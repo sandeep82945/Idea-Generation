@@ -71,10 +71,10 @@ def get_text_for_conclusion(json_file_path):
                         prompt='you are given text of conclusion of research paper.return only the future work text from input text.input text is as follows: '+ element['text']
                         op= response_chat(prompt)[2]
                         return op
-                #elif 'conclusion' in heading and len(heading) < 12:
-                 #   prompt='you are given text of conclusion of research paper.return only the future work text from input text.input text is as follows: '+ element['text']
-                  #  op= response_chat(prompt)[2]
-                   # return op
+                elif 'conclusion' in heading and len(heading) < 12:
+                    prompt='you are given text of conclusion of research paper.return only the future work text from input text.input text is as follows: '+ element['text']
+                    op= response_chat(prompt)[2]
+                    return op
 
 
     # If no conclusion heading is found, return None or handle accordingly

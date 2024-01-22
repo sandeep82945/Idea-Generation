@@ -3,7 +3,7 @@ import os
 import pandas as pd
 
 import openai
-openai.api_key = ""
+openai.api_key = "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"
 import json
 import os
 import nltk
@@ -53,16 +53,30 @@ def response_chat(prompt):
     input_text = response['choices'][0]['message']['content']
     return extract_answer(input_text), extract_reviews(input_text), input_text
 
-def get_text_for_conclusion(json_file_path):
+def get_text_from_conclusion(json_file_path):
     with open(json_file_path, 'r') as file:
         data = json.load(file)
+    if 'sections' in data:
+        for element in data['sections']:
+            if 'heading' in element and 'text' in element:
+                heading = element['heading'].lower()
+                if 'conclusion' in heading:
+                    prompt='you are given text of conclusion of research paper.return only the future work text from input text.input text is as follows: '+ element['text']
+                    op= response_chat(prompt)[2]
+                    return op
 
-    #print(json_file_path)
+
+
+
+def get_text_from_future(json_file_path):
+    with open(json_file_path, 'r') as file:
+        data = json.load(file)
     if 'sections' in data:
         for element in data['sections']:
             if 'heading' in element and 'text' in element:
                 heading = element['heading'].lower()
                 if 'future' in heading:
+                    print(json_file_path)
                     if(len(heading)<15):
                         return element['text']
                     else:
@@ -71,35 +85,38 @@ def get_text_for_conclusion(json_file_path):
                         prompt='you are given text of conclusion of research paper.return only the future work text from input text.input text is as follows: '+ element['text']
                         op= response_chat(prompt)[2]
                         return op
-                elif 'conclusion' in heading and len(heading) < 12:
-                    prompt='you are given text of conclusion of research paper.return only the future work text from input text.input text is as follows: '+ element['text']
-                    op= response_chat(prompt)[2]
-                    return op
-
-
-    # If no conclusion heading is found, return None or handle accordingly
     return None
-
+temp=10
 def process_json_files_in_folder(folder_path):
     output_dict = {}
     count=0
     for filename in os.listdir(folder_path):
         if filename.endswith('.json'):
             json_file_path = os.path.join(folder_path, filename)
-            result = get_text_for_conclusion(json_file_path)
-            print(json_file_path)
+            result = get_text_from_future(json_file_path)
 
             if result is not None:
                 output_dict[filename] = result
                 count+=1
-                if(count>300):
+                if(count>temp):
                     break
+    if(count<temp):    
+        for filename in os.listdir(folder_path):
+            if filename.endswith('.json'):
+                if filename in output_dict.keys():
+                    continue
+                json_file_path = os.path.join(folder_path, filename)
+                result = get_text_from_conclusion(json_file_path)
 
-
+                if result is not None:
+                    output_dict[filename] = result
+                    count+=1
+                    if(count>temp):
+                        break
     return output_dict
 
 # Replace 'your_folder_path' with the actual path to your folder containing JSON files
-domain='computer'
+domain='economics'
 folder_path=os.path.join("D:\s2-folks\scipdf_parser",domain+"_json")
 output_dictionary = process_json_files_in_folder(folder_path)
 print(output_dictionary)

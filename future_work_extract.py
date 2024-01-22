@@ -3,7 +3,7 @@ import os
 import pandas as pd
 
 import openai
-openai.api_key = "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"
+openai.api_key = ""
 import json
 import os
 import nltk

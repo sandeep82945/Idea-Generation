@@ -1,0 +1,404 @@
+{
+    "abstractText": "Advanced Air Mobility (AAM) introduces a new, efficient mode of transportation with the use of vehicle autonomy and electrified aircraft to provide increasingly autonomous transportation between previously underserved markets. Safe and efficient navigation of low altitude aircraft through highly dense environments requires the integration of a multitude of complex observations, such as surveillance, knowledge of vehicle dynamics, and weather. The processing and reasoning on these observations pose challenges due to the various sources of uncertainty in the information while ensuring cooperation with a variable number of aircraft in the airspace. These challenges coupled with the requirement to make safety-critical decisions in real-time rule out the use of conventional separation assurance techniques. We present a decentralized reinforcement learning framework to provide autonomous self-separation capabilities within AAM corridors with the use of speed and vertical maneuvers. The problem is formulated as a Markov Decision Process and solved by developing a novel extension to the sample-efficient, offpolicy soft actor-critic (SAC) algorithm. We introduce the use of attention networks for variable-length observation processing and a distributed computing architecture to achieve high training sample throughput as compared to existing approaches. A comprehensive numerical study shows that the proposed framework can ensure safe and efficient separation of aircraft in high density, dynamic environments with various sources of uncertainty. *Distribution Statement A. Approved for public release. Distribution is unlimited. This material is based upon work supported by the United States Air Force under Air Force Contract No. FA870215-D-0001. Any opinions, findings, conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the United States Air Force. Delivered to the U.S. Government with Unlimited Rights, as defined in DFARS Part 252.227-7013 or 7014 (Feb 2014). Notwithstanding any copyright notice, U.S. Government rights in this work are defined by DFARS 252.227-7013 or DFARS 252.227-7014 as detailed above. Use of this work other than as specifically authorized by the U.S. Government may violate any copyrights that exist in this work. \u00a9 2023 Massachusetts Institute of Technology. Introduction Advanced air mobility (AAM) is set to revolutionize transportation by introducing highly automated aircraft to transport passengers and cargo within local, regional, interregional, and urban environments (Federal Aviation Administration 2022). However, the realization of AAM faces several key challenges, including safety, security, social acceptance, resilience, environmental impacts, regulation, scalability, and flexibility (National Academies of Sciences, Engineering, and Medicine 2020). To address these challenges, the use of advanced automation techniques such as artificial intelligence (AI) is essential. Specifically, learning-based decentralized separation assurance holds significant potential for enabling the safe and efficient operation of highly automated aircraft in the high-density, high-tempo AAM environment envisioned by the Federal Aviation Administration (FAA) and the National Aeronautics and Space Administration (NASA) (Federal Aviation Administration 2022; National Aeronautics and Space Administration 2020). However, due to the lack of real operational data and scenarios for AAM, developing, training, and validating AI algorithms becomes a challenge. Simulation provides a lowcost way to overcome this challenge by allowing for the exploration of edge-case scenarios that may be too dangerous to perform in the real world. Therefore, simulationbased training and validation of AI algorithms are essential for safe and efficient operation of AAM. Recently, the AI testbed for Advanced Air Mobility (AAM-Gym) was developed to provide a standardized ecosystem for the research of AI in AAM. By leveraging simulation backends such as BlueSky (Hoekstra and Ellerbroek 2016) and UAMToolkit (Alvarez et al. 2021), representative real-world scenarios can be developed for training and evaluation. Recently, deep reinforcement learning (DRL) has demonstrated superior performance to humans in games such as Atari, GO, Warcraft, and StarCraft II, requiring a sophisticated balance between near-term and long-term strategic decisions (Mnih et al. 2013; Silver et al. 2016; Amato and Shani 2010; Vinyals et al. 2017). In addition, DRL has also ar X iv :2 30 8. 04 95 8v 1 [ cs .A I] 9 A ug 2 02 3 been applied to air traffic control (ATC) and conflict resolution, where early work used an AI agent to mitigate conflicts and minimize the delay of aircraft reaching their metering fixes (Brittain and Wei 2018). In later works, (Pham et al. 2019) demonstrated that an AI agent can effectively resolve randomly generated conflict scenarios between a pair of aircraft through vectoring maneuvers. To encourage human ATC adoption of AI maneuvers, (Tran et al. 2020) developed an interactive conflict solver using DRL that was trained using human resolution maneuvers, providing AI behavior more closely aligned with humans. More recently, (Ribeiro, Ellerbroek, and Hoekstra 2020, 2022) proposed a hybrid geometric-reinforcement learning algorithm for resolving conflicts in low-altitude airspace. (Badea et al. 2022) explored the use of both lateral and vertical maneuvers for conflict resolution using DRL in traditional airspace. While these approaches are effective for sparse airspace environments, they fail to handle state space scalability as the number of intruder aircraft increases due to the either centralized, single-agent architectures or fixed-length state vectors with a maximum number of intruder aircraft. In (Brittain and Wei 2019; Brittain and Wei 2021; Brittain, Yang, and Wei 2021; Brittain and Wei 2022), it is shown how a decentralized separation assurance framework can alleviate the aforementioned scalability concerns and prevent loss of separation in high-density stochastic sectors by leveraging long short-term memory networks (LSTM) and attention networks, even when agents may be optimizing nonhomogeneous reward functions. In this article, a decentralized learning-based framework for aircraft separation assurance is introduced and applied to a high-density AAM use-case. We integrate the sample efficient Discrete Soft Actor-Critic (SACD) algorithm and extend the algorithm with the use of attention networks to handle a variable-length state space. Given SACD is an off-policy algorithm, an asynchronous training architecture is developed to decouple the agent-environment interaction with the algorithm training. This allows us to achieve an approximately 10x increase in the number of transitions trained over existing approaches. We show that the increased training leads to improved safety and operational suitability performance, even in highly uncertain environments. The main contributions of this article are summarized as follows: \u2022 We propose a scalable, distributed, and sample efficient aircraft separation assurance framework based on SACD and attention networks that is capable of both improving safety and operational suitability. \u2022 We introduce an expanded action set over prior works with the introduction of vertical maneuvers. \u2022 A representative AAM environment is developed in AAM-Gym, providing a comprehensive environment for evaluating the effectiveness of the proposed framework. The structure of this paper is as follows. We first provide a brief overview of reinforcement learning and soft actorcritic. Then, we introduce the approach to applying reinforcement learning to aircraft separation assurance. Following, details on the environment setup and numerical experiments are presented. We then discuss the results and summarize our findings in the conclusion.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Marc W. Brittain"
+        },
+        {
+            "affiliations": [],
+            "name": "Luis E. Alvarez"
+        },
+        {
+            "affiliations": [],
+            "name": "Kara Breeden"
+        }
+    ],
+    "id": "SP:ca61289974588f9df5119e131cc475840defcbd4",
+    "references": [
+        {
+            "authors": [
+                "L.E. Alvarez",
+                "I. Jessen",
+                "M.P. Owen",
+                "J. Silbermann",
+                "P. Wood"
+            ],
+            "title": "ACAS sXu: Robust Decentralized Detect and Avoid for",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "L.E. Alvarez",
+                "J.C. Jones",
+                "A. Bryan",
+                "A.J. Weinert"
+            ],
+            "title": "Demand and Capacity Modeling for Advanced Air Mobility",
+            "venue": "AIAA AVIATION 2021 FORUM.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Amato",
+                "G. Shani"
+            ],
+            "title": "High-Level Reinforcement Learning in Strategy Games",
+            "venue": "Proceedings of the 9th International Conference on Autonomous Agents and Multiagent Systems: Volume 1 - Volume 1, AAMAS \u201910, 75\u201382. Richland, SC: International Foundation for Autonomous Agents and Multiagent Sys-",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "C. Badea",
+                "D. Groot",
+                "A.M. Veytia",
+                "M. Ribeiro",
+                "J. Ellerbroek",
+                "J. Hoekstra",
+                "R. Dalmau"
+            ],
+            "title": "Lateral and Vertical Air Traffic Control Under Uncertainty Using Reinforcement Learning",
+            "venue": "12th SESAR Innovation Days.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Brittain",
+                "L.E. Alvarez",
+                "K. Breeden",
+                "I. Jessen"
+            ],
+            "title": "AAM-Gym: Artificial Intelligence Testbed for Advanced Air Mobility",
+            "venue": "2022 IEEE/AIAA 41st Digital Avionics Systems Conference (DASC), 1\u201310.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Brittain",
+                "P. Wei"
+            ],
+            "title": "Autonomous aircraft sequencing and separation with hierarchical deep reinforcement learning",
+            "venue": "2018 International Conference on Research in Air Transportation (ICRAT).",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Brittain",
+                "P. Wei"
+            ],
+            "title": "Autonomous Separation Assurance in An High-Density En Route Sector: A Deep Multi-Agent Reinforcement Learning Approach",
+            "venue": "2019 IEEE Intelligent Transportation Systems Conference (ITSC), 3256\u20133262.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M. Brittain",
+                "P. Wei"
+            ],
+            "title": "Scalable Autonomous Separation Assurance With Heterogeneous Multi-Agent Reinforcement Learning",
+            "venue": "IEEE Transactions on Automation Science and Engineering, 1\u201312.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M.W. Brittain",
+                "P. Wei"
+            ],
+            "title": "One to Any: Distributed Conflict Resolution with Deep Multi-Agent Reinforcement Learning and Long Short-Term Memory",
+            "venue": "AIAA Scitech 2021 Forum.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M.W. Brittain",
+                "X. Yang",
+                "P. Wei"
+            ],
+            "title": "Autonomous Separation Assurance with Deep Multi-Agent Reinforcement Learning",
+            "venue": "Journal of Aerospace Information Systems, 18(12): 890\u2013905.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P. Christodoulou"
+            ],
+            "title": "Soft actor-critic for discrete action settings",
+            "venue": "arXiv preprint arXiv:1910.07207.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "T. Haarnoja",
+                "A. Zhou",
+                "P. Abbeel",
+                "S. Levine"
+            ],
+            "title": "Soft Actor-Critic: Off-Policy Maximum Entropy Deep Reinforcement Learning with a Stochastic Actor",
+            "venue": "Dy, J.; and Krause, A., eds., Proceedings of the 35th International Conference on Machine Learning, volume 80 of Proceedings of Machine Learning",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "T. Haarnoja",
+                "A. Zhou",
+                "K. Hartikainen",
+                "G. Tucker",
+                "S. Ha",
+                "J. Tan",
+                "V. Kumar",
+                "H. Zhu",
+                "A. Gupta",
+                "P Abbeel"
+            ],
+            "title": "Soft actor-critic algorithms and applications",
+            "venue": "arXiv preprint arXiv:1812.05905",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Hoekstra",
+                "J. Ellerbroek"
+            ],
+            "title": "BlueSky ATC Simulator Project: an Open Data and Open Source Approach",
+            "venue": "Proceedings of the seventh International Conference for Research on Air Transport (ICRAT).",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "M.-T. Luong",
+                "H. Pham",
+                "C.D. Manning"
+            ],
+            "title": "Effective approaches to attention-based neural machine translation",
+            "venue": "arXiv preprint arXiv:1508.04025.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "V. Mnih",
+                "K. Kavukcuoglu",
+                "D. Silver",
+                "A. Graves",
+                "I. Antonoglou",
+                "D. Wierstra",
+                "M. Riedmiller"
+            ],
+            "title": "Playing atari with deep reinforcement learning",
+            "venue": "arXiv preprint arXiv:1312.5602.",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "National Academies of Sciences",
+                "Engineering",
+                "Medicine."
+            ],
+            "title": "Advancing Aerial Mobility: A National Blueprint",
+            "venue": "Washington, DC: The National Academies Press. ISBN 978-0-309-67026-",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D.-T. Pham",
+                "N.P. Tran",
+                "S. Alam",
+                "V. Duong",
+                "D. Delahaye"
+            ],
+            "title": "A Machine Learning Approach for Conflict Resolution in Dense Traffic Scenarios with Uncertainties",
+            "venue": "13th USA/Europe ATM R&D Seminar.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Reuther",
+                "J. Kepner",
+                "C. Byun",
+                "S. Samsi",
+                "W. Arcand",
+                "D. Bestor",
+                "B. Bergeron",
+                "V. Gadepally",
+                "M. Houle",
+                "M. Hubbell",
+                "M. Jones",
+                "A. Klein",
+                "L. Milechin",
+                "J. Mullen",
+                "A. Prout",
+                "A. Rosa",
+                "C. Yee",
+                "P. Michaleas"
+            ],
+            "title": "Interactive supercomputing on 40,000 cores for machine learning and data analysis",
+            "venue": "2018 IEEE High",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Ribeiro",
+                "J. Ellerbroek",
+                "J. Hoekstra"
+            ],
+            "title": "Improvement of Conflict Detection and Resolution at High Densities Through Reinforcement Learning",
+            "venue": "Proceedings of the International Conference for Research in Air Transportation.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "M. Ribeiro",
+                "J. Ellerbroek",
+                "J. Hoekstra"
+            ],
+            "title": "Improving Algorithm Conflict Resolution Manoeuvres with Reinforcement Learning",
+            "venue": "Aerospace, 9(12): 847.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Schulman",
+                "F. Wolski",
+                "P. Dhariwal",
+                "A. Radford",
+                "O. Klimov"
+            ],
+            "title": "Proximal policy optimization algorithms",
+            "venue": "arXiv preprint arXiv:1707.06347.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "D. Silver",
+                "A. Huang",
+                "C.J. Maddison",
+                "A. Guez",
+                "L. Sifre",
+                "G. Van Den Driessche",
+                "J. Schrittwieser",
+                "I. Antonoglou",
+                "V. Panneershelvam",
+                "M Lanctot"
+            ],
+            "title": "Mastering the game of Go with deep neural networks and tree",
+            "venue": "search. nature,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "P.N. Tran",
+                "D.-T. Pham",
+                "S.K. Goh",
+                "S. Alam",
+                "V. Duong"
+            ],
+            "title": "An Interactive Conflict Solver for Learning Air Traffic Conflict Resolutions",
+            "venue": "Journal of Aerospace Information Systems, 17(6): 271\u2013277.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "R. Tsing"
+            ],
+            "title": "Starcraft II: A new challenge for reinforcement learning",
+            "venue": "arXiv preprint arXiv:1708.04782.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "C.J. Watkins",
+                "P. Dayan"
+            ],
+            "title": "Q-learning",
+            "venue": "Machine learning, 8: 279\u2013292.",
+            "year": 1992
+        },
+        {
+            "authors": [
+                "Y. Xu",
+                "D. Hu",
+                "L. Liang",
+                "S. McAleer",
+                "P. Abbeel",
+                "R. Fox"
+            ],
+            "title": "Target entropy annealing for discrete soft actor-critic",
+            "venue": "arXiv preprint arXiv:2112.02852.",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "*Distribution Statement A. Approved for public release. Distribution is unlimited. This material is based upon work supported by the United States Air Force under Air Force Contract No. FA870215-D-0001. Any opinions, findings, conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the United States Air Force. Delivered to the U.S. Government with Unlimited Rights, as defined in DFARS Part 252.227-7013 or 7014 (Feb 2014). Notwithstanding any copyright notice, U.S. Government rights in this work are defined by DFARS 252.227-7013 or DFARS 252.227-7014 as detailed above. Use of this work other than as specifically authorized by the U.S. Government may violate any copyrights that exist in this work. \u00a9 2023 Massachusetts Institute of Technology."
+        },
+        {
+            "heading": "Introduction",
+            "text": "Advanced air mobility (AAM) is set to revolutionize transportation by introducing highly automated aircraft to transport passengers and cargo within local, regional, interregional, and urban environments (Federal Aviation Administration 2022). However, the realization of AAM faces several key challenges, including safety, security, social acceptance, resilience, environmental impacts, regulation, scalability, and flexibility (National Academies of Sciences, Engineering, and Medicine 2020).\nTo address these challenges, the use of advanced automation techniques such as artificial intelligence (AI) is essential. Specifically, learning-based decentralized separation assurance holds significant potential for enabling the safe and efficient operation of highly automated aircraft in the high-density, high-tempo AAM environment envisioned by the Federal Aviation Administration (FAA) and the National Aeronautics and Space Administration (NASA) (Federal Aviation Administration 2022; National Aeronautics and Space Administration 2020).\nHowever, due to the lack of real operational data and scenarios for AAM, developing, training, and validating AI algorithms becomes a challenge. Simulation provides a lowcost way to overcome this challenge by allowing for the exploration of edge-case scenarios that may be too dangerous to perform in the real world. Therefore, simulationbased training and validation of AI algorithms are essential for safe and efficient operation of AAM. Recently, the AI testbed for Advanced Air Mobility (AAM-Gym) was developed to provide a standardized ecosystem for the research of AI in AAM. By leveraging simulation backends such as BlueSky (Hoekstra and Ellerbroek 2016) and UAMToolkit (Alvarez et al. 2021), representative real-world scenarios can be developed for training and evaluation.\nRecently, deep reinforcement learning (DRL) has demonstrated superior performance to humans in games such as Atari, GO, Warcraft, and StarCraft II, requiring a sophisticated balance between near-term and long-term strategic decisions (Mnih et al. 2013; Silver et al. 2016; Amato and Shani 2010; Vinyals et al. 2017). In addition, DRL has also\nar X\niv :2\n30 8.\n04 95\n8v 1\n[ cs\n.A I]\n9 A\nug 2\nbeen applied to air traffic control (ATC) and conflict resolution, where early work used an AI agent to mitigate conflicts and minimize the delay of aircraft reaching their metering fixes (Brittain and Wei 2018). In later works, (Pham et al. 2019) demonstrated that an AI agent can effectively resolve randomly generated conflict scenarios between a pair of aircraft through vectoring maneuvers. To encourage human ATC adoption of AI maneuvers, (Tran et al. 2020) developed an interactive conflict solver using DRL that was trained using human resolution maneuvers, providing AI behavior more closely aligned with humans. More recently, (Ribeiro, Ellerbroek, and Hoekstra 2020, 2022) proposed a hybrid geometric-reinforcement learning algorithm for resolving conflicts in low-altitude airspace. (Badea et al. 2022) explored the use of both lateral and vertical maneuvers for conflict resolution using DRL in traditional airspace. While these approaches are effective for sparse airspace environments, they fail to handle state space scalability as the number of intruder aircraft increases due to the either centralized, single-agent architectures or fixed-length state vectors with a maximum number of intruder aircraft. In (Brittain and Wei 2019; Brittain and Wei 2021; Brittain, Yang, and Wei 2021; Brittain and Wei 2022), it is shown how a decentralized separation assurance framework can alleviate the aforementioned scalability concerns and prevent loss of separation in high-density stochastic sectors by leveraging long short-term memory networks (LSTM) and attention networks, even when agents may be optimizing nonhomogeneous reward functions.\nIn this article, a decentralized learning-based framework for aircraft separation assurance is introduced and applied to a high-density AAM use-case. We integrate the sample efficient Discrete Soft Actor-Critic (SACD) algorithm and extend the algorithm with the use of attention networks to handle a variable-length state space. Given SACD is an off-policy algorithm, an asynchronous training architecture is developed to decouple the agent-environment interaction with the algorithm training. This allows us to achieve an approximately 10x increase in the number of transitions trained over existing approaches. We show that the increased training leads to improved safety and operational suitability performance, even in highly uncertain environments. The main contributions of this article are summarized as follows:\n\u2022 We propose a scalable, distributed, and sample efficient aircraft separation assurance framework based on SACD and attention networks that is capable of both improving safety and operational suitability.\n\u2022 We introduce an expanded action set over prior works with the introduction of vertical maneuvers.\n\u2022 A representative AAM environment is developed in AAM-Gym, providing a comprehensive environment for evaluating the effectiveness of the proposed framework.\nThe structure of this paper is as follows. We first provide a brief overview of reinforcement learning and soft actorcritic. Then, we introduce the approach to applying reinforcement learning to aircraft separation assurance. Following, details on the environment setup and numerical experiments are presented. We then discuss the results and sum-\nmarize our findings in the conclusion."
+        },
+        {
+            "heading": "Background",
+            "text": "In this section, we briefly review the background of reinforcement learning and soft actor-critic."
+        },
+        {
+            "heading": "Reinforcement Learning",
+            "text": "Reinforcement learning (RL) is one type of sequential decision making where the objective is to learn a policy in a given environment. RL requires the environment to be formulated as a Markov Decision Process (MDP); a mathematical framework for modeling decision making processes with stochastic transitions. An MDP is defined by the tuple (S,A,R, T, \u03b3), where an agent in state s \u2208 S takes an action a \u2208 A, transitions to state s\u2032 with probability T (s\u2032|s, a), and receives a rewardR(s, a). In RL, the transition matrix T is often unknown. The discount factor \u03b3 determines how far in the future to look for rewards, where immediate rewards are emphasized as \u03b3 \u2192 0 and future rewards are prioritized when \u03b3 \u2192 1.\nThe RL agent is able to derive an optimal policy \u03c0\u2217 in the environment by maximizing a cumulative reward function\n\u03c0\u2217 = argmax \u03c0 E[ \u03c4\u2211 t=0 (r(st, at)|\u03c0)], (1)\nwhere \u03c4 represents the total time for a given environment. In environments with discrete or low-dimensional stateaction representations, the optimal policy \u03c0\u2217 can be obtained using dynamic programming approaches such as Qlearning (Watkins and Dayan 1992). However, many realworld environments can not be represented by discrete values or require high-dimensional state representations, requiring the use of function approximation for the policy. The aforementioned issues can be addressed through deep reinforcement learning (DRL) where a neural network is used to represent the policy \u03c0."
+        },
+        {
+            "heading": "Soft Actor-Critic",
+            "text": "Soft actor-critic (SAC) is a state-of-the-art off-policy deep reinforcement learning algorithm that has shown promise across a wide variety of continuous control tasks (Haarnoja et al. 2018a,b) and recently discrete action settings (Christodoulou 2019). Unlike traditional reinforcement learning, SAC seeks to derive an optimal policy based on a maximum entropy objective function\n\u03c0\u2217 = argmax \u03c0 E[ \u2211 t\u22650 \u03b3t(r(st, at) + \u03b1H(\u03c0(\u00b7|st)))], (2)\nwhere H(\u03c0(\u00b7|st)) represents the entropy of the policy distribution for a given state st such that\nH(\u03c0(\u00b7|st)) = E[\u2212 log(\u03c0(\u00b7|st))]. (3)\nThe temperature parameter \u03b1 represents the trade-off coefficient between expected returns and the entropy term. The standard RL objective is recovered when \u03b1\u2192 0.\nWhile SAC and SACD perform well in many environments, the performance is greatly sensitive to the choice of\n\u03b1 and subsequently the target entropy. Recent work by (Xu et al. 2021) introduced a target entropy annealing approach to address the sensitivity of the target entropy parameter. In this work, we adopt the use of target entropy annealing, which we found to be essential to obtain good performance in the air transportation environment."
+        },
+        {
+            "heading": "Approach",
+            "text": "In this section, the aircraft separation assurance problem is introduced and formulated as an MDP by defining the state space, the action space, and the reward function. We then detail the distributed asynchronous training setup used to achieve a 10x increase in training throughput."
+        },
+        {
+            "heading": "Aircraft Separation Assurance",
+            "text": "Separation assurance involves preventing a loss of separation (LOS) event with aircraft in trail, at intersections, and at metering fixes by providing advisory maneuvers to aircraft. Any given aircraft in the environment is referred to as an ownship with all other aircraft in the airspace referred to as intruder aircraft from the ownship\u2019s point of view. In this way, each ownship will have its own associated intruder aircraft. The LOS threshold, dLOS, defines a safety radius around ownship where operations with an intruder within the threshold become increasingly dangerous. Violating the loss of separation threshold may result in collisions between aircraft or near midair collisions (NMACs) that often result in drastic maneuvers from the aircraft. This task is traditionally performed by human air traffic controllers; however, novel automation techniques are required to safely scale to the expected magnitude of air traffic for AAM."
+        },
+        {
+            "heading": "State Space",
+            "text": "In order to provide a scalable solution for increasing air traffic, we adopt a centralized training, decentralized execution scheme where each aircraft is considered an agent and with training, learns a cooperative policy for navigating through the airspace safely and efficiently. The state space for this environment consists of ownship information as well as information from the surrounding air traffic that is dynamic in size as aircraft take-off and land. The state is therefore decomposed into the ownship state and the intruder state. In order to handle variability in the intruder aircraft information, we then adopt the use of attention networks (Luong, Pham, and Manning 2015), similarly to the D2MAV-A algorithm (Brittain, Yang, and Wei 2021). This resulting intruder attention vector provides a fixed-length vector representation for network optimization. The ownship state space s at time t is defined as\nst = (\u03c8, z, v\u0307x, v\u0307z, vx, vz, gsEast, gsNorth,\nt, at\u22121, xwpt(j)\u2212 x, ywpt(j)\u2212 y) \u2200 j \u2208 [1, Nwpt],\nto include heading (\u03c8), altitude (z), horizontal acceleration (v\u0307x), vertical acceleration (v\u0307z), horizontal speed (vx), vertical speed (vz), east and north ground speed (gsEast, gsNorth), time of day (t), previous action (at\u22121) , andNwpt future ownship relative waypoint positions (x\u0304wpt \u2212x, y\u0304wpt \u2212 y). Nwpt is\na hyperparameter that specifies how many future route segments to consider. The state space h for the i intruder aircraft available to the ownship at time t is defined as\nht(i) = (\u03c8 (i) rel , z (i) rel , v\u0307 (i) x , v\u0307 (i) z , v (i) x , v (i) z , gs (i) East, gs (i) North,\n\u03d5(i), d(i)o , a (i) t\u22121, x (i) wpt(j)\u2212 x, y (i) wpt(j)\u2212 y) \u2200 j \u2208 [1, Nwpt].\nThe intruder state space contains information on the intruder aircraft similar to the ownship state with the intruder\u2019s acceleration, velocities, and previous action. It also includes ownship relative values of relative heading (\u03c8(i)rel), relative altitude (z(i)rel ), relative bearing (\u03d5\n(i)), the straightline distance between ownship and intruder (d(i)o ), and the relative waypoint positions. With the state space specified, the components of the attention network can be defined as\nscore(st, h\u0304t) = s\u22a4W1h\u0304t (4)\n\u03b7st,h\u0304t = exp(score(s, h\u0304t))\u2211n\nj=1 exp(score(st, h\u0304 j t ))\n(5)\ncs = n\u2211 i=1 \u03b7s,h\u0304t h\u0304 i t (6)\nkst = f(cst) = tanh(W2cst), (7)\nwhere Luong\u2019s multiplicative style (Luong, Pham, and Manning 2015) is used as the score calculation. \u03b7st,h\u0304t is the attention weights of the ownship with respect to all of the other intruder aircraft, cs is the context vector that represents the weighted contribution of the surrounding air traffic, and kst is the attention vector that represents the abstract understanding of the surrounding air traffic. W1 and W2 are both learnable weight matrices determined through the neural network training. We then concatenate kst with st to obtain the fixed length vector that can be passed through standard feed-forward layers of the actor and critic networks. Given that the attention network is operating as a state preprocessor, it can be used in both the actor and critic networks for SACD, or as part of a shared-layer network architecture."
+        },
+        {
+            "heading": "Action Space",
+            "text": "Actions for the agent reflect speed and altitude maneuvers, with a decision step of 4 seconds. The decision step is treated as a hyperparameter that can be modified based on the application. The action space is defined as\nat = {v\u0307x\u2212 , v\u0307x0 , v\u0307x+ , vz\u2212 , vz0 , vz+}.\nThe available action are decrease speed (v\u0307x\u2212 ), maintain current speed (v\u0307x0 ), increase speed (v\u0307x+ ), descend (vz\u2212 ), maintain altitude (vz0 ), and climb (vz+ ). Given that there are multiple vertically stacked air corridors, climb and descend actions are automatically stopped when reaching a new lane and the agent must re-select a climb or descend action to continue. The magnitude of the actions are dependent on the performance envelope for a given aircraft type. In addition, selected actions that result in speeds or altitudes outside of the performance envelope have no effect."
+        },
+        {
+            "heading": "Reward Function",
+            "text": "In the context of separation assurance, the primary objective is to maintain a safe distance from intruder aircraft; however, operational suitability objectives (e.g., minimize maneuvers) are also important for real-world deployment. We achieve this objectives through defining the reward function as\nR(st, ht, at) = R(st, ht) +R(at)\u2212 \u2126, (8)\nwhere R(st, ht) and R(at) are defined as\nR(st, ht) =  -1,\nif dco < d NMAC x\nand zrel < dNMACz \u2212\u03c7+ \u03b4 \u00b7 dco, if dNMAC \u2264 dco < dMAX 0, otherwise ,\n(9)\nR(at) =  0, if at \u2208 [v\u0307x0 , vz0 ] \u2212\u03f5, if at \u2208 [v\u0307x\u2212 , v\u0307x+ ] \u2212\u03bb, if at \u2208 [vz\u2212 , vz+ ] . (10)\nIn R(st, ht), dco is the distance from the ownship to the closest intruder aircraft and dMAX is the maximum distance to consider the closest intruder aircraft in the reward function. The hyperparameters \u03c7 and \u03b4 are small, positive constants to penalize aircraft as they approach the separation threshold, dNMAC. In R(at), \u03f5 and \u03bb represent penalties for advisories that require a deviation from the aircraft\u2019s current speed or altitude, respectively, to encourage the agent to minimize maneuvering actions. Finally, in R(st, ht, at), the hyperparameter \u2126 represents a small, positive constant that is applied at every step in scenario. This parameter discourages aircraft from airborne holding, since slower aircraft will incur the \u2126 penalty for an extended time. Table 1 displays the finalized use-case hyperparameters."
+        },
+        {
+            "heading": "Distributed Asynchronous Training",
+            "text": "D2MAV-A introduced a distributed synchronous training procedure where parallel actors collect state-transition experience from the environment for a centralized learner to\ntrain on. Given that D2MAV-A is an on-policy RL algorithm based on Proximal Policy Optimization (Schulman et al. 2017), a synchronization step is required to ensure that each actor is collecting experience from the most up-to-date policy. SACD, an off-policy RL algorithm, does not require each actor to be collecting experience with the latest policy. Therefore, we can then decouple the algorithm training from the algorithm execution in the environment. In this way, the algorithm training can be performed asynchronously from the distributed actors to achieve high training throughput. Figure 1 illustrates the asynchronous centralized learning, decentralized execution scheme. We adopt the same network architecture for SACD as in (Christodoulou 2019) with the addition of the attention network for state preprocessing. The network layers consisted of 256 nodes for both the actor and critic networks. For target entropy annealing, we use the parameter valeus introduced in (Xu et al. 2021), with the exception of the standard deviation threshold, which we set to 0.07. Experiments were performed on the Lincoln Laboratory Supercomputer, consisting of 16 Intel Xeon Gold 6248 2.5 Ghz compute nodes with two NVIDIA Tesla V100 graphics processing units (GPUs) per compute node (Reuther et al. 2018)."
+        },
+        {
+            "heading": "Use-Case: Urban Air Corridors",
+            "text": "Near-term AAM operations are expected to leverage existing visual flight rule (VFR) route networks (e.g., helicopter routes) as they will largely represent AAM corridors at lower air traffic densities (Federal Aviation Administration 2022). As such, we developed an environment based on the VFR route network and 29 vertiport locations for New York City as presented in (Alvarez et al. 2021) with the addition of vertically stacked lanes at 400, 700, 1000, 1300, and 1600 feet. The following subsections discuss the scenarios designed for this use-case, baselines, and experiment setup."
+        },
+        {
+            "heading": "Scenario Design",
+            "text": "A total of 20 days of representative AAM traffic is generated by UAMToolkit (Alvarez et al. 2021) with varying fleet sizes to provide a diverse set of operational densities. The AAM traffic demand is based on a displacement of 5% of the New York City taxi cab market, subject to the number of available AAM aircraft. The scenario generation takes into account imperfect aircraft altitude by adding noise in\nthe form of a uniform distribution with a minimum value of -100 ft and maximum value of 100 ft to offset the selected initial altitude. The fleet size determines how many aircraft are available to operate simultaneously; however, simultaneous operations will be limited based on the availability of vertiport parking spots. In this study, each vertiport was assumed to have four parking spots which results in a max of approximately 200 simultaneous operations. If the fleet size exceeds 200 aircraft, overall network utilization increases due to lower idle times by aircraft repositioning for passenger pickup. For this use-case, two aircraft performance models were chosen to simulate flights: (1) Eurocopter EC-135 and (2) surrogate AAM vehicle based on publicly available AAM aircraft specifications."
+        },
+        {
+            "heading": "Baselines",
+            "text": "Two baselines were used in this study to benchmark the proposed SACD-A algorithm: (1) an unequipped agent that does not implement any separation commands (i.e., aircraft follows original flight plan) and (2) the D2MAV-A algorithm with speed and vertical lane change commands, an extension of the original speed-only D2MAV-A implementation."
+        },
+        {
+            "heading": "Experiment Setup",
+            "text": "Using the AAM-Gym testbed (Brittain et al. 2022) with 40 parallel workers for policy-rollout, each algorithm was trained for 10,000 iterations where one iteration is 64 environment steps (4 simulation seconds). Following the completion of training, evaluation was performed on 100 randomly sampled 3-hour windows of AAM operations for a given day. A sensitivity analysis was performed to understand how robust the algorithms are to state observation noise and fleet size by simulating various fleet sizes with both automatic dependent surveillance-broadcast (ADS-B) noise and perfect surveillance. ADS-B noise is applied as a Gaussian distribution over the latitude, longitude, and altitude, with a standard deviation error magnitude of 0.0001 for latitude and longitude, and 100 feet for altitude. To test the robustness of the algorithms under various levels of uncertainty, we performed a sweep over two stressing parameters : (1) probability of communication and (2) probability of policy equipage with a fleet size of 100 aircraft. Probability of communication refers to the ability of a given aircraft to receive intruder state information. This condition is applied at aircraft initialization such that an aircraft without communication does not observe the intruder aircraft for the entire flight duration. Probability of policy equipage represents the likelihood that an aircraft is equipped with a separation assurance logic to minimize the loss of separation with the surrounding aircraft. Policy equipage is determined at aircraft initialization and aircraft not equipped with the logic follow their original flight altitude and speeds (identical to unequipped aircraft). In situations containing unequipped aircraft, the algorithms must learn and adapt to the non-cooperative aircraft."
+        },
+        {
+            "heading": "Results",
+            "text": "We adopt the use of the risk ratio as the primary metric for evaluating the safety of the algorithms. Risk ratio is a\ncommonly used metric for aircraft collision avoidance systems (Alvarez et al. 2019) and is defined as\nrisk ratio = P (NMAC)logic P (NMAC)no logic . (11)\nThe risk ratio provides a measure of how much safety improvement can be achieved using an algorithm compared to the case when no logic is present (unequipped aircraft). Values close to zero represent that the algorithms resolved all NMAC events, whereas values greater than one indicate the algorithms results in more NMACs than the unequipped aircraft. Risk ratio equal to one indicates no safety improvement with the algorithms.\nFigure 2 shows the algorithm risk ratio for various fleet sizes and surveillance sources. Both algorithms were able to reduce airspace risk over the unequipped agent given risk ratio values less than one. For all fleet sizes SACD-A outperforms D2MAV-A, achieving a steady-state risk ratio at fleet size = 250. Interestingly, SACD-A with ADS-B noise outperforms D2MAV-A with perfect surveillance, demonstrating the robustness of SACD-A.\nFigure 3 shows the algorithm risk ratio for various communication probabilities. As expected, risk ratio increases as the probability of communication decreases since fewer agents are able to receive intruder state information. However, it is seen that SACD-A achieves a much smaller risk ratio over D2MAV-A, with the difference becoming more significant as the probability of communication decreases.\nThe impact of the probability of equipage is shown in Figure 4. At P (equipped) \u2264 0.75, D2MAV-A outperforms SACD-A, indicating that D2MAV-A may perform better at adapting to the behavior of unequipped agents. However, when a greater majority of the aircraft are logic-equipped (P (equipped) > 0.75) SACD-A significantly outperforms D2MAV-A, resulting in a risk ratio of 0.05 when at least 95% of aircraft are equipped with the SACD-A policy.\nThus far the results have focused on algorithm safety, however it is also important to consider the operational suitability of the learned policy (e.g., reduce unnecessary ma-\nneuvers). Table 2 shows the probability distribution of aircraft maneuvers for the SACD-A algorithm from the evaluation scenarios. It is seen that the majority of actions selected by the agent are non-maneuvering actions including \u2018maintain speed\u2019 (v\u0307x0 ) and \u2018maintain altitude\u2019 (vz0 ), successfully achieving our objective of minimizing maneuvering to only when it is necessary. The impact of the step penalty is reflected in the percentage of \u2018speed up\u2019 (v\u0307x+ ) actions, given the agent is encouraged to navigate the route as quickly as possible. From the results, it is shown that the \u2018climb\u2019 action was preferred over \u2018descend\u2019, however there was no preference in the reward function for choosing between climb or descend. We attribute this behavior to the initial altitude distribution being slightly skewed to lower altitudes.\nThe algorithm sample efficiency is compared over the 10,000 training iterations. SACD-A trained on 2.36 billion transitions, while D2MAV-A trained on 256 million transitions, an almost 10x increase. This shows that the distributed\nasynchronous training architecture for SACD-A provides increased training throughput compared to D2MAV-A."
+        },
+        {
+            "heading": "Discussion",
+            "text": "The results of this work provide a promising solution to increase safety and efficiency of air transportation not only in AAM, but also in today\u2019s commercial aviation. When considering a safety-critical application such as separation assurance, there are additional steps that would need to be performed to transition this approach to real-world deployment. First, the simulation environment would need to introduce more accurate models to depict the operating environment, such as action latency and weather. After obtaining a suitable environment of the real world, a standards community would need to be formed in order to validate the safety and efficacy of the proposed algorithm. Existing systems such as the ACAS X collision avoidance system (a dynamic programming approach) approved by RTCA and the FAA provide a model for achieving community approval, however this approach will need to be modified for neural-network based algorithms. In general, having an in-depth understanding of the learning-based system\u2019s behavior and leveraging validation/verification techniques such as adaptive stress testing to identify failure modes of learning-based systems will be required before full deployment in the real world.\nIn the near-term, for today\u2019s commercial aviation sector, deployment could be achieved through human supervisory control. In this setting, the algorithm instead acts as a recommender system to provide air traffic control a recommended maneuver to resolve a potential conflict or improve efficiency. However, further simulation studies and humanin-the-loop experiments would need to be conducted to understand the impact of real-world implementation."
+        },
+        {
+            "heading": "Conclusions",
+            "text": "A decentralized reinforcement learning framework is introduced to safely and efficiently separate aircraft in high density AAM corridors through speed and vertical maneuvers. A rigorous set of numerical experiments demonstrate the effectiveness of the SACD-A framework over existing approaches by introducing sources of uncertainty and high traffic density scenarios. The operational suitability of the proposed framework is shown through maximizing nonmaneuvering actions, so that actions are selected only if necessary to resolve a conflict or increase efficiency. Looking forward, we to plan apply the SACD-A framework to more complex scenarios as well as to explore the framework interoperability with existing airspace deconfliction systems."
+        }
+    ],
+    "title": "Improving Autonomous Separation Assurance through Distributed Reinforcement Learning with Attention Networks",
+    "year": 2023
+}

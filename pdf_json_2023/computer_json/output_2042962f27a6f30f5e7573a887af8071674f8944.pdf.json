@@ -1,0 +1,809 @@
+{
+    "abstractText": "Automated program repair is a crucial task for improving the efficiency of software developers. Recently, neuralbased techniques have demonstrated significant promise in generating correct patches for buggy code snippets. However, most existing approaches arbitrarily treat the buggy context without any analysis to capture the semantic relationship between the buggy statement and its context. Additionally, we observe that existing neural models may output an unaltered patch consistent with the input buggy code snippet, which fails to be the correct human-written one for fixing the given bug. To address the aforementioned limitations, we present in this paper a novel neural program repair framework called REPEATNPR, which adapts the general pre-trained language model for fixing singleline Java bugs. We make the first attempt to use program slicing to extract contextual information directly related to the given buggy statement as repair ingredients from the corresponding program dependence graph and eliminate unaltered patches using an intuitive but effective filter mechanism. We demonstrate the effectiveness of REPEATNPR on five benchmarks when compared with state-of-the-art baselines.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Yuwei Zhang"
+        },
+        {
+            "affiliations": [],
+            "name": "Ge Li"
+        },
+        {
+            "affiliations": [],
+            "name": "Zhi Jin"
+        },
+        {
+            "affiliations": [],
+            "name": "Ying Xing"
+        }
+    ],
+    "id": "SP:577d361f2f477f3ecbfe71ef04c228e2958b2162",
+    "references": [
+        {
+            "authors": [
+                "M. J\u00f8rgensen",
+                "M.J. Shepperd"
+            ],
+            "title": "A systematic review of software development cost estimation studies",
+            "venue": "IEEE Transactions on Software Engineering, vol. 33, no. 1, pp. 33\u201353, 2007.",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "M. Monperrus"
+            ],
+            "title": "Automatic software repair: A bibliography",
+            "venue": "ACM Computing Surveys, vol. 51, no. 1, pp. 17:1\u201317:24, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "C.L. Goues",
+                "M. Pradel",
+                "A. Roychoudhury"
+            ],
+            "title": "Automated program repair",
+            "venue": "Communications of the ACM, vol. 62, no. 12, pp. 56\u201365, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "L. Gazzola",
+                "D. Micucci",
+                "L. Mariani"
+            ],
+            "title": "Automatic software repair: A survey",
+            "venue": "IEEE Transactions on Software Engineering, vol. 45, no. 1, pp. 34\u201367, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "X. Gao",
+                "Y. Noller",
+                "A. Roychoudhury"
+            ],
+            "title": "Program repair",
+            "venue": "CoRR, vol. abs/2211.12787, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "K. Liu",
+                "A. Koyuncu",
+                "D. Kim",
+                "T.F. Bissyand\u00e9"
+            ],
+            "title": "Tbar: Revisiting template-based automated program repair",
+            "venue": "Proceedings of the 28th ACM SIGSOFT International Symposium on Software Testing and Analysis, 2019, pp. 31\u201342.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Koyuncu",
+                "K. Liu",
+                "T.F. Bissyand\u00e9",
+                "D. Kim",
+                "J. Klein",
+                "M. Monperrus",
+                "Y.L. Traon"
+            ],
+            "title": "Fixminer: Mining relevant fix patterns for automated program repair",
+            "venue": "Empirical Software Engineering, vol. 25, no. 3, pp. 1980\u20132024, 2020.",
+            "year": 1980
+        },
+        {
+            "authors": [
+                "C.S. Xia",
+                "L. Zhang"
+            ],
+            "title": "Less training, more repairing please: Revisiting automated program repair via zero-shot learning",
+            "venue": "Proceedings of the 30th ACM Joint European Software Engineering Conference and Symposium on the Foundations of Software Engineering, 2022, pp. 959\u2013 971.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C.S. Xia",
+                "Y. Wei",
+                "L. Zhang"
+            ],
+            "title": "Practical program repair in the era of large pre-trained language models",
+            "venue": "CoRR, vol. abs/2210.14179, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "A. Hindle",
+                "E.T. Barr",
+                "M. Gabel",
+                "Z. Su",
+                "P.T. Devanbu"
+            ],
+            "title": "On the naturalness of software",
+            "venue": "Communications of the ACM, vol. 59, no. 5, pp. 122\u2013131, 2016.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "M. Tufano",
+                "C. Watson",
+                "G. Bavota",
+                "M.D. Penta",
+                "M. White",
+                "D. Poshyvanyk"
+            ],
+            "title": "An empirical study on learning bug-fixing patches in the wild via neural machine translation",
+            "venue": "ACM Transactions on Software Engineering and Methodology, vol. 28, no. 4, pp. 19:1\u201319:29, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Y. Ding",
+                "B. Ray",
+                "P.T. Devanbu",
+                "V.J. Hellendoorn"
+            ],
+            "title": "Patching as translation: the data and the metaphor",
+            "venue": "Proceedings of the 35th IEEE/ACM International Conference on Automated Software Engineering, 2020, pp. 275\u2013286.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Vaswani",
+                "N. Shazeer",
+                "N. Parmar",
+                "J. Uszkoreit",
+                "L. Jones",
+                "A.N. Gomez",
+                "L. Kaiser",
+                "I. Polosukhin"
+            ],
+            "title": "Attention is all you need",
+            "venue": "Proceedings of the 30th Annual Conference on Neural Information Processing Systems, 2017, pp. 5998\u20136008.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "H. Hata",
+                "E. Shihab",
+                "G. Neubig"
+            ],
+            "title": "Learning to generate corrective patches using neural machine translation",
+            "venue": "CoRR, vol. abs/1812.07170, 2018.",
+            "year": 1812
+        },
+        {
+            "authors": [
+                "Z. Chen",
+                "S. Kommrusch",
+                "M. Tufano",
+                "L. Pouchet",
+                "D. Poshyvanyk",
+                "M. Monperrus"
+            ],
+            "title": "Sequencer: Sequence-to-sequence learning for endto-end program repair",
+            "venue": "IEEE Transactions on Software Engineering, vol. 47, no. 9, pp. 1943\u20131959, 2021.",
+            "year": 1943
+        },
+        {
+            "authors": [
+                "T. Lutellier",
+                "H.V. Pham",
+                "L. Pang",
+                "Y. Li",
+                "M. Wei",
+                "L. Tan"
+            ],
+            "title": "Coconut: Combining context-aware neural translation models using ensemble for program repair",
+            "venue": "Proceedings of the 29th ACM SIGSOFT International Symposium on Software Testing and Analysis, 2020, pp. 101\u2013114.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Y. Li",
+                "S. Wang",
+                "T.N. Nguyen"
+            ],
+            "title": "DEAR: A novel deep learning-based approach for automated program repair",
+            "venue": "Proceedings of the 44th IEEE/ACM 44th International Conference on Software Engineering, 2022, pp. 511\u2013523.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Y. Wang",
+                "W. Wang",
+                "S.R. Joty",
+                "S.C.H. Hoi"
+            ],
+            "title": "Codet5: Identifieraware unified pre-trained encoder-decoder models for code understanding and generation",
+            "venue": "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing, 2021, pp. 8696\u20138708.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M.D. Weiser"
+            ],
+            "title": "Program slicing",
+            "venue": "Proceedings of the 5th International Conference on Software Engineering, 1981, pp. 439\u2013449.",
+            "year": 1981
+        },
+        {
+            "authors": [
+                "J. Ferrante",
+                "K.J. Ottenstein",
+                "J.D. Warren"
+            ],
+            "title": "The program dependence graph and its use in optimization",
+            "venue": "ACM Transactions on Programming Languages and Systems, vol. 9, no. 3, pp. 319\u2013349, 1987.",
+            "year": 1987
+        },
+        {
+            "authors": [
+                "S. Horwitz",
+                "T.W. Reps"
+            ],
+            "title": "The use of program dependence graphs in software engineering",
+            "venue": "Proceedings of the 14th International Conference on Software Engineering, 1992, pp. 392\u2013411.",
+            "year": 1992
+        },
+        {
+            "authors": [
+                "M. B\u00f6hme",
+                "E.O. Soremekun",
+                "S. Chattopadhyay",
+                "E. Ugherughe",
+                "A. Zeller"
+            ],
+            "title": "Where is the bug and how is it fixed? an experiment with practitioners",
+            "venue": "Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering, 2017, pp. 117\u2013128.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "W. Zhong",
+                "H. Ge",
+                "H. Ai",
+                "C. Li",
+                "K. Liu",
+                "J. Ge",
+                "B. Luo"
+            ],
+            "title": "Standup4npr: Standardizing setup for empirically comparing neural program repair systems",
+            "venue": "Proceedings of the 37th IEEE/ACM International Conference on Automated Software Engineering, 2022, pp. 97:1\u201397:13.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Monperrus"
+            ],
+            "title": "The living review on automated program repair",
+            "venue": "HAL Archives Ouvertes, [Technical Report] hal-01956501, 2018.",
+            "year": 1956
+        },
+        {
+            "authors": [
+                "C.L. Goues",
+                "T. Nguyen",
+                "S. Forrest",
+                "W. Weimer"
+            ],
+            "title": "Genprog: A generic method for automatic software repair",
+            "venue": "IEEE Transactions on Software Engineering, vol. 38, no. 1, pp. 54\u201372, 2012.",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Y. Qi",
+                "X. Mao",
+                "Y. Lei",
+                "Z. Dai",
+                "C. Wang"
+            ],
+            "title": "The strength of random search on automated program repair",
+            "venue": "Proceedings of the 36th International Conference on Software Engineering, 2014, pp. 254\u2013265.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "J. Hua",
+                "M. Zhang",
+                "K. Wang",
+                "S. Khurshid"
+            ],
+            "title": "Towards practical program repair with on-demand candidate generation",
+            "venue": "Proceedings of the 40th International Conference on Software Engineering, 2018, pp. 12\u201323.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "A. Ghanbari",
+                "S. Benton",
+                "L. Zhang"
+            ],
+            "title": "Practical program repair via bytecode mutation",
+            "venue": "Proceedings of the 28th ACM SIGSOFT International Symposium on Software Testing and Analysis, 2019, pp. 19\u201330.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Saha",
+                "R.K. Saha",
+                "M.R. Prasad"
+            ],
+            "title": "Harnessing evolution for multi-hunk program repair",
+            "venue": "Proceedings of the 41st International Conference on Software Engineering, 2019, pp. 13\u201324.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Y. Yuan",
+                "W. Banzhaf"
+            ],
+            "title": "ARJA: automated repair of java programs via multi-objective genetic programming",
+            "venue": "IEEE Transactions on Software Engineering, vol. 46, no. 10, pp. 1040\u20131067, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S. Mechtaev",
+                "J. Yi",
+                "A. Roychoudhury"
+            ],
+            "title": "Angelix: Scalable multiline program patch synthesis via symbolic analysis",
+            "venue": "Proceedings of the 38th International Conference on Software Engineering, 2016, pp. 691\u2013 701.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "J. Xuan",
+                "M. Martinez",
+                "F. Demarco",
+                "M. Clement",
+                "S.R.L. Marcote",
+                "T. Durieux",
+                "D.L. Berre",
+                "M. Monperrus"
+            ],
+            "title": "Nopol: Automatic repair of conditional statement bugs in java programs",
+            "venue": "IEEE Transactions on Software Engineering, vol. 43, no. 1, pp. 34\u201355, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "X.D. Le",
+                "D. Chu",
+                "D. Lo",
+                "C.L. Goues",
+                "W. Visser"
+            ],
+            "title": "S3: syntaxand semantic-guided repair synthesis via programming by examples",
+            "venue": "Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering, 2017, pp. 593\u2013604.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "L. Chen",
+                "Y. Pei",
+                "C.A. Furia"
+            ],
+            "title": "Contract-based program repair without the contracts",
+            "venue": "Proceedings of the 32nd IEEE/ACM International Conference on Automated Software Engineering, 2017, pp. 637\u2013647.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "A. Afzal",
+                "M. Motwani",
+                "K.T. Stolee",
+                "Y. Brun",
+                "C.L. Goues"
+            ],
+            "title": "Sosrepair: Expressive semantic search for real-world program repair",
+            "venue": "IEEE Transactions on Software Engineering, vol. 47, no. 10, pp. 2162\u2013 2181, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "W. Zhong",
+                "C. Li",
+                "J. Ge",
+                "B. Luo"
+            ],
+            "title": "Neural program repair : Systems, challenges and solutions",
+            "venue": "Proceedings of the 13th Asia-Pacific Symposium on Internetware, 2022, pp. 96\u2013106.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Q. Zhang",
+                "C. Fang",
+                "Y. Ma",
+                "W. Sun",
+                "Z. Chen"
+            ],
+            "title": "A survey of learningbased automated program repair",
+            "venue": "CoRR, vol. abs/2301.03270, 2023.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "S. Chakraborty",
+                "Y. Ding",
+                "M. Allamanis",
+                "B. Ray"
+            ],
+            "title": "CODIT: code editing with tree-based neural models",
+            "venue": "IEEE Transactions on Software Engineering, vol. 48, no. 4, pp. 1385\u20131399, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Y. Li",
+                "S. Wang",
+                "T.N. Nguyen"
+            ],
+            "title": "Dlfix: Context-based code transformation learning for automated program repair",
+            "venue": "Proceedings of the 42nd International Conference on Software Engineering, 2020, pp. 602\u2013614.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Q. Zhu",
+                "Z. Sun",
+                "Y. Xiao",
+                "W. Zhang",
+                "K. Yuan",
+                "Y. Xiong",
+                "L. Zhang"
+            ],
+            "title": "A syntax-guided edit decoder for neural program repair",
+            "venue": "Proceedings of the 15th Joint Meeting of the European Software Engineering Conference and the ACM SIGSOFT Symposium on the Foundations of Software Engineering, 2021, pp. 341\u2013353.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A. Mastropaolo",
+                "S. Scalabrino",
+                "N. Cooper",
+                "D. Nader-Palacio",
+                "D. Poshyvanyk",
+                "R. Oliveto",
+                "G. Bavota"
+            ],
+            "title": "Studying the usage of text-to-text transfer transformer to support code-related tasks",
+            "venue": "Proceedings of the 43rd IEEE/ACM International Conference on Software Engineering, 2021, pp. 336\u2013347.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "N. Jiang",
+                "T. Lutellier",
+                "L. Tan"
+            ],
+            "title": "CURE: code-aware neural machine translation for automatic program repair",
+            "venue": "Proceedings of the 43rd IEEE/ACM International Conference on Software Engineering, 2021, pp. 1161\u20131173.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "E. Mashhadi",
+                "H. Hemmati"
+            ],
+            "title": "Applying codebert for automated program repair of java simple bugs",
+            "venue": "Proceedings of the 18th IEEE/ACM International Conference on Mining Software Repositories, 2021, pp. 505\u2013509.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Z. Feng",
+                "D. Guo",
+                "D. Tang",
+                "N. Duan",
+                "X. Feng",
+                "M. Gong",
+                "L. Shou",
+                "B. Qin",
+                "T. Liu",
+                "D. Jiang",
+                "M. Zhou"
+            ],
+            "title": "Codebert: A pre-trained model for programming and natural languages",
+            "venue": "Findings of the Association for Computational Linguistics: EMNLP, 2020, pp. 1536\u20131547.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "R. Karampatsis",
+                "C. Sutton"
+            ],
+            "title": "How often do single-statement bugs occur?: The manysstubs4j dataset",
+            "venue": "Proceedings of the 17th International Conference on Mining Software Repositories, 2020, pp. 573\u2013577.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "H. Ye",
+                "M. Martinez",
+                "M. Monperrus"
+            ],
+            "title": "Neural program repair with execution-based backpropagation",
+            "venue": "Proceedings of the 44th IEEE/ACM 44th International Conference on Software Engineering, 2022, pp. 1506\u20131518.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "F. Long",
+                "M.C. Rinard"
+            ],
+            "title": "Automatic patch generation by learning correct code",
+            "venue": "Proceedings of the 43rd Annual ACM SIGPLAN- SIGACT Symposium on Principles of Programming Languages, 2016, pp. 298\u2013312.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "T.W. Reps"
+            ],
+            "title": "Program analysis via graph reachability",
+            "venue": "Information and Software Technology, vol. 40, no. 11-12, pp. 701\u2013726, 1998.",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "S. Chakraborty",
+                "B. Ray"
+            ],
+            "title": "On multi-modal learning of editing source code",
+            "venue": "Proceedings of the 36th IEEE/ACM International Conference on Automated Software Engineering, 2021, pp. 443\u2013455.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "T. Kudo",
+                "J. Richardson"
+            ],
+            "title": "Sentencepiece: A simple and language independent subword tokenizer and detokenizer for neural text processing",
+            "venue": "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing, 2018, pp. 66\u201371.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Gu",
+                "Z. Lu",
+                "H. Li",
+                "V.O.K. Li"
+            ],
+            "title": "Incorporating copying mechanism in sequence-to-sequence learning",
+            "venue": "Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics, 2016.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "S.M. Ghaffarian",
+                "H.R. Shahriari"
+            ],
+            "title": "Neural software vulnerability analysis using rich intermediate graph representations of programs",
+            "venue": "Information Sciences, vol. 553, pp. 189\u2013207, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R.K. Saha",
+                "Y. Lyu",
+                "W. Lam",
+                "H. Yoshida",
+                "M.R. Prasad"
+            ],
+            "title": "Bugs.jar: A large-scale, diverse dataset of real-world java bugs",
+            "venue": "Proceedings of the 15th International Conference on Mining Software Repositories, 2018, pp. 10\u201313.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "R. Just",
+                "D. Jalali",
+                "M.D. Ernst"
+            ],
+            "title": "Defects4j: A database of existing faults to enable controlled testing studies for java programs",
+            "venue": "Proceedings of the 23rd ACM SIGSOFT International Symposium on Software Testing and Analysis, 2014, pp. 437\u2013440.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "F. Madeiral",
+                "S. Urli",
+                "M. de Almeida Maia",
+                "M. Monperrus"
+            ],
+            "title": "BEARS: an extensible java bug benchmark for automatic program repair studies",
+            "venue": "Proceedings of the 26th IEEE International Conference on Software Analysis, Evolution and Reengineering, 2019, pp. 468\u2013478.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "D. Lin",
+                "J. Koppel",
+                "A. Chen",
+                "A. Solar-Lezama"
+            ],
+            "title": "Quixbugs: A multilingual program repair benchmark set based on the quixey challenge",
+            "venue": "Proceedings Companion of the 2017 ACM SIGPLAN International Conference on Systems, Programming, Languages, and Applications: Software for Humanity, 2017, pp. 55\u201356.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Y. Liu",
+                "M. Ott",
+                "N. Goyal",
+                "J. Du",
+                "M. Joshi",
+                "D. Chen",
+                "O. Levy",
+                "M. Lewis",
+                "L. Zettlemoyer",
+                "V. Stoyanov"
+            ],
+            "title": "Roberta: A robustly optimized BERT pretraining approach",
+            "venue": "CoRR, vol. abs/1907.11692, 2019.",
+            "year": 1907
+        },
+        {
+            "authors": [
+                "D. Guo",
+                "S. Ren",
+                "S. Lu",
+                "Z. Feng",
+                "D. Tang",
+                "S. Liu",
+                "L. Zhou",
+                "N. Duan",
+                "A. Svyatkovskiy",
+                "S. Fu",
+                "M. Tufano",
+                "S.K. Deng",
+                "C.B. Clement",
+                "D. Drain",
+                "N. Sundaresan",
+                "J. Yin",
+                "D. Jiang",
+                "M. Zhou"
+            ],
+            "title": "Graphcodebert: Pretraining code representations with data flow",
+            "venue": "Proceedings of the 9th International Conference on Learning Representations, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Raffel",
+                "N. Shazeer",
+                "A. Roberts",
+                "K. Lee",
+                "S. Narang",
+                "M. Matena",
+                "Y. Zhou",
+                "W. Li",
+                "P.J. Liu"
+            ],
+            "title": "Exploring the limits of transfer learning with a unified text-to-text transformer",
+            "venue": "Journal of Machine Learning Research, vol. 21, pp. 140:1\u2013140:67, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Y. Noller",
+                "R. Shariffdeen",
+                "X. Gao",
+                "A. Roychoudhury"
+            ],
+            "title": "Trust enhancement issues in program repair",
+            "venue": "Proceedings of the 44th IEEE/ACM International Conference on Software Engineering, 2022, pp. 2228\u20132240.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "H. Ye",
+                "M. Martinez",
+                "M. Monperrus"
+            ],
+            "title": "Automated patch assessment for program repair at scale",
+            "venue": "Empirical Software Engineering, vol. 26, no. 2, p. 20, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R. Pawlak",
+                "M. Monperrus",
+                "N. Petitprez",
+                "C. Noguera",
+                "L. Seinturier"
+            ],
+            "title": "SPOON: A library for implementing analyses and transformations of java source code",
+            "venue": "Software - Practice and Experience, vol. 46, no. 9, pp. 1155\u20131179, 2016.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "J. Falleri",
+                "F. Morandat",
+                "X. Blanc",
+                "M. Martinez",
+                "M. Monperrus"
+            ],
+            "title": "Fine-grained and accurate source code differencing",
+            "venue": "Proceedings of the 29th ACM/IEEE International Conference on Automated Software Engineering, 2014, pp. 313\u2013324.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Y. Tang",
+                "L. Zhou",
+                "A. Blanco",
+                "S. Liu",
+                "F. Wei",
+                "M. Zhou",
+                "M. Yang"
+            ],
+            "title": "Grammar-based patches generation for automated program repair",
+            "venue": "Findings of the Association for Computational Linguistics, 2021, pp. 1300\u20131305.",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "I. INTRODUCTION\nProgram debugging is known to be an extremely laborintensive and time-consuming task in the software development and maintenance process [1]. To assist software developers in relieving manual debugging efforts, automated program repair (APR), which aims at repairing defective programs without human intervention, has emerged as an important research area in both the software engineering (SE) and artificial intelligence (AI) communities. Over the past decade, a variety of APR approaches [2]\u2013[5] have been proposed to automatically generate patches for bug fixing. Among all traditional approaches, template-based APR [6], [7], which utilizes predefined patterns to transform buggy code snippets into fixed ones, is often regarded as state-of-the-art [8], [9]. However, existing template-based approaches mainly design patterns for specific bug types in a given programming language, which in practice necessitate professional domain knowledge to craft. Therefore, the manually designed templates are challenging to apply to unknown bug types or different programming languages, limiting the effectiveness of APR.\nAssisted by the powerful representation ability of deep learning (DL) models, a recent trend is to leverage neuralbased techniques to automatically learn intricate relationships between buggy and fixed code snippets from massive source\ncode corpus. Based on the naturalness hypothesis of software code [10], the neural program repair (NPR) approaches intuitively formulate such a problem as the neural machine translation (NMT) task that translates defective programs into correct versions [11], [12]. Generally, existing NMTbased NPR systems adopt an encoder-decoder architecture [13], where the encoder extracts the hidden status of buggy code snippets with their surrounding context, and the decoder generates fixed code snippets based on the encoder\u2019s hidden status. Compared with the previous APR approaches, the advantage of NPR approaches lies in being less dependent on professional domain knowledge and additional artifacts (e.g., test suites). Consequently, researchers are concentrating on advanced NPR approaches, which have shown great potential for automatically generating patches using DL-based techniques.\nDespite achieving remarkable performance improvements, existing NPR approaches still have some limitations. First, most NPR models do not fully exploit the contextual information of buggy code snippets. It is vital to delineate what information in the source code should be included in the model input as repair ingredients. However, previous NPR models usually treat the notion of context pertaining to a buggy statement within the corresponding source code in an arbitrary fashion, which neither captures the semantic relationship between the buggy statement and its context nor encompasses essential ingredients for bug fixing. For instance, some NPR models merely take the buggy statement [14] as input and ignore context. Others utilize the enclosing buggy class [15] or the enclosing buggy method [11], [16], [17] as context. For software developers, the context of a buggy statement plays a significant role in understanding the root cause of a bug and determining a potential bug-fixing suggestion. Likewise, for the DL-based NPR models, too much information in the input may introduce noise that decreases the repair performance of the model, and too little information may cause relevant repair ingredient loss or overfitting issues. Thus, collecting contextual information related to the buggy code snippets as model input may be more effective in generating correct patches.\nAnother drawback of current NPR approaches is that the prediction results of many NMT-based NPR models may be consistent with the input buggy code snippets, which we call unaltered patches. The input buggy code snippets frequently\nar X\niv :2\n30 5.\n09 31\n5v 1\n[ cs\n.S E\n] 1\n6 M\nay 2\n02 3\nshare a highly similar vocabulary with the fixed ones, which may cause the model based on NMT architecture to output the same results as the input. Figure 1 shows an example of a buggy code snippet from an open-source GitHub project1. The buggy statement (colored in red) with its context is regarded as the input for the corresponding NPR model, while the model prediction result (colored in gray) is identical to the input buggy statement. Such an unaltered patch fails to be the correct human-written one (colored in green) for the given bug. This phenomenon is unsupervised because it can determine whether a model-generated patch is correct by comparing it with the input buggy statement without knowing the ground truth. Intuitively, when applying a different NPR model to the unaltered patches, there is a considerable possibility of fixing a portion of them and thus further refining the APR process.\nIn summary, an effective NPR strategy should include adequate contextual information as repair ingredients for patch generation, while filtering out the generated unaltered patches for further processing. To that end, we present an ensemble NPR framework called REPEATNPR, which adopts pRogram dEPEndence Analysis with a filTer mechanism, in this paper to address the limitations of existing approaches. Recently, large language models pre-trained on massive code corpus using code-aware objectives have yielded state-of-the-art results on a vast number of code-related SE tasks. Inspired by this, the proposed framework adapts the general pre-trained language model CodeT5 [18] for fixing bugs of single-line type, that is, we adopt CodeT5 as the starting point to train REPEATNPR and fine-tune it for the NPR task.\nSpecifically, we first employ program slicing based on the def-use analysis [19] to extract intra-procedural contextual information in the form of source code token sequences directly related to a buggy statement as its repair ingredients from the program dependence graph (PDG) [20], [21], which explicitly represents both data and control flow dependencies of the corresponding buggy method. In addition, we collect global context according to the ingredients within the intra-procedural contextual information. The slicing-based contextual information is in line with the process of program debugging by\n1https://github.com/alpha-asp/Alpha/commit/11c4adc\nsoftware developers. They commonly start by examining all the ingredients (e.g., variables and method invocations) in the buggy statement and then look through the code to find out where those ingredients are defined, used, and modified for understanding the bug [22]. Thus, such relevant contextual information is helpful for the DL-based models to better reason about the bug-fixing process. To tackle the second limitation, we propose an ensemble approach that utilizes an intuitive filter mechanism to combine different NPR models for bug fixing. The filter mechanism directly filters out the unaltered patches by comparing the former NPR model\u2019s predicted results with the input buggy code snippets and continues to input the corresponding buggy code snippets into the next NPR model for processing. Just as the cross-checking form in the code review scenario will find more bugs than self-reviewing, an ensemble of different NPR models should also obtain better repair performance than using a single NPR model.\nIn this paper, the proposed REPEATNPR framework focuses on single-line bugs written in the Java programming language, which is the most popular task in previous studies [23]. To evaluate REPEATNPR, we first select a large-scale dataset called BFP [11], consisting of single-line bugs that can be fixed by using single-line patches within the corresponding buggy methods, as the source to fine-tune the pre-trained model CodeT5. Extensive experiments are then conducted on five benchmarks to validate the performance of REPEATNPR. The experimental results demonstrate that REPEATNPR can achieve higher accuracy over the state-of-the-art baselines.\nThe main contributions of this paper are as follows: \u2022 We make the first attempt at extracting slicing-based con-\ntextual information through program dependence analysis to enhance the NPR task. \u2022 We propose an ensemble framework that integrates different NPR models via an effective filter mechanism. \u2022 We conduct an extensive evaluation of five commonly used benchmarks to demonstrate the effectiveness of the proposed REPEATNPR framework.\nThe remainder of this paper is organized as follows. We describe the related work in Section II. Section III introduces in detail the proposed framework. We provide the experimental setup in Section IV. Section V shows the analyzing results of our research. We disclose the threats to the validity of our approach in Section VI. Section VII draws conclusions and indicates directions for future work."
+        },
+        {
+            "heading": "II. RELATED WORK",
+            "text": "As a promising research topic, APR has received significant attention from both the SE and AI communities. According to a living APR review [24], researchers have proposed a bunch of APR approaches in the last decade, which can be categorized into two mainstreams: search-based [6], [7], [25]\u2013 [30] and semantics-based [31]\u2013[35]. With the rapid development of DL-based techniques, researchers have begun to pay more attention to NPR approaches [36], [37], which have demonstrated remarkable potential for improving program repair performance. In contrast to traditional APR approaches,\nlearning-based techniques can automatically capture the semantic relationships between parallel bug-fixing pairs.\nTufano et al. [11] harness the power of NMT to translate buggy code snippets into fixed ones. In particular, they abstract the identifiers and literals in the source code to reduce the vocabulary size during the data preprocessing process. SEQUENCER [15] is an end-to-end approach based on sequenceto-sequence (Seq2Seq) learning that employs the long shortterm memory (LSTM) encoder-decoder architecture with copy mechanism to overcome the out-of-vocabulary issue. In addition, SEQUENCER considers the class-level abstract context surrounding the buggy statement as input to capture the longrange dependencies required for patch generation. Chakraborty et al. [38] present a two-stage approach called CODIT to learn code changes for fixing the buggy statements by using an LSTM-based NMT model. DLFix [39] parses the source code to AST and uses a tree-based LSTM to encode the code structures surrounding the bug-fixing changes as contextual information for learning code transformations. Lutellier et al. [16] propose an ensemble approach called CoCoNut that combines convolutional neural networks (CNNs) and contextaware NMT models to fix bugs in multiple programming languages. To better capture the diversity of bug-fixing patterns, CoCoNut introduces a novel context-aware NMT architecture that takes the buggy statement and its surrounding method context as two separate inputs. Different from the above NMTor Seq2Seq learning-based models, Ding et al. [12] implement an edit-based model that performs token-level insertion and deletion operations on the buggy code instead of generating raw tokens of the fixed code. Zhu et al. [40] design Recoder, a syntax-guided edit decoder with a novel provider/decider architecture. Recoder receives the buggy statement with its context, the partial AST, and a tree path from the root node to\na non-terminal node as inputs and embeds them using different encoders to generate edits on the AST of the buggy methods.\nInspired by the success of pre-trained models achieved in the field of natural language processing (NLP), an emerging trend is to build language models pre-trained on large source code corpus to boost the performance of program repair. Mastropaolo et al. [41] empirically investigate the performance of the text-to-text transfer transformer (T5) model on four coderelated tasks (including program repair). The experimental results indicate that the T5 model can substantially boost the program repair performance. In a follow-up study of CoCoNut [16], Jiang et al. [42] propose CURE that modifies the NMTbased architecture by using a pre-trained GPT module to learn contextual embedding. Mashhadi et al. [43] apply a pretrained model CodeBERT [44] to fix simple Java bugs on the ManySStuBs4J dataset [45].\nSpecifically, REPEATNPR utilizes the pre-trained language model to automatically learn bug-fixing patterns from sliced context without necessitating professional domain knowledge. Furthermore, existing NPR models simply consider the context arbitrarily. In contrast, REPEATNPR employs the program dependence analysis technique to enhance the NPR task by extracting slicing-based contextual information from PDG. At last, REPEATNPR eliminates the unaltered patches via an effective filter mechanism that aims to take advantage of the ensemble performance of different NPR models."
+        },
+        {
+            "heading": "III. METHODOLOGY",
+            "text": "To address the limitations mentioned in Section I, we present the detailed design (as shown in Figure 2) of our proposed neural APR framework REPEATNPR in this section, which mainly consists of three stages: input processing, model training, and patch filtering. We first employ static program\nslicing on the PDG to extract the relevant contextual information of the corresponding buggy statement. Then, we leverage a general pre-trained language model as the model skeleton to gain the powerful representation learning ability and finetune it using the slicing-based contextual inputs. Finally, we integrate different NPR models via an intuitive but effective filter mechanism to filter out the generated unaltered patches.\nA. Input Processing\nExisting NPR approaches [11], [16], [17], [42], [46] usually treat the context of a buggy statement in an arbitrary manner, such as by directly considering the whole buggy method or a limited number of lines of code surrounding the buggy statement, which neither captures the semantic relationship between the buggy statement and its context nor includes sufficient contextual information as repair ingredients. Thus, we propose to utilize program slicing techniques to extract contextual information from the graphical representations of source code (i.e., PDGs). Unlike existing approaches, we consider the control and data dependencies of the corresponding buggy statement from the buggy method, which is reported to help capture the bug-fixing patterns [22], [47].\n1) Program Dependence Analysis: The graphical representations of source code are a fairly used data structure in the field of program analysis [48]. In this paper, we leverage PDG for program analysis to examine the buggy statement and all the ingredients (e.g., variable usages and method invocations). The PDG explicitly represents the dependencies among statements and predicates, which consists of two subgraphs: the data dependence graph (DDG) and the control dependence graph (CDG). The directed edges in DDG denote a data flow from the source statement to the destination statement, reflecting the influence of one variable on another (i.e., variable definition, usage, or modification). Similarly, each vertex in CDG has a control dependence on its parent vertex. Thus, the control dependency edges reflect the influence of predicates\non the values of variables. The upper left corner of Fig.3 corresponds to a buggy code snippet example, in which Line 2 of the method parse in the EditCommandParser class is a buggy statement that needs to be fixed. To illustrate, the definition of argsTokenizer in statement S2 can lead to its use in statement S6. In this case, a data dependence edge S2 99K S6 is present in the PDG (shown on the right side of Fig.3) of the buggy method.\n2) Dependency Context Extraction: To determine all contexts that affect the buggy statement, we introduce an algorithm for extracting dependency context based on the def-use analysis of variables within the given node Nbuggy. Lines 2 to 19 in the introduced algorithm detailed illustrate the steps of extracting contextual statements by leveraging program slicing (both backward and forward) and ingredient matching. Specifically, we first extract a set of variables that are accessed in Nbuggy. For each variable var used in Nbuggy, we slice a set of nodes Ncontext from PDGbuggy, including both the nodes that have effect on var and those affected by var. Then, we examine all the ingredients in Ncontext and store them in varUsageSet and methodInvocationSet respectively. In addition, we collect all the public fields fieldSet and the signatures of other public methods methodSignatureSet in the buggy class from ASTbuggy. If the elements in fieldSet or methodSignatureSet can match with any of the ingredients in Ncontext, the corresponding AST node of such element is also added to Ncontext as contextual information. The rationale that motivated this inclusion is that generating a correct patch may require inspecting the status of the used public fields or the argument list of the invoked public methods. Finally, the algorithm outputs the sliced context statements concerning the slicing criterion (i.e., the buggy statement) as repair ingredients to generate the inputs for REPEATNPR. In the illustrated example of Fig.3, given the buggy statement S2, the algorithm extracts the sliced statements {S1, S3, S6, S7} as intra-procedural context and the public method\nparseTagsForEdit invoked in S7 as global context. The extracted dependency context contains the repair ingredient \"PREFIX_DEADLINE\", thus making it more likely to generate the correct patch for fixing the buggy statement.\n3) Context Statement Tokenization: At this stage, REPEATNPR prepares the collected context statements in such a manner that they can be directly fed into the DL models based on an encoder-decoder architecture. The input of REPEATNPR is composed of three parts: the buggy statement, the intra-procedural context, and the global context. Existing approaches [16], [42] attempt to encode different parts of the input separately and then fuse the encoding representations. However, it is still a challenge to effectively eliminate the semantic gaps between different encoders and merge the separated encoding vectors. Recently, the empirical results [49] indicate that the best strategy is to encode all of the different input parts using a single encoder. In light of this, REPEATNPR employs a consolidated format to combine the buggy statement and its context into one sequence with special isolated tokens. As shown in the lower left corner of Fig.3, REPEATNPR first separates each content token by a single whitespace. Then, different parts of the input are isolated by different abbreviate tokens (e.g., \u2018\u2018<BOL>\u2019\u2019 denotes the beginning of a buggy statement). REPEATNPR also inserts a special token \u2018\u2018<SEP>\u2019\u2019 for each sliced statement in the intra-procedural context to inform the end-of-line information. In addition, REPEATNPR utilizes the sentence-piece tokenizer [50] to alleviate the open-vocabulary problem [51]. In this manner, the low-frequency tokens can be synthesized more easily, thus making the program repair task more tractable."
+        },
+        {
+            "heading": "B. Model Training",
+            "text": "As illustrated in the right side of Fig.2, REPEATNPR takes the tokenized contextual sequences as input and works on three\ndifferent pieces of content: 1) the global context that contains information of public fields and method signatures; 2) the intra-procedural context sliced from the buggy method; 3) the buggy statement. We begin with the pre-trained model CodeT5 [18] serving as the reference architecture for the proposed REPEATNPR framework. Then, we perform the fine-tuning on the task of program repair. At the inference step, the decoder sequentially predicts the candidate patches.\n1) Model Architecture: CodeT5 is a Seq2Seq language model pre-trained on the colossal clean crawled corpus, which consists of an encoder and a decoder. In the context of NPR, an encoder takes a sequence of code tokens as input to map the buggy context code X = [x1, . . . , xm] into a fixedlength hidden state, while the decoder generates the output sequence of tokens Y = [y1, . . . , yn] by taking the hidden state vector as input. Given an input sequence, CodeT5 first obtains the contextualized vector representations for input tokens by projecting them into an embedded vector space through the embedding and positional encoding layer. Then, the vector is fed into the encoder to capture the long-term dependencies from different perspectives of the input sequences. The encoder comprises a stack of Transformer layers, each of which contains a multi-head self-attention layer followed by a position-wise fully connected feed-forward network. The decoder in CodeT5 is a Transformer-based sequential left-toright decoder that generates one new token at a time until a special stop token is reached. The decoder is similar in structure to the encoder except for the usage of the mask mechanism in multi-head attention, which forces to attend only to past tokens and avoids distraction and information leakage of the subsequent tokens in training.\n2) Fine-Tuning: To learn generic bug-fixing representations, we leverage the pre-trained model CodeT5, which has achieved remarkable performance on a variety of NLP and code-related SE tasks, as the starting point to train REPEATNPR. We then fine-tune the pre-trained model for the task of program repair. Fine-tuning techniques can optimize the pretrained parameters to make them more suitable for downstream tasks. Specifically, we represent the program repair task in a \u201ctext-to-text\u201d format, where the input is the tokenized buggy contextual sequence, and the output is the expected humanwritten patch. The fine-tuning process is performed using the training corpus of BFP dataset D, and each instance within D can be formally represented as a bug-fixing pair di = {b, f}, where b = (c,m, s) comprises the global context obtained from the buggy class c, the intra-procedural context sliced from the buggy method m and the buggy statement s, and f denotes the human-written patch. The fine-tuning objective is to minimize the cross-entropy loss by learning the mapping b \u2192 f as a conditional probability p(f |b).\n3) Patch Inference: After fine-tuning CodeT5 for the program repair task, REPEATNPR can learn latent bug-fixing patterns and generate correct patches. During inference, REPEATNPR represents the given buggy statement with three pieces of token sequence: one for the given statement, the other two for its context. REPEATNPR follows the typical NPR\nprocess and employs beam search to generate the candidate patches sequentially. Once the decoder reaches the stop token, REPEATNPR outputs the top-ranked patches for the given buggy statement, where the number of generated candidate patches is configured as beam width."
+        },
+        {
+            "heading": "C. Patch Filtering",
+            "text": "The lower left corner of Fig.2 shows the procedure of patch filtering. To avoid the unaltered patching issue existing in the NPR task, REPEATNPR proposes an intuitive mechanism to filter out the unaltered patches generated by the pre-trained model CodeT5 for a given bug and then integrates a different NPR model into REPEATNPR to re-generate patches for the bug. As discussed in Section I, the unaltered patching issue frequently occurs when using DL-based models for the APR task since the buggy and fixed code snippets are highly similar in the context of fixing single-line bugs. Such an unsupervised phenomenon can be determined by simply comparing the model-generated patches with the input buggy code snippets. In another word, we can directly filter out a portion of the incorrect patches without knowing the human-written ground truth. The goal of patch filtering is to filter out the unaltered patches from the generated candidate patches of the former model and utilize a new NPR model to work on them.\nSpecifically, given a buggy input, the candidate patches generated by CodeT5 in the first stage can be divided into three categories: correct patches (denoted as CPCodeT5), unaltered patches (denoted as UPCodeT5), and other incorrect patches that are inconsistent with the input buggy code snippet (denoted as IPCodeT5). Then, REPEATNPR filters out the UPCodeT5 and feeds them into another NPR model in the next stage, whereas the CPCodeT5 and IPCodeT5 remain as the final suggested patches. At last, the new NPR model will continue to fix the buggy code snippets among UPCodeT5 with the newlygenerated correct patches CPnewNPR. Thus, the correct patches produced by REPEATNPR can be formulated as follow:\nCPRepeatNPR = CPCodeT5 + UPCodeT5 \u2229 CPnewNPR"
+        },
+        {
+            "heading": "IV. EXPERIMENTAL SETUP",
+            "text": ""
+        },
+        {
+            "heading": "A. Experimental Subjects",
+            "text": "To evaluate REPEATNPR, we require a large-scale corpus of real-world bug-fixing pairs to fine-tune CodeT5. In this paper, we select the BFP dataset [11] as our original data source, which consists of 787k bug-fixing commits extracted from the GitHub repositories. Each instance is composed of both the buggy and fixed versions of a Java method. We follow the steps described in Section III-A to construct our adapted dataset. First, we utilize PROGEX [52], a crossplatform tool for extracting well-known graphical program representations from source code, to parse each Java method into a corresponding PDG for dependency context extraction. In this step, we filter out the instances that failed to be parsed by PROGEX, meanwhile, we truncate the instances whose length is longer than 512 after subword tokenization. Next, we further split the BFP dataset into training, validation, and\ntesting sets by the ratio of 8:1:1. The dataset split is performed carefully by taking into account possible data leakage. To be specific, any two instances belonging to the same GitHub repository cannot be put in two different sets (e.g., one in training and the other in testing). To enrich the diversity of benchmarks for evaluation, we add four benchmarks widely used in the APR task to our testing set and perform the same procedure of input processing. The detailed statistics for the established benchmarks are listed in Table I. In total, we collect 141195 bug-fixing pairs in the training set, 13523 in the validation set, and 13635 in the testing set. Note that each instance represents a single-line bug that can be fixed by using a single-line patch within one Java method."
+        },
+        {
+            "heading": "B. Experimental Design",
+            "text": "In this section, we introduce the selected baselines, implementation details, and how to assess the generated patches.\n1) Baseline: To evaluate the performance of our proposed framework, we compare REPEATNPR with the following ten baselines that are related to our work: \u2022 CODIT [38]: a two-stage approach that learns code\nchanges for bug fixing by using a tree-based NMT model. \u2022 Edits [12]: an edit-based model that performs token-level\ninsertion and deletion operations on buggy code. \u2022 Tufano [11]: an RNN-based model that can translate\nbuggy code snippets into fixed ones. \u2022 Recoder [40]: a syntax-guided decoder to generate edits\non the AST of the buggy method. \u2022 CoCoNut [16]: an ensemble approach for fixing bugs\nin multiple programming languages that combines CNNs and context-aware NMT models. \u2022 SEQUENCER [15]: a Seq2Seq learning-based approach for end-to-end program repair that employs the LSTM encoder-decoder architecture with a copy mechanism. \u2022 RoBERTa [57]: a Transformer-based model pre-trained on a large corpus of natural language texts in a selfsupervised fashion. \u2022 CodeBERT [44]: a bimodal pre-trained model for both programming and natural language that learns generalpurpose representations to support code-related SE tasks. \u2022 GraphCodeBERT [58]: a graph-based pre-trained model for the programming language that considers data-flow information along with code sequences. \u2022 CodeT5 [18]: a pre-trained encoder-decoder model that better leverages the code semantics conveyed from the developer-assigned identifiers.\n2) Implementation: We implement REPEATNPR with the open-source framework PyTorch2 and initialize REPEATNPR with the pre-trained CodeT5-small checkpoint3 from the Huggingface\u2019s website. We adopt the same architecture as T5 [59] model, consisting of 8-headed attention and 6 layers in both the encoder and decoder. We set the maximum source and target sequence lengths both to 512 and the batch size to 32. For the implementation of the selected baseline models, we use the publicly available source codes provided by the authors or the publicly released checkpoints. During the fine-tuning step, we train REPEATNPR for a maximum of 20 epochs. After each epoch, we compute the loss on the validation set and save the model with the minimum validation loss. To avoid over-fitting and save computation costs, we perform early stopping if the validation performance does not improve for five consecutive epochs. During the inference stage, we set both the beam size and candidate number to 10, which means that REPEATNPR will generate 10 top-ranked candidate patches for each perfectly fault-localized instance in the testing set for validation. Prior studies usually choose a larger candidate number for evaluation (e.g., Recoder [40] generates 100 candidate patches). However, recent work [60] shows that most developers are only willing to review up to 10 patches. Thus, we also report the evaluation results within the top-10 candidates generated by each baseline in this paper to draw fair conclusions. During the patch filtering step, we integrate SEQUENCER, which is considered the best NPR model in a recent empirical study [23], into REPEATNPR with our filter mechanism for patch re-generation. We conduct experiments on 4 Nvidia GTX 1080Ti GPUs of 12 GB memory.\n3) Patch Assessment: Existing APR approaches typically use test suites for patch validation, which run the humanwritten test suite against each candidate patch to find plausible patches that can pass all the test cases. Due to the overfitting issue, such plausible patches need further manual assessment to confirm their correctness. However, the empirical results [61] indicate that manual patch assessment 1) needs expertise to understand the semantics of the program under repair, 2) may introduce biases to some extent, and 3) can be undoable when the scale is large. To avoid human bias and reduce manual effort, we use a more objective way in our experiment to assess the correctness of each generated candidate patch by checking if it is identical to the human-written one, that is, we use the exact match metric to evaluate the model performance on the testing set in this paper."
+        },
+        {
+            "heading": "V. RESULTS AND ANALYSIS",
+            "text": "In this section, we present the experimental results for measuring the performance of our proposed framework and answering the following three research questions (RQs): \u2022 RQ1: How does REPEATNPR perform compared with\nthe state-of-the-art baselines? \u2022 RQ2: How does each component in REPEATNPR impact\nthe performance of bug fixing?\n2https://pytorch.org 3https://huggingface.co/Salesforce/codet5-small\n\u2022 RQ3: What is the quality of the candidate patches generated by REPEATNPR?"
+        },
+        {
+            "heading": "A. Answering RQ1",
+            "text": "To answer this question, we compare REPEATNPR with ten state-of-the-art baselines on five commonly used benchmarks. To make a fair comparison, we uniformly use the training set of BFP to train or fine-tune the baselines with corresponding input representations via the same training strategy and hyperparameter settings described in Section IV-B2.\n1) Experimental Metric Evaluation: Table II reports the number of correct patches that are identical to the humanwritten ground truth generated by REPEATNPR and the ten baselines. The best result for each benchmark is marked in bold. As shown in Table II, REPEATNPR substantially outperforms the ten baselines on all five benchmarks. Specifically, REPEATNPR produces more correct patches than the best baseline model CodeT5 by 15.9% in the BFP benchmark, 12.0% in the Bugs.jar benchmark, 22.2% in the Defects4J benchmark, 62.5% in the Bears benchmark, 7.1% in the QuixBugs benchmark. As exact match is a strict metric, such improvements prove the superiority of REPEATNPR in the NPR task. We also observe that the pre-trained models are more promising than those trained from scratch. For instance, CodeT5 improves SEQUENCER by 14.3% in the BFP benchmark and 51.5% in the Bugs.jar benchmark. Since the two models have a similar architecture and a comparable amount of parameters, such improvements demonstrate that using pre-training techniques is advantageous for learning bugfixing patterns for patch generation. Additionally, the Seq2Seq learning-based models (i.e., REPEATNPR, CodeT5, and SEQUENCER) can obtain better results than other baselines, which illustrates the equal importance of correctly understanding the buggy input and generating the candidate patches.\n2) The Impact of Fixing Rate under Different Candidate Numbers: We further investigate the fixing rates of each corresponding model under different candidate numbers on the BFP benchmark (12224 bugs). We set the candidate numbers from 1 to 10, and the fixing rate denotes the ratio of exact match predictions. Note that fixing one bug under candidate number k indicates that at least one of the k model-generated candidate patches is identical to the human-written ground truth. As it\ncan be seen in Fig.4, REPEATNPR consistently outperforms the ten baselines under all candidate numbers on the BFP benchmark. As the candidate number increases, we notice that the performance gains obtained by different NPR models may be inconsistent, even if they are trained with the unified dataset. For example, when the candidate number is limited to 1, Recoder relatively outperforms SEQUENCER by 21.4% in terms of the fixing rate. But when the candidate number reaches 10, the number of correct patches that SEQUENCER can generate is almost twice that of Recoder.\n3) Answer to RQ1: In summary, REPEATNPR significantly outperforms the baselines in terms of the exact match metric. Such improvements demonstrate the effectiveness of REPEATNPR in the APR task. Our observations also indicate that REPEATNPR is capable of generating more correct patches under different candidate numbers than the baselines."
+        },
+        {
+            "heading": "B. Answering RQ2",
+            "text": "To answer this question, we evaluate the impact of different components (i.e., program dependence analysis and filter mechanism) in the design of REPEATNPR by conducting ablation experiments. For a fair comparison, the training strategy and the hyper-parameter settings are consistent with those described in Section IV-B2.\n1) Ablation Study: Table III lists the results with each row representing one model and the number of correct patches that such a model can generate for each benchmark. The best result is marked in bold. To show how each component improves the number of correctly generated patches, we start with the basic pre-trained model CodeT5, which is fine-tuned on the original BFP dataset without using program dependence analysis A and filter mechanism F . When we augment CodeT5 with component F , the ablated model CodeT5F respectively repairs 88, 6, 1, 3, and 0 more bugs for the five benchmarks. When we add component A to CodeT5, the number of correct patches generated by the ablated model CodeT5A for the five benchmarks is respectively 240, 8, 6, 7, and 1 more than that of CodeT5. Generally, the correct patches generated by the three ablated models are fewer than REPEATNPR, which demonstrates the necessity of each component. Figure 5\ndepicts a bug-fixing example from BFP only correctly patched by REPEATNPR. In this case, the predicate of the buggy statement is redundant according to its context. Thus, a correct patch needs to remove the entire body of the if statement. We can observe that the two ablated models without program dependence analysis (i.e., CodeT5 and CodeT5F ) generate the same incorrect patch that is semantically equivalent with the buggy statement, whereas CodeT5A generates an unaltered patch. Therefore, by further applying component F on CodeT5A, REPEATNPR can successfully produce the correct patch that is identical to the human-written one.\n2) The Impact of Program Dependence Analysis on PreTrained Models: We further investigate the fixing rate of each\npre-trained model when using dependency context as input on the BFP benchmark. Table IV presents the comparison results with each pre-trained model comprising two lines of experimental results, in which the first line shows the results of the model that is fine-tuned without using the contextual information based on the program dependence analysis, and the second line shows the results of using such information. The Fix@k metric denotes that a correct patch for a given bug should be among the top-k generated ones. As shown in Table IV, we can observe that providing the dependency context as repair ingredients contributes to improving the bugfixing performance of all the pre-trained models. Among the four pre-trained models, CodeT5 gains the most performance improvements from the input contextual information. This is because CodeT5 is an encoder-decoder model that can leverage the code semantics conveyed from the developer-assigned identifiers to better derive generic representations, whereas the encoder-only pre-trained models (e.g., CodeBERT) treat the source code in the same way as natural language, neglecting the special characteristics of code. Figure 6 demonstrates a bug that can only be fixed by CodeT5A. As shown in Fig.6, the sliced global context provides a hint that variable stepNumber is used to track the current step, thus guiding CodeT5A to generate the correct patch.\n3) The Impact of the Order and Quantity of Models on Filter Mechanism: We first analyze the impact of models\u2019 order on the filter mechanism by comparing FCodeT5A+SRA and FSRA+CodeT5A (SR is short for SEQUENCER). Then, we further integrate a new NPR model GraphCodeBERTA (short as GCBA) into REPEATNPR to evaluate to what extent the models\u2019 quantity impacts the performance of the filter mechanism. As it can be seen in Table V, the fixing rates decrease\nsimultaneously when exchanging the models\u2019 order, which indicates that the order change may affect the performance of bug fixing. As for the models\u2019 quantity, by comparing the results of CodeT5A, FCodeT5A+SRA and FCodeT5A+SRA+GCBA , we can see that the fixing rates can be improved or remain the same by integrating new NPR models into REPEATNPR. Nevertheless, the performance improvement has decreased with the increase in the models\u2019 quantity. A possible reason may be that there is an overlap between the correct patches generated by each model. We will discuss this phenomenon in Section V-C2.\n4) Answer to RQ2: To sum up, all components of REPEATNPR can contribute to performance improvement. Specifically, collecting the dependency context as repair ingredients can better exploit the powerful representation learning ability of the pre-trained model. Meanwhile, the proposed filter mechanism can further increase the number of correct patches by making use of the ensemble performance of different NPR models to eliminate the generated unaltered patches."
+        },
+        {
+            "heading": "C. Answering RQ3",
+            "text": "To answer this question, we manually inspect the generated candidate patches for further evaluation. The evaluation is split into two aspects: 1) analyzing the bug types fixed in the generated correct patches; 2) discussing the overlapping phenomenon among the generated correct patches.\n1) Bug Types Evaluation: We first compute the difference between two ASTs generated by Spoon [62] using the Gumtree algorithm [63]. In total, we classify the bugs into four types, that is Simple Delete, Simple Insert, Simple Replace, and Mixed, according to the edit operations needed to transform one buggy statement into its fixed version. Table VI lists the comparison results with each row representing one model and the number of correct patches that such a model can generate for each bug type on the BFP benchmark. The best result is marked in bold. The statistic results shown in Table VI indicate that existing NPR models do well in fixing bugs that only need deletion edit operations, but are weak in fixing the more complex ones. That makes sense because the insert and replace edit operations require the model to search for additional tokens to fix the given bug. Specifically, Recoder performs the best on generating code-removal patches, while REPEATNPR outperforms all the baselines in fixing the other\nthree types of bugs. Overall, REPEATNPR can achieve better or comparable performance than the baseline models in fixing both simple and complex bugs.\n2) Overlapping Phenomenon Evaluation: As illustrated in Fig.7, each row lists the overlapping ratio of correct patches generated for the BFP benchmark between one NPR model and the other models, while the diagonal indicates the number of unique correct patches generated by each model. For instance, 52% of the correct patches generated by REPEATNPR (row 12) can also be fixed by SEQUENCER (column 7). And there are 390 bugs (row 12, column 12) that can only be fixed by REPEATNPR. According to the results in Fig.7, we observed that the better the repair performance of a model, the higher the overlapping patching rate between it and other models. Regarding the results in Table II, we can find that our proposed framework REPEATNPR, CodeT5, and SEQUENCER are the top three models evaluated on the BFP benchmark. Relatively, the overlapping rate of other models with the three ones is much higher. The possible reason for this phenomenon may be that the DL-based approaches mostly adopt similar network architectures and inference paradigms. Furthermore, the number of unique correct patches generated by REPEATNPR is larger than that of other baselines (except Recoder). As is discussed in Section II, the possible reason is that Recoder is designed to generate edits on the AST of the\nbuggy methods, which is different from the NMT- or Seq2Seq learning-based approaches. Nevertheless, regarding the results we obtained in Table VI, Recoder tends to fix bugs of a specific type (i.e., Simple Delete)."
+        },
+        {
+            "heading": "VI. THREATS TO VALIDITY",
+            "text": "In this section, we illustrate the main threats to the validity of our approach, which are listed as follows:\n\u2022 External threat: The quality of the selected experimental subjects and the generalizability of REPEATNPR are the principal threats to external validity in this paper. First, we use the mainstream dataset BFP for fine-tuning as previous studies [11], [18], [23], [64]. We remove all duplicate instances between the training and testing sets to avoid the data leakage issue. Second, REPEATNPR has been evaluated in Java bugs. Besides, the designed components in REPEATNPR are language-agnostic and can be applied to other programming languages. \u2022 Internal threat: It is widely known that DL-based models are sensitive to hyper-parameters. Thus, using a suboptimal hyper-parameter can pose an internal threat to the validity of REPEATNPR. Due to the limitation of computational resources, we cannot thoroughly explore optimal hyper-parameters in this paper. Since Raffel et al. [59] have explored effective settings of hyper-parameters through extensive experiments in previous work, we use the same hyper-parameters described in their paper. We acknowledge that there might be room for further improvement through additional tuning. \u2022 Construct threat: In this paper, the experimental metric used for model evaluation is referred to as the construct threat. We adopt the exact match metric to assess the correctness of the generated candidate patches. Although such a metric does not represent human judgment, it is a strict and objective metric that can be used to quickly and quantitatively evaluate the model performance. In the future, we will conduct more human evaluations."
+        },
+        {
+            "heading": "VII. CONCLUSION AND FUTURE WORK",
+            "text": "In this paper, we propose a novel NPR framework called REPEATNPR that adapts a state-of-the-art encoder-decoder language model for fixing single-line Java bugs. To accurately capture the semantic relationship between the buggy statement and its context, we make the first attempt to leverage program dependence analysis to improve the NPR task by extracting slicing-based contextual information as repair ingredients from PDG. Additionally, we propose an intuitive but effective filter mechanism to eliminate the unaltered patches by taking advantage of the ensemble performance of different NPR models. Empirical results demonstrate that REPEATNPR outperforms the state-of-the-art approaches on five widely used benchmarks in terms of the exact match metric. In the future, we plan to expand the program analysis techniques to collect project-specific knowledge for bug fixing. Since the PDG and AST exist in most programming languages, we can extend REPEATNPR with small modifications to support new target languages. Furthermore, we will design a better filter mechanism that can determine more incorrect patches (except the unaltered ones) without comparing them with the humanwritten ground truth."
+        }
+    ],
+    "title": "Neural Program Repair with Program Dependence Analysis and Effective Filter Mechanism",
+    "year": 2023
+}

@@ -1,0 +1,944 @@
+{
+    "abstractText": "Expressive text-to-speech aims to generate high-quality samples with rich and diverse prosody, which is hampered by dual challenges: 1) prosodic attributes in highly dynamic voices are difficult to capture and model without intonation; and 2) highly multimodal prosodic representations cannot be well learned by simple regression (e.g., MSE) objectives, which causes blurry and over-smoothing predictions. This paper proposes Prosody-TTS, a two-stage pipeline that enhances prosody modeling and sampling by introducing several components: 1) a self-supervised masked autoencoder to model the prosodic representation without relying on text transcriptions or local prosody attributes, which ensures to cover diverse speaking voices with superior generalization; and 2) a diffusion model to sample diverse prosodic patterns within the latent space, which prevents TTS models from generating samples with dull prosodic performance. Experimental results show that Prosody-TTS achieves new state-of-the-art in text-to-speech with natural and expressive synthesis. Both subjective and objective evaluation demonstrate that it exhibits superior audio quality and prosody naturalness with rich and diverse prosodic attributes. 1",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Rongjie Huang"
+        },
+        {
+            "affiliations": [],
+            "name": "Chunlei Zhang"
+        },
+        {
+            "affiliations": [],
+            "name": "Yi Ren"
+        },
+        {
+            "affiliations": [],
+            "name": "Zhou Zhao"
+        },
+        {
+            "affiliations": [],
+            "name": "Dong Yu"
+        }
+    ],
+    "id": "SP:6ec1e359ae52b65f0d0eb4a83f4bc6a1c863264c",
+    "references": [
+        {
+            "authors": [
+                "Alan Baade",
+                "Puyuan Peng",
+                "David Harwath."
+            ],
+            "title": "Mae-ast: Masked autoencoding audio spectrogram transformer",
+            "venue": "arXiv preprint arXiv:2203.16691.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Alexei Baevski",
+                "Yuhao Zhou",
+                "Abdelrahman Mohamed",
+                "Michael Auli"
+            ],
+            "title": "wav2vec 2.0: A framework for self-supervised learning of speech representations",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Carlos Busso",
+                "Murtaza Bulut",
+                "Chi-Chun Lee",
+                "Abe Kazemzadeh",
+                "Emily Mower",
+                "Samuel Kim",
+                "Jeannette N Chang",
+                "Sungbok Lee",
+                "Shrikanth S Narayanan."
+            ],
+            "title": "Iemocap: Interactive emotional dyadic motion capture database",
+            "venue": "Language resources",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "Moacir A Ponti."
+            ],
+            "title": "Yourtts: Towards zero-shot multi-speaker tts and zero-shot voice conversion for everyone",
+            "venue": "International Conference on Machine Learning, pages 2709\u20132720. PMLR.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Mingjian Chen",
+                "Xu Tan",
+                "Bohan Li",
+                "Yanqing Liu",
+                "Tao Qin",
+                "Sheng Zhao",
+                "Tie-Yan Liu."
+            ],
+            "title": "Adaspeech: Adaptive text to speech for custom voice",
+            "venue": "arXiv preprint arXiv:2103.00993.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Hyeong-Seok Choi",
+                "Juheon Lee",
+                "Wansoo Kim",
+                "Jie Lee",
+                "Hoon Heo",
+                "Kyogu Lee."
+            ],
+            "title": "Neural analysis and synthesis: Reconstructing speech from selfsupervised representations",
+            "venue": "Advances in Neural Information Processing Systems, 34:16251\u201316265.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Prafulla Dhariwal",
+                "Alex Nichol."
+            ],
+            "title": "Diffusion models beat gans on image synthesis",
+            "venue": "arXiv preprint arXiv:2105.05233.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Rinon Gal",
+                "Yuval Alaluf",
+                "Yuval Atzmon",
+                "Or Patashnik",
+                "Amit H Bermano",
+                "Gal Chechik",
+                "Daniel CohenOr."
+            ],
+            "title": "An image is worth one word: Personalizing text-to-image generation using textual inversion",
+            "venue": "arXiv preprint arXiv:2208.01618.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Itai Gat",
+                "Felix Kreuk",
+                "Ann Lee",
+                "Jade Copet",
+                "Gabriel Synnaeve",
+                "Emmanuel Dupoux",
+                "Yossi Adi."
+            ],
+            "title": "On the robustness of self-supervised representations for spoken language modeling",
+            "venue": "arXiv preprint arXiv:2209.15483.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yuan Gong",
+                "Cheng-I Lai",
+                "Yu-An Chung",
+                "James Glass."
+            ],
+            "title": "Ssast: Self-supervised audio spectrogram transformer",
+            "venue": "Proceedings of the AAAI Conference on Artificial Intelligence, volume 36, pages 10699\u201310709.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Kaiming He",
+                "Xinlei Chen",
+                "Saining Xie",
+                "Yanghao Li",
+                "Piotr Doll\u00e1r",
+                "Ross Girshick."
+            ],
+            "title": "Masked autoencoders are scalable vision learners",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 16000\u201316009.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Jonathan Ho",
+                "Ajay Jain",
+                "Pieter Abbeel"
+            ],
+            "title": "Denoising diffusion probabilistic models",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Wei-Ning Hsu",
+                "Benjamin Bolte",
+                "Yao-Hung Hubert Tsai",
+                "Kushal Lakhotia",
+                "Ruslan Salakhutdinov",
+                "Abdelrahman Mohamed."
+            ],
+            "title": "Hubert: Self-supervised speech representation learning by masked prediction of hidden units",
+            "venue": "IEEE/ACM Transactions on Audio,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Kuan Po Huang",
+                "Yu-Kuan Fu",
+                "Yu Zhang",
+                "Hungyi Lee."
+            ],
+            "title": "Improving distortion robustness of self-supervised speech processing tasks with domain adaptation",
+            "venue": "arXiv preprint arXiv:2203.16104.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Rongjie Huang",
+                "Feiyang Chen",
+                "Yi Ren",
+                "Jinglin Liu",
+                "Chenye Cui",
+                "Zhou Zhao."
+            ],
+            "title": "Multi-singer: Fast multi-singer singing voice vocoder with a largescale corpus",
+            "venue": "Proceedings of the 29th ACM International Conference on Multimedia, pages 3945\u2013",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Rongjie Huang",
+                "Chenye Cui",
+                "Feiyang Chen",
+                "Yi Ren",
+                "Jinglin Liu",
+                "Zhou Zhao",
+                "Baoxing Huai",
+                "Zhefeng Wang."
+            ],
+            "title": "Singgan: Generative adversarial network for high-fidelity singing voice generation",
+            "venue": "Proceedings of the 30th ACM International Confer-",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Rongjie Huang",
+                "Max WY Lam",
+                "Jun Wang",
+                "Dan Su",
+                "Dong Yu",
+                "Yi Ren",
+                "Zhou Zhao."
+            ],
+            "title": "Fastdiff: A fast conditional diffusion model for high-quality speech synthesis",
+            "venue": "arXiv preprint arXiv:2204.09934.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Rongjie Huang",
+                "Mingze Li",
+                "Dongchao Yang",
+                "Jiatong Shi",
+                "Xuankai Chang",
+                "Zhenhui Ye",
+                "Yuning Wu",
+                "Zhiqing Hong",
+                "Jiawei Huang",
+                "Jinglin Liu"
+            ],
+            "title": "Audiogpt: Understanding and generating speech",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Rongjie Huang",
+                "Zhou Zhao",
+                "Huadai Liu",
+                "Jinglin Liu",
+                "Chenye Cui",
+                "Yi Ren."
+            ],
+            "title": "Prodiff: Progressive fast diffusion model for high-quality text-to-speech",
+            "venue": "Proceedings of the 30th ACM International Conference on Multimedia, pages 2595\u20132605.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Keith Ito."
+            ],
+            "title": "The lj speech dataset",
+            "venue": "https:// keithito.com/LJ-Speech-Dataset/.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Tom Kenter",
+                "Vincent Wan",
+                "Chun-An Chan",
+                "Rob Clark",
+                "Jakub Vit."
+            ],
+            "title": "Chive: Varying prosody in speech synthesis with a linguistically driven dynamic hierarchical conditional variational network",
+            "venue": "International Conference on Machine Learning, pages",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Jaehyeon Kim",
+                "Sungwon Kim",
+                "Jungil Kong",
+                "Sungroh Yoon."
+            ],
+            "title": "Glow-tts: A generative flow for text-to-speech via monotonic alignment search",
+            "venue": "Advances in Neural Information Processing Systems, 33:8067\u20138077.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jaehyeon Kim",
+                "Jungil Kong",
+                "Juhee Son."
+            ],
+            "title": "Conditional variational autoencoder with adversarial learning for end-to-end text-to-speech",
+            "venue": "International Conference on Machine Learning, pages 5530\u20135540. PMLR.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Jungil Kong",
+                "Jaehyeon Kim",
+                "Jaekyoung Bae."
+            ],
+            "title": "Hifi-gan: Generative adversarial networks for efficient and high fidelity speech synthesis",
+            "venue": "Proc. of NeurIPS.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Robert Kubichek."
+            ],
+            "title": "Mel-cepstral distance measure for objective speech quality assessment",
+            "venue": "1:125\u2013128.",
+            "year": 1993
+        },
+        {
+            "authors": [
+                "Max W.Y. Lam",
+                "Jun Wang",
+                "Rongjie Huang",
+                "Dan Su",
+                "Dong Yu"
+            ],
+            "title": "Bilateral denoising diffusion models",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Adrian \u0141a\u0144cucki."
+            ],
+            "title": "Fastpitch: Parallel text-tospeech with pitch prediction",
+            "venue": "ICASSP 2021-2021 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP), pages 6588\u20136592. IEEE.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Haoliang Li",
+                "Sinno Jialin Pan",
+                "Shiqi Wang",
+                "Alex C Kot."
+            ],
+            "title": "Domain generalization with adversarial feature learning",
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition, pages 5400\u20135409.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Xiang Li",
+                "Changhe Song",
+                "Jingbei Li",
+                "Zhiyong Wu",
+                "Jia Jia",
+                "Helen Meng."
+            ],
+            "title": "Towards multi-scale style control for expressive speech synthesis",
+            "venue": "arXiv preprint arXiv:2104.03521.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Jinglin Liu",
+                "Chengxi Li",
+                "Yi Ren",
+                "Feiyang Chen",
+                "Peng Liu",
+                "Zhou Zhao."
+            ],
+            "title": "Diffsinger: Singing voice synthesis via shallow diffusion mechanism",
+            "venue": "arXiv preprint arXiv:2105.02446, 2.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Zhengxi Liu",
+                "Qiao Tian",
+                "Chenxu Hu",
+                "Xudong Liu",
+                "Menglin Wu",
+                "Yuping Wang",
+                "Hang Zhao",
+                "Yuxuan Wang."
+            ],
+            "title": "Controllable and lossless nonautoregressive end-to-end text-to-speech",
+            "venue": "arXiv preprint arXiv:2207.06088.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Shitong Luo",
+                "Wei Hu."
+            ],
+            "title": "Diffusion probabilistic models for 3d point cloud generation",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 2837\u20132845.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Dongchan Min",
+                "Dong Bok Lee",
+                "Eunho Yang",
+                "Sung Ju Hwang."
+            ],
+            "title": "Meta-stylespeech: Multispeaker adaptive text-to-speech generation",
+            "venue": "pages 7748\u20137759.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Aaron van den Oord",
+                "Yazhe Li",
+                "Oriol Vinyals."
+            ],
+            "title": "Representation learning with contrastive predictive coding",
+            "venue": "arXiv preprint arXiv:1807.03748.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Myle Ott",
+                "Sergey Edunov",
+                "Alexei Baevski",
+                "Angela Fan",
+                "Sam Gross",
+                "Nathan Ng",
+                "David Grangier",
+                "Michael Auli."
+            ],
+            "title": "fairseq: A fast, extensible toolkit for sequence modeling",
+            "venue": "arXiv preprint arXiv:1904.01038.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Vassil Panayotov",
+                "Guoguo Chen",
+                "Daniel Povey",
+                "Sanjeev Khudanpur."
+            ],
+            "title": "Librispeech: an asr corpus based on public domain audio books",
+            "venue": "2015 IEEE international conference on acoustics, speech and signal processing (ICASSP), pages 5206\u20135210.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Adam Polyak",
+                "Yossi Adi",
+                "Jade Copet",
+                "Eugene Kharitonov",
+                "Kushal Lakhotia",
+                "Wei-Ning Hsu",
+                "Abdelrahman Mohamed",
+                "Emmanuel Dupoux."
+            ],
+            "title": "Speech resynthesis from discrete disentangled self-supervised representations",
+            "venue": "arXiv preprint",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Vadim Popov",
+                "Ivan Vovk",
+                "Vladimir Gogoryan",
+                "Tasnima Sadekova",
+                "Mikhail Kudinov."
+            ],
+            "title": "Grad-tts: A diffusion probabilistic model for text-to-speech",
+            "venue": "International Conference on Machine Learning, pages 8599\u20138608. PMLR.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Kaizhi Qian",
+                "Yang Zhang",
+                "Shiyu Chang",
+                "Mark Hasegawa-Johnson",
+                "David Cox."
+            ],
+            "title": "Unsupervised speech decomposition via triple information bottleneck",
+            "venue": "International Conference on Machine Learning, pages 7836\u20137846. PMLR.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Kaizhi Qian",
+                "Yang Zhang",
+                "Shiyu Chang",
+                "Jinjun Xiong",
+                "Chuang Gan",
+                "David Cox",
+                "Mark HasegawaJohnson."
+            ],
+            "title": "Global rhythm style transfer without text transcriptions",
+            "venue": "arXiv preprint arXiv:2106.08519.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Kaizhi Qian",
+                "Yang Zhang",
+                "Heting Gao",
+                "Junrui Ni",
+                "Cheng-I Lai",
+                "David Cox",
+                "Mark Hasegawa-Johnson",
+                "Shiyu Chang."
+            ],
+            "title": "Contentvec: An improved self-supervised speech representation by disentangling speakers",
+            "venue": "International Conference on Ma-",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yi Ren",
+                "Chenxu Hu",
+                "Xu Tan",
+                "Tao Qin",
+                "Sheng Zhao",
+                "Zhou Zhao",
+                "Tie-Yan Liu."
+            ],
+            "title": "Fastspeech 2: Fast and high-quality end-to-end text to speech",
+            "venue": "arXiv preprint arXiv:2006.04558.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Yi Ren",
+                "Ming Lei",
+                "Zhiying Huang",
+                "Shiliang Zhang",
+                "Qian Chen",
+                "Zhijie Yan",
+                "Zhou Zhao."
+            ],
+            "title": "Prosospeech: Enhancing prosody with quantized vector pre-training in text-to-speech",
+            "venue": "ICASSP 20222022 IEEE International Conference on Acoustics,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yi Ren",
+                "Yangjun Ruan",
+                "Xu Tan",
+                "Tao Qin",
+                "Sheng Zhao",
+                "Zhou Zhao",
+                "Tie-Yan Liu."
+            ],
+            "title": "Fastspeech: Fast, robust and controllable text to speech",
+            "venue": "Advances in Neural Information Processing Systems, 32.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Eitan Richardson",
+                "Yair Weiss."
+            ],
+            "title": "On gans and gmms",
+            "venue": "Proc. of ICONIP.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Robin Rombach",
+                "Andreas Blattmann",
+                "Dominik Lorenz",
+                "Patrick Esser",
+                "Bj\u00f6rn Ommer."
+            ],
+            "title": "Highresolution image synthesis with latent diffusion models",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Jiaming Song",
+                "Chenlin Meng",
+                "Stefano Ermon."
+            ],
+            "title": "Denoising diffusion implicit models",
+            "venue": "Proc. of ICLR.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Yang Song",
+                "Jascha Sohl-Dickstein",
+                "Diederik P Kingma",
+                "Abhishek Kumar",
+                "Stefano Ermon",
+                "Ben Poole."
+            ],
+            "title": "Score-based generative modeling through stochastic differential equations",
+            "venue": "Proc. of ICLR.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Guangzhi Sun",
+                "Yu Zhang",
+                "Ron J Weiss",
+                "Yuan Cao",
+                "Heiga Zen",
+                "Yonghui Wu."
+            ],
+            "title": "Fullyhierarchical fine-grained prosody modeling for interpretable speech synthesis",
+            "venue": "ICASSP 2020-2020 IEEE international conference on acoustics, speech",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Hao Sun",
+                "Xu Tan",
+                "Jun-Wei Gan",
+                "Hongzhi Liu",
+                "Sheng Zhao",
+                "Tao Qin",
+                "Tie-Yan Liu."
+            ],
+            "title": "Token-level ensemble distillation for grapheme-to-phoneme conversion",
+            "venue": "arXiv preprint arXiv:1904.03446.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Aaron van den Oord",
+                "Oriol Vinyals",
+                "Koray Kavukcuoglu."
+            ],
+            "title": "Neural discrete representation learning",
+            "venue": "Advances in Neural Information Processing Systems, pages 6309\u20136318.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Jindong Wang",
+                "Cuiling Lan",
+                "Chang Liu",
+                "Yidong Ouyang",
+                "Tao Qin",
+                "Wang Lu",
+                "Yiqiang Chen",
+                "Wenjun Zeng",
+                "Philip Yu."
+            ],
+            "title": "Generalizing to unseen domains: A survey on domain generalization",
+            "venue": "IEEE Transactions on Knowledge and Data Engineering.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Xin Wang",
+                "Shinji Takaki",
+                "Junichi Yamagishi",
+                "Simon King",
+                "Keiichi Tokuda."
+            ],
+            "title": "A vector quantized variational autoencoder (vq-vae) autoregressive neural f_0 model for statistical parametric speech synthesis",
+            "venue": "IEEE/ACM Transactions on Audio, Speech,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Yuxuan Wang",
+                "RJ Skerry-Ryan",
+                "Daisy Stanton",
+                "Yonghui Wu",
+                "Ron J Weiss",
+                "Navdeep Jaitly",
+                "Zongheng Yang",
+                "Ying Xiao",
+                "Zhifeng Chen",
+                "Samy Bengio"
+            ],
+            "title": "Tacotron: Towards end-to-end speech synthesis",
+            "venue": "arXiv preprint arXiv:1703.10135",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Yuxuan Wang",
+                "Daisy Stanton",
+                "Yu Zhang",
+                "RJ-Skerry Ryan",
+                "Eric Battenberg",
+                "Joel Shor",
+                "Ying Xiao",
+                "Ye Jia",
+                "Fei Ren",
+                "Rif A Saurous."
+            ],
+            "title": "Style tokens: Unsupervised style modeling, control and transfer in end-to-end speech synthesis",
+            "venue": "International",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Hu Xu",
+                "Juncheng Li",
+                "Alexei Baevski",
+                "Michael Auli",
+                "Wojciech Galuba",
+                "Florian Metze",
+                "Christoph Feichtenhofer"
+            ],
+            "title": "Masked autoencoders that listen",
+            "venue": "arXiv preprint arXiv:2207.06405",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Jinhyeok Yang",
+                "Jae-Sung Bae",
+                "Taejun Bak",
+                "Youngik Kim",
+                "Hoon-Young Cho."
+            ],
+            "title": "Ganspeech: Adversarial training for high-fidelity multi-speaker speech synthesis",
+            "venue": "arXiv preprint arXiv:2106.15153.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Shu-wen Yang",
+                "Po-Han Chi",
+                "Yung-Sung Chuang",
+                "Cheng-I Jeff Lai",
+                "Kushal Lakhotia",
+                "Yist Y Lin",
+                "Andy T Liu",
+                "Jiatong Shi",
+                "Xuankai Chang",
+                "GuanTing Lin"
+            ],
+            "title": "Superb: Speech processing universal performance benchmark",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Heiga Zen",
+                "Viet Dang",
+                "Rob Clark",
+                "Yu Zhang",
+                "Ron J Weiss",
+                "Ye Jia",
+                "Zhifeng Chen",
+                "Yonghui Wu."
+            ],
+            "title": "Libritts: A corpus derived from librispeech for textto-speech",
+            "venue": "arXiv preprint arXiv:1904.02882. 8028",
+            "year": 2019
+        }
+    ],
+    "sections": [
+        {
+            "text": "Findings of the Association for Computational Linguistics: ACL 2023, pages 8018\u20138034 July 9-14, 2023 \u00a92023 Association for Computational Linguistics"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "Text-to-speech (TTS) (Wang et al., 2017; Ren et al., 2019; Kim et al., 2020; Huang et al., 2023) aims to generate human-like audios using text and auxiliary conditions, which attracts broad interest in the machine learning community. TTS models have been extended to more complex scenarios, requiring more natural and expressive voice generation with improved prosody modeling (Min et al., 2021; Chen et al., 2021; Li et al., 2021). A growing number of applications, such as personalized voice as-\n\u2217Equal contributions \u2020Corresponding author\n1Audio samples are available at https:// improve-prosody.github.io/.\nsistants and game commentary, have been actively developed and deployed to real-world applications.\nExpressive text-to-speech aims to generate samples with natural, rich, and diverse prosodic attributes (e.g., duration, pitch, and energy), which is challenged by two major obstacles: 1) Prosody patterns (Qian et al., 2021; Wang et al., 2018) in human speech are often very sparse, which are difficult to capture and model without supervision signals (i.e., detailed transcriptions); 2) machine learning models (Li et al., 2018; Wang et al., 2022) usually learn a mean distribution over input data, resulting a dull prediction with prosody learners which fails to produce natural and diverse prosodic styles in the generated speech. Although recent studies (Choi et al., 2021; Kim et al., 2021; Ren et al., 2022) have proposed several ways to enhance prosody for high-fidelity TTS, there still exist dual challenges:\n\u2022 Prosody capturing and modeling. Researchers leverage several designs to capture and model prosodic attributes: 1) Local prosody features. Ren et al. (2020) and Choi et al. (2021) introduce the idea of predicting pitch and energy explicitly. However, those signal processing-based prosodic attributes may have inevitable errors, which make the optimization of TTS models difficult and degrade performance. 2) Variational latent representations. A series of works (Sun et al., 2020; Kenter et al., 2019; Liu et al., 2022) utilize conditional variational auto-encoder to model prosody in a latent space, where global, local, or hierarchical features are sampled from a prior distribution. Nevertheless, they generally request speech-text parallel data for modeling prosody, which constrain the learned representation to the paired TTS data.\n\u2022 Prosody producing and sampling. Most works (Wang et al., 2017; Min et al., 2021; Yang et al., 2021a) utilize regression losses (e.g.,\n8018\nMSE) for prediction and assume that the latent space follows a unimodal distribution. However, the highly multimodal (a phoneme may be pronounced in various speaking styles) prosodic representations cannot be well modeled by these simple objectives, which causes blurry and oversmoothing predictions.\nTo address the above dual challenges for prosody-enhanced expressive text-to-speech, we propose Prosody-TTS, a two-stage TTS pipeline that improves both prosody modeling and sampling by introducing several novel designs:\n\u2022 Self-supervised prosody pre-training. To handle different acoustic conditions for expressive speech, we propose prosody masked autoencoders (Prosody-MAE), a transformer-based model that captures prosody patterns (e.g., local rises and falls of the pitch and stress) in a selfsupervised manner. It is trained on audio-only data, which avoids inevitable errors and ensures to cover diverse speech corpora with superior generalization.\n\u2022 Generative diffusion modeling in latent space. A diffusion model is explored to bridge TTS inputs (i.e., text and target speaker) and speaking prosody in latent space. We formulate the generative process with multiple conditional diffusion steps, and thus we expect our model to exhibit better diversity and prevent generating samples with dull prosodic performance.\nExperimental results on LJSpeech and LibriTTS benchmarks demonstrate that our proposed Prosody-TTS achieves new state-of-the-art results for text-to-speech with natural and expressive synthesis. Both subjective and objective evaluations demonstrate that Prosody-TTS exhibits superior audio quality and prosody naturalness with rich and diverse prosodic attributes."
+        },
+        {
+            "heading": "2 Related Works",
+            "text": ""
+        },
+        {
+            "heading": "2.1 Prosody Modeling in Text-To-Speech",
+            "text": "Prosody modeling has been studied for decades in the TTS community. The idea of pitch and energy prediction (\u0141an\u0301cucki, 2021; Ren et al., 2020) represents a popular way to address the one-to-many mapping challenges. Wang et al. (2019) utilize the VQ-VAE framework to learn a latent representation for the F0 contour of each linguistic unit and adopt a second-stage model which maps from linguistic\nfeatures to the latent features. Choi et al. (2021) further use a new set of analysis features, i.e., the wav2vec and Yingram feature for self-supervised training. However, these signal processing-based prosodic attributes have inevitable errors, which make the optimization of TTS models difficult and result in degraded TTS performance. Instead of relying on local prosody attributes, a series of works (Sun et al., 2020; Kenter et al., 2019; Liu et al., 2022) utilize conditional variational autoencoder to model prosody in a latent space, where global, local, or hierarchical features are sampled from a prior distribution. Nevertheless, they generally request speech-text parallel data for modeling prosody, which constrained the learned representation to the paired TTS data and explicit poor generalization (Wang et al., 2022). Ren et al. (2022) introduces a prosody encoder to disentangle the prosody to latent vectors, while the requirement of a pre-trained TTS model hurts model generalization. In this work, we propose to learn the prosodic distribution given speech-only corpora without relying on pre-trained TTS models or text transcriptions."
+        },
+        {
+            "heading": "2.2 Self-Supervised Learning in Speech",
+            "text": "Recently, self-supervised learning (SSL) has emerged as a popular solution to many speech processing problems with a massive amount of unlabeled speech data. HuBERT (Hsu et al., 2021) is trained with a masked prediction with masked continuous audio signals. SS-AST (Gong et al., 2022) is a self-supervised learning method that operates over spectrogram patches. Baade et al. (2022) propose a simple yet powerful improvement over the recent audio spectrogram transformer (SSAST) model. Audio-MAE (Xu et al., 2022) is a simple extension of image-based Masked Autoencoders (MAE) (He et al., 2022) for SSL from audio spectrograms. Unlike most of the speech SSL models which capture linguistic content for style-agnostic representation, we focus on learning prosodic representation in expressive speech, which is relatively overlooked."
+        },
+        {
+            "heading": "2.3 Diffusion Probabilistic Model",
+            "text": "Denoising diffusion probabilistic models (DDPMs) (Ho et al., 2020; Song et al., 2020a) are likelihood-based generative models that have recently advanced the SOTA results in several important domains, including image (Dhariwal and Nichol, 2021; Song et al., 2020a), audio (Huang\net al., 2022c; Liu et al., 2021; Huang et al., 2022d), and 3D point cloud generation (Luo and Hu, 2021). In this work, we investigate generative modeling for latent representations with a conditional diffusion model. Unlike regression-based prediction, it generates realistic results that match the ground-truth distribution and avoid over-smoothing predictions."
+        },
+        {
+            "heading": "3 Prosody-TTS",
+            "text": "In this section, we first overview the Prosody-TTS framework, introducing several critical designs with prosody masked autoencoder (Prosody-MAE), latent diffusion model, and the vector quantization layer. Finally, we present the pre-training, training, and inference pipeline, which supports high-fidelity speech synthesis with natural, rich, and diverse prosodic attributes."
+        },
+        {
+            "heading": "3.1 Problem Formulation",
+            "text": "Expressive text-to-speech aims to generate highfidelity speech samples with natural and diverse prosody (e.g., duration, pitch, and energy). Since the duration attribute has been inherently wellstudied in non-autoregressive literature (Ren et al., 2020; Min et al., 2021; Huang et al., 2021, 2022b), we mainly explore prosody on rises and falls of the pitch and stress in this work."
+        },
+        {
+            "heading": "3.2 Overview",
+            "text": "As illustrated in Figure 1, to address the aforementioned dual challenges for prosody-enhanced expressive text-to-speech, we introduce a multistage pipeline with the following key designs: 1) a prosody masked autoencoder (Prosody-MAE) to capture and model prosody feature in a selfsupervised manner. 2) a generative diffusion model to produce and sample prosody in latent space. Specifically:\n1) In the pre-training stage, the Prosody-MAE captures prosodic information from large-scale unpaired speech data without relying on transcriptions or local prosody attributes. The self-supervised training manner ensures Prosody-MAE learns discriminative prosody representations covering diverse speech corpora; 2) In training TTS models, the converged prosody encoder derives style representations z for optimizing the latent diffusion model (LDM), which bridges the TTS conditions (i.e., textual features and target speaker) and prosody representations via diffusion process\nq(zt|zt\u22121); 3) In inference time, the LDM samples diverse latent representations within the prosodic space through reverse denoising p\u03b8(zt\u22121|zt). It breaks the generation process into several conditional diffusion steps, which exhibits better diversity and prevents generating dull samples with a constrained prosodic distribution. We describe these designs in detail in the following subsections."
+        },
+        {
+            "heading": "3.3 Self-supervised Prosody Pre-training",
+            "text": "In this part, we propose Prosody-MAE, a selfsupervised autoencoder (AE) consisting of an encoder and decoder that can effectively capture and model prosodic style given speech samples without relying on text annotations. Moreover, we design several techniques to learn prosodic representation in a self-supervised manner:\n\u2022 Information flow. Through analysis of speech attributes, Prosody-MAE enjoys a carefully-crafted bottleneck design to disentangle linguistic and speaker information, ensuring the prosody stream to learn discriminative style-aware representations.\n\u2022 Multi-task learning. Auxiliary style (i.e., pitch and energy) classifications have been included in training SSL models, and it guarantees to discover style representation aware of the pitch/stress rises and falls."
+        },
+        {
+            "heading": "3.3.1 Information Flow",
+            "text": "Most voice reconstruction tasks (Choi et al., 2021; Polyak et al., 2021) can be defined by synthesizing and controlling three aspects of voice, i.e., linguistic, speaker, and prosody encoder. It motivates us to develop an autoencoder that can analyze voice into these properties and then synthesize them back into a speech (transformer decoder).\nLinguistic Encoder. Learning the linguistic content C from the speech signal is crucial to construct an intelligible speech signal, and we obtain linguistic representation using a pre-trained XLSR-53. Since SSL representation (Choi et al., 2021; Qian et al., 2022; Gat et al., 2022) contain both linguistic and acoustic information, we perturb the speaker and prosody patterns in audios by randomly shifting pitch and shaping energy values, ensuring it only provides the linguistic-related (i.e., prosodicagnostic) information. More details have been included in Appendix E.\nSpeaker Encoder. Speaker S is perceived as the timbre characteristic of a voice. It has been\nreported that (Choi et al., 2021) the features from the first layer of XLSR-53 perform as clusters representation for each speaker.\nProsody Encoder. Prosody is a vital part of the domain style, where different emotions or styles have distinctive prosody patterns. In the multilayer transformer prosody encoder, 1) speech is first transformed and embedded into spectrogram patches, and 2) the encoders f : X 7\u2192 P take patches X as input and effectively capture prosodic latent representations p1, . . . ,pT for T time-steps. 3) Some tokens are masked by randomly replacing them with a learned masking token (mi illustrated in Figure 1(a)). In practice, we mask by shuffling the input patches and keeping the first 1 \u2212 p proportion of tokens.\nTransformer Decoder. As illustrated in Figure 1(a), we conduct the element-wise addition operation between the linguistic content C, speaker S and the prosody P representations before passing through the transformer decoder with a series of transformer blocks. To this end, the carefully crafted bottleneck design in Prosody-MAE disentangles linguistic, speaker, and prosody attributes and then synthesizes them back into a speech with a transformer decoder, ensuring the prosody stream to learn discriminative prosody-aware representations agnostic to linguistic content and speaker."
+        },
+        {
+            "heading": "3.3.2 Multi-task Learning",
+            "text": "For training autoencoders, reconstruction loss Lg is calculated as a mean squared error between the output of the linear reconstruction head and the input patches. Contrastive head (Gong et al., 2022)\ncreates an output vector vi similar to the masked input patch xi but dissimilar to other masked inputs, where we consider different masked inputs as negative samples and implement the InfoNCE (Oord et al., 2018) as a criterion.\nMoreover, to enhance the model in deriving style attributes, we explore the frame-level style (i.e., pitch Lp, energy Le) classification with crossentropy criterion (Oord et al., 2018) as the complemental tasks. To formulate the classification target, we respectively 1) quantize the fundamental frequency (f0) of each frame to 256 possible values pi in log-scale; and 2) compute the L2-norm of the amplitude of each short-time Fourier transform (STFT) and then quantize to 256 possible values ei uniformly. On that account, Prosody-MAE better discovers prosodic representations which are aware of the pitch/stress rises and falls."
+        },
+        {
+            "heading": "3.4 Generative Modeling of Prosodic Representations",
+            "text": "To produce and sample prosodic representation z within the latent space learned in Prosody-MAE, we implement our prosody generator over Latent Diffusion Models (LDMs) (Rombach et al., 2022; Gal et al., 2022), a recently introduced class of Denoising Diffusion Probabilistic Models (DDPMs) (Ho et al., 2020) that operate in the latent space. As illustrated in Figure 1(c), the denoising WaveNet \u03b8 conditions on phonetic representation, breaking the generation process into several conditional diffusion steps. The training loss is defined as the mean squared error in the noise \u03f5 \u223c N (0, I) space, and efficient training is optimizing a random\nterm of t with stochastic gradient descent:\nL\u03b8 = \u2225\u2225\u2225\u2225\u03f5\u03b8 ( \u03b1tz0 + \u221a 1\u2212 \u03b12t\u03f5 ) \u2212 \u03f5 \u2225\u2225\u2225\u2225 2\n2\n(1)\nTo this end, our prosody generator produces and samples prosody faithfully, which strongly matches the ground-truth distribution and exhibits better diversity. It avoids incorrect unimodal distribution assumptions by regression objectives (e.g., MSE) and prevents generating samples with dull prosodic performance. We refer the reader to Section 4.2 for summary of our findings."
+        },
+        {
+            "heading": "3.5 Vector Quantization",
+            "text": "It has been reported (Rombach et al., 2022) that due to the expressiveness of diffusion models, the produced latent spaces z could be highly variant and diverse. To avoid instability, we impose a vector quantization (VQ) layer after the latent diffusion for regularization.\nDenote the latent space e \u2208 RK\u00d7D where K is the size of the discrete latent space (i.e., a K-way categorical), and D is the dimensionality of each latent embedding vector ei. Note that there are K embedding vectors ei \u2208 RD, i \u2208 1, 2, . . . ,K. To make sure the representation sequence commits to an embedding and its output does not grow, we add a commitment loss following previous work (van den Oord et al., 2017):\nLc = \u2225z\u2212 sg[e]\u222522 , (2)\nwhere sg stands for stop gradient."
+        },
+        {
+            "heading": "3.6 Pre-training, Training and Inference Procedures",
+            "text": ""
+        },
+        {
+            "heading": "3.6.1 Pre-training and Training",
+            "text": "We pre-train the Prosody-MAE to derive prosodic representation in a self-supervised manner with the following objectives: 1) reconstruction loss Lg: the MSE between the estimated and ground-truth sample; 2) contrastive loss Ld: the discriminative gradient to pick the correct patch for each masked position from all patches being masked, and 3) frame-level style (i.e., pitch, energy) classification losses Lp,Le: the cross entropy error between the estimated and ground-truth style attributes.\nIn training Prosody-TTS, the final loss terms consist of the following parts: 1) duration loss Ldur: MSE between the predicted and the GT phonemelevel duration in log scale; 2) diffusion losses in prosody generator Lldm and mel decoder Ldec: calculating between the estimated and gaussian noise\naccording to Equation 1; 3) commitment loss Lc: regularizing vector quantization layer according to Equation 2."
+        },
+        {
+            "heading": "3.6.2 Inference",
+            "text": "As illustrated in Figure 1, Prosody-TTS generates expressive speech with natural, rich, and diverse prosody in the following pipeline: 1) The text encoder takes the phoneme sequence as input, which is expanded according to the predicted durations; 2) conditioning on linguistic and speaker information, the prosody generator randomly samples a noise latent and iteratively denoises to produce a new prosodic representation in latent space, and 3) the mel decoder converts randomly sampled noise latent and iteratively decodes to expressive melspectrograms."
+        },
+        {
+            "heading": "4 Experiments",
+            "text": ""
+        },
+        {
+            "heading": "4.1 Experimental Setup",
+            "text": ""
+        },
+        {
+            "heading": "4.1.1 Pre-training Prosody-MAE",
+            "text": "In the pre-training stage, we utilize the commonlyused LibriSpeech (Panayotov et al., 2015) dataset with labels discarded, which provides 960 hours of audiobook data in English, read by over 1,000 speakers. We convert the 16kHz waveforms into 128-dimensional log-Melfilterbank features with a frame length of 25 ms and frame shift of 10 ms. The spectrogram is then split into 16\u00d716 patches.\nBy default, we use an encoder with 6 layers and a decoder of 2 layers, both using 12 heads and a width of 768. We train Prosody-MAE for up to 400k iterations on 8 NVIDIA V100 GPUs using the publicly-available fairseq framework (Ott et al., 2019), and the pre-training takes about 5 days. For downstream evaluation, we use the standard SUPERB (Yang et al., 2021b) training and testing framework. More detailed information has been attached in Appendix C."
+        },
+        {
+            "heading": "4.1.2 Training Prosody-TTS",
+            "text": "Dataset. For a fair and reproducible comparison against other competing methods, we use the benchmark LJSpeech dataset (Ito, 2017), which consists of 13,100 audio clips from a female speaker for about 24 hours in total. For the multi-speaker scenario, we utilize the 300-hour LibriTTS (Zen et al., 2019) dataset derived from LibriSpeech. We convert the text sequence into the phoneme sequence with an open-source grapheme-to-phoneme conver-\nsion tool (Sun et al., 2019) 2. Following the common practice (Chen et al., 2021; Min et al., 2021), we conduct preprocessing on the speech and text data: 1) convert the sampling rate of all speech data to 16kHz; 2) extract the spectrogram with the FFT size of 1024, hop size of 256, and window size of 1024 samples; 3) convert it to a mel-spectrogram with 80 frequency bins.\nModel Configurations. Prosody-TTS consists of 4 feed-forward transformer blocks for the phoneme encoder. We add a linear layer to transform the 768-dimensional prosody latent representation from Prosody-MAE to 256 dimensions. The default size of the codebook in the vector quantization layer is set to 1000. The diffusion model comprises a 1x1 convolution layer and N convolution blocks with residual connections to project the input hidden sequence with 256 channels. For any step t, we use the cosine schedule \u03b2t = cos(0.5\u03c0t). More detailed information has been attached in Appendix A.\nTraining and Evaluation. We train ProsodyTTS for 200,000 steps using 4 NVIDIA V100 GPUs with a batch size of 64 sentences. Adam optimizer is used with \u03b21 = 0.9, \u03b22 = 0.98, \u03f5 = 10\u22129. We utilize HiFi-GAN (Kong et al., 2020) as the vocoder to synthesize waveform from the mel-\n2https://github.com/Kyubyong/g2p\nspectrogram in our experiments. We conduct crowd-sourced human evaluations on the testing set via Amazon Mechanical Turk, which is reported with 95% confidence intervals (CI). We analyze the MOS in two aspects: prosody (naturalness of pitch, energy, and duration) and audio quality (clarity, high-frequency and original timbre reconstruction), respectively scoring MOSP and MOS-Q. We further include objective evaluation metrics: MCD (Kubichek, 1993) measures the audio and prosody quality, NDB and JSD (Richardson and Weiss, 2018) explore the diversity of generated mel-spectrograms. More details have been attached in Appendix F.\nBaseline Models. We compare the quality of generated audio samples with other systems, including 1) GT, the ground-truth audio; 2) GT (voc.), we first convert the ground-truth audio into melspectrograms and then convert them back to audio using HiFi-GAN (V1) (Kong et al., 2020); 3) FastSpeech 2 (Ren et al., 2020): a model that predicts local prosody attributes; 4) Meta-StyleSpeech (Kim et al., 2020): the finetuned multi-speaker model with meta-learning; 5) Glow-TTS (Kim et al., 2020): a flow-based TTS model trained with monotonic alignment search; 6) Grad-TTS (Popov et al., 2021): a denoising diffusion probabilistic models for speech synthesis. 7) YourTTS (Casanova et al., 2022): an expressive model for zero-shot multispeaker synthesis which is built upon VITS (Kim et al., 2021). We list the prosody modeling and sampling approaches in baseline models in Table 2."
+        },
+        {
+            "heading": "4.2 Quantitative Results",
+            "text": "Both objective and subjective evaluation results are presented in Table 1, and we have the following observations: 1) In terms of audio quality, Prosody-TTS achieves the highest perceptual quality with MOS-Q of 4.03 (LJSpeech) and 4.09\n(LibriTTS). For objective evaluation, Prosody-TTS also demonstrates the outperformed performance in MCD, superior to all baseline models. 2) For prosody diversity and naturalness, Prosody-TTS scores the highest overall MOS-P with a gap of 0.21 (LJSpeech) and 0.23 (LibriTTS) compared to the ground truth audio. Prosody-TTS scores the superior NDB with scores of 30 (LJSpeech) and 52 (LibriTTS), producing samples covering diverse prosodic patterns (e.g., local rises and falls of the pitch and stress). Informally, by breaking the generation process into several conditional diffusion steps, generative latent modeling prevents TTS from synthesizing samples with dull prosodic performance.\nThe evaluation of the TTS models is very challenging due to its subjective nature in perceptual quality, and thus we include a site-by-site AXY test in Table 3. For each reference (A), the listeners are asked to choose a preferred one among the samples synthesized by baseline models (X) and proposed Prosody-TTS (Y), from which AXY preference rates are calculated. It indicates that raters prefer our model synthesis against baselines in terms of prosody naturalness and expressiveness. Without relying on text transcriptions or local prosody attributes, Prosody-TTS is trained on an audio-only corpus in a self-supervised manner, covering diverse speaking styles and avoiding dull synthesis with similar patterns."
+        },
+        {
+            "heading": "4.3 Qualitative Findings",
+            "text": "As illustrated in Figure 2, we plot the melspectrograms and corresponding pitch tracks generated by the TTS systems and have the follow-\ning observations: 1) Prosody-TTS can generate mel-spectrograms with rich details in frequency bins between two adjacent harmonics, unvoiced frames, and high-frequency parts, which results in more natural sounds. 2) Prosody-TTS demonstrates its ability to generate samples with diverse prosodic styles. In contrast, some baseline models have difficulties addressing the dual challenges of prosody modeling and sampling: some of them learn a mean pitch contour (YourTTS, Grad-TTS) or incomplete sampling (FastSpeech 2), others suffer from a perturbed distribution with acute contour (SC-GlowTTS, Meta-StyleSpeech)."
+        },
+        {
+            "heading": "4.4 Ablation Studies and Model Properties",
+            "text": "In this section, we conduct ablation studies to demonstrate the effectiveness of several designs to alleviate the dual challenges in prosody-enhanced text-to-speech:\n\u2022 For prosody capturing and modeling, we explore Prosody-MAE with different model properties in the style-aware downstream challenges, including the frame-level pitch and energy recognition on the commonly-used\ndataset IEMOCAP (Busso et al., 2008).\n\u2022 For prosody producing and sampling, we investigate the generative modeling in ProsodyTTS with diffusion prosody generator and vector quantization modulewith through CMOS evaluation."
+        },
+        {
+            "heading": "4.4.1 Prosody capturing and modeling",
+            "text": "Pretext task. We investigate the impact of different pretext tasks for pre-training the Prosody-MAE, and find that 1) the additional contrastive objective Ld leads to better performance for all tasks, and 2) the joint multi-task learning with frame-level style classification Lp,Le has witnessed a distinct promotion of downstream accuracy, demonstrating its efficiency in learning style-aware prosody representations.\nInformation flow. We conduct ablation studies to demonstrate the effectiveness of the carefullycrafted information flow in learning prosodic style attributes: 1) Dropping the linguistic and speaker encoder has witnessed a distinct degradation of downstream performance, proving that they disentangle the linguistic and speaker information, ensuring the prosody stream to learn style-aware representations; and 2) Removing the information perturbation also decreases accuracy, demonstrating that the perturbation assists to selectively provide only the linguistic (i.e., prosodic-agnostic) and eliminate undesired information.\nMore ablations on masking strategies, network architecture, and further comparision with other state-of-the-art have been attached in Appendix B"
+        },
+        {
+            "heading": "4.4.2 Prosody producing and sampling",
+            "text": "To verify the effectiveness of prosody producing and sampling in Prosody-TTS, we respectively replace the latent diffusion model and remove the\nvector quantization module. The CMOS evaluation results have been presented in Table 4(c), and we have the following observations: 1) Replacing the diffusion prosody generator with regression-based predictor results in decrease prosody naturalness, suggesting that generative latent diffusion avoids producing blurry and over-smoothing results. 2) Removing the vector quantization layer has witnessed a distinct drop in audio quality, verifying that the VQ compression layer is efficient in regularizing latent spaces and preventing arbitrarily high-variance predictions. 3) Since baseline models with local attributes have inevitable errors, and variational inference requires parallel speech-text data which constrains learned representation, they both lead to the degradation in prosody naturalness."
+        },
+        {
+            "heading": "5 Conclusion",
+            "text": "In this work, we propose Prosody-TTS, improving prosody with masked autoencoder and conditional diffusion model for expressive text-to-speech. To tackle dual challenges of prosody modeling and sampling, we design a two-stage pipeline to enhance high-quality synthesis with prosperous and diverse prosody: 1) Prosody-MAE was introduced to pre-train on large-scale unpaired speech datasets to capture prosodic representations without relying on text transcriptions. It ensured that the model covered diverse speaking voices and avoided inevitable error. 2) The latent diffusion model was adopted to produce diverse patterns within the learned prosody space. It broke the generation process into several conditional diffusion steps, avoiding generating samples with dull prosodic performance. Experimental results demonstrated that Prosody-TTS promoted prosody modeling and synthesized highfidelity speech samples, achieving new state-ofthe-art results with outperformed audio quality and\nprosody expressiveness. For future work, we will further extend Prosody-TTS to more challenging scenarios such as multilingual prosody learning. We envisage that our work serve as a basis for future prosody-aware TTS studies."
+        },
+        {
+            "heading": "6 Limitation",
+            "text": "Prosody-TTS adopts generative diffusion models for high-quality synthesis, and thus it inherently requires multiple iterative refinements for better results. Besides, latent diffusion models require typically require more computational resources, and degradation could be witnessed with decreased training data. One of our future directions is to develop lightweight and fast diffusion models for accelerating sampling."
+        },
+        {
+            "heading": "7 Ethics Statement",
+            "text": "Prosody-TTS lowers the requirements for highquality and expressive text-to-speech synthesis, which may cause unemployment for people with related occupations, such as broadcasters and radio hosts. In addition, there is the potential for harm from non-consensual voice cloning or the generation of fake media, and the voices of the speakers in the recordings might be overused than they expect."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "This work was supported in part by the National Key R&D Program of China under Grant No.2022ZD0162000, National Natural Science Foundation of China under Grant No.62222211, Grant No.61836002 and Grant No.62072397."
+        },
+        {
+            "heading": "A Details of Models",
+            "text": "In this section, we describe hyper-parameters and details of several modules.\nA.1 Model Configurations\nWe list the model hyper-parameters of ProsodyTTS in Table 5.\nA.2 Diffusion mechanism\nFor the training prosody latent diffusion model, the clean prosodic representation derived by Prosody-MAE passes through the vector quantification layer, which is also adopted to optimize the latent diffusion model (LDM) via the forward diffusion process. In inference time, the LDM samples diverse latent representations within the prosodic space through reverse backward denoising. According to the spectrogram denoiser, sampling from the Gaussian prior distribution is regarded as a common assumption. The diffusion decoder receives the textual hidden representation as a conditional signal and iteratively denoises Gaussian noise to reconstruct the target distribution by reverse sampling."
+        },
+        {
+            "heading": "B Downstream Evaluation on Model Properties",
+            "text": "In the fine-tuning phase, we remove the decoder and only fine-tune the encoder on the commonlyused dataset IEMOCAP (Busso et al., 2008) that contains about 12 hours of emotional speech. We use a fixed learning rate of 1e-4 and max iteration of 10k and fine-tune on 4 V100 GPUs for 60 epochs using the SUPERB (Yang et al., 2021b) framework. We further evaluate the architecture and masking strategies designs in Prosody-MAE:\nNetwork architecture. Similar to the MAE paper demonstrated for the visual domain, increasing the decoder depth only provides minor improve-\nments if any, indicating that the decoder depth can be small relative to the encoder.\nMasking strategies. We compare different masking ratios for pre-training Prosody-MAE, and observe that a high masking ratio (70% in our case) is optimal for audio spectrograms. Due to the fact that audio spectrograms and images are continuous signals with significant redundancy, and thus SSL models still could reconstruct results given most tokens dropped, which is consistent with the masked autoencoders (He et al., 2022) in the visual domain.\nComparision with other state-of-the-art. We compare our proposed Prosody-MAE with prior state-of-the-art SSL models, including: 1) wav2vec 2.0 (Baevski et al., 2020), 2) hubert (Hsu et al., 2021), 3) robust hubert (Huang et al., 2022a), and 4) mae-ast (Baade et al., 2022) and find that our proposed Prosody-MAE achieves the best performance across all tasks compared to other systems. Specifically, the majority of the speech SSL models focus on learning the linguistic content information, which try to disentangle unwanted variations (e.g. acoustic variations) from the content. In contrast, we hope to capture prosodic information from speech, and thus Prosody-MAE exhibits outperformed capability in capturing style attributes."
+        },
+        {
+            "heading": "C Details of Pre-training and Fine-tuning",
+            "text": "We list the pre-training and fine-tuning settings in Table 7."
+        },
+        {
+            "heading": "D Diffusion Probabilistic models",
+            "text": "Given i.i.d. samples {x0 \u2208 RD} from an unknown data distribution pdata(x0). In this section, we introduce the theory of diffusion probabilistic model (Ho et al., 2020; Lam et al., 2021; Song et al., 2020a,b), and present diffusion and reverse process given by denoising diffusion probabilistic models (DDPMs), which could be used to learn a model distribution p\u03b8(x0) that approximates pdata(x0).\nDiffusion process Similar as previous work (Ho et al., 2020; Song et al., 2020a), we define the data distribution as q(x0). The diffusion process is defined by a fixed Markov chain from data x0 to the latent variable xT :\nq(x1, \u00b7 \u00b7 \u00b7 ,xT |x0) = T\u220f\nt=1\nq(xt|xt\u22121), (3)\nFor a small positive constant \u03b2t, a small Gaussian noise is added from xt to the distribution of xt\u22121 under the function of q(xt|xt\u22121).\nThe whole process gradually converts data x0 to whitened latent xT according to the fixed noise schedule \u03b21, \u00b7 \u00b7 \u00b7 , \u03b2T .\nq(xt|xt\u22121) := N (xt; \u221a\n1\u2212 \u03b2txt\u22121, \u03b2tI) (4) Efficient training is optimizing a random term of\nt with stochastic gradient descent:\nL\u03b8 = \u2225\u2225\u2225\u2225\u03f5\u03b8 ( \u03b1tx0 + \u221a 1\u2212 \u03b12t \u03f5 ) \u2212 \u03f5 \u2225\u2225\u2225\u2225 2\n2\n(5)\nReverse process Unlike the diffusion process, reverse process is to recover samples from Gaussian noises. The reverse process is a Markov chain from xT to x0 parameterized by shared \u03b8:\np\u03b8(x0, \u00b7 \u00b7 \u00b7 ,xT\u22121|xT ) = T\u220f\nt=1\np\u03b8(xt\u22121|xt), (6)\nwhere each iteration eliminates the Gaussian noise added in the diffusion process:\np(xt\u22121|xt) := N (xt\u22121;\u00b5\u03b8(xt, t), \u03c3\u03b8(xt, t)2I) (7)\nE Information Perturbation\nXLSR-53 is pre-trained on 56k hours of speech in 53 languages, to provide linguistic information.\nWe apply the following functions (Qian et al., 2020; Choi et al., 2021) on acoustic features (i.e., pitch, and energy) to create acoustic-perturbed speech samples S\u0302, while the linguistic content remains unchanged, including 1) formant shifting fs, 2) pitch randomization pr, and 3) random frequency shaping using a parametric equalizer peq.\n\u2022 For fs, a formant shifting ratio is sampled uniformly from Unif(1, 1.4). After sampling the ratio, we again randomly decided whether to take the reciprocal of the sampled ratio or not.\n\u2022 In pr, a pitch shift ratio and pitch range ratio are sampled uniformly from Unif(1, 2) and Unif(1, 1.5), respectively. Again, we randomly decide whether to take the reciprocal of the sampled ratios or not. For more details for formant shifting and pitch randomization, please refer to Parselmouth https://github. com/YannickJadoul/Parselmouth.\n\u2022 peq represents a serial composition of lowshelving, peaking, and high-shelving filters. We use one low-shelving HLS, one high-shelving HHS, and eight peaking filters HPeak."
+        },
+        {
+            "heading": "F Evaluation",
+            "text": "F.1 Subjective Evaluation\nFor MOS tests, the testers present and rate the samples, and each tester is asked to evaluate the subjective naturalness on a 1-5 Likert scale. For CMOS, listeners are asked to compare pairs of audio generated by systems A and B and indicate which of the two audio they prefer, and choose one of the following scores: 0 indicating no difference, 1 indicating a small difference, 2 indicating a large difference and 3 indicating a very large difference.\nFor quality evaluation, we explicitly instruct the raters to \u201c(focus on examining the audio quality and naturalness, and ignore the differences of style (timbre, emotion and prosody).)\u201d. For prosody evaluation, we explicitly instruct the raters to \u201c(focus on the naturalness of the prosody and style, and ignore the differences of content, grammar, or audio quality.)\u201d.\nOur subjective evaluation tests are crowdsourced and conducted by 25 native speakers via\nAmazon Mechanical Turk. The screenshots of instructions for testers have been shown in Figure 4. We paid $8 to participants hourly and totally spent about $800 on participant compensation. A small subset of speech samples used in the test is available at https://Prosody-TTS.github.io/.\nF.2 Objective Evaluation Mel-cepstral distortion (MCD) (Kubichek, 1993) measures the spectral distance between the synthesized and reference mel-spectrum features.\nF0 Frame Error (FFE) combines voicing decision error and F0 error metrics to capture F0 information.\nNumber of Statistically-Different Bins (NDB) and Jensen-Shannon divergence (JSD) (Richardson and Weiss, 2018). They measure diversity by 1) clustering the training data into several clusters, and 2) measuring how well the generated samples fit into those clusters.\nACL 2023 Responsible NLP Checklist"
+        },
+        {
+            "heading": "A For every submission:",
+            "text": ""
+        },
+        {
+            "heading": "3 A1. Did you describe the limitations of your work?",
+            "text": "See section 6"
+        },
+        {
+            "heading": "3 A2. Did you discuss any potential risks of your work?",
+            "text": "See section 7"
+        },
+        {
+            "heading": "3 A3. Do the abstract and introduction summarize the paper\u2019s main claims?",
+            "text": "See section 1\n7 A4. Have you used AI writing assistants when working on this paper? Left blank.\nB 7 Did you use or create scientific artifacts? Left blank.\nB1. Did you cite the creators of artifacts you used? No response.\nB2. Did you discuss the license or terms for use and / or distribution of any artifacts? No response.\nB3. Did you discuss if your use of existing artifact(s) was consistent with their intended use, provided that it was specified? For the artifacts you create, do you specify intended use and whether that is compatible with the original access conditions (in particular, derivatives of data accessed for research purposes should not be used outside of research contexts)? No response.\nB4. Did you discuss the steps taken to check whether the data that was collected / used contains any information that names or uniquely identifies individual people or offensive content, and the steps taken to protect / anonymize it? No response.\nB5. Did you provide documentation of the artifacts, e.g., coverage of domains, languages, and linguistic phenomena, demographic groups represented, etc.? No response.\nB6. Did you report relevant statistics like the number of examples, details of train / test / dev splits, etc. for the data that you used / created? Even for commonly-used benchmark datasets, include the number of examples in train / validation / test splits, as these provide necessary context for a reader to understand experimental results. For example, small differences in accuracy on large test sets may be significant, while on small test sets they may not be. No response.\nC 3 Did you run computational experiments? See section 4"
+        },
+        {
+            "heading": "3 C1. Did you report the number of parameters in the models used, the total computational budget",
+            "text": "(e.g., GPU hours), and computing infrastructure used? See section 4.1\nThe Responsible NLP Checklist used at ACL 2023 is adopted from NAACL 2022, with the addition of a question on AI writing assistance."
+        },
+        {
+            "heading": "3 C2. Did you discuss the experimental setup, including hyperparameter search and best-found",
+            "text": "hyperparameter values? See section 4.1"
+        },
+        {
+            "heading": "3 C3. Did you report descriptive statistics about your results (e.g., error bars around results, summary",
+            "text": "statistics from sets of experiments), and is it transparent whether you are reporting the max, mean, etc. or just a single run? See section 4.1"
+        },
+        {
+            "heading": "3 C4. If you used existing packages (e.g., for preprocessing, for normalization, or for evaluation), did",
+            "text": "you report the implementation, model, and parameter settings used (e.g., NLTK, Spacy, ROUGE, etc.)? Left blank.\nD 3 Did you use human annotators (e.g., crowdworkers) or research with human participants? See section 4.1 and Appendix F"
+        },
+        {
+            "heading": "3 D1. Did you report the full text of instructions given to participants, including e.g., screenshots,",
+            "text": "disclaimers of any risks to participants or annotators, etc.? See section 4.1 and Appendix F"
+        },
+        {
+            "heading": "3 D2. Did you report information about how you recruited (e.g., crowdsourcing platform, students)",
+            "text": "and paid participants, and discuss if such payment is adequate given the participants\u2019 demographic (e.g., country of residence)? See section 4.1 and Appendix F\nD3. Did you discuss whether and how consent was obtained from people whose data you\u2019re using/curating? For example, if you collected data via crowdsourcing, did your instructions to crowdworkers explain how the data would be used? Not applicable. Left blank.\nD4. Was the data collection protocol approved (or determined exempt) by an ethics review board? Not applicable. Left blank.\nD5. Did you report the basic demographic and geographic characteristics of the annotator population that is the source of the data? Not applicable. Left blank."
+        }
+    ],
+    "title": "Prosody-TTS: Improving Prosody with Masked Autoencoder and Conditional Diffusion Model For Expressive Text-to-Speech",
+    "year": 2023
+}

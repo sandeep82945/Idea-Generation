@@ -1,0 +1,805 @@
+{
+    "abstractText": "Automated Vehicles aim to increase road safety as automated driving systems (ADS) take over the human driving task in the operational design domain (ODD), introducing severe challenges for safety validation. Pure driving over many kilometers to gather enough evidence for a safety argument is not feasible. Scenario-based testing is an approach to overcome this, but challenges like parameter discretization still prevail, hindering safety assurance. This work proposes contributions towards a traceable and efficient safety argumentation for ADS built upon ODD coverage. First, ODD coverage is thoroughly quantified across all scenario levels, assuming distribution functions\u2019 availability for the scenario parameters. Secondly, a sampling method for n-dimensional scenario parameter distributions is proposed. The provided algorithms adapt an initial k-means clustering using pre-defined boundary conditions requiring significantly fewer scenarios. Furthermore, a risk metric for urban intersections is presented for scenario evaluation. The risk metric consists of two parts, scene prediction of traffic participants (TPs) and risk assessment. The scene prediction uses a manoeuvre-based motion model with a data-driven approach towards trajectory prediction, increasing the validity. For the risk assessment, a probabilistic risk prediction for the TPs is performed for each scenario scene. The risk metric shows a reasonable tradeoff between sensitivity and specificity, outperforming time-to-collision. These contributions are exemplarily applied at an intersection using a simplified setup for generating TPs and ego vehicle trajectories. The results indicate that an increased safety argumentation is enabled using the proposed methods alongside a coverage process, facilitating further research. INDEX TERMS Automated vehicles, autonomous vehicles, automated driving, validation, coverage, operational design domain, automotive safety, vehicle safety, safety argumentation.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "PATRICK WEISSENSTEINER"
+        },
+        {
+            "affiliations": [],
+            "name": "GEORG STETTINGER"
+        },
+        {
+            "affiliations": [],
+            "name": "SIDDARTHA KHASTGIR"
+        },
+        {
+            "affiliations": [],
+            "name": "DANIEL WATZENIG"
+        }
+    ],
+    "id": "SP:e9a32b54e07fbcd9723d196346e5035fc1e05a66",
+    "references": [
+        {
+            "authors": [
+                "A. Poddey",
+                "T. Brade",
+                "J.E. Stellet",
+                "W. Branz"
+            ],
+            "title": "On the validation of complex systems operating in open contexts",
+            "venue": "2019, arXiv:1902.10517.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J SAE"
+            ],
+            "title": "Taxonomy and Definitions for Terms Related to On-Road Motor Vehicle Automated Driving Systems, SAE International, On-Road Automated Driving (ORAD) Committee",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M.S. Blumenthal",
+                "L. Fraade-Blanar",
+                "R. Best",
+                "J.L. Irwin"
+            ],
+            "title": "Safe enough: Approaches to assessing acceptable safety for automated vehicles",
+            "venue": "RANDCorp., SantaMonica, CA,USA, Tech. Rep. RR-A569-1, Oct. 2020. [Online]. Available: https://www.rand.org/pubs/research_ reports/RRA569-1.html",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "F. Batsch",
+                "S. Kanarachos",
+                "M. Cheah",
+                "R. Ponticelli",
+                "M. Blundell"
+            ],
+            "title": "A taxonomy of validation strategies to ensure the safe operation of highly automated vehicles",
+            "venue": "J. Intell. Transp. Syst., vol. 26, no. 1, pp. 1\u201320, Mar. 2020. [Online]. Available: https://www.tandfonline.com/doi/full/ 10.1080/15472450.2020.1738231",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Corso",
+                "R. Moss",
+                "M. Koren",
+                "R. Lee",
+                "M. Kochenderfer"
+            ],
+            "title": "A survey of algorithms for black-box safety validation of cyber-physical systems",
+            "venue": "J. Artif. Intell. Res., vol. 72, Oct. 2021. [Online]. Available: https://jair.org/index.php/jair/article/view/12716",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Ulbrich",
+                "T. Menzel",
+                "A. Reschka",
+                "F. Schuldt",
+                "M. Maurer"
+            ],
+            "title": "Defining and substantiating the terms scene, situation, and scenario for automated driving",
+            "venue": "Proc. IEEE 18th Int. Conf. Intell. Transp. Syst. (ITSC), Canaria, Spain, Sep. 2015, pp. 982\u2013988. [Online]. Available: http://ieeexplore.ieee.org/document/7313256/",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "T. Menzel",
+                "G. Bagschik",
+                "L. Isensee",
+                "A. Schomburg",
+                "M. Maurer"
+            ],
+            "title": "From functional to logical scenarios: Detailing a keyword-based scenario description for execution in a simulation environment",
+            "venue": "2019, arXiv:1905.03989.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Riedmaier",
+                "T. Ponn",
+                "D. Ludwig",
+                "B. Schick",
+                "F. Diermeyer"
+            ],
+            "title": "Survey on scenario-based safety assessment of automated vehicles",
+            "venue": "IEEE Access, vol. 8, pp. 87456\u201387477, 2020. [Online]. Available: https://ieeexplore.ieee.org/document/9090897/",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "T. Brade",
+                "B. Kramer",
+                "C. Neurohr"
+            ],
+            "title": "Paradigms in scenariobased testing for automated driving",
+            "venue": "Proc. Int. Symp. Elect., Electron. Inf. Eng., Feb. 2021, pp. 108\u2013114. [Online]. Available: https://dl.acm.org/doi/10.1145/3459104.3459208",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Neurohr",
+                "L. Westhofen",
+                "T. Henning",
+                "T. de Graaff",
+                "E. M\u00f6hlmann",
+                "E. B\u00f6de"
+            ],
+            "title": "Fundamental considerations around scenario-based testing for automated driving",
+            "venue": "2020, arXiv:2005.04045.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jama",
+                "Sakura"
+            ],
+            "title": "Automated Driving Safety Evaluation Framework Ver. 1.0 -Guidelines for Safety Evaluation of Automated Driving Technology",
+            "venue": "Accessed: Feb",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "ASAM"
+            ],
+            "title": "ASAM test specification study group report 2022",
+            "venue": "ASAM e.V., Hoehenkirchen, Germany, Tech. Rep., Version 1.0.0, Feb. 2022. [Online]. Available: https://report.asam.net/wp-content/uploads/2022/02/ASAM- Test-Specification-Study-Group-Report-2022_V1-0-0.pdf",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "United Nations Economic Commission for Europe"
+            ],
+            "title": "New assessment/test method for automated driving (NATM)",
+            "venue": "Econ. Social Council, Geneva, Switzerland, Submitted by the Working Party on Automated/Autonomous and Connected Vehicles Tech. Rep. ECE/TRANS/WP.29/2021/61, 2021. [Online]. Available: https://unece.org/sites/default/files/2021-04/ECE- TRANS-WP29-2021-61e.pdf",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "B. Ciuffo",
+                "K. Mattas",
+                "M.C. Galassi"
+            ],
+            "title": "Safety assurance of automated driving systems. Raising the level of ambition",
+            "venue": "Proc. Eur. Commission Joint Res. Center, Nov. 2020, pp. 1\u201310.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "R. Don\u00e0",
+                "B. Ciuffo",
+                "A. Tsakalidis",
+                "L. Di Cesare",
+                "C. Sollima",
+                "M. Sangiorgi",
+                "M.C. Galassi"
+            ],
+            "title": "Recent advancements in automated vehicle certification: How the experience from the nuclear sector contributed to making them a reality",
+            "venue": "Energies, vol. 15, no. 20, p. 7704, Oct. 2022. [Online]. Available: https://www.mdpi.com/1996-1073/15/20/7704",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C. Miethaner",
+                "J.-E. Stavesand"
+            ],
+            "title": "Virtual homologation of an ALKS according to UNECE R157",
+            "venue": "T\u00dcV S\u00dcD& dSPACE, Westendstr, Munich, Germany, White paper, 2022. Accessed: Feb. 4, 2023. [Online]. Available: https://www.tuvsud.com/en-gb/-/media/global/pdf-files/whitepaperreport-e-books/tuvsud_virtual-homologation-of-an-alks-according-tounece-r157.pdf",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "H. Hungar"
+            ],
+            "title": "A concept of scenario space exploration with criticality coverage guarantees, extended abstract",
+            "venue": "Leveraging Applications of Formal Methods, Verification and Validation: Applications (LectureNotes in Computer Science), vol. 12478. Rhodes, Greece: Springer, Oct. 2020, ch. 19, pp. 293\u2013306. [Online]. Available: http://link.springer.com/10.1007/978-3- 030-61467-6_19",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P. Junietz"
+            ],
+            "title": "Microscopic and macroscopic risk metrics for the safety validation of automated driving",
+            "venue": "Ph.D. thesis, Dept. Mech. Eng., Technische Universit\u00e4t Darmstadt, Darmstadt, 2019. [Online]. Available: https://tuprints.ulb.tu-darmstadt.de/9282/",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "P. Junietz",
+                "U. Steininger",
+                "H. Winner"
+            ],
+            "title": "Macroscopic safety requirements for highly automated driving",
+            "venue": "Transp. Res. Record, J. Transp. Res. Board, vol. 2673, no. 3, pp. 1\u201310, Feb. 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "B. Gangopadhyay",
+                "S. Khastgir",
+                "S. Dey",
+                "P. Dasgupta",
+                "G. Montana",
+                "P. Jennings"
+            ],
+            "title": "Identification of test cases for automated driving systems using Bayesian optimization",
+            "venue": "Proc. IEEE Intell. Transp. Syst. Conf. (ITSC), Oct. 2019, pp. 1961\u20131967. [Online]. Available: https://ieeexplore.ieee.org/document/8917103/",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Khastgir",
+                "S. Brewerton",
+                "J. Thomas",
+                "P. Jennings"
+            ],
+            "title": "Systems approach to creating test scenarios for automated driving systems",
+            "venue": "Rel. Eng. Syst. Saf., vol. 215, Nov. 2021, Art. no. 107610. [Online]. Available: https://linkinghub.elsevier.com/retrieve/pii/S0951832021001551",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P. Weissensteiner",
+                "G. Stettinger",
+                "S. Genser",
+                "D. Watzenig"
+            ],
+            "title": "Operational design domain coverage for the safety validation of automated driving systems",
+            "venue": "Proc. Driving Simul. Strasbourg, France: Driving Simulation Association, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "X. Zhang",
+                "J. Tao",
+                "K. Tan",
+                "M. T\u00f6rngren",
+                "J.M.G. S\u00e1nchez",
+                "M.R. Ramli",
+                "X. Tao",
+                "M. Gyllenhammar",
+                "F. Wotawa",
+                "N. Mohan",
+                "M. Nica",
+                "H. Felbinger"
+            ],
+            "title": "Finding critical scenarios for automated driving systems: A systematic literature review",
+            "venue": "2021, arXiv:2110.08664.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "T. Ken Mori",
+                "X. Liang",
+                "L. Elster",
+                "S. Peters"
+            ],
+            "title": "The inadequacy of discrete scenarios in assessing deep neural networks",
+            "venue": "IEEE Access, vol. 10, pp. 118236\u2013118242, 2022. [Online]. Available: https://ieeexplore.ieee.org/document/9943537/",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "N. Weber",
+                "D. Frerichs",
+                "U. Eberle"
+            ],
+            "title": "A Simulation-Based, Statistical Approach for the Derivation of Concrete Scenarios for the Release of Highly Automated Driving Functions (Automotive Meets Electronics)",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Y. Akagi",
+                "R. Kato",
+                "S. Kitajima",
+                "J. Antona-Makoshi",
+                "N. Uchida"
+            ],
+            "title": "A risk-index based sampling method to generate scenarios for the evaluation of automated driving vehicle safety",
+            "venue": "Proc. IEEE Intell. Transp. Syst. Conf. (ITSC), Oct. 2019, pp. 667\u2013672. [Online]. Available: https://ieeexplore.ieee.org/document/8917311/",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A.T. Ihler",
+                "E.B. Sudderth",
+                "W.T. Freeman",
+                "A.S. Willsky"
+            ],
+            "title": "Efficient multiscale sampling from products of Gaussian mixtures",
+            "venue": "Proc. 16th Int. Conf. Neural Inf. Process. Syst. Cambridge, MA, USA: MIT Press, 2003, pp. 1\u20138. 12282 VOLUME 11, 2023 P. Weissensteiner et al.: ODD-Driven Coverage for the Safety Argumentation of Automated Vehicles",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "R. Xu",
+                "D. Wunsch"
+            ],
+            "title": "Survey of clustering algorithms",
+            "venue": "IEEE Trans. Neural Netw., vol. 16, no. 3, pp. 645\u2013678, May 2005. [Online]. Available: http://ieeexplore.ieee.org/document/1427769/",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "J.B. MacQueen"
+            ],
+            "title": "Some methods for classification and analysis of multivariate observations",
+            "venue": "Proc. 5th Berkeley Symp. Math., Stat., Prob., 1967, pp. 281\u2013297.",
+            "year": 1967
+        },
+        {
+            "authors": [
+                "S. Lloyd"
+            ],
+            "title": "Least squares quantization in PCM",
+            "venue": "IEEE Trans. Inf. Theory, vol. IT-28, no. 2, pp. 129\u2013137, Mar. 1982.",
+            "year": 1982
+        },
+        {
+            "authors": [
+                "D. Arthur",
+                "S. Vassilvitskii"
+            ],
+            "title": "K-Means++: The advantages of careful seeding",
+            "venue": "Proc. 18th Annu. ACM-SIAM Symp. Discrete Algorithms. Philadelphia, PA, USA: Society for Industrial and Applied Mathematics, Jan. 2007, pp. 1027\u20131035.",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "F. Pedregosa",
+                "G. Varoquaux",
+                "A. Gramfort",
+                "V. Michel",
+                "B. Thirion",
+                "O. Grisel",
+                "M. Blondel",
+                "A. M\u00fcller",
+                "J. Nothman",
+                "G. Louppe",
+                "P. Prettenhofer",
+                "R. Weiss",
+                "V. Dubourg",
+                "J. Vanderplas",
+                "A. Passos",
+                "D. Cournapeau",
+                "M. Brucher",
+                "M. Perrot",
+                "E. Duchesnay"
+            ],
+            "title": "Scikit-learn: Machine learning in Python",
+            "venue": "J. Mach. Learn. Res., vol. 12, pp. 2825\u20132830, Oct. 2012. [Online]. Available: http://jmlr.org/papers/v12/pedregosa11a.html",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "M.D. McKay",
+                "W.J. Conover",
+                "R.J. Beckman"
+            ],
+            "title": "A comparison of three methods for selecting values of input variables in the analysis of output from a computer code",
+            "venue": "Technometrics, vol. 21, no. 2, pp. 239\u2013245, May 1979.",
+            "year": 1979
+        },
+        {
+            "authors": [
+                "C. Neurohr",
+                "L. Westhofen",
+                "M. Butz",
+                "M.H. Bollmann",
+                "U. Eberle",
+                "R. Galbas"
+            ],
+            "title": "Criticality analysis for the verification and validation of automated vehicles",
+            "venue": "IEEE Access, vol. 9, pp. 18016\u201318041, 2021.",
+            "year": 1801
+        },
+        {
+            "authors": [
+                "J.C. Hayward"
+            ],
+            "title": "Near-miss determination through use of a scale of danger",
+            "venue": "Highway Res. Rec., Pennsylvania Transp. Traffic Saf. Center, Pennsylvania, PA, USA, Tech. Rep., 1972, no. 384.",
+            "year": 1972
+        },
+        {
+            "authors": [
+                "F. Jim\u00e9nez",
+                "J.E. Naranjo",
+                "F. Garc\u00eda"
+            ],
+            "title": "An improved method to calculate the time-to-collision of two vehicles",
+            "venue": "Int. J. Intell. Syst., vol. 11, no. 1, pp. 34\u201342, 2013. [Online]. Available: http://link.springer.com/10.1007/s13177-012-0054-4",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "B.L. Allen",
+                "B.T. Shin",
+                "P.J. Cooper"
+            ],
+            "title": "Analysis of traffic conflicts and collisions",
+            "venue": "Transp. Res. Rec., vol. 667, pp. pp. 67\u201374, 1978.",
+            "year": 1978
+        },
+        {
+            "authors": [
+                "L. Westhofen",
+                "C. Neurohr",
+                "T. Koopmann",
+                "M. Butz",
+                "B. Sch\u00fctt",
+                "F. Utesch",
+                "B. Neurohr",
+                "C. Gutenkunst",
+                "E. B\u00f6de"
+            ],
+            "title": "Criticality metrics for automated driving: A review and suitability analysis of the state of the art",
+            "venue": "Arch. Comput. Methods Eng., vol. 30, no. 1, pp. 1\u201335, Aug. 2022, doi: 10.1007/s11831-022-09788-7.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M.-Y. Yu",
+                "R. Vasudevan",
+                "M. Johnson-Roberson"
+            ],
+            "title": "Occlusion-aware risk assessment for autonomous driving in urban environments",
+            "venue": "2018, arXiv:1809.04629.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "D. Wang",
+                "W. Fu",
+                "Q. Song",
+                "J. Zhou"
+            ],
+            "title": "Potential risk assessment for safe driving of autonomous vehicles under occluded vision",
+            "venue": "Sci. Rep., vol. 12, no. 1, p. 4981, Mar. 2022. [Online]. Available: https://www.nature.com/articles/s41598-022-08810-z",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "P. Weissensteiner",
+                "G. Stettinger",
+                "K. Tieber",
+                "K. Rehrl"
+            ],
+            "title": "Virtual risk assessment for the deployment of autonomous shuttles",
+            "venue": "Transp. Res. Rec., J. Transp. Res. Board, vol. 2675, no. 11, p. 10, Jul. 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P. Schneider",
+                "M. Butz",
+                "C. Heinzemann",
+                "J. Oehlerking",
+                "M. Woehrle"
+            ],
+            "title": "Towards threat metric evaluation in complex urban scenarios",
+            "venue": "Proc. IEEE Int. Intell. Transp. Syst. Conf. (ITSC), Sep. 2021, pp. 1192\u20131198. [Online]. Available: https://ieeexplore.ieee.org/document/ 9564790/",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Bock",
+                "R. Krajewski",
+                "T. Moers",
+                "S. Runde",
+                "L. Vater",
+                "L. Eckstein"
+            ],
+            "title": "The inD dataset: A drone dataset of naturalistic road user trajectories at German intersections",
+            "venue": "2019, arXiv:1911.07602.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Wagner",
+                "K. Groh",
+                "T. K\u00fchbeck",
+                "M. D\u00f6rfel",
+                "A. Knol"
+            ],
+            "title": "Using time-to-react based on naturalistic traffic object behavior for scenariobased risk assessment of automated driving",
+            "venue": "Proc. IEEE Intell. Vehicles Symp. (IV), Jun. 2018, pp. 1521\u20131528. [Online]. Available: https://ieeexplore.ieee.org/document/8500624/",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "S. Lef\u00e8vre",
+                "D. Vasquez",
+                "C. Laugier"
+            ],
+            "title": "A survey on motion prediction and risk assessment for intelligent vehicles",
+            "venue": "ROBOMECH J., vol. 1, no. 1, p. 1, Dec. 2014. [Online]. Available: https://robomechjournal.springeropen.com/articles/10.1186/s40648-014- 0001-z",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "K. Kreutz",
+                "J. Eggert"
+            ],
+            "title": "Analysis of the generalized intelligent driver model (GIDM) for uncontrolled intersections",
+            "venue": "Proc. IEEE Int. Intell. Transp. Syst. Conf. (ITSC), Sep. 2021, pp. 3223\u20133230. [Online]. Available: https://ieeexplore.ieee.org/document/9564423/",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "K. Mattas",
+                "G. Albano",
+                "R. Don\u00e0",
+                "M.C. Galassi",
+                "R. Suarez-Bertoa",
+                "S. Vass",
+                "B. Ciuffo"
+            ],
+            "title": "Driver models for the definition of safety requirements of automated vehicles in international regulations. Application to motorway driving conditions",
+            "venue": "Accident Anal. Prevention, vol. 174, Sep. 2022, Art. no. 106743. [Online]. Available: https://linkinghub.elsevier. com/retrieve/pii/S0001457522001798",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M.T. Wolf",
+                "J.W. Burdick"
+            ],
+            "title": "Artificial potential functions for highway driving with collision avoidance",
+            "venue": "Proc. IEEE Int. Conf. Robot. Autom. (ICRA), May 2008, pp. 3731\u20133736. [Online]. Available: http://ieeexplore.ieee.org/document/4543783/",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "J. Quehl",
+                "H. Hu",
+                "S. Wirges",
+                "M. Lauer"
+            ],
+            "title": "An approach to vehicle trajectory prediction using automatically generated traffic maps",
+            "venue": "Proc. IEEE Intell. Vehicles Symp. (IV), Jun. 2018, pp. 544\u2013549.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Schreier",
+                "V. Willert",
+                "J. Adamy"
+            ],
+            "title": "An integrated approach to maneuver-based trajectory prediction and criticality assessment in arbitrary road environments",
+            "venue": "IEEE Trans. Intell. Transp. Syst., vol. 17, no. 10, pp. 2751\u20132766, Oct. 2016. [Online]. Available: http://ieeexplore.ieee. org/document/7412746/",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "S. Ettinger",
+                "S. Cheng",
+                "B. Caine",
+                "C. Liu",
+                "H. Zhao",
+                "S. Pradhan",
+                "Y. Chai",
+                "B. Sapp",
+                "C. Qi",
+                "Y. Zhou",
+                "Z. Yang",
+                "A. Chouard",
+                "P. Sun",
+                "J. Ngiam",
+                "V. Vasudevan",
+                "A. McCauley",
+                "J. Shlens",
+                "D. Anguelov"
+            ],
+            "title": "Large scale interactive motion forecasting for autonomous driving: The waymo open motion dataset",
+            "venue": "Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV), Oct. 2021, pp. 9690\u20139699. [Online]. Available: https://ieeexplore.ieee. org/document/9709630/",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "D. Petrich",
+                "T. Dang",
+                "D. Kasper",
+                "G. Breuel",
+                "C. Stiller"
+            ],
+            "title": "Map-based long term motion prediction for vehicles in traffic environments",
+            "venue": "Proc. 16th Int. IEEE Conf. Intell. Transp. Syst. (ITSC), Oct. 2013, pp. 2166\u20132172. [Online]. Available: http://ieeexplore.ieee.org/document/6728549/",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "S. Biswas",
+                "M. Bianchini",
+                "R.N. Shaw",
+                "A. Ghosh"
+            ],
+            "title": "Prediction of traffic movement for autonomous vehicles",
+            "venue": "Machine Learning for Robotics Applications, vol. 960. Singapore: Springer, 2021, pp. 153\u2013168. [Online]. Available: https://link.springer.com/10.1007/978-981-16-0598-7_12",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "V.P. Thazha",
+                "D. Filliat",
+                "J. Iba\u00f1ez-Guzm\u00e1n"
+            ],
+            "title": "Applying map-masks to trajectory prediction for interacting traffic-agents",
+            "venue": "Proc. IEEE Int. Conf. Intell. Transp. Syst. (ITSC), Dec. 2019, pp. 1\u20137.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "W. Zhan",
+                "L. Sun",
+                "D.Wang",
+                "H. Shi",
+                "A. Clausse",
+                "M. Naumann",
+                "J. Kummerle",
+                "H. Konigshof",
+                "C. Stiller",
+                "A. de La Fortelle",
+                "andM. Tomizuka"
+            ],
+            "title": "INTERAC- TION dataset: An INTERnational, adversarial and cooperative moTION dataset in interactive driving scenarios with semantic maps",
+            "venue": "2019, arXiv:1910.03088.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "F. Poggenhans",
+                "J.-H. Pauls",
+                "J. Janosovits",
+                "S. Orf",
+                "M. Naumann",
+                "F. Kuhnt",
+                "M. Mayr"
+            ],
+            "title": "Lanelet2: A high-definition map framework for the future of automated driving",
+            "venue": "Proc. 21st Int. Conf. Intell. Transp. Syst. (ITSC), Maui, HI, USA, Nov. 2018, pp. 1672\u20131679. [Online]. Available: http://www.mrt.kit.edu/z/publ/download/2018/Poggenhans2018Lanelet2. pdf",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "L. Breiman"
+            ],
+            "title": "Random forests",
+            "venue": "Mach. Learn., vol. 45, no. 1, pp. 5\u201332, 2001, doi: 10.1023/A:1010933404324.",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "Y. Bar-Shalom",
+                "X.-R. Li",
+                "T. Kirubarajan"
+            ],
+            "title": "Estimation With Applications to Tracking and Navigation: Theory, Algorithms and Software",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "C. Pek",
+                "V. Rusinov",
+                "S. Manzinger",
+                "M.C. Uste",
+                "M. Althoff"
+            ],
+            "title": "CommonRoad drivability checker: Simplifying the development and validation of motion planning algorithms",
+            "venue": "Proc. IEEE Intell. Vehicles Symp. (IV), Oct. 2020, pp. 1013\u20131020. [Online]. Available: https://ieeexplore.ieee.org/document/9304544/",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J. Eggert"
+            ],
+            "title": "Risk estimation for driving support and behavior planning in intelligent vehicles",
+            "venue": "Automatisierungstechnik, vol. 66, no. 2, pp. 119\u2013131, Feb. 2018. [Online]. Available: https://www.degruyter. com/document/doi/10.1515/auto-2017-0132/html",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Eggert",
+                "T. Puphal"
+            ],
+            "title": "Continuous risk measures for ADAS and AD",
+            "venue": "Proc. Int. Symp. Future Active Safety Technol. Towards Zero-Traffic- Accidents (FAST-Zero), 2017, pp. 1\u20138.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J. Eggert"
+            ],
+            "title": "Predictive risk estimation for intelligent ADAS functions",
+            "venue": "Proc. IEEE Conf. Intell. Transp. Syst. (ITSC), Oct. 2014, pp. 711\u2013718. [Online]. Available: http://ieeexplore.ieee.org/document/6957773/",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "E.K. Antonsson"
+            ],
+            "title": "A general measure of collision hazard in traffic",
+            "venue": "2022, arXiv:2205.08640. VOLUME 11, 2023 12283 P. Weissensteiner et al.: ODD-Driven Coverage for the Safety Argumentation of Automated Vehicles",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S.O. Rice"
+            ],
+            "title": "Mathematical analysis of random noise",
+            "venue": "Bell Syst. Tech. J., vol. 24, no. 1, pp. 46\u2013156, 1945.",
+            "year": 1945
+        },
+        {
+            "authors": [
+                "P. Beckmann"
+            ],
+            "title": "Statistical distribution of the amplitude and phase of a multiply scattered filed",
+            "venue": "J. Res. Nat. Bureau Standards, vol. 66D, pp. 231\u2013240, May 1962.",
+            "year": 1962
+        },
+        {
+            "authors": [
+                "A R"
+            ],
+            "title": "Language and Environment for Statistical Computing, R Core Team, Vienna, Austria, 2022",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D. Wollschlaeger"
+            ],
+            "title": "ShotGroups: Analyze Shot Group Data. R Package Version 0.8.2",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Bernhard",
+                "P. Hart",
+                "A. Sahu",
+                "C. Sch\u00f6ller",
+                "M. Guzman Cancimance"
+            ],
+            "title": "Risk-based safety envelopes for autonomous vehicles under perception uncertainty",
+            "venue": "2021, arXiv:2107.09918.",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "INDEX TERMS Automated vehicles, autonomous vehicles, automated driving, validation, coverage, operational design domain, automotive safety, vehicle safety, safety argumentation.\nI. INTRODUCTION In 2016, more than 1.3 million traffic deaths happened worldwide. Compared to the growing global population, the death rate has, however, at least stagnated. Taking the increasing motorisation in large parts of the world into account suggests\nThe associate editor coordinating the review of this manuscript and\napproving it for publication was Lorenzo Ciani .\nthat the rising safety measures in modern vehicles positively contribute to safety. [1].\nAutomated vehicles (AVs) are cyber-physical systems operating in open context [2]. AVs are equipped with automated driving systems (ADS) which are expected to increase the aforementioned safety benefits of vehicle automation further while enabling new mobility methods, e.g., robotaxis, in complex urban areas. ADS are SAE Level 3 to 5 [3]\nVOLUME 11, 2023 This work is licensed under a Creative Commons Attribution 4.0 License. For more information, see https://creativecommons.org/licenses/by/4.0/ 12263\nas they take over the complete driving task without human supervision. The boundaries of operation for such systems are specified by the target operational design domain (ODD). The description of an ODD contains a set of parameters and their respective ranges. A respective taxonomy for such an ODD description is given in [4]. The open context brings various difficulties for the safety validation of these systems. In general, the definition of safety for ADS is a difficult concept which still needs to be clarified. However, certain initiatives exist (e.g. [5]). For example, in [6], specific interpretations of safety are defined, including the definition of safety as a process, which influences the possible validation strategies. Overviews of the different validation strategies are given in [7] and [8], respectively.\nA. CHALLENGES OF SAFETY VALIDATION FOR ADS Most of these strategies use the concept of scenarios, introduced in [9] and [10]. In there, different types of scenarios are defined. The logical scenario (LS) is a model of time sequences of consecutive scenes with parameters represented as ranges. The concrete scenario (CS) is an instance of a LS, with concrete values for each LS parameter. The continuous parameter (CP) is part of the LS and can take on every value between specific pre-defined ranges. In contrast, the discrete parameter can assume only specific values (e.g. binary values). However, it must be noted that the discrete parameters can also be used to split up existing LS into individual LS. These individual LS then contain only CP.\nThis leads to various validation strategies using scenariobased testing (SBT) as the basis. An overview is given in [11], [12], and [13]. The general issues regarding those strategies include:\n\u2022 Defining the correct scenarios. These can come from certain databases (with data from traffic analysis, including accident data) and expert-based approaches. \u2022 Providing suitable test methods. Even if the SBT approach offers ways to tackle the open context problem of ADS, there is still a tremendous amount of scenarios to be executed, which calls for suitable test methods, mostly virtual testing. \u2022 Evaluating the executed scenarios and deciding on the correct metric to evaluate criticality. \u2022 Provide a suitable safety argumentation which includes evidence of the achieved ODD coverage.\nPotential solutions are formulated in various research initiatives, e.g. [14] and standardisation activities [15]. The question of how safe ADS-equipped vehicles need to be for operating in real traffic also concerns regulatory bodies on all levels. Recently, the United Nations Economic Commission for Europe (UNECE) proposed a regulatory framework for the safety assessment of ADS ( [16], [17], and [18]). The framework consists of multiple pillars, including a scenario catalogue for conducting SBT, various test methods for scenario execution and assessment procedures. This framework aims to be repeatable, objective and evidence-based in assessing ADS safety. While the overall safety assessment\nframework is clearly defined, specific details for an actual execution still need to be clarified, including methods for choosing CS\u2019 andmetrics for scenario evaluation. This article aims to contribute to the resolution of these current issues.\nThere are also certain approaches in the industry towards the safety validation of ADS. General views on safety validation and certification are provided in [19] and [20]. A safety argumentation for assessing an automated lane-keeping system (ALKS) focused on virtual test methods is provided in [21]. However, the respective ADS has a narrow target ODD and severely bounded behaviour competencies, which makes the proposed methods only conditionally applicable for more complex use cases.\nII. STRUCTURE OF THE ARTICLE The remainder of the article is structured as follows: First, Sec. III will introduce the proposed methods and key results of this article, which all contribute towards an increased safety argumentation. Secondly, in Sec. IV, the methods are applied exemplarily. The generated results and their implications are discussed in Sec. V. The article concludes with a summary and an outlook in Sec. VI.\nIII. COVERAGE EVALUATION METHOD As stated in [13], traditional distance-based statistical approaches are insufficient to cover the resulting test space. Various methods to explore the scenario space exist. In [22], a method for criticality identification to provide coverage estimates is proposed. It uses a criticality indicator for the exploration of the scenario space using a guided search. Another method is to estimate the probability of a random scenario being critical. The actual probability is unknown for a specific ADS, so estimation is necessary [13]. However, deriving confidence statements for such methods can take time and effort. They need to be derived for each ADS separately and also repeated for every change in the ADS. This introduces another source of potential error in the overall safety argumentation process.\nIn general, the required safety argumentation for AVs can be viewed as a combination of a microscopic and macroscopic assessment [11]. The microscopic assessment, as defined in [23], evaluates the individual scenarios using respective metrics. A metric for the microscopic assessment of scenarios at urban intersections is presented in Sec. III-D. The macroscopic assessment, as defined [24], compiles the individual microscopic assessments to statistical statements about the overall impact of AVs. A proposal for the macroscopic assessment is given in Sec. III-B. The combination of both assessments into an overall safety argumentation leads to the safety validation process, which is presented in Sec. III-A. Therefore, the goal of the safety validation process lies not in the search for critical scenarios or certain edge cases (e.g., [25], [26]). Such a search is essential during the development and internal validation of such systems, especially across different design iterations, as it can influence certain development decisions. Nevertheless, such edge\n12264 VOLUME 11, 2023\ncases inherently depend on the performance of the tested ADS regarding the experienced criticality, based on the predefined metrics.\nThe safety validation process essentially needs to be seen as a function of the defined target ODD of the ADS, as this defines the overall search space that needs to be covered. Additionally, it provides the necessary safety argumentation for the ADS and its respective target ODD. A proposal for such an overall process is shown in [27]. To determine the overall coverage, an exploration method independent of the respective ADS performance is needed. Hence, a deterministic and transparent way to calculate the overall coverage can only be achieved if it is based on the respective input parameters, meaning the executed scenarios. In other words, taking an open-loop approach towards coverage evaluation, as closing the loop and using the feedback of the experienced criticality in a guided search for the following scenario, would once again incorporate a specific ADS. This is displayed in Figure 1.\nAn overview of different methods for exploring the scenario space is given in [28]. As mentioned earlier, the focus is on sampling-based methods, as they provide the possibility to respect available parameter distributions, enabling the previously mentioned advantages. the advantage of which has also already been explained. Another advantage of sampling methods is that, since the drawn samples are mutually independent, the generated test cases can be executed in parallel, reducing overall testing time. Sampling methods, in general, tend to be inefficient if uniform distributions are assumed. Furthermore, the applied discretisation processes are not able to provide sufficient argumentations for the safety validation [29].\nThere are, after all, a fewmethods to increase efficiency for these assumptions (see [30] or [31]). In [31], different concepts for the coverage calculation, based on the past scenario in the overall scenario space, are presented.\nHowever, this can be partly addressed using the respective parameter distributions of the CPs for each LS. These parameter distributions can e.g. include the likelihood of exposure to given scenarios. As opposed to using uniform distributions, realistic parameter distributions enable a more efficient design of the sampling process, e.g., by considering that higher probabilities of exposure in the real world are of high significance for the safety validation of ADS. A method for drawing efficient test case samples, while independent of ADS implementations, will be shown in Sec. III-C."
+        },
+        {
+            "heading": "A. EXPLORING THE PROCESS OF COVERAGE EVALUATION",
+            "text": "The aim of the coverage evaluation as part of the safety argumentation for ADS is to systematically ensure safe operation inside a pre-defined ODD. Therefore, a dedicated process needs to be in place to enable an efficient and traceable way to cover the target ODD of the ADS. Two crucial aspects of such a process are:\n\u2022 Extendable towards all necessary target ODDs. \u2022 The concrete ADS implementation is irrelevant.\nIn general, such a process starts by gathering all requirements for the process itself, including the ADS\u2019 target ODD, manoeuvers and the overall use case. These requirements are used for further execution of the process, presented in detail in [27].\nThe overall process consists of six steps, depicted in the left part of Figure 2. In step 1, the target ODD based on the top-level taxonomy from [4] is defined. Next, step 2 defines the occurring disturbances, a concept defined in [14], which enhances the SBT approach with the underlying physical principles for each ADS subtask (perception, judgement and control in [14]). These disturbances also define the structure of the relevant LS, which is, together with the target ODD parameter of step 1, the input for step 3, the LS generation. In step 3 and step 4, the CS\u2019 are created, whereas in step 4+ they are executed using specific test methods (ranging from real-world proving grounds to virtual testing). Next, the executed test cases are evaluated using a pre-defined set of key performance indicators (KPIs) to determine if the test was passed or failed (step 5). This is then used as input for the determination of the achieved coverage (step 6).\nWhile the presented process (left part of Figure 2) introduces an overall method together with a stepwise process regarding the coverage evaluation of ADS, certain aspects still need to be better defined. The aspects concerning the core part of the process (Figure 2) include a consistent definition of the coverage itself in the context of SBT, as introduced in Sec. I, and a respective set of metrics usable for pass/fail determination in an urban use case. Furthermore, the exact type of scenarios to include in the overall process, either gathered from scenario databases such as [32] or derived otherwise (e.g., using expert knowledge), is an open question. The first two aspects are being addressed in Sec. III-B and Sec. III-D, respectively. However, scenario creation is an equally important aspect that will be covered in future publications.\nB. DEFINING COVERAGE IN THE EVALUATION PROCESS As already examined at the beginning of Sec. III, most definitions of coverage in the domain of safety validation for ADS are either simplified pass/fail ratios of executed test cases or only cover the aspect of coverage partly (e.g., on parameter level) and not in the context of an overall SBT approach for safety argumentations. Therefore, the aim is to define coverage in a way that fits SBT, especially considering that for most LS descriptions, the associated CPs are defined as probability density functions (PDFs) using a specific metric.\nVOLUME 11, 2023 12265\nThis directly leads to the fact that each CS contributes differently to the overall coverage based on the associated metric in the CP PDF. This is in line with the basic idea of scenarios, where it is acknowledged that not every situation while driving is equally relevant. Furthermore, this means that some information is available regarding the scenarios (based on the utilised metric) which can be utilised for CS generation. For the remainder of this article, it is assumed that the associated metric for the CP PDF is the probability of occurrence. This means that values of the CP with higher densities are more likely to appear in the real world. However, other metric types can also be defined on the continuous parameter level and for CS and LS. Other possible metrics would be the associated risk of a CS (based on some pre-assessment) or specific metadata for a LS (e.g., amount of roads at a junction) or even a combination of those."
+        },
+        {
+            "heading": "1) DEFINING THE DIFFERENT LEVELS OF COVERAGE",
+            "text": "The previous section already mentioned that the different elements of a scenario (LS, CS, CP) could all have their metrics that influence the overall coverage. This fact is combined into a general overview, respecting the hierarchy between the different levels and includes statements regarding the test case domain and the number of test cases. It can be\nseen in Figure 3. Starting from the top, an ADS of SAE Level 5 would have to cover the entire input parameter space without any restrictions, leading to infinite test cases. The ODD is limited in the case of an ADS of SAE Level 3 or 4 (one level below in Figure 3). As the amount of test cases is still infinite, using the SBT approach, the ODD is split into a finite amount of LS, denoted as SL = {SL,1, SL,2, . . . , SL,n}. However, for a respective LS and the associated scenario space, the test case domain is once again infinite. For each SL,i, there is a number of CS defined, given as SL,i = {SC,1, SC,2, . . . , SC,n}. Then again, for each SC,i, concrete values are assigned, making it executable as a test case given a chosen test method. This is denoted as SC,i = {x1, x2, . . . , xn}. At the lowest level, CPs define the actual values of each SC,i. TheCPs for a given SL,i are denoted as SP,i = {SCP,1, SCP,2, . . . , SCP,n}. The elements of SP,i are the chosen test case values for each CP, e.g., SCP,i = {x1, x2, . . . , xn}. Essentially, the generated CS for each LS can be seen as the cartesian product of each SCP,i associated with SL,i, as the values and the number of resulting pairs are equal to the defined CS. Having established the general relationship between the different levels of scenario descriptions, a thorough definition of coverage is possible. Starting with the overall coverage on\n12266 VOLUME 11, 2023\ntarget ODD level, cODD \u2208 [0, 1] is given by\ncODD = |SL |\u2211 i=1 cLS,imLS,i,coverage, (1)\nwhere cLS,i \u2208 [0, 1] is the coverage of one specific LS and mLS,i,coverage is the value of the specified metric to weigh the different LS across each other (e.g., according to the probability of occurrence). Over all LS, the sum of this metric is defined as\n|SL |\u2211 i=1 mLS,i,coverage := 1. (2)\nThe individual coverage of a specific LS is\ncLS,j = |SL,j|\u2211 i=1 cCS,i, (3)\nwhere cCS,i \u2208 [0, 1] is defined as the coverage for a specific CS and is calculated using the following equation:\ncCS,i = \u2211|SP,j| i=1 cCP,i(\u2211|SP,j|\ni=1 1\n|SCP,i|\n) |SL,j| , (4)\nwhere cCP,i \u2208 [0, 1] is the coverage on CP level. To make sure that for a given LS SL,j the calculated coverage in Eq. 3 does not exceed the defined limit, the individual CS coverage calculated in Eq. 4 is corrected, using the amount of chosen CP values for each defined CP in the LS description and the total amount of CS for the specific LS. At last, cCP,i is given as\nPr(xi,a \u2264 X \u2264 xi,b) = \u222b xi,b xi,a fX (x)dx = cCP,i, (5)\nwhich equals Ai in Figure 4. This means that for a respective CP a specific value range will be represented by one concrete value, which becomes the test case value. This stems from the fact that specific values (for given value ranges) are needed to get executable scenarios and to cope with the infinite test\ncase domain of each LS. However, the probability that a value is occurring based on a given PDF is only defined for parameter ranges. Therefore, an approach combining specific value ranges with representative concrete values is needed. This representative value can e.g. be the mean of the value range, as this takes the shape of the associated PDF, for that specific range, into account.\nIt can be observed from Eq. 4 that each generated CS contributes differently to the overall coverage, depending on the covered area of each CP associated with the CS. Note that in Eq. 3 it is possible to include another metric (similar to mLS,i,coverage on LS level) to adjust the individual weighing of each CS. This would further influence how much it contributes to the overall coverage based on a metric defined on the CS level. This is omitted for now but will be explored in greater detail in future publications.\nC. PROPOSED SAMPLING METHOD FOR EFFICIENT TEST CASE GENERATION After defining a consistent way for ODD coverage calculation, the parameter discretisation process is examined further in this section. This process chooses exact values for each CP in a LS description to generate CS\u2019. This technically belongs to step 1, depicted in Figure 2.\nThere are two extreme cases to consider when looking at sampling from a specific PDF for generating exact values of CP. On the one hand, choosing only one value and assigning the complete value range of a CP to this value, e.g. using the mean, would be possible. How advisable this is, depends on the shape of the PDF, as a narrow PDF is more suitable than a wide one. Therefore, the overall PDF\u2019s variance is essential (which is a property influenced by the shape of the PDF). For each area (e.g. Ai in Figure 4), the variance should be as slim as possible since, otherwise, the chosen representative value can differ a lot from actual values inside the respective value range. On the other hand, using Monte Carlo sampling with a high number of samples leads to minimal areas and narrow value ranges for each representative value, reducing\nVOLUME 11, 2023 12267\nthe respective variance and approaching zero in case of an infinite number of Monte Carlo samples. Even if both cases are unrealistic, they contribute towards displaying the necessity of generating representative samples for given CP PDFs in a traceable manner.\nExploiting the PDF of scenario parameters has already been explored in the literature. For example, in [33], the cumulative probability of a CP, based on synthetic data generated using traffic simulation, is split into equidistant areas, which all encompass the same amount of coverage on the CP level. In [34], existing parameter distributions are used for conditional sampling based on risk measures. As a concrete method for sampling, an expectation value-based kD-tree is used for dividing the parametric space, which can be ndimensional [35]. The kD-tree performs a spatial subdivision based on a pre-defined number of divisions. Each resulting subspace has an equal amount of points sampled from the original PDF. It is in principle similar to the method in [33], however, extended towards higher dimensions, in case multiple CPs are dependent on each other and are defined over a joint PDF, as both methods aim for test cases of equal coverage on CP level.\nIf parameter distributions are used for the CPs of the defined scenarios (either one-dimensional, meaning one CP, or multi-dimensional, meaning multiple CPs together in a joint PDF), two main aspects need to be considered:\n\u2022 Overall, the chosen test case values need to be as close as possible to the actual occurring values, given a pre-defined amount of values. Otherwise, Monte Carlo sampling would be the apparent default solution. \u2022 The deviation must be limited for each test case value and must not exceed a certain predefined limit. This is necessary to ensure that a particular condition is met for each test case value, as the first aspect focuses on an overall condition across all test case values.\nTherefore, in Sec. III-C2, specific metrics will be introduced to quantify different sampling methods across each other, including the proposed sampling method in Sec. III-C1, which covers both mentioned aspects."
+        },
+        {
+            "heading": "1) METHOD FOR GENERATING SAMPLES FROM PARAMETER DISTRIBUTIONS OF CPs",
+            "text": "Clustering is an unsupervised learning task already covered by literature in many aspects [36]. A well-known algorithm for clustering is called k-means [37], whose objective function is to minimise the total within-cluster distances (squared euclidian distances) to the closest centroids. This objective function directly addresses the first aspect stated at the end of Sec. III-C if the centroids from k-means are chosen as test case values. To apply clustering, samples must be drawn from the available parameter distributions of the CP. However, the second aspect (see the end of Sec. III-C) is still unaddressed. Therefore, the following proposed method will use k-means as the basis for the first clustering and further adapt this initial solution to address the second aspect. The steps of the\nsampling method are all depicted in Figure 5 and will be explained stepwise in the following. Step 1: It is assumed that the original data concerning some CP (in Figure 5 denoted as xi and xj) is available in point samples. Using kernel density estimation (KDE) on the data would lead to a respective estimation of the PDF. It could also be the case that parameter densities are already available, e.g. from extracted LS\u2019 from a scenario database. Step 2: In any case, samples are drawn from the derived PDF in step 1 and scaling is performed. Concretely, we denote X = {x1, x2, . . . , xm} \u2286 [0, 1]d as the representation of the dataset on which the clustering is performed upon. Step 3: Performing clustering on X , we first define C = {C1,C2, . . . ,Ck} as the respective partition of X into k clusters, with Ci \u2229 Cj = \u2205, i \u0338= j. Additionally, the centroids are denoted as 2 = {\u03b81, \u03b82, . . . , \u03b8k}, whereas \u03b8 j \u2208 [0, 1]d is the centroid of Cj. It is expressed as \u03b8 j = 1|Cj| \u2211 x\u2208Cj x. Now, we define the within cluster distances WCj between samples x \u2208 Ci as\nW (Ci) = \u2211 x\u2208Ci \u2225x\u2212 \u03b8 i\u222522, (6)\nwith \u2225.\u222522 being the squared euclidian distance. This defines also the variance within each cluster. k-means is then defined as the minimisation of the objective function\nJ (C; 2) = |C|\u2211 i=1 W (Ci). (7)\nThemost common algorithm to tackle this problem is Lloyd\u2019s algorithm [38] which uses a greedy strategy to approximate J (C; 2). As initialisation of the centroids for the first step, the k-means++ initialisation is used [39]. For the concrete implementation, used for generating the benchmark in Sec. III-C2, the Scikit-learn [40] package is utilised. Step 4: After having completed the initial partition into k clusters, the clusters are now adapted in the following steps. First, the probability pCi that x \u2208 Ci is calculated using,\npCi = |Ci|\u2211|C| i=1 |Ci| . (8)\nThe two properties of each cluster, stated in Eq. 6 and 8, can be seen in a qualitative representation in Figure 5 for step 4. There, the x-axis, denoted as POccurence, represents the individual occurrence probabilities pCi for each cluster, whereas the y-axis, denoted as tr(6), is the trace of the covariance matrix. This is used as a scalar-valued generalisation for higher dimensions interpreting the deviation in the variance definition as euclidian distance since in Eq. 6 the squared euclidian distance was also interpreted as a variance. If X is a column vector which elements are random variables Xi and 6 is the covariance matrix between each components of X , the scalar valued variance Vars is defined as\nVars(X) = E [ \u2225X \u2212 E[X]\u222522 ] . (9)\n12268 VOLUME 11, 2023\nAfter some rewriting, which is omitted, this equals the sum of the individual variances of each Xi, which in turn equals tr(6). Therefore, in the following, the use of tr(6) is equal toW (Ci). As the overall goal is to bound each within-cluster variance W (Ci), based on some pre-defined condition to fulfil the second aspect presented in Sec. III-C, the following inequality is defined:\nW (Ci) \u2264 g(pCi ) + \u03f5 \u2200 Ci \u2208 C, (10)\nwith \u03f5 being a threshold value and g being described as follows:\ng : pCi \u2208 [0, 1] 7\u2192 k pCi + d \u2208 R +, (11)\nwhere k and d are parameters to be defined. Eq. 10 determines the condition each cluster needs to obey. For a start, the condition itself, Eq. 11, is expressed as a boundary line and reflects the following assumption: For a cluster Ci, where its centroid \u03b8 i represents the actual test case value, with higher occurrence probability, pCi , there should be a lower within-cluster varianceWCi . This makes intuitive sense. For a cluster representing more of the sampled points than a cluster with lower occurrence probability, the imposed condition (in this case, the variance) should be more strict. How exactly this relationship (\u2191 pCi \u21d2 \u2193 WCi ) is characterised, needs to be explored more in future publications. As stated in Eq. 11, a simple boundary line with two parameters is chosen, as it reflects the basic intuitive assumption. The parameters are chosen using linear regression on the points defined by the properties of each cluster, as can be seen in step 4 in Figure 5. This gives a realistic boundary, as some clusters will be above and beyond the line. For future publications,\nassuming a predefined boundary condition will be explored further. Adjusting the sampling method presented in this article would enable the determination of the required amount of test cases, considering that each of these cases needs to obey the boundary condition. Step 5: In this step, a respective adaption strategy needs to be specified so that all clusters obey the respective boundary, discussed in step 4. The general idea, as qualitatively depicted in Figure 5, is to efficiently search for pairs of points in the sample space that fulfil two criteria:\n\u2022 They belong to different clusters and, \u2022 the euclidian distance between them falls below a certain threshold.\nThese point pairs are potential candidates for exchange between their respective clusters. Because fundamentally, clusters above the boundary need to drop some points to reduce the occurrence probability. As the dropped points, by definition, are rather far off from their respective centroid, the within-cluster variance is also reduced. Eventually, if enough points are dropped, the boundary condition will be met. This already describes the basics of the developed algorithms. Concretely, two algorithms for cluster reduction were developed, Alg. 1 for the one-dimensional problem and Alg. 2 as a generalisation for the n-dimensional problem. In the following, both algorithms are explained.\nThe one-dimensional algorithm, shown in Alg. 1, deals with the situation of having clustered samples (re-scaled to [0,1]) from the parameter distribution of a CP, which is independent of all other CPs defined in a LS. This means that only the direction of the x-axis is left as the degree of freedom for dropping or absorbing points in clusters, which\nVOLUME 11, 2023 12269\nis in maximum two other clusters (\u2018\u2018left\u2019\u2019 and or \u2018\u2018right\u2019\u2019 of the cluster in focus). Considering this fact enables an adapted algorithm design for the one-dimensional problem. Taking the overall point samples and the clusters and centroids from the k-means clustering as input, and the adapted clusters are returned. At first, the clusters are sorted based on the individual centroids, from small to large, and the cluster properties, WCi and pCi , are calculated. Then, until each cluster obeys the boundary condition, three options are available for each cluster. Option 1 is that the cluster is inside the \u03f5-threshold, which means no further action is taken for this cluster. Option 2 means the cluster is above the boundary line g(pCi ). Therefore, points are dropped towards the next cluster based on the sorting. The last option, a cluster being below g(pCi ), means further points can be added. The euclidian distance threshold between points of different clusters determines how many points are dropped or added. If the threshold is high, the algorithm needs fewer iterations asmore points are exchanged in each iteration and vice versa.\nAlgorithm 1 One-Dimensional Algorithm for Cluster Adaption Require: X \u2286 [0, 1], C, 2, \u03f5, threshold, number of samples m, number of clusters k Ensure: C print sort(C) after 2, ObtainW (Ci) & pCi by Eq. 6 & 8 \u2200 Ci \u2208 C repeat for i = 1, 2, . . . , k do\nif W (Ci) \u2264 g(pCi ) + \u03f5 then continue else for j = 1, 2, . . .mi do dj,l = \u2225xj \u2212 xl\u22252 \u2200 xl \u2208 Ci+1 if dj,l < threshold then\nif W (Ci) > g(pCi ) then Ci = {Ci \\ xj}, Ci+1 = Ci+1 \u222a {xj} else ifW (Ci) < g(pCi ) then Ci+1 = {Ci+1 \\ xl}, Ci = Ci \u222a {xl}\nend if else continue\nend if end for\nend if end for update:W (Ci) & pCi using Eq. 6 & 8 \u2200 Ci \u2208 C\nuntil W (Ci) \u2264 g(pCi ) + \u03f5 \u2200 Ci \u2208 C return C\nThe generalisation of the one-dimensional algorithm towards n-dimensions is based on the same principles of exchanging points, which are part of the original dataset X and assigned to different clusters, to obtain a final set C that obeys Eq. 10. At first, the cluster properties WCi and pCi are calculated for each cluster. Additionally, we denote S \u2286 C\nwhich is constructed as:\nS = {Ci \u2208 C |W (Ci) > g(pCi ) + \u03f5}. (12)\nNow the algorithm repeats the following steps until S is empty: Iterating through S, all possible other clusters (except the current cluster itself) are checked for how much they reduce the defined objective function\nJ (C) = |S|\u2211 i=1 W (Si) \u2212 g(pSi ) \u2212 \u03f5. (13)\nOnce again, points with less euclidian distance than a pre-defined threshold are considered for the exchange. After having iterated through every possible combination, the option which minimises the objective function in Eq. 13 the most, is chosen and a new iteration starts.\nAlgorithm 2N-Dimensional Algorithm for Cluster Adaption\nRequire: X \u2286 [0, 1]d , C, \u03f5, threshold Ensure: C\nprint Obtain W (Ci) & pCi by Eq. 6 & 8 \u2200 Ci \u2208 C; S from Eq. 12 repeat for Si \u2208 S do for Cj \u2208 {C \\ Si} do Di,j = \u2225xi \u2212 yj\u22252, x \u2208 Ci, y \u2208 Si (di,j) \u2208 R|Ci|\u00d7|Si| for di,j < threshold do C \u2032i = Ci \u222a {yj}, S \u2032 i = {Si \\ yj}\nend for C\u2032i,j = {C \\ {Ci, Si}} \u222a {C \u2032 i , S \u2032 i }\nL = L \u222a {C\u2032i,j} end for\nend for C\u2032 = argminC\u2032\u2208L J (C\u2032) update: C = C\u2032,S from Eq. 12\nuntil S = \u2205 return C\nStep 6: In this last step, the proposed algorithms, either Alg. 1 or Alg. 2, depending on the dimensionality of the problem, are applied to the original clustering of X using k-means, which leads, qualitatively, to the situation depicted for step 6 in Figure 5, as all clusters, based on their properties, obey to the defined boundary condition. Next, the proposed sampling method (adapted k-means) will be benchmarked against other methods."
+        },
+        {
+            "heading": "2) BENCHMARKING THE PROPOSED METHOD FOR CONTINUOUS PARAMETER SAMPLING",
+            "text": "The proposed adapted k-means addresses both aspects defined in Sec. III-C that sampling methods should have. In order to compare this method to other ones and showcase in which aspects the method outperforms others, a short benchmarking is performed for the one-dimensional and twodimensional cases. In total, five methods are included in the\n12270 VOLUME 11, 2023\nbenchmark. The first option is simply sampling from a given PDF, basically a Monte Carlo approach. As this method was mentioned in Sec. III-C as an extreme case, it was essential to include it here. Then, equidistant steps across the value range are used next for the one-dimensional case. For the twodimensional case, Latin hypercube sampling (LHS), a much more efficient method based on [41], is used. Both methods discourage the available parameter distribution and assume an underlying uniform distribution. However, it should be showcased that if a respective PDF is available, it is best to utilise it. That is why thesemethods are included. The last two methods are the k-means and the proposed adapted k-means approach, respectively. Next, the two relevant metrics are introduced, followed by the definition of the used parameter distributions and the actual results of the benchmark.\nThe two metrics are: \u2022 Distance-based metric (DBM): The idea of this metric is that if a large number of samples m is drawn from the parameter distribution, it should be measured how close the closest test case value is to each of the sample points. Concretely this is expressed as\nDBM = 1 m m\u2211 i=1 min \u2200\u03b8\u22082 \u2225xi \u2212 \u03b8\u22252. (14)\nThe aim of a sampling method for parameter distributions of CP in a SBT approach is therefore to reduce DBM as much as possible as it reduces the uncertainty that is inevitably introduced since not every exact value that is possible can also be tested. \u2022 Standard deviation metric (STDM): This metric enables measurement of the expected standard deviation for a chosen cluster, scaled by the actual occurrence probability of said cluster. This directly reflects the already mentioned fact that clusters with higher occurrence probability should have stricter boundaries on the within-cluster variance. It is defined as\nSTDM = \u221a W (Ci) pCi . (15)\nBoth metrics operate only on clusters and their properties, which means that they are independent of the dimensions of the parameter distributions.\nTo benchmark the methods, two examples, one and twodimensional, have been constructed. For the one-dimensional case, the probability density is defined using a mixture of two Gaussian distributions,\nf (x) = n\u2211 i=1 wipi(x), (16)\nwith n = 2, w1 = 0.55, w2 = 0.45, p1 = N (\u22122, 1) and p2 = N (2, 0.04). For the two-dimensional case, two onedimensional Gaussian distributions, p1(x) = N (0.5, 0.25) and p2(x) = N (0.2, 1), are defined. The two-dimensional samples are obtained by adding and subtracting p1(x) and p2(x) for the x and y axis, respectively. Executing all themethods on this given examples for various amounts of test cases\nleads to the results shown in Tab. 1 for the one-dimensional example, Tab. 2 shows the two-dimensional case. For both Tables, the values shown for each column represent the fractional of the necessary test cases for the adapted k-means over the other respective method to achieve the same value for the DBM. Both evaluations are also depicted for one and two dimensions in Figure 6 and Figure 7, respectively.\nFor the one-dimensional case, the mean of the reduction potential is approx. 6.5% over the k-means, 26.4% over the equidistant steps, and 62.6% over sampling from the PDF. For the two-dimensional case, these values are 2.4% over the k-means, 67.3% over sampling from the PDF, and 73.8% over using LHS.\nThe achieved results show various things: First, the performance of the adapted k-means in comparison to the k-means is not degraded by applying the cluster adaption algorithms, neither in one nor in two dimensions. Secondly, it can be observed that both clustering techniques outperform all other benchmarked methods severely. This indicates,\nVOLUME 11, 2023 12271\nbased on the applied metrics, that utilising parameter distributions, when available, offers a large test case reduction potential on CP level. This effect is further enhanced on LS level since it is typically composed of many individual CP.\nAt last, for the one-dimensional case, the STDM is observed. Calculating this metric for each cluster in the given example is depicted in Figure 8. The upper boundary line is created by inserting Eq. 10 into the STDM (Eq. 15). This means, that for the adapted k-means the STDM is bounded based on the given boundary condition. In Figure 8 it can be observed that one specific cluster of the k-means approach is violating this boundary. All clusters of the adapted k-means are within the given boundary.\nD. METRICS FOR THE EVALUATION OF SCENARIOS This section deals with the evaluation of executed scenarios. Following the main steps of the ODD coverage process, this corresponds to step 3 (see Figure 2). Evaluating scenarios means analysing if a certain amount of criticality did occur during the execution, whereas criticality is defined as \u2019the combined risk of the involved actors when the traffic situation is continued\u2019 [42]. The most obvious way to determine that is by checking if an actual collision between entities of a scenario did occur. However, that would disregard certain near-misses and would provide no means of indicating the criticality of those scenarios. Therefore, many different criticality metrics exist, as they are not only relevant for evaluating scenarios during the safety validation phase using a SBT approach. There are applications for such metrics along the entire V-model [43]. The most well-known metric is the time to collision (TTC), which calculates the time until a predicted collision between traffic participants [44]. It originates from traffic conflict research and is, therefore, collision-focused. There exist many adapted and improved versions of TTC. In [45], different accident configurations are considered, taking the vehicles\u2019 width and length into account and providing a more accurate TTC. For a-posteriori traffic data analysis, the post encroachment time (PET) calculates the time gap between a traffic participant leaving and another entering a pre-defined area [46]. A comprehensive overview of criticality metrics is given in [47]. The authors of [47] also define a set of properties relevant to such metrics. These properties are (excerpt):\n\u2022 Reliability: Describes how close repeated measurements are to one another. \u2022 Validity: This property is concerned with how close the measurements are to the actual accident probability.\n12272 VOLUME 11, 2023\n\u2022 Sensitivity: This is the true positive rate (TPR), which is defined as\nTPR = TP\nTP + FN , (17)\nwhereas TP are the true positives and FN are the false negatives. \u2022 Specificity: Similarily, specificity is the true negative rate (TNR), which describes the rate of correctly identified uncritical situations, expressed as\nTNR = TN\nTN + FP , (18)\nwith TN and FP being the true negatives and the false positives, respectively. In this article, the focus is on the test evaluation of certain scenarios, based on pre-defined pass/fail criteria to determine the overall coverage of the target ODD for a specific ADS. If the focus is on an urban use case, including complex intersections, TTC is considered to not be an ideal choice, since it suffers from reduced validity and sensitivity [47].\nVarious literature exists that aims to apply distinct risk metrics towards urban-based use cases. In [48], a probabilistic risk assessment algorithm considering occlusion, focusing on integration into planning algorithms, is proposed. In [49], a potential risk assessment for occluded areas in urban situations is proposed by threat modelling of the potential risk, however, it is designed for real-time purposes. In [50], a virtual risk assessment, determining the suitability of an automated shuttle deployment in suburban areas, is presented, taking into account the actual geo-location. Another risk metric for urban use cases is presented in [51]. The authors propose a threat metric in complex urban scenarios using the inD dataset [52]. Moreover, they perform a reachability analysis, a technique to compute reachable system states based on parametrised motion models. Also, respective lane association is considered. However, this association is static, not considering the typical driver\u2019s intention. This leads to a threat metric which is prone to reduced sensitivity."
+        },
+        {
+            "heading": "1) STRUCTURE OF THE DEVELOPED METRIC FOR URBAN JUNCTIONS",
+            "text": "A useful structure of such metric, which also applies towards simple ones like TTC, can be seen in Figure 9, which is based on [53]. It serves as an overview for the urban risk metric which is proposed to be used to evaluate executed scenarios during the ODD coverage process. The two main parts, the scene prediction and the risk assessment, will be explained in detail in Sec. III-D2 and Sec. III-D3, respectively."
+        },
+        {
+            "heading": "2) SCENE PREDICTION",
+            "text": "Many advanced metrics (including the proposed urban risk metric) calculate the risk for every scenario scene and then derive a final risk value for the whole scenario. On that basis, the pass/fail criteria are evaluated. To do that, for every scene in the scenario, a scene prediction needs to be carried out\nto calculate criticality based on a predicted future evolvement of the scenario. This prediction either, for a pre-defined prediction horizon, calculates a single evolution or multiple ones for each traffic participant in the scenario. For the single evolution, the worst case is mostly chosen, which leads to severely reduced specificity. Multiple evolvements can be carried out using a probabilistic framework or calculating reachable sets using reachability analysis.\nIn [54], motion models for prediction are categorized into three levels, with increasing abstraction. Physics-based models consider the motion of vehicles based on the laws of physics.Manoeuvre-basedmotionmodels consider the future motion of the vehicle also based on the potential driver\u2019s intention. Interaction-aware models are additionally taking into account the vehicles\u2019 manoeuvres (e.g., [55], [56]). Another option is to define potential functions for each object type and aggregate these functions to obtain a manoeuvre model [57].\nIf a manoeuvre-based motion model is used, the actual trajectory of the vehicle needs to be predicted. In [58], the authors perform trajectory prediction based on observations using image processing and map-matching techniques. It is shown that these generated predictions outperform the usual physics-based motion models in the observed intersections. Schreier et al. perform criticality assessment using a manoeuvre-based trajectory prediction utilising a Bayesian network where each manoeuvre is modelled separately [59]. Several other approaches towards trajectory prediction exist, using data-driven machine learning techniques (e.g., [60], [61], [62], [63]).\nThe scene prediction for the urban risk metric uses a manoeuvre-basedmotionmodel predictionwith a data-driven approach towards concrete trajectory prediction. Using a data-driven approach increases the validity of the applied risk metric, although it is restricted to the locations with available data. However, if these locations represent complex intersections (e.g. included in the inD dataset [52] or the INTERACTION dataset [64]), these are vital aspects of the defined target ODD, which may justify the additional effort associated with gathering the necessary amount of traffic observations. Concretely, a specific map of the INTERACTION dataset is used to develop the scene prediction and provide an exemplary application in Sec. IV-A. The dataset provides naturalistic motions of different traffic participants for various complex intersections. One of these intersections is chosen to showcase the developed method and can be seen\nVOLUME 11, 2023 12273\nin Figure 10. The junction is provided in the Lanelet2 format [65]. The chosenmap provides an unsignaled intersection and approx. 260 minutes of birds-view video material with more than 10 thousand vehicles. The dataset can be evaluated extensively with the provided Lanelet2 map, which provides good starting points for further analysis.\nBased on the overall structure of the urban risk metric (Figure 9), the scene prediction is divided into two separate layers. The first layer performs a road network-based manoeuvre prediction. In contrast, the second layer performs an actual trajectory prediction, providing a respective scene prediction for the second primary step, the risk assessment.\nFor the road network-based manoeuvre prediction, a classification problem is formulated, where the goal is to store pre-trained classifiers for each relevant lanelet section. A lanelet section is defined by four nodes (two nodes for each side). Doing that enables better performance of each individual classifier. All lanelets at respective road forks, and for which more than one option for future manoeuvres is possible, are considered. A respective ground truth (GT) is needed for training the classifiers. The GT is created by analysing the provided vehicle tracks in the dataset and matching it with a pre-defined list of lanelet IDs that belong to a global route (e.g. the route from the top left of Figure 10 going right (from top-view), crossing the red lanelet and taking the immediate right turn). Furthermore, certain manoeuvres are connected with that global route. Additionally, for these manoeuvres, it is defined at which respective lanelet the manoeuvre decision has to be made and which lanelets are the successors. For example, for the red lanelet in Figure 10, a decision if turn right or go straight needs to be made. The features for the classifier include the lateral position (in regards to the respective lane in the provided map), the vehicles\u2019 velocity and the global heading for each lanelet section. An overview of manoeuvre intention estimation at road intersections and its associated features is given in [54].\nIn our case, the required supervised learning algorithm acts on a dataset D, drawn from an unknown distribution, which is defined as\nD = {(x1, y1), . . . , (xn, yn) \u2286 R3 \u00d7 L} (19)\nwhere n is the size of the dataset, R3 is the feature space and L is the label space. Furthermore, yi is the label and xi is the feature vector of the ith sample, which is expressed as\nxi = [velocity, global heading, lateral position]T . (20)\nThe label space, for the example shown in Figure 10, is designed to be:\nL = [Turning,Straight] (21)\nThe goal of the algorithm is to find h : R3 \u2192 L so that for new samples (x1, y1) we get h(x) \u2248 y. Different classifiers were trained and evaluated for the situation depicted in Figure 10. The results of the test and train scores (80/20 split) can be seen in Tab. 3. The random forest classifier (RBF), which fits several decision tree classifiers on various sub-samples of the dataset [66], performs best for the test and the training dataset. In general, it can be observed that the manoeuvre intention is predictable with very high accuracy. Therefore, for future trajectories, for example, considering the decision for a right turn or going straight in Figure 10, it is not necessary to always chose the worst case, which would unnecessarily reduce specificity.\nSuppose the probability for a particular predicted manoeuvre is below 0.65. In that case, the prediction is disregarded, all possible manoeuvres are considered future trajectories, and a worst-case estimation is performed in the risk assessment. Future advancements in the urban risk metric regard the investigation of calibrated classifiers. If such classifiers are being used, it would be possible to utilise the different prediction probabilities for each manoeuvre as a weighting factor for the predicted trajectories, which can be exploited for the risk assessment. This requires a classifier with a low log loss, which is necessary if the probability estimates of the classifier are utilised directly.\nAs the first layer of the scene prediction provided the manoeuvre estimation, the second layer predicts the actual future trajectories of the traffic participants. The output is thereby defined by the necessary input to the second major part of the urban risk metric, which is based on the probabilistic evolvement of object positions for the pre-defined\n12274 VOLUME 11, 2023\nprediction horizon. As Figure 11 shows, a bivariate Gaussian distribution is constructed for each object and each timestep 1t . This distribution is described in the respective local object coordinate system for each prediction timestep. It distinguishes between a longitudinal prediction along the axis in the driving direction and a lateral prediction perpendicular to this. It is crucial to notice that there is no restriction regarding the shape of the bivariate Gaussian distribution.\nFor the traffic participants\u2019 lateral prediction along the road, an Ornstein-Uhlenbeck process [67] is modelled based on [59]. The process has an exponentially decaying autocovariance function and is discretised as\nylat,i+1=e\u2212\u03b1T ylat,i + (1 \u2212 e\u2212\u03b1T ) u+ wylat\u2200i \u2208 {j : j+ TP},\n(22)\nwith \u03b1 being a constant defining the rate of decay, T is the current time in the prediction horizon, and u is defined as the long-term mean of the process. Furthermore, wylat is the process noise scalar, with a variance stated as\nQi = \u03c3 2ylat (1 \u2212 e \u22122\u03b1T ), (23)\nwhere \u03c3 2ylat equals the limiting value of Qi. The notation {j : j+TP} equals the sequence {j, j+1, . . . , j+TP with TP} being the amount of prediction timesteps, calculated as\nTP = tpred 1t , (24)\nwith tpred being the prediction horizon and 1t the prediction timestep. This leads to the following Gaussian distribution of the lateral prediction:\nN (e\u2212\u03b1T ylat,i + (1 \u2212 e\u2212\u03b1T ) u,Qi). (25)\nThe longidutinal prediction for the traffic participant at each timestep in the prediction horizon is defined as\nxlon,i+1 = xlon,i + vlon,i 1t + 1 2 alon,i 1t2 \u2200i \u2208 {j : j+ TP},\n(26)\nwhich equals a constant acceleration model, with xlon,i being the current position along the prediction horizon and vlon,i the current velocity. Analysing the INTERACTION dataset at the complex intersection shown in Figure 10 reveals that there is a correlation between the current velocity and the acceleration of traffic participants. This is utilised by conditionally sampling from the joint PDF of velocity and acceleration, derived for each section of relevant lanelets, to get point samples for accelerations based on the current vlon,i. These samples are approximated by a Gaussian distribution by calculating the mean and variance of the acquired acceleration samples, which leads to\nalon,i = N (ameanlon,i , \u03c3 2lon,i). (27)\nNow, for both directions, longitudinal and lateral, a distribution for predicting the future motion of the respective traffic participant along the prediction horizon is in place. The lateral prediction is parametrised by setting \u03b1 = 0.66. This was also used in [59] for the conducted parameter study and lead to meaningful predictions. The long-term mean u is set to equal the mean of all relevant trajectories in the dataset for the specific global route. In Figure 12, this is equal to the dashed red line. The original centre line would be the dashed yellow line derived from the respective means of the lanelet boundaries. It can be observed that directly using an already adapted centre lane as the basis for defining the lateral prediction process is much more realistic. The limiting variance \u03c3 2ylat is defined so that the generated trajectories do not exceed the respective lanelets. These parameters have been verified to lead to feasible kinematic predictions using [68].\nObserving Figure 12 shows that the lateral prediction converges towards the adapted centre line with ongoing prediction time. For each value, the respective point samples for this specific prediction timestep are plotted in the time horizon colour bar of Figure 12. As the prediction progresses, the variance of the longitudinal prediction grows more significant, as the longitudinal position is primarily influenced by potential braking manoeuvres caused by other traffic participants. While this is not accounted for in the motion model itself, to a certain degree, this is considered by the growing variance in the prediction, as these situations are part of the dataset\nVOLUME 11, 2023 12275\nsamples used for generating the longitudinal prediction. The variance of the lateral prediction also grows more prominent, as modelled with the Ornstein-Uhlenbeck process. However, it is outgrown by the longitudinal prediction variance. This makes sense, as the probability that the traffic participant stays inside its respective lane (and deviates to the calculated mean) is much more probable.\nThe generated probability distributions must reflect realistic traffic participant behaviour to serve as valuable scene predictions. To rate the overall scene prediction, a scene prediction for a prediction horizon of 3 seconds is performed for each object trajectory which is part of the displayed first section of the red lanelet in Figure 10. The generated probability distributions are then compared to the positions of all trajectories in the dataset following the same global route. The 1\u03c3 , 2\u03c3 and 3\u03c3 intervals are constructed based on the positions after 3 seconds. The resulting overall accuracy of the scene prediction based on the specific example shown in Figure 10 is displayed in Tab. 4. The accuracy for the 3\u03c3 interval is already quite good, considering it already includes both the manoeuvre prediction at the red lanelet and the following route prediction. The accuracy could be improved further if the trajectories in the dataset are filtered to exclude traffic participants performing a brakingmanoeuvre since this is not explicitly accounted for in the motion model as this would require an interaction-aware model."
+        },
+        {
+            "heading": "3) RISK CALCULATION",
+            "text": "Calculating a criticality measure for every scene in a given scenario, each for a pre-defined prediction horizon, requires a metric that can be calculated for arbitrary time intervals, also in the absence of evident object collisions. As the preceding scene prediction outputs respective position probability distributions, using a probability-based risk calculation is consistent. The probability distributions of objects in the scene reflect the growing uncertainty moving along the prediction horizon and can be accounted for directly in a probabilistic risk prediction. Eggert [69] use an exponential transform in combination with a survival function to estimate future event probabilities. The focus is on collision risk, which is accounted for by modelling a distance-dependent risk. Other types of risks could be modelled, e.g. the risk of a vehicle losing control in a curve. However, the focus is now on modelling the risk of traffic collisions and potential close calls.\nThe future collision event probability is derived by combining a survival probability, designed as a survival function that decays in proportion to the collision event\nprobabilities. Earlier events significantly influence the predictive risk calculations as potential risks that occur before others are considered more important. The distancedependent risk directly influences the collision event probability. More detailed explanations are in [70] and [71], respectively.\nNext, the concrete implementation of the risk calculation is explained. At first, the distance-dependent risk is defined as\nrindi(ti) = 1 2\n( erf ( threshold \u2212 dadapted\u221a 2\u03c3 2i ) + 1 ) , (28)\nwith rindi \u2208 [0, 1] and the threshold calculated as\nthreshold = { 0.25 + 0.002 v2rel vrel > 0 0.25 vrel \u2264 0.\n(29)\nThe relative velocity between traffic objects vrel is calculated as a relative velocity vector in the direction of the distance vector between both points of the forward edge of the objects as described in [72]. The threshold is increased if vrel is greater than zero. If dadapted falls beneath the threshold, the indicated risk approaches 1. In cases where the threshold is still higher than dadapted , the risk is increased by a higher variance \u03c3 2i , which is used as a parameter to quantify the uncertainty in the distance estimate dadapted . Higher uncertainty leads to higher risk estimates in cases above the threshold. A detailed explanation of how to analytically compute dadapted and \u03c3 2i follows at the end of this section. Next, rindi is used to calculate the event probability\npevent (ti) = (1 \u2212 e\u2212rindi(ti)\n1 \u2212 e\u22121\n) , (30)\nwith pevent \u2208 [0, 1]. Furthermore, the survival probability is calculated as follows:\npsurvival(ti) = e\u2212 \u222b ti 0 pevent (ti)dt , (31)\nwith psurvival \u2208 [0, 1]. The actual collision probability for timestep ti in the prediction horizon is calculated as\npcoll(ti) = psurvival(ti) pevent (ti), (32)\nwith pcoll \u2208 [0, 1]. The overall collision probability for a scenario is then determined using the maximum value over the prediction horizon across all individual scenes.\nObserving Figure 11 already indicates that using the euclidian distance between the means of the probability distributions is not sufficient for dadapted , as choosing \u03c3 2i would still be an open question. The probability distribution of the distance between two bivariate Gaussian probability distributions can be solved analytically. First, the problem needs to be reformulated. This is achieved by transforming these two distributions into a single one, by applying a coordinate transform so that the mean of one distribution becomes the coordinate origin. The final covariance matrix 6d is obtained by applying uncertainty propagation as follows:\n6d = J 61,2 JT , J = ( 1 0\n0 1 \u22121 0 0 \u22121\n) , (33)\n12276 VOLUME 11, 2023\nwith61,2 being the matrix of the combined individual covariance matrices defined as\n61,2 = ( 61 0 0 62 ) . (34)\nNow the problem is reduced to finding the distribution of the distance vector from the coordinate origin to the individual points sampled from the combined bivariate Gaussian distribution. This problem, however, has been addressed in other domains before. In case the bivariate Gaussian is circularlysymmetric, the actual distance distribution is described by the Rice distribution [73]. However, since using a Rice distribution in our case would mean a restriction, as it was already shown in Sec. III-D2 that a circularly-symmetric assumption for the individual Gaussians would be unwanted simplification. However, the Beckmann distribution describes the distribution for the general case, with no assumptions [74]. From the Beckmann distribution, various others, including the Rice distribution can be derived.\nNext, a simple example is constructed to showcase the different distributions and their effect on the distance estimate, also concerning the needed values, mean and variance of the distance distribution, for the distance-dependent risk in Eq. 28. The position of the first traffic object, in a global coordinate system, is described by a bivariate Gaussian distribution of a random vector X1 = (X ,Y )T \u2208 R2 with\nX1 \u223c N (\u00b51, 61), (35)\nwith \u00b51 and 61 being defined as\n\u00b51 = [ 4 4 ] , 61 = [ 0.35 0.3 0.3 1 ] , (36)\nand similar for the second object with the random vector X2 = (X ,Y )T \u2208 R2 with\nX2 \u223c N (\u00b52, 62), (37)\nwith \u00b52 and 62 being expressed as\n\u00b52 = [ 0 0 ] , 62 = [ 3 \u22123.5 \u22123.5 5 ] . (38)\nThree different methods are investigated to construct the resulting distance vector distribution. The already mentioned Rice and Beckmann distributions together with the Monte Carlo approach. Starting with the latter, samples from both individual Gaussians are drawn and the euclidian distance between these points is calculated and stored. Performing this calculation for 10k samples each leads to the distribution depicted in Figure 13 as a dashed blue line. Next, the Rice and Beckmann distributions are calculated using R, a free software environment for statistical computing [75] with an additional package [76] for calculating the specific distributions. In the case of the Rice distribution it can be observed that, while the mean deviates not too much from the Monte Carlo approach, the variance is much greater. The Beckmann distribution is solved by numerical integration, which leads to small deviations compared to the Monte Carlo simulation\nTABLE 5. Three different methods are compared for computing the distance vector distribution for bivariate Gaussian distributions.\nFIGURE 13. The PDFs of the euclidian distance between two traffic participants (dE in Figure 11) assuming a Rice distribution (red line) and a Beckmann distribution (orange line) compared to the Monte Carlo evaluation (dashed blue line).\naround the mean. However, overall, the computed Beckmann distribution is very close to the actual solution (derived using Monte Carlo simulation). The individual simulation time, the mean and the standard deviation for all methods can be seen in Tab.5.\nTo calculate the actual dadapted for Eq. 28, the shape of the traffic participants and uncertainty regarding the orientation of the object needs to be considered. Based on the objects\u2019 current orientation, \u00b1 3\u25e6 of angular deviation is considered, for which an enveloping ellipse is constructed taking the resulting object shapes into account. These ellipses act as a safety envelope, similar to the concepts presented in [77] and [78]. Next, the shortest distance between these two resulting ellipses is determined by sampling, using uniform distributed ellipse angles as shown in Figure 14. To account for the already discussed fact that the distance vector between those two objects, using bivariate Gaussians, actually follows a parameter distribution, the mean of the chosen distribution (e.g. the presented Beckmann distribution) dmean,dist is substracted from the simple euclidian distance deuclidian between the objects to account for the shifted mean and added to the shortest distance between the objects at each positional mean dshort,ellipses, concretely\ndadapted = dshort,ellipses + (dmean,dist \u2212 deuclidian). (39)\nDoing that, the final distance value includes the probabilistic approach regarding the objects\u2019 position as well as the object\u2019s global heading and also the actual dimensions of each respective object. The variance \u03c3 2i for Eq. 28 is directly derived from the calculated distance vector distribution.\nVOLUME 11, 2023 12277\nIV. RESULTS This section is structured into three main parts. First, the steps that have been taken to construct an application example of the coverage process are explained. Secondly, the produced results are presented in detail. Lastly, a detailed evaluation of the urban risk metric is included.\nA. APPLICATION OF THE COVERAGE PROCESS Two methods that advance the main parts of the coverage process (see Figure 2) have been presented. First, the creation of CS\u2019 by applying the proposed sampling method using an adapted k-means is tackled. Additionally, a respective metric for the evaluation of the created scenarios is presented. It is based on metrics already existing in the literature and has been further developed for use in specific urban areas and called the urban risk metric. To apply these two contributions to the coverage process, various steps have been taken, which can be seen in Figure 15 and are discussed next. Step 1: In the first step, the LS need to be designed. For this application example, no LS from any scenario databases are used, but self-constructed ones. The LS is located at the exact complex intersection pictured in Figure 10. One traffic participant is approaching from the top left (from a bird\u2019s view) and is either turning right or going straight at the road fork and turning right one road fork later. This is equivalent to the manoeuvre decision in Figure 10. The other traffic object is meant to be representing the ego vehicle, which tries to turn\nright at the intersection. It is represented as the green vehicle in Figure 10. Step 2: The CPs for this LS define the vehicle configuration of the traffic participant at the start of the scenario. Therefore the CPs are defined to be the vehicle\u2019s lateral position, the global heading and the velocity. The longitudinal starting position is set to be at the beginning of the lanelet section depicted in Figure 10. Based on the available data in the INTERACTION dataset, the values for these three CPs for all available vehicle trajectories in the dataset in this specific lanelet section are extracted. Using that, the respective PDFs, for each CP individually, assuming that these parameters are independent, are derived. They can be observed in Figure 16. Step 3: With the individual PDFs for each CP of the LS in place, the proposed sampling method from Sec. III-C1 is used to efficiently choose values from the CP PDFs to generate the actual CS\u2019. Concretely, the Alg.1 is applied to the parameter distributions in Figure 16. In the case of the vehicles\u2019 global velocity distribution, the generated test case values are shown in Figure 17 as individual black dots. Furthermore, the boundaries of the resulting coverage areas (value under the parameter distribution) for each test case value, are displayed. All parameters that define the LS and are used to construct the respective CS are shown in Tab. 6.\n12278 VOLUME 11, 2023\nStep 4: Now, the scene prediction presented in Sec. III-D2 is used to generate the actual trajectories of the traffic participant for each CS. Another option would have been to choose the closest matching trajectory available in the dataset for the traffic participant. However, since the scene prediction has been shown to produce meaningful results, it was also applied for trajectory generation in this application example. Step 5: For the ego vehicle, one trajectory was generated that resembles a typical turn manoeuver at the intersection. Here, the underlying assumption is that the behaviour of the ego vehicles ADS is always the same for each CS. Note that steps 4 and 5 tackle the scenario execution (step 4+ of the high-level ODD coverage process, see Figure 2) in a simplified manner. Since the aim of this application example is to show the proposed methods from Sec. III in an overall example coverage process, this is sufficient but will be expanded in future publications.\nStep 6: As the last step, the CS\u2019 are evaluated. Since each CS consists of a pair of one TP trajectory and the ego vehicle trajectory, these two object trajectories are used as input to the urban risk metric. Based on the output of the risk metric, each CS is either categorised as passed or failed. This information is then used to compute the overall coverage value cODD.\nV. DISCUSSION All of the generated TP trajectories can be observed in Figure 19. For a specific pair, consisting of a TP trajectory and the trajectory of the ego vehicle, the time and object positions of the collision are depicted. Approx. 30% of the generated trajectories lead to an actual collision, with many near-misses.\nFor evaluating each CS, three different types of metrics are applied. First, the urban risk metric with the Rice distribution is used for the distance vector between the objects\u2019 positional distribution. Second, the urban riskmetric with the Beckmann distribution and, as a third method, the well-known TTC calculation, using the improved calculation method of [45]. For each metric, the TPR and the TNR using Eq. 17 and Eq. 18 is calculated and shown in Tab. 7 for all metrics, whereas the positive case is referred to an actual collision, and vice versa. This can be done since this is an a-posteriori analysis of trajectory pairs. It can be observed that the urban risk metric (for both implemented cases) can observe nearly every collision. The risk assessment part of the urban risk metric is parametrised so that for every scenario where the calculated risk pcoll exceeds a value of 0.7 for at least one future scene evolvement, the scenario is flagged as failed. Based on how the actual risk is calculated, using an event-based distancedependent risk, even in actual collision cases, the calculated risk is slightly below 0.7. This, however, can further be tuned based on the threshold parameter in Eq. 29. However, in any case, each CS will be additionally collision-checked with the actual trajectories.\nVOLUME 11, 2023 12279\nIt can be observed that the urban risk metric with the implemented Beckmann distribution provides the best tradeoff of sensitivity, with a high TPR, but also reasonable specificity with flagging near-miss cases as being critical. In the case of the urban risk metric with the Rice distribution, however, the TNR is severely reduced. This is a direct consequence of the greater variance that this distribution assumption has, which overstates the distance-depending risk in Eq. 28. Note that such a metric does not need to achieve a TNR of 1 since this would mean that no other than actual collision scenarios are flagged as critical. However, a simple collision check of both trajectories is enough to achieve the same. In an application with an actual ADS, it is much more essential to unveil potentially critical evolvements of an already executed scenario (since this is a-posteriori analysis) which can be further evaluated. The urban risk metric provides precisely that, as it generates realistic scene predictions, trained using actual traffic data, next to the reliability for the specific geolocation the metric is applied at. Using the urban risk metric with the Beckmann distribution for the overall ODD coverage evaluation leads to an achieved coverage value of 55.96%.\nFor the TTC calculation, the situation is different. As displayed in Tab. 7, the TTC metric categorised every scenario as critical. For the TTC metric to flag a scenario as critical, the TTC value needs to equal zero for at least one scene evolution. Consequently, this means that using the TTC metric for evaluating CS\u2019 in complex urban intersections turns out to be worthless, as no new information can be gathered by applying this metric. A fact discussed as well in [47].\nNext, the validity of the urban risk metric (with the Beckmann distribution) and the TTC calculation is evaluated. For that, all executed CS\u2019 with collisions are analysed. For these scenarios, the actual time to collision is known in this aposteriori analysis. Then, for each metric, the time offset is calculated from the actual time to collision in the first time step of the scenario. The distribution of the offset (in seconds) from the actual time to collision is shown in Figure 20. The urban risk metric has a smaller offset and less variance than the TTC calculation. This shows the urban risk metric\u2019s greater validity than the TTC calculation, as it already has quite a low error in predicting the collision time, even at the first scenario timestep, which has the largest prediction time until the actual collision.\nNow, a specificCSwith a collision is analysed in Figure 19, with the TP trajectory in orange and the ego vehicle displayed in blue. For this specific trajectory pair, the time (in seconds) which is left until a predicted collision is shown for the urban risk metric, the calculated TTC and the actual time until the collision is added as well (see Figure 21). It shows that for the\nfirst timestep, the prediction of the TTC is worse, and also, until the actual collision, the urban risk metric proves to be more reliable.\nThese results show that using a manoeuvre-based motion model as part of the scene prediction used in the urban risk metric is suitable since the traffic participant has the right of way in this example. Otherwise, the motion model needs to be enhanced towards interaction awareness to provide reasonable estimates. Using the scene prediction from Sec. III-D2 for the generation of TP trajectories also, in turn, betters the performance of the urban risk metric, as the identical scene prediction is used to calculate potential future evolvements for each scene. However, the TTC calculation also partly benefits from this since if the generated TP trajectories would include interaction-aware breaking or accelerating, the performance of this metric would also be greatly deterred. In addition, the application example enabled an analysis of an urban risk metric based on the properties of validity, sensitivity and specificity. Additionally, analysing the derived PDFs from the INTERACTION dataset for the specific lanelet section (see Figure 10) shows a strong correlation between the global heading angle of the vehicle and its lateral position.\n12280 VOLUME 11, 2023\nThis can be utilised by applyingAlg. 2 to the two-dimensional PDF of these two features to generate test cases.\nVI. CONCLUSION AND OUTLOOK This work proposes multiple extensions for a pre-existing high-level coverage process for the safety validation of ADS. The contributions are across a particular part of the coverage process, detailed in the right part of Figure 2, and enable more traceable and efficient safety argumentations for ADS\u2019. Concretely, these contributions are (the first number of each contribution refers to the respective step of the right process in Figure 2):\n\u2022 Contribution 1.1: A n-dimensional sampling method for the scenario discretisation process is presented, based on k-means clustering. It enables the definition of relevancy-dependent variance boundaries for the individual test case values. \u2022 Contribution 3.1: A risk metric for the use in complex urban intersections is extended based on current literature. A significantly reduced specificity compared to time-to-collision is shown by using an exact mathematical formulation for the distribution of the distance vector between the positional distributions of traffic objects. Additionally, using actual traffic data from the respective geolocation increased the validity of the metric. \u2022 Contribution 4.1: The coverage process is advanced by the individual contributions and the application example in Sec. IV. \u2022 Contribution 4.2: Different levels of ODD coverage are introduced corresponding to the scenario ontology (LS, CS and CP). \u2022 Contribution 4.3: The ODD coverage is thoroughly quantified across all scenario levels, assuming distribution functions\u2019 availability for the scenario parameters.\nIn summation, a transparent process to evaluate the achieved coverage for the target ODD, independent of the ADS implementation, is needed. Such a process is extended in multiple ways in this article, which in turn enables further extensions. Potential future work includes:\n\u2022 The proposed coverage calculation can also be extended to include a metric to individually weigh each executed CS, e.g., taking into account the experienced criticality. Also, other types of metrics on the scenario level are possible, e.g., if the focus of the coverage evaluation needs to be steered towards assessing the perception layer. \u2022 The coverage evaluation assigns every CS a certain value that contributes to the overall coverage. That information can be useful when deciding the specific test method for the respective CS, as CS, which contributes strongly to the overall coverage, need to be executed with a test method of high validity. Considering that most test methods have certain limitations (e.g., virtual testing regarding weather and the respective effects), this can be utilised when deciding the test method for the CS\u2019. Furthermore, as the impact on the overall achievable\ncoverage can be stated explicitly for each CS, test method efforts can be guided more efficiently. This article does not cover this topic, but the proposed coverage calculation provides a good starting point for future research. \u2022 Since the proposed sampling method for concrete CS generation is variance-bounded based on the individual coverage contribution, the number of necessary test cases for each CP can be calculated inversely given the respective boundary condition. That way, the boundaries can be adjusted for each CP individually, and the required amount of test cases (and their concrete values) can be automatically generated, enabling more automation in the coverage process. \u2022 Currently, the proposed generation of CS using the adapted k-mean sampling is deterministic, as, for each generated cluster, the centroid is chosen as the actual test case value. However, every other rule of determining the actual values based on the generated clusters is possible. Suppose the generated CS should not be deterministic, e.g., because the whole process is repeated multiple times during an ADS development cycle. The actual test case value could again be a drawn sample from the respective cluster. \u2022 The urban risk metric can also be extended in multiple ways. This concerns primarily scene predictions as this determines how valid the actual risk estimates are. Currently, the proposed scene prediction depends on the availability of enough traffic data to train the individual manoeuvre prediction classifiers. Also, for route prediction, this data is needed. However, the scene prediction could also be carried out with more generally applicable driver models which would lead to increased scalability. \u2022 For this article, no concrete ADSwas used in the application example, as the coverage calculation, the proposed sampling method and the urban risk metric can be exemplarily shown without a concrete ADS implementation. However, using a concrete ADS offers specific other usages. Concretely, the sensor setup requirements for a specific ADS with a pre-defined target ODD can be recursively determined using the urban risk metric in combinationwith a value on the necessary coverage. The urban risk metric can be applied to determine if the ADS detected particular other traffic participants that could lead to dangerous situations eventually. \u2022 The proposed safety argumentation for AVs could also be extended towards other means of transportation where automated systems are deployed (for example, automated drones or ships). Possible adaptions to apply the safety argumentation proposed in this article in these domains can be explored in future research.\nACKNOWLEDGMENT The Austrian Research Promotion Agency (FFG) has been authorized for program management. They would\nVOLUME 11, 2023 12281\nfurthermore like to express their thanks to their supporting industrial and scientific project partners, namely Infineon Technologies Austria AG, Ing. h. c. F. Porsche AG, Volkswagen AG, aiMotive Kft, Joanneum Research, the University of Klagenfurt, Technical University Graz, and the University of Graz.\nREFERENCES [1] Global Status Report on Road Safety 2018: Summary, World Health\nOrganization, Geneva, Switzerland, 2018. [Online]. Available: http://apps. who.int/iris/bitstream/handle/10665/277370/WHO-NMH-NVI-18.20eng.pdf?ua=1 [2] A. Poddey, T. Brade, J. E. Stellet, and W. Branz, \u2018\u2018On the validation of complex systems operating in open contexts,\u2019\u2019 2019, arXiv:1902.10517. [3] SAE J 3016 Taxonomy and Definitions for Terms Related to On-Road Motor Vehicle Automated Driving Systems, SAE International, On-Road Automated Driving (ORAD) Committee, Warrendale, PA, USA, Apr. 2021. [4] (Aug. 2020). PAS 1883:2020. [Online]. Available: https://www. bsigroup.com/en-GB/CAV/pas-1883/ [5] SaFAD. (2019). Safety First for Automated Driving. [Online]. Available: https://connectedautomateddriving.eu/mediaroom/framework-for-safeautomated-driving-systems/ [6] M. S. Blumenthal, L. Fraade-Blanar, R. Best, and J. L. Irwin, \u2018\u2018Safe enough: Approaches to assessing acceptable safety for automated vehicles,\u2019\u2019 RANDCorp., SantaMonica, CA,USA, Tech. Rep. RR-A569-1, Oct. 2020. [Online]. Available: https://www.rand.org/pubs/research_ reports/RRA569-1.html [7] F. Batsch, S. Kanarachos, M. Cheah, R. Ponticelli, and M. Blundell, \u2018\u2018A taxonomy of validation strategies to ensure the safe operation of highly automated vehicles,\u2019\u2019 J. Intell. Transp. Syst., vol. 26, no. 1, pp. 1\u201320, Mar. 2020. [Online]. Available: https://www.tandfonline.com/doi/full/ 10.1080/15472450.2020.1738231 [8] A. Corso, R. Moss, M. Koren, R. Lee, and M. Kochenderfer, \u2018\u2018A survey of algorithms for black-box safety validation of cyber-physical systems,\u2019\u2019 J. Artif. Intell. Res., vol. 72, Oct. 2021. [Online]. Available: https://jair.org/index.php/jair/article/view/12716 [9] S. Ulbrich, T. Menzel, A. Reschka, F. Schuldt, and M. Maurer, \u2018\u2018Defining and substantiating the terms scene, situation, and scenario for automated driving,\u2019\u2019 in Proc. IEEE 18th Int. Conf. Intell. Transp. Syst. (ITSC), Canaria, Spain, Sep. 2015, pp. 982\u2013988. [Online]. Available: http://ieeexplore.ieee.org/document/7313256/ [10] T. Menzel, G. Bagschik, L. Isensee, A. Schomburg, and M. Maurer, \u2018\u2018From functional to logical scenarios: Detailing a keyword-based scenario description for execution in a simulation environment,\u2019\u2019 2019, arXiv:1905.03989. [11] S. Riedmaier, T. Ponn, D. Ludwig, B. Schick, and F. Diermeyer, \u2018\u2018Survey on scenario-based safety assessment of automated vehicles,\u2019\u2019 IEEE Access, vol. 8, pp. 87456\u201387477, 2020. [Online]. Available: https://ieeexplore.ieee.org/document/9090897/ [12] T. Brade, B. Kramer, and C. Neurohr, \u2018\u2018Paradigms in scenariobased testing for automated driving,\u2019\u2019 in Proc. Int. Symp. Elect., Electron. Inf. Eng., Feb. 2021, pp. 108\u2013114. [Online]. Available: https://dl.acm.org/doi/10.1145/3459104.3459208 [13] C. Neurohr, L. Westhofen, T. Henning, T. de Graaff, E. M\u00f6hlmann, and E. B\u00f6de, \u2018\u2018Fundamental considerations around scenario-based testing for automated driving,\u2019\u2019 2020, arXiv:2005.04045. [14] Jama and Sakura. Automated Driving Safety Evaluation Framework Ver. 1.0 -Guidelines for Safety Evaluation of Automated Driving Technology. Accessed: Feb. 4, 2023. [Online]. Available: https://www.jama. or.jp/english/reports/docs/Automated_Driving_Safety_Evaluation_ Framework_Ver2.0.pdf [15] ASAM, \u2018\u2018ASAM test specification study group report 2022,\u2019\u2019 ASAM e.V., Hoehenkirchen, Germany, Tech. Rep., Version 1.0.0, Feb. 2022. [Online]. Available: https://report.asam.net/wp-content/uploads/2022/02/ASAMTest-Specification-Study-Group-Report-2022_V1-0-0.pdf [16] United Nations Economic Commission for Europe, \u2018\u2018New assessment/test method for automated driving (NATM),\u2019\u2019 Econ. Social Council, Geneva, Switzerland, Submitted by the Working Party on Automated/Autonomous and Connected Vehicles Tech. Rep. ECE/TRANS/WP.29/2021/61, 2021. [Online]. Available: https://unece.org/sites/default/files/2021-04/ECETRANS-WP29-2021-61e.pdf\n[17] B. Ciuffo, K. Mattas, and M. C. Galassi, \u2018\u2018Safety assurance of automated driving systems. Raising the level of ambition,\u2019\u2019 in Proc. Eur. Commission Joint Res. Center, Nov. 2020, pp. 1\u201310. [18] R. Don\u00e0, B. Ciuffo, A. Tsakalidis, L. Di Cesare, C. Sollima, M. Sangiorgi, and M. C. Galassi, \u2018\u2018Recent advancements in automated vehicle certification: How the experience from the nuclear sector contributed to making them a reality,\u2019\u2019 Energies, vol. 15, no. 20, p. 7704, Oct. 2022. [Online]. Available: https://www.mdpi.com/1996-1073/15/20/7704 [19] Building Safe Autonomous Systems\u2014Handbook for the Verification and Validation (V&V) of Autonomous Systems, Applied Intuition-Accelerating Safety, Mountain View, CA, USA, Jul. 2022. [20] Certification of Highly Automated Vehicles for Use on UK Roads\u2014 Creating An Industry-Wide Framework for Safety, FIVE AI, Bristol, U.K., 2019. [21] C. Miethaner and J.-E. Stavesand, \u2018\u2018Virtual homologation of an ALKS according to UNECE R157,\u2019\u2019 T\u00dcV S\u00dcD& dSPACE, Westendstr, Munich, Germany, White paper, 2022. Accessed: Feb. 4, 2023. [Online]. Available: https://www.tuvsud.com/en-gb/-/media/global/pdf-files/whitepaperreport-e-books/tuvsud_virtual-homologation-of-an-alks-according-tounece-r157.pdf [22] H. Hungar, \u2018\u2018A concept of scenario space exploration with criticality coverage guarantees, extended abstract,\u2019\u2019 in Leveraging Applications of Formal Methods, Verification and Validation: Applications (LectureNotes in Computer Science), vol. 12478. Rhodes, Greece: Springer, Oct. 2020, ch. 19, pp. 293\u2013306. [Online]. Available: http://link.springer.com/10.1007/978-3030-61467-6_19 [23] P. Junietz, \u2018\u2018Microscopic and macroscopic risk metrics for the safety validation of automated driving,\u2019\u2019 Ph.D. thesis, Dept. Mech. Eng., Technische Universit\u00e4t Darmstadt, Darmstadt, 2019. [Online]. Available: https://tuprints.ulb.tu-darmstadt.de/9282/ [24] P. Junietz, U. Steininger, and H. Winner, \u2018\u2018Macroscopic safety requirements for highly automated driving,\u2019\u2019 Transp. Res. Record, J. Transp. Res. Board, vol. 2673, no. 3, pp. 1\u201310, Feb. 2019. [25] B. Gangopadhyay, S. Khastgir, S. Dey, P. Dasgupta, G. Montana, and P. Jennings, \u2018\u2018Identification of test cases for automated driving systems using Bayesian optimization,\u2019\u2019 in Proc. IEEE Intell. Transp. Syst. Conf. (ITSC), Oct. 2019, pp. 1961\u20131967. [Online]. Available: https://ieeexplore.ieee.org/document/8917103/ [26] S. Khastgir, S. Brewerton, J. Thomas, and P. Jennings, \u2018\u2018Systems approach to creating test scenarios for automated driving systems,\u2019\u2019 Rel. Eng. Syst. Saf., vol. 215, Nov. 2021, Art. no. 107610. [Online]. Available: https://linkinghub.elsevier.com/retrieve/pii/S0951832021001551 [27] P. Weissensteiner, G. Stettinger, S. Genser, and D. Watzenig, \u2018\u2018Operational design domain coverage for the safety validation of automated driving systems,\u2019\u2019 in Proc. Driving Simul. Strasbourg, France: Driving Simulation Association, 2022. [28] X. Zhang, J. Tao, K. Tan, M. T\u00f6rngren, J. M. G. S\u00e1nchez, M. R. Ramli, X. Tao, M. Gyllenhammar, F. Wotawa, N. Mohan, M. Nica, and H. Felbinger, \u2018\u2018Finding critical scenarios for automated driving systems: A systematic literature review,\u2019\u2019 2021, arXiv:2110.08664. [29] T. Ken Mori, X. Liang, L. Elster, and S. Peters, \u2018\u2018The inadequacy of discrete scenarios in assessing deep neural networks,\u2019\u2019 IEEE Access, vol. 10, pp. 118236\u2013118242, 2022. [Online]. Available: https://ieeexplore.ieee.org/document/9943537/ [30] (2010).Design of Experiments (DoE), Technical Statistics. [Online]. Available: https://assets.bosch.com/media/global/bosch_group/purchasing_ and_logistics/information_for_business_partners/downloads/quality_ docs/general_regulations/bosch_publications/booklet-no11-design-ofexperiments-doe_EN.pdf [31] \u2018\u2018Scenario-based verification and validation of self-driving vehicles: Relevant safety metrics,\u2019\u2019 Siemens Digit. Industries Softw., Munich, Germany, White Paper 84312-D4 2/22 A, 2022. [32] Safety Pool\u2014Powered by Deepen AI and WMG University of Warwick. Accessed: Feb. 4, 2023. [Online]. Available: https://www.safetypool.ai/ [33] N. Weber, D. Frerichs, and U. Eberle, A Simulation-Based, Statistical Approach for the Derivation of Concrete Scenarios for the Release of Highly Automated Driving Functions (Automotive Meets Electronics), no. 11. German: Dortmund, Jan. 2020. [34] Y. Akagi, R. Kato, S. Kitajima, J. Antona-Makoshi, and N. Uchida, \u2018\u2018A risk-index based sampling method to generate scenarios for the evaluation of automated driving vehicle safety,\u2019\u2019 in Proc. IEEE Intell. Transp. Syst. Conf. (ITSC), Oct. 2019, pp. 667\u2013672. [Online]. Available: https://ieeexplore.ieee.org/document/8917311/ [35] A. T. Ihler, E. B. Sudderth, W. T. Freeman, and A. S. Willsky, \u2018\u2018Efficient multiscale sampling from products of Gaussian mixtures,\u2019\u2019 in Proc. 16th Int. Conf. Neural Inf. Process. Syst. Cambridge, MA, USA: MIT Press, 2003, pp. 1\u20138.\n12282 VOLUME 11, 2023\n[36] R. Xu and D. Wunsch, \u2018\u2018Survey of clustering algorithms,\u2019\u2019 IEEE Trans. Neural Netw., vol. 16, no. 3, pp. 645\u2013678, May 2005. [Online]. Available: http://ieeexplore.ieee.org/document/1427769/ [37] J. B. MacQueen, \u2018\u2018Some methods for classification and analysis of multivariate observations,\u2019\u2019 in Proc. 5th Berkeley Symp. Math., Stat., Prob., 1967, pp. 281\u2013297. [38] S. Lloyd, \u2018\u2018Least squares quantization in PCM,\u2019\u2019 IEEE Trans. Inf. Theory, vol. IT-28, no. 2, pp. 129\u2013137, Mar. 1982. [39] D. Arthur and S. Vassilvitskii, \u2018\u2018K-Means++: The advantages of careful seeding,\u2019\u2019 in Proc. 18th Annu. ACM-SIAM Symp. Discrete Algorithms. Philadelphia, PA, USA: Society for Industrial and Applied Mathematics, Jan. 2007, pp. 1027\u20131035. [40] F. Pedregosa, G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, M. Blondel, A. M\u00fcller, J. Nothman, G. Louppe, P. Prettenhofer, R. Weiss, V. Dubourg, J. Vanderplas, A. Passos, D. Cournapeau, M. Brucher, M. Perrot, and E. Duchesnay, \u2018\u2018Scikit-learn: Machine learning in Python,\u2019\u2019 J. Mach. Learn. Res., vol. 12, pp. 2825\u20132830, Oct. 2012. [Online]. Available: http://jmlr.org/papers/v12/pedregosa11a.html [41] M. D. McKay, W. J. Conover, and R. J. Beckman, \u2018\u2018A comparison of three methods for selecting values of input variables in the analysis of output from a computer code,\u2019\u2019 Technometrics, vol. 21, no. 2, pp. 239\u2013245, May 1979. [42] C. Neurohr, L. Westhofen, M. Butz, M. H. Bollmann, U. Eberle, and R. Galbas, \u2018\u2018Criticality analysis for the verification and validation of automated vehicles,\u2019\u2019 IEEE Access, vol. 9, pp. 18016\u201318041, 2021. [43] ISO 26262-1:2018\u2013Road Vehicles\u2013Functional Safety, International Organization for Standardization, Geneva, Switzerland, 2018. [Online]. Available: https://cdn.standards.iteh.ai/samples/68383/ 4e26ddadc54a4198bed652afe29669fa/ISO-26262-1-2018.pdf [44] J. C. Hayward, \u2018\u2018Near-miss determination through use of a scale of danger,\u2019\u2019 Highway Res. Rec., Pennsylvania Transp. Traffic Saf. Center, Pennsylvania, PA, USA, Tech. Rep., 1972, no. 384. [45] F. Jim\u00e9nez, J. E. Naranjo, and F. Garc\u00eda, \u2018\u2018An improved method to calculate the time-to-collision of two vehicles,\u2019\u2019 Int. J. Intell. Syst., vol. 11, no. 1, pp. 34\u201342, 2013. [Online]. Available: http://link.springer.com/10.1007/s13177-012-0054-4 [46] B. L. Allen, B. T. Shin, and P. J. Cooper, \u2018\u2018Analysis of traffic conflicts and collisions,\u2019\u2019 Transp. Res. Rec., vol. 667, pp. pp. 67\u201374, 1978. [47] L. Westhofen, C. Neurohr, T. Koopmann, M. Butz, B. Sch\u00fctt, F. Utesch, B. Neurohr, C. Gutenkunst, and E. B\u00f6de, \u2018\u2018Criticality metrics for automated driving: A review and suitability analysis of the state of the art,\u2019\u2019 Arch. Comput. Methods Eng., vol. 30, no. 1, pp. 1\u201335, Aug. 2022, doi: 10.1007/s11831-022-09788-7. [48] M.-Y. Yu, R. Vasudevan, and M. Johnson-Roberson, \u2018\u2018Occlusion-aware risk assessment for autonomous driving in urban environments,\u2019\u2019 2018, arXiv:1809.04629. [49] D. Wang, W. Fu, Q. Song, and J. Zhou, \u2018\u2018Potential risk assessment for safe driving of autonomous vehicles under occluded vision,\u2019\u2019 Sci. Rep., vol. 12, no. 1, p. 4981, Mar. 2022. [Online]. Available: https://www.nature.com/articles/s41598-022-08810-z [50] P. Weissensteiner, G. Stettinger, K. Tieber, and K. Rehrl, \u2018\u2018Virtual risk assessment for the deployment of autonomous shuttles,\u2019\u2019 Transp. Res. Rec., J. Transp. Res. Board, vol. 2675, no. 11, p. 10, Jul. 2021. [51] P. Schneider, M. Butz, C. Heinzemann, J. Oehlerking, and M. Woehrle, \u2018\u2018Towards threat metric evaluation in complex urban scenarios,\u2019\u2019 in Proc. IEEE Int. Intell. Transp. Syst. Conf. (ITSC), Sep. 2021, pp. 1192\u20131198. [Online]. Available: https://ieeexplore.ieee.org/document/ 9564790/ [52] J. Bock, R. Krajewski, T. Moers, S. Runde, L. Vater, and L. Eckstein, \u2018\u2018The inD dataset: A drone dataset of naturalistic road user trajectories at German intersections,\u2019\u2019 2019, arXiv:1911.07602. [53] S. Wagner, K. Groh, T. K\u00fchbeck, M. D\u00f6rfel, and A. Knol, \u2018\u2018Using time-to-react based on naturalistic traffic object behavior for scenariobased risk assessment of automated driving,\u2019\u2019 in Proc. IEEE Intell. Vehicles Symp. (IV), Jun. 2018, pp. 1521\u20131528. [Online]. Available: https://ieeexplore.ieee.org/document/8500624/ [54] S. Lef\u00e8vre, D. Vasquez, and C. Laugier, \u2018\u2018A survey on motion prediction and risk assessment for intelligent vehicles,\u2019\u2019 ROBOMECH J., vol. 1, no. 1, p. 1, Dec. 2014. [Online]. Available: https://robomechjournal.springeropen.com/articles/10.1186/s40648-0140001-z\n[55] K. Kreutz and J. Eggert, \u2018\u2018Analysis of the generalized intelligent driver model (GIDM) for uncontrolled intersections,\u2019\u2019 in Proc. IEEE Int. Intell. Transp. Syst. Conf. (ITSC), Sep. 2021, pp. 3223\u20133230. [Online]. Available: https://ieeexplore.ieee.org/document/9564423/ [56] K. Mattas, G. Albano, R. Don\u00e0, M. C. Galassi, R. Suarez-Bertoa, S. Vass, and B. Ciuffo, \u2018\u2018Driver models for the definition of safety requirements of automated vehicles in international regulations. Application to motorway driving conditions,\u2019\u2019 Accident Anal. Prevention, vol. 174, Sep. 2022, Art. no. 106743. [Online]. Available: https://linkinghub.elsevier. com/retrieve/pii/S0001457522001798 [57] M. T. Wolf and J. W. Burdick, \u2018\u2018Artificial potential functions for highway driving with collision avoidance,\u2019\u2019 in Proc. IEEE Int. Conf. Robot. Autom. (ICRA), May 2008, pp. 3731\u20133736. [Online]. Available: http://ieeexplore.ieee.org/document/4543783/ [58] J. Quehl, H. Hu, S. Wirges, and M. Lauer, \u2018\u2018An approach to vehicle trajectory prediction using automatically generated traffic maps,\u2019\u2019 in Proc. IEEE Intell. Vehicles Symp. (IV), Jun. 2018, pp. 544\u2013549. [59] M. Schreier, V. Willert, and J. Adamy, \u2018\u2018An integrated approach to maneuver-based trajectory prediction and criticality assessment in arbitrary road environments,\u2019\u2019 IEEE Trans. Intell. Transp. Syst., vol. 17, no. 10, pp. 2751\u20132766, Oct. 2016. [Online]. Available: http://ieeexplore.ieee. org/document/7412746/ [60] S. Ettinger, S. Cheng, B. Caine, C. Liu, H. Zhao, S. Pradhan, Y. Chai, B. Sapp, C. Qi, Y. Zhou, Z. Yang, A. Chouard, P. Sun, J. Ngiam, V. Vasudevan, A. McCauley, J. Shlens, and D. Anguelov, \u2018\u2018Large scale interactive motion forecasting for autonomous driving: The waymo open motion dataset,\u2019\u2019 in Proc. IEEE/CVF Int. Conf. Comput. Vis. (ICCV), Oct. 2021, pp. 9690\u20139699. [Online]. Available: https://ieeexplore.ieee. org/document/9709630/ [61] D. Petrich, T. Dang, D. Kasper, G. Breuel, and C. Stiller, \u2018\u2018Map-based long term motion prediction for vehicles in traffic environments,\u2019\u2019 in Proc. 16th Int. IEEE Conf. Intell. Transp. Syst. (ITSC), Oct. 2013, pp. 2166\u20132172. [Online]. Available: http://ieeexplore.ieee.org/document/6728549/ [62] S. Biswas, M. Bianchini, R. N. Shaw, and A. Ghosh, \u2018\u2018Prediction of traffic movement for autonomous vehicles,\u2019\u2019 in Machine Learning for Robotics Applications, vol. 960. Singapore: Springer, 2021, pp. 153\u2013168. [Online]. Available: https://link.springer.com/10.1007/978-981-16-0598-7_12 [63] V. P. Thazha, D. Filliat, and J. Iba\u00f1ez-Guzm\u00e1n, \u2018\u2018Applying map-masks to trajectory prediction for interacting traffic-agents,\u2019\u2019 in Proc. IEEE Int. Conf. Intell. Transp. Syst. (ITSC), Dec. 2019, pp. 1\u20137. [64] W. Zhan, L. Sun, D.Wang, H. Shi, A. Clausse, M. Naumann, J. Kummerle, H. Konigshof, C. Stiller, A. de La Fortelle, andM. Tomizuka, \u2018\u2018INTERACTION dataset: An INTERnational, adversarial and cooperative moTION dataset in interactive driving scenarios with semantic maps,\u2019\u2019 2019, arXiv:1910.03088. [65] F. Poggenhans, J.-H. Pauls, J. Janosovits, S. Orf, M. Naumann, F. Kuhnt, and M. Mayr, \u2018\u2018Lanelet2: A high-definition map framework for the future of automated driving,\u2019\u2019 in Proc. 21st Int. Conf. Intell. Transp. Syst. (ITSC), Maui, HI, USA, Nov. 2018, pp. 1672\u20131679. [Online]. Available: http://www.mrt.kit.edu/z/publ/download/2018/Poggenhans2018Lanelet2. pdf [66] L. Breiman, \u2018\u2018Random forests,\u2019\u2019 Mach. Learn., vol. 45, no. 1, pp. 5\u201332, 2001, doi: 10.1023/A:1010933404324. [67] Y. Bar-Shalom, X.-R. Li, and T. Kirubarajan, Estimation With Applications to Tracking and Navigation: Theory, Algorithms and Software. Hoboken, NJ, USA: Wiley, 2001. [68] C. Pek, V. Rusinov, S. Manzinger, M. C. Uste, and M. Althoff, \u2018\u2018CommonRoad drivability checker: Simplifying the development and validation of motion planning algorithms,\u2019\u2019 in Proc. IEEE Intell. Vehicles Symp. (IV), Oct. 2020, pp. 1013\u20131020. [Online]. Available: https://ieeexplore.ieee.org/document/9304544/ [69] J. Eggert, \u2018\u2018Risk estimation for driving support and behavior planning in intelligent vehicles,\u2019\u2019 Automatisierungstechnik, vol. 66, no. 2, pp. 119\u2013131, Feb. 2018. [Online]. Available: https://www.degruyter. com/document/doi/10.1515/auto-2017-0132/html [70] J. Eggert and T. Puphal, \u2018\u2018Continuous risk measures for ADAS and AD,\u2019\u2019 in Proc. Int. Symp. Future Active Safety Technol. Towards Zero-TrafficAccidents (FAST-Zero), 2017, pp. 1\u20138. [71] J. Eggert, \u2018\u2018Predictive risk estimation for intelligent ADAS functions,\u2019\u2019 in Proc. IEEE Conf. Intell. Transp. Syst. (ITSC), Oct. 2014, pp. 711\u2013718. [Online]. Available: http://ieeexplore.ieee.org/document/6957773/ [72] E. K. Antonsson, \u2018\u2018A general measure of collision hazard in traffic,\u2019\u2019 2022, arXiv:2205.08640.\nVOLUME 11, 2023 12283\n[73] S. O. Rice, \u2018\u2018Mathematical analysis of random noise,\u2019\u2019 Bell Syst. Tech. J., vol. 24, no. 1, pp. 46\u2013156, 1945. [74] P. Beckmann, \u2018\u2018Statistical distribution of the amplitude and phase of a multiply scattered filed,\u2019\u2019 J. Res. Nat. Bureau Standards, vol. 66D, pp. 231\u2013240, May 1962. [75] R: A Language and Environment for Statistical Computing, R Core Team, Vienna, Austria, 2022. [Online]. Available: https://www.R-project.org/ [76] D. Wollschlaeger. (2022). ShotGroups: Analyze Shot Group Data. R Package Version 0.8.2. [Online]. Available: https://cran.rproject.org/web/packages/shotGroups/index.html [77] J. Bernhard, P. Hart, A. Sahu, C. Sch\u00f6ller, and M. Guzman Cancimance, \u2018\u2018Risk-based safety envelopes for autonomous vehicles under perception uncertainty,\u2019\u2019 2021, arXiv:2107.09918. [78] J. Bernhard and A. Knoll, \u2018\u2018Risk-constrained interactive safety under behavior uncertainty for autonomous driving,\u2019\u2019 in Proc. IEEE Intell. Vehicles Symp. (IV), Jul. 2021, pp. 63\u201370. [Online]. Available: https://ieeexplore.ieee.org/document/9575956/\nPATRICK WEISSENSTEINER received the B.Sc. and M.Sc. degrees in mechanical engineering and business economics from the Graz University of Technology, Graz, Austria, in 2015 and 2017, respectively.\nHe is currently working as a Senior Researcher with the Automotive Electronics and Software Department, Virtual Vehicle Research GmbH, Graz. His current research interest includes safety validation of automated vehicles, with a particular\nfocus toward coverage methods for the respective operational design domain of such vehicles.\nGEORG STETTINGER received the B.Sc. and M.Sc. degrees in electrical engineering from the Graz University of Technology (TUG), Graz, Austria, in 2009 and 2011, respectively, and the Ph.D. degree in information technology from the University of Klagenfurt (AAU), Klagenfurt, Austria, in 2015. From 2015 to 2018, he was a Senior Researcher with the Co-Simulation and Software Group, Virtual Vehicle Research GmbH, Graz. From 2018 to 2022, he led the Control Systems\nTeam, Virtual Vehicle Research GmbH. He is currently a Senior Project Manager with the Research and Development Funding Department, Infineon Technologies AG, Munich, Germany. His current research interests include ODD-based testing and validation, particularly certification and homologation of automated vehicles. He is an active member of the Technical Committee of the Driving Simulation Association with a special focus on virtual verification and validation of ADAS/AD systems.\nSIDDARTHA KHASTGIR (Member, IEEE) received the dual B.Tech. and M.Tech. degrees in mechanical engineering from the Indian Institute of Technology (IIT) Kharagpur, India, in 2011, and the Ph.D. degree from The University of Warwick, U.K., in 2019. He is currently the Head of Verification and Validation, Intelligent Vehicles with WMG, The University of Warwick. His research interests include trust in automation, system safety, and verification and validation of\nautonomous vehicles. He is a member of the Institution of Mechanical Engineers (IMechE), U.K. He has been named in the Forbes 30 under 30 Europe 2018\u2014industry list and was awarded the prestigious UKRI Future Leaders Fellowship, in 2019. He is also a Chartered Engineer.\nDANIEL WATZENIG (Senior Member, IEEE) received the M.Sc. degree in electrical engineering and the Ph.D. degree in technical science from the Graz University of Technology, Graz, Austria, in 2002 and 2006, respectively, the Habilitation (Venia Docendi) degree in electrical measurement and signal processing, in 2009. Since 2006, he has been the Divisional Director and the Scientific Head of the Automotive Electronics and Software Department, Virtual Vehicle\nResearch GmbH, Graz. In 2017, he was appointed as a Full Professor of autonomous driving with the Institute of Automation and Control, Graz University of Technology. He is the Founder and a Team Leader of the Autonomous Racing Graz Team, one of currently six teams of the global race series Roborace. He is the author or coauthor of more than 200 peer-reviewed papers, book chapters, patents, and articles. His research interests include sense and control of automated vehicles, signal processing, multi-sensor data fusion, uncertainty estimation and quantification, and robust optimization.\n12284 VOLUME 11, 2023"
+        }
+    ],
+    "title": "Operational Design Domain-Driven Coverage for the Safety Argumentation of Automated Vehicles",
+    "year": 2023
+}

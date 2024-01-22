@@ -1,0 +1,140 @@
+{
+    "abstractText": "Novel intent class detection is an important problem in real world scenario for conversational agents for continuous interaction. Several research works have been done to detect novel intents in a mono-lingual (primarily English) texts and images. But, current systems lack an end-to-end universal framework to detect novel intents across various different languages with less human annotation effort for mis-classified and system rejected samples. This paper proposes NIDAL (Novel Intent Detection and Active Learning based classification), a semi-supervised framework to detect novel intents while reducing human annotation cost. Empirical results on various benchmark datasets demonstrate that this system outperforms the baseline methods by more than 10% margin for accuracy and macro-F1. The system achieves this while maintaining overall annotation cost to be just \u223c 6-10% of the unlabeled data available to the system.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Ankan Mullick"
+        }
+    ],
+    "id": "SP:deb4c078e9405649c3aeabf4eda288e482a11c8c",
+    "references": [
+        {
+            "authors": [
+                "Q. Chen",
+                "Z. Zhuo",
+                "W. Wang"
+            ],
+            "title": "BERT for Joint Intent Classification and Slot Filling",
+            "venue": "arXiv:1902.10909.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Coucke",
+                "A. Saade",
+                "A Ball"
+            ],
+            "title": "Snips Voice Platform: an embedded Spoken Language Understanding system for private-by-design voice interfaces. arXiv:1805.10190",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "T. Danka",
+                "P. Horvath"
+            ],
+            "title": "modAL: A modular active learning framework for Python",
+            "venue": "arXiv preprint arXiv:1805.00979.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "D. Hendrycks",
+                "K. Gimpel"
+            ],
+            "title": "A Baseline for Detecting Misclassified and Out-of-Distribution Examples in Neural Networks",
+            "venue": "arXiv:1610.02136.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "X. Mu",
+                "F. Zhu",
+                "J. Du",
+                "E. Lim",
+                "Z.-H. Zhou"
+            ],
+            "title": "Streaming classification with emerging new class by class matrix sketching",
+            "venue": "AAAI Conference.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "S. Schuster",
+                "S. Gupta",
+                "R. Shah",
+                "M. Lewis"
+            ],
+            "title": "Cross-lingual transfer learning for multilingual task oriented dialog",
+            "venue": "arXiv preprint arXiv:1810.13327.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Tan",
+                "Y. Yu",
+                "H. Wang",
+                "D. Wang",
+                "S. Potdar",
+                "S. Chang",
+                "M. Yu"
+            ],
+            "title": "Out-of-domain detection for low-resource text classification tasks",
+            "venue": "arXiv preprint arXiv:1909.05357.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Tian",
+                "M. Lease"
+            ],
+            "title": "Active learning to maximize accuracy vs",
+            "venue": "effort in interactive information retrieval. In ACM SIGIR conference, 145\u2013154.",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "G. Tur",
+                "D. Hakkani-T\u00fcr",
+                "L. Heck"
+            ],
+            "title": "What is left to be understood in ATIS? In 2010 IEEE Spoken Language Technology Workshop, 19\u201324",
+            "venue": "IEEE.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "Y.-N. Zhu",
+                "Y.-F. Li"
+            ],
+            "title": "Semi-Supervised Streaming Learning with Emerging New Labels",
+            "venue": "AAAI Conference.",
+            "year": 2020
+        }
+    ],
+    "sections": [
+        {
+            "text": "ar X\niv :2\n30 4.\n11 05\n8v 1\n[ cs\n.C L\n] 2\n2 Fe\nb 20"
+        },
+        {
+            "heading": "Introduction",
+            "text": "With the emerging new intents in the system, the conversational agents need to be retrained in order to identify these newer intents aka novel classes. Also as time progresses, the overall accuracy of identifying the known intents for the user queries should not be compromised. Currently, if a user utterance belongs to one of the known intents but the confidence score is low, these are called rejected utterances. It is infeasible to label all the new instances because of the sheer volume, and hence an effective mechanism to reduce human annotation cost would be required. To address these issues, in this work, a semi-supervised setting is adopted to identify known and novel intent classes. Corresponding to this problem setting, it starts with an initial labelled training data which consists of a set of known intents and a large unlabelled data that comprises of known and novel intent classes. The evaluation is performed on a predefined test set that consists of all the known and novel classes.\nIn the last decade, researchers have focused on out of domain class detection and explored various active learning methods in various scenarios to improve classification and lowering the human annotation effort. Novel Class Detection: Some advanced approaches are developed to explore class emergence problem in data stream like SEEN (Zhu\nCopyright \u00a9 2023, Association for the Advancement of Artificial Intelligence (www.aaai.org). All rights reserved.\nand Li 2020), Zero-Shot-OOD (Tan et al. 2019) and SENCMaS (Mu et al. 2017) but there is less focus on novel intent detection. Active Learning: ModAL (Danka and Horvath 2018) propose various active learning (AL) strategies to improve system accuracy. (Tian and Lease 2011) develop a maximal marginal uncertainty based AL model. But, these are not focused on rejected utterances.\nIn this work, an end-to-end framework is proposed to identify novel intents with increased in-domain class detection accuracy while handling system rejected utterances."
+        },
+        {
+            "heading": "Dataset",
+            "text": "NIDAL approach is compared with similar models and evaluated across several standard public dataset in NLU domain - SNIPS (Coucke et al. 2018), ATIS (Tur, Hakkani-Tu\u0308r, and Heck 2010) and Facebook Multi-lingual (Schuster et al. 2018). This framework is language agnostic and performs significantly well on all the datasets."
+        },
+        {
+            "heading": "Approach",
+            "text": "The framework \u201cNIDAL\u201d is divided into two major components - novel intent detection and active learning. The Novel Intent Detection module detects out-of-domain samples on unlabelled data and the active learning based known intent classification, handles the rejected utterances ensuring higher overall accuracy on the known intents.\nNeural Model (M): The JointBERT (Chen, Zhuo, and Wang 2019) is used as the learning model for intent classification.English uncased BERT-Base model is used as the base model for JointBERT. For other languages, bert-basemultilingual-uncased model is used. The best results can be obtained when the model is trained for 10 epochs and the learning rate is 5e\u2212 5. Part 1: Novel Intent Detection (NID): The algorithm for Novel Intent Detection consists of the following Steps: Step 1 - Cycle 0: With the initial labelled data (L), consisting of examples only from the known intent set, a Neural Model (M) is trained. Step 2 - Out-Of-Domain Sample Detection (OOD-SD): MSP (Hendrycks and Gimpel 2018) algorithm is considered to detect Out-Of-Domain samples U \u2032 on the Unlabelled Data (U). Step 3 - Labeling of Novel Intents: m% of the OOD samples is considered U \u2032 for manual annotation (U \u2032\nm ). Experiments are done with various labeling\nstrategies to add the rest of the OOD samples back to Cycle 0 training set (L). Step 4 - Cycle 1: M is re-trained on the modified training set to perform prediction on the Test Set.\nPart 2: Active Learning (AL): Next, an active learning based framework is devised to take care of rejected utterances with a low confidence. The algorithm is as follows: Step 1 - Cycle 1: The retrained Neural Model (M) is used to predict intent scores on the unlabelled dataset after removing OODs (Urem). Step 2 - Cycle 1: A pre-defined threshold (T H) is set, and the samples with score < T H are then fed XGBoost (XGB) classifier and the prediction score is used to identify their labels (auto-corrected). Samples which are rejected again, are manually annotated. These auto-corrected and annotated samples are added back to the labelled data and removed from the unlabelled data. Step 3 - Cycle 2: The Neural Model (M) is re-trained with updated labelled dataset and redo step 1-2 for the same threshold value. Step 4: This approach is run for 2 \u2264 K \u2264 5 cycles."
+        },
+        {
+            "heading": "Experimental Results",
+            "text": "Softmax Prediction Probability (MSP) is used to predict outof-domain samples based on the softmax prediction scores. Different threshold values on top of Neural Model (M) is set to identify rejected utterances and optimum results are obtained when threshold is set to 75% of maximum classification probability score for a particular dataset. These rejected utterances are passed through XGBoost (XGB) classifier for auto-correction. The rest of the samples (i.e. XGB rejected) are annotated manually. These auto corrected and manually annotated samples are removed from the unlabelled set and added back to labelled dataset, L for retraining purposes. Thus the auto-correction criteria, saves significant human labeling cost.\nThe results for Novel Intent Detection and Active Learning (NIDAL) in terms of accuracy and macro f1 score for various english (Facebook-English [FB-EN], SNIPS, ATIS) and non-english data (Facebook-Thai [FB-TH] and Facebook-Spanish [FB-ES]) are shown in Table 1.\nCompeting Baselines: Experiments are done with modified versions of various existing methods to compare NIDAL - SEEN (Zhu and Li 2020), Zero-Shot-OOD (Tan et al. 2019) and SENC-MaS (Mu et al. 2017). Experiments are done with different variations of baselines (parameter and hyperparameter tuning) and the best results are reported. Since, all these methods can only detect one novel class at a time, when considering the multiple novel intents in test set as a single novel class for these methods and report the accuracy and macro-F1 considering the various known classes and a novel class for the same. The results for different baselines\nare shown in Table 1. It is observed that the annotation cost varies from 6-10% samples of the unlabelled data. Considering the huge gains in performance, this is a reasonable annotation cost trade-off. These experiments show that given the same amount of human labeling, this framework works much better than the baselines."
+        },
+        {
+            "heading": "Conclusion",
+            "text": "This paper proposes NIDAL, an end-to-end framework for detection of novel intents, as well as to handle system rejected utterances using an active learning framework. Experiments are performed on various benchmark datasets and the results consistently show the efficacy of the proposed framework. Specifically, it achieves large and consistent gains in performance with a small human annotation cost across different datasets. One future step is to extend this work on diverse domains (like finance, technology, healthcare etc.)."
+        }
+    ],
+    "year": 2023
+}

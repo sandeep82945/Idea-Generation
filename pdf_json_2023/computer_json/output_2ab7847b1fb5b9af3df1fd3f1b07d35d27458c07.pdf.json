@@ -1,0 +1,106 @@
+{
+    "abstractText": "We introduce Total Curvature Calculator, a novel approach for measuring the total curvature at every triangle of a discrete surface. This method takes advantage of the relationship between per triangle total curvature and the Dirichlet energy of the Gauss map. This new tool can be used on both triangle meshes and point clouds and has numerous applications. In this study, we demonstrate the effectiveness of our technique by using it for feature-awaremesh decimation, and show that it outperforms existing curvature-estimation methods from popular libraries such as Meshlab, Trimesh2, and Libigl. When estimating curvature on point clouds, our method outperforms popular libraries PCL and CGAL. Libigl-style source code is available at https://github.com/HeCraneChen/total-curvatureestimation.git. Open3d-style source code is available at https:// github.com/HeCraneChen/Open3D-curvature-computation. CCS CONCEPTS \u2022 Computing methodologies\u2192 Shape modeling; Curvature.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Crane He Chen"
+        }
+    ],
+    "id": "SP:5c26767550e6a82f51dddc0d179854d7bed364aa",
+    "references": [
+        {
+            "authors": [
+                "Mikhail Belkin",
+                "Jian Sun",
+                "Yusu Wang."
+            ],
+            "title": "Discrete Laplace operator on meshed surfaces",
+            "venue": "Proceedings of the twenty-fourth annual symposium on Computational geometry. 278\u2013287.",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "Michael Garland",
+                "Paul S Heckbert."
+            ],
+            "title": "Surface simplification using quadric error metrics",
+            "venue": "Proceedings of the 24th annual conference on Computer graphics and interactive techniques. 209\u2013216.",
+            "year": 1997
+        },
+        {
+            "authors": [
+                "Hugues Hoppe."
+            ],
+            "title": "Progressive meshes",
+            "venue": "Proceedings of the 23rd annual conference on Computer graphics and interactive techniques. 99\u2013108.",
+            "year": 1996
+        },
+        {
+            "authors": [
+                "Quentin M\u00e9rigot",
+                "Maks Ovsjanikov",
+                "Leonidas J Guibas."
+            ],
+            "title": "Voronoi-based curvature and feature estimation from point clouds",
+            "venue": "IEEE Transactions on Visualization and Computer Graphics 17, 6 (2010), 743\u2013756.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "Daniele Panozzo",
+                "Enrico Puppo",
+                "Luigi Rocca."
+            ],
+            "title": "Efficient multi-scale curvature and crease estimation",
+            "venue": "Proceedings of Computer Graphics, Computer Vision and Mathematics (Brno, Czech Rapubic 1, 6 (2010).",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "Szymon Rusinkiewicz."
+            ],
+            "title": "Estimating curvatures and their derivatives on triangle meshes",
+            "venue": "Proceedings. 2nd International Symposium on 3D Data Processing, Visualization and Transmission, 2004. 3DPVT 2004. IEEE, 486\u2013493.",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "Gabriel Taubin."
+            ],
+            "title": "Estimating the tensor of curvature of a surface from a polyhedral approximation",
+            "venue": "Proceedings of IEEE International Conference on Computer Vision. IEEE, 902\u2013907. Max Wardetzky, Mikl\u00f3s Bergou, David Harmon, Denis Zorin, and Eitan Grinspun. 2007. Discrete quadratic curvature energies. Computer Aided Geometric Design 24,",
+            "year": 1995
+        }
+    ],
+    "sections": [
+        {
+            "text": "CCS CONCEPTS \u2022 Computing methodologies\u2192 Shape modeling; Curvature.\nKEYWORDS curvature estimation, triangle mesh, point cloud"
+        },
+        {
+            "heading": "1 INTRODUCTION",
+            "text": "Curvature is an essential differential property in many geometry processing applications. In some cases, an algorithm requires the directions and values of principal curvatures. This is usually achieved by estimating a symmetric tensor approximating the shape operator. Computing the eigen-decomposition of the tensor, one obtains the principal curvature directions (the eigenvectors) and the principal curvature values (the eigenvalues). Then, curvature energies (e.g.\nmean, Gaussian, and total curvature) can be defined based on the estimated principal curvatures [Wardetzky et al. 2007]. We propose an alternative for directly estimating the total curvature \ud835\udf0521 + \ud835\udf05 2 2 by integrating the variation of normal vectors, bypassing the problem of explicitly estimating the shape operator and computing its principal curvature values, \ud835\udf051 and \ud835\udf052. Specifically, our approach for total curvature estimation only requires estimation of normals and a way to compute the Dirichlet energy \u2013 both well-studied tasks in geometry processing. Source code of libigl-style is freely available at https://github.com/HeCraneChen/total-curvature-estimation.git."
+        },
+        {
+            "heading": "2 ALGORITHM",
+            "text": "Consider a triangle mesh with per vertex normals e.g. estimated by off-the-shelf algorithms. The goal is to directly estimate the total curvature over every triangle \ud835\udc47\n\ud835\udf05\ud835\udc47 = \u222b \ud835\udc47 (\ud835\udc5821 + \ud835\udc58 2 2) \ud835\udc51\ud835\udc5d. (1)\nNoting that the sum of the squares of the eigenvalues of a symmetric matrix equals its squared Frobenius norm and leveraging the relationship between the shape operator and the derivatives of the Gauss map, we obtain\n\ud835\udf05\ud835\udc47 = \u222b \ud835\udc47 \u2225\u2207\u00ae\ud835\udc5b\u22252\ud835\udc39 \ud835\udc51\ud835\udc5d = 3\u2211\ufe01\n\ud835\udc56=1\n\u222b \ud835\udc47 \u2225\u2207\ud835\udc5b\ud835\udc56 \u22252 \ud835\udc51\ud835\udc5d (2)\nwhere \u00ae\ud835\udc5b = (\ud835\udc5b1, \ud835\udc5b2, \ud835\udc5b3) : \ud835\udc47 \u2192 \ud835\udc462 is the (Gauss) map assigning a normal to every point on the triangle.\nThe advantage of the formulation in Equation 2 is that it does not require the estimation of the shape operator. Instead, the integrals\nar X\niv :2\n30 5.\n12 65\n3v 2\n[ cs\nCrane He Chen\nare simply the Dirichlet energies of the coordinate functions of the Gauss map \u2013 quantities that can be computed using the cotangent Laplacian stiffness matrix.\nConcretely, given a triangle \ud835\udc47 \u2208 T , letting S\ud835\udc47 \u2208 R3\u00d73 denote the cotangent Laplacian stiffness matrix associated with triangle \ud835\udc47 and setting N\ud835\udc47 \u2208 R3\u00d73 to be the matrix whose column vectors are the normals at the vertices of \ud835\udc47 , we get:\n\ud835\udf05\ud835\udc47 \u2248 Trace ( N\ud835\udc47 \u00b7 S\ud835\udc47 \u00b7 N\u22a4\ud835\udc47 ) .\nNote that this is an approximate estimate of the total curvature because the cotangent Laplacian assumes values are linearly interpolated from the vertices, whereas a Gauss map would require that the interpolated normal vectors be normalized to have unit-length.\nSimilar treatment can be applied to oriented point clouds. With normals given, all that is required is the definition of a stiffness matrix. For example, we can use the approach of Belkin et al. [Belkin et al. 2008] which defines a system matrix by constructing a local triangulation around each sample."
+        },
+        {
+            "heading": "3 PERFORMANCE",
+            "text": "For triangle meshes, we evaluate the Hausdorff distance between the decimated triangle mesh and the original triangle mesh in Table 1. For point clouds, we evaluate the RMSE distance between the estimated curvature and ground truth curvature quantitatively in Table 2 and qualitatively in Figure 2. It can be observed that our method performs better than the methods adopted in popular libraries. For fairness of comparison, the results we show for PCL and CGAL are after carefully re-scaling using the ground truth curvature. Additionally, from Table 2, the quality of normal has non-negligible effects on the performance of curvature estimation."
+        },
+        {
+            "heading": "4 DISCUSSION",
+            "text": "Wehave introduced a simple yet effectivemethod for total curvature estimation that is easy to integrate within existing libraries. Our results demonstrate that this method surpasses the accuracy of standard implementations that estimate the shape operator."
+        },
+        {
+            "heading": "A APPENDIX",
+            "text": "A.1 Additional Details\u2013Triangle Meshes We compare results for parametric surfaces, for which an analytic expression of curvature can be obtained. Similar to Taubin [Taubin 1995], we evaluate total curvature estimation on the two different triangulations of a surface (icosahedron-subdivided spheres, and polyhedral tori constructed by regular grids of different resolutions). Numerical results for the meshes shown in Figure 3 are presented in Table 3. For these results, the normal vector at each point is calculated by differentiating the parameterization.\nsampling PCL CGAL[M\u00e9rigot et al. 2010] Ours (N est.) Ours (N gt)\na torus knot\nuniform 61.7166 85.9137 25.1193 7.8117 nonuniform 81.3795 86.0262 67.1373 8.0127\nsparse 85.7216 60.2592 28.7982 7.6624\nanother knot\nuniform 182.7609 218.5101 58.3876 35.484 nonuniform 195.2599 243.3259 94.2648 37.1814\nsparse 208.9368 283.0388 178.3064 52.0716\nTo verify and compare the efficacy of our approach on complex models, specifically those with unknown parameterizations and ground truth curvatures, we turn our attention to the mesh decimation task. This enables us to evaluate the effectiveness of the\ndifferent approaches. The metric we use is the Hausdorff distance between the original mesh and the results of feature-aware decimation using curvature obtained from different estimation methods as cost function or per-vertex weight.\nHere comes the implementation details. In particular, we incorporated our total curvature estimation method into two pipelines for the task, one successive method inspired by Hoppe [Hoppe 1996] using shortest-edge-mid-point cost, and the other is a quadratic energy-based method inspired by QSLIM [Garland and Heckbert 1997]. In the successive methods, edge length is one of the most commonly selected cost, and its midpoint is selected as the merged vertex when edge collapsing happens. We incorporate the total curvature as a weight, which is multiplied to the edge length, to formulate a new cost function. Comparative results are shown in Figure 4. It can be observed that highly curved regions around the arm of the mother have higher resolution, whereas conventional shortest-edge-midpoint maintains similar resolution everywhere. In the QSLIM inspired method, a total curvature weight is assigned to each vertex. The results are shown in Figure 5. Final results from the tables in the paper are obtained from the QSLIM inspired method.\nA.2 Additional Details\u2013Point Clouds Our approach generalizes to point clouds, and can be implemented as follows: (1) For each point \ud835\udc5d , find its k-nearest neighbors\ud835\udc41\ud835\udc58 (\ud835\udc5d) =\nCrane He Chen\n{\ud835\udc5d1, \ud835\udc5d2, ..., \ud835\udc5d\ud835\udc58 }, and project these points onto the tangent plane of the surface into \ud835\udc47\ud835\udc58 (\ud835\udc5d) = {\ud835\udc5d\ud835\udc611, \ud835\udc5d\ud835\udc612, ..., \ud835\udc5d\ud835\udc61\ud835\udc58 }. (2) Comute a Delaunay triangulation of\ud835\udc47\ud835\udc58 (\ud835\udc5d), and extract the one-ring of triangles incident on \ud835\udc5d . (3) Calculate the curvature at \ud835\udc5d by averaging the per-triangle Dirichlet energies of the 1-ring neighborhood, as in the computation of total curvature for triangle meshes. The results of this total curvature estimation are shown in Figure 6.\nIn our results, \u201cuniform\u201d refers to a dense Poisson Disk sampling on the triangle mesh with around 20k points, \u201cnonuniform\u201d refers to first oversampling 40k points on the triangle mesh with Poisson Disk sampling, then randomly sample around 20k points form the 40k points, \u201csparse\u201d refers to sparse Poisson Disk sampling with around 2k points. Ground truth normals refers to the normals calculated either parametrically or estimated on the pre-known triangle mesh. Estimated normals refers to the normals estimated directly from the point clouds based on the covariance matrix of k-nearest-neighbors. Each patch might have inconsistent sign for the normal compared to other patches. We propagate the normal orientation using a minimum spanning tree.\nDuring the experiments, emperically, we found that compared to CGAL and PCL, our method is less sensitive to parameters. Our\nmethod takes into account the one-ring-neighborhood based on the local Delaunay triangulation. The only parameter to tune is the \ud835\udc58 of k-nearest neighbors. We select \ud835\udc58 = 20 for the case of dense sampling, and \ud835\udc58 = 10 for the case of sparse sampling. Whereas both CGAL and PCL have two parameters related to radius that need to be fine-tuned in order to get good results. The parameters could differ a lot from model to model, and their selection procedure could be time-consuming. Take the torus knot as example, CGAL needs \ud835\udc45 = 0.1, \ud835\udc5f = 0.09 for dense sampling and \ud835\udc45 = 0.2, \ud835\udc5f = 0.18 for sparse sampling. Whereas the torus in the paper works the best with \ud835\udc45 = 0.3, \ud835\udc5f = 0.1. Similarly, in PCL, the torus knot needs \ud835\udc5f1 = \ud835\udc5f2 = 0.03 for dense sampling \ud835\udc5f1 = \ud835\udc5f2 = 0.1 for sparse sampling, whereas the torus needs \ud835\udc5f1 = \ud835\udc5f2 = 0.3.\nMore results for point clouds are presented in Table 4. Qualitative comparisons of estimated curvature on uniform, nonuniform, and sparse point clouds with ground truth normals are shown in Figure 7. Qualitative comparisons for the effect of quality of normal on curvature estimation are shown in Figure 8. It can be observed that the proposed method is robust with respect to the density and regularity of sampling, but sensitive to the quality of estimated normals."
+        },
+        {
+            "heading": "B ACKNOWLEDGEMENTS",
+            "text": "The author would like to express particular gratitude to Michael Kazhdan for advising the research and illuminating discussions. To Apple Inc. for funding my PhD research. To department of Mechanical Engineering at the Johns Hopkins University for departmental fellowship."
+        }
+    ],
+    "title": "Estimating Discrete Total Curvature  with Per Triangle Normal Variation",
+    "year": 2023
+}

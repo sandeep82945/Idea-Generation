@@ -1,0 +1,172 @@
+{
+    "abstractText": "Adobe Fonts has a rich library of over 20,000 unique fonts that Adobe users utilize for creating graphics, posters, composites etc. Due to the nature of the large library, knowing what font to select can be a daunting task that requires a lot of experience. For most users in Adobe products, especially casual users of Adobe Express, this often means choosing the default font instead of utilizing the rich and diverse fonts available. In this work, we create an intentdriven system to provide contextual font recommendations to users to aid in their creative journey. Our system takes in multilingual text input and recommends suitable fonts based on the user\u2019s intent. Based on user entitlements, themix of free and paid fonts is adjusted. The feature is currently used by millions of Adobe Express (shown in Fig. 1) users with a CTR of >25%.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Sanat Sharma"
+        },
+        {
+            "affiliations": [],
+            "name": "Jayant Kumar"
+        },
+        {
+            "affiliations": [],
+            "name": "Jing Zheng"
+        }
+    ],
+    "id": "SP:2042f8a91066c5379f0ee9b95ce4386124efd69a",
+    "references": [
+        {
+            "authors": [
+                "Henry S. Baird",
+                "George Nagy"
+            ],
+            "title": "Self-correcting 100-font classifier. In SPIE-The international Society for Optical Engeneering",
+            "venue": "Document Recognition",
+            "year": 1994
+        },
+        {
+            "authors": [
+                "Tianlang Chen",
+                "Zhaowen Wang",
+                "Ning Xu",
+                "Hailin Jin",
+                "Jiebo Luo"
+            ],
+            "title": "Largescale Tag-based Font Retrieval with Generative Feature Learning",
+            "venue": "In IEEE/CVF International Conference on Computer Vision (ICCV). IEEE. https://doi.org/10. 48550/ARXIV.1909.02072 Available on arXiv",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Tianyu Gao",
+                "Xingcheng Yao",
+                "Danqi Chen"
+            ],
+            "title": "SimCSE: Simple Contrastive Learning of Sentence Embeddings",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Elad Hoffer",
+                "Nir Ailon"
+            ],
+            "title": "Deep metric learning using Triplet network. In Similarity-Based Pattern Recognition: Third International Workshop, SIMBAD 2015 (Copenhagen, Denmark)",
+            "venue": "https: //doi.org/10.48550/ARXIV.1412.6622 Available on arXiv",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Shuhui Jiang",
+                "Zhaowen Wang",
+                "Aaron Hertzmann",
+                "Hailin Jin",
+                "Yun Fu"
+            ],
+            "title": "arXiv:1811.08015 http://arxiv",
+            "venue": "Visual Font Pairing. CoRR abs/1811.08015",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Florian Kadner",
+                "Yannik Keller",
+                "Constantin A. Rothkopf"
+            ],
+            "title": "AdaptiFont: Increasing Individuals\u2019 Reading Speedwith a Generative FontModel and Bayesian Optimization",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Diederik P. Kingma",
+                "Jimmy Ba"
+            ],
+            "title": "Adam: A Method for Stochastic Optimization",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Seiya Matsuda",
+                "Akisato Kimura",
+                "Seiichi Uchida"
+            ],
+            "title": "Impressions2Font: Generating Fonts by Specifying Impressions",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Victor Sanh",
+                "Lysandre Debut",
+                "Julien Chaumond",
+                "Thomas Wolf"
+            ],
+            "title": "DistilBERT, a distilled version of BERT: smaller, faster, cheaper and lighter",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Daniel Ponsa Vassileios Balntas",
+                "Edgar Riba",
+                "Krystian Mikolajczyk"
+            ],
+            "title": "Learning local feature descriptors with triplets and shallow convolutional neural networks",
+            "venue": "In Proceedings of the British Machine Vision Conference (BMVC),",
+            "year": 2016
+        }
+    ],
+    "sections": [
+        {
+            "text": "CCS CONCEPTS \u2022 Applied computing \u2192 Document management and text processing.\nKEYWORDS font recommendations, intent understanding, text processing, neural networks, triplet learning, recommendation system ACM Reference Format: Sanat Sharma, Jayant Kumar, Jing Zheng, and Tracy Holloway King. 2023. Contextual Font Recommendations based on User Intent. In Proceedings of ACM SIGIR Workshop on eCommerce (SIGIR eCom\u201923). ACM, New York, NY, USA, 5 pages."
+        },
+        {
+            "heading": "1 INTRODUCTION: APPLICATION",
+            "text": "Fonts, including the difficulty of font search and recommendations, have been a well-studied area in industry and at Adobe in particular.1 Previous works have tagged fonts with a small array of tags which can then be used for search. For example, Adobe Fonts ascribes 26 tags to fonts on their site. Recent works have used the MyFonts dataset to assign tags to fonts and utilized them for 1We thank Andrei Stefan, Ravindra Sadaphule, and Arpita Agrawal for their invaluable help in productionalizing the font recommendation feature shown in Fig. 1.\nPermission to make digital or hard copies of part or all of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for third-party components of this work must be honored. For all other uses, contact the owner/author(s). SIGIR eCom\u201923, July 27, 2023, Taipei, Taiwan \u00a9 2023 Copyright held by the owner/author(s).\nretrieval [2] [1]. There are also projects that do font pairing and retrieval based on visual appearance of the font [5] [8].\nHowever, doing font retrieval based on font tags often misses the semantics governing what types of contexts the font should be used in. Furthermore, retrieving and recommending fonts based on the visual style of the fonts already on the canvas often leads to poor results when there is variety in the content of the page.\nOur work focuses on understanding the intent of the the user\u2019s project using multimodal input (text and image context). We then recommend fonts that work well with the project intent. This allows us to understand the semantic relationship between the user\u2019s input (e.g. the text they need to select a font for) and the fonts in our library. Our work comprises:\n(1) A multimodal Input\u2192 Font model that can accurately and reliably recommend a diverse array of fonts to the user, by extracting their creative intent. (2) A method to recommend \u201csimilar\u201d fonts by intent, rather than simple appearance. (3) A scalable query architecture for low latency recommendations.\nSince we map the user\u2019s context to intent and then to fonts, we are able to showcase a diverse set of fonts, including specialized, unique fonts. This intent-based method also allows us to train our models on a much smaller set of data, which is often a problem in training font recommendation models. The approach is currently used in production in Adobe Express, with a CTR of >25% and a\nar X\niv :2\n30 6.\n08 18\n8v 1\n[ cs\n.H C\n] 1\n4 Ju\nn 20\n23\ndownstream project export rate of >50% whenever a recommended font has been clicked: that is, users who interact with the recommended fonts are very likely to finish and export the project they are working on. Whether the user is using a free, trial, paid, or enterprise account has an effect on engagement with font selection in general and with subsequent use of the font recommendations."
+        },
+        {
+            "heading": "2 DATA",
+            "text": "In order to mine data for training, we extracted text-font pairs for \u223c212,000 texts in Adobe Express templates. Adobe Express is a platform for people to create flyers, posters, cards, logos, etc. and hence has templates with a diverse set of fonts. Previous font recommendation approaches often utilized general text documents, which rarely have much diversity of fonts [6] [5].\nFor each text input, we determine the top intents via our intent detection model. The intent detection model is trained on 1500+ intents, derived from Adobe Express template tags. These tags range from events such as \u201cChristmas\u201d and \u201cHalloween\u201d to objects and emotional characteristics such as \u201cballoon\u201d, \u201chappy\u201d, and \u201cencouraging\u201d. This results in triplets of font + text + intent. This, to our knowledge, is the largest dataset of font-text-intent mapping. Fig. 2 showcases a sample of the training dataset. After further thresholding and preprocessing, we extract 470,000 rows of text + font + intent triplets that we utilize to train our models.\nSince fonts within a font family are visually similar and have other similar characteristics, we group similarly used fonts in a font family together based on intent. This grouping helps to capture artistic factors of the fonts and corresponding intents. The final training set consists of 2043 unique font families that we recommend from. Fig. 3 shows some examples of fonts and their associated intents."
+        },
+        {
+            "heading": "3 MODEL",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Intent Detection Model",
+            "text": "3.1.1 Creative Intent Taxonomy. In order to accurately map user creative intent, we semi-automatically extract a creative intent taxonomy from the Adobe Express content metadata and users\u2019 behavioral data when using and searching for content. We utilize Adobe Express templates for this taxonomy, since the template data contains rich designer-added tags and represents a diverse set of creative intents. The intents comprise two main types (example broad and narrower intents in parentheses):"
+        },
+        {
+            "heading": "An example of the font is shown below the font name.",
+            "text": "(1) Topic of work/task/emotion (e.g. yoga, Halloween, cosmetic, food, book launch, happiness, birthday, birthday party) (2) Type of creation (e.g. flyer, poster, social media post, card, greeting card, christmas card, valentine\u2019s day card)\nWe utilize a pretrained DistilBert [9] transformer to cluster related topics and then apply popularity metrics to derive a creative intent taxonomy of over 1500 intents mined from the Adobe Express dataset. This clustering allows us to collapse terms such as \"mlk jr day\", \"martin luther jr day\" and \"mlk day\" into one concept. We keep the concept with the most popularity (most frequent occurrence among all templates).\n3.1.2 Multilingual Text-Intent Model. Users often add text to their creation to convey their intent. For example, \u201cHappy Mother\u2019s Day\u201d is written on Mother\u2019s Day greeting cards, and \u201cWe stand in solidarity with black businesses\u201d for BLM social media posts. It is crucial to infer the intent (topic + type) of a user project based on the text entered on the canvas or issued as a search. We trained a transformer model which takes as input a text sample (sentence or phrase or word) and predicts the top, most probable intents from our curated taxonomy. We extracted over 335,000 pairs of text from Adobe Express templates and mapped them to the \u201ctopics\u201d that were manually tagged by the template designers. Our final dataset consisted of over 1 million text\u2013intent pairs that we utilized to train our classification model. We fine-tuned a DistilBert [9] using contrastive learning to learn the text-to-intent relationships. Our model works for 36+ languages including English, French, German and Japanese, which is crucial for any production feature at Adobe."
+        },
+        {
+            "heading": "3.2 Font Recommendation Model",
+            "text": "In order to model intent and fonts in the same embedding space efficiently, we utilized Triplet Learning and online triplet mining [4]. This effectively generates intent-to-font pairings, as shown in Fig 4. We fine-tuned a pretrained SimCSE model trained on query understanding [3] and trained the model with Triplet Margin Loss [10] with a margin of 2. The loss function is summarized in equation 1 where: \ud835\udefc is the margin;\ud835\udc34, \ud835\udc43 and \ud835\udc41 denote the anchor, positive and negative sample respectively; \ud835\udc53 denotes the neural network. We\nutilize Adam [7] as our optimization function with a high learning rate (empirically we found 3\ud835\udc52\u22123 to give the best results).\n\ud835\udc3f(\ud835\udc34, \ud835\udc43, \ud835\udc41 ) =\ud835\udc5a\ud835\udc4e\ud835\udc65 (\u2225 \ud835\udc53 (\ud835\udc34)\u2212\ud835\udc53 (\ud835\udc43) \u22252 \u2212 \u2225 \ud835\udc53 (\ud835\udc34)\u2212\ud835\udc53 (\ud835\udc41 ) \u22252 +\ud835\udefc, 0) (1)\nOne challenge was to prevent commonly used fonts from skewing recommendation variation. For generating the embedding for each font, we found the best results by representing a font by a ranked set of its top 7 intents. The ranking is based on the prevalence of the intent-font pair in our dataset. This helped distinguish unique fonts and remove font bias at runtime."
+        },
+        {
+            "heading": "4 SERVICE ARCHITECTURE",
+            "text": "The system design of font recommendation has three main components: the font recommendation service, Search Platform as a Service (SPaaS) and Universal Search Service (USS).\nThe USS service defines the input-output schema for clients and acts as the orchestrator between the font recommendation service and the Search Platform (SPaaS).\nSPaaS contains the metadata, embeddings and intent information across various Adobe assets such as backgrounds, images, fonts and Adobe Express templates. SPaaS is responsible for providing the font recommendation service with input information (context, embeddings, etc.) present in its Elasticsearch (ES) index as well as extracting font metadata from the ES index for each recommended font returned from the service.\nAt runtime, our clients send user requests (i.e. text input from the Adobe Express editing canvas) to USS. USS retrieves additional information from SPaaS before sending the full payload to the font recommendation service. The font recommendation service extracts the intents from the text input and then uses the weighted set of intents to generate an embedding. This embedding is used to select font recommendations. When the input language has a select set of compatible fonts (e.g. Japanese), SPaaS provides the recommendation service with the subset of fonts to recommend from. The full architecture is shown in Figure 5."
+        },
+        {
+            "heading": "5 EVALUATION",
+            "text": ""
+        },
+        {
+            "heading": "5.1 External Manual Evaluation",
+            "text": "We conducted an external evaluation with 75 evaluators. We selected 78 high frequency templates and displayed them to annotators with one of the texts removed. We then showed the annotators 5 recommended fonts for the text that had been removed and asked then to rate each of the fonts as \u201cvery good\u201d, \u201cok\u201d or \u201cnot good\u201d. Since font recommendations are highly subjective, we asked the annotators to fully consider each font\u2019s compatibility with the text. We found that evaluators considered a text-font pair relevant (very good or ok) 81% of the time (Table 1).\nWe also evaluated a weak baseline of randomly selected fonts and a strong baseline of common fonts. Both were >10ppt (see fn. 3) worse than the intent-based algorithm. Randomly selected fonts often showed inappropriate, heavily stylized fonts. Popular fonts showed visually similar fonts with little diversity or newness: This reduced discoverability of unique fonts (e.g. for Halloween, where stylized fonts work well, only non-stylized options were shown)."
+        },
+        {
+            "heading": "5.2 Internal Manual Evaluation",
+            "text": "We also conducted an internal evaluation with 16 annotators before AB testing the font recommendations. Similar to the external evaluation, we took 100 texts in multiple languages (English, French, German, Japanese) from Adobe templates and asked team members to rank the font recommendations on a scale of 1\u20135 (1 = very bad, 5 = very good). Our internal results reflected the external evaluation, with a mean score of 3.67. Since fonts are so subjective, this was considered sufficient for AB testing. The score distribution is shown in Table 1. Some examples of the internal evaluation queries are shown in Figure 6."
+        },
+        {
+            "heading": "5.3 In-Production Analysis",
+            "text": "Once the external and internal evaluations were completed, the font recommendations were put in production2 in Adobe Express in the experience shown in Fig. 1. Overall, the recommendations have a click-through rate (CTR) of >25% and users who select a recommended font have a downstream project export rate of >50%.\nThere are 3 types of user accounts on Adobe Express: Free, trial, and enterprise. Although the font recommendation algorithm is identical for all users, the percentage of free and paid fonts depends on their account type. We analyzed the engagement and success of the different types, focusing on users who edited text since font recommendations are only relevant to such users. Surprisingly, free and enterprise users who edited text had the same rates for using the font selection module, selecting a recommendation, and 2We cannot report exact numbers for proprietary reasons. Instead we provide lower bounds and relative numbers.\nexporting a final project. In contrast, trial users had much higher engagement at each step (font module +15ppt; recommendation selection +13ppt; export +2ppt).3\nUsers who utilize font recommendations have a higher project export (+25ppt) compared to users who do not. This may be due to the fact that engaged users have higher desire to complete their projects. This is also consistent with overall project export rates after click on font recommendation for paid (trial + enterprise + non-enterprise paid) vs. free users. Paid users had a +10ppt export rate compared to free users after clicking on font recommendations.\nWe also saw much higher (3x) engagement on web compared to mobile surfaces. We attribute this to the fact that the feature is more prominent on web as well as having a larger screen allows users to browse recommendations more easily.\nFinally we draw some key insights about paid vs. free fonts. For paid users, where there is an equal split of free and paid fonts, users click on paid fonts slightly more (+2ppt) than free ones. In contrast, free users are shown a much higher percentage of free fonts and rarely select paid fonts due to the payment barrier. This reflects the fact that while paid fonts are generally better liked, they are not enough incentive for most users to convert to paying customers."
+        },
+        {
+            "heading": "6 CONCLUSION AND NEXT STEPS",
+            "text": "This work showcased a novel end-to-end framework for recommending fonts based on multilingual user input. The recommendation system includes a model to understand user intent and brings intents and fonts into the same representation space. It includes a low-latency, scalable architecture to serve the font recommendations. The current approach has high accuracy and relevance in their recommendations and is highly used by Adobe Express users.\nNext steps focus on whole document relevance. Firstly, we want to understand the fonts already in the document so that we can recommend fonts that work in harmony with the existing artistic design. Secondly, the model described here focuses on individual texts, whereas global intent is not taken into consideration. Finally, we currently do not support right-to-left languages like Arabic.\n3We are unable to publish the exact rates. We report the results as percentage point (ppt) change. For example, a +5 in CTR indicates going from a CTR of X% (e.g. 60%) to a CTR of X+5% (e.g. 65%)."
+        }
+    ],
+    "title": "Contextual Font Recommendations based on User Intent",
+    "year": 2023
+}

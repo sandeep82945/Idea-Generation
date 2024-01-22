@@ -1,0 +1,175 @@
+{
+    "abstractText": "Hyper-parameter tuning, and especially regularisation parameter estimation, is a challenging but essential task when solving inverse problems. The solution is obtained here through the minimization of a functional composed of a data fidelity term and a regularization term. Those terms are balanced through a (or several) regularisation parameter(s) whose estimation is made under an unrolled strategy together with the inverse problem solving. The resulting network is trained while incorporating information on the model through Maximum a Posteriori estimation which drastically decreases the amount of data needed for the training and results in better estimation results. The performances are demonstrated in a deconvolution context where the regularisation is performed in the wavelet domain.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Pascal Nguyen"
+        },
+        {
+            "affiliations": [],
+            "name": "Emmanuel Soubies"
+        },
+        {
+            "affiliations": [],
+            "name": "Caroline Chaux"
+        }
+    ],
+    "id": "SP:7690854ddad4af1dfb2606a50263bd34450aa629",
+    "references": [
+        {
+            "authors": [
+                "C. Chaux",
+                "P.L. Combettes",
+                "J.-C. Pesquet",
+                "V.R. Wajs"
+            ],
+            "title": "A variational formulation for frame based inverse problems",
+            "venue": "Inverse Problems, vol. 23, no. 4, pp. 1495\u20131518, Aug. 2007.",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "A. Cultrera",
+                "L. Callegaro"
+            ],
+            "title": "A simple algorithm to find the L-curve corner in the regularisation of ill-posed inverse problems",
+            "venue": "IOP SciNotes, vol. 1, no. 2, pp. 025004, 8 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "C. Crockett",
+                "J. Fessler"
+            ],
+            "title": "Bilevel methods for image reconstruction",
+            "venue": "Found. Trends Signal Process., vol. 15, no. 2-3, pp. 121\u2013289, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "B. Afkham",
+                "J. Chung",
+                "M. Chung"
+            ],
+            "title": "Learning regularization parameters of inverse problems via deep neural networks",
+            "venue": "Inverse Problems, vol. 37, no. 10, pp. 105017, 9 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A. Kofler",
+                "F. Altekr\u00fcger",
+                "F.A. Ba",
+                "C. Kolbitsch",
+                "E. Papoutsellis",
+                "D. Schote",
+                "C. Sirotenko",
+                "F.F. Zimmermann",
+                "K. Papafitsoros"
+            ],
+            "title": "Learning regularization parameter-maps for variational image reconstruction using deep neural networks and algorithm unrolling",
+            "venue": "arXiv preprint arXiv:2301.05888, 2023.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "D.L. Donoho"
+            ],
+            "title": "De-noising by soft-thresholding",
+            "venue": "IEEE Trans. Inform. Theory, vol. 41, no. 3, pp. 613\u2013627, May 1995.",
+            "year": 1995
+        },
+        {
+            "authors": [
+                "R. Tibshirani"
+            ],
+            "title": "Regression shrinkage and selection via the lasso",
+            "venue": "J. R. Stat. Soc. Ser. B Stat. Methodol., vol. 58, no. 1, pp. 267\u2013288, 1 1996.",
+            "year": 1996
+        },
+        {
+            "authors": [
+                "V. Monga",
+                "Y. Li",
+                "Y. Eldar"
+            ],
+            "title": "Algorithm unrolling: Interpretable, efficient deep learning for signal and image processing",
+            "venue": "IEEE Signal Process. Mag., vol. 38, no. 2, pp. 18\u201344, 3 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A. Beck",
+                "M. Teboulle"
+            ],
+            "title": "A fast iterative shrinkagethresholding algorithm for linear inverse problems",
+            "venue": "SIAM J. Imaging Sci., vol. 2, no. 1, pp. 183\u2013202, 2009.",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "S. Chang",
+                "Y. Bin",
+                "M. Vetterli"
+            ],
+            "title": "Adaptive wavelet thresholding for image denoising and compression",
+            "venue": "IEEE Trans. Image Process., vol. 9, no. 9, pp. 1532\u20131546, 2000.",
+            "year": 2000
+        }
+    ],
+    "sections": [
+        {
+            "text": "Index Terms\u2014 Maximum a Posteriori, Unrolling, Parameter estimation, Deconvolution, Wavelets."
+        },
+        {
+            "heading": "1. INTRODUCTION",
+            "text": "In this work, we consider the class of inverse problems that consists in recovering x \u2208 RN from data y \u2208 RM that follow the linear model\ny = Ax+ \u03b5, (1)\nwhere A \u2208 RM\u00d7N is the forward matrix and \u03b5 \u2208 RM a noise vector whose entries are drawn from a zero-mean normal distribution with variance \u03c32. The standard practice to tackle such an inverse problem [1] is to solve an optimization problem of the form\nx\u0302 \u2208 { arg min\nx\u2208RN F(x) := 1 2 \u2225Ax\u2212 y\u222522 + \u03bbR(x)\n} . (2)\nHere, the least-squares term measures the discrepancy between the model and the data. While other measures of fit could be adopted, the \u21132-norm is a natural choice for additive Gaussian noise (see Section 2). The regularization term R (assumed convex) enforces prior knowledge on the targeted solution. Finally, the regularization parameter \u03bb > 0 allows to adjust the trade-off between data fidelity and regularization.\nThe choice of an optimal value for \u03bb is by no means straightforward and usually practitioners resort to manual tuning. Yet, given its practical importance, many works have been and continue to be devoted to the development of methods that select \u03bb automatically. These include classical approaches such as cross-validation or Lcurve [2], as well as more sophisticated methods like bi-level strategies [3]. Moreover, with the recent rise of neural networks and increasing computational capabilities, several methods based on deep\nThis work was supported by the National Research Foundation, Prime Minister\u2019s Office, Singapore under its Campus for Research Excellence and Technological Enterprise (CREATE) Programme.\nlearning were proposed [4]. In particular, some of them exploit unrolling strategies [5] so as to maintain interpretability.\nContributions and outline. In this communication, we propose a method to automatically adjust \u03bb from the data y. To that end, we train\u2014in an end-to-end supervised way\u2014a network that combines a trainable parameter estimation module together with an unrolled algorithm for (2) (Section 3). As opposed to [5], the proposed parameter estimation module derives from a maximum a posteriori (MAP) interpretation of (2) (Section 2). As such, it remains interpretable and only few parameters have to be learned.\nAlthough the proposed general principle (sections 2 and 3.1) can be adapted to any problem of the form (2), we focus in this work on wavelet-based deconvolution. It corresponds to the situation where\nA = HW\u2217 and R = \u2225 \u00b7 \u22251, (3)\nwith H \u2208 RN\u00d7N being a convolution operator and W \u2208 RN\u00d7N a wavelet operator. Hence, in this case, x represents wavelets coefficients of the target image z = W\u2217x. Moreover, we present in Section 3.4 an extension allowing for the consideration of a different \u03bb for each wavelet sub-band.\nWe illustrate the effectiveness of the proposed method on image deconvolution purposes in Section 4. We show that 1) the network being informed, the proposed strategy enables to automatically estimate the regularisation parameter(s) from a small learning data set and 2) the reached performances are very close to the best performances one can obtain following an (unrealistic) grid search strategy. Indeed, the latter requires a ground truth and is not applicable in practice but constitutes a good reference for comparison."
+        },
+        {
+            "heading": "2. MAXIMUM A POSTERIORI INTERPRETATION",
+            "text": "From a Bayesian perspective, solving an inverse problem of the from (1) consists in maximizing x 7\u2192 p(x|y), the probability of x knowing the data y. Although not directly accessible in practice, Bayes\u2019 formula gives us\np(x|y) \u221d p\u03c3(y|x)p\u00b5(x) (4)\nwhere p\u03c3(y|x) is the likelihood function which only depends on the noise level \u03c3. For additive Gaussian noise, we have p\u03c3(y|x) \u221d exp ( \u2212\u2225Ax\u2212 y\u222522/(2\u03c32) ) which is nothing else than the probability of the vector of noise \u03b5. On the other hand, p\u00b5 represents the prior distribution on x. Without loss of generality, we consider logconcave Gibbs distributions of the form p\u00b5(x) \u221d exp (\u2212R(x)/\u00b5) where \u00b5 > 0 is a scale parameter.\nInjecting these expressions in (4) and taking the negative logarithm, we see that maximizing p(x|y) with respect to x is equivalent\nto solve (2) with \u03bb = \u03c32/\u00b5. (5)\nAs such, we get from this Bayesian viewpoint that the hyperparameter \u03bb should be proportional to the noise variance and inversely proportional to the scale of the prior distribution. This is confirmed by Fig. 1 where we illustrate, on synthetic data satisfying the model perfectly, that the smallest relative error is obtain by taking \u03bb equal or close to the theoretical value defined in (5). In Section 3, we exploit this interpretation in order to derive a MAPinformed unrolled algorithm that allows to automatically adjust \u03bb from the data y."
+        },
+        {
+            "heading": "3. PROPOSED METHODOLOGY",
+            "text": ""
+        },
+        {
+            "heading": "3.1. General Principle",
+            "text": "Let \u03c3\u0302y and \u00b5\u0302y be respectively estimates of \u03c3 and \u00b5 obtained from the data y (see Section 3.2). Then, one can deploy an iterative optimization algorithm to solve (2) with \u03bb = \u03c3\u03022y/\u00b5\u0302y. Yet, the success of this approach depends heavily on the quality of these estimates. To tackle this drawback, we propose to learn rectification functions r\u03c3(\u00b7;\u03b8) and r\u00b5(\u00b7;\u03d1) (with learnable parameters \u03b8 and \u03d1) so that r\u03c3(\u03c3\u0302y;\u03b8) and r\u00b5(\u00b5\u0302y;\u03d1) lead to better estimates of \u03c3 and \u00b5. Specifically, we consider rectification functions of the form\nr\u03c3(s;\u03b8) = \u03b81s+ \u03b82 and r\u00b5(u;\u03d1) = \u03d11u+ \u03d12. (6)\nThe rationale behind this choice is discussed in Section 3.2. We then learn the four parameters defining these rectification functions through the resolution of\n(\u03b8\u0302, \u03d1\u0302) \u2208 arg min \u03b8,\u03d1\u2208R2 Q\u2211 q=1 \u2225N (\u03b8,\u03d1;yqtrain)\u2212 x q train\u2225 2 2 (7)\nwhere {xqtrain,y q train} Q q=1 is a set of input-target image-pairs and N is defined by unrolling an algorithm for (2) (see Section 3.3). More precisely, we set\nN (\u03b8,\u03d1;y) = ST (x0, (r\u03c3(\u03c3\u0302y;\u03b8))2/r\u00b5(\u00b5\u0302y;\u03d1)) (8)\nwhere ST (x0, \u03bb) stands for T iterations of the considered algorithm initialized with x0 to solve (2) with the given \u03bb.\nBy construction, the proposed network can adapt the hyperparameter to both the noise level and the image content, as in the recent work [5]. Yet, as opposed to [5], our parameter estimation module is interpretable and has significantly less parameters to learn."
+        },
+        {
+            "heading": "3.2. Initial Estimation of \u03c3 and \u00b5",
+            "text": "Initial estimation of \u03c3. Following [6], we compute an initial estimate of \u03c3 as\n\u03c3\u0302y = 1\n0.6745 median(|d(Wy)|), (9)\nwhere d is a function that extracts detail coefficients of the wavelet decomposition. As illustrated in Fig. 2 (top), this estimator is very accurate in our context where A = HW is a low-pass filter. We observe that \u03c3\u0302y detaches from the identity line only for very small level of noise (\u03c3 < 10\u22125) compared to the signal level \u00b5 = 0.01.\nInitial estimation of \u00b5. Given that the random vectors Ax and \u03b5 are independent, we have var(y) = var(Ax) + var(\u03b5) where var stands for the variance. In the Bayesian context of Section 2, setting R = \u2225 \u00b7 \u22251 corresponds to the consideration of a zero mean Laplace distribution with scale parameter \u00b5 [7]. As such, if A was an identity operator we would get\nvar(y) = 2\u00b52 + \u03c32, (10)\nusing the fact that the variance of a zero mean Laplace distribution with scale parameter \u00b5 is 2\u00b52. Although this relation does not hold anymore for an arbitrary A, we use it as a rough approximation in order to compute an initial estimate of \u00b5 as\n\u00b5\u0302y = \u221a |var(y)\u2212 \u03c3\u03022y|/2. (11)\nThe performance of this estimator is analyzed in the bottom graph of Fig. 2. We can distinguish two regimes. On the one hand, when the signal level (i.e. \u00b5) is larger than the noise level (here \u03c3 = 0.1), the estimation is accurate within a constant bias. This is due to the fact that we ignore the effect of the operator A. This bias motivates the proposed parameterization for the rectification functions in (6). On the other hand, when \u00b5 is smaller than the noise level, the estimation becomes constant, equal to a value related to the noise only.\nRemark 1. It is noteworthy to mention that we could directly adjust the parameters of the rectification functions in (6) from the experiments reported in Fig. 2. Yet, the proposed training strategy is more relevant for several reasons. First, natural images does not follow exactly the considered model (wavelet coefficients from a Laplace\ndistribution). Second, as emphasized with the experiment of Fig. 1, \u03bb = \u03c32/\u00b5 is \u201coptimal\u201d when comparing solutions at convergence. The later being very slow (problem ill-conditioned), algorithms are usually stopped way before convergence. In this case, \u03bb = \u03c32/\u00b5 may not remain the best choice. Hence, the proposed training strategy in Section 3.1 allows to adjust the rectification functions by taking into account both the deviation of natural images from the considered model and a reduced number of algorithm iterations."
+        },
+        {
+            "heading": "3.3. Unrolled Fast Iterative Soft Thresholding Algorithm (FISTA)",
+            "text": "The resulting optimisation problem (2) is solved by using an unrolled [8] version of FISTA algorithm [9]. This algorithm basically involves two main operations: a gradient step (quadratic term in (2), stepsize \u03b3) and a thresholding step (regularisation R). In this case, T iterations of FISTA, denoted by ST (x0, \u03bb) in (8), reads\nAlgorithm 1 FISTA 1: Input: x0, v0 = x0, \u03bb \u2265 0, 0 < \u03b3 < 1/\u2225A\u2217A\u2225 2: Output: xT 3: for t = 0, . . . , T \u2212 1 do 4: xt+1 = Soft\u03bb\u03b3 ( vt \u2212 \u03b3A\u2217(Axt \u2212 y)\n) 5: vt+1 = xt + t\nt+ 3 (xt+1 \u2212 xt)\n6: end for\nwhere Soft\u03bb\u03b3 denotes the soft-thresholding operator defined by Soft\u03bb\u03b3(x) = sign(x)max(|x| \u2212 \u03bb\u03b3, 0). This algorithm is implemented under an unrolling strategy that is under a neural network form where each layer is defined by one iteration of Alg. 1."
+        },
+        {
+            "heading": "3.4. Wavelet Sub-band Variable Parameter",
+            "text": "When considering a multiscale representation of signals, choosing an adaptive regularisation parameter is often more accurate, the information contained in each sub-band possibly being of a great variability [10]. We can thus generalize the optimisation problem (2) with a new one given by\nx\u0302 \u2208 arg minx\u2208RN G(x) := 12\u2225Ax\u2212 y\u222522 +\u2211 j\u2208Sj \u03bbjR(x|j )  . (12) where Sj denotes the jth sub-band of the multiscale transform, and x|j denotes the coefficients in x associated to this j\nth sub-band. This formulation allows us to define (and later tune) a regularisation parameter \u03bbj per sub-band. Only Line 4 of Alg. 1 needs to be modified with a processing per sub-band.\nIt is noteworthy to mention that, in this new configuration, a grid search is no longer possible (in addition to being not realistic as mentioned previously) due to the increase of the number of parameters to tune. In contrast, the proposed MAP-informed unrolled strategy can be defined as described previously with N (\u03b8, (\u03d1j)j ;y) where now a vector \u03d1j per sub-band will be learnt."
+        },
+        {
+            "heading": "4. NUMERICAL EXPERIMENTS",
+            "text": ""
+        },
+        {
+            "heading": "4.1. Context",
+            "text": "We illustrate the performance of our approach in an image deconvolution context where the direct model is given by (1) in which A = HW\u2217 and the noise \u03b5 corresponds to an additive white Gaussian noise with variance \u03c32. H represents a blur operator corresponding to a Gaussian kernel (with \u03c3h = 1) and W\u2217 (resp. W) defines an orthogonal wavelet synthesis (resp. analysis) operator (Daubechies wavelet of order 4 on 3 resolution levels).\nOur objective is to recover x from y assuming H is known by solving either Problem (2) (one regularisation parameter) or Problem (12) (multiple regularisation parameters).\nWe perform our training and tests on Linnaeus 5 Image database1 where we considered images of size 256\u00d7 256 with 256 gray-scale levels. We consider 50 unrolled iterations of FISTA. To learn the parameters of our rectification functions, we use 20 epochs of ADAM optimizer with learning rate 0.01 on 30 images taking into account 2 different levels of noise (two values of \u03c3 are randomly chosen between 1 and 15 for each of the 30 images). As such, a total of 60 images with various noise levels has been considered for training.\nWe test our procedure on 100 images corrupted by two different intensities of noise: a low noise level (standard deviation 2) and a high noise level (standard deviation 10)."
+        },
+        {
+            "heading": "4.2. Results",
+            "text": "To assess the relevance of the proposed approach, we compare the performances obtained by an exhaustive grid search and the unrolled strategies with single and multiple \u03bb (in the trained and untrained contexts). First, we display the average Signal-To-Noise Ratio (SNR) performances (over the 100 tested images) for the four unrolled strategies in Fig. 4. As expected, we observe that the trained network always outperforms its untrained counterpart. The multi \u03bb strategy is always as good as its single counterpart (performances depend on the considered image).\n1http://chaladze.com/l5/\nWe now concentrate our attention on two images of the test dataset (represented in Fig. 3 upper and lower left corners) for which we display the SNR performances along with \u03bb in Fig. 5. Not only does the trained network always outperforms its untrained counterpart, but the trained versions (with slightly improved performance for the multi \u03bb case) reach the maximum performance of the single \u03bb grid search. Associated visual performance are displayed in Fig. 3."
+        },
+        {
+            "heading": "5. CONCLUSION",
+            "text": "We have proposed in this work a MAP-informed unroll procedure that allows to adjust automatically the regularisation parameter\nwhen solving inverse problems in a regularized variational framework. The information provided to the network comes from the MAP principle at a low cost and enables the training step to be performed on small datasets (small number of parameters to be learnt). Furthermore, the use of an unrolled neural network allows to keep the interpretability of the whole process. Finally, it is noteworthy to mention that this strategy goes beyond the considered Problem (2) and can be extended to other optimisation problems."
+        },
+        {
+            "heading": "6. REFERENCES",
+            "text": "[1] C. Chaux, P. L. Combettes, J.-C. Pesquet, and V. R. Wajs, \u201cA variational formulation for frame based inverse problems,\u201d Inverse Problems, vol. 23, no. 4, pp. 1495\u20131518, Aug. 2007.\n[2] A. Cultrera and L. Callegaro, \u201cA simple algorithm to find the L-curve corner in the regularisation of ill-posed inverse problems,\u201d IOP SciNotes, vol. 1, no. 2, pp. 025004, 8 2020.\n[3] C. Crockett and J. Fessler, \u201cBilevel methods for image reconstruction,\u201d Found. Trends Signal Process., vol. 15, no. 2-3, pp. 121\u2013289, 2022.\n[4] B. Afkham, J. Chung, and M. Chung, \u201cLearning regularization parameters of inverse problems via deep neural networks,\u201d Inverse Problems, vol. 37, no. 10, pp. 105017, 9 2021.\n[5] A. Kofler, F. Altekru\u0308ger, F. A. Ba, C. Kolbitsch, E. Papoutsellis, D. Schote, C. Sirotenko, F. F. Zimmermann, and K. Papafitsoros, \u201cLearning regularization parameter-maps for variational image reconstruction using deep neural networks and algorithm unrolling,\u201d arXiv preprint arXiv:2301.05888, 2023.\n[6] D. L. Donoho, \u201cDe-noising by soft-thresholding,\u201d IEEE Trans. Inform. Theory, vol. 41, no. 3, pp. 613\u2013627, May 1995.\n[7] R. Tibshirani, \u201cRegression shrinkage and selection via the lasso,\u201d J. R. Stat. Soc. Ser. B Stat. Methodol., vol. 58, no. 1, pp. 267\u2013288, 1 1996.\n[8] V. Monga, Y. Li, and Y. Eldar, \u201cAlgorithm unrolling: Interpretable, efficient deep learning for signal and image processing,\u201d IEEE Signal Process. Mag., vol. 38, no. 2, pp. 18\u201344, 3 2021.\n[9] A. Beck and M. Teboulle, \u201cA fast iterative shrinkagethresholding algorithm for linear inverse problems,\u201d SIAM J. Imaging Sci., vol. 2, no. 1, pp. 183\u2013202, 2009.\n[10] S. Chang, Y. Bin, and M. Vetterli, \u201cAdaptive wavelet thresholding for image denoising and compression,\u201d IEEE Trans. Image Process., vol. 9, no. 9, pp. 1532\u20131546, 2000."
+        }
+    ],
+    "title": "MAP-informed Unrolled Algorithms for Hyper-parameter Estimation",
+    "year": 2024
+}

@@ -1,0 +1,252 @@
+{
+    "abstractText": "We present a GPU accelerated N-body integrator using the Bulirsch\u2013Stoer method, called GANBISS (GPU accelerated n-body code for binary star systems). It is designed to simulate the dynamical evolution of planetesimal disks in binary star systems which contain some thousand disk objects. However, it can also be used for studies of non-interacting massless bodies where up to 50 million objects can be studied in a simulation. GANBISS shows the energy and angularmomentumconservation behavior of non-symplectic integrationmethods. The code is written in CUDA C and can be run on NVIDIA GPUs of compute capability of at least 3.5. A comparison of GPU and CPU computations indicates a speed-up of the GPU performance of up to 100 times\u2014depending on the number of disk objects.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Maximilian Zimmermann"
+        },
+        {
+            "affiliations": [],
+            "name": "Elke Pilat-Lohinger"
+        },
+        {
+            "affiliations": [],
+            "name": "Giovanni F. Gronchi"
+        },
+        {
+            "affiliations": [],
+            "name": "Ugo Locatelli"
+        },
+        {
+            "affiliations": [],
+            "name": "Alessandra Celletti"
+        }
+    ],
+    "id": "SP:a4a4246c267d6b0ac0a33dc05046ab02edeca454",
+    "references": [
+        {
+            "authors": [
+                "J. Barnes",
+                "P. Hut"
+            ],
+            "title": "A hierarchical o(n log n) force-calculation algorithm",
+            "venue": "Nature 324(6096),",
+            "year": 1986
+        },
+        {
+            "authors": [
+                "J.E. Chambers",
+                "G.W. Wetherill"
+            ],
+            "title": "Making the terrestrial planets: N-body integrations of planetary embryos in three dimensions",
+            "venue": "Icarus 136(2),",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "X. Delfosse",
+                "J. Beuzit",
+                "L. Marchal",
+                "X. Bonfils",
+                "C. Perrier",
+                "D. S\u00e9gransan",
+                "S. Udry",
+                "M. Mayor",
+                "Forveille",
+                "T.: M"
+            ],
+            "title": "dwarfs binaries: Results from accurate radial velocities and high angular resolution observations",
+            "venue": "Astronomical Society of the Pacific Conference Series,",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "P. Deuflhard"
+            ],
+            "title": "Order and stepsize control in extrapolation methods",
+            "venue": "Numer. Math. 41,",
+            "year": 1983
+        },
+        {
+            "authors": [
+                "M.J. Duncan",
+                "H.F. Levison",
+                "M.H. Lee"
+            ],
+            "title": "A multiple time step symplectic algorithm for integrating close encounters",
+            "venue": "Astron. J. 116(4),",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "L. Greengard",
+                "V. Rokhlin"
+            ],
+            "title": "A fast algorithm for particle simulations",
+            "venue": "J. Comput. Phys. 2,",
+            "year": 1987
+        },
+        {
+            "authors": [
+                "S.L. Grimm",
+                "J.G. Stadel",
+                "R. Brasser",
+                "M.M.M. Meier",
+                "C. Mordasini"
+            ],
+            "title": "GENGA II: GPU planetary N-body simulations with non-Newtonian forces and high number of particles",
+            "venue": "Astrophys. J. 932(2),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Gyergyovits",
+                "S. Eggl",
+                "E. Pilat-Lohinger",
+                "C. Theis"
+            ],
+            "title": "Disc-protoplanet interaction. Influence of circumprimary radiate discs on self-gravitating protoplanetary bodies in binary star systems",
+            "venue": "Astron. Astrophys. 566,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "N. Haghighipour",
+                "S.N. Raymond"
+            ],
+            "title": "Habitable planet formation in binary planetary systems. Astrophys",
+            "venue": "J. 666(1),",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "M. Moe",
+                "R. Di Stefano"
+            ],
+            "title": "Mind your PS and QS: The interrelation between period",
+            "venue": "comets. IAU Symposium 364,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "T.W.A. M\u00fcller",
+                "W. Kley"
+            ],
+            "title": "Circumstellar disks in binary star systems. models for \u03b3 cephei and \u03b1 centauri",
+            "venue": "stars. Astrophys. J. Suppl. Ser",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "L. Nyland",
+                "M. Harris",
+                "J. Prins"
+            ],
+            "title": "Fast n-body simulation with CUDA",
+            "venue": "Astron. Astrophys. 539,",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Suppl. Ser"
+            ],
+            "title": "Planetary formation in the \u03b3 Cephei system",
+            "year": 2010
+        }
+    ],
+    "sections": [
+        {
+            "text": "Keywords Celestial mechanics\u2014methods \u00b7 Numerical\u2014planets and satellites \u00b7 Formation\u2014stars \u00b7 Planetary systems\u2014stars \u00b7 Binary stars"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "Most of the stars in the solar neighborhood are part of binary or multiple star systems, respectively (up to 90 % of the O, B-type stars (Moe and Di Stefano 2016), about 50 % of the solar-type stars (Raghavan et al. 2010) and 27 % of the low mass stars (Delfosse et al. 2004)). From the detected exoplanet candidates (\u223c 5000)1 only a small fraction (\u223c 217)2 of the planets are located in binary star systems. However, both observations and simulations\n1 https://exoplanet.eu. 2 https://adg.univie.ac.at/schwarz/multiple.html.\nThis article is part of the topical collection on Innovative computational methods in Dynamical Astronomy. Guest Editors: Christoph Lhotka, Giovanni F. Gronchi, Ugo Locatelli, Alessandra Celletti.\nB Maximilian Zimmermann maximilian.zimmermann@univie.ac.at\nElke Pilat-Lohinger elke.pilat-lohinger@univie.ac.at\n1 Department of Astrophysics, University of Vienna, T\u00fcrkenschanzstra\u00dfe 17, Vienna 1180, Austria\nsuggest that planet formation should be possible in stellar systems (e.g., M\u00fcller and Kley (2012) or Haghighipour and Raymond (2007)).\nWhile early phases of planet formation have to be studied by hydrodynamical simulations, the late stage of terrestrial planet formation can be investigated using N-body simulations which are less time-consuming. Nevertheless, N-body computations can result in a high computational effort in case of a large number of bodies, as it scales with N 2. To greatly increase the performance of such simulations and reduce the time needed for a single simulation one can make use of the parallelization possibilities of graphical processing units (GPU). The first GPU code with an application to planet formation is the GENGA code, which is in its current state able to simulate up to \u223c 60000 interacting bodies (Grimm et al. 2022). But simulations using GENGA are limited to single star systems due to the chosen symplectic integration method, which are in principal more powerful than classical ones (e.g., Runge\u2013Kutta or Bulirsch\u2013Stoer). Symplectic integration methods are especially designed for Hamiltonian systems, so that the conservation of energy is given for a constant step size. Simulations of planetesimal/embryo disks in circumstellar motion of tight binary stars lead to many collisions of the disk objects. Thus, the application of a symplectic integrator would be disadvantageous, since numerical studies of collisions require a variable step size. To overcome this problem existing hybrid codes could be used (e.g., Mercury6 (Chambers and Wetherill 1998) or SyMBA (Duncan et al. 1998)) but they are not designed for dynamical studies in binary stars. Therefore, we developed a GPU code using a classical integration method (Bulirsch\u2013Stoer method).\nIn this study, we introduce the new N-body code GANBISS (GPU Accelerated N-body code for binary star systems), which uses the acceleration by graphical processing units (GPUs). GANBISS can be used (i) for studies of some thousand (up 10000) interacting objects moving in binary stars and (ii) for investigations of some million (up to 50 million) non-interacting massless bodies single or binary stars.\nThe method and implementation are described in Sect. 2. Section3 gives a short summary about the two computationmodes. In Sect. 4, an overview about the conservation probabilities and a comparison of the performance is given. Finally, a summary and an outlook for future improvements are provided in Sect. 5."
+        },
+        {
+            "heading": "2 Method",
+            "text": "The force acting on a body m\u03bd in an N-body system can be written as:\nF\u03bd = m\u03bd r\u0308\u03bd = k2 m\u03bd N\u2211\n\u03bc=0,\u03bc =\u03bd\nm\u03bc \u2016r\u03bc \u2212 r\u03bd\u20163 ( r\u03bc \u2212 r\u03bd ) (1)\nwhere k is the Gaussian Gravitational constant. The 3N second-order differential equations (1) can be rewritten into 6N first-order differential equations\nr\u0307\u03bd = v\u03bd (2) v\u0307\u03bd = k2 N\u2211\n\u03bc=1,\u03bd =\u03bc\nm\u03bc ( r\u03bc \u2212 r\u03bd ) \u2225\u2225r\u03bc \u2212 r\u03bd \u2225\u22253 (3)\nwhere n denotes the current phase space vector for the \u03bdth particle at time t and with the evolution function f Eqs. (2) and (3) can be rewritten as\nyn,\u03bd = ( rn,\u03bd vn,\u03bd ) (4) y\u0307n,\u03bd = f ( tn, yn,\u03bd ) (5)\nTo solve Eq. 5 we use the Bulirsch\u2013Stoer (BS) method which is a well-known algorithm for integrating the N-body problem. This method is released in several publications such as in the Numerical recipes (Press et al. 2002),Mercury6 (Chambers and Wetherill 1998) or nie-package (Eggl and Dvorak 2010). Basically the method consists of two parts:\n(i) The so-called modified midpoint method is used for the integration of time-step \u03c4 , which is performed several times using an increasing number of sub-steps \u03c4m = \u03c4m where the splitting procedure proposed by Deuflhard (Deuflhard 1983) is used:\nnm = 1 m = 0, nm = 2 \u00b7 m m \u2208 N\n(ii) A polynomial extrapolation is applied to each result Rm to obtain the result R\u221e. A BS step is successful when\n|Rm\u22121 \u2212 Rm| = i < (6) where i is the error estimate for the column i of the extrapolation scheme and is the chosen accuracy. Depending on the number of iterations (i) needed, the time-step \u03c4 of the next integration step is chosen accordingly to the following scheme:\ni < , m < mmax \u03c4 \u00b7 1.3 i < , m = mmax \u03c4 \u00b7 0.55 i > , m \u2265 mmax \u03c4 \u00b7 0.5\n\u23ab \u23ac \u23ad = \u03c4new (7)\nThe last case only occurs if the accuracy couldn\u2019t be achieved within the maximum number of iterations nmax. The time-step \u03c4 is then halved and recalculated."
+        },
+        {
+            "heading": "2.1 Collision handling",
+            "text": "The dynamical evolution of planetesimal disks shows close encounters among planetesimals and planetary embryos. If the distance between two bodies is smaller than their summed radii a collision occurs. However, for the sake of reducing the simulation time a slightly increased collision radius has been used, which is 5% of the Hill radii rH of the colliding bodies:\nd < 0.05 \u00b7 (rH ,\u03bd + rH ,\u03bc )\n(8)\nIn case the colliding bodies orbit a single star their Hill radii are:\nrH \u2248 a \u00b7 ( m 3M )1/3 (9)\nwhere a is the semi-major axis of the disk object, m its mass and M the mass of the star. In case the colliding bodies orbit both stars (i.e., P-type motion), their Hill radii are:\nrH \u2248 abary \u00b7 (\nm 3 \u00b7 (M1 + M2) )1/3\n(10)\nwhere abary is the distance of the disk object to the barycenter of the two stars, m is the mass of the disk object and M1 and M2 are the masses of the two stars. For simplicity the collision is handled as a perfect inelastic collision, such that the two bodies (with masses m1 and m2) merge to a bigger one (mcoll = m1 + m2). The new positions and velocities of the resulting body correspond to those the center of mass of the two original bodies."
+        },
+        {
+            "heading": "2.2 GPU-implementation in CUDA",
+            "text": "The principal idea of GPU computing is the parallel computation on thousands of cores using the SIMT execution model (single instruction, multiple threads). As the name implies, a single instruction is applied on a given number of threads, where a thread is a single execution sequence. Thirty-two threads are combined to a so-called warp. Each thread within a warp executes the same instructions. On the logical scale, threads are combined up to three dimensional thread blocks, which are themselves combined to two dimensional grids. The GPU functions (kernels) are executed on a given grid.\nThere are different memory spaces with different access latencies which can be accessed by the threads. The lowest latency have the registers, which can only be accessed by the thread its belonging to. Each thread block has shared memory, which can be accessed of all threads of the block. The slowest access occurs on the global memory, but every thread of each block has access to it.\nThere are differences between a GPU and a CPU. So, not the complete code is transferred on theGPU, only partswhich benefit from the parallelization of their task.AGPUhas a higher overhead time in their functions (kernels) calls and a lower clock rate compared to a CPU. To hide this additional work the GPU need some degree of parallelization of their computation. One has also to take into account that the instruction set of a GPU is limited to that of a CPU. These instruction sets are optimized for floating-point and arithmetic calculations, making a GPU very efficient in computational tasks which allow a high degree of parallelism. In practice the code gets split into a host part (executes on the CPU) and a device part (executes on the GPU). Where the device code is called from the host and includes all kernel functions. For detailed description of the CUDA model and interface see the CUDA programming guide3.\nIn the next section, the parallelized parts of the codes are discussed."
+        },
+        {
+            "heading": "2.2.1 Overview of the kernels",
+            "text": "As the N-body problem scales with \u03c4 \u223c O (N 2) due to the right-hand side of the equation of motion (3), it is the most crucial part to parallelize. Thus, the following kernels have been parallelized:\n\u2022 bb_force: computes the N 2 forces \u2022 update_arr: corresponds to all the computations of the sub-steps of the BS method. \u2022 extrapol: is for the recursive extrapolation. \u2022 errmax: finds the largest error among all computed bodies using a parallelized reduction\nalgorithm. \u2022 det_merg_ev: checks for collision events by computing all-pair distances as it is per-\nformed in the bb_force kernel.\n3 https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html."
+        },
+        {
+            "heading": "2.2.2 Simple kernels: update_arr",
+            "text": "The update_arr refers to the simple kernels which do not have any dependencies between the bodies. Thus, it is simple to parallelize with each thread deal with one body. These kernels are the update steps of the modified midpoint method, the update of the extrapolation scheme and the check for the crossing of the cutoff radius, as well as the extrapolation. Yet, the effort of the extrapolation is depending on the number of sub-steps m."
+        },
+        {
+            "heading": "2.2.3 Force computation: bb_force",
+            "text": "Equation3 is an all-pair algorithm, because each entry f\u03bd\u03bc of a N \u00d7 N grid has to be computed. The total force f\u03bd acting on one particle \u03bd is the sum of all entries within the \u03bd-th row. The computation is split into a parallel and sequential part (Fig. 1). Therefore the grid is partitioned into squared computational tiles, each performing a parallel and sequential part. A tile consists of p\u03bd rows and p\u03bc columns, which are stored in registers (p\u03bd) and shared memory (p\u03bc). After each sequential pass of a computational tile the bodies acceleration a\u03bd gets updated.\nIn practice, these tiles are represented by thread blocks. Thus, the size of a tile is equal the number of threads per block squared. Each thread p\u03bd computes p\u03bc interactions sequentially and updates the acceleration a\u03bd at the end of the tile. After p2 interactions a synchronization is performed, the next p\u03bc body descriptions are loaded into the shared memory and are computed. This is repeated until all \u03bc interactions per body have been evaluated. One exception is the last tile. Because the number of bodies varies and are not a multiply of the number of threads at the complete simulation time, the last tile has a reduced number of p\u03bc computations. The same is true for the last parallel tile with a reduced number of p\u03bd threads.\nFor a simulation with N bodies and p threads per block there are N/p tiles for N mod p = 0 and N/p + 1 tiles for N mod p = 0. Figure2 shows a full example grid for N = 16 and p = 4. For a more detailed description of the algorithm, see the work of Nyland Nyland et al. (2009).\nThis algorithm reduces the memory load because of the reuse of the data stored in the shared memory as well as a full utilization of the GPU."
+        },
+        {
+            "heading": "2.2.4 Force computation massless: bb_force_ml",
+            "text": "The computation of f\u03bd\u03bc for the massless particles works nearly the same way as in the N 2 case. Yet, the exception is the input of the computational tile changes. p\u03bd corresponds to the massless particles and p\u03bc to the massive bodies acting on the massless particles. The computational effort for the massless particles reduces to N \u00b7 M , where N is the number of\nmassive bodies and M the number of massless bodies. Depending on the number of threads per block and the number of the massive bodies full utilization of the GPU may not be achieved anymore."
+        },
+        {
+            "heading": "2.2.5 Determination of max: errmax",
+            "text": "The search for the largest error has to be performed with a parallel reduction. First a sample of the largest errors of the position and velocity vectors of all bodies will be determined with the size of the block size. This is achieved by iterating through all bodies in parallel, where each thread within the block is assigned a body pthreadId+blockSize\u2217i with i being the loop index. The computed errors will be compared with the errors from the previous loop index. In the next step the reduction on the remaining sample will be performed. Therefor the error values are stored in the shared memory. The values with j < Arr Si ze/2 will be compared with j + Arr Si ze/2. The results are stored at their positions and cut the number of the remaining values into half. This is procedure is repeated until the highest error remains. Figure3 shows this reduction procedure for an array size of Arr Si ze = 8.\nAs in the simulations the number of bodiesmay vary because of collisions and/or ejections, the arrays may not be filled completely though these are filled with zeros before each kernel execution."
+        },
+        {
+            "heading": "2.2.6 Detection of collisions: det_merg_ev",
+            "text": "The detection of collisions works similar as the force evaluation. Yet, it is an all-pair comparison. Instead of the computation of the accelerations the kernel checks if the distance of two bodies is smaller than the given radii following the inequality 8. If this inequality holds a collision flag is set and the index of the two colliding bodies are stored. The collision itself is performed in a CPU function.\nThe det_merg_evkernel is a separate function, because the additional query of the collision condition in the bb_force kernel would lead to a divergence in the parallelization and thus to a longer calculation time in the bb_force kernel."
+        },
+        {
+            "heading": "3 Applications",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Default-mode",
+            "text": "By default, an N-body simulation take the interactions of all bodies (stars, planets and disk objects\u2014i.e., planetary embryos and planetesimals) into account. The simulations can be carried out for single or binary stars. For a binary star system S- or P-type motion has to be distinguished. In case of S-type motion, the disk is set around the primary star and in the case of P-type motion, the disk is around both stars with respect to binaries barycenter. The disk objects are allowed to collide with each other. Collisions between stars and planets are not explicitly treated, since such collisions are not expected in the intended simulations, or it is presupposed that planets, especially gas giants, within the simulation are on stable orbits. Moreover, disk objects can be ejected from the system. The cutoff radius, which defines the distance a body has to reach to be ejected from the system can be set by the user. In addition, the simulation time, the output time-steps and the accuracy of the BS integration ( ) are defined by the user."
+        },
+        {
+            "heading": "3.2 Massless particles",
+            "text": "Massless particles have been introduced to simulate a large number of bodies where their mutual interactions are negligible. Thus, they do not have any gravitational influence and they can only collide with massive objects (stars or planets)\u2014but in such a case they will be removed from the simulation. The computational effort for the massless bodies reduces to \u03c4 (N \u00b7 M) where N corresponds to the number of massive bodies and M to the massless bodies.\nGANBISS has been successfully applied to the study of comets in theOort cloud perturbed by a passing star (see (Pilat-Lohinger et al. 2022), Loibnegger et al. (2022))."
+        },
+        {
+            "heading": "4 Results",
+            "text": ""
+        },
+        {
+            "heading": "4.1 Conservation of angular momentum and energy",
+            "text": "To check the reliability of the presented code, its conservation of the total energy and the total angular momentum within a given system has been tested. For non-symplectic integrators the momentary relative error in the energy and angular momentum follows roughly a linear growth. Figure4 shows themomentary relative error of the energy and angularmomentum for 20 different simulations for 100 kyr simulation time. Each simulation consists of a solar mass central star and 17 planetary embryos distributed differently between 1 and 5 au around the central star. All simulations show the expected error behavior for non-symplectic integrators. The relative error itself is quite robust among the different initial configurations.\nCollisions performed via perfect merging do not conserve energy. Thus, due to the choice of the integration method, one can only try to keep the error of the energy within a certain error range.\nNote, that the \u201closs\u201d of energy through collisions and ejections is not considered. Thus, the energy may not preserved in simulations with collisions or ejections."
+        },
+        {
+            "heading": "4.2 Performance",
+            "text": "Performancemeasurements have been taken using theNVIDIAprofiling tools4 to obtain each kernel\u2019s performance. For the comparison with the CPU Fortran code the gprof profiling tool has been used. The initial set-ups for the comparisons consist of a binary star system with a planetesimal disk in S-type motion. Both stars are Solar mass stars and have a separation of ab = 30 au. The planetesimal disk is placed around the primary star between 1 and 4 au with varying number (10-10000) of small bodies and a total mass of about Mtot \u2248 2.4M\u2295."
+        },
+        {
+            "heading": "4.2.1 Performance of the main kernels",
+            "text": "Figure5 shows the average computation time for the main kernels as a function of the number of bodies.\nThe most expensive kernels are the force evaluation (blue line) and the collision detection (orange line) in Fig. 5), because both kernels perform all pair-wise interactions. While the update_arr (red line) and the extrapol (purple) referring to the simple kernels are the least\n4 https://docs.nvidia.com/cuda/profiler-users-guide/index.html.\nFig. 6 The total time needed of each kernel for a simulation time of 10 yr considering different numbers of bodies on a NVIDIA A100\n102 103 104\nNumber of bodies\n10\u22122\n10\u22121\n100\n101\n102\n103\nt [s ]\nbb force det merg ev errmax update arr extrapol\nexpensive kernels as they have only a N dependency. In between is the errmax (green line) kernel. This kernel\u2019s performance is limited by the block size as the reduction algorithm is performed within block.\nComparing the total time needed by the kernels within a simulation run, the time effort changes (Fig. 6), because of the number of calls of each kernel.While the det_merg_ev kernel is called once per successful time-step, the kernels errmax and extrapol are called once per iteration step within a time-step and the kernels bb_force and update_arr are called several times per iteration step. The small decline from 9000 to 10000 objects is due to a smaller number of function calls. The bb_force kernel is the most time-consuming one during the simulation runs and needs up to 99 % of the computation time."
+        },
+        {
+            "heading": "4.2.2 Performance comparison between GPU and CPU",
+            "text": "Figure7 shows a comparison of the force computation between a CPU (nie-package (Eggl and Dvorak 2010), Fortran implementation) and the here presented GPU implementation. The simulations have been carried out with 10\u22121000 planetesimals with a total planetesimal mass of 2.4 M\u2295. The GPU implementation is up to 100 times faster compared to the CPU implementation depending on the number of bodies. However, for a small number of bodies (< 20) the CPU code is faster. This is because the GPU cannot benefit fully from the parallelization and is limited by the kernel launch overhead. Despite the number of cores there are other differences between a CPU and a GPU. A CPU has lower latency per instruction and a higher clock rate, which favors the performance for a small number of bodies.\nFig. 8 Comparison of the average time needed of the bb_force kernel for different GPUs for up to 10000 bodies\n102 103 104\nNumber of bodies\n0\n5\n10\n15\n20\n25\n30\n35\nt [m\ns]\nGTX 1080 GTX TITAN GTX TITAN BLACK A40 A100"
+        },
+        {
+            "heading": "4.2.3 Performance comparison between different GPUs",
+            "text": "Figure8 shows the performance for different GPUs for the force computation. The A100 shows the best results because it has the best theoretical double precision performance. For relatively small numbers (\u223c 1000 bodies) the computation time of the force barely differs between the different GPUmodels. Hence, all used GPUs are suitable for the computation of small numbers of bodies. For larger numbers of bodies the computation times diverge visibly and for more than > 5000 bodies only two GPUs (A100 and A40) are recommendable.\nWhile the GTX TITAN cards should be the second best cards on paper according to the theoretical floating point operation performance, they perform the worst in this comparison. This is probably because the calculation of the theoretical performance of the floating point operations do not consider the clock rate or the memory bandwidth, which is faster in case of the GTX 1080 and A40."
+        },
+        {
+            "heading": "4.3 Performancemassless",
+            "text": "Figure9 shows the average computation time for the main kernels for simulations with massless particles. In these simulations 106 to 4 \u00b7 107 massless test-particles have been placed around a star between 50 and 5000 au to mimic the outer Kuiper belt region and the disk of the inner Oort cloud. In addition a gas giant orbits the star at 5.2 au. The time needed for the force evaluation of the massless particles shows an N dependency and thus, is not the dominating factor in the computation time anymore. The bottleneck now is the calculation of the maximum error. This is because the performance is limited by the block size, which is\n1024 threads per block. For two massive bodies the time needed for the computation of their interactions is neglectable."
+        },
+        {
+            "heading": "4.4 Example: planetesimal disk in binary star systems",
+            "text": "A simulation of a self-gravitating planetesimal disk in a binary star systems has been carried out for 1Myr simulation time. The binary stars have a separation of 30 au andmove on circular orbits in the sameplane.Both stars have amass of 1M . The disk contains 2000 planetesimals and 25 planetary embryos (Moon to Mars sized) with a total disk mass Mdisk \u2248 4.8 M\u2295, where the total mass of planetesimals and embryos is equal. We assume the existence of planetesimals in a circumstellar disk of tight binary stars due to the work of Gyergyovits Gyergyovits et al. (2014). All disk objects are placed around the primary star between 1 and 4 au and are initially dynamically cold.\nFigure10 shows 6 snapshots of the planetesimal (blue dots)/embryo (red points) disk for the computation time of 1Myrs. The top panels indicate clearly that most of the planetesimal collided with embryos within the first 200 kyrs. Occasionally mutual embryo collisions occur (see Fig. 10 bottom panel). Due to numerous collisions the circumstellar disk is reduced from 25 embryos to 11 and from 2000 planetesimals to 102 after 1 Myrs. Besides the mutual interactions of planetesimals and embryos only perturbations of the secondary star act on the disk since no giant planet has been included in the initial configuration. An additional giant planet would lead to a higher number of collisions and an increased impact velocity (Th\u00e9bault et al. 2004)."
+        },
+        {
+            "heading": "5 Conclusion and Outlook",
+            "text": "In this study, we introduced a new GPU parallelized N-body code so study circumstellar disks in binary star systems. A performance analysis has been presented which indicates the efficiency of the GPU Code especially for a high number of interacting bodies where a speed-up of the computation up to 100 times of the CPU performance has been achieved. For a small number of bodies (< 20) the GPU code is slower compared to the CPU code.\nIn addition, it has been shown that GANBISS can be applied to study the dynamical behavior of massless bodies where the computational effort is smaller compared to a fully interacting system of some thousand bodies.\nAs an example, we showed the growth of planetary embryos in a circumstellar disk in a binary star via collisions which were studied in a first attempt by perfect merging. This\nsimple consideration of collisions will be improved in future studies by including results of SPH5-simulations which enable a detailed analysis of two body collisions and provide more realistic results.\nAnother problem is the N 2 complexity of the N-body problem. While a GPU implementation increases the performance due to its increased arithmetic power, it depends strongly on the underlying hardware. This problem will be additionally addressed in future work by implementing a method that reduces the all-pair interactions to body-cell or cell\u2013cell interactions. These methods are known as Barnes-Hut (Barnes and Hut 1986), or fast multipole method (Greengard and Rokhlin 1987) in the latter case.\n5 Smooth particle hydrodynamics.\nCurrently, GANBISS is still in an alpha version, but it is planned to make it publicly available in the future.\nAcknowledgements The authors want to acknowledge the support by the Austrian FWF\u2014Project P33351-N and S11608-N16. The computational results presented have been achieved using the Vienna Scientific Cluster (Projects 71637, 71686, 70320). Finally, the authors want to thank the anonymous referees for their helpful comments and suggestions to improve this article.\nAuthor Contributions MZ and EP-L wrote the main manuscript and MZ prepared the figures.\nFunding Open access funding provided by Austrian Science Fund (FWF).\nData availability The datasets generated during and analyzed during the current study are available from the corresponding author on reasonable request.\nDeclarations\nConflict of interest The authors have no conflicts of interest to declare that are relevant to the content of this article.\nOpen Access This article is licensed under a Creative Commons Attribution 4.0 International License, which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if changes were made. The images or other third party material in this article are included in the article\u2019s Creative Commons licence, unless indicated otherwise in a credit line to the material. If material is not included in the article\u2019s Creative Commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this licence, visit http://creativecommons.org/licenses/by/4.0/."
+        }
+    ],
+    "title": "GANBISS: a new GPU accelerated N-body code for binary star systems",
+    "year": 2023
+}

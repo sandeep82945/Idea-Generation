@@ -1,0 +1,109 @@
+{
+    "abstractText": "In real-world human-robot systems, it is essential for a robot to comprehend human objectives and respond accordingly while performing an extended series of motor actions. Although human objective alignment has recently emerged as a promising paradigm in the realm of physical human-robot interaction, its application is typically confined to generating simple motions due to inherent theoretical limitations. In this work, our goal is to develop a general formulation to learn manipulation functional modules and long-term task goals simultaneously from physical human-robot interaction. We show the feasibility of our framework in enabling robots to align their behaviors with the long-term task objectives inferred from human interactions.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Haonan Chen"
+        },
+        {
+            "affiliations": [],
+            "name": "Ye-Ji Mun"
+        },
+        {
+            "affiliations": [],
+            "name": "Zhe Huang"
+        },
+        {
+            "affiliations": [],
+            "name": "Yilong Niu"
+        },
+        {
+            "affiliations": [],
+            "name": "Yiqing Xie"
+        },
+        {
+            "affiliations": [],
+            "name": "D. Livingston McPherson"
+        },
+        {
+            "affiliations": [],
+            "name": "Katherine Driggs-Campbell"
+        }
+    ],
+    "id": "SP:3a029f67995a2e3d2c166523da031193bce72d81",
+    "references": [
+        {
+            "authors": [
+                "Z. Huang",
+                "Y.-J. Mun",
+                "X. Li",
+                "Y. Xie",
+                "N. Zhong",
+                "W. Liang",
+                "J. Geng",
+                "T. Chen",
+                "K. Driggs-Campbell"
+            ],
+            "title": "Hierarchical intention tracking for robust human-robot collaboration in industrial assembly tasks",
+            "venue": "2023 IEEE International Conference on Robotics and Automation (ICRA), 2023, pp. 9821\u20139828.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "A. Bajcsy",
+                "D.P. Losey",
+                "M.K. O\u2019Malley",
+                "A.D. Dragan"
+            ],
+            "title": "Learning robot objectives from physical human interaction",
+            "venue": "Proceedings of the 1st Annual Conference on Robot Learning, ser. Proceedings of Machine Learning Research, S. Levine, V. Vanhoucke, and K. Goldberg, Eds., vol. 78. PMLR, 13\u201315 Nov 2017, pp. 217\u2013226. [Online]. Available: https://proceedings.mlr.press/v78/bajcsy17a.html",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "D.P. Losey",
+                "A. Bajcsy",
+                "M.K. O\u2019Malley",
+                "A.D. Dragan"
+            ],
+            "title": "Physical interaction as communication: Learning robot objectives online from human corrections",
+            "venue": "The International Journal of Robotics Research, vol. 41, no. 1, pp. 20\u201344, 2022. [Online]. Available: https://doi.org/10.1177/02783649211050958",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "A. Bobu",
+                "A. Bajcsy",
+                "J.F. Fisac",
+                "S. Deglurkar",
+                "A.D. Dragan"
+            ],
+            "title": "Quantifying hypothesis space misspecification in learning from human\u2013robot demonstrations and physical corrections",
+            "venue": "IEEE Transactions on Robotics, vol. 36, no. 3, pp. 835\u2013854, 2020.",
+            "year": 2020
+        }
+    ],
+    "sections": [
+        {
+            "text": "I. INTRODUCTION One of the core challenges in physical human-robot interaction (pHRI) for robotic manipulation is to estimate human goals and adapt the robot\u2019s interaction with the environment accordingly [1]. Learning to manipulate objects such as chopping or pouring is relatively easy for a child with parental guidance and feedback, but modeling and planning robot interactions with the environment to do the same can be difficult. Previous works have explored a variety of strategies for handling pHRI, including generating desired impedance, switching to gravity compensation to comply with humanapplied force, or updating the objective function based on real-time interaction [2], [3].\nThese underlying approaches are accompanied by several limitations, such as restricting simple motion generation and lacking the capacity to synthesize intricate motions. In contrast, we introduce behavior primitives and propose a framework that allows robots to learn from human interaction while manipulating liquid or granular materials (see Fig. 1). By employing a parameterized action space, the autonomous agent can infer human intent to interact with the object and environment. The incorporation of behavior primitives enables the robot to generate complex behaviors, thereby facilitating operation in more general settings.\nIn this work, we propose a novel framework that identifies task goals and subsequently update the robot\u2019s behavior during interactions with the external environment. We aim to minimize human efforts (i.e., interaction time) to teach the robot to complete the task. To this end, we take a hierarchical approach to decompose the task into high-level task skills (also referred to as behavior primitives in this paper) and low-level parameters for each skill, which allows the robot to learn complex tasks such as pouring. Through the employment of hierarchical modeling, we allow robots\n\u2217 denotes equal contribution. H. Chen, Y. Mun, Z. Huang, Y. Niu, Y. Xie, D. McPherson, and K. Driggs-Campbell are with the Department of Electrical and Computer Engineering at the University of Illinois at Urbana-Champaign. emails: {haonan2, yejimun2, zheh4, yilongn2, yiqingx2, dlivm, krdc}@illinois.edu\nThis work was supported by ZJU-UIUC Joint Research Center for Cyberphysical Manufacturing Networks (CyMaN), Project No. DREMES 202003, funded by Zhejiang University.\nto reject human disturbances, estimate high-level controller types, and infer parameters for low-level controllers. We employ a Bayesian inference framework to infer both the desired skills (e.g., shaking, tapping, and stopping) and the long-term task goal (e.g., pouring amount)."
+        },
+        {
+            "heading": "II. METHODOLOGY",
+            "text": ""
+        },
+        {
+            "heading": "A. Problem Formulation",
+            "text": "We model pHRI as a discrete system with forward dynamics function f in line with prior works [2]\u2013[4]:\nxt+1r = f(x t r, u t r + u t h). (1)\nwhere x \u2208 Rn\u00d76 denotes the joint positions and velocities of the n-DOF robot, ur \u2208 R6 is commanded velocity of the end effector, and uh \u2208 R6 is the velocity of the end effector resulting from the wrench applied by the human at the time step t. In the presence of human actions, the robot\u2019s trajectory is subject to deformation to conform to human corrections.\nWe assume that there is a task parameter \u03b2, which captures the desired goal of humans in carrying out the task. The robot, lacking knowledge of the human\u2019s true target, relies on human interactions to gain information about this objective. For example, \u03b2 could denote the desired quantity of liquids or powders to complete the pouring task, or the target size for chopping. The robot estimates \u03b2 by filtering based on observations o0:t = {xtr, xte, utr, uth}, where xte represents the state measurement of the environment. In our task setting, xte denotes the measured poured amount. The robot updates a belief bt(\u03b2) = P (\u03b2|o0:t) from the previous history of observations o0:t. Utilizing Bayes\u2019 theorem, we have:\nP (\u03b2|o0:t) \u221d P (ot|\u03b2, o0:t\u22121)P (\u03b2|o0:t\u22121) (2)\nWe can expand the likelihood P (ot|\u03b2, o0:t\u22121) as:\nP (ot|\u03b2, o0:t\u22121) = P (xtr, xte, utr, uth|\u03b2, o0:t\u22121) = P (utr|\u03b2, o0:t\u22121, xtr, xte, uth) P (uth|\u03b2, o0:t\u22121, xtr, xte)P (xtr, xte|\u03b2, o0:t\u22121)\n(3) We make three reasonable assumptions to justify the simplification of the likelihood P (ot|\u03b2, o0:t\u22121). The first assumption is that the robot\u2019s action complies with the human during the interaction while being a deterministic mapping from \u03b2 and xte when there is no interaction. Thus,\nar X\niv :2\n30 9.\n04 59\n6v 1\n[ cs\n.R O\n] 8\nS ep\n2 02\n3\nP (utr|\u03b2, o0:t\u22121, xtr, xte, uth) can be reduced in the equations 3. The second assumption is human\u2019s action follows the Markov property, so uth is independent of o\n0:t\u22121 conditioned on the task goal \u03b2 and states xt+1r , x t+1 e . The third assumption is that state transition dynamics are deterministic for both robot and environment, so P (xt+1r , x t+1 e |\u03b2, o1:t) disappears. We can then express the likelihood as:\nP (ot|\u03b2, o0:t\u22121) \u221d P (uth|\u03b2, xtr, xte) (4) Combining Equation 2 and Equation 4, we can now get\nthe iterative posterior distribution over the task goal belief:\nbt(\u03b2) \u221d P (uth|\u03b2, xtr, xte) bt\u22121(\u03b2) (5)"
+        },
+        {
+            "heading": "B. Approximate Inference over Task Goals",
+            "text": "Observation Model. We model that humans\u2019 actions reflect the difference between the current task progress and the desired task goal. For example, in the task of robot pouring, the human operator adjusts the robot\u2019s pouring speed based on the difference between the desired and actual amount of liquid. When the gap is large, the operator will adjust the robot to pour more aggressively, while for a smaller gap, the operator will adjust the robot to pour more conservatively. To formalize this relationship, we define a distance function \u2206(xte, \u03b2) to measure the discrepancy between the current progress xte and the desired task goal \u03b2. We then use a function g that maps the distance to a probability distribution over the space of possible actions, giving us:\np(uth|\u03b2, xtr, xte) \u221d p(uth|\u03b2, xte) \u221d g(\u2206(xte, \u03b2)). (6) In the case of robot pouring, the function g can be chosen to be a sigmoid function that maps the discrepancy to a probability of choosing a certain pouring speed, with higher discrepancy values corresponding to higher probabilities of aggressive pouring. In the event that the robot state xtr aligns with human expectations, it is expected that humans will refrain from taking action, denoted by uth being zero.\nApproximating Task Goal Posterior. Since there is no linear relationship between the observation model and the task goal, and given the cardinality of the task goal space |B|, we represent the belief as the density of a sampled distribution:\nbt(\u03b2) = |B|\u2211 i=1 wti\u03b4(\u03b2i) (7)\nwhere \u03b4(\u03b2i) is a delta function centered at \u03b2i. Using importance sampling, we can approximate a target distribution bt(\u03b2) by drawing samples from a proposal distribution q(\u03b2t|u0:th ) [5]. The weight wti can be represented as:\nwti \u221d p(\u03b2i|o0:t)\nq(bt(\u03b2i)|o0:t) . (8)\nThe weight can be written recursively as:\nwti \u221d wt\u22121i P (uth|\u03b2, xtr, xte)\nq(bt(\u03b2i)|bt\u22121(\u03b2i), ot) . (9)\nTaking the proposal distribution q(bt(\u03b2i)|bt\u22121(\u03b2i), ot) to be a deterministic value, we have:\nwti \u221d wt\u22121i P (u t h|\u03b2, xtr, xte). (10)\nIn practice, we want to ensure the weights are normalized, specifically to satisfy the condition of \u2211|B| i=0 w t i = 1. The full algorithm is summarized in Algorithm 1.\nAlgorithm 1: Online Goal Learning from pHRI Initialize: wt=0i=0:|B| \u2190 1 |B|\nfor t = 0 to T do utr = Br(q\u0307 t r \u2212 q\u0307t) +Kr(qtr \u2212 qt)\n\u03b7 = 0 if uth = 0 then\nP (uth|\u03b2i, xtr, xte)\u2190 1 else\nP (uth|\u03b2i, xtr, xte)\u2190 Pg(\u2206(xte,\u03b2i))(u t h) \u25b7 (6)\nend for i = 1 to |B| do\nwti \u2190 w t\u22121 i p(u t h|\u03b2, xte) \u25b7 (10)\n\u03b7 \u2190 \u03b7 + wti end for i = 1 to |B| do\nwti \u2190 wti/\u03b7 end utr \u2190 Opt(\u2206(\u03b2cur, bt(\u03b2)))\nend"
+        },
+        {
+            "heading": "III. CONCLUSION AND FUTURE WORKS",
+            "text": "In this work, we introduce a novel framework that employs importance sampling within a Bayesian paradigm to minimize the human effort required in various daily scenarios that involve pHRI. We formalize how the robot can effectively infer task objectives (i.e., target pouring amount) and optimize the task skills (i.e., shaking, pouring, stopping) during the physical interaction. We show the analysis that how task goals can be inferred in complex daily manipulation tasks. We plan to conduct a user study to demonstrate the applicability of the proposed framework in a series of complex pouring tasks involving shaking and tapping motions. In the future, we also intend to evaluate the potential of our proposed approach in terms of its capability to generalize and its feasibility in practice with respect to a range of source containers and pouring materials (e.g., rice, beans, candies, cereals, and carrots)."
+        }
+    ],
+    "title": "Learning Task Skills and Goals Simultaneously from Physical Interaction",
+    "year": 2023
+}

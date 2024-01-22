@@ -1,0 +1,547 @@
+{
+    "abstractText": "Gene regulatory network (GRN) inference that incorporates single-cell RNA-seq (scRNAseq) differentiation trajectories or RNA velocity can reveal causal links between transcription factors and their target genes. However, current GRN inference methods require a total ordering of cells along a linear pseudotemporal axis, which is biologically inappropriate since trajectories with branches cannot be reduced to a single time axis. Such orderings are especially difficult to derive from RNA velocity studies since they characterize each cell\u2019s state transition separately. Here, we introduce Velorama, a novel conceptual approach to causal GRN inference that newly represents scRNA-seq differentiation dynamics as a partial ordering of cells and operates on the directed acyclic graph (DAG) of cells constructed from pseudotime or RNA velocity measurements. To our knowledge, Velorama is the first GRN inference method that can work directly with RNA velocity-based cell-to-cell transition probabilities. On a standard set of synthetic datasets, we first demonstrate Velorama\u2019s use with just pseudotime, finding that it improves area under the precision-recall curve (AUPRC) by 1.25-3x over state-of-the-art approaches. Using RNA velocity instead of pseudotime as the input to Velorama further improves AUPRC by an additional 1.75-3x. We also applied Velorama to study cell differentiation in pancreas, dentate gyrus, and bone marrow from real datasets and obtained intriguing evidence for the relationship between regulator interaction speeds and mechanisms of gene regulatory control during differentiation. We expect Velorama to be a critical part of the RNA velocity toolkit for investigating the causal drivers of differentiation and disease. Software availability: https://cb.csail.mit.edu/cb/velorama *These authors contributed equally to the work Computer Science and Artificial Intelligence Lab., MIT, Cambridge, MA 02139 Co-corresponding authors: {rsingh,bab}@mit.edu Philips Exeter Academy, Exeter, NH 03883. Work performed while AM was a summer student at MIT. Computer Science and Artificial Intelligence Lab and Dept. of Mathematics, MIT, Cambridge, MA 02139 . CC-BY-NC-ND 4.0 International license available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is made The copyright holder for this preprint this version posted October 21, 2022. ; https://doi.org/10.1101/2022.10.18.512766 doi: bioRxiv preprint",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Rohit Singh"
+        },
+        {
+            "affiliations": [],
+            "name": "Alexander P. Wu"
+        },
+        {
+            "affiliations": [],
+            "name": "Anish Mudide"
+        },
+        {
+            "affiliations": [],
+            "name": "Bonnie Berger"
+        }
+    ],
+    "id": "SP:6c52d2a535c430ded60ce55e8a984315f2867fc5",
+    "references": [
+        {
+            "authors": [
+                "M. d. Hoon",
+                "S. Imoto",
+                "S. Miyano"
+            ],
+            "title": "Inferring gene regulatory networks from time-ordered gene expression data using differential equations",
+            "venue": "International Conference on Discovery Science, pp. 267\u2013 274, Springer, 2002.",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "A.J. Hartemink"
+            ],
+            "title": "Reverse engineering gene regulatory networks",
+            "venue": "Nature biotechnology, vol. 23, no. 5, pp. 554\u2013555, 2005.",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "J. Ding",
+                "N. Sharon",
+                "Z. Bar-Joseph"
+            ],
+            "title": "Temporal modelling using single-cell transcriptomics",
+            "venue": "Nature Reviews Genetics, vol. 23, no. 6, pp. 355\u2013368, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "B. Hie",
+                "J. Peters",
+                "S.K. Nyquist",
+                "A.K. Shalek",
+                "B. Berger",
+                "B.D. Bryson"
+            ],
+            "title": "Computational methods for single-cell rna sequencing",
+            "venue": "Annual Review of Biomedical Data Science, vol. 3, pp. 339\u2013364, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "V.A. Huynh-Thu",
+                "A. Irrthum",
+                "L. Wehenkel",
+                "P. Geurts"
+            ],
+            "title": "Inferring regulatory networks from expression data using tree-based methods",
+            "venue": "PloS one, vol. 5, no. 9, p. e12776, 2010.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "H. Matsumoto",
+                "H. Kiryu",
+                "C. Furusawa",
+                "M.S. Ko",
+                "S.B. Ko",
+                "N. Gouda",
+                "T. Hayashi",
+                "I. Nikaido"
+            ],
+            "title": "Scode: an efficient regulatory network inference algorithm from single-cell rna-seq during differentiation",
+            "venue": "Bioinformatics, vol. 33, no. 15, pp. 2314\u20132321, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "T.E. Chan",
+                "M.P. Stumpf",
+                "A.C. Babtie"
+            ],
+            "title": "Gene regulatory network inference from single-cell data using multivariate information measures",
+            "venue": "Cell systems, vol. 5, no. 3, pp. 251\u2013267, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "N. Papili Gao",
+                "S.M. Ud-Dean",
+                "O. Gandrillon",
+                "R. Gunawan"
+            ],
+            "title": "Sincerities: inferring gene regulatory networks from time-stamped single cell transcriptional expression profiles",
+            "venue": "Bioinformatics, vol. 34, no. 2, pp. 258\u2013266, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "X. Qiu",
+                "A. Rahimzamani",
+                "L. Wang",
+                "B. Ren",
+                "Q. Mao",
+                "T. Durham",
+                "J.L. McFaline-Figueroa",
+                "L. Saunders",
+                "C. Trapnell",
+                "S. Kannan"
+            ],
+            "title": "Inferring causal gene regulatory networks from coupled single-cell expression dynamics using scribe",
+            "venue": "Cell systems, vol. 10, no. 3, pp. 265\u2013274, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "T. Moerman",
+                "S. Aibar Santos",
+                "C. Bravo Gonz\u00e1lez-Blas",
+                "J. Simm",
+                "Y. Moreau",
+                "J. Aerts",
+                "S. Aerts"
+            ],
+            "title": "Grnboost2 and arboreto: efficient and scalable inference of gene regulatory networks",
+            "venue": "Bioinformatics, vol. 35, no. 12, pp. 2159\u20132161, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Deshpande",
+                "L.-F. Chu",
+                "R. Stewart",
+                "A. Gitter"
+            ],
+            "title": "Network inference with granger causality ensembles on single-cell transcriptomics",
+            "venue": "Cell reports, vol. 38, no. 6, p. 110333, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "G. La Manno",
+                "R. Soldatov",
+                "A. Zeisel",
+                "E. Braun",
+                "H. Hochgerner",
+                "V. Petukhov",
+                "K. Lidschreiber",
+                "M.E. Kastriti",
+                "P. L\u00f6nnerberg",
+                "A. Furlan"
+            ],
+            "title": "Rna velocity of single cells",
+            "venue": "Nature, vol. 560, no. 7719, pp. 494\u2013498, 2018. 12 . CC-BY-NC-ND 4.0 International license available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is made The copyright holder for this preprint this version posted October 21, 2022. ; https://doi.org/10.1101/2022.10.18.512766 doi: bioRxiv preprint",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "V. Bergen",
+                "R.A. Soldatov",
+                "P.V. Kharchenko",
+                "F.J. Theis"
+            ],
+            "title": "Rna velocity\u2014current challenges and future perspectives",
+            "venue": "Molecular systems biology, vol. 17, no. 8, p. e10282, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M. Lange",
+                "V. Bergen",
+                "M. Klein",
+                "M. Setty",
+                "B. Reuter",
+                "M. Bakhti",
+                "H. Lickert",
+                "M. Ansari",
+                "J. Schniering",
+                "H.B. Schiller"
+            ],
+            "title": "Cellrank for directed single-cell fate mapping",
+            "venue": "Nature methods, vol. 19, no. 2, pp. 159\u2013170, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "R. Singh",
+                "A.P. Wu",
+                "B. Berger"
+            ],
+            "title": "Granger causal inference on dags identifies genomic loci regulating transcription",
+            "venue": "International Conference on Learning Representations, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Kim",
+                "M. Choi",
+                "J.-R. Kim",
+                "H. Jin",
+                "V.N. Kim",
+                "K.-H. Cho"
+            ],
+            "title": "The co-regulation mechanism of transcription factors in the human gene regulatory network",
+            "venue": "Nucleic Acids Research, vol. 40, no. 18, p. 8849\u20138861, 2012.",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "P. Dibaeinia",
+                "S. Sinha"
+            ],
+            "title": "Sergio: a single-cell expression simulator guided by gene regulatory networks",
+            "venue": "Cell systems, vol. 11, no. 3, pp. 252\u2013271, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "C. Hiemstra",
+                "J.D. Jones"
+            ],
+            "title": "Testing for linear and nonlinear granger causality in the stock pricevolume relation",
+            "venue": "The Journal of Finance, vol. 49, no. 5, pp. 1639\u20131664, 1994.",
+            "year": 1994
+        },
+        {
+            "authors": [
+                "A.K. Seth",
+                "A.B. Barrett",
+                "L. Barnett"
+            ],
+            "title": "Granger causality analysis in neuroscience and neuroimaging",
+            "venue": "Journal of Neuroscience, vol. 35, no. 8, pp. 3293\u20133297, 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "A. Fujita",
+                "J.R. Sato",
+                "M. Garay",
+                "R. Yamaguchi",
+                "S. Miyano",
+                "M. Sogayar",
+                "C.E. Ferreira"
+            ],
+            "title": "Modeling gene expression regulatory networks with the sparse vector autoregressive model",
+            "venue": "BMC Systems Biology, vol. 1(39), 2007.",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "S. Yao",
+                "S. Yoo",
+                "D. Yu"
+            ],
+            "title": "Prior knowledge driven granger causality analysis on gene regulatory network discovery",
+            "venue": "BMC Bioinformatics, vol. 16(273), 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "F. Benhmad"
+            ],
+            "title": "Modeling nonlinear Granger causality between the oil price and US dollar: A wavelet based approach",
+            "venue": "Economic modelling, vol. 29, no. 4, pp. 1505\u20131514, 2012.",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "A. Tank",
+                "I. Covert",
+                "N. Foti",
+                "A. Shojaie",
+                "E.B. Fox"
+            ],
+            "title": "Neural granger causality",
+            "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R. Marcinkevi\u010ds",
+                "J.E. Vogt"
+            ],
+            "title": "Interpretable models for granger causality using self-explaining neural networks",
+            "venue": "arXiv preprint arXiv:2101.07600, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "D.P. Kingma",
+                "J. Ba"
+            ],
+            "title": "Adam: A method for stochastic optimization",
+            "venue": "arXiv preprint arXiv:1412.6980, 2014.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "N. Parikh",
+                "S. Boyd"
+            ],
+            "title": "Proximal algorithms",
+            "venue": "Foundations and trends\u00ae in Optimization, vol. 1, no. 3, pp. 127\u2013239, 2014.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "B. Hie",
+                "H. Cho",
+                "B. DeMeo",
+                "B. Bryson",
+                "B. Berger"
+            ],
+            "title": "Geometric sketching compactly summarizes the single-cell transcriptomic landscape",
+            "venue": "Cell systems, vol. 8, no. 6, pp. 483\u2013493, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "B. DeMeo",
+                "B. Berger"
+            ],
+            "title": "Hopper: a mathematically optimal algorithm for sketching biological data",
+            "venue": "Bioinformatics, vol. 36, pp. i236\u2013i241, 07 2020. 13 . CC-BY-NC-ND 4.0 International license available under a (which was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is made The copyright holder for this preprint this version posted October 21, 2022. ; https://doi.org/10.1101/2022.10.18.512766 doi: bioRxiv preprint",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Bastidas-Ponce",
+                "S. Tritschler",
+                "L. Dony",
+                "K. Scheibner",
+                "M. Tarquis-Medina",
+                "C. Salinno",
+                "S. Schirge",
+                "I. Burtscher",
+                "A. B\u00f6ttcher",
+                "F. Theis"
+            ],
+            "title": "Comprehensive single-cell mrna profiling reveals a detailed roadmap for pancreatic endocrinogenesis",
+            "venue": "Development, vol. 146, no. 12, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "H. Hochgerner",
+                "A. Zeisel",
+                "P. L\u00f6nnerberg",
+                "S. Linnarsson"
+            ],
+            "title": "Conserved properties of dentate gyrus neurogenesis across postnatal development revealed by single-cell rna sequencing",
+            "venue": "Nature Neuroscience, vol. 21, no. 2, p. 290\u2013299, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Setty",
+                "V. Kiseliovas",
+                "J. Levine",
+                "A. Gayoso",
+                "L. Mazutis",
+                "D. Pe\u2019er"
+            ],
+            "title": "Characterization of cell fate probabilities in single-cell data with Palantir",
+            "venue": "Nat Biotechnol, vol. 37, pp. 451\u2013460, 04 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "F.A. Wolf",
+                "P. Angerer",
+                "F.J. Theis"
+            ],
+            "title": "Scanpy: large-scale single-cell gene expression data analysis",
+            "venue": "Genome biology, vol. 19, no. 1, pp. 1\u20135, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "V. Bergen",
+                "M. Lange",
+                "S. Peidli",
+                "F.A. Wolf",
+                "F.J. Theis"
+            ],
+            "title": "Generalizing rna velocity to transient cell states through dynamical modeling",
+            "venue": "Nature biotechnology, vol. 38, no. 12, pp. 1408\u20131414, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Pratapa",
+                "A.P. Jalihal",
+                "J.N. Law",
+                "A. Bharadwaj",
+                "T. Murali"
+            ],
+            "title": "Benchmarking algorithms for gene regulatory network inference from single-cell transcriptomic data",
+            "venue": "Nature methods, vol. 17, no. 2, pp. 147\u2013154, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "E.Y. Chen",
+                "C.M. Tan",
+                "Y. Kou",
+                "Q. Duan",
+                "Z. Wang",
+                "G.V. Meirelles",
+                "N.R. Clark",
+                "A. Ma\u2019ayan"
+            ],
+            "title": "Enrichr: Interactive and collaborative html5 gene list enrichment analysis tool",
+            "venue": "BMC Bioinformatics, vol. 14, no. 1, 2013.",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "D. Lara-Astiaso",
+                "A. Weiner",
+                "E. Lorenzo-Vivas",
+                "I. Zaretsky",
+                "D.A. Jaitin",
+                "E. David",
+                "H. Keren-Shaul",
+                "A. Mildner",
+                "D. Winter",
+                "S. Jung",
+                "N. Friedman",
+                "I. Amit"
+            ],
+            "title": "Chromatin state dynamics during blood formation",
+            "venue": "Science, vol. 345, no. 6199, pp. 943\u2013949, 2014.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "R. Ostuni",
+                "V. Piccolo",
+                "I. Barozzi",
+                "S. Polletti",
+                "A. Termanini",
+                "S. Bonifacio",
+                "A. Curina",
+                "E. Prosperini",
+                "S. Ghisletti",
+                "G. Natoli"
+            ],
+            "title": "Latent enhancers activated by stimulation in differentiated cells",
+            "venue": "Cell, vol. 1-2, pp. 157\u2013171, 2013.",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "R. Singh",
+                "B. Hie",
+                "A. Narayan",
+                "B. Berger"
+            ],
+            "title": "Schema: metric learning enables interpretable synthesis of heterogeneous single-cell modalities",
+            "venue": "Genome Biology, vol. 22, no. 131, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "B. Hie",
+                "H. Cho",
+                "B. Bryson",
+                "B. Berger"
+            ],
+            "title": "Coexpression enables multi-study cellular trajectories of development and disease",
+            "venue": "bioRxiv, p. 719088, 2020.",
+            "year": 1908
+        },
+        {
+            "authors": [
+                "J. Zhang",
+                "J. Liu",
+                "D. Lee",
+                "S. Lou",
+                "Z. Chen",
+                "G. G\u00fcrsoy",
+                "M. Gerstein"
+            ],
+            "title": "Diner: a differential graphical model for analysis of co-regulation network rewiring",
+            "venue": "BMC bioinformatics, vol. 21, no. 1, pp. 1\u201315, 2020.",
+            "year": 2020
+        }
+    ],
+    "sections": [
+        {
+            "text": "Software availability: https://cb.csail.mit.edu/cb/velorama\n*These authors contributed equally to the work \u2020Computer Science and Artificial Intelligence Lab., MIT, Cambridge, MA 02139 \u2021Co-corresponding authors: {rsingh,bab}@mit.edu \u00a7Philips Exeter Academy, Exeter, NH 03883. Work performed while AM was a summer student at MIT. \u00b6Computer Science and Artificial Intelligence Lab and Dept. of Mathematics, MIT, Cambridge, MA 02139"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "Inference of gene regulatory networks (GRNs), which capture regulator\u2013target gene interactions, from expression assays has been a long-standing research focus in computational biology [1\u20133]. Single-cell RNAseq (scRNA-seq) technologies have the potential to revolutionize our ability to estimate cell type-specific GRNs. We focus here on a potent innovation in scRNA-seq-based GRN inference: taking advantage of scRNA-seq datasets\u2019 ability to capture snapshots of cell states along dynamic biological processes [4]. By exploiting pseudotime computed from trajectory analysis, recent GRN inference methods have constructed an ordering of cells over which they compare the expression profile of a gene against the lagged profile of its putative regulators [5\u201311]. This ordering of cells with respect to time (or pseudotime) enables more accurate inference and brings us closer to discovering causal regulatory relationships rather than just gene associations.\nUnfortunately, existing GRN inference methods that incorporate differentiation information have a fundamental limitation; they require a total, or linear, ordering over cells (or groups of cells) in order to create a \u201ctime\u201d axis along which each gene\u2019s expression profile can be correlated with others (Figure 1a). For a trajectory with multiple branches, which frequently occurs with scRNA-seq, a total ordering of cells would collapse these distinct branches down into a single global sequence of cells.\nA related and even more pressing challenge is incorporating RNA velocity into GRN inference methods. RNA velocity compares the spliced and unspliced counts of genes to predict per-cell state transitions during a differentiation process [12,13]. RNA velocity has proven powerful in understanding how differentiating cells commit to specific fates [14], and Qiu et al. [9] have argued that it more faithfully captures the expression dynamics of differentiation than pseudotime. These advantages suggest that the rich information encoded in RNA velocity data could be beneficial for inferring gene regulatory interactions. However, it is unclear how RNA velocity can be adapted as an input to existing GRN approaches, since they require a global pseudotime estimate (on a timeline) while RNA velocity is an inherently local measure. One workaround could entail using RNA velocity vectors to forcibly collapse cells into a global pseudotime-series over the full dataset, but doing so removes much of the rich local information provided by this data.\nHere, we present Velorama, a novel method for gene regulatory network inference on scRNA-seq data that does not require a total ordering over the differentiation landscape. To our knowledge, Velorama is the first method to fully incorporate per-cell RNA velocities for GRN inference. Our key conceptual advance is to perform causal GRN inference while modeling the differentiation landscape as a partial, rather than total, ordering of cells (Figure 1a). Thus, we model cell-differentiation in a local, rather than global, context, which enables us to better capture cell dynamics. Instead of a linear pseudotemporal axis, we perform inference on a directed acyclic graph (DAG) of cells that encodes the partial ordering: edges in this graph connect transcriptionally related cells, with the edge direction capturing the local direction of cell differentiation. When RNA velocity data is available, the DAG is constructed directly from the cell transition matrix, allowing us to leverage the full richness of RNA velocity data. When only pseudotime information is available, we construct the DAG by orienting the edges of a k-nearest-neighbor graph of cells in the direction of increasing pseudotime, which allows us to appropriately model merging and branching trajectories without collapsing them onto a single axis.\nTo address the algorithmic challenge of performing causal inference on a partial ordering, we build upon recent innovations in Granger causal (GC) inference. In a gene regulatory context, Granger causality reasons that a causal regulatory gene\u2019s past expression will be significantly predictive of its target gene\u2019s current expression. While standard GC inference approaches are limited to total orderings, we recently introduced a generalization of Granger causality to partial orderings that uses a graph neural network framework to\nperform GC inference on a DAG [15]. Our previous work assessed pairwise interactions between each ATAC-seq peak (chromatin accessibility) and a candidate gene in its genomic neighborhood. However, this is insufficient for assessing gene\u2013gene interactions, as transcriptional regulation often requires the coordination of multiple co-regulators [16]. We therefore introduce here a different mathematical formulation of GC inference that allows us to simultaneously consider all potential regulators and their non-linear, combinatorial effects. In Velorama, regulator\u2013target gene comparisons are made locally for each node, by relating the target gene\u2019s value at a node to the values of all candidate regulators at the node\u2019s ancestors in the DAG (Figure 1b).\nWe evaluated Velorama on a variety of synthetic and real scRNA-seq datasets, on which it demonstrated significantly greater accuracy than existing methods. On synthetic datasets with associated ground-truth GRNs made available by Dibaeinia et al. [17], we first applied Velorama using only pseudotime data, benchmarking it against other GRN methods. Velorama offers state-of-the-art precision and recall, substantially outperforming a diverse set of pseudotime-based GRN inference techniques on the area under precision recall curve (AUPRC) metric. By applying Velorama on RNA velocity data, generated from the same ground-truth GRNs, we show that the use of RNA velocity can dramatically improve the quality of GRN inference, leading to an additional 1.75-3x improvement in AUPRC over what was achieved with pseudotime. These findings suggest that Velorama can help unlock insights unattainable by current meth-\nods. When run on real datasets characterizing brain, pancreas, and bone marrow differentiation, Velorama with RNA velocity better captures relevant regulatory interactions in each dataset compared to pseudotime. As RNA velocity assays are increasingly being leveraged to reveal fine-grained dynamics of differentiation and disease, Velorama\u2019s unprecedented ability to identify causal regulatory drivers from RNA velocity data opens the door to uncovering deeper mechanistic insights into dynamic gene regulatory processes."
+        },
+        {
+            "heading": "2 Algorithm",
+            "text": ""
+        },
+        {
+            "heading": "2.1 Background: classical Granger causal inference and its non-linear extensions",
+            "text": "Granger causal (GC) inference, a statistical approach for estimating causal relationships within dynamical systems, has been effectively used in many settings for which only observational data is available [18\u201322]. Granger causality leverages the key intuition that since a cause precedes its effect, temporally-predictive relationships between dynamically changing variables could be indicative of causal relationships.\nStatistical and machine learning methods have been developed to recover such temporally-predictive relationships. Broadly, there are two strategies to assess the existence of a GC relationship between variables x and y: ablation and invariance [15]. The ablation approach involves training two predictive models of y, denoted as u and u\\x, where u includes the history of every variable in the system and u\\x excludes the history of x. If u performs significantly better than u\\x, as determined by a one-tailed F-test, then x Granger-causes y. The invariance approach involves training just one predictive model of y, denoted as f , using the history of every variable. In this approach, x does not Granger-cause y if and only if the learned weights governing the interaction between x and y are all equal to 0. Equivalently, no causal relationship exists exactly when the prediction of y is invariant to the history of x. Unlike our previous work [15], here we chose the invarance-based approach since it allows multiple candidate Granger causal variables to be evaluated simultaneously, enables the lag associated with each Granger causal interaction to be determined, and reduces training time.\nWhile the classic formulation of GC inference assumes linear interactions, extensions have been developed to capture the nonlinear interactions more often seen in real-world datasets. Many of these extensions have been based on deep learning-based architectures. Tank et al. [23] introduce a regularized multilayer perceptron and a long short-term memory network that model nonlinear relationships while simultaneously determining the lag of each putative causal relationship. Marcinkevic\u030cs and Vogt [24] extend self-explaining neural networks to multivariate time series data in order to determine whether a causal relationship induces a positive or negative effect.\nGiven a dynamical system with a totally-ordered sequence of N observations, each over G variables, Granger causal inference involves training per-variable models f1, f2, . . . , fG. Here, fj models variable j as a function of the previous L observations:\nzj(t) = fj ( z1(t\u2212 L; t\u2212 1), z2(t\u2212 L; t\u2212 1), . . . , zG(t\u2212 L; t\u2212 1) ) + ej(t)\nHere, zj(t) denotes the value of the variable j at observation t, ej(t) denotes an error term, and zk(t\u2212L; t\u22121) is the sequence of L past observations of variable k: (zk(t\u2212L), . . . , zk(t\u2212 1)) [23]. Each pair of variables (i, j) has an associated weight tensor W(i,j) that defines how variable j depends on past lags of variable i. The sub-tensor Wl(i,j) refers to the lag-l value of interaction between zi(t \u2212 l) and zj(t). Variable i is then said to Granger-cause j if |W(i,j)| =\u0338 0, meaning that fj is not invariant to zi. During training, regularization can be applied to each weight tensor W(i,j) to assist in achieving exact zeros for the non-causal relationships.\nBy applying additional regularization terms on each Wl(i,j), we can automatically detect the relevant lags of each putative causal relationship [23]."
+        },
+        {
+            "heading": "2.2 Velorama: non-linear Granger causal inference on partially ordered observations",
+            "text": "In both the linear and non-linear formulations above, zt is defined to temporally precede zt+1, which means that a total ordering on the N observations is required. Thus, dynamical systems that consist of branching points, such as cellular differentiation trajectories, are not compatible with these approaches. To address this, Velorama extends the nonlinearity and automatic lag selection of modern GC methods to DAG-structured dynamical systems that encode a partial ordering of observations.\nVelorama takes in two inputs, A \u2208 RN\u00d7N and X \u2208 RN\u00d7G, and produces one output GC \u2208 RG\u00d7G. A is the adjacency matrix of the DAG, where each node represents an observation and edges connect these observations. X is the feature matrix which describes the values of the G variables over the N observations, and GC summarizes the inferred causal graph, where GCij represents the strength of the causal relationship between variables i and j. We pre-compute a modified matrix A\u2032, defined to be the normalized transpose of A, where row sums to 1 so as to account for variability in the in-degrees of the DAG. If a row of AT consists of all zeros, the row is unaltered. A\u2032 serves as a graph diffusion operator that aggregates information over each observation\u2019s ancestors.\nTo infer causal relationships, we train G separate models f1, f2, . . . , fG. We propose fj to be a multilayer neural network that models variable j as a nonlinear function of ancestors within the DAG. The key component of our model architecture is the first hidden layer, which takes on the form\nh(1) = \u03c3 ( L\u2211\nl=1\n(A\u2032)lXW1,l + b1 ) Here, (A\u2032)l represents the lth power of A\u2032, W1,l \u2208 RG\u00d7d is a learned weight matrix and b1 \u2208 RN\u00d7d is a learned bias term. d is the number of hidden units per layer. (A\u2032)lXW1,l represents the information aggregated over l hops backward in the DAG (Figure A.1a). Note that, as the A\u2032 and X matrices are fixed, we can pre-compute (A\u2032)lX = A\u2032 ( (A\u2032)l\u22121X ) inductively for 1 \u2264 l \u2264 L . \u03c3(\u00b7) is a nonlinear activation function. In a K layer model, the hidden layers h(k) for 2 \u2264 k < K are given by\nh(k) = \u03c3 ( h(k\u22121)Wk + bk ) where h(k) \u2208 RN\u00d7d, Wk \u2208 Rd\u00d7d and bk \u2208 RN\u00d7d (Figure A.1b). Finally, the output fj \u2208 RN of the autoregressive model is given by\ns ( h(K\u22121)WK + bK ) where WK \u2208 Rd\u00d71 and bK \u2208 RN\u00d71. s(\u00b7) is an optional element-wise decoder function that links the real numbers to a domain-specific output. Here, we use the identity function for s(\u00b7).\nGranger causal inference via regularization of W1. To infer causality, we concatenate the per-lag W1,l matrices into W1 \u2208 RL\u00d7G\u00d7d. Let W1i \u2208 RL\u00d7d denote the weights that govern the interaction between variable i (regulator) and variable j (target) (Figure A.1c). Variable i does not Granger-cause variable j if\u2225\u2225W1i \u2225\u2225F = 0, where || \u00b7 ||F denotes the Frobenius matrix norm. Similarly, let W1,li \u2208 Rd denote the weights that govern the interaction between variable i and variable j at a particular lag l. If variable i Granger-causes j, then l is not a relevant lag when \u2225\u2225\u2225W1,li \u2225\u2225\u2225 2 = 0, where || \u00b7 ||2 denotes the \u21132-norm.\nWe simultaneously reduce the prediction error of each model fj while encouraging exact zeros within the W1i matrices in order to induce sparsity in the causal graph. To achieve this, our loss function L is defined to be the sum of the mean-squared error (MSE) loss \u2113(\u00b7) and a regularization penalty applied to W1:\nL = \u2113(fj ,X:j) + \u03bbR(W1).\nHere, X:j \u2208 RN denotes the value of variable j over all N observations and R: RL\u00d7G\u00d7d \u2192 R is the regularization loss function. The hyperparameter \u03bb controls their relative weight.\nThe specific form of R is guided by the regularization characteristics sought by the user. Tank et al. [23] introduced three regularization schemes: group, lag-selection, and hierarchical, with the last one being the broadest. Here we use the hierarchical formulation, though our implementation makes all three available (Appendix A.1 for details). Hierarchical regularization merges weights from the same lag (this aids in automatic lag detection), and further penalizes longer lags more than shorter lags (Figure A.1d):\nR(W1) = G\u2211 i=1 ( L\u2211 l=1 \u2225\u2225\u2225(W1,li , . . . ,W1,Li )\u2225\u2225\u2225 F ) .\nTraditional gradient descent algorithms such as Adam [25] and stochastic gradient descent often fail to converge the learned weights to exact zeros, hindering causal detection. We thus optimize the objective function L via proximal gradient descent, a specialized algorithm designed to induce sparsity [26]."
+        },
+        {
+            "heading": "2.3 Constructing the DAG from RNA velocity or pseudotime data",
+            "text": "If only pseudotime data is available, we first construct a k-nearest-neighbor graph G of the cells. In this work, we chose k = 15. Next, we orient each edge e \u2208 G in the direction of increasing pseudotime. Doing so preserves the underlying differentiation structure while ensuring that the constructed graph is acyclic.\nFor RNA velocity datasets, we apply Lange et al.\u2019s CellRank to calculate cell\u2013cell transition probabilities [14]. The probability pij of cell i transitioning into a neighboring cell j captures differentiation in a local context: it is based on the alignment of the velocity vector of cell i and the transcriptomic displacement vector between cell i and cell j. Since our problem formulation is fully compatible with having edge-weights on the DAG, the transition matrix can directly be used as the Velorama adjacency matrix A. Later, we describe an ablation study comparing the use of an A constructed with edge-weights (as pij) versus a binarized version of A (only choosing edges where pij is greater than some threshold).\nA possible complication with directly using the cell transition matrix is that it may contain cycles. In Velorama, we only consider ancestors up to L hops away, so only cycles of up to length L are relevant. To combat the possibility of cycles, we first remove cycles of length 2 by setting pji = 0 if pij > pji. When we pre-compute powers of A\u2032, we then set all non-zero diagonal terms back to zero after each successive multiplication with A\u2032, as cycles can be identified by non-zero terms along the diagonal."
+        },
+        {
+            "heading": "2.4 Identification of Granger-causal interactions",
+            "text": "The hyperparameter \u03bb plays a key role in regularization, with higher values of \u03bb leading to sparser GRNs. However, selecting the appropriate hyperparameters for a specific setting can be a challenge. To address this, we sweep over a range of \u03bb values and compute the GRN by aggregating over their results. Thus, the user can simply use Velorama with its default settings. We sweep \u03bb uniformly over the log-scaled range of [0.01, 10]. To aggregate results over the various \u03bb, we retain only those GC matrices (recall GC \u2208 RG\u00d7G)\nwith between 1% and 95% non-zero values. We then sum the retained GC matrices corresponding to each lag, which results in L composite GC matrices (one for each lag). These per-lag matrices are themselves summed to produce a single GC matrix, which we report as the GRN.\nTraining details. We trained using proximal gradient descent, which minimizes the sum of the mean squared error and the hierarchical regularization. For all results shown in this work, we used a single hidden layer with 32 nodes, a learning rate of 0.01, and a maximum of 10,000 epochs (with early stopping along the lines of Tank et al. [23]). The hyperparameter sweep of \u03bb covered 19 log-spaced values in the range [0.01, 10]. Model training was performed on a mix of Nvidia V100 (32 GB memory) and A100 (80 GB memory) GPUs.\nScalability and runtime. We perform G\u039b training runs where G is the number of target genes and \u039b is the number of \u03bb choices we sweep over. Each run is relatively light and we were able to perform 10 parallel runs for \u03bb settings on a single V100 GPU. While N (the number of cells) is not a major runtime scalability concern, the input matrices (of size O(NG\u2032), where G\u2032 is the number of candidate regulators) need to fit into GPU memory. For large datasets (e.g., with over 100,000 cells), we recommend sketching the data [27, 28] to first extract a smaller representative sample. When the list of potential targets or regulators is known, the scope of computation can be constrained. For example, in our analysis of biological data, we limited candidate regulators to the set of transcription factors in the dataset. The (A\u2032)lX inputs to the first hidden layer are pre-computed and amortized over all target genes, and thus this computation is not meaningful to the overall runtime. For a synthetic dataset with 1,800 cells and 100 genes, the full run of Velorama (including hyperparameter sweep) required approximately 55 minutes on an Nvidia V100 GPU. For real scRNA-seq datasets with between 2,531\u20135,780 cells, 245\u2013499 candidate regulators, and 1,585\u2013 1,873 candidate target genes, each full run took roughly 3\u20135 hours on a Nvidia A100 GPU."
+        },
+        {
+            "heading": "3 Results",
+            "text": "Datasets. We benchmarked Velorama on a series of synthetic datasets for which the underlying groundtruth GRN is known. We used four differentiation datasets from SERGIO [17], which simulates singlecell expression dynamics according to a given GRN. These datasets, which we obtained from the SERGIO Github repository, span a range of differentiation landscapes, including linear (Dataset A), bifurcation (Dataset B), trifurcation (Dataset C), and tree-shaped (Dataset D) trajectories (Figure 2, Appendix A.2.1). The underlying GRN for each of these datasets consists of 100 genes and 137 edges. For each of these GRNs, SERGIO simulates spliced and unspliced counts (for RNA velocity) as well as total transcript counts (for pseudotime). We also applied Velorama on three RNA velocity studies of mouse endocrinogenesis, mouse dentate gyrus neurogenesis, and human hematopoiesis [29\u201331]. We used processed Scanpy [32] objects for these datasets that were made available by scVelo and CellRank [14, 33].\nVelorama accurately infers GRNs from expression dynamics. We first sought to evaluate Velorama when only pseudotime data is available. Any benchmarking of Velorama requires this setting since existing methods can not make use of the full RNA velocity transition matrices. We compared against a diverse set of methods: GENIE3, GRNBoost2, Scribe, PIDC, SCODE, SINCERITIES, and SINGE [5\u201311].We chose these methods because a) their underlying mathematical and statistical techniques vary widely (decision trees and random forests, differential equations, information theory, and total-order Granger causality); and\nb) these were the top-rated methods in a comprehensive single-cell GRN benchmarking study by Pratapa et al. [34]. We benchmarked using Pratapa et al.\u2019s BEELINE evaluation framework.\nOn the area under precision-recall curve (AUPRC) metric, Velorama outperforms all other methods (Table 1), often by very substantial margins. For GRN inference, the AUPRC metric has typically been the focus in previous work, as these datasets are heavily unbalanced (since most gene pairs do not have a regulatory interaction). On the area under receiver operating curve (AUROC) metric as well, Velorama offers state-of-the-art performance, with it and GENIE3 being the two top-performing methods. GENIE3, originally designed for bulk RNA-seq, has often been reported to be one of the top-performing GRN methods. However, its random-forest feature selection approach has sometimes been difficult to scale to scRNA-seq datasets. As such, Velorama\u2019s outperformance against GENIE3 on the AUPRC metric and competitiveness on the AUROC metric is notable. The improvement of Velorama over SINGE and SINCERITIES, both of which utilize total ordering-based Granger causal inference, suggests that our innovation of extending Granger causality to the DAG plays a crucial role in Velorama. We note that Velorama\u2019s relative AUPRC outperformance is most substantial for the dataset with the most complex differentiation landscape (Dataset D, Figure 2). This finding supports the motivating intuition behind our work: compared to total orderings, partial orderings can more effectively capture a complex differentiation landscape.\nVelorama capitalizes on RNA velocity data. We assessed how well Velorama could recover the groundtruth GRN when using RNA velocity rather than pseudotime. The SERGIO datasets provide spliced and unspliced transcript counts for the same ground-truth GRNs, which we processed with CellRank to obtain the RNA velocity cell-to-cell transition matrices. Alongside the pseudotime comparison, we also performed an ablation to study if Velorama could exploit fine-grained information from cell-transition probabilities.\nAccordingly, we tested two ways of specifying RNA velocity to Velorama. In one, the adjacency matrix A makes use of the transition probabilities (i.e. the edges of the DAG are weighted). In the other setting, we created a binary matrix A by using only the edges that correspond to the top 50% of each cell\u2019s transition probabilities.\nBoth RNA velocity settings of Velorama substantially improve upon the pseudotime version, even as the latter itself offers state-of-the-art performance compared to existing benchmarks. Across the various datasets, the RNA velocity-based AUPRC metrics consistently improve upon the pseudotime-based metrics by 1.75-3x (Table 2). To confirm this result was not a measurement artifact, we plotted the actual ground-truth GRN matrix and the Velorama-inferred GRNs when using pseudotime or RNA velocity data (Figures 3, A.2). RNA velocity-based GRNs indeed capture the ground-truth regulatory relationships with higher fidelity. As expected, the relative AUPRC outperformance of RNA velocity over pseudotime is weakest for dataset A (linear trajectory, Figure 2) and stronger for the more complex trajectories. Again, this underscores the potential for using Velorama with RNA velocity data to unravel regulatory drivers of complex differentiation landscapes.\nIn addition, our ablation studies suggest that Velorama can exploit fine-grained cell transition probabilities, with the probabilistic setting of A outperforming the binarized setting. Indeed, with the probabilistic setting, Velorama\u2019s outperformance over existing methods is very substantial: for dataset D, an AUPRC of 0.656 is achieved when using Velorama; in comparison, GENIE3 reports an AUPRC of 0.129, while other methods have AUPRCs below 0.06 (Tables 1,2). Of course, the splicing dynamics encoded in SERGIO are relatively simple and the RNA velocity version of Velorama could be benefiting from that. Nonetheless, synthetic data offers the advantage of known ground-truths and allows us to validate that Velorama can effectively leverage RNA velocity-based cell transition probabilities. While the magnitude of performance boost is unlikely to be this strong on actual scRNA-seq datasets, we offer evidence below that using RNA\nvelocity helps in those cases too.\nVelorama speed predictions cohere with underlying regulatory interaction dynamics. Velorama\u2019s ability to perform lag selection also enables it to predict the interaction speed for each regulator\u2013target gene pair. For a target gene j, we quantify the Velorama interaction speed between a regulator i and the target by first scoring each of its associated lags l as the \u21132-norm of the weights W 1,l i \u2208 Rd. We obtain these scores for each \u03bb that is associated with a GC matrix with between 1% and 95% non-zero values. We then binarize these scores, setting these scores to 1 if they are non-zero and 0 otherwise. We average these binarized scores across the retained \u03bb values to yield a per-lag score C(l)ij for each regulator-target gene pair (i, j). These values are normalized by applying a softmax transformation over the lags for each regulatortarget gene pair (i, j). The softmax normalization helps account for differences in overall regulator strengths and highlights just the lag variations. Finally, we represent the interaction speed sij for a regulator i and target gene j as the difference between the normalized scores for the shortest and longest lags:\nsij = C\u0303 (1) ij \u2212 C\u0303 (L) ij , where C\u0303 (l) ij = softmaxl\n( C\n(l) ij ) We evaluated Velorama\u2019s interaction speed predictions using the aforementioned SERGIO datasets. SERGIO uses a stochastic differential equation (SDE) to simulate each target gene\u2019s expression dynamics, such that the production rate Pj for a target gene j is modeled as a function of its regulators\u2019 expression levels and the contribution of each regulator i \u2208 Rj (see Appendix A.3 for details). The magnitude of a regulator i\u2019s contribution, denoted as |Kij |, thus serves as a proxy for the speed at which changes in the expression of regulator i affect the expression of target gene j. For all four SERGIO datasets, we compared the interaction speeds estimated from Velorama sij and the magnitude of the contributions |Kij | from the SERGIO SDEs across the full set of regulator-target gene interactions in the ground-truth GRN. We found that these two sets of values were correlated in each of the four SERGIO datasets (Table 3). This result suggests that Velorama can help uncover novel insights into the relationship between specific gene regulators and the timing of their effects on downstream targets.\nVelorama identifies relevant gene regulatory interactions in real RNA velocity datasets. We applied Velorama to analyze gene regulatory interactions for three scRNA-seq datasets. These datasets characterize the expression dynamics for mouse endocrinogenesis [29], mouse dentate gyrus neurogenesis [30], and human hematopoiesis [31] (Figure 4a). After performing standard pre-processing (Appendix A.2.2), we applied Velorama, along with probabilistic RNA velocity, to infer regulator-target gene interactions for each dataset. We separately also computed a diffusion pseudotime estimate for these datasets and applied Velorama with pseudotime. For each dataset, we first identified the top 0.5% of all candidate regulator-target gene interactions based on the same scoring scheme as above. The regulators and target genes implicated in these interactions were significantly enriched for Gene Ontology (GO) terms corresponding to the specific biological processes being profiled in each of these datasets (FDR < 0.05, [35],Figure 4b).\nMoreover, when comparing this enrichment for interactions inferred when pseudotime instead of RNA velocity was supplied to Velorama, the RNA velocity-based interactions yielded more significant enrichment\nfor 7 of the 9 GO terms. This improvement in enrichment was more modest for the mouse endocrinogenesis and is possibly a consequence of the less complex expression dynamics of this dataset. Both the mouse neurogenesis and human hematopoesis datasets feature more cell types and differentiation branches than the mouse endocrinogenesis dataset (Figure 4a), which pose challenges for pseudotime-based approaches that collapse these complex dynamics onto a total ordering of cells. Notably, even with pseudotime, employing Velorama\u2019s DAG-based representation helps alleviate these issues, as evidenced by the significant enrichment results for that case. Nonetheless, the RNA velocity-based DAG better handles these dynamics. Taken together, these results provide evidence for both Velorama\u2019s effectiveness in detecting relevant regulatory relationships as well as the benefits of leveraging RNA velocity to do so.\nVelorama suggests development/differentiation regulators act more slowly than others. We also evaluated the interaction speeds for the top 0.5% of regulator-target gene interactions in each of the three scRNA-seq datasets. We estimated regulator interaction speeds as previously described. For each of the three scRNA-seq datasets, the bottom 10% of regulators by interaction speed were significantly enriched for GO terms related to cellular differentiation (GO:0045595) and development (GO:0060284) (p < 0.05,\nhypergeometric test, Figure 4c). In comparison, the regulators with the highest 10% of interaction speeds did not show enrichment for these terms. This pattern of enrichment for only the lower interaction speed regulators was observed not just for each tissue but across all three tissues.\nThis observation aligns with known mechanisms of gene regulatory control during differentiation. Regulators of these processes often participate in a number of epigenetic and/or cofactor recruitment steps prior to influencing their target [36,37]. As a result, these intermediary regulatory activities may manifest in a lag between changes in regulators\u2019 expression levels and those of their targets, hence leading to lower observed interaction speeds for such regulators. Notably, we did not observe a similar phenomenon for housekeeping transcription factors. Identifying the regulatory range and duration of transcription factors is a major open problem and this preliminary investigation suggests a promising direction of future work: RNA velocity assays, analyzed with Velorama, could systematically measure regulatory speed in a variety of tissues, leading to a deeper understanding of gene regulatory control."
+        },
+        {
+            "heading": "4 Discussion",
+            "text": "scRNA-seq datasets capture rich information about gene regulatory dynamics, parts of which are neglected by current techniques due to their inability to operate on partial (nonlinear) orderings of cells. This is particularly a problem for RNA velocity data, since many existing methods require a pseudotime estimate. An alternative approach is described in Scribe [9] where RNA velocity is considered, in essence, as two time-points of scRNA-seq data: one corresponding to spliced counts (regulators) and the other to unspliced counts (targets). However, this makes the heavily-questioned assumption [13] that splice rates across genes are equal, is not designed to identify interactions spanning multiple cell states, and is unable to take advantage of cell transition estimates offered by methods like scVelo and CellRank [14, 33]. Velorama takes a conceptually different approach by modeling the differentiation dynamics suggested by RNA velocity as a DAG. Velorama is also compatible with pseudotime if RNA velocity is unavailable. While our previous work introduced DAG-based representations of cellular dynamics [15], Velorama is the first to integrate percell transition probabilities from RNA velocity for GRN inference. Furthermore, Velorama is also the first method to leverage these DAG-based dynamics to evaluate multiple candidate regulators simultaneously along with their combinatorial effects.\nVelorama\u2019s effectiveness on the GRN inference task opens the door to several directions for future work. Firstly, while Velorama has demonstrated notable performance using only scRNA-seq data, integrating this data with other data modalities, like chromatin accessibility and/or TF binding data, may contribute to further performance gains [38]. In addition, Velorama\u2019s ability to consider numerous regulators simultaneously allows for further investigation into the mechanisms underlying important co-regulatory relationships that underpin coordinated gene expression control [39, 40]. Lastly, we have demonstrated the effectiveness of using Velorama with either pseudotime or RNA velocity, but opportunities exist to integrate these two approaches. By ensembling cell-cell similarity predictions from these two approaches, we can potentially harness the unique features captured by both to more faithfully represent the underlying cellular dynamics used by Velorama for GRN inference.\nVelorama unlocks crucial information from RNA velocity that otherwise would be lost with other techniques. As efforts to model gene expression dynamics from RNA velocity continue to grow and improve, Velorama\u2019s distinctive ability to flexibly leverage RNA velocity for causal GRN inference positions it to be an invaluable tool for uncovering novel mechanistic insights into differentiation and disease.\nAcknowledgements AW, RS and BB were supported by the NIH grant R35GM141861. Some figures were made using biorender.com.\nDeclaration of Interests None"
+        },
+        {
+            "heading": "A Appendix",
+            "text": "A.1 Regularization Schemes\nThe group regularization penalizes all weights within W1 symmetrically (Figure A.1c):\nR(W1) = G\u2211 i=1 \u2225\u2225W1i \u2225\u2225F The lag-selection regularization aids in automatic lag detection by merging weights from the same lag\ntogether (Figure A.1d):\nR(W1) = G\u2211 i=1 (\u2225\u2225W1i \u2225\u2225F + L\u2211 l=1 \u2225\u2225\u2225W1,li \u2225\u2225\u2225 2 )\nA.2 Datasets and pre-processing\nA.2.1 SERGIO\nWe applied Velorama to four benchmark synthetic datasets obtained from the SERGIO GitHub repository (Table A.1). Prior to running Velorama, we normalized the expression values of each gene to have a mean of 0 and a standard deviation of 1. To evaluate Velorama, we compared the inferred causal graph to the groundtruth set of regulator\u2013target pairs used to simulate the expression matrix. All 100 genes were indicated as candidate regulators and targets.\nA.2.2 RNA velocity datasets of human and mouse tissue differentiation\nWe analyzed three scRNA-seq datasets profiling mouse endocrinogenesis [29], mouse dentate gyrus neurogenesis [30], and human hematopoiesis [31]. We performed the same pre-processing procedure for each of these datasets. We first normalized the number of counts per cell such that each cell has a total count equal to the pre-normalization median number of counts per cell. We then applied a log(1 + X) transformation on the normalized counts X and identified the top 2000 most highly variable genes. The transformed expression values for each gene were then normalized to have a mean of 0 and a standard deviation of 1. We removed all genes that were represented in fewer than 1% of cells in each dataset and retained the union of the remaining highly variable genes and genes that were annotated as transcription factors according to AnimalTFDB [41]. When applying Velorama, transcription factors were selected as the set of candidate regulators, and candidate target genes were defined to be the set of highly variable genes excluding transcription factors.\nA.3 SERGIO model parameters and regulatory interaction speeds\nWe sought to evaluate Velorama\u2019s ability to predict interaction speeds between regulators and their targets by evaluating these predictions for various synthetic datasets simulated using SERGIO. Specifically, we compared these interaction speed predictions with the parameters in the SERGIO stochastic differential equation (SDE) models that determine these speeds in the models\u2019 simulation procedure. In SERGIO, the production rate for a target gene j is modeled as follows.\nPj = \u2211 i\u2208Rj Kij x nij i h nij ij + x nij j + bj\nHere, xi represents the expression level of regulator gene i and Rj denotes the set of regulators for target gene j. Kij mediates the contribution of a regulator i to the production rate of target gene j and, thus, its magnitude serves as a proxy for the speed at which changes in expression for regulator i affect the expression for target gene j. nij , hij , and bj are constants representing the Hill coefficient, the half-response regulator concentration, and the basal production rate. By default, nij = 2 and hij is set to the average of the\nregulators\u2019 expression among the cell types to be simulated. In our experiments, we use the SDE model parameters that accompany the selected benchmark datasets.\nA.4 Velorama-inferred GRNs for SERGIO datasets\nWe plotted the ground-truth GRN as well as the Velorama-inferred GRNs using pseudotime and RNA velocity for datasets A, B and C (Figure A.2). Including RNA velocity greatly improves the prediction of the GRN."
+        }
+    ],
+    "title": "Unraveling causal gene regulation from the RNA velocity graph using Velorama",
+    "year": 2022
+}

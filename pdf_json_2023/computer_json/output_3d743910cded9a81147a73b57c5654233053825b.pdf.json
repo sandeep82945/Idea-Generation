@@ -1,0 +1,806 @@
+{
+    "abstractText": "Recent conditional image generation methods produce images of remarkable diversity, fidelity and realism. However, the majority of these methods allow conditioning only on labels or text prompts, which limits their level of control over the generation result. In this paper, we introduce MaskSketch, an image generation method that allows spatial conditioning of the generation result using a guiding sketch as an extra conditioning signal during sampling. MaskSketch utilizes a pre-trained masked generative transformer, requiring no model training or paired supervision, and works with input sketches of different levels of abstraction. We show that intermediate self-attention maps of a masked generative transformer encode important structural information of the input image, such as scene layout and object shape, and we propose a novel sampling method based on this observation to enable structure-guided generation. Our results show that MaskSketch achieves high image realism and fidelity to the guiding structure. Evaluated on standard benchmark datasets, MaskSketch outperforms stateof-the-art methods for sketch-to-image translation, as well as unpaired image-to-image translation approaches.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Dina Bashkirova"
+        },
+        {
+            "affiliations": [],
+            "name": "Jos\u00e9 Lezama"
+        },
+        {
+            "affiliations": [],
+            "name": "Kihyuk Sohn"
+        },
+        {
+            "affiliations": [],
+            "name": "Kate Saenko"
+        },
+        {
+            "affiliations": [],
+            "name": "Irfan Essa"
+        }
+    ],
+    "id": "SP:ab5c39fe9ba3d7de5854eb20c8088d5d57b0c9e9",
+    "references": [
+        {
+            "authors": [
+                "James Bradbury",
+                "Roy Frostig",
+                "Peter Hawkins",
+                "Matthew James Johnson",
+                "Chris Leary",
+                "Dougal Maclaurin",
+                "George Necula",
+                "Adam Paszke",
+                "Jake VanderPlas",
+                "Skye Wanderman-Milne",
+                "Qiao Zhang"
+            ],
+            "title": "JAX: composable transformations of Python+NumPy programs, 2018",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Andrew Brock",
+                "Jeff Donahue",
+                "Karen Simonyan"
+            ],
+            "title": "Large scale gan training for high fidelity natural image synthesis",
+            "venue": "arXiv preprint arXiv:1809.11096,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Mathilde Caron",
+                "Hugo Touvron",
+                "Ishan Misra",
+                "Herv\u00e9 J\u00e9gou",
+                "Julien Mairal",
+                "Piotr Bojanowski",
+                "Armand Joulin"
+            ],
+            "title": "Emerging properties in self-supervised vision transformers",
+            "venue": "In Proceedings of the IEEE/CVF International Conference on Computer Vision,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Huiwen Chang",
+                "Han Zhang",
+                "Lu Jiang",
+                "Ce Liu",
+                "William T. Freeman"
+            ],
+            "title": "Maskgit: Masked generative image transformer",
+            "venue": "In The IEEE Conference on Computer Vision and Pattern Recognition (CVPR), June 2022",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Wengling Chen",
+                "James Hays"
+            ],
+            "title": "Sketchygan: Towards diverse and realistic sketch to image synthesis",
+            "venue": "In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Yu-Jie Chen",
+                "Shin-I Cheng",
+                "Wei-Chen Chiu",
+                "Hung-Yu Tseng",
+                "Hsin-Ying Lee"
+            ],
+            "title": "Vector quantized image-to-image translation",
+            "venue": "In European Conference on Computer Vision (ECCV),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yunjey Choi",
+                "Minje Choi",
+                "Munyoung Kim",
+                "Jung-Woo Ha",
+                "Sunghun Kim",
+                "Jaegul Choo"
+            ],
+            "title": "Stargan: Unified generative adversarial networks for multi-domain image-to-image translation",
+            "venue": "In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Yunjey Choi",
+                "Youngjung Uh",
+                "Jaejun Yoo",
+                "Jung-Woo Ha"
+            ],
+            "title": "Stargan v2: Diverse image synthesis for multiple domains",
+            "venue": "In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jia Deng",
+                "Wei Dong",
+                "Richard Socher",
+                "Li-Jia Li",
+                "Kai Li",
+                "Li Fei-Fei"
+            ],
+            "title": "Imagenet: A large-scale hierarchical image database",
+            "venue": "In 2009 IEEE conference on computer vision and pattern recognition,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "Jacob Devlin",
+                "Ming-Wei Chang",
+                "Kenton Lee",
+                "Kristina Toutanova"
+            ],
+            "title": "Bert: Pre-training of deep bidirectional transformers for language understanding",
+            "venue": "arXiv preprint arXiv:1810.04805,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Prafulla Dhariwal",
+                "Alexander Nichol"
+            ],
+            "title": "Diffusion models beat gans on image synthesis",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Mathias Eitz",
+                "Ronald Richter",
+                "Kristian Hildebrand",
+                "Tamy Boubekeur",
+                "Marc Alexa"
+            ],
+            "title": "Photosketcher: interactive sketch-based image synthesis",
+            "venue": "IEEE Computer Graphics and Applications,",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "Patrick Esser",
+                "Robin Rombach",
+                "Bj\u00f6rn Ommer"
+            ],
+            "title": "Taming transformers for high-resolution image synthesis, 2020",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Oran Gafni",
+                "Adam Polyak",
+                "Oron Ashual",
+                "Shelly Sheynin",
+                "Devi Parikh",
+                "Yaniv Taigman"
+            ],
+            "title": "Make-a-scene: Scenebased text-to-image generation with human priors",
+            "venue": "arXiv preprint arXiv:2203.13131,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Rinon Gal",
+                "Yuval Alaluf",
+                "Yuval Atzmon",
+                "Or Patashnik",
+                "Amit H Bermano",
+                "Gal Chechik",
+                "Daniel Cohen- Or"
+            ],
+            "title": "An image is worth one word: Personalizing text-toimage generation using textual inversion",
+            "venue": "arXiv preprint arXiv:2208.01618,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Marjan Ghazvininejad",
+                "Omer Levy",
+                "Yinhan Liu",
+                "Luke Zettlemoyer"
+            ],
+            "title": "Mask-predict: Parallel decoding of conditional masked language models",
+            "venue": "arXiv preprint arXiv:1904.09324,",
+            "year": 1904
+        },
+        {
+            "authors": [
+                "Arnab Ghosh",
+                "Richard Zhang",
+                "Puneet K Dokania",
+                "Oliver Wang",
+                "Alexei A Efros",
+                "Philip HS Torr",
+                "Eli Shechtman"
+            ],
+            "title": "Interactive sketch & fill: Multiclass sketch-to-image translation",
+            "venue": "In Proceedings of the IEEE/CVF International Conference on Computer Vision,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Ian Goodfellow",
+                "Jean Pouget-Abadie",
+                "Mehdi Mirza",
+                "Bing Xu",
+                "David Warde-Farley",
+                "Sherjil Ozair",
+                "Aaron Courville",
+                "Yoshua Bengio"
+            ],
+            "title": "Generative adversarial networks",
+            "venue": "Communications of the ACM,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Shuyang Gu",
+                "Dong Chen",
+                "Jianmin Bao",
+                "Fang Wen",
+                "Bo Zhang",
+                "Dongdong Chen",
+                "Lu Yuan",
+                "Baining Guo"
+            ],
+            "title": "Vector quantized diffusion model for text-to-image synthesis",
+            "venue": "arXiv preprint arXiv:2111.14822,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Cusuh Ham",
+                "Gemma Canet Tarres",
+                "Tu Bui",
+                "James Hays",
+                "Zhe Lin",
+                "John Collomosse"
+            ],
+            "title": "Cogs: Controllable generation and search from sketch and style",
+            "venue": "European Conference on Computer Vision, 2022",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Jonathan Heek",
+                "Anselm Levskaya",
+                "Avital Oliver",
+                "Marvin Ritter",
+                "Bertrand Rondepierre",
+                "Andreas Steiner",
+                "Marc van Zee"
+            ],
+            "title": "Flax: A neural network library and ecosystem for JAX, 2020",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Amir Hertz",
+                "Ron Mokady",
+                "Jay Tenenbaum",
+                "Kfir Aberman",
+                "Yael Pritch",
+                "Daniel Cohen-Or"
+            ],
+            "title": "Prompt-to-prompt image editing with cross attention control",
+            "venue": "arXiv preprint arXiv:2208.01626,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Martin Heusel",
+                "Hubert Ramsauer",
+                "Thomas Unterthiner",
+                "Bernhard Nessler",
+                "Sepp Hochreiter"
+            ],
+            "title": "Gans trained by a two time-scale update rule converge to a local nash equilibrium",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Jonathan Ho",
+                "Tim Salimans"
+            ],
+            "title": "Classifier-free diffusion guidance",
+            "venue": "NeurIPS",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Xun Huang",
+                "Ming-Yu Liu",
+                "Serge Belongie",
+                "Jan Kautz"
+            ],
+            "title": "Multimodal unsupervised image-to-image translation",
+            "venue": "In ECCV, 2018",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Phillip Isola",
+                "Jun-Yan Zhu",
+                "Tinghui Zhou",
+                "Alexei A Efros"
+            ],
+            "title": "Image-to-image translation with conditional adversarial networks",
+            "venue": "In Proceedings of the IEEE conference on computer vision and pattern recognition,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Tero Karras",
+                "Samuli Laine",
+                "Timo Aila"
+            ],
+            "title": "A style-based generator architecture for generative adversarial networks",
+            "venue": "In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Bahjat Kawar",
+                "Shiran Zada",
+                "Oran Lang",
+                "Omer Tov",
+                "Huiwen Chang",
+                "Tali Dekel",
+                "Inbar Mosseri",
+                "Michal Irani"
+            ],
+            "title": "Imagic: Text-based real image editing with diffusion models",
+            "venue": "arXiv preprint arXiv:2210.09276,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Jos\u00e9 Lezama",
+                "Huiwen Chang",
+                "Lu Jiang",
+                "Irfan Essa"
+            ],
+            "title": "Improved masked image generation with token-critic",
+            "venue": "European Conference on Computer Vision, 2022",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Tsung-Yi Lin",
+                "Michael Maire",
+                "Serge Belongie",
+                "James Hays",
+                "Pietro Perona",
+                "Deva Ramanan",
+                "Piotr Doll\u00e1r",
+                "C Lawrence Zitnick"
+            ],
+            "title": "Microsoft coco: Common objects in context",
+            "venue": "In European conference on computer vision,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Ming-Yu Liu",
+                "Thomas Breuel",
+                "Jan Kautz"
+            ],
+            "title": "Unsupervised image-to-image translation networks",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Yongyi Lu",
+                "Shangzhe Wu",
+                "Yu-Wing Tai",
+                "Chi-Keung Tang"
+            ],
+            "title": "Image generation from sketch constraint using contextual gan",
+            "venue": "In Proceedings of the European conference on computer vision (ECCV),",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Chenlin Meng",
+                "Yutong He",
+                "Yang Song",
+                "Jiaming Song",
+                "Jiajun Wu",
+                "Jun-Yan Zhu",
+                "Stefano Ermon"
+            ],
+            "title": "Sdedit: Guided image synthesis and editing with stochastic differential equations",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Chenlin Meng",
+                "Yutong He",
+                "Yang Song",
+                "Jiaming Song",
+                "Jiajun Wu",
+                "Jun-Yan Zhu",
+                "Stefano Ermon"
+            ],
+            "title": "SDEdit: Guided image synthesis and editing with stochastic differential equations",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Alex Nichol",
+                "Prafulla Dhariwal",
+                "Aditya Ramesh",
+                "Pranav Shyam",
+                "Pamela Mishkin",
+                "Bob McGrew",
+                "Ilya Sutskever",
+                "Mark Chen"
+            ],
+            "title": "Glide: Towards photorealistic image generation and editing with text-guided diffusion models",
+            "venue": "arXiv preprint arXiv:2112.10741,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Utkarsh Ojha",
+                "Yijun Li",
+                "Jingwan Lu",
+                "Alexei A Efros",
+                "Yong Jae Lee",
+                "Eli Shechtman",
+                "Richard Zhang"
+            ],
+            "title": "Few-shot image generation via cross-domain correspondence",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Taesung Park",
+                "Alexei A Efros",
+                "Richard Zhang",
+                "Jun- Yan Zhu"
+            ],
+            "title": "Contrastive learning for unpaired image-to-image translation",
+            "venue": "In European conference on computer vision,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Taesung Park",
+                "Ming-Yu Liu",
+                "Ting-Chun Wang",
+                "Jun-Yan Zhu"
+            ],
+            "title": "Semantic image synthesis with spatially-adaptive normalization",
+            "venue": "In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Alec Radford",
+                "Jong Wook Kim",
+                "Chris Hallacy",
+                "Aditya Ramesh",
+                "Gabriel Goh",
+                "Sandhini Agarwal",
+                "Girish Sastry",
+                "Amanda Askell",
+                "Pamela Mishkin",
+                "Jack Clark"
+            ],
+            "title": "Learning transferable visual models from natural language supervision",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Aditya Ramesh",
+                "Prafulla Dhariwal",
+                "Alex Nichol",
+                "Casey Chu",
+                "Mark Chen"
+            ],
+            "title": "Hierarchical text-conditional image generation with clip latents",
+            "venue": "arXiv preprint arXiv:2204.06125,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Aditya Ramesh",
+                "Mikhail Pavlov",
+                "Gabriel Goh",
+                "Scott Gray",
+                "Chelsea Voss",
+                "Alec Radford",
+                "Mark Chen",
+                "Ilya Sutskever"
+            ],
+            "title": "Zero-shot text-to-image generation",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Elad Richardson",
+                "Yuval Alaluf",
+                "Or Patashnik",
+                "Yotam Nitzan",
+                "Yaniv Azar",
+                "Stav Shapiro",
+                "Daniel Cohen-Or"
+            ],
+            "title": "Encoding in style: a stylegan encoder for image-to-image translation",
+            "venue": "In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Tal Ridnik",
+                "Emanuel Ben-Baruch",
+                "Asaf Noy",
+                "Lihi Zelnik-Manor"
+            ],
+            "title": "Imagenet-21k pretraining for the masses",
+            "venue": "arXiv preprint arXiv:2104.10972,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Robin Rombach",
+                "Andreas Blattmann",
+                "Dominik Lorenz",
+                "Patrick Esser",
+                "Bj\u00f6rn Ommer"
+            ],
+            "title": "High-resolution image synthesis with latent diffusion models",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Nataniel Ruiz",
+                "Yuanzhen Li",
+                "Varun Jampani",
+                "Yael Pritch",
+                "Michael Rubinstein",
+                "Kfir Aberman"
+            ],
+            "title": "Dreambooth: Fine tuning text-to-image diffusion models for subject-driven generation",
+            "venue": "arXiv preprint arXiv:2208.12242,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Chitwan Saharia",
+                "William Chan",
+                "Saurabh Saxena",
+                "Lala Li",
+                "Jay Whang",
+                "Emily Denton",
+                "Seyed Kamyar Seyed Ghasemipour",
+                "Burcu Karagol Ayan",
+                "S Sara Mahdavi",
+                "Rapha Gontijo Lopes"
+            ],
+            "title": "Photorealistic text-to-image diffusion models with deep language understanding",
+            "venue": "arXiv preprint arXiv:2205.11487,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Vadim Sushko",
+                "Edgar Sch\u00f6nfeld",
+                "Dan Zhang",
+                "Juergen Gall",
+                "Bernt Schiele",
+                "Anna"
+            ],
+            "title": "Khoreva. You only need adversarial supervision for semantic image synthesis",
+            "venue": "arXiv preprint arXiv:2012.04781,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Narek Tumanyan",
+                "Omer Bar-Tal",
+                "Shai Bagon",
+                "Tali Dekel"
+            ],
+            "title": "Splicing vit features for semantic appearance transfer",
+            "venue": "arXiv preprint arXiv:2201.00424,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Haohan Wang",
+                "Songwei Ge",
+                "Zachary Lipton",
+                "Eric P Xing"
+            ],
+            "title": "Learning robust global representations by penalizing local predictive power",
+            "venue": "In Advances in Neural Information Processing Systems,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Tengfei Wang",
+                "Ting Zhang",
+                "Bo Zhang",
+                "Hao Ouyang",
+                "Dong Chen",
+                "Qifeng Chen",
+                "Fang Wen"
+            ],
+            "title": "Pretraining is all you need for image-to-image translation",
+            "venue": "In arXiv,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Chenfei Wu",
+                "Jian Liang",
+                "Lei Ji",
+                "Fan Yang",
+                "Yuejian Fang",
+                "Daxin Jiang",
+                "Nan Duan. N"
+            ],
+            "title": "uwa: Visual synthesis pre-training for neural visual world creation",
+            "venue": "arXiv preprint arXiv:2111.12417,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Saining Xie",
+                "Zhuowen Tu"
+            ],
+            "title": "Holistically-nested edge detection",
+            "venue": "In Proceedings of the IEEE international conference on computer vision,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Jiahui Yu",
+                "Yuanzhong Xu",
+                "Jing Yu Koh",
+                "Thang Luong",
+                "Gunjan Baid",
+                "Zirui Wang",
+                "Vijay Vasudevan",
+                "Alexander Ku",
+                "Yinfei Yang",
+                "Burcu Karagol Ayan"
+            ],
+            "title": "Scaling autoregressive models for content-rich text-to-image generation",
+            "venue": "arXiv preprint arXiv:2206.10789,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Pan Zhang",
+                "Bo Zhang",
+                "Dong Chen",
+                "Lu Yuan",
+                "Fang Wen"
+            ],
+            "title": "Cross-domain correspondence learning for exemplar-based image translation",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Richard Zhang",
+                "Phillip Isola",
+                "Alexei A Efros",
+                "Eli Shechtman",
+                "Oliver Wang"
+            ],
+            "title": "The unreasonable effectiveness of deep features as a perceptual metric",
+            "venue": "In CVPR,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Xingran Zhou",
+                "Bo Zhang",
+                "Ting Zhang",
+                "Pan Zhang",
+                "Jianmin Bao",
+                "Dong Chen",
+                "Zhongfei Zhang",
+                "Fang Wen"
+            ],
+            "title": "Cocosnet v2: Full-resolution correspondence learning for image translation",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1. Introduction",
+            "text": "Image generation methods recently achieved remarkable success, allowing diverse and photorealistic image synthesis [4,11,44,46]. The majority of state-of-the-art generative models allow conditioning with class labels [2, 4, 11, 13] or text prompts [40, 41, 44, 46], however, applications require a more fine-grained control over the spatial composition of the generation result. While methods that use conditioning with segmentation maps [14] or strokes [34] achieve some spatial control over the generated image, sketching allows a more fine-grained specification of the target spatial layout, which makes it desirable for many creative applications.\nIn this paper, we propose MaskSketch, a method for\n*Boston University \u2020This work was done during an internship at Google. \u2021Google Research \u00a7Georgia Institute of Technology\nconditional image synthesis that uses sketch guidance to define the desired structure, and a pre-trained state-of-theart masked generative transformer, MaskGIT [4], to leverage a strong generative prior. We demonstrate the capability of MaskSketch to generate realistic images of a given structure for sketch-to-photo image translation. Sketch-tophoto [5, 20, 32] is one of the most challenging applications of structure-conditional generation due to the large domain gap between sketches and natural images. MaskSketch achieves a balance between realism and fidelity to the given structure. Our experiments show that MaskSketch outperforms state-of-the-art sketch-to-photo [20] and general unpaired image translation methods [6, 25, 37], according to standard metrics for image generation models [23] and user preference studies.\nIn MaskSketch, we formulate a structure similarity constraint based on the observation that the intermediate self-\nar X\niv :2\n30 2.\n05 49\n6v 1\n[ cs\n.C V\n] 1\n0 Fe\nb 20\n23\nattention maps of a generative transformer [4] encode rich structural information (see Fig. 2). We use this structure similarity constraint to guide the generated image towards the desired spatial layout [22, 48]. Our study shows that the proposed attention-based structure similarity objective is robust to the domain shift occurring in sketch-to-photo translation. The proposed structure-based sampling method leverages a pre-trained image generator, and does not require model finetuning or sketch-photo paired data. Moreover, it is significantly faster than other methods that exploit self-attention maps for guided image generation [48]. Figure 1 shows the translation results produced by our method on sketches of various levels of abstraction.\nThe limitations of existing sketch-to-photo translation methods [5, 20, 32] come from having to learn both an implicit natural domain prior and the mapping that aligns sketches to natural images, for which the domain gap is severe. MaskSketch, on the other hand, uses the strong generative prior of a pre-trained generative transformer, which allows highly realistic generation. In addition, MaskSketch uses the domain-invariant self-attention maps for structure conditioning, allowing its use on sketches of a wide range of abstraction levels.\nOur contributions can be summarized as follows: \u2022 We show that the self-attention maps of a masked gen-\nerative transformer encode important structural information and are robust to the domain shift between images and sketches. \u2022 We propose a sampling method based on self-attention similarity, balancing the structural guidance of an input sketch and the natural image prior. \u2022 We demonstrate that the proposed sampling approach, MaskSketch, outperforms state-of-the-art methods in unpaired sketch-to-photo translation. \u2022 To the best of our knowledge, MaskSketch is the first method for sketch-to-photo translation in the existing literature that produces photorealistic results requiring only class label supervision."
+        },
+        {
+            "heading": "2. Related Work",
+            "text": "While there is a vast volume of literature on image generative models thanks to recent progress ranging from generative adversarial networks [2, 18, 27] generative transformers [4, 13, 54] and diffusion models [11, 35, 40, 46], in this section, we focus on reviewing image-conditioned image generation, also known as image translation.\nSupervised image conditional generation Sketch-tophoto image translation is a special case of imageconditional image generation. Early conditional image generation methods were based on generative adversarial networks. For example, pix2pix [26] conditioned the generation result by minimizing the distance between the ground truth and the generated image; SPADE [38] and OASIS [47] used spatially-adaptive instance normalization to condition the resulting image on a segmentation map; CoCosNet [55] and CoCosNet V2 [57] warped the real reference image using a correlation matrix between the image and the given segmentation map. Similarly to MaskSketch, Makea-Scene and NUWA [14, 52] use a VQ-based transformer architecture and is designed to condition generation on semantic segmentation and text prompts. While these methods allow spatial conditioning, they are inapplicable for sketch-to-photo due to the lack of ground truth paired data, domain gap between sketches and segmentation maps and lack of efficient methods that extract semantic segmentation from sketches.\nUnsupervised image-conditional generation In unsupervised image-conditioned translation, the ground truth input and translation pairs are not available for training. For example, CycleGAN [58] used a cycle reconstruction loss to ensure a semantically consistent translation, UNIT [31], MUNIT [25], and StarGANv2 [8] disentangled domainspecific and shared information between the source and target image domains by mapping them to a shared latent embedding space. PSP [42] used StyleGAN [46] inversion along with style mixing for segmentation map- and edgeguided image translation. SDEdit [33] uses a diffusion model to translate the input strokes or segmentation maps to natural images.\nThe closest work to ours in this line may be SpliceVIT [48], which uses self-attention key self-similarity extracted from the discriminative ViT (Dino [3]) to represent the structure of an input image. As pointed in [48], SpliceVIT works only in case when both the input and expected output images come from the same domain, which makes it inapplicable for sketch-to-photo translation. VQ-I2I [6] is another work on unsupervised image translation that leverages the generative power of a VQ-GAN [13]-based generative transformer. Unlike MaskSketch, VQ-I2I uses the embedding reconstruction loss for controllable generation.\nRecently, [15, 28, 45] also demonstrated how to leverage\npre-trained image generators for image synthesis based on novel conditioning inputs. These methods allow to replicate a given object or subject in the generated image. However, they do not allow to finely specify the spatial layout of the generated image as MaskSketch and typically require some degree of fine-tuning. Prompt-to-prompt tuning [22] uses the attention features to perform spatially aligned promptconditional generation. General image-conditional methods show remarkable results when the source and target domains are visually similar, e.g., translating horses to zebras, performing artistic style transfer, etc, however, they tend to struggle on the more challenging sketch-to-photo translation task. MaskSketch shows a promising alternative for transferring the spatial composition from sketches of various degrees of abstraction, since it requires no paired data or model training, thanks to leveraging a powerful pre-trained generator.\nSketch-to-photo translation The sketch-to-photo application received attention in recent years thanks to the advancement in the field of image generation. For example, SketchyGAN [5] proposes an a GAN-based approach based on edge-preserving image augmentations, ContextualGAN [32] leverages conditional GAN along with joint image-sketch representation, iSketchNFill [17] uses a gating mechanism to condition output images on the class label and an MUNIT-based generator to synthesize images with diverse appearance. Photosketcher [12] uses sketch-based image retrieval to compose a real image. PITI [51] is pretrained with ground truth edge maps and semantic segmentation maps to learn a domain invariant semantic representation. The state-of-the-art supervised method CoGS [20] minimizes the distances between the structure embeddings of the input sketch and the corresponding ground truth real image in the vector-quantized space of a VQ-GAN [13]. In contrast, MaskSketch does not rely on paired data for training, which allows it to use sketches of different abstraction levels, as well as real photos."
+        },
+        {
+            "heading": "3. Method",
+            "text": "In this section, we describe the main components in MaskSketch that introduce sketch-guided spatial control to a conditional masked image generator. We first review masked image generation in Section 3.1. Then we introduce the two main components of MaskSketch, a structure similarity distance in Section 3.2, and structure-guided parallel sampling in Section 3.3. Finally, we discuss how to balance the trade-off between structure fidelity and generation realism in Section 3.4."
+        },
+        {
+            "heading": "3.1. Background: Masked Image Generation",
+            "text": "Masked image generation is a state-of-the-art approach for efficient generation [4, 19, 29], combining the strengths of masked token modeling [10] and non-autoregressive sampling [16]. It encodes images as discrete sequences of visual tokens using a VQ-GAN encoder [13], and then trains a bi-directional transformer (BERT [10]) to model natural image distribution in the discrete token sequence space. Generation is performed iteratively, where significant gains in efficiency are obtained by using parallel sampling instead of auto-regressive sampling. MaskGIT [4] starts from a blank canvas where all visual tokens are masked. At each sampling iteration, all the missing tokens are sampled in parallel, and a rejection criteria is used, where the tokens with low model likelihood are masked and will be re-predicted in the next refinement iteration. See Figure 3 (left) for an illustration of a single MaskGIT decoding step. MaskSketch extends the parallel sampling of MaskGIT to sample images that follow the structure determined by an input image (Fig. 3, right), as described in the following sections."
+        },
+        {
+            "heading": "3.2. Structure Similarity via Attention Maps",
+            "text": "We consider two images to be structurally similar when their self-similarity maps are close to each other. MaskSketch leverages the self-similarity encoded in the selfattention maps of a masked generative transformer (Sec-\ntion 3.1) to define structural distance. One key observation in our work is that a class-conditional MaskGIT trained on ImageNet shows a high degree of domain invariance in its attention maps and is able to capture the self-similarity in out-of-distribution domains such as sketches (Fig. 2).\nFormally, we define a structural distance based on a comparison of self-attention maps. Let Z be the indices representing the VQ-GAN [13] dictionary of vector-quantized image tokens. Let x \u2208 ZN be sequence of N discrete tokens obtained using a VQ-GAN encoding an input image in the vector-quantized space. Given an input image x and a generated image y, let A`(x) \u2208 [0, 1]N\u00d7N be the transformer self-attention map at layer `. Each row in A`(x) represents the attention weights of each token with respect to all tokens, normalized with a softmax function. We define the structural distance between the ith tokens of images x and y across layers L as:\ndiS(x,y) = \u2211 `\u2208L dJ ( A`i(x), A ` i(y) ) , (1)\nwhere dJ is the Jeffrey\u2019s divergence:\ndJ(u,v) = KL (u\u2016v) +KL (v\u2016u)\n2 . (2)\nIntuitively, the image regions represented by the ith tokens of x and y are structurally similar if their distributions of attention self-similarities are close to each other."
+        },
+        {
+            "heading": "3.3. Structure-guided Parallel Decoding",
+            "text": "MaskSketch adapts the parallel sampling of MaskGIT to take into account the structural similarity between the output and the reference input sketch. More precisely, the token rejection criteria in each decoding iteration is modified to also reject the sampled tokens that have low selfsimilarity score (1). The proposed structure-guided decoding strategy can also be seen as a greedy optimization technique that balances minimizing the structural distance and following the model\u2019s image prior.\nWhile MaskGIT sampling rejects token candidates with the lowest likelihood by masking them at the end of each decoding iteration, MaskSketch creates an additional mask that rejects tokens based on the structural similarity to the input sketch (see Fig. 3). At the end of one decoding iteration, we compute the logical OR between the confidencebased and the structure-based masks to optimize both realism and structure similarity (Sec. 3.4). The pseudocode of our algorithm is described in Algorithm 1. It relies on the function sample mask, which takes as input a vector of structure similarity scores ss and the number of masked elements k, and samples a mask by Gumbel top-k using ss to mask the tokens with the highest structure distance.\nThe choice of layers L selected for computing the structure similarity significantly impacts the generation results. Our experiments show that sampling with the attention maps extracted from the first layers results in nearly identical reconstruction of the given input image, whereas minimizing the structure distance based on the last layers results in images of diverse appearance that are spatially aligned with the input image at a high level, as shown in Fig. 4."
+        },
+        {
+            "heading": "3.4. Structure fidelity vs realism trade-off",
+            "text": "One of the biggest challenges in sketch-to-real translation is the immense domain gap between the source and target domains. The input sketches and natural images differ significantly not only in appearance, but also in the distribution of shapes and spatial composition. Due to the domain gap, optimization based solely on the structure distance often results in structurally similar but unrealistic images. To overcome this issue, we propose a combined masking approach that optimizes both structure fidelity and realism.\nTo navigate this trade-off, we use a parameter \u03bbs \u2208 [0, 1] to determine the proportion of tokens masked according to the structure similarity scores and those masked according to the model confidence or likelihood scores. Given an overall masking rate schedule function \u03b3(t) at step t, the structure-based mask rate is computed as \u03bbs\u03b3(t), whereas the confidence-based mask rate is (1 \u2212 \u03bbs)\u03b3(t). Two independent masks, mst and m c t , are computed for the structurebased and confidence-based scores, respectively. The final mask at iteration t is then computed as the logical OR between mst and m c t .\nClassifier-free Guidance To further improve the level of realism in the translation result, we use classifier-free guidance [14, 24, 35] when computing the model likelihood scores. Specifically, for a given sequence of sampled tokens y\u0304 and input image x, we use the pre-trained generator G to compute the per-token logits log p(y\u0304(i)|x, c) conditioned on the correct class c and logits conditioned on a random class r: log p(y\u0304(i)|x, r), and calibrate the final confidencebased scores as follows:\nsc(i) = log p(y\u0304(i)|x, c) \u2212 \u03b2 (log p(y\u0304(i)|x, c)\u2212 log p(y\u0304(i)|x, r)) (3)\nAlgorithm 1 MaskSketch sampling Input: Pre-trained BERT generator G, structure and confidence masking schedule function \u03b3(t), structure-based sampling ratio \u03bbs, input sketch x, layer(s) `. Output: Generated image encoding y0\n1: A`(x)\u2190 attn map(G,x, `) 2: Initialize yT 3: for t = T \u2212 1 . . . 0 do 4: y\u0304t, s c t = G(yt+1) 5: A`(y\u0304t) = attn map(G, y\u0304t, `) 6: sst \u2190 { dJ ( A`i(y\u0304t), A ` i(x) )} i=1...N 7: mst = sample mask(s s t , b\u03bbs\u03b3(t) \u00b7Nc) 8: mct = sample mask(s c t , b(1\u2212 \u03bbs)\u03b3(t) \u00b7Nc) 9: mt = m s t \u2228 mct\n10: yt = y\u0304t mt 11: end for\nwhere \u03b2 is the classifier-free guidance scale. Figure 5 shows how varying \u03b2 affects the fidelity-realism trade-off.\nGlobal CLIP-based rejection sampling Minimization of the structure similarity distance in the space of visual tokens is a discrete optimization problem that cannot be efficiently tackled via continuous optimization methods such as gradient descent. Moreover, since MaskGIT was trained to minimize a different objective, such a greedy optimization process requires more iterations than regular sampling. To increase the stability of the proposed method, we improve the overall fidelity by producing multiple translation samples for a given sketch with different random seeds and guidance scales \u03b2, and selecting the image that yields the highest structure fidelity and realism according to a CLIPbased score. Inspired by the recent success in photo-tosketch mapping with CLIP [39] domain-invariant representations [49], we use the L1 distance between features of a CLIP encoder CLIPs(x,y) of the input image x of class c and generation result y to estimate the structure similarity. We also use the CLIP similarity score CLIPr(c,y) between the translated image and the corresponding prompt prompt(c) = \u2018photo of a c\u2019 to assess the realism for each generated example, more details can be found in Appendix F. We normalize the scores across R trials and keep the result with the highest overall quality score:\nyfinal = argmax y\u2208{y1...yR}\n(1\u2212CLIPs(x,y))2 CLIPr(c,y) (4)\nTab. 5 in the Appendix shows how the proposed CLIPbased selection approach improves the overall generation result as the number of sampling trials increases."
+        },
+        {
+            "heading": "4. Experiments",
+            "text": "Experimental Setup In all experiments, we used a classconditional MaskGIT model pretrained on the ImageNet 2012 [9] dataset with the output resolution 256\u00d7256. We used layers 1, 3, 16, 20, 21 and 22 to formulate the structure preservation objective. We validated this choice on 100 random sketches considering structure preservation and realism. In our experiments, for each input sketch, we sample the images four times (R = 4) with different classifier-free guidance scales (i.e. \u03b2 \u2208 {0.0, 0.05, 0.1, 0.25}), and select the one that maximizes the CLIP-based objective in Eq. (4). We use a linear decay mask rate schedule in all experiments, starting from \u03b3(T ) = 0.95 and stopping sampling at the mask rate \u03b3(0) = 0.25, which results in higher realism and reduces artifacts associated with structure-based sampling. To further increase realism, we postprocess the generated samples with Token-Critic refinement [29], which adds 32 sampling iterations. See Appendix D for more details. We generate each image using T = 500 sampling iterations, and the overall sampling time for a batch of 8 images is\non average 750 seconds on a single TPUv4, including four trials and the CLIP-based evaluation.\nBaselines We consider well-established unpaired imageto-image translation methods as baselines. Specifically, we used CUT [37], MUNIT [25] and VQI2I [6] in our comparisons. We note that for sketch-to-photo translation, methods that use ground truth attribute information to translate from one attribute to another, e.g. StarGAN [7, 8], fail to minimize the gap between sketch and real domains [20]. CUT [37] uses a contrastive objective to ensure structural similarity between the corresponding patches of the input image and the translation result. MUNIT [25] is a GANbased model that uses latent embedding reconstruction losses to disentangle appearance from structure. VQI2I [6] uses a vector-quantized GAN to encode images into sequences of tokens representing the structure and appearance of the input images, and uses embedding reconstruction losses to enforce the disentanglement of the structure. Since these methods are not class-conditional, we trained them on each class separately. We report the average result across the examples of all classes as well as the results of training on the entire datasets.\nAlthough MaskSketch does not utilize paired data, we also consider as baseline the state-of-the-art paired sketchto-photo method CoGS [20]. We note that VQI2I, CoGS and MUNIT allow diverse sampling with an additional appearance image or vector as input, whereas MaskSketch samples diverse results by varying the random seed.\nDatasets For qualitative evaluation of MaskSketch, we propose OpenSketches, a novel dataset made of 200 openly licensed sketches. OpenSketches contains real sketches drawn with pencil and paper, as well as digital ske\u2018tches. Furthermore, to mimick realistic, highly detailed sketches, we utilized the open source implementation of Stable Diffusion [44] to generate input examples. All the sketches shown in this manuscript are from OpenSketches.\nFor quantitative evaluation, we considered two datasets: ImageNet-Sketch [50], a dataset of 50 real sketches of 1000 classes of ImageNet-2012 [9] and the Pseudosketches dataset [20], consisting of pairs of ground truth real images and their corresponding automatically extracted edge maps from 125 classes from the ImageNet21K [43] dataset. We present qualitative results for these datasets in Appendix C1. In our quantiative experiments, we report the results on two versions of the datasets: 1) full: using all examples from each of the datasets, and 2) 10-class: using the 10 classes that are reported to result in the highest-quality translation results in CoGS [20]: \u201csongbird\u201d, \u201cpizza\u201d, \u201cvolcano\u201d, \u201czebra\u201d, \u201ccastle\u201d, \u201cdoor\u201d, \u201cshark\u201d, \u201cmushroom\u201d,\n1Not shown in the main manuscript due to copyright concerns.\n\u201ccup\u201d, \u201clion\u201d. The 10-class subsets of Pseudosketches and ImageNet-Sketch consist of 1,749 and 508 examples respectively, whereas the full datasets consist of 113,370 examples and 52,888 examples, respectively. For the 10-class subsets, we trained unpaired image translation baselines that are not class-conditional on each class separately and reported the aggregated results over all 10 classes for a fair comparison with the class-conditional MaskSketch. For the full version of the datasets, we train the baseline methods on all classes without class conditioning. Since ImageNetSketch does not provide ground truth paired data, it is impossible to train CoGS [20] on this dataset, therefore we use the model trained on Pseudosketches for both datasets.\nMetrics Quantitative evaluation of sketch-to-photo translation consists of two aspects: evaluation of realism of the generation results, and evaluation of structure fidelity with respect to the input sketch. To estimate realism, we use the FID score [23]. To assess generation diversity, we used the LPIPS-based diversity score [36], which computes the average LPIPS [56] distance between the generated examples. For a fair comparison and due to the limited number of samples in the 10-class subsets, we report the FID and LPIPS results over 10,000 examples generated with different \u2018appearance\u2019 inputs with the baseline methods CoGS, MUNIT and VQI2I, and with different seeds for MaskSketch. For CUT, we diversify the generated set with augmentations. The FID score is computed with respect to the images from ImageNet [9] for the ImageNet-Sketch experiments, and with respect to the ground truth Pseudosketches images for the Pseudosketches experiments.\nTo provide additional quantitative evaluation of structure preservation quality and realism, we also report the two CLIP-based metrics defined in Sec. 3.4: image feature distance and prompt similarity score. The CLIP feature distance metric is more appropriate for the evaluation of structure preservation quality than the edge-based metrics [20] since the CLIP features are more invariant to the domain gap as shown in the recent works on image-to-sketch translation [49]. We note that these metrics are identical to the CLIP-based rejection sampling in Sec. 3, and we include the quantitative results without CLIP-based sampling in Appendix C.1.\nUser Preference Studies Quantitative evaluation of structure fidelity is challenging due to the distribution shift between the shapes of real objects and abstract sketches and outlines. To complement the quantitative results, we performed user preference studies. We asked users the question: \u201dGiven the task of converting the sketch shown on the left into a realistic photo, which result do you prefer?\u201d. Users were asked to pick one result among the five compared methods (CoGS, MUNIT, VQI2I, CUT and MaskSketch) according to their preference. We collected three\npreference evaluations for each example in the 10-class ImageNet-Sketch and Pseudosketches datasets. Finally, we counted only unanimous votes to guarantee statistical significance. Please see Appendix E for more details."
+        },
+        {
+            "heading": "5. Results",
+            "text": "Quantitative Results In Tab. 1, we report the quantitative evaluation results on the 10-class subsets of ImageNetSketch and Pseudosketch. Additionally, we report the FID and LPIPS diversity scores over the full ImageNet-Sketch and Pseudosketch datasets in Tab. 2. The results on the 10-class subsets indicate an advantage of MaskSketch in terms of realism and diversity, with a two-fold decrease in the FID score compared to the baseline MUNIT on both ImageNet-Sketch and Pseudosketch datasets. In our experiments, MaskSketch outperformed the baselines on the entire ImageNet-Sketch dataset of real sketches, including the fully-supervised CoGS on the Pseudosketches. Notably, general image translation methods, such as MUNIT and CUT, outperform the fully-supervised CoGS in a classsupervised setup. As seen from the FID and LPIPS results, VQI2I struggles to generalize on the relatively small ImageNet-Sketch dataset that contains only 50 examples in each class, mainly due to mode collapse.\nQualitative Results Qualitative comparison shows that the baseline image translation methods, including the supervised CoGS, capture the overall layout and outlines of the input sketch but sometimes fail to produce realistic results. For instance, the GAN-based architectures, namely CUT and MUNIT, produce structurally similar results by practically recoloring the input sketch, which results in a sub-par realism, especially on the more abstract sketches. In our experiments, the VQ-GAN-based VQI2I model failed to learn the correspondences between hand-drawn sketches from ImageNet-Sketch and images from the real photo domain due to a limited number of examples in ImageNetSketch, therefore we observe a severe mode collapse on most classes. The fully-supervised CoGS sometimes failed to produce realistic and semantically meaningful results, especially on the hand-drawn sketches. MaskSketch achieved a good balance between realism and structure fidelity on the majority of sketches from ImageNet-Sketch. However, MaskSketch struggled to preserve structure on some examples from Pseudosketches due to the extreme complexity of the extracted edge maps.\nLimitations The main limitation of MaskSketch is computational efficiency. To achieve a successful optimization\nof the structural constraint, MaskSketch requires significantly more sampling iterations than the regular MaskGIT. Furthermore, to improve the stability of results it was necessary to apply a multiple trials rejection scheme. Two other important limitations for MaskSketch are the coarse granularity of the attention maps in a transformer, and the flexibility of the prior model, in our case an ImageNet-pretrained MaskGIT. Figure 7 illustrates the common failure cases of our method: out-of-distribution scene composition scarcely or not represented in the training set of MaskGIT, multiple objects forming an unrealistic scene, as well as the complex scenes with multiple foreground and background objects."
+        },
+        {
+            "heading": "6. Conclusion",
+            "text": "We proposed MaskSketch, a sketch-guided image generation method that allows control over the spatial layout of the generation result. MaskSketch achieves high realism and structure preservation without pairwise supervision, does not require model finetuning and works on sketches of various levels of abstraction. We show that the self-attention maps of the intermediate layers of a masked generative\ntransformer encode important structural information of the input image and are sufficiently domain-invariant, which allows their use in a structure similarity constraint. Our experimental results show that the proposed attention-based sampling approach outperforms state-of-the-art sketch-tophoto and general image translation methods in terms of both realism and structure fidelity.\nAcknowledgements We thank Tali Dekel, Huiwen Chang, Lu Jiang, and David Salesin for their insightful advice and guidance. This work was done during an internship at Google Research."
+        },
+        {
+            "heading": "A. Method implementation details",
+            "text": "MaskSketch is implemented in Jax [1] / Flax [21] similarly to the official implementation of MaskGIT. We will release the implementation of MaskSketch upon acceptance. We used an ImageNet-pretrained 256\u00d7256 VQGAN encoder-decoder and a 24-layer BERT transformer in all experiments.2 In all experiments, we used the following parameters:\n\u2022 layers 1, 3, 16, 18, 20, 21, 22 for the structure distance objective in Eq. (1)\n\u2022 Gumbel temperature 0 for ImageNet-Sketch and 0.001 for Pseudosketches experiments.\n\u2022 4 sampling trials for ImageNet-Sketch and 3 sampling trials for the Pseudosketches.\n\u2022 1000 iterations for ImageNet-Sketch and 500 iterations for Pseudosketches.\n\u2022 Classifier-free guidance scales of (0., 0.1, 0.25, 0.5) for ImageNet-Sketch and (0., 0.05, 0.1) for Pseudosketches, varied for each iteration trial accordingly.\n\u2022 \u03bbs is set to 0.9 for ImageNet-Sketch and to 0.95 for Pseudosketches.\n\u2022 Starting mask rate is set to 0.95 for both datasets, and the end mask rate is 0.25 for ImageNet-Sketch and 0.33 for Pseudosketches.\n\u2022 Token-Critic parameters: We used the Token-Critic refinement ratio rtc = 0.5 and rtc = 0.6 for ImageNetSketch and Pseudosketches experiments, respectively, and set the number of refinement steps to Ntc = 32 (explained in Appendix D)."
+        },
+        {
+            "heading": "B. Structure-guided sampling",
+            "text": "Please see Fig. 8 for more examples of the structureguided sampling across the first and last layers of MaskGIT (extending Fig. 4)."
+        },
+        {
+            "heading": "C. Results on ImageNet-Sketch and Pseudosketches",
+            "text": "Unfortunately, we cannot include the illustration on ImageNet-Sketch and Pseudosketches in the main manuscript due to copyright concerns.\nC.1. Ablation of CLIP-based rejection"
+        },
+        {
+            "heading": "D. Token-Critic refinement",
+            "text": "In our experiments, we used the ImageNet-trained Token-Critic [29] refinement to further improve realism of the translation results. In Token-Critic refinement, the tokens of a sampled image are passed to a critic transformer model that outputs a conditional likelihood score for each token. The score is high for tokens that are likely under the data distribution and low otherwise. We refine a sampled image by using the Token-Critic scores as the confidence scores in Algorithm 1, and setting \u03bbs = 0 (no structure guidance). The refinement process uses a mask rate of rtc. We used rtc = 0.5 and rtc = 0.6 for ImageNet-Sketch and Pseudosketches experiments, respectively, and set the number of refinement steps to Ntc = 32, and in both experiments, the mask ratio varies across iterations according to the cosine schedule."
+        },
+        {
+            "heading": "E. User preference study",
+            "text": "For all the validation images in the ImageNet 10-classes and Pseudosketches 10-classes datasets, we asked the participants to pick one option that best answers the question: \u201cGiven the task of converting the sketch shown on the left into a realistic photo, which result do you prefer?\u201d. For each example, we got the answers from three participants, and we report the unanimous voting results (3/3) in Tab. 1. We report the ratios of choices of the user preference study in Tab. 3: statistics for the unanimous votes (3/3), exactly two out of three votes (2/3) as well as the overall preference. We also report the total number of choices in Tab. 4.\n2The VQGAN and transformer model checkpoints used in our experiments are found in https://github.com/google-research/ maskgit."
+        },
+        {
+            "heading": "F. CLIP-based metrics",
+            "text": "Structure distance To estimate structure similarity between the input sketch x and the translation result y, we compute L1-distance between the ResNet101-based CLIP image encoder intermediate layer features: CLIPs(x,y) = ||CLIPl(x)\u2212CLIPl(y)||1, where l is the ResNet-101 layer block index. In our experiments, we use the last layer block (l = 4).\nPrompt similarity To asses realism and semantic accuracy of the translation result, we use CLIP zero-shot classification to estimate the relative similarity between the translated image and the prompt \u201cPhoto of a c\u201d, where c is the ground truth class label index corresponding to the input sketch. Therefore, given an input sketch x of class c, the prompt similarity is computed as:\nCLIPr(c,y) = softmax{CLIP (y)TCLIP (p)}[c]\nwhere p = [\u201cPhoto of a m\u201d \u2200m \u2208 \u2126], \u2126 is the set of class labels in the dataset."
+        },
+        {
+            "heading": "G. Comparison with PITI",
+            "text": "In this section, we provide the quantitative and qualitative comparison with the concurrent supervised image-toimage translation method PITI [51]. For a fair comparison, we compared the generation results on the four classes from the intersection of classes of the MS COCO [30] dataset that was used to train PITI and ImageNet-Sketch 10 classes we used to compare with the other baseline methods. Since PITI is sensitive to the modality of the input (e.g., it produces subpar results on inverted sketches), we used PITI \u2019s edge extraction pipeline on the input sketches before translating with PITI. The CLIP-based evaluation results on Tab. 6 show that PITI results are slightly better in terms of structure fidelity, however they are generally less realistic than MaskSketch translation results. An important disadvantage of PITI is its sensitivity to the domain shift: the edge extraction method HED [53] that was used to train PITI removes some edges in the given sketch, which results in errors in structure and even misclassification of the input sketch (e.g. PITI typically confuses the round pizza shape with other round objects, such as watch or bowl)."
+        }
+    ],
+    "title": "MaskSketch: Unpaired Structure-guided Masked Image Generation",
+    "year": 2023
+}

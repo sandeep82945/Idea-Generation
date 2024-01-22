@@ -1,0 +1,633 @@
+{
+    "abstractText": "Using the computational resources of an untrusted third party to crack a password hash can pose a high number of privacy and security risks. The act of revealing the hash digest could in itself negatively impact both the data subject who created the password, and the data controller who stores the hash digest. This paper solves this currently open problem by presenting a Privacy-Preserving Password Cracking protocol (3PC), that prevents the third party cracking server from learning any useful information about the hash digest, or the recovered cleartext. This is achieved by a tailored anonymity set of decoy hashes, based on the concept of predicate encryption, where we extend the definition of a predicate function, to evaluate the output of a one way hash function. The protocol allows the client to maintain plausible deniability where the real choice of hash digest cannot be proved, even by the client itself. The probabilistic information the server obtains during the cracking process can be calculated and minimized to a desired level. While in theory cracking a larger set of hashes would decrease computational speed, the 3PC protocol provides constant-time lookup on an arbitrary list size, bounded by the input/output operation per second (IOPS) capabilities of the third party server, thereby allowing the protocol to scale efficiently. We demonstrate these claims both theoretically and in practice, with a real-life use case implemented on an FPGA architecture.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Norbert Tihanyi"
+        },
+        {
+            "affiliations": [],
+            "name": "Tamas Bisztray"
+        },
+        {
+            "affiliations": [],
+            "name": "Bertalan Borsos"
+        },
+        {
+            "affiliations": [],
+            "name": "Sebastien Raveau"
+        }
+    ],
+    "id": "SP:0ba46e77b5bec594f3b26d51cd91efa72f5287cc",
+    "references": [
+        {
+            "authors": [
+                "L. O\u2019Gorman"
+            ],
+            "title": "Comparing passwords, tokens, and biometrics for user authentication",
+            "venue": "Proceedings of the IEEE, vol. 91, no. 12, pp. 2021\u20132040, Dec. 2003. [Online]. Available: http://ieeexplore.ieee.org/ document/1246384/",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Srinivas"
+            ],
+            "title": "One step closer to a passwordless future",
+            "venue": "May 2022. [Online]. Available: https://blog.google/technology/ safety-security/one-step-closer-to-a-passwordless-future/",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Bonneau",
+                "C. Herley",
+                "P.C. v. Oorschot",
+                "F. Stajano"
+            ],
+            "title": "The Quest to Replace Passwords: A Framework for Comparative Evaluation of Web Authentication Schemes",
+            "venue": "2012 IEEE Symposium on Security and Privacy, May 2012, pp. 553\u2013567, iSSN: 2375-1207.",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "K. Siddique",
+                "Z. Akhtar",
+                "Y. Kim"
+            ],
+            "title": "Biometrics vs passwords: a modern version of the tortoise and the hare",
+            "venue": "Computer Fraud & Security, vol. 2017, no. 1, pp. 13\u201317, Jan. 2017. [Online]. Available: https://linkinghub.elsevier.com/retrieve/pii/S1361372317300076",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "P.A. Grassi",
+                "J.L. Fenton",
+                "E.M. Newton",
+                "R.A. Perlner",
+                "A.R. Regenscheid",
+                "W.E. Burr",
+                "J.P. Richer",
+                "N.B. Lefkovitz",
+                "J.M. Danker",
+                "Y.-Y. Choong",
+                "K.K. Greene",
+                "M.F. Theofanos"
+            ],
+            "title": "Digital identity guidelines: authentication and lifecycle management",
+            "venue": "National Institute of Standards and Technology, Tech. Rep., Jun. 2017. [Online]. Available: https: //nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-63b.pdf",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "N. Tihanyi",
+                "A. Kovacs",
+                "G. Vargha",
+                "A. Lenart"
+            ],
+            "title": "Unrevealed Patterns in Password Databases Part One: Analyses of Cleartext Passwords",
+            "venue": "Technology and Practice of Passwords, ser. Lecture Notes in Computer Science, S. F. Mjolsnes, Ed. Cham: Springer International Publishing, 2015, pp. 89\u2013101.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "P. Kamal"
+            ],
+            "title": "Security of Password Hashing in Cloud",
+            "venue": "Journal of Information Security, vol. 10, no. 2, pp. 45\u201368, Feb. 2019, number: 2 Publisher: Scientific Research Publishing. [Online]. Available: http://www.scirp.org/Journal/Paperabs.aspx?paperid=90861",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J. Bonneau",
+                "C. Herley",
+                "P.C. van Oorschot",
+                "F. Stajano"
+            ],
+            "title": "Passwords and the evolution of imperfect authentication",
+            "venue": "Communications of the ACM, vol. 58, no. 7, pp. 78\u201387, Jun. 2015. [Online]. Available: https://dl.acm.org/doi/10.1145/2699390",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "M. Dell\u2019Amico",
+                "P. Michiardi",
+                "Y. Roudier"
+            ],
+            "title": "Password Strength: An Empirical Analysis",
+            "venue": "2010 Proceedings IEEE INFOCOM, Mar. 2010, pp. 1\u20139, iSSN: 0743-166X.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "M. Weir",
+                "S. Aggarwal",
+                "M. Collins",
+                "H. Stern"
+            ],
+            "title": "Testing metrics for password creation policies by attacking large sets of revealed passwords",
+            "venue": "Proceedings of the 17th ACM conference on Computer and communications security - CCS \u201910. Chicago, Illinois, USA: ACM Press, 2010, p. 162. [Online]. Available: http://portal.acm.org/citation.cfm?doid=1866307.1866327 14",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "S.M. Egelman",
+                "S. Komanduri",
+                "R. Shay",
+                "P.G. Kelley",
+                "M.L. Mazurek",
+                "L. Bauer",
+                "N. Christin",
+                "L.F. Cranor"
+            ],
+            "title": "Of Passwords and People: Measuring the Effect of Password-Composition Policies",
+            "venue": "NIST, May 2011, last Modified: 2017-02-19T20:02-05:00 Publisher: Serge M. Egelman, Saranga Komanduri, Richard Shay, Patrick G. Kelley, Michelle L. Mazurek, Lujo Bauer, Nicolas Christin, Lorrie F. Cranor. [Online]. Available: https://www.nist.gov/publications/ passwords-and-people-measuring-effect-password-composition-policies",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "Y.-Y. Choong",
+                "M.F. Theofanos",
+                "H.-K. Liu"
+            ],
+            "title": "United States Federal Employees\u2019 Password Management Behaviors &#150; A Department of Commerce Case Study",
+            "venue": "NIST, Apr. 2014, last Modified: 2018- 11-10T10:11-05:00 Publisher: Yee-Yin Choong, Mary F. Theofanos, Hung-Kung Liu. [Online]. Available: https://www.nist.gov/publications",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "B. Ewaida"
+            ],
+            "title": "Pass-the-hash attacks: Tools and Mitigation",
+            "venue": "2010. [Online]. Available: https://www.sans.org/white-papers/33283/",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "Y. Li",
+                "H. Wang",
+                "K. Sun"
+            ],
+            "title": "Personal Information in Passwords and Its Security Implications",
+            "venue": "IEEE Transactions on Information Forensics and Security, vol. 12, no. 10, pp. 2320\u20132333, Oct. 2017. [Online]. Available: http://ieeexplore.ieee.org/document/7931642/",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "D. Wang",
+                "P. Wang",
+                "D. He",
+                "Y. Tian"
+            ],
+            "title": "Birthday, name and bifacialsecurity: understanding passwords of Chinese web users",
+            "venue": "Proceedings of the 28th USENIX Conference on Security Symposium, ser. SEC\u201919. USA: USENIX Association, Aug. 2019, pp. 1537\u20131554.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "R. Veras",
+                "C. Collins",
+                "J. Thorpe"
+            ],
+            "title": "On the Semantic Patterns of Passwords and their Security Impact",
+            "venue": "Proceedings 2014 Network and Distributed System Security Symposium. San Diego, CA: Internet Society, 2014. [Online]. Available: https://www.ndss-symposium.org/ndss2014/ programme/semantic-patterns-passwords-and-their-security-impact/",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "R.L. Rivest",
+                "L. Adelmann",
+                "M.L. Dertouzos"
+            ],
+            "title": "On DataBanks And Privacy Homomorphisms",
+            "venue": "Foundations of Secure Computation, 1987. [Online]. Available: http://people.csail.mit.edu/rivest/ RivestAdlemanDertouzos-OnDataBanksAndPrivacyHomomorphisms. pdf",
+            "year": 1987
+        },
+        {
+            "authors": [
+                "M. Alloghani",
+                "M.M. Alani",
+                "D. Al-Jumeily",
+                "T. Baker",
+                "J. Mustafina",
+                "A. Hussain",
+                "A.J. Aljaaf"
+            ],
+            "title": "A systematic review on the status and progress of homomorphic encryption technologies",
+            "venue": "Journal of Information Security and Applications, vol. 48, p. 102362, Oct. 2019. [Online]. Available: https://www.sciencedirect.com/science/article/pii/ S2214212618306057",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "P. Parmar",
+                "S. Padhar",
+                "S. Patel",
+                "N. Bhatt",
+                "R. Jhaveri"
+            ],
+            "title": "Survey of Various Homomorphic Encryption algorithms and Schemes",
+            "venue": "International Journal of Computer Applications, vol. 91, Mar. 2014.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "A. Acar",
+                "H. Aksu",
+                "A.S. Uluagac",
+                "M. Conti"
+            ],
+            "title": "A Survey on Homomorphic Encryption Schemes: Theory and Implementation",
+            "venue": "ACM Computing Surveys, vol. 51, no. 4, pp. 79:1\u201379:35, Jul. 2018. [Online]. Available: https://doi.org/10.1145/3214303",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "D. Hoover",
+                "B. Kausik"
+            ],
+            "title": "Software smart cards via cryptographic camouflage",
+            "venue": "Proceedings of the 1999 IEEE Symposium on Security and Privacy (Cat. No.99CB36344). Oakland, CA, USA: IEEE Comput. Soc, 1999, pp. 208\u2013215. [Online]. Available: http: //ieeexplore.ieee.org/document/766915/",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "H. Bojinov",
+                "E. Bursztein",
+                "X. Boyen",
+                "D. Boneh"
+            ],
+            "title": "Kamouflage: Loss- Resistant Password Management",
+            "venue": "Computer Security \u2013 ESORICS 2010, ser. Lecture Notes in Computer Science, D. Gritzalis, B. Preneel, and M. Theoharidou, Eds. Berlin, Heidelberg: Springer, 2010, pp. 286\u2013302.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "A. Juels",
+                "T. Ristenpart"
+            ],
+            "title": "Honey Encryption: Security Beyond the Brute-Force Bound",
+            "venue": "May 2014.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "A. Juels",
+                "R.L. Rivest"
+            ],
+            "title": "Honeywords: making password-cracking detectable",
+            "venue": "Proceedings of the 2013 ACM SIGSAC conference on Computer & communications security - CCS \u201913. Berlin, Germany: ACM Press, 2013, pp. 145\u2013160. [Online]. Available: http://dl.acm.org/citation.cfm?doid=2508859.2516671",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Jennifer Pullman",
+                "Kurt Thomas",
+                "Elie Bursztein"
+            ],
+            "title": "Protect your accounts from data breaches with Password Checkup",
+            "venue": "2019. [Online]. Available: https://security.googleblog.com/2019/02/ protect-your-accounts-from-data.html",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "K. Thomas",
+                "J. Pullman",
+                "K. Yeo",
+                "A. Raghunathan",
+                "P.G. Kelley",
+                "L. Invernizzi",
+                "B. Benko",
+                "T. Pietraszek",
+                "S. Patel",
+                "D. Boneh",
+                "E. Bursztein"
+            ],
+            "title": "Protecting accounts from credential stuffing with password breach alerting",
+            "venue": "2019, pp. 1556\u20131571. [Online]. Available: https: //www.usenix.org/conference/usenixsecurity19/presentation/thomas",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "L. Li",
+                "B. Pal",
+                "J. Ali",
+                "N. Sullivan",
+                "R. Chatterjee",
+                "T. Ristenpart"
+            ],
+            "title": "Protocols for Checking Compromised Credentials",
+            "venue": "Proceedings of the 2019 ACM SIGSAC Conference on Computer and Communications Security. London United Kingdom: ACM, Nov. 2019, pp. 1387\u20131403. [Online]. Available: https://dl.acm.org/doi/10.1145/3319535.3354229",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Z. Hou",
+                "D. Wang"
+            ],
+            "title": "New Observations on Zipf\u2019s Law in Passwords",
+            "venue": "IEEE Transactions on Information Forensics and Security, pp. 1\u20131, 2022. [Online]. Available: https://ieeexplore.ieee.org/document/ 9777714/",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Bonneau"
+            ],
+            "title": "The Science of Guessing: Analyzing an Anonymized Corpus of 70 Million Passwords",
+            "venue": "2012 IEEE Symposium on Security and Privacy, May 2012, pp. 538\u2013552, iSSN: 2375-1207.",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "J. Blocki",
+                "A. Datta",
+                "J. Bonneau"
+            ],
+            "title": "Differentially Private Password Frequency Lists",
+            "venue": "Proceedings 2016 Network and Distributed System Security Symposium. San Diego, CA: Internet Society, 2016. [Online]. Available: https://www.ndss-symposium.org/wp-content/uploads/2017/ 09/differentially-private-password-frequency-lists.pdf",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "D. Malone",
+                "K. Maher"
+            ],
+            "title": "Investigating the Distribution of Password Choices",
+            "venue": "Computing Research Repository - CORR, Apr. 2011.",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "S. Aggarwal",
+                "S. Houshmand",
+                "M. Weir"
+            ],
+            "title": "New Technologies in Password Cracking Techniques",
+            "venue": "Cyber Security: Power and Technology, ser. Intelligent Systems, Control and Automation: Science and Engineering, M. Lehto and P. Neittaanm\u00e4ki, Eds. Cham: Springer International Publishing, 2018, pp. 179\u2013198. [Online]. Available: https://doi.org/10.1007/978-3-319-75307-2 11",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Weir",
+                "S. Aggarwal",
+                "B. d. Medeiros",
+                "B. Glodek"
+            ],
+            "title": "Password Cracking Using Probabilistic Context-Free Grammars",
+            "venue": "2009 30th IEEE Symposium on Security and Privacy, May 2009, pp. 391\u2013405, iSSN: 2375-1207.",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "A. Kanta",
+                "I. Coisel",
+                "M. Scanlon"
+            ],
+            "title": "PCWQ: A Framework for Evaluating Password Cracking Wordlist Quality",
+            "venue": "The 12th EAI International Conference on Digital Forensics and Cyber Crime, Dec. 2021, publisher: Springer. [Online]. Available: https: //markscanlon.co/papers/PasswordCrackingWordlistQuality.php",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A. Kanta",
+                "S. Coray",
+                "I. Coisel",
+                "M. Scanlon"
+            ],
+            "title": "How viable is password cracking in digital forensic investigation? Analyzing the guessability of over 3.9 billion real-world accounts",
+            "venue": "Digit. Investig., 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Galbally",
+                "I. Coisel",
+                "I. Sanchez"
+            ],
+            "title": "A New Multimodal Approach for Password Strength Estimation Part I: Theory and Algorithms",
+            "venue": "IEEE Transactions on Information Forensics and Security, vol. 12, no. 12, pp. 2829\u20132844, Dec. 2017. [Online]. Available: https://ieeexplore.ieee.org/document/7776908/",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "D. Wang",
+                "D. He",
+                "H. Cheng",
+                "P. Wang"
+            ],
+            "title": "fuzzyPSM: A New Password Strength Meter Using Fuzzy Probabilistic Context- Free Grammars",
+            "venue": "2016 46th Annual IEEE/IFIP International Conference on Dependable Systems and Networks (DSN). Toulouse, France: IEEE, Jun. 2016, pp. 595\u2013606. [Online]. Available: http: //ieeexplore.ieee.org/document/7579775/",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "S. Oesch",
+                "S. Ruoti"
+            ],
+            "title": "That Was Then, This Is Now: A Security Evaluation of Password Generation, Storage, and Autofill in Thirteen Password Managers",
+            "venue": "Dec. 2019, arXiv:1908.03296 [cs]. [Online]. Available: http://arxiv.org/abs/1908.03296",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J. Galbally",
+                "I. Coisel",
+                "I. Sanchez"
+            ],
+            "title": "A New Multimodal Approach for Password Strength Estimation. Part II: Experimental Evaluation",
+            "venue": "IEEE Transactions on Information Forensics and Security, vol. 12, no. 12, pp. 2845\u20132860, Dec. 2017, conference Name: IEEE Transactions on Information Forensics and Security.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "S. Gorbunov",
+                "V. Vaikuntanathan",
+                "H. Wee"
+            ],
+            "title": "Predicate Encryption for Circuits from LWE",
+            "venue": "Advances in Cryptology \u2013 CRYPTO 2015, R. Gennaro and M. Robshaw, Eds. Berlin, Heidelberg: Springer Berlin Heidelberg, 2015, vol. 9216, pp. 503\u2013523, series Title: Lecture Notes in Computer Science. [Online]. Available: http://link.springer.com/10.1007/978-3-662-48000-7 25",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "A.K. Lenstra",
+                "H.W. Lenstra",
+                "L. Lov\u00e1sz"
+            ],
+            "title": "Factoring polynomials with rational coefficients",
+            "venue": "Mathematische Annalen, vol. 261, no. 4, pp. 515\u2013534, Dec. 1982. [Online]. Available: https://doi.org/10.1007/ BF01457454",
+            "year": 1982
+        },
+        {
+            "authors": [
+                "L. Sweeney"
+            ],
+            "title": "k-ANONYMITY: A MODEL FOR PROTECTING PRIVACY",
+            "venue": "International Journal of Uncertainty, Fuzziness and Knowledge-Based Systems, vol. 10, no. 05, pp. 557\u2013570, Oct. 2002. [Online]. Available: https://www.worldscientific.com/doi/abs/10.1142/ S0218488502001648",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "R. Bayardo",
+                "R. Agrawal"
+            ],
+            "title": "Data privacy through optimal kanonymization",
+            "venue": "21st International Conference on Data Engineering (ICDE\u201905), Apr. 2005, pp. 217\u2013228, iSSN: 2375-026X.",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "A. Pfitzmann",
+                "T. Dresden",
+                "M. Hansen",
+                "U. Kiel"
+            ],
+            "title": "Anonymity, Unlinkability, Undetectability, Unobservability, Pseudonymity, and Identity Management \u2013 A Consolidated Proposal for Terminology",
+            "venue": "Citeseer, 2008. [Online]. Available: http://dud.inf.tu-dresden.de/Anon Terminology.shtml",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "P. Markert",
+                "D.V. Bailey",
+                "M. Golla",
+                "M. D\u00fcrmuth",
+                "A.J. Aviv"
+            ],
+            "title": "This PIN Can Be Easily Guessed: Analyzing the Security of Smartphone 15 Unlock PINs",
+            "venue": "2020 IEEE Symposium on Security and Privacy (SP), May 2020, pp. 286\u2013303, iSSN: 2375-1207.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D. Wang",
+                "Q. Gu",
+                "X. Huang",
+                "P. Wang"
+            ],
+            "title": "Understanding Human-Chosen PINs: Characteristics, Distribution and Security",
+            "venue": "Proceedings of the 2017 ACM on Asia Conference on Computer and Communications Security. Abu Dhabi United Arab Emirates: ACM, Apr. 2017, pp. 372\u2013385. [Online]. Available: https://dl.acm.org/doi/10. 1145/3052973.3053031",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "W. Li",
+                "J. Zeng"
+            ],
+            "title": "Leet Usage and Its Effect on Password Security",
+            "venue": "IEEE Transactions on Information Forensics and Security, vol. 16, pp. 2130\u20132143, 2021. [Online]. Available: https://ieeexplore.ieee.org/ document/9316928/",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "D. Wang",
+                "H. Cheng",
+                "P. Wang",
+                "X. Huang",
+                "G. Jian"
+            ],
+            "title": "Zipf\u2019s Law in Passwords",
+            "venue": "IEEE Transactions on Information Forensics and Security, vol. 12, no. 11, pp. 2776\u20132791, Nov. 2017. [Online]. Available: http://ieeexplore.ieee.org/document/7961213/",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "N. Lachtar",
+                "A.A. Elkhail",
+                "A. Bacha",
+                "H. Malik"
+            ],
+            "title": "A Cross-Stack Approach Towards Defending Against Cryptojacking",
+            "venue": "IEEE Computer Architecture Letters, vol. 19, no. 2, pp. 126\u2013129, Jul. 2020, conference Name: IEEE Computer Architecture Letters.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S. Kumar",
+                "C. Paar",
+                "J. Pelzl",
+                "G. Pfeiffer",
+                "M. Schimmler"
+            ],
+            "title": "Breaking Ciphers with COPACOBANA \u2013A Cost-Optimized Parallel Code Breaker",
+            "venue": "Cryptographic Hardware and Embedded Systems - CHES 2006, ser. Lecture Notes in Computer Science, L. Goubin and M. Matsui, Eds. Berlin, Heidelberg: Springer, 2006, pp. 101\u2013118.",
+            "year": 2006
+        }
+    ],
+    "sections": [
+        {
+            "text": "Index Terms\u2014Password security, hash cracking, k-anonymity, privacy enhancing technology, data privacy;\nI. INTRODUCTION\nPASSWORDS are the most widely used mechanism forknowledge based user authentication [1]. Although tech firms such as Apple, Google and Microsoft are pushing for a passwordless future [2], the transition will not impact every domain of identity management as alternatives often fail to provide a set of benefits already present in passwords [3]. Consequently, passwords will remain a part of our every day life, especially in areas where it is not feasible to employ technologies required for passwordless authentication [3], [4]. Therefore, related security and also password management practices should be kept up to date [5].\nTamas Bisztray received funding from the Research Council of Norway (forskningsradet) under Grant Agreement No. 303585 (CyberHunt project), the EU Connecting Europe Facility (CEF) programme under Grant Agreement No. INEA/CEF/ICT/A2020/2373266 (JCOP project) and the Horizon Europe programme under Grant Agreement No. 101070586 (PHOENi2X project). The views and opinions expressed herein are those of the authors only and do not necessarily reflect those of the European Union or the European Research Council Executive Agency. Norbert Tihanyi was supported by the Ministry of Innovation and Technology of Hungary from the National Research, Development and Innovation Fund through the TKP2021-NVA Funding Scheme under Project TKP2021-NVA-29.\nStoring passwords in cleartext poses a high security risk as attackers upon compromising the system could learn not only the passwords, but the password choosing patterns of individuals [6]. A possible mitigation is to only store the hash of the password [7]. Recovering the cleartext from a hash digest is very resource intensive and is often infeasible with sufficiently long and complex passwords. Unfortunately, password choosing habits of individuals often lack such characteristics [8]. There are well-known software tools such as hashcat or John the Ripper that can be used to perform password cracking attacks efficiently. Advancements in modern GPUs and FPGAs have rendered previously popular hashing algorithms obsolete. The same is true for password policies regarding recommended length, character set and complexity [9], [10], [11], [12].\nTesting password security can be conducted for legitimate purposes. The main motivation behind this paper originates from a penetration testing project that took place in 2020. During a penetration testing engagement the Red Team was able to retrieve an NTLM hash of an important service account. It was known, that all service account passwords are randomly generated 9 character long strings containing uppercase and lowercase letters plus numbers. Because of the sensitive nature of the project, the Red Team could not share the exact value of the NTLM hash. According to the signed contract, the team was not allowed to reveal any cleartext passwords from the engagement to third parties. There are many small organizations and freelancers conducting penetration testing and red teaming activities, who would rely on such services, but are prevented from doing so for privacy considerations. If the Red Team transfers a password hash, the cracking server learns the exact value of the hash digest and if the cracking is successful the corresponding cleartext password as well.\nAs the example shows, an entity might have a legitimate reason to crack a password hash, but could lack the computational capacity to perform the cracking process within a reasonable time. One solution would be to use a cloud service called \u201dpassword cracking as a service\u201d (PCaaS), to utilize the resources of a third party. This can be concerning both from a security, and a privacy perspective. As an example, hashes can be used in pass the hash attacks [13] without having to crack the password itself. Moreover, if the cleartext is recovered the third party might learn privacy sensitive information as individuals often embed personally identifying information (PII) when constructing their passwords [14], [15], [16].\nWe would like to find answers to the following questions:\nar X\niv :2\n30 6.\n08 74\n0v 1\n[ cs\n.C R\n] 1\n4 Ju\nn 20\n23\n2 (1) can we use the resources of an untrusted third party for the cracking process without revealing the exact value of the target hash digest and (2) if the hash is cracked, can we prevent information disclosure on the recovered cleartext. In theory, this could be prevented by employing homomorphic encryption [17], [18], where the third party performs operations on encrypted data. The domain of homomorphic encryption has been the subject to a lot of attention and there were many achievements that brought us closer to practical applications in the last decade [19]. Unfortunately, as of today no such algorithm has the efficiency that could allow us to take advantage of this technology for the realization of our goals [20], [18]. To the best of our knowledge prior to this publication privacy-preserving password cracking protocols have not been considered and documented in scientific literature. Such a protocol not only satisfies the client\u2019s security and privacy needs upon using PCaaS, but can also assist in compliance with data protection and privacy regulation, where the data controller can document justifiable and explainable privacy protection measures upon using this privacy enhancing technology (PET). The main contributions of this paper can be summarized as:\n1) We introduce the idea of a Privacy-Preserving Password Cracking (3PC) protocol 2) We extend the concept of predicate functions to evaluate decoy hash digests that make up our anonymity set, thereby resolving data transfer and performance issues 3) We show that the probabilistic information the cracking server learns is not practically useful, and the protocol is resistant against attacks and foul play 4) The protocol provides plausible deniability, where the client can claim to have aimed for a different target 5) Demonstrations of the implemented protocol, both with \u201dtoy examples\u201d, and realistic use cases, showing the scalability and efficiency of the protocol 6) The protocol ensures the client, using proof of work, that the server exhausted the agreed search space\nThe paper will be structured as follows: Section II overviews related literature, while Section III discusses the application of predicate functions, and introduces the 3PC protocol with two toy examples. Section IV presents the security and privacy aspects of 3PC, followed by Section V where we showcase a real-life example, implemented on a FPGA architecture. Section VI concludes our results."
+        },
+        {
+            "heading": "II. RELATED LITERATURE",
+            "text": "The idea to hide valid cryptographic keys and hashes among fake ones appeared in literature 20 years ago. Arcot [21] systems used a list of junk RSA private keys to protect the original private key. An attacker who tries to crack the key container will recover many plausible private keys, but will not be able to tell which one is the original until he tries each to access resources via an authentication server. In 2010 Bojinov et al. [22] introduced the Kamouflage system, a theft-resistant password manager which generates sets of decoy passwords.\nJuels and Ristenpart introduced the honey encryption scheme [23], designed to produce a ciphertext which, when\ndecrypted with incorrect keys, produces plausible-looking but bogus plaintexts called honey messages. This makes it impossible for an attacker to tell when decryption has been successful. In 2013 Jules and Rivest proposed a simple method [24] for improving the security of hashed passwords. The system in addition to a real password with each user\u2019s account associates some additional honeywords (false passwords). The attempted use of a honeyword triggers an alarm.\nCompromised Credential Checking (C3) services, such as HaveIBeenPwned and Google Password Checkup can reveal if user credentials appear in known data breaches [25], [26]. In this setup, clients can provide an N-bit prefix of the hashed password. The server then returns all recorded breached passwords that match this prefix. The client then conducts a local final check to confirm if there is a match. However, in this scenario sharing a small hash prefix of user passwords can significantly increase the effectiveness of remote guessing attacks [27]. The anonymity set it provides will can only come from passwords of the same prefix, which might not be an adequately large set. On the other hand if the prefix is too small, it might return a lot of results, which in this setting would be more difficulty to download for the user. To counter this issue Li et al. developed and tested two new protocols that offer stronger password protection and are practical for deployment [27] . This approach of only sharing a part of the password hash is useful, which we upgraded for the 3PC protocol to allow the creation of a more fine tuned anonymity set.\nFor our protocol, understanding what distribution passwords follow will be also important. As Hou in [28] underlined, several research papers incorrectly assume that passwords follow a uniform distribution. In large real password data sets certain popular passwords are used by multiple users [29]. In [30] Blocki et al. presents how a frequency list can be created based on this observation, essentially ranking passwords from most frequent to least frequent. Inspired by Malone [31], Wang et al. showed that such passwords follow a CDFZipf distribution. These results apply to large user generated data sets where recurrence of passwords can be observed. If we want to analyze a large corpus of machine generated passwords results may be different. Such sets are usually created as a dictionary for password cracking. If the generation algorithm simply outputs random strings, the resulting data set by definition follows a uniform distribution. However, password generation based on real user passwords is shown to perform better. The most popular techniques are: Rulebased dictionary attacks, probabilistic context free grammars (PCFGs), Markov models, and machine learning techniques [32], [33]. The likelihood of each password can be calculated if we assign a probability to each production rule. However, determining the probability distribution over such data sets is not a straightforward task and is outside the scope of this research. It is different from assessing word-list quality [34], [35], or individual password strength [36], [37], [38], [39], as both are a separate line of research. As Aggarwal et al. shows [32], PCFG parse trees are usually ambiguous which means, there can be multiple ways to produce a single word. Furthermore, if a capable adversary aims to determine the\n3 probability distribution of such data sets but doesn\u2019t know the original creation mechanism, they can get a completely different ranking order if for example a Markov model is used to rank a data set created by PCFG. Not to mention that each model is fully dependent on the original training data. Note, that Bonneua warns against the use of traditional metrics such as Shannon entropy and guessing entropy for evaluating large password data sets [29].\nFor hiding the original hash digest among decoy hashes we will utilize a concept similar to predicate encryption. In predicate encryption [40], a ciphertext is associated with descriptive attribute values \u03c5 in addition to a plaintext p, and a secret key is associated with a predicate f . Decryption returns plaintext p if and only if f(v) = 1. In our case there will be no secret key associated with the predicate, as hash functions cannot be reversed in the same way as an encryption function but as the concept is similar we use this terminology."
+        },
+        {
+            "heading": "III. THE 3PC PROTOCOL",
+            "text": "First, we review some important cryptographic primitives and their properties we rely on, which is followed by the main steps of the 3PC protocol. Next, we introduce how a predicate function can evaluate the output of a hash function. Finally, we examine how the protocol works in action by showcasing two \u201dtoy examples\u201d serving as proof of concept.\nA hash function is a computationally efficient deterministic function mapping from an arbitrary size input (message space) into a fixed size output of length l (digest space). A hash function is called a cryptographic hash function if the usual security properties are satisfied: pre-image resistance (or oneway property), second pre-image resistance, and collision resistance. We also require that a hash function exhibits the avalanche effect and satisfies the random oracle model where the output is uniformly distributed. It is important to note that theoretically there are infinitely many collisions for a hash function, but these should be difficult to find, meaning, there is no explicit or efficient algorithm that can output a collision."
+        },
+        {
+            "heading": "A. Protocol Design and Notations",
+            "text": "For the rest of the paper the following notation will be used: \u2022 t: The target hash which the client wants to crack \u2022 \u03a3: the finite set of hexadecimal symbols {0-F}, where the\nfinite sequence of symbols of length l over the alphabet \u03a3 is denoted by \u03a3l \u2022 \u0398\u2217: For any alphabet \u0398, the set of all strings over \u0398 \u2022 h: A cryptographically secure hash function where \u0398\u2217\nserves as the input space for h, i.e., h : \u0398\u2217 \u2192 \u03a3l \u2022 X\u03c5: Set of decoy hashes, serving as an anonymity set for\nthe target hash, where t \u2208 X\u03c5 \u2022 N\u03c5: The desired number of decoy hashes the client wants\nas the size of X\u03c5 \u2022 \u03c5: A vector that describes every hash in X\u03c5 , and \u03c5 \u2208 \u03a32l \u2022 DS: The cracking data set, selected by the client and\nused by the cracking server to recover hashes from X\u03c5 \u2022 CS: Candidate password set, a set of password-hash pairs\nthe server managed to crack from X\u03c5\nA high level pseudo code of the 3PC protocol can be seen in Algorithm 1. Our two parties are the client and the server, as indicated below in Figure 1. The client wants to crack the target hash, and recover the cleartext password. First, the client checks using REQ-H, if the server side architecture can efficiently crack the desired hash function. The server responds with ACK-H, specifying the hash cracking speed in hash-rate/secundum (H/Sec). Based on this information, using DEF-DSR the client selects a data set DS, and specifies the desired number of candidate passwords which is denoted by r. Meaning, the candidate set CS should contain approximately r elements. Next, the client creates a vector \u03c5 that defines the set of decoy hashes, such that |X\u03c5| \u2248 N\u03c5 and t \u2208 X\u03c5 is satisfied (CLC-NV, GEN-V). We note, that creating a vector \u03c5 which defines exactly N\u03c5 elements is linked to the theory of y-smooth numbers. As a consequence N\u03c5 can only be approximated when \u03c5 is created. The cracking data set which can be a selection of dictionary words with mangling rules, brute force rules, etc., and the vector \u03c5 is transferred to the server (SND-P). The server starts hashing every password in DS (CRK-XV). If a resulting hash digest is in the set defined by the vector \u03c5 (this is checked by the predicate function, not by a direct comparison), this hash digest along with the corresponding cleartext password is added to the list of candidate passwords. After exhausting the search space the server sends CS back to the client (SND-CS). To evaluate if the cracking was successful, the client simply checks the candidate list to see if (s, t) \u2208 CS for some s \u2208 DS (CHKCS). Essentially, the server tries to crack every password in the decoy set, never knowing which is the target hash. We want to underline, that the server at no point has any information on whether t is cracked or remains uncracked, which is of utmost importance. This is due to the protocol design, where it is close to impossible to crack all hashes in the decoy set.\nAlgorithm 1 3PC protocol Client-Server exchange 1: procedure 3PC(t, r,DS) 2: REQ-H(h) \u25b7 Request hash information 3: i\u2190 ACK-H(h) \u25b7 Acknowledge hash info request 4: DS, r \u2190 DEF-DSR(i) \u25b7 Define data set and r 5: N\u03c5 \u2190 CLC-NV(r, |DS|) \u25b7 Calculate N\u03c5 6: \u03c5 \u2190 GEN-V(t,N\u03c5) \u25b7 Generate decoy hashes 7: SND-P(DS, \u03c5) \u25b7 Send parameters to server 8: CS \u2190 CRK-XV(\u03c5,DS) \u25b7 Cracking decoy set 9: SND-CS(CS) \u25b7 Send candidate passwords 10: CHK-CS(CS, t) \u25b7 Check target hash in candidate set 11: end procedure\nThe decoy hash set will serve as an anonymity set, providing k-anonymity for the target hash digest, and the server can only have a 1/|X\u03c5| chance to guess t when observing X\u03c5 alone, which in practice can easily be around 10\u221270. The decoy hashes at the same time as protecting t, can ensure the privacy protection of the pre-image of t, regardless of whether it is cracked or not. This is a really important claim. As the server recovers many plausible cleartext passwords these will serve as an anonymity set for the pre-image of t. Using the security\n4\nparameters DS, N\u03c5 and r, one can calculate and adjust the probabilistic knowledge of the server about both the target hash, and the cleartext password that created the hash. This knowledge can be tailored based on the calculated privacy needs of the client, or the resources of the third party.\nPrivacy demands could require ever larger sets of decoy hashes, where transferring |X\u03c5| unique hashes would be a serious bottleneck. In addition to the privacy challenges, this problem is also solved by the 3PC protocol, as the decoy set is transferred in a compact form described by the vector \u03c5. This, at the same time allows the predicate function to remove limitations on the amount of hashes we can efficiently handle. The client or the server side never needs to write the entire X\u03c5 set to disk, which could be a bottleneck, as in realistic scenarios it can contain 1070 unique hash digests or more. This in itself is an important contribution, allowing the CRKXV process to finish regardless of the number of decoy hashes in X\u03c5 as we will show in Lemma III.1."
+        },
+        {
+            "heading": "B. Establishing the Security Parameters",
+            "text": "In the following, we examine how the client can predictably control the number of hashes that are cracked from the decoy set X\u03c5 . Since the pre-images of the decoy hashes are fully random, this \u201dcracking success rate\u201d will be determined only by the size of the cracking data set |DS| and |X\u03c5|. What passwords are present in the data set will have no influence on this calculation. To understand this, we need to look at how password hashes are distributed over the co-domain of h. When elements of DS are hashed, the output is spread randomly over \u03a3l as shown in Figure 2. This means that by picking a hash digest randomly from the output space of h, the probability of selecting one that has a pre-image from DS is simply |DS|/|\u03a3l|. As there is no correlation between\nthe cleartexts and the hashes, by observing only the output space, selecting any of the hash digests carries a |DS|/|\u03a3l| chance to have a pre-image in DS. By picking k hash digests, the expected number of them having a pre-image in DS is k times |DS|/|\u03a3l|.\nThis expected number is the same whether k hashes are picked from X\u03c5 , or by selecting k randomly from \u03a3l. Thus we can choose from X\u03c5 , the set described by \u03c5, where all hashes by definition satisfy the predicate function, which is introduced in Section III-C. Now, we can calculate the expected number of candidate passwords (r) we get from a given X\u03c5 when cracking with a data set with size |DS|:\nN\u03c5 |DS| |\u03a3l| \u2248 r (1)\nThis formula is used by the client in CLC-NV and GEN-V, to determine N\u03c5 , and then to check if vector \u03c5 can ensure approximately r candidate passwords in CS . If we want to have more decoy hashes in X\u03c5 which upon getting cracked will reveal a pre-image in DS, we simply need to increase |X\u03c5|.\nVisually, we can see this from in Figure 2, that as we expand the X\u03c5 set, it will \u201dgobble up\u201d more of the dots representing the hashed DS words. The target hash is only cracked if the cracking data set used contains a pre-image for t. Increasing X\u03c5 will achieve two things: it produces more candidate passwords for a given data set selected, and it decreases the probability of a correct guess on the target hash digest. Due to the random distribution of the hash function the security parameter r is just an expected value. Although we can reliably estimate it, we will not know the exact number of candidates that will be returned in the candidate set until the end of the cracking process. Also, the server will never\n5\nknow if a certain data set has found the target hash, or it is still uncracked."
+        },
+        {
+            "heading": "C. Mathematical foundations of 3PC",
+            "text": "An important contribution of this paper which we next introduce, is the extension of the concept of predicate encryption to one way hash functions. Following that, we present the underlying mathematical problem that needs to be solved during the step GEN-V.\nDefinition III.1 (Predicate Function). The set of all strings of length l over the alphabet \u03a3 is denoted by \u03a3l, where our alphabet will be the set of hexadecimal characters. For a vector \u03c5 = (\u03c51, . . . , \u03c52l) \u2208 \u03a32l we define a predicate function P\u03c5 over \u03a3l as follows: Given an input vector x = (x1, . . . , xl) \u2208 \u03a3l, P\u03c5(x) = 1 if (\u03c52i\u22121 \u2264 xi \u2264 \u03c52i) for all 1 \u2264 i \u2264 l, P\u03c5(x) = 0 otherwise.\nFor example if x = (3, C) \u2208 \u03a32 and v = (2, 5, C,D) \u2208 \u03a34, we have P\u03c5(x) = 1 since 2 \u2264 x1 \u2264 5 and C \u2264 x2 \u2264 D are satisfied for our vector \u03c5. For a given \u03c5 \u2208 \u03a32l, let X\u03c5 be the set of all x vectors which satisfy P\u03c5(x) = 1. The number of elements (cardinality) of X\u03c5 is denoted by |X\u03c5|. The size of X\u03c5 can be calculated from the definition of \u03c5 by the following formula:\n|X\u03c5| = l\u220f\ni=1\nmax{\u03c52i \u2212 \u03c52i\u22121 + 1, 0} (2)\nClearly, we have a set of |X\u03c5| different vectors making up X\u03c5 , i.e.,\nX\u03c5 =  x1 = (x11, . . . , x 1 l ) x2 = (x21, . . . , x 2 l )\n... x|X\u03c5| = (x\n|X\u03c5| 1 , . . . , x |X\u03c5| l )  Note, that |X\u03c5| = 1 iff {\u03c52i = \u03c52i\u22121 : \u2200 1 \u2264 i \u2264 l} and |X\u03c5| = 0 iff \u2203 i such that \u03c52i\u22121 > \u03c52i. Similarly, if for all 1 \u2264 i \u2264 l, \u03c52i is the greatest element of \u03a3 and \u03c52i\u22121 is the least element of \u03a3, then |X\u03c5| = |\u03a3l|.\nLemma III.1. The calculation of P\u03c5(x) is independent of the cardinality of X\u03c5 .\nProof. From condition {\u03c52i\u22121 \u2264 xi \u2264 \u03c52i : 1 \u2264 i \u2264 l}, P\u03c5(x) can be calculated in constant time which in the worst case is 2 \u00b7 l comparison.\nWe say an integer N is y-smooth if N has no prime divisors greater than y.\nLemma III.2. |X\u03c5| is always a 13-smooth number.\nProof. For any \u03c5 = (\u03c51, . . . , \u03c52l) \u2208 \u03a32l vector it is trivial that 0 \u2264 \u03c5i \u2264 |\u03a3| for all 1 \u2264 i \u2264 l. From equation (2), the prime factors of |X\u03c5| are always less than |\u03a3| = 16, from which the lemma follows.\nCorollary III.1. The prime factorization of every |X\u03c5| number is of the form 2A \u00d7 3B \u00d7 5C \u00d7 7D \u00d7 11E \u00d7 13F , where A, . . . , F \u2208 N.\nDuring step CLC-NV, an appropriate N\u03c5 is calculated from the size of the data set |DS|, and the desired number of candidate passwords (r) using equation 1,\nN\u03c5 = r|\u03a3l| |DS|\n(3)\nIn the ideal scenario, the client can create a vector \u03c5 that defines the set of decoy hashes X\u03c5 with exactly N\u03c5 elements, i.e., |X\u03c5| = ||N\u03c5|| where || \u00b7 || denotes the nearest integer. However, N\u03c5 is not necessarily 13-smooth, so we need to find a 13-smooth number close to the original N\u03c5 . We can take the logarithm of both sides of the equation |X\u03c5| = ||N\u03c5||, i.e.,\nlog(2A \u00d7 3B \u00d7 5C \u00d7 7D \u00d7 11E \u00d7 13F ) = log(N\u03c5)\nfrom which we get\nA log(2) +B log(3) + C log(5)+ D log(7) + E log(11) + F log(13)\n\u2212 log(N\u03c5) = 0 (4)\nThis is a 7-variable integer relation problem, and can be viewed as a special subset sum optimization problem. Using the Lenstra, Lenstra and Lova\u0301sz (LLL) basis reduction algorithm [41], or the PSLQ algorithm, one can find the fitting integers. We note, that not all 13-smooth numbers are suitable for our needs, therefore we need to run LLL for different inputs with varying beta reduction parameter. For example, although N\u03c5 = 5l+1 is 13-smooth, it is not possible to divide the factors into l slots, where {\u03c52i\u2212\u03c52i\u22121 \u2264 16 : \u2200 1 \u2264 i \u2264 l} stays true. Modern LLL implementations can solve integer relation problems with more than 500 variables. In our case we can always get an appropriate result in polynomial time (in a few seconds on an average computer).\nAs previously stated, our objective is to crack the target hash and hide it in a decoy set represented by \u03c5. As P\u03c5(t) = 1 must be satisfied we construct \u03c5 from the target hash. Depending on how we adjust the degree of freedom in vector \u03c5, it can allow |X\u03c5| \u2212 1 decoy hashes to satisfy the function P\u03c5 . These vectors will serve as decoy hashes.\nNow we possess the minimum knowledge to understand the protocol. First, we present 3PC through two toy examples, before moving on with the security analysis.\n6"
+        },
+        {
+            "heading": "D. Toy Examples",
+            "text": "Toy Example 1 - Dictionary attack: The Rock-You database contains 14 344 391 unique passwords which will be our DS for this example [6]. The target hash is t = (C, 6, B, F,A,B,A, 2) \u2208 \u03a38, where t is the CRC-32 output of our unknown password. CRC-32 is not a cryptographically secure hash function however, it\u2019s presentable output size is more suitable for a toy example. After requesting hashing information (REQ-H) and getting acknowledgement (ACKH) from the server, the client is looking to create a vector \u03c5 that defines an X\u03c5 set, such that after the cracking process approximately 20 candidate passwords are returned in CS . Knowing the size of the dictionary |DS| = 14 344 391, and the security parameter r = 20, we can calculate N\u03c5 . This means that after 14 344 391 hash calculations the client expects approximately 20 candidates from the Rock-You database to fall into X\u03c5 . To satisfy this requirement, step CLC-NV uses formula 1 to calculate N\u03c5 (the expected size of X\u03c5),\nN\u03c5 = r|\u03a3l| |DS| = 20 \u00b7 168 14 344 391 (5)\nThe result is N\u03c5 \u2248 5988.36. Having calculated N\u03c5 , we need to construct a vector \u03c5 where P\u03c5(t) = 1 and |X\u03c5| is around this size. Note, that 5988 is not 13-smooth as 5988 = 22\u00b73\u00b7499. Using the GEN-V algorithm a suitable \u03c5 can be selected: (C,F, 2, 6, A,B,D, F, 9, F,B,B,A,A, 0, 6) \u2208 \u03a316. This defines an X\u03c5 decoy set with 5880 elements, which satisfies Lemma III.2, Corollary III.1, and is close to N\u03c5 . Moreover, the degrees of freedom can be divided into l slots, while satisfying \u03c52i\u2212\u03c52i\u22121 \u2264 16, \u2200 1 \u2264 i \u2264 8. As such, it will produce nearly the same number of expected candidates:\n|X\u03c5| |DS| |\u03a3l| = 5880 14 344 391 168 \u2248 19.63 (6)\nAfter receiving SND-P the server starts hashing every element in the dictionary, and it looks for matches in the set X\u03c5 . Here lies one of the major benefits of the protocol: the server never has to make |X\u03c5| comparisons for each password. After calculating the hash, the server simply checks if P\u03c5(h(s)) = 1, \u2200s \u2208 DS . In this toy example we expect around 20 passwords from DS to satisfy P\u03c5 . The hashcleartext pairs where P\u03c5(h(s)) = 1 can be seen in Table I.\nFrom the returned candidate set the client can see that the target hash is cracked and the password is \"0BChrist\". The\nserver was expecting around 20 candidates from the dictionary, but has no idea if the cracking was successful. It is also important to ask the question if the passwords are equally likely in this case. This is thoroughly examined in SectionIV. For the sake of this example we selected a password from Rock-You to begin with, hence it was present in the candidate set.\nToy Example 2 - Brute force: A more realistic case is to use a cryptographically secure hash function. In this scenario the client has the extra knowledge, that the hash digest hides an 8 digit PIN code. The client must consider, that leaking such information could significantly improve the guessing ability of the third party as we will discuss in Section IV.\nLet t = (B, 2, 3, B, \u00b7 \u00b7 \u00b7 , A, 7, 9, 3) \u2208 \u03a364 represent the SHA-256 output of the following PIN code: \"43256891\", where the cleartext is not known by the client. There are 108 different 8 digit number codes which will be our DS. The client determines r = 10 to be the expected number of candidate passwords (which would be once again, an insufficient amount in a realistic scenario). To find a vector \u03c5 that satisfies this the client first performs step CLC-NV:\nN\u03c5 = r|\u03a3l| |DS| = 10 \u00b7 1664 108\nThe number of decoy hashes should be N\u03c5 \u2248 1.158 \u2217 1070. By using the GEN-V algorithm we can generate a suitable \u03c5 = (\u03c51, . . . , \u03c5128) \u2208 \u03a3128 vector, where P\u03c5(t) = 1 is satisfied and |X\u03c5| is near N\u03c5 . A suitable vector can be \u03c5 =[7c27385c3 f3f3f3f3f0c3f3f3f3f3f0c3f0c3f3f0c3f3f3f3f3 f0c0c3f0c0c3f3f3f3f0c3f0c0c0c0c3f0c0c3f3f0 c0c0c3f0c3f0c0c3f0c0c3f0c0c3f0c0c3f] \u2208 \u03a3128.\nAfter the server calculates the SHA-256 hashes for all the 108 different number codes, 9 different PINs are cracked from the set X\u03c5 . By observing the candidates the cracking server still cannot know which is the password or if it is cracked at all. The cracked candidate passwords can be seen in Table II:\nSelecting such a small candidate set size and exhausting the search space for a specific input can raise several concerns from a privacy point of view which we will discuss in connection with this example in Section IV. One could argue that for this toy example it would not be necessary to use a PCaaS third party, as SHA-256 is a hash function is fast to compute, therefore, anyone could hash |DS| = 108 passwords on their laptop using John the Ripper. This is however not the case if we change the hash function to bcrypt. If combined with proper key stretching techniques (e.g: 216 iterations)\n7 bcrypt would make it infeasible to brute force even such small key-spaces on desktop computers."
+        },
+        {
+            "heading": "IV. SECURITY AND PRIVACY ANALYSIS OF 3PC",
+            "text": "This section considers the knowledge the third party cracking server possesses, or information an attacker could gain upon acquiring the vector \u03c5, considering different side channel attacks. Finally, we examine how a malicious attacker could try to tamper with the results and how such situations are evaded by the protocol design."
+        },
+        {
+            "heading": "A. Probabilistic knowledge without assumptions",
+            "text": "At first, we examine the best guessing strategy for the server without any assumption on the probability distribution of passwords, as they can vary from uniform (in case of machine generated) to variations of Zipf distribution (for human generated). Since by definition t \u2208 X\u03c5 , even without starting the cracking process a correct guess on the target hash can be made with 1/|X\u03c5| probability. What can the server at this point know about the potential cleartext? By design, the cracking process can only be successful if the selected data set contains a cleartext s\u2217 such that h(s\u2217) = t. Let A be the event the server guesses s\u2217 correctly, and B that s\u2217 \u2208 DS. We can calculate the conditional probability of guessing s\u2217 right:\nP(A) = P(A|B) \u00b7 P(B) (7)\nNote, that s\u2217 \u2208 DS is not an assumption but a condition. If this condition is satisfied the server is faced with the following situation. Without spending any resources, the best guess would be 1/|DS|. Note, that at this stage there is no point in examining the probability distribution over DS. The predicate function selects every password in the data set uniformly with exactly |DS|/|X\u03c5| probability, and only a random subset of s \u2208 DS satisfies P\u03c5(h(s)) = 1, in other words:\nP ( P\u03c5(h(s)) = 1 ) = |DS| |X\u03c5| ,\u2200s \u2208 DS. (8)\nThe server can greatly increase it\u2019s guessing ability by sorting out all passwords where P\u03c5(h(s)) = 0 as shown in Figure 3.\nLemma IV.1. If condition B is fulfilled and |X\u03c5| < |\u03a3l|, the server must hash \u2200s \u2208 DS to maximize P(A|B) over the given data set.\nProof. If |X\u03c5| < |\u03a3l|, then only a random subset of s \u2208 DS will satisfy P\u03c5(h(s)) = 1, others must be sorted out. During the hashing process the server\u2019s guess can be calculated as:\nP(A|B) = 1 |DS| \u2212 |DS|\u2211 i=1 |P\u03c5(h(si))\u2212 1| (9)\nThis can reach it\u2019s maximum when the predicate function has been calculated for \u2200si \u2208 DS, from which the lemma follows.\nWe mention again, that considering the probability distribution over the candidate set should only be attempted after sorting has been performed. From equation 9, and Figure 3 it\nFig. 3. Sorting the data set with the predicate function\ncan be seen, that if for example the hashing process is almost complete, and only one element is left in DS that is not sorted, performing that last hashing operation can further decrease the size of the set we need to guess from. Now it is obvious, that as the hashing process starts and after there are for example five candidates in CS , the server cannot simply stop and say that now it has a 1/5 chance to guess the cleartext.\nThe next vital question to examine is what can the server know about condition P(B). In the traditional cracking scenario, it was always obvious when a certain data set managed to crack a password, it was when a cleartext was found for the only hash digest. In our case there are always approximately r cleartexts found. One way to be certain that P(B) \u2248 1, is to increase the size of the data set to |\u03a3l| unique elements. Then most passwords in X\u03c5 will be cracked regardless of how N\u03c5 was chosen. As a consequence P(A) \u2248 1/CS \u2248 1/N\u03c5 .\nSince it is completely impossible to hash |\u03a3l| elements with real hash functions, the server can never narrow down it\u2019s real guess to the candidate set without making assumptions or learning implicit information. For example if the server thinks that the target hash hides a human generated password, and the data set contains a dictionary of popular words and mangling rules, it might assign a higher probability for condition B. If the password however, is generated by a password manager then it is highly unlikely that such a data set will recover the target hash. If the server aims to increase P(B), even if |\u03a3l| cannot be reached, a mathematically viable approach is to increase the size of the cracking data set. Even though this works perfectly in theory, it has little practical usefulness for the server: After step SND-P, the number of decoy hashes |X\u03c5| is fixed. In addition to the dictionary we requested (DS1), the server will perform further attacks with d\u2212 1 more data sets.\nd\u2211 i=1 |DSi| |X \u03c5| |\u03a3l| \u2248 d\u2211 i=1 ri (10)\nAs expected for every data set, the server will get r candidate passwords. Although this increases P(B), P(A|B) decreases as the candidate set grows. Let k = |DS1 \u222a DS2 \u00b7 \u00b7 \u00b7 \u222a DSd| where DSi \u2229 DSj = \u2205 where i \u0338= j, i, j \u2264 d \u2208 N+ then,\nlim k\u2192|\u03a3l| d\u2211 i=1 ri \u2192 |X \u03c5| (11)\n8 As a consequence of 11, without being able to make any assumptions, the server can not make a guess on the pre-image better than 1/|X\u03c5|.\nUsing the same vector \u03c5 as in Toy Example 1, we can simulate how an attack looks like when further data sets are used to crack elements in X\u03c5 . The server now selects a different core dictionary containing 605834 French passwords1. To this, the server adds mangling rules appending a digit, and a special character at the end of every password using the following command: john --format=crc32 --wordlist=dictionnaire_fr --mask=?w?d?s vectorv.txt. Note, that in this case the vectorv.txt file contains all 5880 hashes, as John the Ripper doesn\u2019t support configuring a predicate function, but with |X\u03c5| being this small writing it\u2019s content to a file is not a concern. As we later see in the real life use case, writing all the decoy hashes to a hard drive would be completely impossible. In total we expected r = (5880 \u00b7 605834 \u00b7 10 \u00b7 32)/168 \u2248 265 candidate passwords. Our cracking process returned 277 candidates which is close to r. A few examples from the new candidate set can be seen in Table III.\nPredicting, the password choosing behaviour of a single individual who we do not know anything about is not a straightforward task, especially if this behaviour can include using a password manager that generates random strings of unknown length. This leaves a malicious attacker with an almost impossible task when it is trying to determine P(B), where the only viable option is to try and learn further information to maximize P(B), and analyse the candidate set in hopes to improve P(A|B)."
+        },
+        {
+            "heading": "B. Side-channel information on the search space",
+            "text": "In the second toy example, if the server would somehow learn that we were after an 8 digit PIN code, it would be able to simply guess from the candidate set. This is due to that in addition to P(B) = 1, an exhaustive search has been performed on 8 digit PINs therefore, Lemma IV.1 has been satisfied. Thus guessing the password becomes P(A) = 1/|CS|.\nA possible mitigation strategy that works even if the server learns this information on P(B), is to increase the number of decoy hashes in X\u03c5 substantially. Thus, |CS| will grow as well, and even if the server guesses from the candidate list it will contain too many entries. At this point we would like to emphasize again, that the 3PC protocol does not communicate such information to the server. If the client is concerned that the server could learn useful information by observing the\n1https://github.com/clem9669/wordlists/blob/master/dictionnaire fr\ndata set, the client can also change the key-space, such that it defines a bigger search space. Such a strategy for Toy Example 2 could be that the client asks all combinations of lower-case letters and digits ut to 8, where |DS| = 468, or ask for an up to 9 character brute force with digits instead of exactly 8. Since this also raises the number of hashing operations, the decision on whether such a strategy is necessary, or feasible, depends on the security and privacy needs of the client.\nAn important differentiator between the client and the server side, is that the client in some cases can possess a lot of implicit information. The client must take extra care not to leak this info through a badly constructed data set, as it can impact the server\u2019s guess on the key space. If the password is hashed by bcrypt, only a small data set is selected that contains the core dictionary of words specific to the target. This can be name, street address, places lived, pet names, hobbies, favourite sports teams, etc., which is supplied with a set of mangling rules. Such information on its own can carry significant privacy risks both to the data subject, who\u2019s PII is leaked, and to the client side who would reveal implicit information to the server. For the above reasons, revealing privacy sensitive information through a badly constructed data set, that would explicitly identify the entity who the target hash belongs to, must be avoided. In contrast to the PIN code cracking example, where a increased data set is beneficial, with the second example it is more than necessary to increase the data set. For such data to remain unlinkable in this context, the client must consider relevant privacy protection principles, to ensure that the data set serves as a sufficiently sized anonymity set of similar data [42], [43], [44]."
+        },
+        {
+            "heading": "C. Server Side Guessing Based On Password Ranking",
+            "text": "In connection with Toy Example 2 we would like to examine if the server can achieve a P(A|B) > 1/|CS| guess by observing the candidate set. As we employed a brute-force attack, where most of the data set consists of random strings this will provide perfect k-anonymity if the target hash also hides a random generated string. What if the target hash hides a human generated password, would this candidate set still offer sufficient privacy protection? The security of human chosen PINs is a well researched topic [45], where 4 and 6 digit PINs were shown to follow a Zipf distribution [46]. Human chosen PINs are likely to follow non-random patterns such as \u201c12345678\u201d, \u201c11111111\u201d, a date structure like \u201c19930810\u201d or leet talk [47], such as \u201c13371337\u201d which reads \u201cleetleet\u201d. If X\u03c5 is large these categories of pre-images will also be represented in CS , as the predicate function selects a random subset of DS. However, this will not provide perfect k-anonymity as the majority of passwords in the candidate set will be a random looking string. If an attacker tries to rank these PIN codes in the candidate list, the target hash can be in one of these human categories, or among the random strings where it is up to the assumptions of the server to try and determine which group is the one to pick from. In this example if the client wants to ensure k-anonymity even for human generated PINs, the best approach is to start with a cracking data set, containing number codes only adhering\n9 to that format. As this is a smaller subset of all 8 digit number codes, N\u03c5 can be chosen to be larger in order to provide a sufficiently sized anonymity set, where all candidate passwords look human generated. Thus if the target hash hides\nsuch a password it is now hidden in a set of similar data.\nReferring back to Toy Example 1 where we employed a dictionary of human generated passwords as our cracking data set, one could also argue that the returned candidates are not equally likely, as password choosing habits of individuals usually does not follow a uniform distribution over all cracking data sets [15]. If the data set DS is a set of random equally likely strings, this would be true however, this cannot be generalised for all cracking data sets. As discussed in connection with Toy Example 1, the Rock-You database was shown by Wang et al. to follow a Zipf-like distribution [48]. As a consequence, employing such a cracking dictionary can result in some passwords in the candidate set appearing more probable from the server\u2019s point of view.\nAs the candidate set can only contain passwords from the given DS that was used for the cracking process, the ranking of passwords in the original dictionary (which the server possesses), can be applied to the candidate set to establish an order. Since our DS in 3PC will only contain every password once, frequency ranking for example is only possible if knowledge about other frequency ranked databases are taken into account 2. Note, that Wang et al. used frequency ranking as a stepping stone from which the distribution was concluded [48]. As we discussed in Section II, there are many possible strategies to rank passwords, where each can produce a different result based on previous knowledge, training data, and assumptions it is built upon. Without implicit knowledge on the use case, ranking could completely impair the server\u2019s guessing ability, where even choosing at random could yield better results.\nRanking the passwords in DS, and trying to guess the target hash based on the likelihood of the returned cleartext passwords in CS , will not improve the guessing ability of the server. As we assume that the output of a hash function is uniformly distributed, the decoy passwords in CS are equally likely to be selected from DS, regardless of what rank or likelihood is assigned to them. As such, the candidate passwords are essentially a randomized subset of the cracking set DS. Which randomized subset is picked, depends on how we selected our \u03c5. To put it differently, the vector \u03c5 will predetermine which hashed pre-images can satisfy the predicate function from DS. However, this can never be known in advance without performing the hashing operation for every cleartext in DS, as no correlation is assumed between cleartext passwords and their hashes. Thus, the occurrence of passwords from DS in the candidate set, is not based on how likely those passwords were, or what rank they had. If they all appear in the data set DS once, they are equally likely to show up in the candidate set CS . To demonstrate this in practice, we used the target hash 0BChrist : C6BFABA2 from Toy Example 1, and created two additional vectors (\u03c5\u2032 and \u03c5\u201d), which contain\n2https://github.com/danielmiessler/SecLists/blob/master/Passwords/LeakedDatabases/rockyou-withcount.txt.tar.gz\nthe same target hash. Each vector \u03c5 defines a different X\u03c5 decoy set. These \u03c5 vectors over the Rock-You data set will produce three different candidate sets depicted in Figure 4.\nWe employed a frequency analysis and a NIST password complexity [12] check on all three candidate sets. The results of the frequency analysis based on the original Rock-You database can be seen in Table IV. As for the NIST guideline, there are only two passwords fulfilling the complexity requirements, which are \"Kissarmy1!\" and \"MyP@ssw0rd!\", whereas \u03c5\u201d didn\u2019t contain a suitable candidate. Both of these passwords had a rank one frequency, so for each vector, these two ranking strategies produced completely contradictory results. Furthermore, the ranking strategies failed to pinpoint the target hash as a likely candidate, for all three vectors.\nHere we would like to underline a crucial idea: the client must never generate more than one \u03c5 vector using GEN-V, as the intersection of the corresponding X\u03c5 sets can narrow the search for the target hash. Our goal here was to demonstrate that different \u03c5 vectors produce different candidate sets over a specific DS. As in general, it is not possible to accurately predict the behaviour of hypothetical individuals, who we do not know anything about, the server cannot make assumptions on what ranking strategy to use. Hence, in this case we rely on empirical evidence and highlight that applying different ranking strategies could easily mislead the server, regardless of which random subset of DS was selected by \u03c5.\nD. Implicit information disclosure\nImagine a scenario, where the NATO Communications and Information Agency (NCI Agency) wanted to recover the cleartext for the \"58727AD23361CA0323D4B3C22A6AFE78\" NTLM hash using a specialized PCaaS company. After the cracking process the server side observes the candidate set, and finds the cleartext password Bices2014, among the other password candidates. The Battlefield, Information, Collection and Exploitation Systems (BICES) serves as the primary intelligence-sharing network between and among all 28 NATO member nations, seven associated partner nations and the NATO organization. Upon learning that the customer is NCI Agency, a potential attacker could extrapolate the following information:\n\u2022 This password could belong to a classified NATO system called BICES; \u2022 The use of special characters is not enforced by the password policy; \u2022 The password was possibly not changed in the last 8 years, in which case no password change policy is enforced.\n10\nLearning the client\u2019s identity is a form of information disclosure that can serve as a starting point for attackers. NCI Agency follows best practices that the hash of a password is confidential and should not leave the security boundary of the organization [13]. As a standalone password without the direct connection to NATO, Bices2014 does not convey any useful information to the server. The word Bices can be associated with various concepts. For example in the Haitian Creole language Bices means bicycles and is spelled exactly the same. Similarly, Bices is the abbreviation for a mining seminar organized annually in China. By design, the 3PC protocol does not allow such information to be exchanged between the server and the client. However, the client must take precaution not to leak this via other channels. This is an example for information disclosure outside of the 3PC protocol.\nAlthough this looks like a high risk scenario on the first glance, everything depends on how the data set was chosen. Let the selected core dictionary contain common words, and ones related to NCI Agency, such as; NATO, BICES, North, Atlantic, Treaty, Organization, NCI, Agency, Jens, Soltenberg, etc. In addition, this can be complemented with a set of mangling rules such as; capitalizing the first letter of every key-word, appending one to three special characters, and optionally replacing relevant letters in the core words to form leet talk like N4t0. A data set constructed with such rules, will not only have a lot of relevant passwords, but it can be argued that the probability distribution is close to uniform, as these passwords look equally likely from the server\u2019s perspective. The security parameter r can be adjusted such that the candidate set can contain millions of passwords in this format, like NC1N4T0.2022, Bic3$pass123 etc.\nWhat we deem acceptable from a privacy perspective greatly\ndepends on the use case. If a company tests corporate passwords of employees in important roles, getting the password cracked by common dictionaries is a good scenario. To discover and change a weak password, is better then the inevitable data breach. Note, that the password is only cracked by such a cracking data set, if the cleartext happens to be in this format. The more difficult question comes when the password is not cracked. What if the third party continues cracking with different dictionaries, brute force attacks etc. In this case, the server runs into the problem of growing candidate sets as we previously discussed in relation to equation 10."
+        },
+        {
+            "heading": "E. Foul Play",
+            "text": "When the client side starts step CHK-CS of the protocol to see if a pre-image for the target hash was found, as a part of this step it must investigate whether the server indeed exhausted the agreed search space and performed |DS| hashing operations. To confirm this, the client relies on proof of work, which is a concept where a prover demonstrates to a verifier that a certain amount of a computational effort has been expended in a specified interval of time [49]. In the case of 3PC the client knows that approximately r candidates must be returned based on the formula, |X\u03c5| |DS||\u03a3l| \u2248 r, where P\u03c5(x) = 1 must be satisfied for all hash digests.\nThe server cannot simply fill the candidate set with randomly chosen r hash digests as they need to fulfill the predicate function for the given vector \u03c5. If the server selects fitting hash digests with fake cleartext passwords, the client can simply select a random subset in CS , and hash it to verify if it is indeed the correct one. Obviously, r is only an expected value but deviating from it significantly can suggest that the server is not truthful in expending the appropriate resources.\n11"
+        },
+        {
+            "heading": "F. Plausible deniability",
+            "text": "If any entity upon acquiring the vector \u03c5 or the candidate set, would claim that the client was trying to break a password hash t\u2032 that belongs to them, they can not incriminate the client. Even if it is true that t\u2032 \u2208 X\u03c5 , the client can always rely on plausible deniability and say that this happened by chance. Indeed, when a specific vector \u03c5 is calculated for a given target hash, it is true that any x \u2208 X\u03c5 could have been the seed given to GEN-V, that produced vector \u03c5. This means that the probability that an arbitrary hash digest from \u03a3l falls into X\u03c5 is |X\u03c5||\u03a3l| , which is a non-negligible probability if the parameters were chosen properly. The client, before transferring \u03c5, can check if the chosen N\u03c5 provides satisfactory plausible deniability based on the scenario."
+        },
+        {
+            "heading": "G. Zero-Knowledge variation",
+            "text": "If the cracking data set is small, it enables the 3PC protocol to be used in a zero-knowledge setting. As we noted, the upper limit for the size of X\u03c5 , is how many candidate passwords can be transferred and stored from a given data set. If the client only needs a small cracking data set, where it would be possible to store and transfer |DS| hashes and the corresponding passwords, then N\u03c5 can be selected such that: N\u03c5 = |X\u03c5| = |\u03a3l| i.e., {\u03c52i = F \u2227 \u03c52i\u22121 = 0 : \u2200 1 \u2264 i \u2264 l}. Now, there is no need to calculate the predicate function as P\u03c5(h(s)) = 1,\u2200s \u2208 \u0398\u2217 as the decoy set is essentially the output space of h. It is then trivial, that not sending the target hash at all, or sending it in vector \u03c5 with the above described zero-knowledge setting, is equivalent."
+        },
+        {
+            "heading": "V. REAL LIFE EXPERIMENTS",
+            "text": "In this experiment we are looking to empirically verify the following question: Is it really feasible to crack billions of hashes using the theory introduced in the 3PC protocol? In the following section, we show the protocol running on an FPGA architecture, where the second part of this section will aim to analyse and interpret the results and related privacy implications.\nA. Implementation on the RIVYERA FPGA cluster\nThe Cost-Optimized Parallel Code Breaker (COPACOBANA) FPGA hardware was introduced in the annual Conference on Cryptographic Hardware and Embedded Systems (CHES) in 2006 [50]. The RIVYERA FPGA hardware architecture [51] is the direct successor of COPACOBANA, equipped with Spartan\u20136 Family FPGA modules which can be seen in Figure 5. The demonstration of the 3PC protocol is conducted on a RIVYERA S6-LX150 cluster, containing 256 Xilinx Spartan\u20136 LX150 FPGA modules.\nRIVYERA is using the se decrypt 3.00.08 cryptanalysis framework, developed by SciEngine3, which is a password cracking tool designed to maximize the efficiency of the FPGA modules. This tool allows configuring the predicate function for a given vector \u03c5, without any design changes or modification in the software. As discussed in the introduction, the main\n3https://www.sciengines.com/it-security-solutions/cryptanalysis-tools/\nmotivation behind this paper originates from a penetration testing engagement where the Red Team was able to retrieve an NTLM hash for an important service account. It was known that all service account passwords are randomly generated 9 character long strings containing uppercase and lowercase letters plus numbers. According to the signed contract revealing any cleartext passwords to third parties was prohibited. However, the client made an exception and approved the use of a PCaaS, if the Red-Team can assure that the third party server does not have a guess with better than 2\u221229 probability. The following example presents a realistic scenario that solves this problem using 3PC.\nLet the data set DS be the set of all 9 character long strings containing uppercase and lowercase letters plus numbers hence, |DS| = 629. According to the specified security requirements, the server must not have a better guess than 1/|CS| < 2\u221229. As a reminder, the 3PC protocol provides a stronger security, as the server can not make a 1/|CS| guess on the candidate set without making several assumptions. The client wanted assurance that even in the worst case scenario if s\u2217 \u2208 DS is known (in other words P(B) = 1), the maximum guessing probability of the server is 1/|CS|. In this example the NTLM target hash is t =8AC54208A85C340AE9B8B0CDB236F14C.\nCompared to the GEN-V step in the 3PC protocol, where it was possible to set a degree of freedom on each hexadecimal character of the target hash, the se_decrypt tool is more limited. The built-in --hit-mask parameter can be used as a \u201drestricted\u201d GEN-V function to create \u03c5. It only allows setting the degree of freedom by bytes (by two hex characters). To be more precise, the n-th bit of the hit mask (from the right) corresponds to the n-th byte of the target (also from the right). If the n-th bit of the hit mask is a \u201d1\u201d, the n-th byte of a resulting candidate password hash must completely match the n-th byte of the target hash, otherwise it does not need to match. The se_decrypt expects this vector \u03c5, and the --hit-mask both in hexadecimal representation. As a consequence, we can only select even powers of sixteen as the size of N\u03c5 . To transform the vector \u03c5 which is suitable for the se_decrypt tool, one needs to solve the following RIVYERA specific inequality:\n12\n229 < |DS| \u00b7 162x\n|\u03a3l| (12)\nThe first x which satisfies 12 is x = 13, for which we have\n629 \u00b7 1626\n1632 \u2248 806 873 234\nThus we expect approximately r \u2248 806 million candidates after hashing all possible strings in DS. A suitable vector is \u03c5 =[88AACC550F0F0F0F0F0F0F0F0F0F0F0F0F0F 0F0F0F0F0F0F0F0F0F0F0F0F44CC] \u2208 \u03a364. One can easily generate the RIVYERA specific mask on the server side namely 8AC5000000000000000000000000004C. This shows that from the 32 hexadecimal character long target hash we need to hide 26 characters (1626) in any position. Using the se decrypt tool, one can use the following parameters to start cracking the data set: se_decrypt -a nthash --hash 8AC5000000000000000000000000004C --hit-mask C001 --lower-case --upper-case --numbers --min-len 9 --max-len 9 --no-stop ---logfile candidate.txt Please note, that the binary representation of the C001 parameter value is 1100000000000001, meaning we disregard 13 bytes from the middle (26 hexadecimal characters) from the original hash. The 8AC5000000000000000000000000004C hash together with the --hit-mask C001 produces the same decoy hashes as the original vector \u03c5, therefore these are equivalent representations of the X\u03c5 decoy set.\nIn our control test, brute forcing the whole 629 key space for one NTLM hash takes approximately 19.6 hours on RIVYERA with 192 billion hash/sec. Here comes the real benefit of the 3PC protocol: After applying the --hit-mask C001 parameter on our modified vector \u03c5 defining |X\u03c5| = 1626 hashes, the RIVYERA cluster finished the cracking process after 19.6 hours, under the same time as it took to find a single hash, and found 806834341 candidate passwords. Writing all candidates to disk took less than 50 seconds which is negligible compared to the cracking time. The output of the cracking process can be seen in Figure 6. The last step is to send the resulting file to the client, which is around 20.0 GB. The client then simply checks whether \u2203(s, t) \u2208 CS, which is true in our case. The cleartext corresponding to the target hash t is \"bKFQ4Q8C0\"."
+        },
+        {
+            "heading": "B. Experimental result analysis",
+            "text": "A very clear advantage of 3PC is that using a predicate function allows the efficient handling of huge anonymity sets, that would otherwise be infeasible. In our experiment presented on RIVYERA, the size of the decoy set was selected to be |X\u03c5| = 1626 = 20282409603651670423947251286016. Applying the P\u03c5 function to the hashed data set produced an anonymity set of r \u2248 806 million decoy passwords. In this example CS provides perfect k-anonimity on the target hash, as the password is hidden in a set of similar data.\nDespite the decoy set being large, the 3PC protocol utilizes the predicate function to allow a constant time check for\nverifying h(s) \u2208 X\u03c5, (based on lemma III.1) for \u2200s \u2208 DS. As a result we can increase |X\u03c5| without any penalties on computational speed. The only upper limit is the size of the candidate set which the server needs to write to disk. In NTLM, one hash value is exactly 128 bit. From this we can easily calculate how much hard drive space it would take if one would attempt to write the content of the decoy set to the hard drive: (1626 \u00b7 128)/8/10245 \u2248 2.88 \u00b7 1017, which is 3 million billion Petabytes. This would clearly be impossible to handle with today\u2019s technology. However 800 million cleartext-hash pairs in the candidate set only takes up 20 GB, which can be easily transferred to the client. To the best of our knowledge this example was the first documented case when perfect kanonimity was achieved during a password cracking process using a third party service."
+        },
+        {
+            "heading": "C. Password analysis and Parameter security",
+            "text": "What if the client was not sure if the target hash hides a machine generated code? Would it be safe to use a brute force attack, assuming that the candidate set provides a sufficient anonymity set for a password like JohnnY007? To answer this question we have analyzed the 800 million candidate passwords which are a random subset of the data set, selected by the P\u03c5 function. We have used the cracklib-check plugin, which groups passwords into six categories. From the 800 million candidates approximately 0.07% of the passwords were flagged as weak. The exact distribution for each category can be seen in TABLE V.\nAs an example we list below some of the dictionary based words that the tool found.\n13\nAlthough there are a good number of passwords that can be easily classified as human generated, this set would not provide perfect k-anonymity for all human generated passwords. The occurrence of shorter dictionary words is higher, but passwords that use all 9 characters in a plausible sequence are less common. This is to be expected, as the protocol is designed to provide an anonymity set for data that makes up the cracking data set. Therefore, we provide the following guidelines for practical applications.\nIf the client possesses no implicit information on the preimage of the target hash, the best approach is to start with a hybrid attack, based on a core dictionary and a rule-set. A smaller data set with a larger N\u03c5 , for which the client can repeatedly switch between the data sets of similar size, without changing X\u03c5 has an added benefit. This will make it impossible for the server to conduct attacks with significantly bigger data sets such as brute force attacks, as the resulting candidate set for the same N\u03c5 could reach sizes of hundreds of Petabytes, making it impossible to store or evaluate the results. If these cracking sessions are proven to be unfruitful, the client could choose to pivot to brute force attacks. If this entails a significantly larger data set, the client can shrink X\u03c5 , but never create a new vector \u03c5 through GEN-V."
+        },
+        {
+            "heading": "VI. CONCLUSION",
+            "text": "This paper introduces privacy-preserving password cracking, showing how the computational resources of an untrusted third party can be used to crack a password hash. The anonymity sets that hide the target hash, would make it impossible in traditional cracking scenarios to process or store this number of hashes and the corresponding cleartext results. We circumvented this by extending the theory of predicate functions to operate on the output of hash functions. On top of this, we demonstrated that increasing the number of decoy hashes bears no impact on the hash rate, making the 3PC protocol very efficient. The implementation of the protocol was shown through two Toy Examples, and one real life implementation running on the RIVYERA FGPA cluster. Through\nthese, we were able to verify our original goals we set out to examine. The server only learns probabilistic information both on the target hash and the cleartext password. The protocol is resistant against foul play, where the server gains no tangible advantage towards learning the target hash, or it\u2019s pre-image by not following the steps of the protocol. The protocol ensures plausible deniability, where the client can claim to have aimed for a different target. Through a proof of work scheme, the client can have a statistical argument if they suspect that the requested search space has not been exhausted. The empirical tests and the theoretical analysis suggests that the 3PC protocol is suitable for practical use both from a security, a privacy, and an efficiency perspective."
+        },
+        {
+            "heading": "ACKNOWLEDGMENT",
+            "text": "The authors would like to thank Dr. Axel Y. Poschmann for the constructive brainstorming sessions, and Dr. Lothar Fritsch for his insightful comments."
+        }
+    ],
+    "title": "Privacy-Preserving Password Cracking: How a Third Party Can Crack Our Password Hash Without Learning the Hash Value or the Cleartext",
+    "year": 2023
+}

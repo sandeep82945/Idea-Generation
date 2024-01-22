@@ -1,0 +1,171 @@
+{
+    "abstractText": "Current least-cost tools for behavioral scientists are computationally insufficient and lack methods to independently derive animal-specific energetic cost functions based on locational data. Moreover, topologically-valid approaches only measure the biomechanical cost of movement, when sometimes net metababolical expediture may be a more-important consideration. In this paper, I first derive generalizable cost functions for energetic expenditure for any arbitrary biped or quadruped, versus the currentlyemployed regressed functions with limited cross-taxa or behavioral mode applicability. I then describe the cost-distance functions of the R package lbmech, designed to (1) regress the parameters describing behavioral sensitivity to slope from GPS tracking data; and (2) calculate the costs of movement in terms of time, kinetic work, and net metabolic expenditure. Finally, I demonstrate the utility of this package using publicly-available GPS, ocean current velocity, and elevation data from the Balearic Islands of Spain. This approach greatly facilitates the collection of field-based data given the reliance on GPS data. Moreover, it allows us to identify and consider individualand group-level effects and variances that may lead to differential movement-related fitness with evolutionary consequences.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Andr\u00e9s G. Mej\u0301\u0131a Ram\u00f3n"
+        }
+    ],
+    "id": "SP:ab66c1e7caa56c1620223d64ade0d1e75b400b6e",
+    "references": [
+        {
+            "authors": [
+                "E. Berti",
+                "M. Davoli",
+                "R. Buitenwerf",
+                "A. Dyer",
+                "O.L.P. Hansen",
+                "M. Hirt",
+                "Svenning",
+                "J.-C",
+                "J.F. Terlau",
+                "U. Brose",
+                "F. Vollrath"
+            ],
+            "title": "The r package enerscape: A general energy landscape framework for terrestrial movement ecology",
+            "venue": "Methods in Ecology and Evolution",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "G. Csardi",
+                "T. Nepusz"
+            ],
+            "title": "The igraph Software Package for Complex Network Research",
+            "venue": "InterJournal 1695,",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "N.C. Heglund",
+                "G.A. Cavagna",
+                "C.R. Taylor"
+            ],
+            "title": "Energetics and mechanics of terrestrial locomotion. III. Energy changes of the centre of mass as a function of speed and body size in birds and mammals",
+            "venue": "Journal of Experimental Biology",
+            "year": 1982
+        },
+        {
+            "authors": [
+                "I. Herzog"
+            ],
+            "title": "A Review of Case Studies in Archaeological Least-Cost Analysis",
+            "venue": "Archeologia e Calcolatori",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "A.D. Kuo"
+            ],
+            "title": "The six determinants of gait and the inverted pendulum analogy: A dynamic walking perspective",
+            "venue": "Human Movement Science",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "I. Lera",
+                "T. P\u00e9rez",
+                "C. Guerrero",
+                "V.M. Eg\u00fa\u0131luz",
+                "C. Juiz"
+            ],
+            "title": "Analysing human mobility patterns of hiking activities through complex network theory",
+            "venue": "PLOS ONE 12(5),",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "K.B. Pandolf",
+                "B. Givoni",
+                "R.F. Goldman"
+            ],
+            "title": "Predicting energy expenditure with loads while standing or walking very slowly",
+            "venue": "Journal of Applied Physiology",
+            "year": 1977
+        },
+        {
+            "authors": [
+                "N.A. Pimental",
+                "K.B. Pandolf"
+            ],
+            "title": "Energy expenditure while standing or walking slowly uphill or downhill with loads",
+            "year": 1979
+        },
+        {
+            "authors": [
+                "H. Pontzer"
+            ],
+            "title": "A unified theory for the energy cost of legged locomotion",
+            "venue": "Biology Letters",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "H. Pontzer",
+                "R. Durazo-Arvizu",
+                "L. Dugas",
+                "J. Plange-Rhule",
+                "P. Bovet",
+                "T. Forrester",
+                "E. Lambert",
+                "R. Cooper",
+                "D. Schoeller",
+                "A. Luke"
+            ],
+            "title": "Constrained Total Energy Expenditure and Metabolic Adaptation to Physical Activity in Adult Humans",
+            "venue": "Current Biology",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "J. van Etten"
+            ],
+            "title": "R Package gdistance : Distances and Routes on Geographical Grids",
+            "venue": "Journal of Statistical Software",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "B.M. Wood",
+                "Z.J. Wood"
+            ],
+            "title": "Energetically optimal travel across terrain: visualizations and a new metric of geographic distance with anthropological",
+            "year": 2006
+        }
+    ],
+    "sections": [
+        {
+            "text": "Key Words: GIS; biomechanics; movement ecology; landscape; calories; topography\nData Availability Statement: The code for all analyses can be obtained at: https://github.com/andresgmejiar/lbmech\nAcknowledgments: The author would like to thank W. David Walter, Douglas Miller, Douglas Bird, Mary Shenk, Christian John, Kenneth Hirth, Tom Froese and Georgii Karelin for comments and suggestions on previous versions of the model. Elio Gonza\u0301lez kindly guided the author through a number of the trails, for which he is hugely grateful.\n\u2217Andres.Mejia@OIST.jp"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "Wood and Wood (2006) and Berti et al. (2022) have proposed applying least-cost path analysis to an animal\u2019s energetic locomotion expenditure. These studies utilize regressed functions (Pandolf et al. 1977; Pimental and Pandolf 1979; Pontzer 2016) to quantify animals\u2019 net metabolic expenditure. The former conflate mechanical work and energy loss due to basal metabolism and employ a topologically-invalid function (Pandolf et al. 1977). The latter, meanwhile, neglects the energetic cost of being alive over an arbitrary period of time. These distinct processes (cf. Pontzer et al. 2016) \u2014 though related\u2014 may uniquely influence movement decisionmaking across landscapes. Mechanical work signifies real-time mechanical effort, while energy integrates both mechanical effort and life\u2019s energetic cost. Additionally, current least-cost tools for behavioral scientists are computationally insufficient and lack methods to independently derive animal-specific energetic cost functions based on locational data.\nIn least-cost path analyses, typically three cost types are considered for landscape traversal: (1) dimensionless, expressing relative cost (e.g., location A has tenfold travel cost compared to location B); (2) temporal, primarily for human movement based on Tobler\u2019s Equation for average human walking speed per incline; and (3) energetic, using either Pandolf\u2019s Equation for human net metabolic expenditure per incline, or Pontzer\u2019s function for estimating an animal\u2019s metabolic expenditure per incline based on its mass. Each approach has various shortcomings.\nDimensionless costs \u2014- often based on subjective landcover transport considerations \u2014 are simple to generate, but generally lack empirical grounding and are often pseudo-quantitative. Temporal costs \u2014 easily conceptualized and linked to quantifiable behavior \u2014 lack a simple non-human animal slope-velocity model estimation method, while Tobler\u2019s hiking function\u2019s parameter variability remains poorly understood. Net metabolic expenditure combining basal metabolism and kinematic work, can misrepresent energy variables. Notably, Pandolf\u2019s human transport equation cannot predict downhill movement, yielding implausibly negative energy estimates (Herzog 2014), suggesting the possibility of energy gain from downhill travel. Pontzer\u2019s function (2016)\u2014which underlies Berti et al. (2022)\u2019s energetic model and the associated enerscape toolkit \u2014 derives the cost-of-travel from the biomechanics of muscle contractions. While it has high explanatory power, the large variance \u2014 particularly on a logarithmic scale \u2014 suggests limited predictive ability in cross-species applications. Thus, a topologically-correct approach that can derive species-specific functions from empirical data is needed.\nIn this paper, I first derive generalizable cost functions for any arbitrary movement, based on energetics and mechanical physics, not regressed functions with limited cross-taxa or behavioral mode applicability. This allows for three independent locomotive energy expenditure types: (1) kinematic/mechanical work; (2) gravitational kinematic/mechanical work; and (3) basal metabolic expenditure. The second section introduces the lbmech package, initially designed for the analyses described herein and to determine energetic parameters for specific taxa and behavioral mode using locational data. Lastly, I illustrate the framework using GPS, topographic, and ocean current data from the Illes Balears (Lera et al. 2017)."
+        },
+        {
+            "heading": "2 The Energetics of Locomotion",
+            "text": "To traverse a terrestrial landscape, kinetic work (K) and work against gravity (U) are performed. Kinetic work for human movement is K = 14mv 2 \u2113s L (Kuo 2007), and for quadrupeds K = m(0.685v+0.072) (Heglund et al. 1982). Here, m is mass, v is speed, \u2113s is step length, and L is leg length. Gravitational work is nonholonomic as it is expended only when moving uphill, resulting in U = mgh, to lift mass m to height h with gravity g. The total work W is:\nW = 1\n4 mv2 \u2113s L + { mgh dz \u2265 0 0 dz < 0\n(1)\nTobler\u2019s Hiking function predicts velocity v based on landscape topography:\nd\u2113 dt = vmaxe \u2212k| dzd\u2113 \u2212s| (2)\nCost versus Slope using Canonical Parameters For Various Costs\nwhere \u2113 is horizontal movement, z vertical movement, vmax the maximum speed, s the optimal slope, and k the speed variation sensitivity. Canonical values for humans are vmax = 1.5 m/s, k = 3.5, and s = \u22120.05. However, getVelocity() in the lbmech package can extract these variables from GPS data.\nConsidering a biomechanical inefficiency efficiency factor of \u03b5, and adding base metabolic rate (dHdt ), we model the total energy expenditure E for bipeds as:\nE = 1\n4 mv2 \u2113s L + dH dt dt+ { mgh dz \u2265 0 0 dz < 0\n(3)\nThe derived functions are anisotropic due to dependence on \u03b8 = arctan ( dz dx ) , and nonholonomic due to their dependence on gravity. However, conventional least-cost tools such as most GIS toolkits are inadequate given that they operate on cell values themselves. Given that this is a problem of integrating a path integral over a differential surface, alternate methods are required.\nA least-cost path algorithm selects paths where segments tend towards the lower end of cost plots in Figure 1. Considering canonical parameters and time minimization (Figure 1a), paths with slopes near the fastest travel slope (s = \u22120.05), are favored. Moving away from this value exponentially increases the cost. For kinetic energy minimization (Figure 1b), extreme slopes are chosen, as movement and kinetic energy are minimal. For work against gravitational potential energy (Figure 1c), any negative slope is equally favored with positive slopes linearly increasing in cost. Downhill movement is primarily kinetic energy-restrained, while uphill movement is mainly limited by gravitational potential energy. For net metabolic energy, penalties apply to slower, mechanically efficient routes due to metabolic costs. Therefore, the most efficient slopes exist at the global minimum of dzd\u2113 = \u22120.0818 = arctan(\u22124.7\n\u25e6) with canonical parameters. Least-cost toolkits often neglect potential water-based movement\u2014much simpler to calculate than on land. The water surface is represented by a two-dimensional vector field for water surface velocity v\u20d7water(x, y). For still water, v\u20d7water = 0. The velocity of someone on water is:\nv\u20d7(x, y) = v\u20d7water + v\u20d7travel, (4)\nwhere v\u20d7travel(x, y) = vtravel\u2113\u0302 is the travel speed (e.g. swimming or rowing) over still water and \u2113\u0302 is the unit vector of the intended travel direction. If v\u20d7 < 0, then travel in that direction is impossible. For simplicity, we assume that the caloric cost is proportional to v2travel.\n3 The Cost-Distance Functions of lbmech\nlbmech is a geospatial R package developed for least-cost path analysis, incorporating tools for determining time and energy-based travel costs for animals and humans navigating landscapes. It also includes built-in statistical tools for deriving cost functions from GPS data. Some features, such as estimating potential energetic net primary productivity from tabulated data, are currently under development, and will be discussed in future works.\nThe general philosophy behind this package is that energetic and least-cost path analyses should always be simple, the most time-taking parts should be done at most once, and ideally that costs should be rooted in empirical reality. It shares features with the gdistance library (van Etten 2017), but differs in computation and usability. Both libraries use differential surfaces to represent movement costs between landscape locations and store these costs in ways that enumerate possible transitions. They then perform computations before generating a network igraph object for efficient distance calculations (Csardi and Nepusz 2006). However, lbmech excels in speed, simplicity, and flexibility due to its data structure and handling methods.\nThe gdistance library uses conductance (i.e., 1/resistance) to store movement costs in a sparse matrix. The use of conductance reduces memory usage but can result in integer overflow errors with large datasets given the need of index masking for when f(0) \u0338= 0. Meanwhile, lbmech stores resistance values directly as an adjacency list and performs linear algebra using the data.table package, enabling simpler syntax for many operations. Each possible movement is stored as a unique row, with entries for 'from' and 'to' nodes, and the difference in or raw final and initial values of the raster. Nodes are named after raster cell coordinates and are stored as 'x,y' character strings. This approach facilitates in-place modification of objects, bidirectional raster analysis, and transformations of large rasters without encountering integer overflow limits.\nlbmech also compartmentalizes the cost-distance workflow, ensuring that intensive steps only need to be performed once. It supports large spatial regions and fine spatial resolutions, critical for land-based transport decision-making at meter and decameter scales. Files are stored in a temporary directory by default, but a workspace directory can be designated for repeated analysis, ensuring efficient file management. Geographic projections and transformations are performed using the terra package, while read/write operations involve the fst package leveraging speed enabling fast referential and partial access to datasets (particularly on solid state drives). lbmech can use multiple elevation rasters, sourced from a polygon grid pointing to a URL or filepath with the region\u2019s elevation data. If no sources are provided, SRTM tiles are fetched using the elevatr package.\nThe package emphasizes empirical reality by focusing on time and energy-based considerations for landscape movement. Its energyCosts() function estimates maximum walking speed at a given slope using a generalized form of Tobler\u2019s hiking function, and one of three biomechanical models (Kuo 2007, Heglund et al. 1982, Pontzer 2016, and an oscillator) for work per unit time or stride. Unlike tools like enerscape for R, lbmech estimates various types of energetic losses and provides a method to derive cost functions from GPS data through the getVelocity() function for use with the Kuo (2007) or Heglund et al. (1982) or oscillator methods. This is less invasive than VO2 meters used for net energetic expenditure estimation. Finally, lbmech incorporates the geosphere package\u2019s distance functions, allowing geodesic corrections at all calculation stages."
+        },
+        {
+            "heading": "4 Case Study \u2014 Movement around the Balearic Islands",
+            "text": "The full code, which includes all functions, figures, and case study, is available on the lbmech website. This section outlines the general usage of the package using an example from the Balearic Islands, Spain. The package can be installed within R:\ninstall.packages('devtools') devtools::install_github('andresgmejiar/lbmech') library(lbmech)"
+        },
+        {
+            "heading": "4.1 Estimating Velocity",
+            "text": "Our GPS dataset of 15,296 usable GPX tracks from https://wikiloc.com, was first detailed by Lera et al. (2017), who analyzed hiking trail activity and network organization seasonality. Given a directory of .gpx files, tracks can be imported as a data.table using importGPX():\ngetData('baleares-gpx', dir = dir) # Download GPS data gpx <- list.files(dir,\nrecursive = TRUE, full.names = TRUE, pattern = \".gpx$\")\ngpx <- lapply(gpx, importGPX) gpx <- rbindlist(gpx)\nGPS tracks can provide a per-length sample rate finer than even the smallest raster pixels we might use, so they are downsampled to an equivalent rate\u2014approximately a pixel length per GPS sample. For an expected pixel size of 50 m and a maximum speed close to 1.5 m/s, t_step = 50/1.5. The downsampleXYZ() function is applied for this purpose:\ngpx <- downsampleXYZ(gpx,\nt_step = 50/1.5, t = 't', x = 'long', y = 'lat', z = 'z', ID = 'TrackID')\nSubsequently, the xyz data is input into getVelocity(), which for each GPS point sequence (1) calculates the elevation changes (dzd\u2113 ) and planimetric speed ( d\u2113 dt ), and (2) carries out a nonlinear quantile regression to achieve a Tobler-like function. This results in a list comprised by the nonlinear model, model parameters, and the transformed data.\nvelocity_gps <- getVelocity(data = gpx[y < 90], # Filter for y\ndegs = TRUE, # Lat/Long; geodesic correction tau_vmax = 0.95, # Quantile for v_max tau_nlrq = 0.50, # Quantile for nlrq v_lim = 3) # Filter for dl/dt\nplotVelocity() can be used to plot the log-transformed probability of a given speed at a given slope versus the regressed function, as in Figure 2:\nplotVelocity(velocity_gps)"
+        },
+        {
+            "heading": "4.2 Energetic Cost-Distance Analysis",
+            "text": "For efficient data handling in various stages of the workflow \u2014 particularly during model-building \u2014 a consistent directory should be set.\n# Define a working directory rd <- \"Baleares\" if (!dir.exists(rd)) dir.create(rd)\nSlope vs. Planimetric Speed Heatmap and Regressed Function\nlbmech offers automatic terrain data download. Nevertheless, to incorporate ocean movement, we import ocean currents around Mallorca and Menorca \u2014 the principal Balearic Islands \u2014 on June 13, 2022 previously downloaded from https://data.marine.copernicus.eu/. Subsequently, the maximum movement region (the \u201cworld\u201d) will be defined around the raster\u2019s extent:\n# Projection will be UTM 31N WGS1984 proj <- \"EPSG:32631\"\n# Import an ocean water surface velocity dataset currents <- project(getData('baleares-currents'),proj)\n# Define region of maximum possible movement region <- as.polygons(ext(currents),proj)\nTo conduct raster operations, we must define a consistent projection and grid. Unlike most raster packages, lbmech requires only the resolution and offsets, not the spatial extents. This can be done with the fix_z() function:\n# Define the raster properties z_fix <- fix_z(proj = proj, res = 50)\nOften, we define a \u2018world\u2019 coincident with a digital elevation model. makeGrid() can generate a polygon from a raster or filepath. This function helps download SRTM data as needed.\ngrid <- makeGrid(dem = region,\nnx = 15, ny = 15, # Number of tiles in 'x' and 'y'\nsources = TRUE, # Does it point to source files? zoom = 11, # Zoom level for SRTM overlap = 0.05) # Overlap between tiles\nSimilar polygons pointing to elevation data sources are often distributed by state GIS agencies. The defineWorld() function segments the movement world into manageable, overlapping \u2018sectors\u2019, read-in only as required due to memory limitations. This function mainly prepares the data for calculations.\ndefineWorld(source = grid,\ngrid = grid, directions = 8, # Contiguity neighbor_distance = 10, # Tiles considered neighbors cut_slope = 0.5, # Max slope water = currents, # Water current raster priority = 'land', # Preference if water/land overlap z_min = 0, # Ignore elevs below this z_fix = z_fix, # Rater with desired origin/resolution/crs dist = 'karney', # Geodesic Distance corrections dir = rd, # Working directory overwrite=FALSE)\nOnce a world has been defined (Figure 3), a cost function can be applied using calculateCosts(). energyCosts() is provided to perform least-time, least-work, and least-energy analyses, as previously described. It prepares data for calculations, but doesn\u2019t typically perform calculations itself.\ncalculateCosts(costFUN = energyCosts, # Cost function\ndir = rd, # Working directory with world method = \"kuo\", # Method to calculate work water = TRUE, # Consider water, or only land? v_max = velocity_gps$vmax, # Maximum walking speed (m/s) k = velocity_gps$k, # Slope sensitivity (dimensionless)\ns = velocity_gps$s, # Slope of fastest motion (dimensionless) row_speed = 1.8, # Speed over water (m/s) row_work = 581, # Work over water (J/s) m = 68, # Mass (kg) BMR = 72, # Basal metabolic rate (J/s) l_s = 1.8, # Stride length (m) L = 0.8) # Leg length\nFor a given cost function and set of origins/destinations, getCosts() identifies necessary sectors, checks and downloads data, performs calculations, and saves cell-wise transition cost tables to the working directory. This way, they won\u2019t need to be fetched or preprocessed again for future calculations.\npobles <- getData('baleares-places') # Import locations on Mallorca, Menorca, Cabrera reg <- as.polygons(ext(buffer(pobles, 10000)),crs = crs(proj))\ncosts <- getCosts(region = reg, # Area of maximum movement\nfrom = pobles, # Origins to = NULL, # Destinations costname = 'energyCosts', # Name of costFUN above id = 'Location', # Column with origin names dir = rd, # Directory with world destination = 'all') # Distance to all points in region\nLeast-cost paths can be computed for a given set of nodes, here between Palma de Mallorca and Mao\u0301, or in Figure 4 :\npaths <- getPaths(region = reg, # Defined region\nnodes = pobles, # Nodes costname = 'energyCosts', # Name of cost function order = c(\"Palma de Mallorca\",\"Mao\u0301\"), # Order of nodes id = 'Location', # Column with node names dir = rd) # Directory with world\nFinally, corridors specify the minimum detour cost to a particular location on a path between two or more points, relative to the least cost path between those points. This can be calculated from the output cost rasters utilizing the makeCorridor() function, here from Castell de Cabrera to Mao\u0301 via Sa Calobra:\ncorr <- makeCorridor(rasters = costs,\norder = c(\"Castell de Cabrera\",\"Sa Calobra\",\"Mao\u0301\"))"
+        },
+        {
+            "heading": "5 Conclusion",
+            "text": "This method improves on cost-distance analysis in behavioral and spatial sciences by modeling individualand group-level effects, tailoring empirical costs, and efficiently handling large-scale, high-resolution data. For instance, we regressed unique parameters for human movement in the Balearic Islands using GPS data, facilitating nuanced behavioral response analyses. Moreover, lbmech offers significant computational benefits over standard methods, intuitively combining water and land transportation while processing extensive regions at 50m resolution, all without overflow errors on a 32 GB laptop. Segmentation of GPS tracks by individual or population would allow us to potentially identify differences in behavioral responses to landscape slope and their energetic consequences. This has direct implications with regards to differential fitness, opening the possibility for evolutionary studies of locomotive efficiency in specific landscapes and the estimation of the minimum amount of energy required to sustain mobile behavior."
+        },
+        {
+            "heading": "Acknowledgments",
+            "text": "The author would like to thank W. David Walter, Douglas Miller, Douglas Bird, Mary Shenk, Christian John, Kenneth Hirth, Tom Froese and Georgii Karelin for comments and suggestions on previous versions of the model."
+        }
+    ],
+    "title": "Efficient Functions for Energetic Least-Cost Analysis over Land and Water in the lbmech package for R",
+    "year": 2023
+}

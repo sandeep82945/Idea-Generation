@@ -1,0 +1,756 @@
+{
+    "abstractText": "Zero Knowledge Proofs (ZKPs) are cryptographic protocols by which a prover convinces a verifier of the truth of a statement without revealing any other information. Typically, statements are expressed in a high-level language and then compiled to a low-level representation on which the ZKP operates. Thus, a bug in a ZKP compiler can compromise the statement that the ZK proof is supposed to establish. This paper takes a step towards ZKP compiler correctness by partially verifying a field-blasting compiler pass, a pass that translates Boolean and bitvector logic into equivalent operations in a finite field. First, we define correctness for field-blasters and ZKP compilers more generally. Next, we describe the specific field-blaster using a set of encoding rules and define verification conditions for individual rules. Finally, we connect the rules and the correctness definition by showing that if our verification conditions hold, the field-blaster is correct. We have implemented our approach in the CirC ZKP compiler and have proved bounded versions of the corresponding verification conditions. We show that our partially verified field-blaster does not hurt the performance of the compiler or its output; we also report on four bugs uncovered during verification.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Alex Ozdemir1(B"
+        },
+        {
+            "affiliations": [],
+            "name": "Riad S. Wahby"
+        },
+        {
+            "affiliations": [],
+            "name": "Fraser Brown"
+        },
+        {
+            "affiliations": [],
+            "name": "Clark Barrett"
+        }
+    ],
+    "id": "SP:a5b5116b302c8a108621e89c9baec552056e4bab",
+    "references": [
+        {
+            "authors": [
+                "S. Angel",
+                "A.J. Blumberg",
+                "E. Ioannidis",
+                "J. Woods"
+            ],
+            "title": "Efficient representation of numerical optimization problems for SNARKs",
+            "venue": "USENIX Security",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Bell\u00e9s-Mu\u00f1oz",
+                "M. Isabel",
+                "J.L. Mu\u00f1oz-Tapia",
+                "A. Rubio",
+                "J. Baylina"
+            ],
+            "title": "Circom: a circuit description language for building zero-knowledge applications",
+            "venue": "IEEE Transactions on Dependable and Secure Computing",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "E. Ben-Sasson",
+                "I. Bentov",
+                "Y. Horesh",
+                "M. Riabzev"
+            ],
+            "title": "Scalable zero knowledge with no trusted setup",
+            "venue": "CRYPTO",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Y. Bertot",
+                "P. Cast\u00e9ran"
+            ],
+            "title": "Interactive theorem proving and program development: Coq\u2019Art: the calculus of inductive constructions",
+            "venue": "Springer, Heidelberg",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "M. Blum",
+                "P. Feldman",
+                "S. Micali"
+            ],
+            "title": "Non-interactive zero-knowledge and its applications",
+            "venue": "STOC",
+            "year": 1988
+        },
+        {
+            "authors": [
+                "F. Brown",
+                "J. Renner",
+                "A. N\u00f6tzli",
+                "S. Lerner",
+                "H. Shacham",
+                "D. Stefan"
+            ],
+            "title": "Towards a verified range analysis for JavaScript JITs",
+            "venue": "PLDI",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "M. Campanelli",
+                "R. Gennaro",
+                "S. Goldfeder",
+                "L. Nizzardo"
+            ],
+            "title": "Zero-knowledge contingent payments revisited: attacks and payments for services",
+            "venue": "CCS",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "E. Chen",
+                "J. Zhu",
+                "A. Ozdemir",
+                "R.S. Wahby",
+                "F. Brown",
+                "W. Zheng"
+            ],
+            "title": "Silph: a framework for scalable and accurate generation of hybrid MPC protocols",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "A. Chiesa",
+                "Y. Hu",
+                "M. Maller",
+                "P. Mishra",
+                "N. Vesely",
+                "N. Ward"
+            ],
+            "title": "Marlin: preprocessing zkSNARKs with universal and updatable SRS",
+            "venue": "EUROCRYPT",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "C. Chin",
+                "H. Wu",
+                "R. Chu",
+                "A. Coglio",
+                "E. McCarthy",
+                "E. Smith"
+            ],
+            "title": "Leo: a programming language for formally verified, zero-knowledge applications (2021)",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M. Cowan",
+                "D. Dangwal",
+                "A. Alaghi",
+                "C. Trippel",
+                "V.T. Lee",
+                "B. Reagen"
+            ],
+            "title": "Porcupine: a synthesizing compiler for vectorized homomorphic encryption",
+            "venue": "PLDI",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Eberhardt",
+                "S. Tai"
+            ],
+            "title": "ZoKrates\u2013scalable privacy-preserving off-chain computations",
+            "venue": "IEEE Blockchain",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "H.B. Enderton"
+            ],
+            "title": "A mathematical introduction to logic",
+            "venue": "Elsevier",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "C. Fournet",
+                "C. Keller",
+                "V. Laporte"
+            ],
+            "title": "A certified compiler for verifiable computing",
+            "venue": "CSF",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "A. Fox",
+                "M.O. Myreen",
+                "Y.K. Tan",
+                "R. Kumar"
+            ],
+            "title": "Verified compilation of CakeML to multiple machine-code targets",
+            "venue": "CPP",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J. Frankle",
+                "S. Park",
+                "D. Shaar",
+                "S. Goldwasser",
+                "D. Weitzner"
+            ],
+            "title": "Practical accountability of secret processes",
+            "venue": "USENIX Security",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "L. Goldberg",
+                "S. Papini",
+                "M. Riabzev"
+            ],
+            "title": "Cairo - a Turing-complete STARK-friendly CPU architecture (2021)",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Goldwasser",
+                "S. Micali",
+                "C. Rackoff"
+            ],
+            "title": "The knowledge complexity of interactive proof-systems",
+            "venue": "STOC",
+            "year": 1985
+        },
+        {
+            "authors": [
+                "P. Grubbs",
+                "A. Arun",
+                "Y. Zhang",
+                "J. Bonneau",
+                "M. Walfish"
+            ],
+            "title": "Zero-knowledge middleboxes",
+            "venue": "USENIX Security",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D. Hopwood",
+                "S. Bowe",
+                "T. Hornby",
+                "N. Wilcox"
+            ],
+            "title": "Zcash protocol specification",
+            "venue": "https://raw.githubusercontent.com/zcash/zips/master/protocol/protocol. pdf",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "K. Jiang",
+                "D. Chait-Roth",
+                "Z. DeStefano",
+                "M. Walfish",
+                "T. Wies"
+            ],
+            "title": "Less is more: refinement proofs for probabilistic proofs",
+            "venue": "IEEE S&P",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "S. Kamara",
+                "T. Moataz",
+                "A. Park",
+                "L. Qin"
+            ],
+            "title": "A decentralized and encrypted national gun registry",
+            "venue": "IEEE S&P",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M. Kaufmann",
+                "P. Manolios",
+                "J.S. Moore"
+            ],
+            "title": "Computer-aided reasoning: ACL2 case studies, vol",
+            "venue": "4. Springer, NY",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "A. Kosba",
+                "D. Papadopoulos",
+                "C. Papamanthou",
+                "D. Song"
+            ],
+            "title": "MIRAGE: succinct arguments for randomized algorithms with applications to universal zk-SNARKs",
+            "venue": "USENIX Security",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Kosba",
+                "C. Papamanthou",
+                "E. Shi"
+            ],
+            "title": "xJsnark: A framework for efficient verifiable computation",
+            "venue": "IEEE S&P",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "A. Kothapalli",
+                "B. Parno"
+            ],
+            "title": "Algebraic reductions of knowledge (2022)",
+            "venue": "https://ia.cr/",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "R. Kumar",
+                "M.O. Myreen",
+                "M. Norrish",
+                "S. Owens"
+            ],
+            "title": "CakeML: A verified implementation of ML",
+            "venue": "POPL",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "S. Kundu",
+                "Z. Tatlock",
+                "S. Lerner"
+            ],
+            "title": "Proving optimizations correct using parameterized program equivalence",
+            "venue": "PLDI",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "C. Lattner",
+                "V. Adve"
+            ],
+            "title": "LLVM: a compilation framework for lifelong program analysis & transformation",
+            "venue": "CGO",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "S. Lerner",
+                "T. Millstein",
+                "C. Chambers"
+            ],
+            "title": "Automatically proving the correctness of compiler optimizations",
+            "venue": "PLDI",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "S. Lerner",
+                "T. Millstein",
+                "E. Rice",
+                "C. Chambers"
+            ],
+            "title": "Automated soundness proofs for dataflow analyses and transformations via local rules",
+            "venue": "POPL",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "X. Leroy"
+            ],
+            "title": "Formal verification of a realistic compiler",
+            "venue": "Commun. ACM 52(7), 107\u2013 115",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "X. Leroy"
+            ],
+            "title": "A formally verified compiler back-end",
+            "venue": "J. Autom. Reason. 43(4), 363\u2013446",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "N.P. Lopes",
+                "J. Lee",
+                "C.K. Hur",
+                "Z. Liu",
+                "J. Regehr"
+            ],
+            "title": "Alive2: bounded translation validation for LLVM",
+            "venue": "PLDI",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "N.P. Lopes",
+                "D. Menendez",
+                "S. Nagarakatte",
+                "J. Regehr"
+            ],
+            "title": "Provably correct peephole optimizations with Alive",
+            "venue": "PLDI",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "E. Mullen",
+                "D. Zuniga",
+                "Z. Tatlock",
+                "D. Grossman"
+            ],
+            "title": "Verified peephole optimizations for CompCert",
+            "venue": "PLDI",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "G.C. Necula"
+            ],
+            "title": "Translation validation for an optimizing compiler",
+            "venue": "PLDI",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "A. Niemetz",
+                "M. Preiner",
+                "A. Reynolds",
+                "Y. Zohar",
+                "C. Barrett",
+                "C. Tinelli"
+            ],
+            "title": "Towards bit-width-independent proofs in SMT solvers",
+            "venue": "CADE",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Niemetz",
+                "M. Preiner",
+                "A. Reynolds",
+                "Y. Zohar",
+                "C. Barrett",
+                "C. Tinelli"
+            ],
+            "title": "Towards satisfiability modulo parametric bit-vectors",
+            "venue": "J. Autom. Reason. 65(7), 1001\u20131025",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "T. Nipkow",
+                "M. Wenzel",
+                "L.C. Paulson"
+            ],
+            "title": "Isabelle/HOL: a proof assistant for higherorder logic",
+            "venue": "Springer, Heidelberg",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "A. Ozdemir",
+                "F. Brown",
+                "R.S. Wahby"
+            ],
+            "title": "CirC: Compiler infrastructure for proof systems, software verification, and more",
+            "venue": "IEEE S&P",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "A. Ozdemir",
+                "G. Kremer",
+                "C. Tinelli",
+                "C. Barrett"
+            ],
+            "title": "Satisfiability modulo finite fields",
+            "venue": "submission",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "A. Ozdemir",
+                "R. Wahby",
+                "B. Whitehat",
+                "D. Boneh"
+            ],
+            "title": "Scaling verifiable computation using efficient set accumulators",
+            "venue": "USENIX Security",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Ozdemir",
+                "R.S. Wahby",
+                "F. Brown",
+                "C. Barrett"
+            ],
+            "title": "Bounded verification for finitefield-blasting",
+            "venue": "Cryptology ePrint Archive",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "B. Parno",
+                "J. Howell",
+                "C. Gentry",
+                "M. Raykova"
+            ],
+            "title": "Pinocchio: nearly practical verifiable computation",
+            "venue": "Commun. ACM 59(2), 103\u2013112",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "A. Pnueli",
+                "M. Siegel",
+                "E. Singerman"
+            ],
+            "title": "Translation validation",
+            "venue": "TACAS",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "S. Ranise",
+                "C. Tinelli",
+                "C. Barrett"
+            ],
+            "title": "SMT fixed size bit-vectors theory",
+            "venue": "https:// smtlib.cs.uiowa.edu/theories-FixedSizeBitVectors.shtml",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "E.B. Sasson",
+                "A. Chiesa",
+                "C. Garman",
+                "M. Green",
+                "I. Miers",
+                "E. Tromer",
+                "M. Virza"
+            ],
+            "title": "Zerocash: decentralized anonymous payments from Bitcoin",
+            "venue": "IEEE S&P",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "S. Setty",
+                "B. Braun",
+                "V. Vu",
+                "A.J. Blumberg",
+                "B. Parno",
+                "M. Walfish"
+            ],
+            "title": "Resolving the conflict between generality and plausibility in verified computation",
+            "venue": "EuroSys",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "G. Stewart",
+                "L. Beringer",
+                "S. Cuellar",
+                "A.W. Appel"
+            ],
+            "title": "Compositional CompCert",
+            "venue": "POPL",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Y.K. Tan",
+                "M.O. Myreen",
+                "R. Kumar",
+                "A. Fox",
+                "S. Owens",
+                "M. Norrish"
+            ],
+            "title": "The verified CakeML compiler backend",
+            "venue": "J. Funct. Programm. 29, E2",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "R Tao"
+            ],
+            "title": "Giallar: push-button verification for the Qiskit quantum compiler",
+            "venue": "PLDI",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Thaler"
+            ],
+            "title": "Proofs, Arguments, and Zero-Knowledge",
+            "venue": "Manuscript",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C. Tinelli"
+            ],
+            "title": "SMT core theory",
+            "venue": "https://smtlib.cs.uiowa.edu/theories-Core.shtml",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "A. Viand",
+                "P. Jattke",
+                "A. Hithnawi"
+            ],
+            "title": "SoK: fully homomorphic encryption compilers",
+            "venue": "IEEE S&P",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R.S. Wahby",
+                "S. Setty",
+                "M. Howald",
+                "Z. Ren",
+                "A.J. Blumberg",
+                "M. Walfish"
+            ],
+            "title": "Efficient RAM and control flow in verifiable outsourced computation",
+            "venue": "NDSS",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "M. Walfish",
+                "A.J. Blumberg"
+            ],
+            "title": "Verifying computations without reexecuting them",
+            "venue": "Commun. ACM 58(2), 74\u201384",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "F. Wang"
+            ],
+            "title": "Ecne: automated verification of ZK circuits (2022)",
+            "venue": "blog/ecne",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Y Zohar"
+            ],
+            "title": "Bit-precise reasoning via Int-blasting",
+            "venue": "CADE",
+            "year": 2022
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1 Introduction",
+            "text": "Zero-Knowledge Proofs (ZKPs) are powerful tools for building privacy-preserving systems. They allow one entity, the prover P, to convince another, the verifier V, that some secret data satisfies a public property, without revealing anything else about the data. ZKPs underlie a large (and growing!) set of critical applications, from billion-dollar private cryptocurrencies, like Zcash [24,53] and Monero [2], to research into auditable sealed court orders [20], private gun registries [26], privacy-preserving middleboxes [23], and zero-knowledge proofs of exploitability [11]. This breadth of applications is possible because of the generality of ZKPs. In general, P knows a secret witness w, whereas V knows a property \u03c6 and a public instance x. P must show that \u03c6(x,w) = . Typically, x and w are vectors of variables in a finite field F, and \u03c6 can be any system of equations over the variables, using operations + and \u00d7. Because \u03c6 itself is an c\u00a9 The Author(s) 2023 C. Enea and A. Lal (Eds.): CAV 2023, LNCS 13966, pp. 154\u2013175, 2023. https://doi.org/10.1007/978-3-031-37709-9_8\ninput to P and V, and because of the expressivity of field equations, a single implementation of P and V can serve many different purposes.\nHumans find it difficult to express themselves directly with field equations, so they use ZKP compilers. A ZKP compiler converts a high-level predicate \u03c6\u2032 into an equivalent system of field equations \u03c6. In other words, a ZKP compiler generalizes a ZKP: by compiling \u03c6\u2032 to \u03c6 and then using a ZKP for \u03c6, one obtains a ZKP for \u03c6\u2032. There are many industrial [3,5,6,14,21,45,55,66] and academic [4,18,28,29,46,48,50,54,63] ZKP compilers.\nThe correctness of a ZKP compiler is critical for security\u2014 a bug in the compiler could admit proofs of false statements\u2014 but verification is challenging for three reasons. First, the definition of correctness for a ZKP compiler is nontrivial; we discuss later in this section. Second, ZKP compilers span multiple domains. The high-level predicate \u03c6\u2032 is typically expressed in a language with common types such as Booleans and fixed-width integers, while the output \u03c6 is over a large, prime-order field. Thus, any compiler correctness definition must span these domains. Third, ZKP compilers are evolving and performance-critical; verification must not inhibit future changes or degrade compiler performance.\nIn this work, we develop tools for automatically verifying the field-blaster of a ZKP compiler. A ZKP compiler\u2019s field-blaster is the pass that converts from a formula over Booleans, fixed-width integers, and finite-field elements, to a system of field equations; as a transformation from bit-like types to field equations, the field-blaster exemplifies the challenge of cross-domain verification.\nOur paper makes three contributions. First, we formulate a precise correctness definition for a ZKP compiler. Our definition ensures that a correct compiler preserves the completeness and soundness of the underlying ZK proof system.1 More specifically, given a ZK proof system where statements are specified in a low-level language L, and a compiler from a high-level language H to L, if the compiler is correct by our definition, it extends the ZK proof system\u2019s soundness and completeness properties to statements in H. Further, our definition is preserved under sequential composition, so proving the correctness of each compiler pass individually suffices to prove correctness of the compiler itself.\nSecond, we give an architecture for a verifiable field-blaster. In our architecture, a field-blaster is a set of \u201cencoding rules.\u201d We give verification conditions (VCs) for these rules, and we show that if the VCs hold, then the field-blaster is correct. Our approach supports automated verification because (bounded versions of) the VCs can be checked automatically. This reduces both the up-front cost of verification and its maintenance cost.\nThird, we do a case study. Using our architecture, we implement a new field-blaster for CirC [46] (\u201cSIR-see\u201d), an infrastructure used by state-of-theart ZKP compilers. We verify bounded versions of our field-blaster\u2019s VCs using SMT-based finite-field reasoning [47], and show that our field blaster does not compromise CirC\u2019s performance. We also report on four bugs that our verification effort uncovered, including a soundness bug that allowed the prover to \u201clie\u201d about the results of certain bit-vector comparisons. We note that the utility of\n1 Roughly speaking, a ZK proof system is complete if it is possible to prove every true statement, and is sound if it is infeasible to prove false ones.\nour techniques is not limited to CirC: most ZKP compilers include something like the field-blaster we describe here.\nIn the next sections, we discuss related work (Sect. 1.1), give background on ZKPs and CirC (Sect. 2), present a field-blasting example (Sect. 3), describe our architecture (Sect. 4), give our verification conditions (Sect. 5), and present the case study (Sect. 6)."
+        },
+        {
+            "heading": "1.1 Related Work",
+            "text": "Verified Compilers. There is a rich body of work on verifying the correctness of traditional compilers. We focus on compilation for ZKPs; this requires different correctness definitions that relate bit-like types to prime field elements. In the next paragraphs, we discuss more fine-grained differences.\nCompiler verification efforts fall into two broad categories: automated\u2014verification leveraging automated reasoning solvers\u2014and foundational\u2014manual verification using proof assistants (e.g., Coq [8] or Isabelle [44]). CompCert [36], for example, is a Coq-verified C compiler with verified optimization passes (e.g., [40]). Closest to our work is backend verification, which proves correct the translation from an intermediate representation to machine code. CompCert\u2019s lowering [37] is verified, as is CakeML\u2019s [31] lowering to different ISAs [19,57]. While such foundational verification offers strong guarantees, it imposes a heavy proof burden; creating CompCert, for example, took an expert team eight years [56], and any updates to compiler code require updates to proofs.\nAutomated verification, in contrast, does not require writing and maintaining manual proofs.2 Cobalt [34], Rhodium [35], and PEC [32] are domain-specific languages (DSLs) for writing automatically-verified compiler optimizations and analyses. Most closely related to our work is Alive [39], a DSL for expressing verified peephole optimizations, local rewrites that transform snippets of LLVM IR [1] to better-performing ones. Alive addresses transformations over fixed types (while we address lowering to finite field equations) and formulates correctness in the presence of undefined behavior (while we formulate correctness for ZKPs). Beyond Alive, Alive2 [38] provides translation validation [41,51] for LLVM [33], and VeRA [10] verifies range analysis in the Firefox JavaScript engine.\nThere is also work on verified compilation for domains more closely related to ZKPs. The Porcupine [15] compiler automatically synthesizes representations for fully-homomorphic encryption [62], and Gillar [58] proves that optimization passes in the Qiskit [60] quantum compiler are semantics-preserving. While these works compile from high-level languages to circuit representations, the correctness definitions for their domains do not apply to ZKP compilers.\nVerified Compilation to Cryptographic Proofs. Prior works on verified compilation for ZKPs (or similar) take the foundational approach (with attendant proof maintenance burdens), and they do not formulate a satisfactory definition of compiler correctness. PinocchioQ [18] builds on CompCert [36]. The 2 Automated verification generally leverages solvers. This is a particularly appealing\napproach in our setting, since CirC (our compiler infrastructure of interest) already supports compilation to SMT formulas.\nauthors formulate a correctness definition that preserves the existential soundness of a ZKP but does not consider completeness, knowledge soundness, or zero-knowledge (see Sect. 2.2). Leo [14] is a ZKP compiler that produces (partial) ACL2 [27] proofs of correct compilation; work to emit proofs from its field-blaster is ongoing.\nRecent work defines security for reductions of knowledge [30]. These let P convince V that it knows a witness for an instance of relation R1 by proving it knows a witness for an instance of an easier-to-prove relation R2. Unlike ZKP compilers, P and V interact to derive R2 using V\u2019s randomness (e.g., proving that two polynomials are nonzero w.h.p. by proving that a random linear combination of them is), whereas ZKP compilers run ahead of time and non-interactively.\nFurther afield, Ecne [65] is a tool that attempts to verify that the input to a ZKP encodes a deterministic computation. It does not consider any notion of a specification of the intended behavior. A different work [25] attempts to automatically verify that a \u201cwidget\u201d given to a ZKP meets some specification. They consider widgets that could be constructed manually or with a compiler. Our focus is on verifying a compiler pass."
+        },
+        {
+            "heading": "2 Background",
+            "text": ""
+        },
+        {
+            "heading": "2.1 Logic",
+            "text": "We assume usual terminology for many-sorted first-order logic with equality ( [17] gives a complete presentation). We assume every signature includes the sort Bool, constants True and False of sort Bool, and symbol family \u2248\u03c3 (abbreviated \u2248) with sort \u03c3 \u00d7 \u03c3 \u2192 Bool for each sort \u03c3. We also assume a family of conditionals: symbols ite\u03c3 (\u201cif-then-else\u201d, abbreviated ite) of sort Bool \u00d7 \u03c3 \u00d7 \u03c3 \u2192 \u03c3.\nA theory is a pair T = (\u03a3, I), where \u03a3 is a signature and I is a class of \u03a3interpretations. A \u03a3-formula is a term of sort Bool. A \u03a3-formula \u03c6 is satisfiable (resp., unsatisfiable) in T if it is satisfied by some (resp., no) interpretation in I. We focus on two theories. The first is TBV , the SMT-LIB theory of bitvectors [52,61], with signature \u03a3BV including a bit-vector sort BV[n] for each n > 0 with bit-vector constants c[n] of sort BV[n] for each c \u2208 [0, 2n \u2212 1], and operators including & and | (bitwise and, or) and +[n] (addition modulo 2n). We write t[i] to refer to the ith bit of bit-vector t, where t[0] is the least-significant bit. The other theory is TFp , which is the theory corresponding to the finite field of order p, for some prime p [47]. This theory has signature \u03a3Fp containing the sort FFp, constant symbols 0, . . . , p \u2212 1, and operators + and \u00d7.\nIn this paper, we assume all interpretations interpret sorts and symbols in the same way. We write dom(v) for the set interpreting the sort of a variable v. We assume that Bool, True, and False are interpreted as { ,\u22a5}, , and \u22a5, respectively; \u03a3BV -interpretations follow the SMT-LIB standard; and \u03a3Fpinterpretations interpret symbols as the corresponding elements and operations in Fp, a finite field of order p (for concreteness, this could be the integers modulo p). Note that only the values of variables can vary between two interpretations.\nFor a signature \u03a3, let t be a \u03a3-term of sort \u03c3, with free variables x1, . . . , xn, respectively of sort \u03c31, . . . , \u03c3n. We define the function t\u0302 : dom(x1) \u00d7 \u00b7 \u00b7 \u00b7 \u00d7\ndom(xn) \u2192 dom(t) as follows. Let x \u2208 dom(x1) \u00d7 \u00b7 \u00b7 \u00b7 \u00d7 dom(xn). Let M be an interpretation that interprets each xi as xi. Then t\u0302(x) = tM (i.e., the interpretation of t in M). For example, the term t = a\u2227\u00aca defines t\u0302 : Bool \u2192 Bool = \u03bbx.\u22a5. In the following, we follow the convention used above in using the standard font (e.g., x) for logical variables and a sans serif font (e.g., x) to denote meta-variables standing for values (i.e., elements of \u03c3M for some \u03c3 and M). Also, abusing notation, we\u2019ll conflate single variables (of both kinds) with vectors of variables when the distinction doesn\u2019t matter. Note that a formula \u03c6 is satisfiable if there exist values x such that \u03c6\u0302(x) = . It is valid if for all values x, \u03c6\u0302(x) = .\nFor terms s, t and variable x, t[x \u2192 s] denotes t with all occurrences of x replaced with s. For a sequence of variable-term pairs, S = (x1 \u2192 s1, . . . , xn \u2192 sn), t[S] is defined to be t[x1 \u2192 s1] \u00b7 \u00b7 \u00b7 [xn \u2192 sn]."
+        },
+        {
+            "heading": "2.2 Zero Knowledge Proofs",
+            "text": "As mentioned above, Zero-knowledge proofs (ZKPs) make it possible to prove that some secret data satisfies a public property\u2014without revealing the data itself. See [59] for a full presentation; we give a brief overview here, and then describe how general-purpose ZKPs are used.\nOverview and Definitions. In a cryptographic proof system, there are two parties: a verifier V and a prover P. V knows a public instance x and asks P to show that it has knowledge of a secret witness w satisfying a public predicate \u03c6(x,w) from a predicate class \u03a6 (a set of formulas) (i.e., \u03c6\u0302(x,w) = ). Figure 1 illustrates the workflow. First, a trusted party runs an efficient (i.e., polytime in an implicit security parameter \u03bb) algorithm Setup(\u03c6) which produces a proving key pk and a verifying key vk. Then, P runs an efficient algorithm Prove(pk, x,w) \u2192 \u03c0 and sends the resulting proof \u03c0 to V. Finally, V runs an efficient verification algorithm Verify(vk, x, \u03c0) \u2192 { ,\u22a5} that accepts or rejects the proof. A zero-knowledge argument of knowledge for class \u03a6 is a tuple \u03a0 = (Setup,Prove,Verify) with three informal properties for every \u03c6 \u2208 \u03a6 and every x \u2208 dom(x),w \u2208 dom(w): \u2013 perfect completeness: if \u03c6\u0302(x,w) holds, then Verify(vk, x, \u03c0) holds; \u2013 computational knowledge soundness [9]: an efficient adversary that does not\nknow w cannot produce a \u03c0 such that Verify(vk, x, \u03c0) holds; and \u2013 zero-knowledge [22]: \u03c0 reveals nothing about w, other than its existence.\nTechnically, the system is an \u201cargument\u201d rather than a \u201cproof\u201d because soundness only holds against efficient adversaries. Also note that knowledge soundness requires that an entity must \u201cknow\u201d a valid w\u2032 to produce a proof; it is not enough for a valid w\u2032 to simply exist. We give more precise definitions in Appendix A.\nRepresentations for ZKPs. As mentioned above, ZKP applications are manifold (Sect. 1)\u2014from cryptocurrencies to private registries. This breadth of applications is possible because ZKPs support a broad class of predicates. Most commonly, these predicates are expressed as rank-1 constraint systems (R1CSs). Recall that Fp is a prime-order finite field (also called a prime field). We will drop the subscript p when it is not important. In an R1CS, x and w are vectors of elements in F; let z \u2208 Fm be their concatenation. The function \u03c6\u0302 can be defined by three matrices A,B,C \u2208 Fn\u00d7m; \u03c6\u0302(x,w) holds when Az\u25e6Bz = Cz, where \u25e6 is the element-wise product. Thus, \u03c6 can be viewed as n conjoined constraints, where each constraint i is of the form ( \u2211 j aijzj) \u00d7 ( \u2211 j bijzj) \u2248 ( \u2211 j cijzj) (where the aij , bij and cij are constant symbols from \u03a3Fp , and the zj are a vector of variables of sort FFp). That is, each constraint enforces a single non-linear multiplication."
+        },
+        {
+            "heading": "2.3 Compilation Targeting Zero Knowledge Proofs",
+            "text": "To write a ZKP about a high-level predicate \u03c6, that predicate is first compiled to an R1CS. A ZKP compiler from class \u03a6 (a set of \u03a3-formulas) to class \u03a6\u2032 (a set of \u03a3\u2032-formulas) is an efficient algorithm Compile(\u03c6 \u2208 \u03a6) \u2192 (\u03c6\u2032 \u2208 \u03a6\u2032,Extx,Extw). Given a predicate \u03c6(x,w), it returns a predicate \u03c6\u2032(x\u2032, w\u2032) as well as two efficient and deterministic algorithms, instance and witness extenders: Extx : dom(x) \u2192 dom(x\u2032) and Extw : dom(x) \u00d7 dom(w) \u2192 dom(w\u2032).3 For example, CirC [46] can compile a Boolean-returning C function (in a subset of C) to an R1CS.\nAt a high-level, \u03c6 and \u03c6\u2032 should be \u201cequisatisfiable\u201d, with Extx and Extw mapping satisfying values for \u03c6 to satisfying values for \u03c6\u2032. That is, for all x \u2208 dom(x) and w \u2208 dom(w) such that \u03c6\u0302(x,w) = , if x\u2032 = Extx(x) and w\u2032 = Extw(x,w), then \u03c6\u0302\u2032(x\u2032,w\u2032) = . Furthermore, for any x, it should be impossible to (efficiently) find w\u2032 satisfying \u03c6\u0302\u2032(Extx(x),w\u2032) = without knowing a w satisfying \u03c6\u0302(x,w) = . In Sect. 5.1, we precisely define correctness for a predicate compiler.\nOne can build a ZKP for class \u03a6 from a compiler from \u03a6 to \u03a6\u2032 and a ZKP for \u03a6\u2032. Essentially, one runs the compiler to get a predicate \u03c6\u2032 \u2208 \u03a6\u2032, as well as Extx and Extw. Then, one writes a ZKP to show that \u03c6\u0302\u2032(Extx(x),Extw(x,w)) = . In Appendix A, we give this construction in full and prove it is secure.\nOptimization. The primary challenge when using ZKPs is cost: typically, Prove is at least three orders of magnitude slower than checking \u03c6 directly [64]. Since Prove\u2019s cost scales with n (the constraint count), it is critical for the compiler to minimize n. The space of optimizations is large and complex, for two reasons. First, the compiler can introduce fresh variables. Second, only equisatifiability\u2014 not logical equivalence\u2014is needed. Compilers in this space exploit equisatisfiability heavily to efficiently represent high-level constructs (e.g., Booleans, bitvectors, arrays, . . . ) as an R1CS.\n3 For technical reasons, the runtime of Extx and the size of its description must be poly(\u03bb, |x|)\u2014not just poly(\u03bb) (Appendix A). .\nAs a (simple!) example, consider the Boolean computation a \u2248 c1 \u2228 \u00b7 \u00b7 \u00b7 \u2228 ck. Assume that c\u20321, . . . , c\u2032k are variables of sort FF and that we add constraints c\u2032i(1 \u2212 c\u2032i) \u2248 0 to ensure that c\u2032i has to be 0 or 1 for each i. Assume further that (c\u2032i \u2248 1) encodes ci for each i. How can one additionally ensure that a\u2032 (also of sort FF) is also forced to be equal to 0 or 1 and that (a\u2032 \u2248 1) is a correct encoding of a? Given that there are k \u2212 1 ORs, natural approaches use \u0398(k) constraints. One clever approach is to introduce variable x\u2032 and enforce constraints x\u2032( \u2211 i c \u2032 i) \u2248 a\u2032 and (1 \u2212 a\u2032)( \u2211 i c \u2032 i) \u2248 0. In any interpretation where any ci is true, the corresponding interpretation for a\u2032 must be 1 to satisfy the second constraint; setting x\u2032 to the sum\u2019s inverse satisfies the first. If all ci are false, the first constraint ensures a\u2032 is 0. This technique assumes the sum does not overflow; since ZKP fields are typically large (e.g., with p on the order of 2255), this is usually a safe assumption.\nCirC. CirC [46] is an infrastructure for building compilers from high-level languages (e.g., a C subset), to R1CSs. It has been used in research projects [4,12], and in industrial R&D. Figure 2 shows the structure of an R1CS compiler built with CirC. First, the front-end of the compiler converts the source program into CirC-IR. CirC-IR is a term IR based on SMT-LIB that includes: Booleans, bit-vectors, fixed-size arrays, tuples, and prime fields.4 Second, the compiler optimizes and simplifies the IR so that the only remaining sorts are Booleans, bit-vectors, and the target prime field. Third, the compiler lowers the simplified IR to an R1CS predicate over the target field. For ZKPs built with CirC, the completeness, soundness, and zero-knowledge of the end-to-end system depend on the correctness of CirC itself."
+        },
+        {
+            "heading": "3 Overview and Example",
+            "text": "To start, we view CirC\u2019s lowering pass as two passes (Fig. 2). The first pass, \u201c(finite-)field-blasting,\u201d converts a many-sorted IR (representable as a (\u03a3BV \u222a \u03a3F)-formula) to a conjunction of field equations (\u03a3F -equations). The second pass, \u201cflattening,\u201d converts this conjunction of field equations to an R1CS.\nOur focus is on verifying the first pass. We begin with a worked example of how to field-blast a small snippet of CirC-IR (Sect. 3.1). This example will illustrate four key ideas (Sect. 3.2) that inspire our field-blaster\u2019s architecture. 4 We list all CirC-IR operators for Booleans, bit-vectors, and prime fields in\nAppendix C. Almost all are from SMT-LIB."
+        },
+        {
+            "heading": "3.1 An Example of Field-Blasting",
+            "text": "We start with an example CirC-IR predicate expressed as a (\u03a3BV \u222a\u03a3F)-formula:\n\u03c6 (x0 \u2295 w0) \u2227 (w1 +[4] x1 \u2248 w1) \u2227 (x2 & w1 \u2248 x2) \u2227 (x3 \u2248 w2 \u00d7 w2) (1)\nThe predicate includes: the XOR of two Booleans (\u201c\u2295\u201d), a bit-vector sum, a bitvector AND, and a field product. x0 and w0 are of sort Bool, x1, x2, and w1 are of sort BV[4], and x3 and w2 are of sort FFp. We\u2019ll assume that p 24. Table 1 summarizes the new variables and assertions we create during field-blasting; we describe the origin of each assertion and new variable in the next paragraphs.\nLowering Clause One (Booleans). We begin with the Boolean term (x0 \u2295 w0). We will use 1 and 0 to represent and \u22a5. We introduce variables x\u20320 and w\u20320 of sort FFp to represent x0 and w0 respectively. To ensure that w\u20320 is 0 or 1, we assert: w\u20320(w \u2032 0\u22121) \u2248 0. 5 x0\u2295w0 is then represented by the expression 1\u2212x\u20320\u2212w\u20320+2x\u20320w\u20320. Setting this equal to 1 enforces that x0 \u2295 w0 must be true. These new assertions and fresh variables are reflected in the first three rows of the table.\nLowering Clause Two and Three (Bit-vectors). Before describing how to bitblast the second and third clauses in \u03c6, we discuss bit-vector representations in\n5 Later (Sect. 5), we will see that \u201cwell-formedness\u201d constraints like this are unnecessary for instance variables, such as x0. .\ngeneral. A bit-vector t can be viewed as a sequence of b bits or as a non-negative integer less than 2b. These two views suggest two natural representations in a prime-order field: first, as one field element t\u2032u, whose unsigned value agrees with t (assuming the field\u2019s size is at least 2b); second, as b elements t\u20320, . . . , t\u2032b\u22121, that encode the bits of t as 0 or 1 (in our encoding, t\u20320 is the least-significant bit and t\u2032b\u22121 is the most-significant bit). The first representation is simple, but with it, some field values (e.g., 2b) don\u2019t corresponding to any possible bit-vector. With the second approach, by including equations t\u2032i(t\u2032i\u22121) \u2248 0 in our system, we ensure that any satisfying assignment corresponds to a valid bit-vector. However, the extra b equations increase the size of our compiler\u2019s output.\nWe represent \u03c6\u2019s w1 bit-wise: as w\u20321,0, . . . , w\u20321,3, and we represent the instance variable x1 as x\u20321,u.6 For the constraint w1 +[4] x1 \u2248 w1, we compute the sum in the field and bit-decompose the result to handle overflow. First, we introduce new variable s\u2032 and set it equal to x\u20321,u + \u22113 i=0 2\niw\u20321,i. Then, we bit-decompose s\u2032, requiring s\u2032 \u2248 \u22114 i=0 2\nis\u2032i, and s\u2032i(s\u2032i \u2212 1) \u2248 0 for i \u2208 [0, 4]. Finally, we assert s\u2032i \u2248 w\u20321,i for i \u2208 [0, 3]. This forces the lowest 4 bits of the sum to be equal to w1.\nThe constraint x2 & w1 \u2248 x2 is more challenging. Since x2 is an instance variable, we initially encode it as x\u20322,u. Then, we consider the bit-wise AND. There is no obvious way to encode a bit-wise operation, other than bit-bybit. So, we convert x\u20322,u to a bit-wise representation: We introduce witness variables x\u20322,0, . . . , x\u20322,3 and equations x\u20322,i(x\u20322,i \u2212 1) \u2248 0 as well as equation x\u20322,u \u2248 \u22113 i=0 2 ix\u20322,i. Then, for each i we require x\u20322,iw\u20321,i \u2248 x\u20322,i.\nLowering the Final Clause (Field Elements). Finally, we consider the field equation x2 \u2248 w2 \u00d7w2. Our target is also field equations, so lowering this is straightforward. We simply introduce primed variables and copy the equation."
+        },
+        {
+            "heading": "3.2 Key Ideas",
+            "text": "This example highlights four ideas that guide the design of our field-blaster:\n1. fresh variables and assertions: Field-blasting uses two primitive operations: creating new variables in \u03c6\u2032 (e.g., w\u20320 to represent w0) and adding new assertions to \u03c6\u2032 (e.g., w\u20320(w\u20320 \u2212 1) \u2248 0). 2. encodings: For a term t in \u03c6, we construct a field term (or collection of field terms) in \u03c6\u2032 that represent the value of t. For example, the Boolean w0 is represented as the field element w\u20320 that is 0 or 1. 3. operator rules: if t is an operator applied to some arguments, we can encode t given encodings of the arguments. For example, if t is x0 \u2295 w0, and x0 is encoded as x\u20320 and w0 as w\u20320, then t can be encoded as 1 \u2212 x\u20320 \u2212 w\u20320 + 2x\u20320w\u20320. 4. conversions: Some sorts can be represented by encodings of different kinds. If a term has multiple possible encodings, the compiler may need to convert between them to apply some operator rule. For example, we converted x2 from an unsigned encoding to a bit-wise encoding before handling an AND.\n6 We represent w1 bit-wise so that we can ensure the representation is well-formed with constraints w\u20321,i(w\u20321,i \u22121) \u2248 0. As previously noted, such well-formedness constraints are not needed for an instance variable like x1.(See footnote 5)."
+        },
+        {
+            "heading": "4 Architecture",
+            "text": "In this section, we present our field-blaster architecture. To compile a predicate \u03c6 to a system of field equations \u03c6\u2032, our architecture processes each term t in \u03c6 using a post-order traversal. Informally, it represents each t as an \u201cencoding\u201d in \u03c6\u2032: a term (or collection of terms) over variables in \u03c6\u2032. Each encoding is produced by a small algorithm called an \u201cencoding rule\u201d.\nBelow, we define the type of encodings Enc (Sect. 4.1), the five different types of encoding rules (Sect. 4.2), and a calculus that iteratively applies these rules to compile all of \u03c6 (Sect. 4.3)."
+        },
+        {
+            "heading": "4.1 Encodings",
+            "text": "Table 2 presents our tagged union type Enc of possible term encodings. Each variant comprises the term being encoded, its tag (the encoding kind), and a sequence of field terms. The encoding kinds are bit (a Boolean as 0/1), uint (a bit-vector as an unsigned integer), bits (a bit-vector as a sequence of bits), and field (a field term trivially represented as a field term). Each encoding has an intended semantics: a condition under which the encoding is considered valid. For instance, a bit encoding of Boolean t is valid if the field term f is equal to ite(t, 1, 0)."
+        },
+        {
+            "heading": "4.2 Encoding Rules",
+            "text": "An encoding rule is an algorithm that takes and/or returns encodings, in order to represent some part of the input predicate as field terms and equations.\nPrimitive Operations. A rule can perform two primitive operations: creating new variables and emitting assertions. In our pseudocode, the primitive function fresh(name, t, isInst) \u2192 x\u2032 creates a fresh variable. Argument isInst is a Boolean indicating whether x\u2032 is an instance variable (as opposed to a witness). Argument t is a field term (over variables from \u03c6 and previously defined primed variables) that expresses how to compute a value for x\u2032. For example, to create a field variable w\u2032 that represents Boolean witness variable w, a rule can call fresh(w\u2032, ite(w, 1, 0),\u22a5). The compiler uses t to help create the Extx and Extw algorithms. A rule asserts a formula t\u2032 (over primed variables) by calling assert(t\u2032).\nRule Types. There are five types of rules: (1) Variable rules variable(t, isInst) \u2192 e take a variable t and its instance/witness status and return an encoding of that variable made up of fresh variables. (2) Constant rules const(t) \u2192 e take a constant term t and produce an encoding of t comprising terms that depend only on t. Since t is a constant, the terms in e can be evaluated to field constants (see the calculus in Sect. 4.3).7 The const rule cannot call fresh or assert. (3) Equality rules assertEq(e, e\u2032) take two encodings of the same kind and emit assertions that equate the underlying terms. (4) Conversion rules convert(e, kind\u2032) \u2192 e\u2032 take an encoding and convert it to an encoding of a different kind. Conversions are only non-trivial for bit-vectors, which have two encoding kinds: uint and bits. (5) Operator rules apply to terms t of form o(t1, . . . , tn). Each operator rule takes t, o, and encodings of the child terms ti and returns an encoding of t. Some operator rules require specific kinds of encodings; before using such an operator rule, our calculus (Sect. 4.3) calls the convert rule to ensure the input encodings are the correct kind. Figure 3 gives pseudocode for the first four rule types, as applied to bit-vectors. Figure 4 gives pseudocode for two bit-vector operator encoding rules. A field blaster uses many operator rules: in our case study (Sect. 6) there are 46.\n7 Having const(t) return terms that depend on t (rather than directly returning constants) is useful for constructing verification conditions for const."
+        },
+        {
+            "heading": "4.3 Calculus",
+            "text": "We now give a non-deterministic calculus describing how our field-blaster applies rules to compile a predicate \u03c6(x,w) into a system of field equations.\nA calculus state is a tuple of three items: (E,A, F ). The encoding store E is a (multi-)map from terms to sets of encodings. The assertions formula A is a conjunction of all field equations asserted via assert. The fresh variable definitions sequence F is a sequence consisting of pairs, where each pair (v, t) matches a single call to fresh(v, t, . . . ).\nFigure 5 shows the transitions of our calculus. We denote the result of a rule as A\u2032, F \u2032, e\u2032 \u2190 r(. . . ), where A\u2032 is a formula capturing any new assertions, F \u2032 is a sequence of pairs capturing any new variable definitions, and e\u2032 is the rule\u2019s return value. We may omit one or more results if they are always absent for a particular rule. For encoding store E, E\u222a(t \u2192 e) denotes the store with e added to t\u2019s encoding set.\nThere are five kinds of transitions. The Const transition adds an encoding for a constant term. The const rule returns an encoding e whose terms depend on the constant c; e\u2032 is a new encoding identical to e, except that each of its terms has been evaluated to obtain a field constant. The Var transition adds an encoding for a variable term. The Conv transition takes a term that is already encoded and re-encodes it with a new encoding kind. The kinds operator returns all legal values of kind for encodings of a given sort. The Opr transition applies operator rule r. This transition is only possible if r\u2019s operator kind agrees with o, and if its input encoding kinds agree with e. The Finish transition applies when \u03c6 has been encoded. It uses const and assertEq to build assertions that hold when \u03c6 = . Rather than producing a new calculus state, it returns the outputs of the calculus: the assertions and the variable definitions.\nTo meet the requirements of the ZKP compiler, our calculus must return two extension function: Extx and Extw (Sect. 2.2). Both can be constructed from the fresh variable definitions F . One subtlety is that Extx(x) (which assigns values to fresh instance variables) is a function of x only\u2014it cannot depend on the witness variables of \u03c6. We ensure this by allowing fresh instance variables to only be created by the variable rule, and only when it is called with isInst = .\nStrategy. Our calculus is non-deterministic: multiple transitions are possible in some situations; for example, some conversion is almost always applicable. The strategy that decides which transition to apply affects field blaster performance (Appendix D) but not correctness."
+        },
+        {
+            "heading": "5 Verification Conditions",
+            "text": "In this section, we first define correctness for a ZKP compiler (Sect. 5.1). Then, we give verification conditions (VCs) for each type of encoding rule (Sect. 5.2). Finally, we show that if these VCs hold, our calculus is a correct ZKP compiler (Sect. 5.3)."
+        },
+        {
+            "heading": "5.1 Correctness Definition",
+            "text": "Definition 1 (Correctness). A ZKP compiler Compile(\u03c6) \u2192 (\u03c6\u2032,Extx,Extw) is correct if it is demonstrably complete and demonstrably sound.\n\u2022 demonstrable completeness: For all x \u2208 dom(x),w \u2208 dom(w) such that \u03c6\u0302(x,w) = ,\n\u03c6\u0302\u2032(Extx(x),Extw(x,w)) =\n\u2022 demonstrable soundness: There exists an efficient algorithm Inv(x\u2032,w\u2032) \u2192 w such that for all x \u2208 dom(x),w\u2032 \u2208 dom(w\u2032) such that \u03c6\u0302\u2032(Extx(x),w\u2032) = ,\n\u03c6\u0302(x, Inv(Extx(x),w\u2032)) =\nDemonstrable completeness (respectively, soundness) requires the existence of a witness for \u03c6\u2032 (resp., \u03c6) when a witness exists for \u03c6 (resp., \u03c6\u2032); this existence is demonstrated by an efficient algorithm Extw (resp., Inv) that computes the witness.\nCorrect ZKP compilers are important for two reasons. First, since sequential composition preserves correctness, one can prove a multi-pass compiler is correct pass-by-pass. Second, a correct ZKP compiler from \u03a6 to \u03a6\u2032 can be used to generalize a ZKP for \u03a6\u2032 to one for \u03a6. We prove both properties in Appendix A.\nTheorem 1 (Compiler Composition). If Compile\u2032 and Compile\u2032\u2032 are correct, then the compiler Compose(Compile\u2032,Compile\u2032\u2032) (Appendix A) is correct.\nTheorem 2 (ZKP Generalization). (informal) Given a correct ZKP compiler Compile from \u03a6 to \u03a6\u2032 and a ZKP for \u03a6\u2032, we can construct a ZKP for \u03a6."
+        },
+        {
+            "heading": "5.2 Rule VCs",
+            "text": "Recall (Sect. 4) that our language manipulates encodings through five types of encoding rules. We give verification conditions for each type of rule. Intuitively, these capture the correctness of each rule in isolation. Next, we\u2019ll show that they imply the correctness of a ZKP compiler that follows our calculus.\nOur VCs quantify over valid encodings. That is, they have the form: \u201cfor any valid encoding e of term t, . . . \u201d We can quantify over an encoding e by making each ti \u2208 terms(e) a fresh variable, and quantifying over the ti. Encoding validity is captured by a predicate valid(e, t), which is defined to be the validity condition in Table 2. Each VC containing encoding variables e implicitly represents a conjunction of instances of that VC, one for each possible tuple of kinds of e, which is fixed for each instance. If a VC contains valid(e, t), the sort of t is constrained to be compatible with kind(e). For a kind and a sort to be compatible, they must occur in the same row of Table 2. We define the equality predicate equal(e, e\u2032) as \u2227 i terms(e)[i] \u2248 terms(e\u2032)[i].\nEncoding Uniqueness. First, we require the uniqueness of valid encodings, for any fixed encoding kind. Table 3 shows the VCs that ensure this. Each row is a formula that must be valid, for all compatible encodings and terms. The first two rows ensure that there is a bijection from terms to their valid encodings (in the first row, we consider only instances for which kind(e) = kind(e\u2032)). The function fromTerm(t, kind) \u2192 e maps a term and an encoding kind to a valid encoding of that kind, and the function toTerm(e) \u2192 t maps a valid encoding to its encoded term. The third and fourth rows ensure that fromTerm and toTerm are correctly defined. We will use toTerm in our proof of calculus soundness (Appendix B) and we will use fromTerm to optimize VCs for faster verification (Sect. 6.1).\nFor an example of the valid , fromTerm, and toTerm functions, consider a Boolean b encoded as an encoding e with kind bit and whose terms consist of a single field element f . Validity is defined as valid(e, b) = f \u2248 ite(b, 1, 0), toTerm(f) is defined as f \u2248 1, and fromTerm(b, bit) is (b, bit, ite(b, 1, 0)).\nVCs for Encoding Rules. Table 4 shows our VCs for the rules of Fig. 5. For each rule application, A and F denote, respectively, the assertions and the variable declarations generated when that rule is applied. We explain some of the VCs in detail.\nFirst, consider a rule ro for operator o applied to inputs t1, . . . , tk. The rule takes input encodings e1, . . . , ek and returns an output e\u2032. It is sound if the validity of its inputs and its assertions imply the validity of its output. It is complete if the validity of its inputs implies its assertions and the validity of its output, after substituting fresh variable definitions.\nSecond, consider a variable rule. Its input is a variable term t, and it returns e\u2032, a putative encoding thereof. Note that e\u2032 does not actually contain t, though the substitutions in F may bind the fresh variables of e\u2032 to functions of t. For the rule to be sound when t is a witness variable (t \u2208 w), the assertions must imply that e\u2032 is valid for some term t\u2032. For the rule to be sound when t is an instance variable (t \u2208 x), the assertions must imply that e\u2032 is valid for t, when the instance variables in e\u2032 are replaced with their definition (Fx denotes F ,\nrestricted to its declarations of instance variables).8 For the variable rule to be complete (for an instance or a witness), the assertions and the validity of e\u2032 for t must follow from F .\nThird, consider a constant rule. Its input is a constant term t, and it returns an encoding e. Recall that the terms of e are always evaluated, yielding e\u2032 which only contains constant terms. Thus, correctness depends only on the fact that e is always a valid encoding of the input t. This can be captured with a single VC."
+        },
+        {
+            "heading": "5.3 A Correct Field-Blasting Calculus",
+            "text": "Given rules that satisfy these verification conditions, we show that the calculus of Sect. 4.3 is a correct ZKP compiler. The proof is in Appendix B.\nTheorem 3 (Correctness). With rules that satisfy the conditions of Sect. 5.2, the calculus of Sect. 4.3 is demonstrably complete and sound (Def. 1)."
+        },
+        {
+            "heading": "6 Case Study: A Verifiable Field-Blaster for CirC",
+            "text": "We implemented and partially verified a field-blaster for CirC [46]. Our implementation is based on a refactoring of CirC\u2019s original field blaster to conform to our encoding rules (Sect. 4.2) and consists of \u2248850 lines of code (LOC).9 As described below, we have (partially) verified our encoding rules, but trust our calculus (Sect. 4.3, \u2248150 LOC) and our flattening implementations (Fig. 2, \u2248160 LOC).\nWhile porting rules, we found 4 bugs in CirC\u2019s original field-blaster (see Appendix G), including a severe soundness bug. Given a ZKP compiled with CirC, the bug allowed a prover to incorrectly compare bit-vectors. The prover, for example, could claim that the unsigned value of 0010 is greater than or less than that of 0001. A patch to fix all 4 bugs (in the original field blaster) has been upstreamed, and we are in the process of upstreaming our new field blaster implementation into CirC."
+        },
+        {
+            "heading": "6.1 Verification Evaluation",
+            "text": "Our implementation constructs the VCs from Sect. 5.2 and emits them as SMTLIB (extended with a theory of finite fields [47]). We verify them with cvc5, because it can solve formulas over bit-vectors and prime fields [47]. The verification is partial in that it is bounded in two ways. We set b \u2208 N to be the maximum bit-width of any bit-vector and a \u2208 N to be the maximum number of arguments to any n-ary operator. In our evaluation, we used a = 4 and b = 4. These bounds are small, but they were sufficient to find the bugs mentioned above. 8 The different soundness conditions for instance and witness variables play a key role\nin the proof of Theorem 3. Essentially: since the condition for instances replaces variables with their definitions, the validity of the encodings of instance variables need not be explicitly enforced in A. This is why some constraints could be omitted in our field-blasting example.(See footnote 5).\n9 Our implementation is in Rust, as is CirC.\nOptimizing Completeness VCs. Generally, cvc5 verifies soundness VCs more quickly than completeness VCs. This is surprising at first glance. To see why, consider the soundness (S) and completeness (C) conditions for a conversion rule from e to e\u2032 that generates assertions A and definitions F :\nS (A \u2227 valid(e, t)) \u2192 valid(e\u2032, t) C (valid(e, t) \u2192 (A \u2227 valid(e\u2032, t)))[F ]\nIn both, t is a variable, e contains variables, and there are variables in e\u2032 and A that are defined by F . In C, though, some variables are replaced by their definitions in F\u2014which makes the number of variables (and thus the search space)\u2014seem smaller for C than S. Yet, cvc5 is slower on C.\nThe problem is that, while the field operations in A are standard (e.g., +, \u00d7, and =), the definitions in F use a CirC-IR operator that (once embedded into SMT-LIB) is hard for cvc5 to reason about. That operator, (ff2bv b), takes a prime field element x and returns a bit-vector v. If x\u2019s integer representative is less than 2b, then v\u2019s unsigned value is equal to x; otherwise, v is zero.\nThe ff2bv operator is trivial to evaluate but hard to embed. cvc5\u2019s SMTLIB extension for prime fields only supports +, \u00d7 and =, so no operator can directly relate x to v. Instead, we encode the relationship through b Booleans that represent the bits of v. To test whether x < 2b, we use the polynomial f(x) = \u220f2b\u22121 i=0 (x\u2212i), which is zero only on [0, 2b\u22121]. The bit-splitting essentially forces cvc5 to guess v\u2019s value; further, f \u2019s high degree slows down the Gr\u00f6bner basis computations that form the foundation of cvc5\u2019s field solver.\nTo optimize verification of the completeness VCs, we reason about CirC-IR directly. First, we use the uniqueness of valid encodings and the fromTerm function. Since the VC assumes valid(e, t), we know e is equal to fromTerm(t, kind(e)). We use this equality to eliminate e from the completeness VC, leaving:\n(A \u2227 valid(e\u2032, t))[F ][e \u2192 fromTerm(t, kind(e))]\nSince F defines all variables in A and e\u2032, the only variable after substitution is t. So, when t is a Boolean or small bit-vector, an exhaustive search is very effective;10 we implemented such a solver in 56 LOC, using CirC\u2019s IR as a library.\nFor soundness VCs, this approach is less effective. The fromTerm substitution still applies, but if F introduces fresh field variables, they are not eliminated and thus, the final formula contains field variables, so exhaustion is infeasible.\nVerification Results. We ran our VC verification on machines with Intel Xeon E52637 v4 CPUs.11 Each attempt is limited to one physical core, 8GB memory, and 30min. Figure 6 shows the number of VCs verified by cvc5 and our exhaustive solver. As expected, the exhaustive solver is effective on completeness VCs for Boolean and bit-vector rules, but ineffective on soundness VCs for rules that introduce fresh field variables. There are four VCs that neither solver verifies 10 So long as the exhaustive solver reasons directly about all CirC-IR operators. 11 We omit the completeness VCs for ff2bv. See Appendix C.\nwithin 30min: bvadd with (b = 4, a = 4), and bvmul with (b = 3, a = 4) and (b = 4, a \u2265 3). Most other VCs verify instantly. In Appendix E, we analyze how VC verification time depends on a and b."
+        },
+        {
+            "heading": "6.2 Performance and Output Quality Evaluation",
+            "text": "We compare CirC with our field-baster (\u201cVerified\u201d) against CirC with its original field-blaster (\u201cUnverified\u201d)12 on three metrics: compiler runtime, memory usage, and the final R1CS constraint count. Our benchmark set is the standard library for CirC\u2019s Z# input language (which extends ZoKrates [16,68] v0.6.2). Our testbed runs Linux with 32GB memory and an AMD Ryzen 2700.\nThere is no difference in constraints, but the verified field-blaster slightly improves compiler performance: \u20138% time and \u20132% memory (Fig. 7). We think that the small improvement is unrelated to the fact that the new field blaster is verified. In Appendix E, we discuss compiler performance further."
+        },
+        {
+            "heading": "7 Discussion",
+            "text": "In this work, we present the first automatically verifiable field-blaster. We view the field-blaster as a set of rules; if some (automatically verifiable) conditions hold for each rule, then the field-blaster is correct. We implemented a performant and partially verified field-blaster for CirC, finding 4 bugs along the way.\nOur approach has limitations. First, we require the field-blaster to be written as a set of encoding rules. Second, we only verify our rules for bit-vectors of bounded size and operators of bounded arity. Third, we assume that each rule is a pure function: for example, it doesn\u2019t return different results depending on 12 After fixing the bugs we found. See Sect. 6.\nthe time. Future work might avoid the last two limitations through bit-widthindependent reasoning [42,43,67] and a DSL (and compiler) for encoding rules. It would also be interesting to extend our approach to: a ZKP with a nonprime field [7,13], a compiler IR with partial or non-deterministic semantics, or a compiler with correctness that depends on computational assumptions.\nAcknowledgements. We appreciate the help and guidance of Andres N\u00f6tzli, Dan Boneh, and Evan Laufer.\nThis material is in part based upon work supported by the DARPA SIEVE program and the Simons foundation. Any opinions, findings, and conclusions or recommendations expressed in this report are those of the author(s) and do not necessarily reflect the views of DARPA. It is also funded in part by NSF grant number 2110397 and the Stanford Center for Automated Reasoning."
+        },
+        {
+            "heading": "A Zero-Knowledge Proofs and Compilers",
+            "text": "This appendix is available in the full version of the paper [49]."
+        },
+        {
+            "heading": "B Compiler Correctness Proofs",
+            "text": "This appendix is available in the full version of the paper [49]."
+        },
+        {
+            "heading": "C CirC-IR",
+            "text": "This appendix is available in the full version of the paper [49]."
+        },
+        {
+            "heading": "D Optimizations to the CirC Field-Blaster",
+            "text": "This appendix is available in the full version of the paper [49].\nE Verified Field-Blaster Performance Details\nThis appendix is available in the full version of the paper [49].\nF Verifier Performance Details\nThis appendix is available in the full version of the paper [49]."
+        },
+        {
+            "heading": "G Bugs Found in the CirC Field Blaster",
+            "text": "This appendix is available in the full version of the paper [49]."
+        }
+    ],
+    "title": "Bounded Verification for Finite-Field-Blasting",
+    "year": 2023
+}

@@ -1,0 +1,841 @@
+{
+    "abstractText": "As a combination of visual and audio signals, video is inherently multi-modal. However, existing video generation methods are primarily intended for the synthesis of visual frames, whereas audio signals in realistic videos are disregarded. In this work, we concentrate on a rarely investigated problem of textguided sounding video generation and propose the Sounding Video Generator (SVG), a unified framework for generating realistic videos along with audio signals. Specifically, we present the SVG-VQGAN to transform visual frames and audio melspectrograms into discrete tokens. SVG-VQGAN applies a novel hybrid contrastive learning method to model inter-modal and intra-modal consistency and improve the quantized representations. A cross-modal attention module is employed to extract associated features of visual frames and audio signals for contrastive learning. Then, a Transformer-based decoder is used to model associations between texts, visual frames, and audio signals at token level for auto-regressive sounding video generation. AudioSetCap, a human annotated text-video-audio paired dataset, is produced for training SVG. Experimental results demonstrate the superiority of our method when compared with existing textto-video generation methods as well as audio generation methods on Kinetics and VAS datasets.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Jiawei Liu"
+        },
+        {
+            "affiliations": [],
+            "name": "Weining Wang"
+        },
+        {
+            "affiliations": [],
+            "name": "Sihan Chen"
+        },
+        {
+            "affiliations": [],
+            "name": "Xinxin Zhu"
+        },
+        {
+            "affiliations": [],
+            "name": "Jing Liu"
+        }
+    ],
+    "id": "SP:a991d3d1d5a02d5408d08523eeb6c25a8af666d9",
+    "references": [
+        {
+            "authors": [
+                "C. Vondrick",
+                "H. Pirsiavash",
+                "A. Torralba"
+            ],
+            "title": "Generating videos with scene dynamics",
+            "venue": "Advances in Neural Information Processing Systems, 2016, pp. 613\u2013621.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "S. Tulyakov",
+                "M. Liu",
+                "X. Yang",
+                "J. Kautz"
+            ],
+            "title": "Mocogan: Decomposing motion and content for video generation",
+            "venue": "IEEE Conference on Computer Vision and Pattern Recognition, 2018, pp. 1526\u20131535.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Y. Tian",
+                "J. Ren",
+                "M. Chai",
+                "K. Olszewski",
+                "X. Peng",
+                "D.N. Metaxas",
+                "S. Tulyakov"
+            ],
+            "title": "A good image generator is what you need for highresolution video synthesis",
+            "venue": "International Conference on Learning Representations, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Li",
+                "M.R. Min",
+                "D. Shen",
+                "D.E. Carlson",
+                "L. Carin"
+            ],
+            "title": "Video generation from text",
+            "venue": "Proceedings of the Thirty-Second AAAI Conference on Artificial Intelligence, 2018, pp. 7065\u20137072.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "C. Wu",
+                "L. Huang",
+                "Q. Zhang",
+                "B. Li",
+                "L. Ji",
+                "F. Yang",
+                "G. Sapiro",
+                "N. Duan"
+            ],
+            "title": "Godiva: Generating open-domain videos from natural descriptions",
+            "venue": "arXiv preprint arXiv:2104.14806, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Wu",
+                "J. Liang",
+                "L. Ji",
+                "F. Yang",
+                "Y. Fang",
+                "D. Jiang",
+                "N. Duan"
+            ],
+            "title": "N\u00fcwa: Visual synthesis pre-training for neural visual world creation",
+            "venue": "European Conference on Computer Vision, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Xie",
+                "X. Chen",
+                "T. Zhang",
+                "Y. Zhang",
+                "S.-P. Lu",
+                "P. Cesar",
+                "Y. Yang"
+            ],
+            "title": "Multimodal-based and aesthetic-guided narrative video summarization",
+            "venue": "IEEE Transactions on Multimedia, pp. 1\u201315, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Bain",
+                "A. Nagrani",
+                "G. Varol",
+                "A. Zisserman"
+            ],
+            "title": "Frozen in time: A joint video and image encoder for end-to-end retrieval",
+            "venue": "International Conference on Computer Vision, 2021, pp. 1708\u20131718.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A. Miech",
+                "D. Zhukov",
+                "J. Alayrac",
+                "M. Tapaswi",
+                "I. Laptev",
+                "J. Sivic"
+            ],
+            "title": "Howto100m: Learning a text-video embedding by watching hundred million narrated video clips",
+            "venue": "International Conference on Computer Vision, 2019, pp. 2630\u20132640.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J.F. Gemmeke",
+                "D.P.W. Ellis",
+                "D. Freedman",
+                "A. Jansen",
+                "W. Lawrence",
+                "R.C. Moore",
+                "M. Plakal",
+                "M. Ritter"
+            ],
+            "title": "Audio set: An ontology and human-labeled dataset for audio events",
+            "venue": "International Conference on Acoustics, Speech and Signal Processing, 2017, pp. 776\u2013780.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "A. Krizhevsky",
+                "I. Sutskever",
+                "G.E. Hinton"
+            ],
+            "title": "Imagenet classification with deep convolutional neural networks",
+            "venue": "Communications of the ACM, vol. 60, no. 6, pp. 84\u201390, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Z. Li",
+                "Y. Sun",
+                "L. Zhang",
+                "J. Tang"
+            ],
+            "title": "Ctnet: Context-based tandem network for semantic segmentation",
+            "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence, vol. 44, no. 12, pp. 9904\u20139917, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A. Ramesh",
+                "M. Pavlov",
+                "G. Goh",
+                "S. Gray",
+                "C. Voss",
+                "A. Radford",
+                "M. Chen",
+                "I. Sutskever"
+            ],
+            "title": "Zero-shot text-to-image generation",
+            "venue": "Proceedings of the International Conference on Machine Learning, 2021, pp. 8821\u2013 8831.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Kong",
+                "J. Kim",
+                "J. Bae"
+            ],
+            "title": "Hifi-gan: Generative adversarial networks for efficient and high fidelity speech synthesis",
+            "venue": "Advances in Neural Information Processing Systems, vol. 33, pp. 17 022\u201317 033, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "K. Su",
+                "X. Liu",
+                "E. Shlizerman"
+            ],
+            "title": "Audeo: Audio generation for a silent performance video",
+            "venue": "Advances in Neural Information Processing Systems, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Radford",
+                "J.W. Kim",
+                "C. Hallacy",
+                "A. Ramesh",
+                "G. Goh",
+                "S. Agarwal",
+                "G. Sastry",
+                "A. Askell",
+                "P. Mishkin",
+                "J. Clark",
+                "G. Krueger",
+                "I. Sutskever"
+            ],
+            "title": "Learning transferable visual models from natural language supervision",
+            "venue": "Proceedings of the International Conference on Machine Learning, ser. Proceedings of Machine Learning Research, vol. 139, 2021, pp. 8748\u20138763.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Ma",
+                "Z. Zeng",
+                "D. McDuff",
+                "Y. Song"
+            ],
+            "title": "Contrastive learning of global and local video representations",
+            "venue": "Advances in Neural Information Processing Systems, vol. 34, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "I. Goodfellow",
+                "J. Pouget-Abadie",
+                "M. Mirza",
+                "B. Xu",
+                "D. Warde-Farley",
+                "S. Ozair",
+                "A. Courville",
+                "Y. Bengio"
+            ],
+            "title": "Generative adversarial networks",
+            "venue": "Communications of the ACM, vol. 63, no. 11, pp. 139\u2013144, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. van den Oord",
+                "O. Vinyals",
+                "K. Kavukcuoglu"
+            ],
+            "title": "Neural discrete representation learning",
+            "venue": "Advances in Neural Information Processing Systems, 2017, pp. 6306\u20136315.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "A. Vaswani",
+                "N. Shazeer",
+                "N. Parmar",
+                "J. Uszkoreit",
+                "L. Jones",
+                "A.N. Gomez",
+                "\u0141. Kaiser",
+                "I. Polosukhin"
+            ],
+            "title": "Attention is all you need",
+            "venue": "Advances in Neural Information Processing Systems, vol. 30, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "F. Ebert",
+                "C. Finn",
+                "A.X. Lee",
+                "S. Levine"
+            ],
+            "title": "Self-supervised visual planning with temporal skip connections.",
+            "venue": "in Conference on Robot Learning,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "K. Soomro",
+                "A.R. Zamir",
+                "M. Shah"
+            ],
+            "title": "UCF101: A dataset of 101 human actions classes from videos in the wild",
+            "venue": "arXiv preprint arXiv:1212.0402, 2012.",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "M. Saito",
+                "E. Matsumoto",
+                "S. Saito"
+            ],
+            "title": "Temporal generative adversarial nets with singular value clipping",
+            "venue": "IEEE International Conference on Computer Vision, 2017, pp. 2849\u20132858.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "N. Kim",
+                "J.-W. Kang"
+            ],
+            "title": "Dynamic motion estimation and evolution video prediction network",
+            "venue": "IEEE Transactions on Multimedia, vol. 23, pp. 3986\u20133998, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Balaji",
+                "M.R. Min",
+                "B. Bai",
+                "R. Chellappa",
+                "H.P. Graf"
+            ],
+            "title": "Conditional GAN with discriminative filter generation for text-to-video synthesis",
+            "venue": "Proceedings of the International Joint Conference on Artificial Intelligence, 2019, pp. 1995\u20132001.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Razavi",
+                "A. van den Oord",
+                "O. Vinyals"
+            ],
+            "title": "Generating diverse highfidelity images with VQ-VAE-2",
+            "venue": "Advances in Neural Information Processing Systems, 2019, pp. 14 837\u201314 847.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M. Ding",
+                "Z. Yang",
+                "W. Hong",
+                "W. Zheng",
+                "C. Zhou",
+                "D. Yin",
+                "J. Lin",
+                "X. Zou",
+                "Z. Shao",
+                "H. Yang"
+            ],
+            "title": "Cogview: Mastering text-to-image generation via transformers",
+            "venue": "Advances in Neural Information Processing Systems, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R. Rakhimov",
+                "D. Volkhonskiy",
+                "A. Artemov",
+                "D. Zorin",
+                "E. Burnaev"
+            ],
+            "title": "Latent video transformer",
+            "venue": "Proceedings of the 16th International Joint Conference on Computer Vision, Imaging and Computer Graphics Theory and Applications, 2021, pp. 101\u2013112.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "W. Yan",
+                "Y. Zhang",
+                "P. Abbeel",
+                "A. Srinivas"
+            ],
+            "title": "Videogpt: Video generation using VQ-VAE and transformers",
+            "venue": "arXiv preprint arXiv:2104.10157, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P. Esser",
+                "R. Rombach",
+                "B. Ommer"
+            ],
+            "title": "Taming transformers for highresolution image synthesis",
+            "venue": "IEEE Conference on Computer Vision and Pattern Recognition, 2021, pp. 12 873\u201312 883.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "W. Hong",
+                "M. Ding",
+                "W. Zheng",
+                "X. Liu",
+                "J. Tang"
+            ],
+            "title": "Cogvideo: Largescale pretraining for text-to-video generation via transformers",
+            "venue": "arXiv preprint arXiv:2205.15868, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C. Gan",
+                "J. Schwartz",
+                "S. Alter",
+                "D. Mrowca",
+                "M. Schrimpf",
+                "J. Traer",
+                "J. De Freitas",
+                "J. Kubilius",
+                "A. Bhandwaldar",
+                "N. Haber"
+            ],
+            "title": "Threedworld: A platform for interactive multi-modal physical simulation",
+            "venue": "Advances in Neural Information Processing Systems, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Ren",
+                "Y. Ruan",
+                "X. Tan",
+                "T. Qin",
+                "S. Zhao",
+                "Z. Zhao",
+                "T. Liu"
+            ],
+            "title": "Fastspeech: Fast, robust and controllable text to speech",
+            "venue": "Advances in Neural Information Processing Systems, 2019, pp. 3165\u20133174.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Owens",
+                "P. Isola",
+                "J. McDermott",
+                "A. Torralba",
+                "E.H. Adelson",
+                "W.T. Freeman"
+            ],
+            "title": "Visually indicated sounds",
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition, 2016, pp. 2405\u2013 2413.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "S. Hochreiter",
+                "J. Schmidhuber"
+            ],
+            "title": "Long short-term memory",
+            "venue": "Neural computation, vol. 9, no. 8, pp. 1735\u20131780, 1997.",
+            "year": 1997
+        },
+        {
+            "authors": [
+                "H. Zhao",
+                "C. Gan",
+                "A. Rouditchenko",
+                "C. Vondrick",
+                "J. McDermott",
+                "A. Torralba"
+            ],
+            "title": "The sound of pixels",
+            "venue": "European Conference on Computer Vision, 2018, pp. 570\u2013586.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "C. Gan",
+                "D. Huang",
+                "P. Chen",
+                "J.B. Tenenbaum",
+                "A. Torralba"
+            ],
+            "title": "Foley music: Learning to generate music from videos",
+            "venue": "European Conference on Computer Vision, 2020, pp. 758\u2013775.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "H. Zhao",
+                "C. Gan",
+                "W.-C. Ma",
+                "A. Torralba"
+            ],
+            "title": "The sound of motions",
+            "venue": "International Conference on Computer Vision, 2019, pp. 1735\u20131744.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Di",
+                "Z. Jiang",
+                "S. Liu",
+                "Z. Wang",
+                "L. Zhu",
+                "Z. He",
+                "H. Liu",
+                "S. Yan"
+            ],
+            "title": "Video background music generation with controllable music transformer",
+            "venue": "ACM Multimedia Conference, 2021, pp. 2037\u20132045.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "V. Iashin",
+                "E. Rahtu"
+            ],
+            "title": "Taming visually guided sound generation",
+            "venue": "British Machine Vision Conference, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "K. Kumar",
+                "R. Kumar",
+                "T. de Boissiere",
+                "L. Gestin",
+                "W.Z. Teoh",
+                "J. Sotelo",
+                "A. de Br\u00e9bisson",
+                "Y. Bengio",
+                "A.C. Courville"
+            ],
+            "title": "Melgan: Generative adversarial networks for conditional waveform synthesis",
+            "venue": "Advances in neural information processing systems, vol. 32, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "K. Simonyan",
+                "A. Zisserman"
+            ],
+            "title": "Very deep convolutional networks for large-scale image recognition",
+            "venue": "International Conference on Learning Representations, 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "J. Deng",
+                "W. Dong",
+                "R. Socher",
+                "L. Li",
+                "K. Li",
+                "L. Fei-Fei"
+            ],
+            "title": "Imagenet: A large-scale hierarchical image database",
+            "venue": "IEEE Conference on Computer Vision and Pattern Recognition, 2009, pp. 248\u2013255. 13",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "H. Alwassel",
+                "D. Mahajan",
+                "B. Korbar",
+                "L. Torresani",
+                "B. Ghanem",
+                "D. Tran"
+            ],
+            "title": "Self-supervised learning by cross-modal audio-video clustering",
+            "venue": "Advances in Neural Information Processing Systems, vol. 33, pp. 9758\u20139770, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "F. Xiao",
+                "Y.J. Lee",
+                "K. Grauman",
+                "J. Malik",
+                "C. Feichtenhofer"
+            ],
+            "title": "Audiovisual slowfast networks for video recognition",
+            "venue": "arXiv preprint arXiv:2001.08740, 2020.",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "S. Min",
+                "Q. Dai",
+                "H. Xie",
+                "C. Gan",
+                "Y. Zhang",
+                "J. Wang"
+            ],
+            "title": "Crossmodal attention consistency for video-audio unsupervised learning",
+            "venue": "arXiv preprint arXiv:2106.06939, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Wu",
+                "K. He"
+            ],
+            "title": "Group normalization",
+            "venue": "Int. J. Comput. Vis., vol. 128, no. 3, pp. 742\u2013755, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P. Khosla",
+                "P. Teterwak",
+                "C. Wang",
+                "A. Sarna",
+                "Y. Tian",
+                "P. Isola",
+                "A. Maschinot",
+                "C. Liu",
+                "D. Krishnan"
+            ],
+            "title": "Supervised contrastive learning",
+            "venue": "Advances in Neural Information Processing Systems, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Z. Li",
+                "J. Tang",
+                "T. Mei"
+            ],
+            "title": "Deep collaborative embedding for social image understanding",
+            "venue": "IEEE transactions on pattern analysis and machine intelligence, vol. 41, no. 9, pp. 2070\u20132083, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Z. Li",
+                "J. Tang"
+            ],
+            "title": "Weakly supervised deep matrix factorization for social image understanding",
+            "venue": "IEEE Transactions on Image Processing, vol. 26, no. 1, pp. 276\u2013288, 2016.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Z. Li",
+                "J. Tang",
+                "L. Zhang",
+                "J. Yang"
+            ],
+            "title": "Weakly-supervised semantic guided hashing for social image retrieval",
+            "venue": "International Journal of Computer Vision, vol. 128, pp. 2265\u20132278, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J. Devlin",
+                "M. Chang",
+                "K. Lee",
+                "K. Toutanova"
+            ],
+            "title": "BERT: pre-training of deep bidirectional transformers for language understanding",
+            "venue": "Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, 2019, pp. 4171\u20134186.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "R. Sennrich",
+                "B. Haddow",
+                "A. Birch"
+            ],
+            "title": "Neural machine translation of rare words with subword units",
+            "venue": "Proceedings of the Association for Computational Linguistics, 2016.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "C.D. Kim",
+                "B. Kim",
+                "H. Lee",
+                "G. Kim"
+            ],
+            "title": "Audiocaps: Generating captions for audios in the wild",
+            "venue": "Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, 2019, pp. 119\u2013132.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "W. Kay",
+                "J. Carreira",
+                "K. Simonyan",
+                "B. Zhang",
+                "C. Hillier",
+                "S. Vijayanarasimhan",
+                "F. Viola",
+                "T. Green",
+                "T. Back",
+                "P. Natsev",
+                "M. Suleyman",
+                "A. Zisserman"
+            ],
+            "title": "The kinetics human action video dataset",
+            "venue": "arXiv preprint arXiv:1705.06950, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "P. Chen",
+                "Y. Zhang",
+                "M. Tan",
+                "H. Xiao",
+                "D. Huang",
+                "C. Gan"
+            ],
+            "title": "Generating visually aligned sound from videos",
+            "venue": "IEEE Trans. Image Process., vol. 29, pp. 8292\u20138302, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D.P. Kingma",
+                "J. Ba"
+            ],
+            "title": "Adam: A method for stochastic optimization",
+            "venue": "International Conference on Learning Representations, 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "I. Loshchilov",
+                "F. Hutter"
+            ],
+            "title": "SGDR: stochastic gradient descent with warm restarts",
+            "venue": "International Conference on Learning Representations, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M. Heusel",
+                "H. Ramsauer",
+                "T. Unterthiner",
+                "B. Nessler",
+                "S. Hochreiter"
+            ],
+            "title": "Gans trained by a two time-scale update rule converge to a local nash equilibrium",
+            "venue": "Advances in Neural Information Processing Systems, 2017, pp. 6626\u20136637.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "K. Hara",
+                "H. Kataoka",
+                "Y. Satoh"
+            ],
+            "title": "Can spatiotemporal 3d cnns retrace the history of 2d cnns and imagenet?",
+            "venue": "IEEE Conference on Computer Vision and Pattern Recognition,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "H. Chen",
+                "W. Xie",
+                "A. Vedaldi",
+                "A. Zisserman"
+            ],
+            "title": "Vggsound: A largescale audio-visual dataset",
+            "venue": "International Conference on Acoustics, Speech and Signal Processing, 2020, pp. 721\u2013725.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "K. Koutini",
+                "J. Schl\u00fcter",
+                "H. Eghbal-zadeh",
+                "G. Widmer"
+            ],
+            "title": "Efficient training of audio transformers with patchout",
+            "venue": "arXiv preprint arXiv:2110.05069, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "L. Van der Maaten",
+                "G. Hinton"
+            ],
+            "title": "Visualizing data using t-sne.",
+            "venue": "Journal of machine learning research,",
+            "year": 2008
+        }
+    ],
+    "sections": [
+        {
+            "text": "Index Terms\u2014Text-guided sounding-video generation, Videoaudio representation, Contrastive learning, Transformer.\nI. INTRODUCTION\nV IDEO generation [1]\u2013[3] has attracted a lot of attentionfrom both academia and industry, since it has the ability to generate videos without copyright issues for media makers and aid in data augmentation for deep learning models. Textto-video generation [4]\u2013[6], in particular, which synthesises videos with natural language as a condition, has improved controllability and is becoming a popular research subject. Current text-to-video generation approaches mainly concentrate on visual frame generation. However, video is actually a type of multi-modal data that includes both visual and audio components. Videos with background audio signals, i.e., sounding videos, include more comprehensive information and are beneficial to video understanding for both humans and machines [7]. For example, it is hard to determine whether a person in a video is singing or speaking without audio. Therefore, as shown in Fig. 1, we propose a novel task of Text-to-Sounding-Video (T2SV) generation that synthesizes\n* Corresponding author. Jiawei Liu, Weining Wang, Sihan Chen, Xinxin Zhu and Jing Liu are with The Laboratory of Cognition and Decision Intelligence for Complex Systems, Institute of Automation, Chinese Academy of Sciences (e-mail: liujiawei2020@ia.ac.cn, weining.wang@nlpr.ia.ac.cn, chensihan2019@ia.ac.cn, xinxin.zhu@nlpr.ia.ac.cn, jliu@nlpr.ia.ac.cn).\nJiawei Liu, Sihan Chen and Jing Liu are also with School of Artificial Intelligence, University of Chinese Academy of Sciences.\nManuscript created October 31, 2022, revised February 13, 2023.\nhigh fidelity sounding videos semantically consistent with the guided textual descriptions.\nThree factors are essential for successful T2SV generation: (1) How to model cross-modal associations for better video representation? In such a multi-modal data as video, crossmodal associations occur naturally and can enable us to obtain more comprehensive and semantically distinct video representations. For instance, using audio information can help identify visually similar objects, such as horses and donkeys.\n(2) It is difficult to generate visual and audio content that is consistent with the guided text while ensuring the correlation and timing alignment of visual frames and audio signals. Tri-modal semantic consistency must be modeled during the generation process. (3) There is no paired textvideo-audio dataset that contains textual descriptions for both visual and audio content. Previous text-video paired datasets [8], [9] concentrate mostly on the visual content and omit the descriptions of audio, whereas the T2SV task needs semantic congruence between audio and text.\nTo address the above issues or challenges, we propose a novel Sounding Video Generator (SVG). As shown in Fig. 2, SVG consists of two stages: quantized encoding and discrete token generation. Firstly, the visual frames and audio spectrograms are independently quantized into discrete tokens using a two-stream SVG-Vector-Quantized GAN (SVG-VQGAN). To obtain better quantized representations, we propose a hybrid contrastive learning method, in which inter-modal contrastive loss is adopted to model cross-modal associations, and intramodal contrastive loss is employed as a regularization to prevent the extracted features from straying away from the original modality. We select positive and negative samples from the same and different video clips separately. To further refine the selection process, we propose three strategies: visual-audio-similarity-based filter, text-guided negative samples selection and window-based positive samples selection. Notably, some visual entities, such as the sky background,\nar X\niv :2\n30 3.\n16 54\n1v 1\n[ cs\n.C V\n] 2\n9 M\nar 2\n02 3\n2 SVG Auto-Regressive Transformer Decoder Visual Decoder Audio Decoder [TXT] Text tokens [BOV1] Visual Tokens [EOV1] [BOA1] Audio Tokens [EOA1] Frame 1 \u2026 Visual Encoder Audio Encoder \u2026 Visual Quantizer \u2026 Audio Quantizer [BOV10] Visual Tokens [EOV10] [BOA10] Audio Tokens [EOA10] Frame 10 BPE Tokenizer 1 \u2026\u2026 Visual Tokens VAF WPS \u2026 2 5 8 7 \u2026 2 Frame 1 Frame 10 5 \u2026\u2026 Audio Tokens 6 7 9 1 \u2026 8 Frame 1 Frame 10 Text: With the sound of the sea, a woman was walking on the beach. TNS \u2026 \u2026 \u2026 \u2026 SVG-VQGAN Hybird Contrastive Learning Cross-modal Attention Module bpbp\nFig. 2. Overview of the proposed SVG framework. Text is tokenized by BPE tokenizer. Visual frames and audio spectrograms are tokenized by the proposed SVG-VQGAN with Cross-modal Attention Module and Hybrid Contrastive Learning modeling visual-audio associations. The dotted green line indicates the back propagation (bp) of contrastive loss. The Visual-Audio-similarity-based Filter (VAF), Text-guided Negative samples Selection (TNS) and Window-based Positive samples Selection (WPS) strategies are used to refine the positive and negative samples in contrastive learning. Then an auto-regressive Transformer decoder is used to generate visual and audio content frame by frame and token by token.\nhave no corresponding audio counterparts, and the same holds true for audio. Thus, a cross-modal attention module is proposed to build local alignment for visual and audio content, and obtain the global features for hybrid contrastive learning. Then, at the second stage, an auto-regressive Transformer decoder is adopted to model semantic consistency between text descriptions, visual frames, and audio signals triples at the token level. To take both visual-to-audio and audio-tovisual attention into account, we suggest a modality alternate sequence format where visual tokens and audio tokens are concatenated in each frame and then cascaded frame by frame.\nTo compensate for the lack of appropriate datasets, AudioSet-Cap, a human annotated text-video-audio paired dataset, is produced for training SVG. AudioSet-Cap is a largescale dataset that contains audio-rich videos from AudioSet [10]. Every video in AudioSet-Cap is annotated by a human annotator with a caption describing both the visual and audio content, whereas previous text-video paired datasets only describe the visual content. Consequently, AudioSet-Cap is a more appropriate dataset for the T2SV task.\nThe main contributions of this work are four-folds:\n\u2022 This is the first work to focus on a novel task of text to sounding video generation using a unified framework. \u2022 We propose a novel SVG-VQGAN, where a cross-modal attention module is introduced to build local semantic correspondence and hybrid contrastive learning is proposed to model inter-modal and intra-modal consistency. \u2022 A human annotated dataset, with descriptions for both visual and audio content, is produced for T2SV generation.\n\u2022 Experimental results demonstrate that SVG achieves excellent performance on T2SV, text-to-video, and opendomain audio generation tasks with the proposed SVGVQGAN and modality alternate sequence format."
+        },
+        {
+            "heading": "II. RELATED WORKS",
+            "text": "Recent years witnessed significant progress in the understanding and generation tasks of visual [11]\u2013[13] and audio [14], [15] content. The following multimodal works [7], [16], [17] place great emphasis on multimodal joint understanding. This paper proposes a novel task for the joint generation of visual and audio content, i.e., T2SV. In this section, we briefly review related works for video generation and audio generation. Notably, the primary distinction between prior works and ours is that we model visual-audio association for video representation and generate video with background audio signals using a unified model.\nA. Video Generation\nPrevious video generation works can be divided into onestage methods based on GAN [18] and two-stage methods based on Vector Quantized VAE (VQVAE) [19] and Transformer [20].\nGAN-based one-stage methods have achieved excellent performances for video-to-video generation on in-domain datasets [21], [22], by separating spatio-temporal generation [1], [23] or disentangling motion and content [2], [3], [24], etc. As for text-to-video generation, RNN is used to extract text features and generate gist for video generator constructed from\n3 3D convolutional GAN [4]. TF-GAN [25] proposes a textconditioning scheme on frame-scale and video-scale, which improves text-video associations. However, those GAN-based methods are hard to extend to open-domain scenarios, limited by the training stability and robustness of GANs.\nVQVAE [19], [26] and Transformer [20] based autoregressive generation models have been popular for image and video generation task. Models like DALLE [13] and Cogview [27] have achieved significant progress on opendomain text-to-image generation, where discrete visual tokens enable efficient and large-scale training of Transformers. LVT [28] and GODIVA [5] use 2D frame VQVAEs to transform visual frames into discrete tokens and VideoGPT [29] then proposes a 3D version. NU\u0308WA [6] uses frame VQGAN [30] taking advantage of GAN to improve the generation fidelity. Different from those visual-only methods, audio information is further considered in our proposed SVG-VQGAN. CogVideo [31] generates a image by a pretrained text-to-image generation model first and then generates subsequent frames. We adopt the Transformer in Cogview [27], and modality alternate sequence format is introduced for generating video with corresponding audio signals.\nExisting interactive multi-modal physical simulators, such as TDW [32], could simulate high-fidelity visual and audio content, which could also be used for sounding video generation. However, the variety of simulated videos is limited by the Unity3D Engine, while we focus on the open-domain video generation guided by the text condition."
+        },
+        {
+            "heading": "B. Audio Generation",
+            "text": "Most of previous audio generation works focus on a specific domain. FastSpeech [33] uses non-auto-regressive Transformer with teacher-student framework to cover the task of text-tospeech generation. Vis [34] builds a model based on CNN [11] and LSTM [35] to synthesize plausible impact sounds from silent videos. Another popular audio generation task is music synthesis [36], [37]. For instance, Audeo [15] covers the task of generating piano music for a silent performance video, where visual frames are translated into raw mechanical musical symbolic to synthesize temporal correlated music. DDT [38] takes visual motions into account and could perform audio-visual source separation of different instruments robustly. CMT [39] further focuses on video background music generation and establishes the rhythmic relations between video and background music, with a controllable music Transformer.\nThe most similar work to ours is SpecVQGAN [40], which addresses the task of open-domain audio generation. Different from SpecVQGAN [40], we generate sounding videos given a text description, while SpecVQGAN [40] takes audio class names and video features as input and only generates audio signals. SpecVQGAN [40] discretizes mel-spectrograms and uses a MelGAN [41] vocoder to decode audio from melspectrograms. In this work, visual information is further utilized for audio representation by hybrid contrastive loss and a HifiGAN [14] trained on large-scale dataset is adopted to reconstruct the raw audio signals."
+        },
+        {
+            "heading": "III. METHOD",
+            "text": "We address the task of Text-to-Sounding-Video (T2SV) generation for the first time. Formally, let v = {v1, v2, ..., vL} denotes the L frames of a video and a denotes the audio signal, where vi \u2208 RC\u00d7H\u00d7W denotes the i-th frame and C,H,W are the channels, height and width of visual frames, respectively. The T2SV task can be expressed as: given an input text t, a generative model G is required to synthesize visual frames v and background audio signals a by maximizing the posterior probability distribution:\nv, a = G(t) = argmax v,a P (v, a|t). (1)\nIn this work, we propose SVG, a novel unified framework for T2SV generation, as shown in Fig. 2. The mel-spectrogram is extracted from the audio a as m \u2208 RF\u00d7T . To model temporal correlations, the video clip is uniformly cropped into L sub-clips with 1 frame in each sub-clip, and m is cropped into L audio frames as m = {m1,m2, ...,mL}, where mi \u2208 RF\u00d7 T L denotes the i-th audio frame. During the training process, we first train the SVG-VQGAN to quantize the visual frames and audio mel-spectrograms into discrete tokens as a reconstruction task. Then a Transformer decoder is trained with text-visual-audio tokens as input and output in an auto-regressive way, i.e., left-to-right prediction. The inference process consists of three parts: 1) The text token is input into the auto-regressive Transformer decoder to generate the matching visual tokens and audio tokens; 2) The generated visual tokens and audio tokens are restored to the visual frames and audio mel-spectrogram through the decoders of SVG-VQGAN; 3) The audio mel-spectrogram is restored to the audio signal through the pre-trained HiFiGAN [14] and combined with the generated visual frames to form the generated sounding video."
+        },
+        {
+            "heading": "A. SVG-VQGAN",
+            "text": "a) Two-Stream VQGAN: Two separate 2D VQGANs [30] for visual frames and audio mel-spectrograms are used as the baseline of SVG-VQGAN. First, the visual frames and audio mel-spectrograms of the i-th to j-th frame randomly sampled from a video clip are encoded into visual features zvi:j = {zvi , ..., zvj } and audio features zai:j :\nzvk = Ev(vk) \u2208 Rdv\u00d7h\u00d7w, k = i, ..., j,\nh = H\ndsv , w =\nW\ndsv zai:j = Ea([mi, ...,mj ]) \u2208 Rda\u00d7f\u00d7[(j\u2212i)\u00d7t],\nf = F\ndsa , t =\nT\nL\u00d7 dsa\n(2)\nwhere Ev and Ea denote the encoders of visual frames and audio mel-spectrograms, dsv and dsa denote the downsampling rate of Ev and Ea, dv and da are the dimension of encoded visual and audio features. Visual frames are encoded separately. And all the audio frames are concatenated and encoded together because mel-spectrograms are continuous in the time dimension. zvi:j and z a i:j are further mapped into their nearest entries in the visual codebook and audio codebook, respectively. Shared quantizer is not adopted for\n4 higher reconstruction upper limit. In this way, quantized video representations z\u0302vi:j and quantized audio representations z\u0302 a i:j are obtained. Then, visual frames and audio mel-spectrograms could be reconstructed by VQGAN decoders as v\u0302i:j and m\u0302i:j . The training losses of visual VQGAN and audio VQGAN are formulated as:\nLvV QGAN = \u2016vi:j \u2212 v\u0302i:j\u201622\ufe38 \ufe37\ufe37 \ufe38 Reconstruction Loss + \u2016CNN(vi:j)\u2212 CNN(v\u0302i:j)\u201622\ufe38 \ufe37\ufe37 \ufe38 Perceptual Loss\n+ \u2016zvi:j \u2212 sg(z\u0302vi:j)\u201622 + \u03b2\u2016sg(zvi:j)\u2212 z\u0302vi:j\u201622\ufe38 \ufe37\ufe37 \ufe38 Codebook Loss + logDv(vi:j) + log(1\u2212Dv(v\u0302i:j))\ufe38 \ufe37\ufe37 \ufe38 Adversarial Loss\n(3)\nLaV QGAN = \u2016mi:j \u2212 m\u0302i:j\u201622\ufe38 \ufe37\ufe37 \ufe38 Reconstruction Loss + \u2016CNN(mi:j)\u2212 CNN(m\u0302i:j)\u201622\ufe38 \ufe37\ufe37 \ufe38 Perceptual Loss\n+ \u2016zai:j \u2212 sg(z\u0302ai:j)\u201622 + \u03b2\u2016sg(zai:j)\u2212 z\u0302ai:j\u201622\ufe38 \ufe37\ufe37 \ufe38 Codebook Loss + logDa(mi:j) + log(1\u2212Da(m\u0302i:j))\ufe38 \ufe37\ufe37 \ufe38 Adversarial Loss\n(4) where \u03b2 is the weight in codebook loss [19], sg is the stopgradient operation, Dv and Da are patch-based discriminators, the CNN in perceptual loss is VGG-16 [42] network pretrained on ImageNet [43] as in VQGAN [30].\nb) Cross-modal Attention Module: For modeling crossmodal associations at the encoding stage, the key idea is that visual frames and audio signals should have semantic correspondence in time, as in previous video-audio self-supervised Learning studies [17], [44]\u2013[46]. However, it is worth noting that not all visual entities have their associated sound counterparts, e.g., the visual entity \u2018sky\u2019 has no associated sound counterparts as it cannot make a sound, and the same is true for audio. Thus, a Cross-modal Attention Module (CAM) is further proposed to model local semantic associations between visual frames and audio signals.\nAs shown in Fig. 3, the encoded features of the k-th visual frame zvk and audio frame z a k are first mapped into a common space with several convolutional layers and group normalization [47], as gvk and g a k . Then g a k is averaged in the time dimension, as visual and audio content may not strictly correspond in time. The average pooled gak is taken as the query of audio-to-visual attention, with gvk as key and value. The visual features obtained by audio-to-visual attention is further averaged to get a global visual feature of the k-th frame as hvk. Since the audio-associated global visual feature hvk has been obtained, we can use it to extract the visualassociated global audio feature of the k-th frame by taking hvk as the query and gak as the key and value in visual-to-audio attention. Both of the audio-to-visual attention and visual-toaudio attention are calculated as in Eq. 5 with input query, key and value as eq, ek, ev .\nq = Q(eq), k = K(ek), v = V (ev)\nh = softmax( qT \u00b7 k\u221a din ) \u00b7 v (5)\nwhere Q, K and V are linear layers, din is the dimension of eq, ek, ev and h is the output feature.\nConv&\nNorm\n\ud835\udc67\ud835\udc58 \ud835\udc63 \ud835\udc67\ud835\udc58 \ud835\udc4e\nConv& Norm\n\ud835\udc44\ud835\udc63\ud835\udc3e\ud835\udc63\ud835\udc49\ud835\udc63 \ud835\udc44\ud835\udc4e \ud835\udc3e\ud835\udc4e \ud835\udc49\ud835\udc4e\nAverage Pooling\nAverage Pooling\n\u210e\ud835\udc58 \ud835\udc63\n\u210e\ud835\udc58 \ud835\udc4e\n\ud835\udc54\ud835\udc58 \ud835\udc63 \ud835\udc54\ud835\udc58\n\ud835\udc4e\nCross-modal Attention Module\nAudio-to-Visual\nAttention\nVisual-to-Audio\nAttention\nFig. 3. Details of the Cross-modal Attention Module.\nS W\nS\nW S\nW\nW\nT T T T T T T T T T T T T T T T T T\nW S W T T T T T T\nS T T T T T T\nW W S T T T T T T T T T T T T S W W T T T T T T S T T T T T T W S W T T T T T T W S W T T T T T T S T T T T T T W W S\nV V V V V V S W V V V V V V V V V S V V V V V V V V V W S V V V\nV V V V V V V V V S W V V V V V V V V V S V V V V V V V V V W S\nV is\nu al 1 A u d io\n1 V is u al 2\nA u\nd io 2 V is u al 3\nA u\nd io\n3\nVisual-Visual positive sample\nAudio-Audio\npositive sample\nAudio-Audio\nnegative sample\nNo contribution\nInter-Modal\nnegative sample\nV id\neo c\nli p 1 V id eo c li p 2\nV id\neo c\nli p\n3 Inter-modal\npositive sample\nVisual-Visual\nnegative sample\nFiltered out by\nIntra-modal\nInter-modal\nW\nT\nV\nS\nWPS\nTNS\nVAF\nSelf-Self\nFig. 4. Example of positive and negative sample selection with video length of 3, batch size of 3 and WPS window size of 2. Video clip 1 2 have semantically similar texts and will not serve as negative samples of the other. The VAF filters out video clip 3 as its visual and audio content are weakly connected and will not serve as positive samples for inter-modal contrastive learning. The dot product of a feature and itself (self-self) will not be involved in the calculation of contrastive loss as in [48].\nc) Hybrid Contrastive Learning: In the training phase of SVG-VQGAN, we incorporate the objective of modeling the associations between visual frames and audio signals by contrastive learning. The visual and audio features in the same video clip should be more consistent than those in video clips with distinct semantics. The inter-modal contrastive loss is adopted based on this hypothesis, in which hv and ha from the same video clips are taken as positive samples and those in different video clips are taken as negative samples. To avoid the extracted features from straying significantly from the original modality, the intra-modal contrastive loss is utilized as a regularization. This method is referred to as Hybrid Contrastive Learning (HCL). Two kinds of contrastive losses, i.e. modality split and modality gathered are exploited. The modality split version calculates contrastive loss in visualvisual, audio-audio and visual-audio separately, while the modality gathered version takes all visual and audio features equally. The loss of modality split HCL (LMSHCL) and modality gathered HCL (LMGHCL) could be respectively defined by Eq. 6 and Eq. 7:\nLMSHCL = LCL(Hv,Hv) + LCL(Ha,Ha)\ufe38 \ufe37\ufe37 \ufe38 intra-modal\n+ LCL(Hv,Ha) + LCL(Ha,Hv)\ufe38 \ufe37\ufe37 \ufe38 inter-modal\n(6)\n5 LMGHCL = LCL([Hv,Ha], [Hv,Ha])\ufe38 \ufe37\ufe37 \ufe38 inter-modal and intra-modal (7)\nwhere Hv and Ha represent all visual and audio features in a batch and [Hv,Ha] denotes the concatenation of them. LCL is the contrastive loss which will be introduced in detail later.\nDifferent from previous contrastive learning methods [17], [46] used in multi-modal encoding, we introduce hybrid contrastive learning in reconstruction and generation tasks, which requires more accurate positive and negative samples. Thus, we propose three mechanisms to refine the selection process.\nFirstly, it is worth noting that some visual entities and background audio signals are not semantically consistent, e.g., music videos with no person in visual content but with human voice. In fact, content tags could be used to retrieval images [49]\u2013[51] and provide an intermediary for audio and visual content. In this case, we propose a Visual-Audio similarity based Filter (VAF) mechanism to use the powerful CLIP [16] model for filtering out the inter-modal positive samples with low semantic similarity. Audio categories are extracted by a pre-trained audio recognition model and are further processed to a sentence with a prompt of \u2018an image with the sound of {the audio categories}\u2019. After that the CLIP cosine similarity between every visual frames in the video and the corresponding audio categories sentence will be calculated and visual-audio pairs with CLIP similarity smaller than a preset threshold will be filtered out. Note that those samples will still be the negative samples of other video clips for data diversity.\nSecondly, it should also be noted that different video clips may be semantically related. Thus, we propose a Text-guided Negative samples Selection (TNS) mechanism. Text features are extracted by a pre-trained BERT [52] and could represent the semantic information of a video clip. Thus, we use them to calculate the semantic similarity between different video clips. Video clips with BERT similarity higher than a preset threshold will not be chosen as negative samples.\nThirdly, frames in the same video clip may be semantically different, as the video subject is likely to change over time. Since the semantics between adjacent frames are generally the same, we propose a Window-based Positive sample Selection (WPS) mechanism, which refine the selection of positive sample in a random timing window.\nAn example of positive and negative sample selection could be found in Fig. 4. Formally, hl is defined as the global feature of a visual frame or an audio mel-spectrogram frame, extracted from the cross-modal attention module, and H is all of the visual or audio global features in a batch. The contrastive loss could be defined based on supervised contrastive losses [48] with VAF, TNS and WPS refining the positive and negative samples. Specifically, the positive part P(hl,H2) and the negative part N (hl,H2) of contrastive loss between a single hl and another set H2 are shown in Eq. 8 and Eq. 9:\nP(hl,H2) = \u2211\nhm\u2208H2, hm 6=hl\n1WPS(hl, hm) exp(h T l \u00b7 hm/\u03c4) (8)\nN (hl,H2) = \u03b6 \u2211\nhn\u2208H2\n1TNS(hl, hn) exp(h T l \u00b7 hn/\u03c4),\n\u03b6 = |H2|\u2211\nhn\u2208H2 1TNS(hl, hn)\n(9)\nwhere \u03c4 is the temperature coefficient, 1WPS(hl, hm) is a binary indicator for WPS to indicate whether hm is a positive sample for hl, and 1TNS(hl, hn) is a binary indicator for TNS to indicate whether hn is a negative sample for hl. 1WPS(hl, hm) is set to 1 when the distance between the frames of hl and hm is smaller than a preset window size. 1TNS(hl, hn) is set to 1 when the cosine similarity between text features of the video clips is smaller than a threshold. The \u03b6 in N (hl,H2) is a coefficient used to balance the loss value caused by the unbalanced number of negative samples, where the numerator |H2| represents the total number of samples in H2, and the denominator represents the number of negative samples. Then the contrastive loss could be defined as:\nLlCL(hl,H2) = \u2212 log P(hl,H2) N (hl,H2)\n(10)\nLCL(H1,H2) = \u2211\nhl\u2208H1\n1V AF (hl)\u2211 hl\u2208H1 1V AF (hl) LlCL(hl,H2)\n(11) where 1V AF (hl) is a binary indicator for VAF to indicate whether the visual content of the video clip where hl is extracted from is related to its sound. 1V AF (hl) is set to 0 only for inter modal contrastive loss when the CLIP similarity of visual frames and audio categories is smaller than a threshold.\nThen the final loss of SVG-VQGAN is calculated as:\nLSVG-VQGAN = LvV QGAN + LaV QGAN + \u03b1LHCL (12)"
+        },
+        {
+            "heading": "B. Auto-Regressive Transformer Decoder",
+            "text": "As mentioned above, the text is tokenized by BPE [53] as XT ={xt1,..., xtm}. The visual frames and audio signals are quantized into discrete tokens by the proposed SVG-VQGAN. In this section, we introduce the auto-regressive Transformer decoder to generate the visual and audio tokens with text tokens as input. We utilize the unidirectional Transformer from Cogview [27] as the backbone, and multimodal sequence formats are introduced for this sounding video generation task. Some specific tokens are used to indicate the modality or frame boundary. Specifically, we use [TXT ], [BOV i], [BOAi] to denote the beginning of text, the i-th visual frame and the i-th audio frame, respectively. [EOV i] and [EOAi] denote the end of the i-th visual frame and the i-th audio frame, respectively. Then modality cascade sequence format and modality alternate sequence format are introduced to build the input of autoregressive Transformer decoder.\nModality cascade sequence format concatenates visual tokens XV and audio tokens XA as\nXV = {[BOV 1], xv1, [EOV 1], ..., [BOV L], xvL, [EOV L]}, XA = {[BOA1], xa1 , [EOA1], ..., [BOAL], xaL, [EOAL]},\n(13) where xvi and x a i denote the flattened discrete tokens of the i-th visual frame and the i-th audio frame. Then, all\n6\ntokens are cascaded in the order of [XT , XV , XA] (T-V-A) or [XT , XA, XV ] (T-A-V). Due to the unidirectional attention in auto-regressive Transformer, only visual-to-audio cross-modal association is built for T-V-A format and only audio-to-visual cross-modal association is built in T-A-V format.\nModality Alternate Sequence Format (MASF) first concatenates both visual and audio tokens in a frame as\nXFi = {[BOV i], xvi , [EOV i], [BOAi], xai , [EOAi]}, (14)\nand then concatenates all frames with text token as\nX = {[TXT ], XT , XF1 , ..., XFL } (15)\nIn this way, the first visual frame is generated as a pivot and latter tokens could attend to both visual and audio content.\nThe training object of auto-regressive Transformer decoder is left-to-right token prediction, using cross-entropy loss. All text, visual and audio tokens are equally treated, with different loss weights \u03b3v, \u03b3a, \u03b3t, following Cogview [27]. Finally the auto-regressive loss LAR could be define as:\nLtAR = \u2212\u03b3t M\u2211 i=1 1t(Xi)Xi log(P (Xi|X<i))\nLvAR = \u2212\u03b3v M\u2211 i=1 1v(Xi)Xi log(P (Xi|X<i))\nLaAR = \u2212\u03b3a M\u2211 i=1 1a(Xi)Xi log(P (Xi|X<i)) LAR = LtAR + LvAR + LaAR\u2211M\ni=1 1t(Xi)\u03b3 t + 1v(Xi)\u03b3v + 1a(Xi)\u03b3a\n(16)\nwhere M is the length of X , 1t(Xi), 1v(Xi) and 1a(Xi) separately denote whether Xi is text, visual or audio tokens."
+        },
+        {
+            "heading": "IV. EXPERIMENTS",
+            "text": ""
+        },
+        {
+            "heading": "A. Datasets",
+            "text": "To solve the problem of missing appropriate training data for T2SV task, we construct a text-video-audio dataset based on AudioSet [10], named AudioSet-Cap. Audioset is an excellent data source as it is rich in audio diversity and provides links to the original videos. Thus, we build the T2SV dataset by further supplementing the manually annotated text description for videos from AudioSet. The annotators are required to describe both the visual and audio content, and filter out the low-quality data meeting the following conditions: 1) videos with meaningless visual or audio content which are hard to be described; 2) videos with no change through all frames; 3) videos less than 10 seconds (to train SVG with sufficiently long videos). Finally there are 809,438 and 1,000 video clips of about 10 seconds each in the training set and test set. As shown in Table I, compared with other text-audio dataset, such as AudioCaps [54], and text-video dataset, such as HowTo-100M [9] and WebVid-2M [8], AudioSet-Cap contains meaningful audio signals in each video and provides accurate human annotated descriptions for both visual and background audio content. These advantages make it more suitable for T2SV task. The dataset will be released soon.\nTo compare our method with state-of-the-art text-to-video and audio generation methods, we further evaluate our model on Kinetics [55] dataset as in T2V [4], and VAS [56] dataset as in SpecVQGAN [40]. For the Kinetics dataset, we collect videos of the 10 classes first used in T2V [4] from the original Kinetics [55] dataset and scrape there titles from the internet as the text descriptions. Finally 5,186 video clips are selected as the training set and 1,000 videos from the original test set and part of the validation set are selected as the test set, as not all descriptions are available now due to invalid website and privacy. The VAS [56] dataset contains 9,520 and 754 video clips of 10 classes for training and evaluation. Videos less than 10 seconds are repeat and crop to keep the width of mel-spectrogram larger than 800, as in SpecVQGAN [40].\nB. Implementation Details\nThe raw audio with sampling rate of 22050 Hz is pre-processed as in SpecVQGAN [40], where a log-melspectrogram m of size (F \u00d7 T ) = (80 \u00d7 800) is obtained, corresponding to a video clip of 9.26 seconds. The number of video sub-clips is L = 10 and the size of the visual frames is set to H = W = 128, which is a tradeoff between efficiency and video quality. Thus, the visual frames are sparsely extracted from the raw video with FPS = 1/9.26 = 1.08. The dowonsampling rate dsv and dsa are both set to 16, resulting in visual frame tokens of size (8\u00d7 8) and audio frame tokens of size (f \u00d7 t) = (5\u00d7 5).\nThe encoders and decoders follow the settings in VQGAN [30], which are composed of convolutional stacks with skipconnections and group normalization. There are 4 downsampling blocks in the encoders of SVG-VQGAN. In each downsampling block, 2D-convolutional layers first spatially downsample the input by a factor of 2, then 2 residual blocks are used for feature extraction. And the decoders are symmetric to the encoders, where convolution layers and nearest neighbor interpolation make up the upsampling blocks. We also add 2 self-attention layers at the end of the encoders, following VQGAN [30] and SpecVQGAN [40]. The output features of self-attention layers are considered as the output of encoders, which are then used for modeling cross-modal associations by CAM and quantized by Exponential Moving Average (EMA) vector quantizer. The dimensions da, dv are both set to 256. The visual codebook size is 8192 and the audio codebook size is 4096. We use the modality split HCL according to the experiment. The similarity thresholds in VAF\n7\nand TNS are set to 20.0 and 0.85 based on the statistics of dataset. And the window size in WPS is set to 2 for a larger batch size of 20, as we random crop 2 frames for each sampled video clip. After training for 700k iterations, we finetune SVGVQGAN on 10 frames video clip and keep the window size of 2 with a batch size of 4 for 50k iterations to get better reconstruction quality of audio. The loss weight of HCL is set to 1.0. We optimize SVG-VQGAN using Adam [57] with a learning rate of 4.5e-6, on 4 NVIDIA-A100 GPUs.\nThe auto-regressive Transformer decoder is composed of 24 Transformer layers with 16-heads, and the dimension of hidden state is set to 1024. The max length of input sequence is set to 1025. We set the loss weight according to the token length of different modalities, as \u03b3t = 3, \u03b3a = 2, \u03b3v = 1. The parameters are updated by Adam [57] with a max learning rate of 8e-4. Warming up and cosine annealing decay [58] for learning rate are used. We train the Transformer on 8 NVIDIAA100 GPUs with a batch size of 256 for 350k iterations.\nThe HiFiGAN [14] model is trained on AudioSet-Cap dataset with a batch size of 32, learning rate of 2e-4 and segment size of 8192 for 425k iterations."
+        },
+        {
+            "heading": "C. Evaluation on Audioset-Cap",
+            "text": "a) Quantitative Evaluation: We use the CLIPSIM metric proposed in GODIVA [5] to measure the semantic consistency between text and video, which utilizes CLIP [16] to calculate the cosine similarity between the text and the generated visual frames. We further use FID-img [59] and FID-vid [25], [60] to evaluate the quality of generated visual frames as in TFGAN [25]. And FID-aud in SpecVQGAN [40] is used for quantitative evaluation for the generated audio. To evaluate the semantic consistency between text-audio and visual-audio, manual evaluation is used. Manual evaluation score ranges from 0 to 100, where scores in (0, 25), [25,50), [50,75) and [75,100) indicate meaningless audio signals, audio signals mismatched with text, audio signals associated with text but not corresponding to video, audio signals matched with text and visual frames, respectively. The evaluation criteria is the subjective evaluation of semantic consistency. If there is content that cannot be recognized semantically, it will be directly evaluated as semantically irrelevant. For example, if the audio signal matched the text description but the visual fidelity is too low, it will be evaluated to [50,75). 32 samples\nare generated for each text description and CLIPSIM [5], [16] is used to find the video matching best to the text.\nAs shown in Table II, better semantic consistency is obtained after re-ranked by CLIPSIM, along with better realism of generated visual frames for the smallest FID-vid. Using all samples gets better FID-img and FID-aud because more samples are more likely to fit the distribution of real visual frames and audio. We compare our method with state-of-theart two-stage video generation model, i.e., CogVideo [31]. 5 frames are generated for each video as in CogVideo-stage1. To prevent the difference caused by frame number, we repeat the generated video to 10 frames to calculate FID-img and FIDvid. It could be found that CogVideo generates video frames with higher fidelity and better visual-text consistency, as more parameters and frames with higher resolution of 480 \u00d7 480 are used by CogVideo, which also leads to slower inference. Besides, SVG could generate associated audio while CogVideo focuses on video frames generation. Fig. 5 shows the manual evaluation result of videos generated by SVG with CLIPSIM re-rank. It can be found that most of the audio signals, visual frames and texts are associated.\nb) Qualitative Evaluation: Visualization of various generated frames and mel-spectrograms are shown in Fig. 6. It can be found that the visual frames generated by SVG match the text description well, and the generated audio signals also present the sound characteristics, e.g., the wind is concentrated on the low frequency, the sound of guitar is rhythmic, and the frequency of the human voice is richer. On the other hand, thanks to the modality alternate sequence format, the audio tokens can only attend to the previous visual frames, so that the generated audio and visual frames have a certain time alignment, such as the example of a woman singing. More synthesised videos could be found in the project page 1."
+        },
+        {
+            "heading": "D. Evaluation on Open-Sourced Dataset",
+            "text": "In this section, we compare our method with state-of-theart video generation methods on Kinetics [4], [55] dataset and audio generation method on VAS [56] dataset, while we generate both visual frames and audio signals guided by text descriptions simultaneously.\n1https://github.com/jwliu-cc/SVG.git\n8 Input Text: The grass was green, with blue sky and white clouds, and the wind.\nClick to Play in\nAdobe Reader\nInput Text: A man in A blue shirt was playing the guitar.\nClick to Play in\nAdobe Reader\nInput Text: A woman with long hair sang in the room.\nClick to Play in\nAdobe Reader\nInput Text: A man in a suit and glasses speaks indoors.\nClick to Play in\nAdobe Reader\nInput Text: A bird stood in the room, shaking its head and whistling.\nClick to Play in\nAdobe Reader\nInput Text: In the game, a yellow car roars along the road.\nClick to Play in\nAdobe Reader\nFig. 6. Visualization of various generated visual frames and mel-spectrograms, containing landscapes, animals, objects, and humanities. The columns of mel-spectrograms from top to bottom represent low to high frequencies and the rows represent changes over time. Audio files could also be found in https://github.com/jwliu-cc/SVG.git when Adobe Reader is unavailable.\n9 Input Text: playing golf on grass\nT 2 V\n(6 4 \u00d7\n6 4 )\nT F\nG A\nN\n(1 2 8 \u00d7\n1 2 8\n)\nG O\nD IV\nA\n(1 2 8 \u00d7\n1 2 8 ) N U W A\n(3 8\n4 \u00d7\n3 8 4\n)\n..\nO u rs\n(1 2 8 \u00d7\n1 2 8 )\nN U\nW A .. O u rs\nO u rs\nFig. 7. Visualization of text-to-video generation on Kinetics dataset.\na) Text-to-Video Generation: We compare our method with other text-to-video generation methods quantitatively in Table III and qualitatively in Fig. 7. Note that we separately finetune SVG-VQGAN and Transformer on Kinetics for 10 epochs and 2k iterations, then generate 32 samples for each text and re-rank with CLIPSIM. As shown in Table III, our proposed SVG outperforms previous text-to-video generation methods in most metrics, and is comparable to NU\u0308WA [6] in CLIPSIM. Visualization of generated samples could be found in Fig. 7. It can be found that the quality of the visual frames\nInput: drum\nO u rs G ro u n d T ru th Click to Play in Adobe Reader\nO u rs Click to Play in Adobe Reader\nS p ec\nV Q\nG A\nN\nClick to Play in Adobe Reader\nFig. 8. Visualization of text-to-audio generation on VAS dataset. Note that the visual frames in the first line are generated by our model while SpecVQGAN takes real visual frames as input.\ngenerated by our model is better than previous generation models T2V [4], TFGAN [25], GODIVA [5], while we could generate audio signals at the same time. Note that NU\u0308WA [6] generates video with a high resolution of 384\u00d7384, leading to better visualization but longer visual tokens sequence, which also introduces greater computational consumption.\nb) Text-to-Audio Generation: We set the Nv = 512 and Na = 128 when training on VAS for fair comparison with SpecVQGAN [40] and the resolution of visual frames\n10\nis 64 \u00d7 64 with downsampling rate 8 for this small dataset. The class labels in VAS are taken as the input text. We use the FID-aud and MKL metric for quantitative evaluation as in SpecVQGAN [40]. Results in Table IV show that our method trained on VAS remarkably outperforms SpecVQGAN even when SpecVQGAN uses visual frames as extra input. We also prove the zero-shot generation result of our model when trained on AudioSet-Cap dataset. Since the model is trained using description as input, the performance is slightly inferior to SpecVQGAN trained on VGGSound [61], which using class names as input as VAS. As shown in Fig. 8, The mel-spectrograms generated by our model is smoother and clearer than SpecVQGAN. Note that the generated audio of SpecVQGAN is downloaded from the project page2."
+        },
+        {
+            "heading": "E. Ablation Study",
+            "text": "a) SVG-VQGAN at Reconstruction Stage: For the ablation study at the reconstruction stage, we set the resolution of visual frames to 64 \u00d7 64 with a downsampling rate of 8 for simplicity, and train on AudioSet-Cap for 10 epochs, with Nv = Na = 2048.\nQuantitative results could be found in Table V, including experiments with or without HCL (i), ablation study of different settings of HCL (ii), ablation study of hyper parameters (iii) and 10-frames finetuning experiments (iv). Improvements have been achieved on both FID-aud and FID-img when training\n2https://iashin.ai/SpecVQGAN\nSVG-VQGAN with additionally HCL (comparing i-1 and i-2). It is worth noting that using HCL with accurate audio category annotations (i-1) or categories extracted by pretrained PaSST [62] (ii-1) for VAF have closer performance, which shows that HCL is universal and can be used for other datasets without audio category annotations.\nWe conducted experiments (ii) on replacing modality split contrastive loss with modality gathered contrastive loss, removing VAF and TNS strategies. Modality split contrastive loss is shown to be better than modality gathered contrastive loss (ii-2) in this reconstruction task, as it separates the construction of cross-modal correlation and the regularity of of intra-modal distribution. Removing VAF (ii-3) does harm to the performance of SVG-VQGAN, as video clips with uncorrelated visual-audio content are used as positive samples. It should be noted that the reconstruction quality is also degraded when TNS is removed (ii-4), especially on audio, because there is a large number of audios with similar semantics in AudioSet dataset, e.g., concert videos, and it is critical to use text descriptions for selecting semantically distinct negative samples.\nFrom the ablation study of hyper parameters, it could be found that SVG-VQGAN with different VAF (iii-1 and iii2) and TNS (iii-3 and iii-4) thresholds outperforms SVGVQGAN without HCL (i-2), which shows the robustness of\n11\nHCL. It is worth noting that improvements have been achieved in SVG-VQGAN with a higher VAF threshold of 22.0 (iii-1), as better inter-modal positive samples are provided. However, we set the VAF threshold to 20.0 because accurate audio labels may be missing in other datasets. We also notice that the quality of video reconstruction decreases when the window size in WPS is set to 1 (iii-5), which shows the importance of intra-modal contrastive loss. Using a larger window size (i.e. 4 and 10) in WPS (iii-6 and iii-7) is better for audio spectrogram reconstruction, as we evaluate on the whole audio mel-spectrogram of 10 frames and train the model with larger window size can better adapt to the 10- frames mel-spectrogram. However, the performance of video reconstruction is degraded because some positive samples with poor correlation may be introduced and the frame diversity within a batch is reduced. Besides, it is hard to train with large window size when using higher resolution visual frames, limited by the memory of GPUs. Actually, we can further finetune the SVG-VQGAN with 10-frames video to achieve better quality in audio mel-spectrogram reconstruction, as shown in the last two rows of Table V.\nComparison of some visualized reconstructed examples are shown in Fig. 9, and the obvious advantages of HCL can be found in the reconstruction of audio mel-spectrogram, where the areas with significant characteristics related to visual content will be particularly focused on, which will be discussed later, and reconstructed better.\nWe further visualise the visual features encoded by SVGVQGAN with and without HCL in Fig.10. The encoded features in the validation set corresponding to the 10 embeddings with the highest cosine similarity in the video codebook are dimensionally reduced by t-SNE [63] and visualized. It is obviously that the features extracted by SVG-VQGAN with HCL are more clustering and separable, while the gray, pink and yellow-green features extracted by SVG-VQGAN without HCL are dispersive and mixed.\nb) SVG-VQGAN on Generation Stage: For the ablation study of SVG-VQGAN with and without HCL on generation stage, we use the pretrained SVG-VQGAN with and without HCL above to extract visual and audio tokens, and construct Transformers with 12 self-attention layers and the hidden size of 1024 for auto-regressive token generation. Both of the Transformer models are trained on AudioSet-Cap dataset for 100k iterations. Results could be found in Table VI. It can be found that the generation quality of SVG using SVG-VQGAN with HCL is better than that without HCL on all evaluation metrics, which indicates that HCL improves the quantized representations of visual frames and audio signals and benefits the training of Transformer because of less noise.\nc) Different Multi-modal Sequence Formats: For the ablation study of different sequence formats, we use a smaller version Transformer with 12 layers and train the model for 100k iterations on AudioSet-Cap. 16 samples are generated for each text and all samples are used for calculating FID-img and FID-aud. Modality AlternateSequence Format (MASF) outperforms modality cascade sequence format, i.e. T-V-A and T-A-V, on all metrics. The reasons are from two aspects. On the one hand, MASF can build cross-modal associations in both audio-to-visual and visual-to-audio, while T-V-A and TA-V only focus on single directional cross-modal associations. On the other hand, T-V-A and T-A-V are more dependent on the quality of the previous generated modality, making it susceptible to previous generation errors.\nF. Visualization of Cross-modal Attention Module\nWe visualise the attention map in CAM in Fig. 11. For visual attention map, we take the average through all 5 audio frequency bands. The visualised example shows that the audioto-visual attention could capture the main visual position where the sound comes from, e.g., the face of the woman in the example. And more attention was paid to the areas with prominent features in the audio mel-spectrogram in visualto-audio attention. Therefore, local alignment between visual frames and audio mel-spectrograms is build, through which audio-associated visual features and visual-associated audio features are obtained for HCL."
+        },
+        {
+            "heading": "V. CONCLUSION",
+            "text": "In this paper, we present Sounding Video Generator (SVG) as a unified model, that can simultaneously generate video with audio signals guided by text descriptions for the first time. A novel SVG-VQGAN with cross-modal attention module and hybrid contrastive loss is proposed to quantize visual frames and audio mel-spectrograms into discrete tokens. Then an auto-regressive Transformer decoder with a modality alternate sequence format is used for generating visual and audio tokens guided by the text descriptions. In this way, SVG could model visual-audio associations at both the encoding and decoding stage, and generate semantically associated visual frames and audio signals guided by text. Future studies may include high resolution and high frame rate video generation, and more explicit modeling of the temporal alignment between visual frames and audio signals.\n12"
+        },
+        {
+            "heading": "VI. ACKNOWLEDGEMENT",
+            "text": "This work was supported by the National Key Research and Development Program of China (No. 2020AAA0106400), National Natural Science Foundation of China (U21B2043, 62102419, 62102416) and CAAI-Huawei MindSpore Open Fund."
+        }
+    ],
+    "title": "Sounding Video Generator: A Unified Framework for Text-guided Sounding Video Generation",
+    "year": 2023
+}

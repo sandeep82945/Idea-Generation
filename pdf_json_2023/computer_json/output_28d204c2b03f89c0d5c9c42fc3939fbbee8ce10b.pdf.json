@@ -1,0 +1,797 @@
+{
+    "abstractText": "High-fidelity numerical simulations of partial differential equations (PDEs) given a restricted computational budget can significantly limit the number of parameter configurations considered and/or time window evaluated for modeling a given system. Multi-fidelity surrogate modeling aims to leverage less accurate, lowerfidelity models that are computationally inexpensive in order to enhance predictive accuracy when highfidelity data are limited or scarce. However, low-fidelity models, while often displaying important qualitative spatio-temporal features, fail to accurately capture the onset of instability and critical transients observed in the high-fidelity models, making them impractical as surrogate models. To address this shortcoming, we present a new data-driven strategy that combines dimensionality reduction with multi-fidelity neural network surrogates. The key idea is to generate a spatial basis by applying the classical proper orthogonal decomposition (POD) to high-fidelity solution snapshots, and approximate the dynamics of the reduced states \u2014 time-parameter-dependent expansion coefficients of the POD basis \u2013 using a multi-fidelity long-short term memory (LSTM) network. By mapping low-fidelity reduced states to their high-fidelity counterpart, the proposed reduced-order surrogate model enables the efficient recovery of full solution fields over time and parameter variations in a non-intrusive manner. The generality and robustness of this method is demonstrated by a collection of parametrized, time-dependent PDE problems where the low-fidelity model can be defined by coarser meshes and/or time stepping, as well as by misspecified physical features. Importantly, the onset of instabilities and transients are well captured by this surrogate modeling technique.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Paolo Contia"
+        },
+        {
+            "affiliations": [],
+            "name": "Mengwu Guo"
+        },
+        {
+            "affiliations": [],
+            "name": "Andrea Manzoni"
+        },
+        {
+            "affiliations": [],
+            "name": "Attilio Frangi"
+        },
+        {
+            "affiliations": [],
+            "name": "Steven L. Brunton"
+        },
+        {
+            "affiliations": [],
+            "name": "J. Nathan Kutz"
+        }
+    ],
+    "id": "SP:ccda70d7bc3e9cbbe5658e2fca160f89d61d43ae",
+    "references": [
+        {
+            "authors": [
+                "S.E. Ahmed",
+                "O. San",
+                "K. Kara",
+                "R. Younis",
+                "A. Rasheed"
+            ],
+            "title": "Multifidelity computing for coupling full and reduced order models",
+            "venue": "Plos one, 16(2):e0246092",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M.A. \u00c1lvarez",
+                "L. Rosasco",
+                "N.D. Lawrence"
+            ],
+            "title": "Kernels for vector-valued functions: A review",
+            "venue": "Foundations and Trends\u00ae in Machine Learning, 4(3):195\u2013266",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "A.C. Antoulas"
+            ],
+            "title": "A survey of model reduction methods for large-scale systems",
+            "venue": "Contemporary Mathematics, 280:193\u2013219",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "J. Bakarji",
+                "K. Champion",
+                "J.N. Kutz",
+                "S.L. Brunton"
+            ],
+            "title": "Discovering governing equations from partial measurements with deep delay autoencoders",
+            "venue": "arXiv preprint arXiv:2201.05136",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "P. Benner",
+                "S. Gugercin",
+                "K. Willcox"
+            ],
+            "title": "A survey of projection-based model reduction methods for parametric dynamical systems",
+            "venue": "SIAM review, 57(4):483\u2013531",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "J. Bergstra",
+                "R. Bardenet",
+                "Y. Bengio",
+                "B. K\u00e9gl"
+            ],
+            "title": "Algorithms for hyper-parameter optimization",
+            "venue": "Advances in Neural Information Processing Systems, 24",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "J. Bergstra",
+                "D. Yamins",
+                "D. Cox"
+            ],
+            "title": "Hyperopt: Distributed asynchronous hyper-parameter optimization",
+            "venue": "Astrophysics Source Code Library, pages ascl\u20132205",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "N. Botteghi",
+                "M. Guo",
+                "C. Brune"
+            ],
+            "title": "Deep kernel learning of dynamical models from high-dimensional noisy data",
+            "venue": "Scientific reports, 12(1):21530",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S.L. Brunton",
+                "J.N. Kutz"
+            ],
+            "title": "Data-driven science and engineering: Machine learning",
+            "venue": "dynamical systems, and control. Cambridge University Press",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S.L. Brunton",
+                "J.L. Proctor",
+                "J.N. Kutz"
+            ],
+            "title": "Discovering governing equations from data by sparse identification of nonlinear dynamical systems",
+            "venue": "Proceedings of the national academy of sciences, 113(15):3932\u2013 3937",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "T. Bui-Thanh",
+                "K. Willcox",
+                "O. Ghattas"
+            ],
+            "title": "Parametric reduced-order models for probabilistic analysis of unsteady aerodynamic applications",
+            "venue": "AIAA journal, 46(10):2520\u20132529",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "K.T. Carlberg",
+                "R. Tuminaro",
+                "P. Boggs"
+            ],
+            "title": "Preserving lagrangian structure in nonlinear model reduction with application to structural dynamics",
+            "venue": "SIAM J. Sci. Comput, 37(2):B153\u2013B184",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "K. Champion",
+                "B. Lusch",
+                "J.N. Kutz",
+                "S.L. Brunton"
+            ],
+            "title": "Data-driven discovery of coordinates and governing equations",
+            "venue": "Proceedings of the National Academy of Sciences, 116(45):22445\u201322451",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "P. Conti"
+            ],
+            "title": "MultiFidelity POD",
+            "venue": "https://github.com/ContiPaolo/MultiFidelity_POD",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "P. Conti",
+                "G. Gobat",
+                "S. Fresca",
+                "A. Manzoni",
+                "A. Frangi"
+            ],
+            "title": "Reduced order modeling of parametrized systems through autoencoders and SINDy approach: continuation of periodic solutions",
+            "venue": "Computer Methods in Applied Mechanics and Engineering, 411:116072",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "P. Conti",
+                "M. Guo",
+                "A. Manzoni",
+                "J.S. Hesthaven"
+            ],
+            "title": "Multi-fidelity surrogate modeling using long short-term memory networks",
+            "venue": "Computer methods in applied mechanics and engineering, 404:115811",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "T. Cui",
+                "Y. Marzouk",
+                "K. Willcox"
+            ],
+            "title": "Data-driven model reduction for the bayesian solution of inverse problems",
+            "venue": "International Journal for Numerical Methods in Engineering, 102(5):966\u2013990",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "M. Frangos",
+                "Y. Marzouk",
+                "K. Willcox"
+            ],
+            "title": "and B",
+            "venue": "van Bloemen Waanders. Surrogate and reduced-order modeling: a comparison of approaches for large-scale statistical inverse problems. Large-Scale Inverse Problems and Quantification of Uncertainty, pages 123\u2013149",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "S. Fresca",
+                "L. Dede",
+                "A. Manzoni"
+            ],
+            "title": "A comprehensive deep learning-based approach to reduced order modeling of nonlinear time-dependent parametrized pdes",
+            "venue": "Journal of Scientific Computing, 87(2):1\u201336",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Fresca",
+                "A. Manzoni"
+            ],
+            "title": "Real-time simulation of parameter-dependent fluid flows through deep learning-based reduced order models",
+            "venue": "Fluids, 6(7):259",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Fresca",
+                "A. Manzoni"
+            ],
+            "title": "POD-DL-ROM: enhancing deep learning-based reduced order models for nonlinear parametrized pdes by proper orthogonal decomposition",
+            "venue": "Computer Methods in Applied Mechanics and Engineering, 388:114181",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "N. Geneva",
+                "N. Zabaras"
+            ],
+            "title": "Multi-fidelity generative deep learning turbulent flows",
+            "venue": "Foundations of Data Science, 2(4):391\u2013428",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "F.A. Gers",
+                "J. Schmidhuber",
+                "F. Cummins"
+            ],
+            "title": "Learning to forget: Continual prediction with lstm",
+            "venue": "Neural Computation, 12(10):2451\u20132471",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "O. Ghattas",
+                "K. Willcox"
+            ],
+            "title": "Learning physics-based models from data: perspectives from inverse problems and model reduction",
+            "venue": "Acta Numerica, 30:445\u2013554",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M. Guo",
+                "J.S. Hesthaven"
+            ],
+            "title": "Data-driven reduced order modeling for time-dependent problems",
+            "venue": "Computer methods in applied mechanics and engineering, 345:75\u201399",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M. Guo",
+                "A. Manzoni",
+                "M. Amendt",
+                "P. Conti",
+                "J.S. Hesthaven"
+            ],
+            "title": "Multi-fidelity regression using artificial neural networks: efficient approximation of parameter-dependent output quantities",
+            "venue": "Computer methods in Applied Mechanics and Engineering, 389:114378",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Guo",
+                "S.A. McQuarrie",
+                "K.E. Willcox"
+            ],
+            "title": "Bayesian operator inference for data-driven reduced-order modeling",
+            "venue": "Computer Methods in Applied Mechanics and Engineering, 402:115336",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "W. Haik",
+                "Y. Maday",
+                "L. Chamoin"
+            ],
+            "title": "A real-time variational data assimilation method with data-driven model enrichment for time-dependent problems",
+            "venue": "Comput. Methods Appl. Mech. Engrg., 405:115868",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "J.S. Hesthaven",
+                "G. Rozza",
+                "B. Stamm"
+            ],
+            "title": "Certified reduced basis methods for parametrized partial differential equations",
+            "venue": "Springer International Publishing",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "S. Hochreiter",
+                "J. Schmidhuber"
+            ],
+            "title": "Long short-term memory",
+            "venue": "Neural Computation, 9(8):1735\u20131780",
+            "year": 1997
+        },
+        {
+            "authors": [
+                "M. Kast",
+                "M. Guo",
+                "J.S. Hesthaven"
+            ],
+            "title": "A non-intrusive multifidelity method for the reduced order modeling of nonlinear problems",
+            "venue": "Comput. Methods Appl. Mech. Engrg., 364:112947",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "M.C. Kennedy",
+                "A. O\u2019Hagan"
+            ],
+            "title": "Predicting the output from a complex computer code when fast approximations are available",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "D.P. Kingma",
+                "J. Ba"
+            ],
+            "title": "Adam: A method for stochastic optimization",
+            "venue": "arXiv preprint arXiv:1412.6980",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "J.N. Kutz"
+            ],
+            "title": "Data-driven modeling & scientific computation: methods for complex systems & big data",
+            "venue": "Oxford University Press",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "K. Lee",
+                "K.T. Carlberg"
+            ],
+            "title": "Model reduction of dynamical systems on nonlinear manifolds using deep convolutional autoencoders",
+            "venue": "Journal of Computational Physics, 404:108973",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D. Liu",
+                "Y. Wang"
+            ],
+            "title": "Multi-fidelity physics-constrained neural network and its application in materials modeling",
+            "venue": "Journal of Mechanical Design, 141(12)",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Y. Maday",
+                "A. Patera",
+                "J. Penn",
+                "M. Yano"
+            ],
+            "title": "A parametrized-background data-weak approach to variational data assimilation: formulation",
+            "venue": "analysis, and application to acoustics. Int. J. Numer. Methods Engrg., 102:933\u2013965",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "A. Manzoni",
+                "A. Quarteroni",
+                "G. Rozza"
+            ],
+            "title": "Shape optimization for viscous flows by reduced basis methods and free-form deformation",
+            "venue": "International Journal for Numerical Methods in Fluids, 70(5):646\u2013 670",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "L. Mars Gao",
+                "J.N. Kutz"
+            ],
+            "title": "Bayesian autoencoders for data-driven discovery of coordinates",
+            "venue": "governing equations and fundamental constants. arXiv e-prints, pages arXiv\u20132211",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "R. Maulik",
+                "B. Lusch",
+                "P. Balaprakash"
+            ],
+            "title": "Reduced-order modeling of advection-dominated systems with recurrent neural networks and convolutional autoencoders",
+            "venue": "Physics of Fluids, 33(3):037106",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "X. Meng",
+                "H. Babaee",
+                "G.E. Karniadakis"
+            ],
+            "title": "Multi-fidelity Bayesian neural networks: Algorithms and applications",
+            "venue": "Journal of Computational Physics, 438:110361",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "X. Meng",
+                "G.E. Karniadakis"
+            ],
+            "title": "A composite neural network that learns from multi-fidelity data: Application to function approximation and inverse pde problems",
+            "venue": "Journal of Computational Physics, 401:109020",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "M. Motamed"
+            ],
+            "title": "A multi-fidelity neural network surrogate sampling method for uncertainty quantification",
+            "venue": "International Journal for Uncertainty Quantification, 10(4)",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "T. Nakamura",
+                "K. Fukami",
+                "K. Hasegawa",
+                "Y. Nabae",
+                "K. Fukagata"
+            ],
+            "title": "Convolutional neural network and long short-term memory based reduced order surrogate for minimal turbulent channel flow",
+            "venue": "Physics of Fluids, 33(2):025116",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "F. Negri",
+                "G. Rozza",
+                "A. Manzoni",
+                "A. Quarteroni"
+            ],
+            "title": "Reduced basis method for parametrized elliptic optimal control problems",
+            "venue": "SIAM Journal on Scientific Computing, 35(5):A2316\u2013A2340",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "B.R. Noack",
+                "M. Morzynski",
+                "G. Tadmor"
+            ],
+            "title": "Reduced-order modelling for flow control",
+            "venue": "volume 528. Springer Science &amp; Business Media",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "B.R. Noack",
+                "M. Schlegel",
+                "M. Morzynski",
+                "G. Tadmor"
+            ],
+            "title": "Galerkin method for nonlinear dynamics",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "C. Olah"
+            ],
+            "title": "Understanding lstm networks",
+            "venue": "https://colah.github.io/posts/ 2015-08-Understanding-LSTMs/, 2015. Accessed: April 21",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "S.E. Otto",
+                "C.W. Rowley"
+            ],
+            "title": "Linearly recurrent autoencoder networks for learning dynamics",
+            "venue": "SIAM Journal on Applied Dynamical Systems, 18(1):558\u2013593",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "B. Peherstorfer",
+                "K. Willcox"
+            ],
+            "title": "Data-driven operator inference for nonintrusive projection-based model reduction",
+            "venue": "Computer Methods in Applied Mechanics and Engineering, 306:196\u2013215",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "B. Peherstorfer",
+                "K. Willcox",
+                "M. Gunzburger"
+            ],
+            "title": "Survey of multifidelity methods in uncertainty propagation",
+            "venue": "inference, and optimization. SIAM Review, 60(3):550\u2013591",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "N. Pepper",
+                "A. Gaymann",
+                "S. Sharma",
+                "F. Montomoli"
+            ],
+            "title": "Local bi-fidelity field approximation with knowledge based neural networks for computational fluid dynamics",
+            "venue": "Scientific Reports, 11(1):1\u201311",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Perron",
+                "D. Rajaram",
+                "D. Mavris"
+            ],
+            "title": "Development of a multi-fidelity reduced-order model based on manifold alignment",
+            "venue": "AIAA Aviation 2020 Forum, page 3124",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "E. Qian",
+                "B. Kramer",
+                "B. Peherstorfer",
+                "K. Willcox"
+            ],
+            "title": "Lift & learn: Physics-informed machine learning for large-scale nonlinear dynamical systems",
+            "venue": "Physica D: Nonlinear Phenomena, 406:132401",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Quarteroni",
+                "A. Manzoni",
+                "F. Negri"
+            ],
+            "title": "Reduced Basis Methods for Partial Differential Equations",
+            "venue": "An Introduction. Springer International Publishing",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "M. Raissi",
+                "P. Perdikaris",
+                "G.E. Karniadakis"
+            ],
+            "title": "Inferring solutions of differential equations using noisy multi-fidelity data",
+            "venue": "J. Comput. Phys., 335:736\u2013746",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "B. Rajani",
+                "A. Kandasamy",
+                "S. Majumdar"
+            ],
+            "title": "Numerical simulation of laminar flow past a circular cylinder",
+            "venue": "Appl. Math. Mod., 33(3):1228 \u2013 1247",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "P.-B. Rubio",
+                "L. Chamoin",
+                "F. Louf"
+            ],
+            "title": "Real-time data assimilation and control on mechanical systems under uncertainties",
+            "venue": "Adv. Model. Simul. Eng. Sci, 8(1):1\u201325",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "H. Schaeffer"
+            ],
+            "title": "Learning partial differential equations via data discovery and sparse optimization",
+            "venue": "Proceedings of the Royal Society A: Mathematical, Physical and Engineering Sciences, 473",
+            "year": 2197
+        },
+        {
+            "authors": [
+                "P.J. Schmid"
+            ],
+            "title": "Dynamic mode decomposition of numerical and experimental data",
+            "venue": "Journal of fluid mechanics, 656:5\u201328",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "C. Sinigaglia",
+                "D.E. Quadrelli",
+                "A. Manzoni",
+                "F. Braghin"
+            ],
+            "title": "Fast active thermal cloaking through pde-constrained optimization and reduced-order modelling",
+            "venue": "Proceedings of the Royal Society A, 478",
+            "year": 2258
+        },
+        {
+            "authors": [
+                "B. Sudret",
+                "A. Der Kiureghian"
+            ],
+            "title": "Stochastic finite element methods and reliability: a state-of-the-art report",
+            "venue": "Department of Civil and Environmental Engineering, University of California . . . ",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "M. Torzoni",
+                "A. Manzoni",
+                "S. Mariani"
+            ],
+            "title": "A multi-fidelity surrogate model for structural health monitoring exploiting model order reduction and artificial neural networks",
+            "venue": "Mechanical Systems and Signal Processing, 197:110376",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "L.N. Trefethen"
+            ],
+            "title": "Spectral methods in MATLAB",
+            "venue": "SIAM",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "A. Vaswani",
+                "N. Shazeer",
+                "N. Parmar",
+                "J. Uszkoreit",
+                "L. Jones",
+                "A.N. Gomez",
+                "L. Kaiser",
+                "I. Polosukhin"
+            ],
+            "title": "Attention is all you need",
+            "venue": "Advances in Neural Information Processing Systems, 30",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "P.R. Vlachas",
+                "G. Arampatzis",
+                "C. Uhler",
+                "P. Koumoutsakos"
+            ],
+            "title": "Multiscale simulations of complex systems by learning their effective dynamics",
+            "venue": "Nature Machine Intelligence, 4(4):359\u2013366",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "P.R. Vlachas",
+                "W. Byeon",
+                "Z.Y. Wan",
+                "T.P. Sapsis",
+                "P. Koumoutsakos"
+            ],
+            "title": "Data-driven forecasting of high-dimensional chaotic systems with long short-term memory networks",
+            "venue": "Proceedings of the Royal Society A: Mathematical, Physical and Engineering Sciences, 474",
+            "year": 2213
+        },
+        {
+            "authors": [
+                "C. Wang",
+                "S. Mahadevan"
+            ],
+            "title": "A general framework for manifold alignment",
+            "venue": "2009 AAAI Fall Symposium Series",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "M.M. Zdravkovich"
+            ],
+            "title": "Flow around circular cylinders: Volume 2: Applications",
+            "venue": "volume 2. Oxford university press",
+            "year": 1997
+        },
+        {
+            "authors": [
+                "Q. Zhuang",
+                "J.M. Lorenzi",
+                "H.-J. Bungartz",
+                "D. Hartmann"
+            ],
+            "title": "Model order reduction based on Runge\u2013 Kutta neural networks",
+            "venue": "Data-Centric Engineering, 2:e13",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "High-fidelity numerical simulations of partial differential equations (PDEs) given a restricted computational budget can significantly limit the number of parameter configurations considered and/or time window evaluated for modeling a given system. Multi-fidelity surrogate modeling aims to leverage less accurate, lowerfidelity models that are computationally inexpensive in order to enhance predictive accuracy when highfidelity data are limited or scarce. However, low-fidelity models, while often displaying important qualitative spatio-temporal features, fail to accurately capture the onset of instability and critical transients observed in the high-fidelity models, making them impractical as surrogate models. To address this shortcoming, we present a new data-driven strategy that combines dimensionality reduction with multi-fidelity neural network surrogates. The key idea is to generate a spatial basis by applying the classical proper orthogonal decomposition (POD) to high-fidelity solution snapshots, and approximate the dynamics of the reduced states \u2014 time-parameter-dependent expansion coefficients of the POD basis \u2013 using a multi-fidelity long-short term memory (LSTM) network. By mapping low-fidelity reduced states to their high-fidelity counterpart, the proposed reduced-order surrogate model enables the efficient recovery of full solution fields over time and parameter variations in a non-intrusive manner. The generality and robustness of this method is demonstrated by a collection of parametrized, time-dependent PDE problems where the low-fidelity model can be defined by coarser meshes and/or time stepping, as well as by misspecified physical features. Importantly, the onset of instabilities and transients are well captured by this surrogate modeling technique.\nKeywords: machine learning, reduced-order modeling, scientific computing, multi-fidelity surrogate modeling, LSTM networks, proper orthogonal decomposition, parametrized PDEs"
+        },
+        {
+            "heading": "1. Introduction",
+            "text": "Scientific computing has revolutionized science and engineering by enabling advancements that have transformed almost every field of application. While becoming an increasingly critical component of any real-world modeling, accurate and well-resolved simulations for multi-fidelity and multi-physics system also come at an elevated computational cost that can strain limited computational resources. Indeed, it is often challenging to generate many high-fidelity (HF) simulations from large-scale models with limited availability of computing power, thus imposing restrictions on how comprehensive, either in parametric studies or length of time evolution, such numerical simulations can be. In particular, computational costs can easily become prohibitive or intractable when parameterized, time-dependent systems of partial differential equations (PDEs) are solved with detailed full-order models (FOMs) in a multi-query context (i.e., at many instances of the input parameters characterizing the systems), such as in uncertainty quantification [11, 63], optimal control [46, 62], shape optimization [38], parameter estimation [18, 17], and model calibration [37, 28, 59].\n\u2217Corresponding author. Email addresses: paolo.conti@polimi.it (Paolo Conti), m.guo@utwente.nl (Mengwu Guo), andrea1.manzoni@polimi.it\n(Andrea Manzoni), attilio.frangi@polimi.it (Attilio Frangi), sbrunton@uw.edu (Steven L. Brunton), kutz@uw.edu (J. Nathan Kutz)\nar X\niv :2\n30 9.\n00 32\n5v 1\n[ cs\n.L G\n] 1\nS ep\n2 02\nIn such cases, the construction of efficient surrogate models is of paramount importance in order to produce model proxies which can cheaply and accurately characterize the PDE system. By mapping low-fidelity reduced states to their high-fidelity counterpart, we demonstrate a reduced-order surrogate model paradigm that enables the efficient recovery of full solution fields over time and parameter variations in a non-intrusive manner.\nReduced-order models (ROMs) have been developed to construct low-dimensional representations of highdimensional systems for a significant reduction in computational costs with controlled accuracy [56, 5, 3, 48, 47, 12, 29]. Among the available strategies, intrusive ROM techniques explicitly incorporate full-order governing equations at the reduced level and often yield reliable and physically meaningful solutions. However, the requirement for full-order simulators has limited the flexibility, generality, and industrial relevance of these approaches. On the other hand, non-intrusive approaches learn reduced-order systems primarily from solution data, including from numerical or experimental data. Examples are dynamic mode decomposition [61, 9], reduced-order operator inference [51, 55, 24, 27], sparse identification of reduced latent dynamics [10, 13, 4, 60, 15, 39], manifold learning using deep auto-encoders [35, 19, 21, 50], data-driven approximation of time-integration schemes [71], and Gaussian processes for reduced representations [25, 8]. These data-driven ROM techniques do not rely on direct operations on the full-order solvers, and are especially advantageous for applications with well-established, readily-executed legacy codes.\nHowever, the applicability and reliability of these numerical methods can break down when the collection of HF data for model reduction is too computationally expensive, even in the offline stage of model training. In addition, it is increasingly common to encounter scenarios where a wealth of data sources are readily available, easily accessible, and/or cheaply computable, albeit not perfectly accurate. These low-fidelity (LF) data can be generated from coarse discretizations, linearization, simplified geometric or physical assumptions, or computationally efficient surrogate models. Despite limitations in accuracy, the LF data can represent a useful addition of information to the limited HF data used for model training. Thus, multi-fidelity (MF) methods aim to achieve an effective data fusion from various fidelity levels, and enable strong generalization performance of data-driven models in regions where HF data are scarce or even absent. A wide range of MF surrogate modeling techniques have been developed based on Gaussian processes [32, 2] and neural networks (NNs) [42, 41, 36, 43, 26]. They have found recent applications in many areas of scientific computing, including uncertainty quantification, inference, and optimization [52, 57, 53, 31, 64, 22, 1]. Nevertheless, MF techniques often become impractical when approximating high-dimensional systems, thereby limiting their ability to directly approximate the full solution fields of PDEs. Fortunately, with the aid of dimensionality reduction, MF data fusion can be feasible for the representation of reduced states in a predominant lowdimensional latent space.\nTo combine the computational flexibility of non-intrusive ROMs and data efficiency of MF modeling, we present an MF method of reduced-order surrogate modeling, abbreviated as MF-POD, which integrates MF regression with dimensionality reduction via the proper orthogonal decomposition (POD). The core idea is to approximate the solution manifold by a reduced subspace spanned by a small number of spatial bases using the POD, and then employ MF regression to represent their time-parameter-dependent expansion coefficients. The essence of MF regression here is inferring HF POD coefficients from their LF counterpart, so as to approach HF accuracy at the computational cost of LF evaluations. To achieve this, a time-parameterdependent mapping from the LF to HF POD coefficients is constructed by means of long-short term memory (LSTM) NNs [30, 23]. LSTM models have been shown to be effective in time series analysis, especially for the detection of both long- and short-term temporal patterns and nonlinear correlations between datasets, with potential relevance in the construction of non-intrusive reduced order models [1, 68, 67, 44, 40]. A recent work [16] has also shown their success in MF surrogate modeling for simultaneous parametric generalization and temporal forecast. Thus, instead of relying on expensive HF full-order evaluations, MF-POD allows for efficient online approximation of solution fields over time and parameter variation by running fast LF simulations and then mapping their POD coefficients to the HF level. In this way, parameter regions with sparse (or even no) HF data coverage can be conveniently explored. From the time evolution of the LF model, the long-term HF forecast is enabled through LSTM models. A schematic representation of the method is represented in Fig. 1.\nThe major advantage of the proposed method lies in a guaranteed light-weight offline stage. The computational cost of MF data generation is reduced, as the need for HF samples (for both the POD and LSTM training) is limited and the computation of LF samples (for LSTM training) is extremely efficient. The POD\nreduction also ensures that the LSTM time series is modeled in a relatively low dimension. While leveraging the advantages of being non-intrusive, MF-POD overcomes the potential lack of physical consistency by incorporating physically meaningful LF data, hence enabling interpretability and reliability in generalization. We test MF-POD\u2019s performance in parametric generalization and temporal forecasting on a diverse set of PDE benchmark problems, including spiral wave propagation in a parametrized reaction-diffusion system, vorticity approximation of advection-diffusion in shallow water, and velocity and pressure approximation of fluid flow past a cylinder in a channel. Compared to detailed HF simulations, LF data are generated by lower-quality discretizations over space and time, and/or with corrupted values of critical physical features.\nThis paper is structured as follows. In section 2, we introduce the offline training process of the proposed multi-fidelity reduced-order surrogate model, which consists of the POD reduced basis construction and the LF-to-HF mapping with LSTM network models, both based on bi-fidelity data at limited timeparameter locations; thereafter, using this trained model, we present the online procedure to infer HF solutions from LF evaluations over a wider range of parametric configurations and forward in time. Results for the aforementioned numerical tests are reported and discussed in sections 3 to 5, and conclusions are finally drawn in section 6. The source code of the proposed method is made available in the public repository MultiFidelity POD [14]."
+        },
+        {
+            "heading": "2. MF-POD: offline/online framework",
+            "text": "In this section, we introduce an algorithmic method for MF reduced-order surrogate modeling \u2014 MFPOD, which is decoupled into the stages of offline training and online testing."
+        },
+        {
+            "heading": "2.1. Offline training",
+            "text": "A schematic presentation of the offline training is illustrated in Fig. 3, while its algorithmic implementation is outlined in what follows.\n\u2022 Step 1: Generating MF training datasets HF and LF solution data for training are computed over a limited set of parametric configurations Ptrain by running the respective solvers. HF (resp. LF) snapshots are stacked in a matrix XHF \u2208 RN HF dof\u00d7N\u00b5N HF t (resp. XLF \u2208 RN LF dof\u00d7N\u00b5N LF t ), where N\u00b5 = |Ptrain|, and NHFdof (resp. NLFdof) is the number of spatial degrees of freedom and NHFt (resp. N LF t ) the number of time instances for the HF (resp. LF) level. Note that solutions at\ndifferent fidelity levels are evaluated at the same parameter values, but not necessarily at the same spatiotemporal locations, because the latter depends on the spatial mesh and time stepping of choice. This step demands the highest computational cost in the offline stage, as it requires querying the HF full-order model. Therefore, we consider a small number of parameter instances N\u00b5 for the training data.\n\u2022 Step 2: Dimensionality reduction via POD A set of NPOD reduced basis vectors, collected in U\u0303HF \u2208 RN HF dof\u00d7NPOD , is extracted from the HF snapshot matrix XHF via the POD. Note that U\u0303 T HFU\u0303HF = INPOD .\nProper Orthogonal Decomposition (POD): The POD takes advantage of the singular-value decomposition (SVD) to linearly extract principal components from high-dimensional data, and hence provide low-dimensional orthonormal basis that can be computed as follows:\n1. Compute the SVD of XHF, such that\nXHF = UHF\u03a3HFV T HF, with \u03a3HF = diag(\u03c31, . . . , \u03c3N\u00b5NHFt ) and U T HFUHF = I, V T HFVHF = I . (1)\nHere \u03c31 \u2265 \u03c32 \u2265 . . . \u2265 \u03c3N\u00b5NHFt \u2265 0.\n2. Define NPOD as the minimum integer that satisfies\u2211NPOD i=1 \u03c3\n2 i\u2211N\u00b5NHFt\ni=1 \u03c3 2 i\n\u2265 1 \u2212 \u03f52POD, (2)\nwhere \u03f5POD > 0 is a given tolerance that determines how much of the variance of the signal should be captured. As an alternative to providing a fixed tolerance \u03f5POD, one can select the dimension NPOD of the reduced basis according to the singular-value decay.\n3. Form the POD basis U\u0303HF as the first NPOD columns of UHF, i.e., U\u0303HF = (UHF):,1:NPOD .\nThe POD truncation provides a low-rank approximation of XHF, i.e., XHF = UHF\u03a3HFV T HF \u2248 U\u0303HF\u03a3\u0303HFV\u0303 T\nHF, where V\u0303HF contains the first NPOD columns of VHF and \u03a3\u0303HF contains the first NPOD \u00d7NPOD block of \u03a3HF.\n\u2022 Step 3: Computing POD coefficients via direct projection The time-parameter-dependent combination coefficients of the POD basis for both fidelity levels are obtained by projecting XHF and XLF onto the basis U\u0303HF, respectively:\nXcoefHF = U\u0303 T HFXHF, X coef LF = U\u0303 T HFL(XLF), (3)\nwhere XcoefHF ,X coef LF \u2208 RNPOD\u00d7N\u00b5N HF t collect respectively the POD coefficients of the HF and LF data. Here, L represents an operator which lifts the LF solution vectors to the HF spatio-temporal resolution via interpolation. In particular, spatial interpolation is required when the LF model is on a different (coarser) mesh than the HF one, thus the LF solution vectors should be transformed to match with the HF resolution and hence enable a projection onto the POD modes U\u0303HF; temporal interpolation is necessary when LF and HF data are computed with different time discretizations, because compatible sequential data between the two fidelity levels are required by the NN model in the next step. In this work, we consider either linear interpolation (i.e., L(XLF) = PXLFQT with P \u2208 RN HF dof\u00d7N LF dof and Q \u2208 RN\u00b5NHFt \u00d7N\u00b5NLFt being the spatial and temporal interpolating matrices, respectively) or nearest-neighbor interpolation, both of which are computationally inexpensive. An alternative option for matching LF and HF solution vectors is manifold alignment [69, 54].\n\u2022 Step 4: Training LSTM surrogate model The goal of this step is to learn the mapping f from the LF POD coefficients xcoefLF \u2208 RNPOD at time instance t and parameter \u00b5 to their HF correspondence xcoefHF \u2208 RNPOD , written as(\nt, \u00b5,xcoefLF (t, \u00b5) ) 7\u2192 f(t, \u00b5,xcoefLF (t, \u00b5)) = xcoefHF (t, \u00b5). (4)\nTo approximate the mapping f , we make use of a long short-term memory (LSTM) NN model denoted by fNN(\u00b7) = fNN(\u00b7;\u0398NN), where \u0398NN are the network parameters. This NN model fNN is trained on the input-output pairs of POD coefficients {(xcoefLF (ti, \u00b5i),xcoefHF (ti, \u00b5i))} N\u00b5N HF t i=1 \u2208 RNPOD (the columns of the matrices X coef LF and XcoefHF , respectively, for each time-parameter instance (ti, \u00b5i)). Using the Adam [33] algorithm, the LF to HF mapping fNN is determined by minimizing the mean squared error loss function as follows:\nSince LSTM units are recurrent NNs that deal with sequential data, in practice, training data are grouped in batch subsequences with shape nbatch \u00d7K \u00d7NPOD, in which nbatch is the batch size and K is the length of batch subsequences. To determine the NN model\u2019s hyperparameters, including the network architecture (i.e., the numbers of layers and nodes in each layer) and the parameters associated to model training (e.g., the optimizer learning rate), we use a Bayesian optimization technique [6] implemented by the Python package Hyperopt [7]."
+        },
+        {
+            "heading": "2.2. Online testing",
+            "text": "Once the MF-POD model is trained offline, it can be used online to efficiently evaluate PDE solutions for unseen parameter locations and longer time horizons, all at a very limited computational cost. As illustrated in Fig. 1, for new parameter configurations of interest, we compute the LF solution xLF and project it onto the POD basis to obtain the corresponding reduced states given by the projection coefficients xcoefLF . These coefficients are passed as inputs to the MF LSTM model and hence mapped to the sequences of POD coefficients towards the HF level, obtaining x\u0302coefHF , from which the high-resolution fields x\u0302HF can be reconstructed. Thus, the proposed reduced-order surrogate model allows to provide an approximation of HF simulations at a cheap online price of LF run-times and, moreover, to infer the future states of HF solutions from the LF solutions evaluated forward in time. This enables reliable long-term forecast without querying the expensive full-order model at all."
+        },
+        {
+            "heading": "2.3. Metrics for performance evaluation",
+            "text": "In the following sections we will assess the performance of MF-POD in several numerical examples. To highlight the advantages of MF-POD over HF solvers in saving computational costs, as well as the gain in accuracy in comparison to LF solvers, we report here the metrics for performance evaluation in terms of computational time and errors.\n\u2022 Computational time is recorded for the complete time evolution of interest, averaged over the testing parameter instances. For LF and HF solutions, this means the run time of respective solvers, while for the MF model, it refers to the evaluations in the online testing procedure. Percentages are computed with respect to the HF time.\n\u2022 Relative error with respect to the HF reference solution xHF is evaluated for both the MF solution x\u0302HF and the lifted LF input xLF, as an average over the test set:\nerr%MF-POD = 100%\nNtest Ntest\u2211 i=1 \u2225xHF(ti, \u00b5i) \u2212 x\u0302HF(ti, \u00b5i)\u22252 \u2225xHF(ti, \u00b5i)\u22252 , err%LF = 100% Ntest Ntest\u2211 i=1 \u2225xHF(ti, \u00b5i) \u2212 xLF(ti, \u00b5i)\u22252 \u2225xHF(ti, \u00b5i)\u22252 , (6)\nwhere Ntest is the number of time-parameter combinations in the test set."
+        },
+        {
+            "heading": "3. Numerical example I: Reaction-diffusion problem",
+            "text": "We consider a lambda-omega reaction-diffusion system governed by the following equations u\u0307 = ( 1 \u2212 ( u2 + v2 )) u+ \u00b5 ( u2 + v2 ) v + d (uxx + uyy) ,\nv\u0307 = \u2212\u00b5 ( u2 + v2 ) u+ ( 1 \u2212 ( u2 + v2 )) v + d (vxx + vyy) ,\n(7)\ndefined over a spatial domain (x, y) \u2208 [\u2212L,L]2 for L = 20 and a time span t \u2208 [0, T ] for T = 80, where \u00b5 and d are parameters that respectively regulate the reaction and diffusion behaviors of the system. We prescribe periodic boundary conditions, and the initial condition is defined as\nu(x, y, 0) = v(x, y, 0) = tanh (\u221a x2 + y2 cos ( (x+ iy) \u2212 \u221a x2 + y2 )) .\nThe solution [u, v]T (x, y, t) to problem (7) represents two oscillating modes which generate spiral waves, representing an attracting limit cycle in the state space.\nOur goal is to approximate the solution components u and v as functions of the varying reaction parameter \u00b5 \u2208 P = [0.5, 1.5] with a fixed diffusion coefficient d = 0.05. We employ the MF-POD method to efficiently evaluate high-resolution solutions over the whole time span with certain parametric variation, with the aid of cheaply obtained, low-resolution LF approximations. To reduce offline computational costs, we train the MF-POD model with a small amount of expensive HF solution data computed at a limited set of parameter locations over a shorter time horizon Ttrain = 40 < T , while leveraging LF solutions generated on a coarse spatial mesh with a corrupted value of diffusion coefficient."
+        },
+        {
+            "heading": "3.1. Multi-fidelity setting",
+            "text": "Both HF and LF solution datasets are constructed by solving the PDEs (7) using the Fourier spectral method [65] with time step \u2206t = 0.05. The two fidelity levels are defined as follows, and the difference between LF and HF solutions is shown in Fig. 4.\n- LF solution data are generated on a coarse equispaced spatial grid with nLF = 32 points in each direction, while a fine grid with nHF = 100 is adopted for the HF data.\n- LF solutions are evaluated at a corrupted diffusion coefficient dLF = 0.1, instead of dHF = d = 0.05. This represents a bias in the LF modeling in terms of the physical property of viscosity.\n- HF data are only available over a limited time window [0, Ttrain] with Ttrain = 40 < T = 80.We hence aim to extrapolate for a same-length time window beyond that covered by the HF training data.\n- Training data on both fidelity levels are computed for a small number of parameter instances \u00b5 \u2208 P = [0.5, 1.5]. In particular, N\u00b5 = 10 \u00b5-values are selected over an equispaced grid of P.\nTo apply the MF-POD method, we perform the POD reduction on the HF snapshots and retain the first NPOD = 9 modes. LF data are lifted to the HF spatial dimensionality via nearest-neighbor interpolation. For both fidelity levels, POD coefficients are computed by projecting the data onto the reduced basis and then fed to the LSTM neural network for training. Once the training phase is concluded, we run the LF solvers to efficiently evolve LF solutions over the whole time window [0, T ], and test the MF-POD accuracy in estimating the HF solutions over an unseen set of Ntest\u00b5 = 25 equispaced parameter locations over P."
+        },
+        {
+            "heading": "3.2. Results",
+            "text": "For a few extrapolated time instances at unseen testing values of the reaction coefficient \u00b5, we show in Fig. 5 the reconstruction of entire solution field predicted by MF-POD, compared with both HF reference and LF input. The proposed MF strategy is able to recover high resolution and correct the prediction of system behavior from inaccurate LF solutions. Table 1 provides a quantitative comparison of computational time and relative errors among LF, HF, and MF solutions, highlighting the good performance of MF-POD.\nThe combination of POD reduction and MF regression with LSTM proves to be effective in this example. The POD at the HF level extracts a global basis that represents predominant spatial patterns of the spiral wave propagation, and the LSTM network model approximates the corresponding expansion coefficients that describe how these spatial modes evolve over time. The expressive power of LSTM neural networks is crucial not only for the approximation of POD coefficients\u2019 strongly nonlinear dependency on time and parameters, but also for the correlation modeling between the LF and HF levels, especially considering that such an unknown correlation is parameter-dependent and potentially highly complex. In Fig. 6, we depict the evolution of several POD coefficients predicted by the LSTM network. We notice that MF-POD provides very accurate estimation of the time-dependent POD coefficients at unseen parameter locations, not only in the training time interval [0, 40], but also for the future states over [40, 80], as the MF-predicted coefficients match very well with the HF reference and present a significant improvement compared to the LF level. These results over twice the length of the training time span indicate the capability of MF-POD in long-term forecast."
+        },
+        {
+            "heading": "3.3. The need of LSTM networks",
+            "text": "Although the presented results have shown the proposed method\u2019s capability in mapping LF solutions to HF ones, the need to create this map via an LSTM neural network, instead of alternative regression techniques, has not been made clear yet. To show more evidence in this regard, we report further results\nobtained by replacing the LSTM neural network with a \u201cstatic\u201d feed-forward neural network (i.e., without t in the inputs) in the MF regression step (Step 4 offline). In this scenario, the LF POD coefficients are mapped to their HF counterparts instant by instant, instead of being processed as time series. In Fig. 7, we report such computed spatial reconstructions and their absolute errors at the same time-parameter test locations considered before. We note a clear worsening in reconstruction accuracy and a significant increase in approximation errors, compared with the predictions by MF-POD with LSTM networks reported in Fig. 5. This highlights that the MF regression with LSTM networks allows a better detection of temporal patterns in time series and nonlinear correlations between datasets at different fidelity levels, guaranteeing an improved predictive performance. We refer to [16] for further discussions on these aspects."
+        },
+        {
+            "heading": "4. Numerical example II: Advection-diffusion in shallow water",
+            "text": "In this example, we consider an advection-diffusion problem describing a fluid motion in the shallow water limit [34] given by\n\u2202\u03c9 \u2202t + \u00b5\n( \u2202\u03c8\n\u2202x\n\u2202\u03c9 \u2202y \u2212 \u2202\u03c8 \u2202y \u2202\u03c9 \u2202x\n) = d\u22072\u03c9, (8a)\n\u22072\u03c8 = \u03c9, (8b)\ndefined over a spatial domain (x, y) \u2208 [\u2212L,L]2 and a time span t \u2208 [0, T ]. Here \u03c9(x, y, t) and \u03c8(x, y, t) represent the vorticity and streamfunction, respectively, \u22072 = \u22022x + \u22022y is the two-dimensional Laplacian, d = 0.001 is the diffusion coefficient, and we take L = 10 and T = 20. We assume periodic boundary conditions and a stretched Gaussian function as the initial condition of vorticity:\n\u03c9(x, y, 0) = exp ( \u22122x2 \u2212 y 2\n20\n) , (x, y) \u2208 [\u2212L,L]2 . (9)\nWe are interested in approximating the time-dependent vorticity field \u03c9 as the parameter \u00b5 varies over P = [1, 5].\nThe general procedure for solving the system (8) numerically is to (i) compute the streamfunction \u03c8(x, y, 0) at t = 0 by solving the elliptic equation (8b) given the initial condition of vorticity (9), (ii) use a time-stepper on (8a) to advance the vorticity \u03c9 by one step \u2206t, and (iii) repeat (i) and (ii) starting with the updated \u03c9(x, y, t+ \u2206t) until the final time T is reached. A small time-step \u2206t implies a large number of iterations, and a fine spatial discretization requires solving a large linear system in (i). Moreover, this procedure must be repeated for each instance of parameter \u00b5, which makes HF simulations impractical. We use the proposed MF-POD method to relieve these heavy computational burdens. In particular, we consider LF solutions on a coarser spatial grid with larger time-steps, while only evaluating a limited number of HF solution data at several parameter locations for MF-POD training."
+        },
+        {
+            "heading": "4.1. Multi-fidelity setting",
+            "text": "As in the previous example, we adopt two fidelity levels that differ in the spatial resolution of discretization, but also consider larger steps of time integration in the LF model than its HF counterpart. Specifically,\nthe HF (resp. LF) solution data are generated via the Fourier spectral method on an equispaced spatial grid of nHF = 200 (resp. nLF = 50) nodal points along each direction with time-step size \u2206tHF = 0.25 (resp. \u2206tLF = 1.00). The bi-fidelity training data cover a limited time window [0, Ttrain] = [0, 12] with Ttrain < T = 20, only at a small number (N\u00b5 = 5) of parameters locations equispaced over P. Thereafter, the training data are fed to the offline algorithm of MF-POD. In this example, we retain the first NPOD = 17 POD modes and consider linear interpolation both in time and space to lift LF data to the HF dimensionality for the POD projection. The first four POD modes and the corresponding time-dependent expansion coefficients at \u00b5 = 3 are depicted in Fig. 8. The predictive performance of MF-POD is tested for N test\u00b5 = 4 unseen parameters values \u00b5 \u2208 {1.5, 2.5, 3.5, 4.5} \u2282 P."
+        },
+        {
+            "heading": "4.2. Results",
+            "text": "The MF-POD method allows us to create an efficient, reliable, low-dimensional surrogate model for the advection-diffusion in shallow water. As presented in Table 2, parametric solutions can be evaluated with MF-POD at a computational cost comparable to that of the LF, yet with a significant improvement in accuracy as highlighted by the substantial reduction in predictive error.\nThis example is challenging for data-driven surrogate modeling, especially in terms of the approximation of POD coefficients describing a parametric coherent structure that propagates over time (i.e., the wave-type phenomena). If only the time-parameter inputs are accounted for, the regression may very likely suffer from difficulties with limited data, leading to poor generalization performance, and extrapolation beyond the training time window would thus be barely possible. The proposed MF-POD method mitigates such technical risks by incorporating physically meaningful LF solutions, which can capture unseen dynamical characteristics and inform the solution approximation via the LF-to-HF mapping on POD coefficients.\nTo illustrate the effectiveness of MF-POD in predicting forward in time and for new parameter instances simultaneously, we depict in Fig. 9 the evolution of vorticity \u03c9 at an unseen testing parameter value \u00b5 = 3.5. The physical behavior is accurately predicted by the MF-POD approach, even with very low resolution on the LF level. As time evolves, the wave propagation presents finer spatial patterns, and the temporal extrapolation becomes more complex, especially considering that no HF information is available after t = Ttrain = 12, and the LF input does not have sufficient resolution to perfectly detect fine patterns. Nevertheless, the proposed method allows to accurately extrapolate (see, e.g., the prediction at t = 15 in Fig. 9) up to time T = 20, showing the power of MF data fusion, though such power is not unlimited as the predictive error in wave propagation is no longer negligible after T ."
+        },
+        {
+            "heading": "5. Numerical example III: Navier-Stokes equations",
+            "text": "For the last example, we consider a two-dimensional fluid flow around a cylinder \u2014 a benchmark problem in computational fluid dynamics. Our goal is to efficiently approximate the velocity and pressure fields of a viscous, incompressible Newtonian fluid flow as its Reynolds number varies. The problem is governed by the following Navier-Stokes equations\n\u03c1 \u2202v\n\u2202t \u2212 \u03c1v \u00b7 \u2207v\u2212\u2207 \u00b7 \u03c3(v, p) = 0, (x, t) \u2208 \u2126 \u00d7 (0, T ) ,\n\u2207 \u00b7 v = 0, (x, t) \u2208 \u2126 \u00d7 (0, T ) , (10)\nwhere v(x, t) and p(x, t) represent the velocity and pressure field, respectively, and \u03c1 = 1.0 kg/m 3\nis the fluid density, \u03c3(v, p) = \u2212pI+2\u03bd\u03f5(v) is the stress tensor with \u03f5(v) denoting the strain tensor. The kinematic viscosity is defined as \u03bd = 1/Re [20], in which the Reynolds number, Re, is the system parameter of interest. As initial conditions we consider the fluid at rest\nv(x, 0) = 0, x \u2208 \u2126 ,\nand we provide the following boundary conditions for the domain \u2126 = (0, 2.2) \u00d7 (0, 0.41)\\Br(0.2, 0.2) (r = 0.05), representing a 2D channel with a cylindrical obstacle (see Fig. 10):\nv = 0, (x, t) \u2208 \u0393D1 \u00d7 (0, T ) , v = h, (x, t) \u2208 \u0393D2 \u00d7 (0, T ) ,\n\u03c3(v, p)n = 0, (x, t) \u2208 \u0393N \u00d7 (0, T ) ,\nwhich include a no-slip condition on \u0393D1 , a parabolic inflow\nh(x, t) =\n( 4U(t)x2(0.41 \u2212 x2)\n0.412 , 0\n) , U(t) = { 0.75(1 \u2212 cos (\u03c0t)), t < 1 1.5, t \u2265 1\non the inlet \u0393D2 , and an open boundary condition at the outlet \u0393N. In the present study, we consider \u00b5 = Re \u2208 P = [30, 100]. When Re < 49, the flow presents a laminar behavior; for larger values of Reynolds number, the flow transitions to an unsteady state and a pair of vortices form in the wake of the cylinder, oscillating periodically between the top and bottom sides [58, 70]. As Re varies across laminar and unsteady ranges, we use the MF-POD method to construct efficient MF surrogate models for the velocity and pressure fields up to T = 18 s, at which time the fluid is fully developed and presents a periodic behavior."
+        },
+        {
+            "heading": "5.1. Multi-fidelity setting",
+            "text": "Solution data are generated through a finite element approximation of (10) with the backward differentiation formula provided by the MATLAB library redbKIT [45]. We consider a training set computed over a short time window Ttrain = 12 s < T = 18 s at N\u00b5 = 15 Reynolds numbers equispaced over P. In this case,\nthe difference between the fidelity levels incorporates all the characteristics considered so far in the previous examples, namely the choice of spatial mesh size and time step, as well as whether the physical characteristic Re is corrupted.\nFor the HF data, the total number of spatial degrees of freedom is NdofHF = 73131, obtained with quadratic finite elements for the velocity field and linear finite elements for the pressure field over a mesh with 16478 triangular elements and 8239 vertices, while the temporal discretization is with step size \u2206Ttrain = 5 ms. Instead, LF data are computed with a larger time step \u2206TLF = 50 ms over a coarser mesh consisting of 7789 triangular elements and 3899 nodes, thus resulting in snapshots with NdofLF = 34439. The LF solutions can be computed with significantly reduced time in comparison with the HF ones. Moreover, we consider a corruption factor of \u03b1 = 0.95 that multiplies Re in the generation of LF data. For example, when Re = 60 for the HF level, the LF solution is evaluated at R\u0303e = \u03b1Re = 57.\nOnce solution data are prepared, POD reduction is applied to the HF snapshots and the first NPOD = 32 modes are retained. LF data are lifted by linear interpolation over the spatial and temporal domains, and the POD coefficients, obtained by projecting the HF and lifted LF data onto the reduced basis, are then passed to the MF LSTM network for training."
+        },
+        {
+            "heading": "5.2. Results",
+            "text": "The MF-POD method is tested for approximating the fluid velocity and pressure fields at unseen parameter values Re \u2208 {37, 48, 63, 78, 92}, while simultaneously extrapolating into the time window [Ttrain, T ] = [12 s, 18 s] over which no training data are provided. For a given new value of Re, the LF solution is evolved up to the final time of interest T = 18 s, then the LF POD coefficients are computed and mapped through the LSTM network to their HF counterparts, from which the whole velocity and pressure fields are reconstructed.\nIn Table 3, we report the computational costs and predictive errors evaluated over the test set. Once again, we observe that the MF-POD method achieves advantages over the HF and LF models, by drastically reducing computational time while preserving a good accuracy, respectively. Moreover, in Fig. 11, we illustrate the MF predictive solutions for two testing parameter values Re \u2208 {48, 63} in comparison with their LF inputs and HF references. These two Re values correspond to two different regimes of the fluid flow \u2014 laminar and unsteady, respectively. In both cases, the proposed model is able to capture correct fluid behaviors with a good accuracy. For Reynolds numbers close to the bifurcation (Re = 49) between laminar and unsteady regimes, a coarse approximation may lead to significant errors in simulating the dynamical behaviors of the fluid. For example, when Re = 48, we observe that the LF solution exhibits the onset of unsteady oscillatory phenomena, which are, instead, absent in the reference HF solution, which exhibits the expected laminar behavior. This is even more evident by observing the temporal evolution of POD coefficients as shown in Fig. 12, where we notice that the LF solution features a non-negligible oscillatory contribution from the third and fourth POD coefficients; these latter are instead almost vanishing for the reference HF solution. We note that MF-POD is able to accurately recover the correct HF characteristics."
+        },
+        {
+            "heading": "6. Conclusions",
+            "text": "We have developed a new reduced-order surrogate modeling method that relies on solution data from different fidelity levels to reduce computational costs while preserving predictive accuracy. Like traditional\nmodel reduction, the MF-POD architecture employs POD to extract a low-dimensional basis that approximates the solution manifold from a limited amount of HF data. An MF LSTM model is subsequently trained to infer the temporal evolution of the HF solution on the POD manifold from its LF counterpart. Once trained offline, the proposed model can be deployed online to generate new solutions that approach HF accuracy at the computational cost of LF evaluations. The advantages of the MF POD technique has been compared to both HF and LF methods directly through a diverse number of example PDEs with the results summarized in Fig. 13.\nBy incorporating physically meaningful LF data, MF-POD addresses the potential lack of physical consistency in purely data-driven methods, thereby ensuring interpretability and reliability in parametric generalization and temporal forecasting while still benefiting from its non-intrusive nature. A limitation of the proposed framework is the assumption of a strict hierarchy among fidelity levels, which implies that LF solutions are required at parameter configurations in which we are interested on the HF level. A further limitation is that this method has not fully benefited from the large availability of LF data. In fact, the\nMF LSTM networks are trained on the same amount of LF and HF data to learn the LF-to-HF mapping, sampled at the same parameter locations (see Fig. 3). Moreover, the low-dimensional basis is constructed solely with the HF data. Therefore, potential LF information could be additionally exploited to improve both the construction of reduced basis and the MF regression for the expansion coefficients.\nHowever, the non-intrusiveness of the proposed method guarantees remarkable flexibility in numerical implementations, and enables seamless adaptation, extension, and enhancement of its individual components. For instance, the use of other techniques for reduced basis construction, which may be better tailored to suit specific applications of interest, can replace the POD reduction. Moreover, alternative recurrent neural network or other emerging architectures (e.g., transformers [66]) can be employed instead of the LSTM layers in the MF regression task. Such refinements will further empower the proposed method to evolve and excel in diverse physical simulations in computational science and engineering.\nIn particular, as a direction for future development, the presented framework can be naturally extended to real-life applications, in which experimental measurement data can be fused with synthetic (LF) simulation\ndata to create surrogate models that produce accurate real-time predictions beyond the experimental data coverage."
+        },
+        {
+            "heading": "Acknowledgment",
+            "text": "PC is supported under the JRC STEAM STM-Politecnico di Milano agreement. MG receives support from Sectorplan Be\u0300ta (the Netherlands) under the focus area Mathematics of Computational Science. The present research has been partially supported by FAIR (Future Artificial Intelligence Research) project, funded by the NextGenerationEU program within the PNRR-PE-AI scheme (M4C2, Investment 1.3, Line on Artificial Intelligence) and by MUR, grant Dipartimento di Eccellenza 2023-2027. PC, SLB, and JNK acknowledge generous funding support from the National Science Foundation AI Institute in Dynamic Systems (grant number 2112085)."
+        }
+    ],
+    "title": "Multi-fidelity reduced-order surrogate modeling",
+    "year": 2023
+}

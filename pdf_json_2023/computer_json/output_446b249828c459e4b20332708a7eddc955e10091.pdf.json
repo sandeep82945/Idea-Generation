@@ -1,0 +1,94 @@
+{
+    "abstractText": "I present an agile method and a tool to display data from Wikidata and other Wikibase instances via SPARQL queries. The work-inprogress combines ideas from the Scholia Web application and the Listeria tool.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Finn \u00c5rup Nielsen"
+        }
+    ],
+    "id": "SP:579ba4a38187d1b1e6d87233891017c106eab719",
+    "references": [
+        {
+            "authors": [
+                "Daniel Mietchen",
+                "Egon Willighagen"
+            ],
+            "title": "Scholia, Scientometrics and Wikidata",
+            "venue": "The Semantic Web: ESWC 2017 Satellite Events,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Ivar Lyhne",
+                "Dario Garigliotti",
+                "Annika Butzbach",
+                "Emilia Ravn Boess",
+                "Katja Hose",
+                "Lone K\u00f8rn\u00f8v"
+            ],
+            "title": "Environmental impact assessment reports in Wikidata and a Wikibase",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Finn \u00c5rup Nielsen"
+            ],
+            "title": "Ordia: A Web application for Wikidata lexemes",
+            "venue": "The Semantic Web: ESWC 2019 Satellite Events,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Rasberry",
+                "Mietchen2022] Lane Rasberry",
+                "Daniel Mietchen"
+            ],
+            "title": "Scholia for Software",
+            "venue": "Research Ideas and Outcomes,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Kenneth Seals-Nutt",
+                "Mika Matsuzaki"
+            ],
+            "title": "Introducing WikiFCD: Many Food Composition Tables in a Single Knowledge Base",
+            "venue": "Proceedings of the Joint Ontology Workshops",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Denise Slenter",
+                "Daniel Mietchen",
+                "Chris T. Evelo",
+                "Finn \u00c5rup Nielsen"
+            ],
+            "title": "Wikidata and Scholia as a hub linking chemical knowledge",
+            "venue": "11th International Conference on Chemical Structures. Program & Abstracts,",
+            "year": 2018
+        }
+    ],
+    "sections": [
+        {
+            "text": "Keywords: Wikidata, Wikibase, SPARQL"
+        },
+        {
+            "heading": "Introduction",
+            "text": "Scholia is a Web application running from the Wikimedia Foundation Toolforge server at http://scholia. toolforge.org. It displays data from Wikidata via SPARQL queries to the Wikidata Query Service (WDQS), particularly showing metadata about scientific publications (Nielsen et al., 2017), chemical information (Willighagen et al., 2018), and software (Rasberry and Mietchen, 2022). The Web application is implemented with the Python Flask framework and SPARQL templates are defined with Jinja2 templates that are read during the application startup and interpolated based on the Scholia user browsing. Two other tools use a similar Flask/SPARQL template approach to display Wikidata data: Ordia is specialized for the lexicographic part of Wikidata (Nielsen, 2019) and CVRminer1 on Danish companies. Common limitations for these tools are currently\n1. The tools are bound to the Wikidata WDQS endpoint\n2. The language is fixed to English\n3. Development of new panels and aspects requires the involvement of software developers.\nFor Magnus Manske\u2019s Listeria tool, wiki editors define MediaWiki templates with SPARQL queries on wikipages. The Listeria bot then edits on behalf of the user and generate tables on the wikipage according to the SPARQL query.2\nThe approach I will describe here was first explored in a specific instance of a Wikibase for data related to environmental impact assessment reports (Nielsen et al.,\n1https://cvrminer.toolforge.org/. 2https://listeria.toolforge.org/.\n2023). In this abstract, I describe the extension of the approach, so it can be used more widely with only slight changes in configurations in and across different Wikibases, \u2014 including Wikidata."
+        },
+        {
+            "heading": "Methods",
+            "text": "I call the tool Synia with the canonical homepage set up at https://synia.toolforge.org/. The implementation is a serverless single-page application (SPA) consisting of a simple HTML page and some JavaScript. Instead of storing the SPARQL templates along with the Web application, the templates are stored on wikipages. The URL pattern of Scholia is borrowed and changed to use URI fragments to control which wikipage should be read and what values should be interpolated in the template. Table 1 shows some of the mapping between the URI fragment and the wikipage. A pseudonamespace, Wikidata:Synia, is used as the default for grouping the templates. If the template is not defined on the wiki Synia creates a link, so a user/editor can create the template. Faceted search is supported, e.g., \u201c#venue/Q15817015/topic/Q2013\u201d shows information about the topic Wikidata occurring in the journal Semantic Web. Aspects with multiple items, e.g., handling \u201c#authors/Q20980928,Q20895241,Q20895785\u201d is not yet supported.\nWhen wikipages are used for templates there are at least two important issues to consider: The template should be humanly readable as a wikipage and the information read should be untrusted as wikis are usually openly editable. Currently, a limited set of components are handled, see Table 2. The parsing of the components is based on a series of regular expressions. Synia will recognize MediaWiki headings and render them with h1, h2, and h3 HTML tags. SPARQL templates for Synia are stored on the wikipage in the Template:SPARQL MediaWiki template. Synia extracts the SPARQL code, interpolates the Q- and L- identifier(s), and sends the interpolated SPARQL to the SPARQL endpoint. The response is rendered as a table in the SPA using the DataTables JavaScript library or it may be rendered as a graph in an iframe with the graphing capabilities of the query service. For the ordinary wiki user, the template wikipage appears as ordinary wikipages with SPARQL as code examples,\n\u00a9 Copyright held by the owner/author(s), published under Creative Commons CC BY 4.0 License\nar X\niv :2\n30 3.\n15 13\n3v 1\n[ cs\n.D L\n] 2\n7 M\nar 2\n02 3\nsee Figure 1. The wikipage may have multiple headings and SPARQL templates.\nOther endpoints than the configured default can be queried. Currently Synia abuses an endpoint parameter for the Template:SPARQL MediaWiki template on Wikidata to specify the other endpoint. An example using the approach is currently displayed at https://www.wikidata.org/ wiki/Wikidata:Synia:compound where a panel for a SPARQL query goes to the endpoint of the https: //wikifcd.wikibase.cloud wiki (Thornton et al., 2021). This wiki has a Wikidata mapping property, so the Q-identifier can be matched across Wikibases to a Wikidata identifier.\nBootstrap, jQuery, and DataTables libraries are used. To avoid leaking browsing behavior the static files are hosted along with the SPA. Configuration, e.g., about the location of templates and the default endpoint is maintained in a separate JavaScript file.\nA few aspects have so far been defined for Synia each with a few panels, e.g., author, work, venue, film, actor, compound, and lexeme. Figure 2 shows a screenshot of the actor aspect for the Wikidata entity Q294647 with two panels: a table and a bar chart.\nTo demonstrate that it is possible to use other template sites and other endpoints, I set up a template page at https://www.wikidata.org/wiki/User: Fnielsen:Synia:index copying a query from WikiFCD and reconfigured a cloned version of Synia to use \u201chttps://www.wikidata.org/wiki/User:Fnielsen:Synia:\u201d as the template base URL and https://wikifcd. wikibase.cloud/query as the query service URL."
+        },
+        {
+            "heading": "Discussion/Conclusions",
+            "text": "The approach for the creation of new aspects and panels with Synia is more agile and wiki-like than Scholia\u2019s method. While the creation of a new panel in Scholia usually involves the creation of a new issue in GitHub, creation of a new branch, editing SPARQL and jinja2 code, commiting, pushing, merging the branch, testing, and deploying to Toolforge, a new panel with Synia is created by just editing a wikipage. Creating a new aspect with Synia can be done by creating a new wikipage, while for Scholia it would entail editing Python code as well as all the other steps involved in creating a panel. Discussions about new aspects or changes in Scholia take place on GitHub issue pages, while for Synia, discussions could take place on the wiki, e.g., the talk page associated with the templates.\nWikis with open editing, such as Wikidata, can be vandalized and security is an issue. If a malicious wiki editor adds a third-party endpoint then the browsing behavior of a Synia user will leak to the third-party site. The problem\ncould be alleviated by having a set of allowed endpoints, e.g., Wikidata and Wikibase.cloud instances.\nHow language should best be handled is not clear. Figure 3 shows an aspect in Danish for a Danish company, so it is possible to control the language from a template. However, this approach \u201coccupies\u201d a specific URI pattern and a change of language is not possible without redoing much of the template.\nNavigation with menu and search is currently missing in Synia as well as redirects and aspect-switching that all are available in Scholia. Instead of hardcoding such components in the Web application, it is envisioned that components in the templates on the wiki could control placement of menus and search forms.\nSPARQL in MediaWiki templates may generate a problem as the pipe and the equality characters in SPARQL collide with the use of the characters to handle parameters in MediaWiki templates. Synia\u2019s simple regular expression parsing of the wikitext does not handle \u201c{{!}}\u201d that may be used to escape the pipe character in a MediaWiki template. A more elaborate parsing may be needed."
+        },
+        {
+            "heading": "Acknowledgment",
+            "text": "Thanks to the Scholia team, particular Daniel Mietchen and Egon Willighagen, for continued inspiration."
+        }
+    ],
+    "title": "Synia: Displaying data from Wikibases",
+    "year": 2023
+}

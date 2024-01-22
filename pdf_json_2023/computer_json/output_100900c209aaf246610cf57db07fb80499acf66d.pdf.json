@@ -1,0 +1,761 @@
+{
+    "abstractText": "Recent works in spatiotemporal radiance fields can produce photorealistic free-viewpoint videos. However, they are inherently unsuitable for interactive streaming scenarios (e.g. video conferencing, telepresence) because have an inevitable lag even if the training is instantaneous. This is because these approaches consume videos and thus have to buffer chunks of frames (often seconds) before processing. In this work, we take a step towards interactive streaming via a frame-by-frame approach naturally free of lag. Conventional wisdom believes that per-frame NeRFs are impractical due to prohibitive training costs and storage. We break this belief by introducing Incremental Neural Videos (INV), a per-frame NeRF that is efficiently trained and streamable. We designed INV based on two insights: (1) Our main finding is that MLPs naturally partition themselves into Structure and Color Layers, which store structural and color/texture information respectively. (2) We leverage this property to retain and improve upon knowledge from previous frames, thus amortizing training across frames and reducing redundant learning. As a result, with negligible changes to NeRF, INV can achieve good qualities (> 28.6db) in 8min/frame. It can also outperform prior SOTA in 19% less training time. Additionally, our Temporal Weight Compression reduces the per-frame size to 0.3MB/frame (6.6% of NeRF). More importantly, INV is free from buffer lag and is naturally fit for streaming. While this work does not achieve real-time training, it shows that incremental approaches like INV present new possibilities in interactive 3D streaming. Moreover, our discovery of natural information partition leads to a better understanding and manipulation of MLPs. Code and dataset will be released soon.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Shengze Wang"
+        },
+        {
+            "affiliations": [],
+            "name": "Alexey Supikov"
+        },
+        {
+            "affiliations": [],
+            "name": "Joshua Ratcliff"
+        },
+        {
+            "affiliations": [],
+            "name": "Henry Fuchs"
+        },
+        {
+            "affiliations": [],
+            "name": "Ronald Azuma"
+        }
+    ],
+    "id": "SP:de2e5046a5d032f6e58bcdb2410b6ab032bd5142",
+    "references": [
+        {
+            "authors": [
+                "Alex Yu",
+                "Sara Fridovich-Keil",
+                "Matthew Tancik",
+                "Qinhong Chen",
+                "Benjamin Recht",
+                "Angjoo Kanazawa"
+            ],
+            "title": "Plenoxels: Radiance fields without neural networks, 2021",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Benjamin Attal",
+                "Eliot Laidlaw",
+                "Aaron Gokaslan",
+                "Changil Kim",
+                "Christian Richardt",
+                "James Tompkin",
+                "Matthew O\u2019Toole"
+            ],
+            "title": "T\u00f6rf: Time-of-flight radiance fields for dynamic scene view synthesis",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Benjamin Attal",
+                "Selena Ling",
+                "Aaron Gokaslan",
+                "Christian Richardt",
+                "James Tompkin"
+            ],
+            "title": "Matryodshka: Real-time 6dof video view synthesis using multi-sphere",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "Jonathan T. Barron",
+                "Ben Mildenhall",
+                "Matthew Tancik",
+                "Peter Hedman",
+                "Ricardo Martin-Brualla",
+                "Pratul P. Srinivasan"
+            ],
+            "title": "Mip-nerf: A multiscale representation for anti-aliasing neural radiance fields, 2021",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Michael Broxton",
+                "John Flynn",
+                "Ryan Overbeck",
+                "Daniel Erickson",
+                "Peter Hedman",
+                "Matthew DuVall",
+                "Jason Dourgarian",
+                "Jay Busch",
+                "Matt Whalen",
+                "Paul Debevec"
+            ],
+            "title": "Immersive light field video with a layered mesh",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Anpei Chen",
+                "Zexiang Xu",
+                "Andreas Geiger",
+                "Jingyi Yu",
+                "Hao Su"
+            ],
+            "title": "Tensorf: Tensorial radiance fields",
+            "venue": "In European Conference on Computer Vision (ECCV),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Anpei Chen",
+                "Zexiang Xu",
+                "Fuqiang Zhao",
+                "Xiaoshuai Zhang",
+                "Fanbo Xiang",
+                "Jingyi Yu",
+                "Hao Su"
+            ],
+            "title": "Mvsnerf: Fast generalizable radiance field reconstruction from multi-view stereo",
+            "venue": "arXiv preprint arXiv:2103.15595,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Julian Chibane",
+                "Aayush Bansal",
+                "Verica Lazova",
+                "Gerard Pons-Moll"
+            ],
+            "title": "Stereo radiance fields (srf): Learning view synthesis from sparse views of novel scenes",
+            "venue": "In IEEE Conference on Computer Vision and Pattern Recognition (CVPR). IEEE,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Kangle Deng",
+                "Andrew Liu",
+                "Jun-Yan Zhu",
+                "Deva Ramanan"
+            ],
+            "title": "Depth-supervised nerf: Fewer views and faster training for free",
+            "venue": "arXiv preprint arXiv:2107.02791,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Chen Gao",
+                "Ayush Saraf",
+                "Johannes Kopf",
+                "Jia-Bin Huang"
+            ],
+            "title": "Dynamic view synthesis from dynamic monocular video",
+            "venue": "CoRR, abs/2105.06468,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Stephan J Garbin",
+                "Marek Kowalski",
+                "Matthew Johnson",
+                "Jamie Shotton",
+                "Julien Valentin"
+            ],
+            "title": "Fastnerf: High-fidelity neural rendering at 200fps",
+            "venue": "arXiv preprint arXiv:2103.10380,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Peter Hedman",
+                "Pratul P. Srinivasan",
+                "Ben Mildenhall",
+                "Jonathan T. Barron",
+                "Paul Debevec"
+            ],
+            "title": "Baking neural radiance fields for real-time view synthesis",
+            "venue": "ICCV, 2021",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Georgios Kopanas",
+                "Julien Philip",
+                "Thomas Leimk\u00fchler",
+                "George Drettakis"
+            ],
+            "title": "Point-based neural rendering with perview optimization",
+            "venue": "CoRR, abs/2109.02369,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Youngjoong Kwon",
+                "Dahun Kim",
+                "Duygu Ceylan",
+                "Henry Fuchs"
+            ],
+            "title": "Neural human performer: Learning generalizable radiance fields for human performance rendering",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Tianye Li",
+                "Mira Slavcheva",
+                "Michael Zollh\u00f6fer",
+                "Simon Green",
+                "Christoph Lassner",
+                "Changil Kim",
+                "Tanner Schmidt",
+                "Steven Lovegrove",
+                "Michael Goesele",
+                "Zhaoyang Lv"
+            ],
+            "title": "Neural 3d video synthesis",
+            "venue": "CoRR, abs/2103.02597,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Zhengqi Li",
+                "Simon Niklaus",
+                "Noah Snavely",
+                "Oliver Wang"
+            ],
+            "title": "Neural scene flow fields for space-time view synthesis of dynamic scenes",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "D.B.* Lindell",
+                "J.N.P.* Martel",
+                "G. Wetzstein"
+            ],
+            "title": "Autoint: Automatic integration for fast neural volume rendering",
+            "venue": "In Proc. CVPR,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Peter Lindstrom"
+            ],
+            "title": "Fixed-rate compressed floating-point arrays",
+            "venue": "IEEE Transactions on Visualization and Computer Graphics, 20,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Peter Lindstrom",
+                "Martin Isenburg"
+            ],
+            "title": "Fast and efficient compression of floating-point data",
+            "venue": "IEEE transactions on visualization and computer graphics,",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "Lingjie Liu",
+                "Marc Habermann",
+                "Viktor Rudnev",
+                "Kripasindhu Sarkar",
+                "Jiatao Gu",
+                "Christian Theobalt"
+            ],
+            "title": "Neural actor: Neural free-view synthesis of human actors with pose control",
+            "venue": "ACM Trans. Graph.(ACM SIGGRAPH Asia),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Stephen Lombardi",
+                "Tomas Simon",
+                "Jason M. Saragih",
+                "Gabriel Schwartz",
+                "Andreas M. Lehrmann",
+                "Yaser Sheikh"
+            ],
+            "title": "Neural volumes: Learning dynamic renderable volumes from images",
+            "venue": "CoRR, abs/1906.07751,",
+            "year": 1906
+        },
+        {
+            "authors": [
+                "Matthew Loper",
+                "Naureen Mahmood",
+                "Javier Romero",
+                "Gerard Pons-Moll",
+                "Michael J. Black"
+            ],
+            "title": "SMPL: A skinned multi-person linear model",
+            "venue": "ACM Trans. Graphics (Proc. SIGGRAPH Asia),",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Rafa\u0142 K. Mantiuk",
+                "Gyorgy Denes",
+                "Alexandre Chapiro",
+                "Anton Kaplanyan",
+                "Gizem Rufo",
+                "Romain Bachy",
+                "Trisha Lian",
+                "Anjul Patney"
+            ],
+            "title": "Fovvideovdp: A visible difference predictor for wide field-of-view video",
+            "venue": "ACM Trans. Graph.,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Ricardo Martin-Brualla",
+                "Rohit Pandey",
+                "Shuoran Yang",
+                "Pavel Pidlypenskyi",
+                "Jonathan Taylor",
+                "Julien P.C. Valentin",
+                "Sameh Khamis",
+                "Philip L. Davidson",
+                "Anastasia Tkach",
+                "Peter Lincoln",
+                "Adarsh Kowdle",
+                "Christoph Rhemann",
+                "Dan B. Goldman",
+                "Cem Keskin",
+                "Steven M. Seitz",
+                "Shahram Izadi",
+                "Sean Ryan Fanello"
+            ],
+            "title": "Lookingood: Enhancing performance capture with real-time neural re-rendering",
+            "venue": "CoRR, abs/1811.05029,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Ben Mildenhall",
+                "Pratul P Srinivasan",
+                "Matthew Tancik",
+                "Jonathan T Barron",
+                "Ravi Ramamoorthi",
+                "Ren Ng"
+            ],
+            "title": "Nerf: Representing scenes as neural radiance fields for view synthesis",
+            "venue": "In European conference on computer vision,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Thomas M\u00fcller",
+                "Alex Evans",
+                "Christoph Schied",
+                "Alexander Keller"
+            ],
+            "title": "Instant neural graphics primitives with a multiresolution hash encoding",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Phong Nguyen",
+                "Nikolaos Sarafianos",
+                "Christoph Lassner",
+                "Janne Heikkila",
+                "Tony Tung"
+            ],
+            "title": "Human view synthesis using a single sparse rgb-d",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Ahmed A A Osman",
+                "Timo Bolkart",
+                "Michael J. Black"
+            ],
+            "title": "STAR: A sparse trained articulated human body regressor",
+            "venue": "In European Conference on Computer Vision (ECCV),",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Keunhong Park",
+                "Utkarsh Sinha",
+                "Jonathan T. Barron",
+                "Sofien Bouaziz",
+                "Dan B Goldman",
+                "Steven M. Seitz",
+                "Ricardo Martin-Brualla"
+            ],
+            "title": "Nerfies: Deformable neural radiance fields",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Keunhong Park",
+                "Utkarsh Sinha",
+                "Peter Hedman",
+                "Jonathan T. Barron",
+                "Sofien Bouaziz",
+                "Dan B Goldman",
+                "Ricardo Martin- Brualla",
+                "Steven M. Seitz"
+            ],
+            "title": "Hypernerf: A higherdimensional representation for topologically varying neural radiance fields",
+            "venue": "ACM Trans. Graph.,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Sida Peng",
+                "Junting Dong",
+                "Qianqian Wang",
+                "Shangzhan Zhang",
+                "Qing Shuai",
+                "Xiaowei Zhou",
+                "Hujun Bao"
+            ],
+            "title": "Animatable neural radiance fields for modeling dynamic human bodies",
+            "venue": "In ICCV,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Sida Peng",
+                "Yuanqing Zhang",
+                "Yinghao Xu",
+                "Qianqian Wang",
+                "Qing Shuai",
+                "Hujun Bao",
+                "Xiaowei Zhou"
+            ],
+            "title": "Neural body: Implicit neural representations with structured latent codes for novel view synthesis of dynamic humans",
+            "venue": "In CVPR,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Gernot Riegler",
+                "Vladlen Koltun"
+            ],
+            "title": "Free view synthesis",
+            "venue": "CoRR, abs/2008.05511,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Gernot Riegler",
+                "Vladlen Koltun"
+            ],
+            "title": "Stable view synthesis",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Darius R\u00fcckert",
+                "Linus Franke",
+                "Marc Stamminger"
+            ],
+            "title": "Adop: Approximate differentiable one-pixel point rendering",
+            "venue": "arXiv preprint arXiv:2110.06635,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Johannes Lutz Sch\u00f6nberger",
+                "Enliang Zheng",
+                "Marc Pollefeys",
+                "Jan-Michael Frahm"
+            ],
+            "title": "Pixelwise view selection for unstructured multi-view stereo",
+            "venue": "In European Conference on Computer Vision (ECCV),",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Vincent Sitzmann",
+                "Julien N.P. Martel",
+                "Alexander W. Bergman",
+                "David B. Lindell",
+                "Gordon Wetzstein"
+            ],
+            "title": "Implicit neural representations with periodic activation functions",
+            "venue": "In arXiv,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Pratul P Srinivasan",
+                "Richard Tucker",
+                "Jonathan T Barron",
+                "Ravi Ramamoorthi",
+                "Ren Ng",
+                "Noah Snavely"
+            ],
+            "title": "Pushing the boundaries of view extrapolation with multiplane images",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Shih-Yang Su",
+                "Frank Yu",
+                "Michael Zollh\u00f6fer",
+                "Helge Rhodin"
+            ],
+            "title": "A-nerf: Articulated neural radiance fields for learning human shape, appearance, and pose",
+            "venue": "In Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Richard Szeliski",
+                "Polina Golland"
+            ],
+            "title": "Stereo matching with transparency and matting",
+            "venue": "In Sixth International Conference on Computer Vision (IEEE Cat. No. 98CH36271),",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "Matthew Tancik",
+                "Pratul P. Srinivasan",
+                "Ben Mildenhall",
+                "Sara Fridovich-Keil",
+                "Nithin Raghavan",
+                "Utkarsh Singhal",
+                "Ravi Ramamoorthi",
+                "Jonathan T. Barron",
+                "Ren Ng"
+            ],
+            "title": "Fourier features let networks learn high frequency functions in low dimensional domains. NeurIPS, 2020",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Edgar Tretschk",
+                "Ayush Tewari",
+                "Vladislav Golyanik",
+                "Michael Zollh\u00f6fer",
+                "Christoph Lassner",
+                "Christian Theobalt"
+            ],
+            "title": "Nonrigid neural radiance fields: Reconstruction and novel view synthesis of a dynamic scene from monocular video",
+            "venue": "In IEEE International Conference on Computer Vision (ICCV)",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Richard Tucker",
+                "Noah Snavely"
+            ],
+            "title": "Single-view view synthesis with multiplane images",
+            "venue": "In The IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Qianqian Wang",
+                "Zhicheng Wang",
+                "Kyle Genova",
+                "Pratul Srinivasan",
+                "Howard Zhou",
+                "Jonathan T. Barron",
+                "Ricardo Martin- Brualla",
+                "Noah Snavely",
+                "Thomas Funkhouser"
+            ],
+            "title": "Ibrnet: Learning multi-view image-based rendering",
+            "venue": "In CVPR,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Olivia Wiles",
+                "Georgia Gkioxari",
+                "Richard Szeliski",
+                "Justin Johnson"
+            ],
+            "title": "SynSin: End-to-end view synthesis from a single image",
+            "venue": "In CVPR,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Wenqi Xian",
+                "Jia-Bin Huang",
+                "Johannes Kopf",
+                "Changil Kim"
+            ],
+            "title": "Space-time neural irradiance fields for free-viewpoint video",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Jae Shin Yoon",
+                "Kihwan Kim",
+                "Orazio Gallo",
+                "Hyun Soo Park",
+                "Jan Kautz"
+            ],
+            "title": "Novel view synthesis of dynamic scenes with globally coherent depths from a monocular camera",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Alex Yu",
+                "Ruilong Li",
+                "Matthew Tancik",
+                "Hao Li",
+                "Ren Ng",
+                "Angjoo Kanazawa"
+            ],
+            "title": "PlenOctrees for real-time rendering of neural radiance fields",
+            "venue": "In ICCV,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Alex Yu",
+                "Vickie Ye",
+                "Matthew Tancik",
+                "Angjoo Kanazawa"
+            ],
+            "title": "pixelnerf: Neural radiance fields from one or few images, 2020",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Feihu Zhang",
+                "Oliver J. Woodford",
+                "Victor Adrian Prisacariu",
+                "Philip H.S. Torr"
+            ],
+            "title": "Separable flow: Learning motion cost volumes for optical flow estimation",
+            "venue": "In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Kai Zhang",
+                "Gernot Riegler",
+                "Noah Snavely",
+                "Vladlen Koltun"
+            ],
+            "title": "Nerf++: Analyzing and improving neural radiance fields",
+            "venue": "CoRR, abs/2010.07492,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Richard Zhang",
+                "Phillip Isola",
+                "Alexei A Efros",
+                "Eli Shechtman",
+                "Oliver Wang"
+            ],
+            "title": "The unreasonable effectiveness of deep features as a perceptual metric",
+            "venue": "In CVPR,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Tinghui Zhou",
+                "Richard Tucker",
+                "John Flynn",
+                "Graham Fyffe",
+                "Noah Snavely"
+            ],
+            "title": "Stereo magnification: Learning view synthesis using multiplane images",
+            "venue": "In SIGGRAPH,",
+            "year": 2018
+        }
+    ],
+    "sections": [
+        {
+            "text": "In this work, we take a step towards interactive streaming via a frame-by-frame approach naturally free of lag. Conventional wisdom believes that per-frame NeRFs are impractical due to prohibitive training costs and storage. We break this belief by introducing Incremental Neural Videos (INV), a per-frame NeRF that is efficiently trained and streamable. We designed INV based on two insights:\n(1) Our main finding is that MLPs naturally partition themselves into Structure and Color Layers, which store structural and color/texture information respectively.\n(2) We leverage this property to retain and improve upon knowledge from previous frames, thus amortizing training across frames and reducing redundant learning.\nAs a result, with negligible changes to NeRF, INV can achieve good qualities (> 28.6db) in 8min/frame. It can also outperform prior SOTA in 19% less training time. Additionally, our Temporal Weight Compression reduces the per-frame size to 0.3MB/frame (6.6% of NeRF). More importantly, INV is free from buffer lag and is naturally fit for streaming. While this work does not achieve real-time training, it shows that incremental approaches like INV present new possibilities in interactive 3D streaming. Moreover, our discovery of natural information partition leads to a better understanding and manipulation of MLPs. Code and dataset will be released soon."
+        },
+        {
+            "heading": "1. Introduction",
+            "text": "Recent advances in photorealistic 3D video generation hint at an exciting future where moments can be captured and experienced in 3D. One application of peculiar potential is interactive 3D streaming. It is the basis of telepresence\nsystems, which can democratize high-quality education via immersive remote classrooms, replace business traveling, and allow for face-to-face reunions between distant friends and families. In this work, we take a step towards this exciting future by introducing an efficient representation suitable for interactive 3D video streaming.\nSpatiotemporal NeRFs [3, 11, 16, 17]) are a popular approach to synthesizing 3D videos due to their impressive photorealism. However, they suffer from an inherent lag because they consume videos and thus have to wait for chunks of frames (often seconds) before processing. Due to this buffer lag, these approaches are not suitable for interactive streaming scenarios like telepresence and immersive cloud gaming. In this work, we introduce Incremental Neural Videos (INV), a frame-by-frame approach that is naturally free of lag. While it is a common belief that per-frame NeRFs are impractical due to their prohibitive training costs\nar X\niv :2\n30 2.\n01 53\n2v 1\n[ cs\n.C V\n] 3\nF eb\n2 02\n3\nand storage size, INV breaks this belief by showing the possibility of training each frame in minutes and maintaining a streamable size. INV achieves this with negligible changes to NeRF, and it is a general framework that can be combined with more optimized approaches.\nMoreover, prior approaches mostly show results on short videos lasting several seconds. This is because they model the entire 3D video as a single spatiotemporal object, and thus are limited by small model capacities. While one can divide longer videos into chunks (as in Neural 3D Videos [16]), it could months of GPU hours to generate a minutelong 3D video. The high training costs thus prevent the general public from using them.\nWe argue that the cause of such high training costs, in addition to the commonly discussed sampling bottleneck, can also be attributed to the learning of duplicated information. Prior works [11,16,17,26] learn the mapping from input 4D points [x, y, z, t] (or equivalent) to their radiance. This input formulation essentially views 3D points from different frames as different 4D points. As a result, even if the scene is static, the same 3D points would need to be re-learned when the time variable changes. In our work, we retain and improve upon previously learned information to avoid training each frame from scratch and to continually improve over time. Moreover, we discovered that MLPs naturally store structural information in earlier Structure Layers and color information in later Color Layers. Since the color/texture space is often consistent in many scenarios (e.g. teleconferencing and live streaming), we significantly reduce storage by maintaining a constant color/texture space and learning only structural information.\nBased on these observations, we propose Incremental Neural Videos (INV), a neural representation that can be efficiently learned and stored frame-by-frame. Our contributions can be summarized as follows:\n\u2022 Natural Partition of Structure and Color Layers: we found that MLPs naturally store structural in earlier layers and color/texture information in later layers. We perform numerous experiments on both 2D and 3D videos to showcase this phenomenon. This discovery leads to a clearer understanding and more effective manipulation of MLPs.\n\u2022 We leverage this phenomenon to design Incremental Neural Videos (INV), which is naturally free of lag and suitable for interactive streaming. INV consists of two types of sub-modules: (1) a shared color module that is shared across frames and encodes the color/texture of the scene, and (2) per-frame structure modules that encode the changing structures of the dynamic scene and are stored frame-by-frame.\n\u2022 We propose Structure Transfer, an incremental training scheme that significantly accelerates training. With\nStructure Transfer, INV outperforms the state-of-theart on per-frame quality metrics with less training. Moreover, INV can achieve good qualities in minutes.\n\u2022 We propose Temporal Weight Compression to further compress the already concise representation. A compressed INV frame is only 0.3MB, 6.6% of NeRF."
+        },
+        {
+            "heading": "2. Related Works",
+            "text": ""
+        },
+        {
+            "heading": "2.1. Static Novel View Synthesis",
+            "text": "Layered Representations. Existing methods differ in how they represent 3D scenes. Multiplane Images (MPI) [4, 6, 39, 41, 44, 54] are variable-viewpoint images that represent a scene as a set of fronto-parallel images, layeredmeshes, or multilayer-spheres. However, these methods usually exhibit stack-of-card artifacts when viewed at a close distance or from steep angles.\nNeural Radiance Fields. NeRF [26] introduced a simple but powerful representation based on Multi-Layer Perceptrons (MLPs) and differentiable volumetric rendering. It achieved unprecedented photorealism while allowing free viewpoints rendering. The high-level idea is to use a neural network to model the radiance of 3D points in the target scene. Notably, positional encodings [38, 42] play a vital role in improving the quality of the reconstructed radiance field. Many works (e.g. [5, 8, 45, 52]) have been inspired by NeRF. However, static NeRF faced two main challenges:\n(1) Slow training and rendering. Multiple approaches (e.g. [1, 7, 10, 12, 13, 18, 27, 49]) have been proposed to improve training and rendering speed, but long training time is still the main bottleneck of NeRF-based models.\n(2) Generalization to new scenes. Many works like [8, 9, 45, 50] have tried to achieve generalization by adding ConvNets or Transformers to NeRF, but it remains a challenge to learn generalizable neural radiance fields.\nExplicit 3D Representations. One of the fundamental difficulties in view synthesis is to model the scene in 3D based on 2D images. To alleviate the burden from view synthesis algorithms, some works [2,14,34\u201336] rely on preprocessed raw 3D geometry (e.g. point clouds and meshes), obtained from multi-view stereo software such as COLMAP [37]. Such approaches show fewer fog-like artifacts which are common in NeRF-based methods. Methods like [34,35] also demonstrate good generalization to new scenes. Point cloud-based neural rendering approaches [14, 36, 46] show impressive sharpness and details in large scenes with thin structures. However, the aforementioned approaches rely on good input 3D models to render high-quality images."
+        },
+        {
+            "heading": "2.2. Dynamic Novel View Synthesis",
+            "text": "Human-Specific Approaches. Some recent works [15, 21, 32, 33, 40] focus on animating clothed humans only.\nThey often use colored videos as inputs and leverage human body templates (e.g. SMPL [23] and STAR [29]) and deep textures. On the other hand, LookinGood [25] uses multiple RGBD cameras to reconstruct human mesh in real-time. They then use a neural network to render colored mesh into high-quality novel views. HVSNet [28] uses monocular RGBD videos and renders from feature point clouds. Our work focuses on general scenes with complex human-object interactions. Therefore, approaches limited to human subjects would not apply to our target scenario.\nDynamic Novel View Synthesis of General Scenes Yoon et al. [48] utilizes multi-view stereo and monocular depth estimators to estimate spatially and temporally coherent depth maps and motion fields. Their approach generates 3D videos without per-video optimization or prior knowledge of the scene. Many NeRF-based approaches [11, 17, 43, 47] encode dynamic scenes as spatio-temporal radiance fields. Many learn a radiance field and a motion field for each frame. The motion field is then used to establish 3D correspondences between frames, thus allowing for temporal consistency regularizations. Optical flow and monocular depth estimators are often used to guide the optimization to a good local optimum. To\u0308RF [3] uses Timeof-Flight sensors to achieve better modeling of both static and dynamic scenes. Approaches like Nerfies [30], HyperNeRF [31], and Neural 3D Videos (N3V) [16] use latent codes to help model dynamic contents. N3V also shows that smart sampling strategies can accelerate training and improve rendering qualities. However, all of these approaches require hours of training per frame, leading to weeks of training for a short video lasting several seconds. Our work shows how to significantly accelerate training and reduce storage via a concise incremental representation that naturally extends to streaming applications."
+        },
+        {
+            "heading": "3. Method",
+            "text": "We discuss our work in 3 parts: (1) the Incremental Transfer (I.T.) training scheme that drastically accelerates the training. I.T. also leads to (2) our discovery of Structure and Color Layers in MLPs, and (3) the Incremental Neural Videos (INV) representation that leverages this discovery to drastically reduce storage size and increase stability."
+        },
+        {
+            "heading": "3.1. Transferring Information Across Frames",
+            "text": "Prior works [11, 16, 17, 43, 47] can render impressively realistic 3D videos after hours of training per frame. The cause of such high training costs, aside from the wellexplored sampling bottleneck, can also be attributed to the redundancy in training. Many works map 4D points [x, y, z, t] (or equivalent) to RGB\u03c3 values. This input formulation essentially views 3D points from different frames as different 4D points. Therefore, even if the scene is static, the same 3D points would need to be re-learned when the\ntime variable changes. While loss terms enforce consistencies between mappings for different frames, duplicated mappings still consume model capacity and training resources. A similar argument also applies to dynamic points.\nWe notice that, when the frame rate is infinitely high, adjacent frames should be almost identical. Therefore, given the MLP representation \u03a6t for a frame at time t, it should take almost no effort to learn \u03a6t\u2032 for the next frame at t\u2032. Thus, the difference \u2206\u03a6 = \u03a6t\u2032 \u2212 \u03a6t should decrease as time difference \u2206t = t\u2032 \u2212 t decreases.\nlim \u2206t\u21920\n\u2206\u03a6 = 0\nTherefore, a model should reuse most of the previous information given high frame rates. Following this intuition, we propose Incremental Transfer (I.T.) to explicitly reuse information from frame to frame. We train one model per frame, with the earlier frame as the initialization for the later frame. As shown in Fig.3 and 5, I.T. leads to significantly less training by directly improving upon previous frames. The model thus gradually converges to a good quality similar to NeRF with only a fraction of the training. However, such a naive training scheme leads to significant temporal artifacts in rendered 3D videos, like flickering. In later sections, we show how INV reduces such artifacts.\nMoreover, in Table. 1, we show that incrementally trained InstantNGP (\u201dOurs NGP\u201d) acheives good results with merely 6 sec/frame of training."
+        },
+        {
+            "heading": "3.2. Discovery of Structure and Color Layers",
+            "text": "Another benefit of Incremental Transfer is that we can now analyze the effect of different \u2206\u03a6\u2019s. This leads to our core discovery: When mapping from image/volume coordinates to colors (and/or densities), an MLP naturally partitions itself into Structure Layers and Color Layers. Structure Layers are early layers of the model that store structural information. Color Layers are later layers that store color/style information (i.e. object color, shadows, etc.). Moreover, the mapping spaces learned by each layer are similar across nearby frames. We perform several experiments to show this interesting behavior."
+        },
+        {
+            "heading": "3.2.1 2D Structure Swap",
+            "text": "We first examine how changes in Structure Layers can affect the structural contents of 2D images. First, we perform Incremental Transfer to learn MLPs (with positional encodings) \u03a6A and \u03a6B for frames A and B. Second, we perform Structure Swap, where we replace the 1st layer of \u03a6A with that of \u03a6B . As shown in Fig. 2 (Left), without any further training, the whole scene moves to the right (e.g. more letters on the car plate are covered) and the kid\u2019s legs move closer. However, replacing later layers does not induce such structural changes. This means that 2D MLPs\nStructure Layers & Color Layers in 2D\nstore structure information in earlier Structure Layers (the 1st layer in this case), and changes in Structure Layers induces structural changes in the rendered image. Moreover, since nearby Structure Layers can be swapped without further fine-tuning, the mappings learned by each layer are similar for nearby frames. This observation is important to support the idea of sharing the later layers."
+        },
+        {
+            "heading": "3.2.2 2D Color Scheme Transfer",
+            "text": "We have shown that 2D MLPs (with positional encodings) store structural information in early Structure Layers. But what do later layers store? We explore the answer via the Color Scheme Transfer experiment. As shown in Fig. 2 (Right), we first train MLP \u03a6A to reconstruct image A. Then, we finetune the Structure Layer (1st layer in this case) on image B while freezing later Layers. During the early stages of finetuning (e.g. first 400 iters), the color scheme of A is often preserved while the structure quickly changes to B. Although the color scheme would eventually also change to B after longer training (e.g. 1k iters), this phenomenon shows that color information is stored in the later Color Layers of a 2D MLP."
+        },
+        {
+            "heading": "3.2.3 3D Structure Swap and Color Scheme Transfer",
+            "text": "We perform 3D analysis using our Immersive Telepresence Dataset (Fig. 4 (Left)), captured with 3 camera bars, each containing 5 compact cameras. Our images are much closer to the subject, enabling much easier visualization and analysis. We observed the following behaviors:\n(1) NeRFs often contain more than one Structure Layer (ranging from 3 to 7 layers depending on the content).\n(2) Replacing incrementally more Structural Layers induces continual and meaningful changes/motions in 3D. For\nStructure Layers & Color Layers in 3D\nexample in Fig. 4 (Left), when more Structure Layers from B are swapped into A, the person\u2019s head rotates more and a smile gradually appears. This means that the mappings learned by each layer stay consistent across time, allowing for layer replacements without finetuning.\n(3) Replacing Colors Layers results in color changes (e.g. tone, shadows, etc.) but no obvious structural changes.\n(4) 3D Color Scheme Transfer experiments show the same findings as 2D experiments.\nThis phenomenon is intuitively true since an MLP is a chain of non-linear mappings. The first layer maps coordinate/structural inputs to a latent space, which is then gradually transformed into the final color space through the chain of mappings. Earlier layers would thus retain more properties related to the input structural space.\n3D Color Scheme Transfer experiments follow the same procedure described in Sec. 3.2.2. In Fig. 4 (Right), we show that the novel view renderings demonstrate expected behaviors. In other words, during the early stages of training (e.g. first 500 iters), the color scheme of the \u201doriginal\u201d is preserved while the structure quickly changes to the \u201dtarget\u201d. Then, much longer training is needed to correct the color scheme since later layers are frozen (notice that with more trainable layers, this process becomes faster and easier). This consistency between 2D and 3D MLPs further supports our finding that MLPs (with pos. enc.) naturally\nstore structure and color information separately. These findings also hint at a different view of InstantNGP [27]. NGP\u2019s hash grid can be seen as the output of Structure Layers stored in 3D, and the MLP can be seen as the Color Layers. In this way, NGP achieves the same \u201dposition\u2192 latent space\u201d mapping as the Structure Layers without going through any linear layers, thus directly accessing the Color Layers and thus accelerating the training."
+        },
+        {
+            "heading": "3.3. Efficient Incremental Neural Videos",
+            "text": "In Sec. 3.1, we showed that Incremental Transfer (I.T.) significantly reduces the training cost for the original NeRF while achieving good per-frame image quality. However, I.T. has two main disadvantages: (1) the storage cost is extremely high. A 5-minute 30FPS 3D video would require 40.1GB of storage. (2) There is significant flickering despite good per-frame image quality. To address these two issues, we propose the Incremental Neural Videos (INV) Representation that drastically reduces storage cost while providing high-quality visual results with notably improved temporal stability over I.T."
+        },
+        {
+            "heading": "3.3.1 The INV Representation",
+            "text": "Our representation consists of 2 types of modules: (1) PerFrame Structure Layers (SLs) which are stored frame-by-\nframe, and (2) Shared Color Layers (SCL) which are shared by all frames. Per-Frame SLs encode the structure for a specific frame. They map the coordinate inputs (after positional encoding) to latent vectors v. SCL then maps these latent vectors v into RGB\u03c3. As a result, a video of N frames would be converted into N Per-Frame SLs \u03a6si (i \u2208 1...N ) and 1 SCL \u03a6c. In this way, we have a constant color/style space for the scene while allowing the scene structure to change from frame to frame. Moreover, storing only Structure Layers brings storage savings. For the original NeRF of 12 layers (including RGB and \u03c3 heads, no skip connection), storing 3 Structure Layers would reduce the weight size to 1.12MB (24.6% of the complete model of 4.43MB)."
+        },
+        {
+            "heading": "3.3.2 Training INVs via Structure Transfer",
+            "text": "There are two stages to training INVs: (1) Warm-Up: Incremental Transfer (all layers trained) from frame to frame until frame i. Color Layers at frame i are then stored and shared as the Shared Color Layers \u03a6c.\n(2) Structure Transfer: Incremental Transfer only on Structure Layers, with Shared Color Layers frozen. Structural information from previous frames is thus explicitly reused in later frames. Structure Layers\u2019 outputs are then converted into colors and densities via Shared Color Layers, which provide a constant color/style space. Only Structure Layers are stored for each frame (about 1.12MB/frame). Due to the freezing, videos are notably more stable as seen in the supplementary videos.\n(Optional) SplitINV: Video Stabilization with Background NeRF: When INVs receive short training (e.g. 8min/frame), videos can be flickery. To alleviate this, one can use a separate frozen NeRF to model the static backgrounds and focus computation on dynamic contents. Implementation details are included in the supplementary.\nTo render an INV frame i, one could first recover the full\nmodel \u03a6 by concatenating the Per-Frame Structure Layers \u03a6si with the Shared Color Layers \u03a6\nc. The recovered model \u03a6i is then used to render the 3D frame i."
+        },
+        {
+            "heading": "3.3.3 Temporal Weight Compression (TWC)",
+            "text": "To further reduce the size, we propose Temporal Weight Compression. Floating-point data compression algorithms (e.g. [19, 20]) can provide significant compression rate while maintaining high fidelity for structured data (e.g. 2D images, 3D geometry, etc.), but they struggle to compress near-random data that lack clear structure, such as the MLPs weights. However, there could be temporal structures in how the weights change through time. Therefore, we construct temporal weight matrices by concatenating weights from consecutive frames. We then perform FPZIP [20] at 16bits precision on the temporal weight matrix. As shown in Table. 1 \u201dINV+TWC\u201d, this simple approach maintains video quality while compressing the Structure Layers down to 0.3MB/frame. Therefore, once the Shared Color Layers (3.29MB) are transmitted, it only costs 0.3MB to transmit any new INV frame, i.e. 72 MegaBits/second at 30FPS."
+        },
+        {
+            "heading": "4. Implementation Details",
+            "text": "Our baseline NeRF is a faithful PyTorch reimplementation of NeRF that reproduces the original results. We use the same NeRF for INV, except that we disable skip connections to the middle of the MLP. Although skip connections provide some quality improvement, they activate more Structure Layers and thus increase the storage size. All models are trained on a single NVIDIA RTX3090 GPU with the same settings as the original NeRF (learning rate 5 \u00d7 10\u22124, 1024 ray samples, 64 depth samples for coarse NeRF and 128 samples for fine NeRF). In our tables, 8 minutes of INV training amounts to 10k iterations, 15\nmin is 20k, 90 min is 120k, and 210 min is 280k. Temporal Weight Compression batches all INV frames (after warmup) into a single temporal weight matrix, then we use the fpzip python library to perform floating-point compression at 16 bits resolution."
+        },
+        {
+            "heading": "5. Experiments",
+            "text": "We evaluate the quantitative and qualitative performance of INV against State-Of-The-Art approaches."
+        },
+        {
+            "heading": "5.1. Datasets",
+            "text": "The Plenoptic Video Datasets (PVD) [16] is released by Neural 3D Videos (DyNeRF) as their benchmark dataset. It is captured with 21 GoPro cameras at 2028 \u00d7 2704 and 30 FPS. It contains challenging volumetric effects (e.g. flames), view-dependent effects (e.g. specularity from silverware, transparency from bottles), complex actions (e.g.\ncooking), changing topologies (e.g. cutting beef, pouring liquid), etc. Same as DyNeRF, INV is evaluated at 1352 \u00d7 1014 on the same and only sequence that DyNeRF reported quantitative results on, i.e. the first 10 seconds of the \u201dflame salmon 1\u201d sequence. We report quantitative results on other sequences in the supplementary.\nImmersive Telepresence Dataset. As mentioned in Sec. 3.2.3, we also perform analysis of Structure and Color Layers on our custom dataset. The dataset is captured with 3 camera bars each containing 5 compact cameras, and we follow PVD [16] to use 14 views for training and 1 middle view for evaluation. Different from PVD [16], our dataset is captured closer to the subject and thus much more suitable for analyzing and visualizing Structure Swap. However, since compact cameras have lower image qualities, this dataset is only suitable for visualization and analysis but quantitative evaluation. Please refer to the supplementary for more details."
+        },
+        {
+            "heading": "5.2. Metics and Competing Methods",
+            "text": "We follow DyNeRF to use these metrics:(1) Peak SignalTo-Noise Ratio (PSNR), (2) Perceptual Score (LPIPS [53]), and (3) Just-Objectionable-Difference(JOD) [24]. We omit FLIP and DSSIM since we deem the three widely used metrics enough for reliable measurement. The following methods are evaluated:\nNeRF [26]: Our baseline NeRF is trained from scratch and stored for each frame separately. This baseline helps to\nquantify the training acceleration and storage savings provided by INV (which uses the same NeRF internally).\nNeural 3D Videos (DyNeRF) [16]: DyNeRF proposed to use learnable latent codes as inputs for each frame (in addition to positional encoding) to improve the rendering quality. DyNeRF also accelerates training via hierarchical training and ray importance sampling. Longer videos are divided into chunks of 10-second clips for better results. The authors also released the Plenoptic Video Datasets [16]. They show showed superior performance to their baselines. Since the DyNeRF code is not available and only results on the \u201dflame salmon\u201d sequence are reported, we cannot provide side-by-side visual comparisons and can only compare with them on that sequence.\nInstantNGP [27]: We train InstantNGP on the scene with 800 iterations (6\u0303sec) from scratch for each frame.\nINV: INV uses the original NeRF with the same settings as our NeRF baseline, but we disable skip connections. This is because they activate more Structure Layers, leading to higher storage costs while providing insignificant improvements. In most experiments, we train 3 Structure Layers. Although the frozen and shared layers also include some Structure Layers, we count them as part of the Shared Color Layers for simplicity. \u201dINV+TWC\u201d uses TWC to batches and compress all frames after Warm-Up. \u201dSplitINV\u201d uses a separate frozen NeRF to model the backgrounds, and INV\nis used to capture the foreground. All metrics are measured on all 300 frames, including the Warm-Up frames which show worse results.\nSplitINV: We use a separate NeRF to model the static background, while the foreground is encoded by INV. This allows INV to focus computation on the foreground and also helps stabilize the background. Please refer to the supplementary for more details on training.\nOurs NGP: We train InstantNGP on the scene with 800 iterations/frame with the previous frame as the initialization for the MLP and hash grid. Importantly, the hash grid of NGP can be seen as the output of Structure Layers stored in 3D, and the MLP can be seen as the Color layers. In this way, NGP skips the Structure Layers and directly accesses the Color layers. Therefore, after 30 frames of warmup, we fix the MLP and train the hash grid only on the foreground pixels (as estimated by an optical flow estimator [51]). This allows NGP to focus computation on the foreground and also helps stabilize the background.\nMulti View Stereo (MVS), Local Light Field Fusion (LLFF), NeuralVolumes (NV), and NeRF-T: We adopt the numbers as reported by DyNeRF [16]. Please refer to [16] for more details."
+        },
+        {
+            "heading": "5.3. Results",
+            "text": "As shown in Fig. 3 and 5, INV\u2019s quality quickly and continually improves during the Warm-Up Stage. During the Structure Transfer Stage, INV performance stabilizes at a good quality. Moreover, INV can model challenging visual effects (e.g. flames, reflections, etc.) even though the Color Layers are frozen and shared between frames.\nAs shown in Table. 1, INV achieves state-of-the-art results on per-frame quality metrics (PSNR & LPIPS) with 50 minutes/frame less (\u221219%) training than DyNeRF. Moreover, with merely 8min/frame of training, we achieve an average PSNR of 28.77db (\u201dINV+TWC\u201d). We also notice that more trainable Structure Layers result in better per-frame image metrics, but it almost completely removes the stabilization effect of freezing later layers as seen in the table and supplementary videos. This is because more structural contents are allowed to change with no guarantee that the change is consistent over time.\nIn \u201dINV?\u201d, we show that well-trained Shared Color Layers can notably improve quality. During Warm-Up, the models are trained for 210min/frame. During Structural Transfer, the Structure Layers are only trained for 15min/frame. However, compared to the basic INV trained for 15min/frame throughout the video, PSNR increases by 0.42db (from 28.95db to 29.38db). This quality is similar\nto the basic INV trained for 90min/frame. Pretraining INV could potentially be useful for many live-streaming settings (e.g. game streaming, lectures, and remote meetings). Since many live-streaming sessions capture the same background and people, it could be helpful to maintain or continually improve a long-term memory via a color/style space that is shared across sessions. Moreover, \u201dSplitINV\u201d increases the stability via its frozen background NeRF.\nDue to its incremental nature, INV can synthesize 3D videos on-the-fly and does not have to wait for video chunks before processing. This property makes it naturally suitable for interactive 3D streaming. Additionally, INV doesn\u2019t make strong assumptions about the modeling backbone, thus it can likely be enhanced by more sophisticated techniques."
+        },
+        {
+            "heading": "6. Limitations and Future Work",
+            "text": "The main limitation of our work is visual stability. INV models that are trained longer (e.g. 210min/frame) generally show good stability. However, short training (e.g. 8min/frame) results in poor stability despite good per-frame qualities. While background models could improve stability on static contents, it is still challenging to stabilize dynamic contents effectively. It is likely helpful to enforce consistency for temporal correspondences (e.g. as done in\n[11,16,17]). Moreover, it could improve stability and quality by training an intelligently selected subset of neurons, instead of always freezing certain layers. We leave this for future research.\nWhile INV shows promising training acceleration, more needs to be done to achieve real-time training in the future. One advantage of INV is that it retains and continually improves upon previous information. This property could be combined with other approaches (e.g. smarter sampling, human-specific modeling, voxel-based approaches, etc.) to further reduce training time.\nAdditionally, we did not address the need for real-time rendering in this work. Since there are many prior works [12,13,27,49] on real-time rendering for NeRFs, one might be able to achieve real-time streaming and rendering by combining INV with these approaches, assuming that the INV frames are already trained.\nAnother future work is to handle large and/or abrupt changes, as well as moving cameras. A simple solution is to detect these sudden changes and update the entire model. It could also be beneficial to dynamically determine which layers or neurons to train. However, this is likely less of a problem for many live-streaming scenarios with still cameras and smoothly varying content (e.g. game streaming, lectures, etc.). For general videos, it is also possible to store dedicated Shared Color Layers for each scene."
+        },
+        {
+            "heading": "7. Conclusions",
+            "text": "In this work, we introduced INV, an efficient frame-byframe representation naturally suitable for interactive 3D streaming. It significantly reduces training while compressing storage sizes to the streamable realm. Additionally, we find that MLPs naturally partition themselves into Structure and Color Layers. Our findings can thus help the community better understand and manipulate MLP models. We believe that this is a solid step toward the future of interactive 3D streaming."
+        }
+    ],
+    "title": "INV: Towards Streaming Incremental Neural Videos",
+    "year": 2023
+}

@@ -1,0 +1,556 @@
+{
+    "abstractText": "Pretrained Language Models (PLMs) have emerged as the state-of-the-art paradigm for code search tasks. The paradigm involves pretraining the model on search-irrelevant tasks such as masked language modeling, followed by the finetuning stage, which focuses on the search-relevant task. The typical finetuning method is to employ a dual-encoder architecture to encode semantic embeddings of query and code separately, and then calculate their similarity based on the embeddings. However, the typical dual-encoder architecture falls short in modeling token-level interactions between query and code, which limits the model\u2019s capabilities. In this paper, we propose a novel approach to address this limitation, introducing a crossencoder architecture for code search that jointly encodes the semantic matching of query and code. We further introduce a Retriever-Ranker (RR) framework that cascades the dualencoder and cross-encoder to promote the efficiency of evaluation and online serving. Moreover, we present a probabilistic hard negative sampling method to improve the cross-encoder\u2019s ability to distinguish hard negative codes, which further enhances the cascade RR framework. Experiments on four datasets using three code PLMs demonstrate the superiority of our proposed method.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Hande Dong"
+        },
+        {
+            "affiliations": [],
+            "name": "Jiayi Lin"
+        },
+        {
+            "affiliations": [],
+            "name": "Yichong Leng"
+        },
+        {
+            "affiliations": [],
+            "name": "Jiawei Chen"
+        },
+        {
+            "affiliations": [],
+            "name": "Yutao Xie"
+        }
+    ],
+    "id": "SP:83704261dcda51207cd458170b23774ac79a17aa",
+    "references": [
+        {
+            "authors": [
+                "X. Gu",
+                "H. Zhang"
+            ],
+            "title": "and S",
+            "venue": "Kim, \u201cDeep code search,\u201d in Proceedings of the 40th International Conference on Software Engineering, ICSE 2018, Gothenburg, Sweden, May 27 - June 03, 2018, M. Chaudron, I. Crnkovic, M. Chechik, and M. Harman, Eds. ACM",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Cambronero",
+                "H. Li",
+                "S. Kim",
+                "K. Sen"
+            ],
+            "title": "and S",
+            "venue": "Chandra, \u201cWhen deep learning met code search,\u201d in Proceedings of the ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering, ESEC/SIGSOFT FSE 2019, Tallinn, Estonia, August 26-30, 2019, M. Dumas, D. Pfahl, S. Apel, and A. Russo, Eds. ACM",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "X. Ling",
+                "L. Wu",
+                "S. Wang",
+                "G. Pan",
+                "T. Ma",
+                "F. Xu",
+                "A.X. Liu",
+                "C. Wu"
+            ],
+            "title": "and S",
+            "venue": "Ji, \u201cDeep graph matching and searching for semantic code retrieval,\u201d ACM Trans. Knowl. Discov. Data, vol. 15, no. 5, pp. 88:1\u201388:21",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "T. Diamantopoulos",
+                "G. Karagiannopoulos"
+            ],
+            "title": "and A",
+            "venue": "L. Symeonidis, \u201cCodecatch: Extracting source code snippets from online sources,\u201d in 6th IEEE/ACM International Workshop on Realizing Artificial Intelligence Synergies in Software Engineering, RAISE@ICSE 2018, Gothenburg, Sweden, May 27, 2018, W. F. Tichy and L. L. Minku, Eds. ACM",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "S. Luan",
+                "D. Yang",
+                "C. Barnaby",
+                "K. Sen"
+            ],
+            "title": "and S",
+            "venue": "Chandra, \u201cAroma: code recommendation via structural code search,\u201d Proc. ACM Program. Lang., vol. 3, no. OOPSLA, pp. 152:1\u2013152:28",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "B. Sisman",
+                "A.C. Kak"
+            ],
+            "title": "Assisting code search with automatic query reformulation for bug localization,",
+            "venue": "Proceedings of the 10th Working Conference on Mining Software Repositories,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "D. Guo",
+                "S. Ren",
+                "S. Lu",
+                "Z. Feng",
+                "D. Tang",
+                "S. Liu",
+                "L. Zhou",
+                "N. Duan",
+                "A. Svyatkovskiy",
+                "S. Fu",
+                "M. Tufano",
+                "S.K. Deng",
+                "C.B. Clement",
+                "D. Drain",
+                "N. Sundaresan",
+                "J. Yin",
+                "D. Jiang"
+            ],
+            "title": "and M",
+            "venue": "Zhou, \u201cGraphcodebert: Pre-training code representations with data flow,\u201d in 9th International Conference on Learning Representations, ICLR 2021, Virtual Event, Austria, May 3-7, 2021. OpenReview.net",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Z. Feng",
+                "D. Guo",
+                "D. Tang",
+                "N. Duan",
+                "X. Feng",
+                "M. Gong",
+                "L. Shou",
+                "B. Qin",
+                "T. Liu",
+                "D. Jiang"
+            ],
+            "title": "and M",
+            "venue": "Zhou, \u201cCodebert: A pre-trained model for programming and natural languages,\u201d in Findings of the Association for Computational Linguistics: EMNLP 2020, Online Event, 16-20 November 2020, ser. Findings of ACL, T. Cohn, Y. He, and Y. Liu, Eds., vol. EMNLP 2020. Association for Computational Linguistics",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D. Guo",
+                "S. Lu",
+                "N. Duan",
+                "Y. Wang",
+                "M. Zhou"
+            ],
+            "title": "and J",
+            "venue": "Yin, \u201cUnixcoder: Unified cross-modal pre-training for code representation,\u201d in Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), ACL 2022, Dublin, Ireland, May 22-27, 2022, S. Muresan, P. Nakov, and A. Villavicencio, Eds. Association for Computational Linguistics",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Zhang",
+                "S. Panthaplackel",
+                "P. Nie",
+                "J.J. Li"
+            ],
+            "title": "and M",
+            "venue": "Gligoric, \u201cCoditt5: Pretraining for source code and natural language editing,\u201d in 37th IEEE/ACM International Conference on Automated Software Engineering, ASE 2022, Rochester, MI, USA, October 10-14, 2022. ACM",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C. Niu",
+                "C. Li",
+                "V. Ng",
+                "J. Ge",
+                "L. Huang"
+            ],
+            "title": "and B",
+            "venue": "Luo, \u201cSpt-code: Sequenceto-sequence pre-training for learning source code representations,\u201d in 44th IEEE/ACM 44th International Conference on Software Engineering, ICSE 2022, Pittsburgh, PA, USA, May 25-27, 2022. ACM",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Guo",
+                "Y. Fan",
+                "Q. Ai"
+            ],
+            "title": "and W",
+            "venue": "B. Croft, \u201cA deep relevance matching model for ad-hoc retrieval,\u201d in Proceedings of the 25th ACM International Conference on Information and Knowledge Management, CIKM 2016, Indianapolis, IN, USA, October 24-28, 2016, S. Mukhopadhyay, C. Zhai, E. Bertino, F. Crestani, J. Mostafa, J. Tang, L. Si, X. Zhou, Y. Chang, Y. Li, and P. Sondhi, Eds. ACM",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "C. Xiong",
+                "Z. Dai",
+                "J. Callan",
+                "Z. Liu"
+            ],
+            "title": "and R",
+            "venue": "Power, \u201cEnd-to-end neural ad-hoc ranking with kernel pooling,\u201d in Proceedings of the 40th International ACM SIGIR Conference on Research and Development in Information Retrieval, Shinjuku, Tokyo, Japan, August 7-11, 2017, N. Kando, T. Sakai, H. Joho, H. Li, A. P. de Vries, and R. W. White, Eds. ACM",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Y. Luan",
+                "J. Eisenstein",
+                "K. Toutanova",
+                "M. Collins"
+            ],
+            "title": "Sparse",
+            "venue": "dense, and attentional representations for text retrieval,\u201d Trans. Assoc. Comput. Linguistics, vol. 9, pp. 329\u2013345",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Sachdev",
+                "H. Li",
+                "S. Luan",
+                "S. Kim",
+                "K. Sen"
+            ],
+            "title": "and S",
+            "venue": "Chandra, \u201cRetrieval on source code: a neural code search,\u201d in Proceedings of the 2nd ACM SIGPLAN International Workshop on Machine Learning and Programming Languages, MAPL@PLDI 2018, Philadelphia, PA, USA, June 18-22, 2018, J. Gottschlich and A. Cheung, Eds. ACM",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "N.D.Q. Bui",
+                "Y. Yu"
+            ],
+            "title": "and L",
+            "venue": "Jiang, \u201cSelf-supervised contrastive learning for code retrieval and summarization via semantic-preserving transformations,\u201d in SIGIR \u201921: The 44th International ACM SIGIR Conference on Research and Development in Information Retrieval, Virtual Event, Canada, July 11-15, 2021, F. Diaz, C. Shah, T. Suel, P. Castells, R. Jones, and T. Sakai, Eds. ACM",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Wan",
+                "J. Shu",
+                "Y. Sui",
+                "G. Xu",
+                "Z. Zhao",
+                "J. Wu"
+            ],
+            "title": "and P",
+            "venue": "S. Yu, \u201cMultimodal attention network learning for semantic source code retrieval,\u201d in 34th IEEE/ACM International Conference on Automated Software Engineering, ASE 2019, San Diego, CA, USA, November 11-15, 2019. IEEE",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J. Devlin",
+                "M. Chang",
+                "K. Lee"
+            ],
+            "title": "and K",
+            "venue": "Toutanova, \u201cBERT: pre-training of deep bidirectional transformers for language understanding,\u201d in Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, NAACL-HLT 2019, Minneapolis, MN, USA, June 2-7, 2019, Volume 1 (Long and Short Papers), J. Burstein, C. Doran, and T. Solorio, Eds. Association for Computational Linguistics",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "T.B. Brown",
+                "B. Mann",
+                "N. Ryder",
+                "M. Subbiah",
+                "J. Kaplan",
+                "P. Dhariwal",
+                "A. Neelakantan",
+                "P. Shyam",
+                "G. Sastry",
+                "A. Askell",
+                "S. Agarwal",
+                "A. Herbert- Voss",
+                "G. Krueger",
+                "T. Henighan",
+                "R. Child",
+                "A. Ramesh",
+                "D.M. Ziegler",
+                "J. Wu",
+                "C. Winter",
+                "C. Hesse",
+                "M. Chen",
+                "E. Sigler",
+                "M. Litwin",
+                "S. Gray",
+                "B. Chess",
+                "J. Clark",
+                "C. Berner",
+                "S. McCandlish",
+                "A. Radford",
+                "I. Sutskever"
+            ],
+            "title": "and D",
+            "venue": "Amodei, \u201cLanguage models are few-shot learners,\u201d in Advances in Neural Information Processing Systems 33: Annual Conference on Neural Information Processing Systems 2020, NeurIPS 2020, December 6-12, 2020, virtual, H. Larochelle, M. Ranzato, R. Hadsell, M. Balcan, and H. Lin, Eds.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "X. Li",
+                "Y. Gong",
+                "Y. Shen",
+                "X. Qiu",
+                "H. Zhang",
+                "B. Yao",
+                "W. Qi",
+                "D. Jiang",
+                "W. Chen"
+            ],
+            "title": "and N",
+            "venue": "Duan, \u201cCoderetriever: Large-scale contrastive pretraining for code search,\u201d in the Association for Computational Linguistics: EMNLP 2022",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "X. Wang",
+                "Y. Wang",
+                "Y. Wan",
+                "J. Wang",
+                "P. Zhou",
+                "L. Li",
+                "H. Wu"
+            ],
+            "title": "and J",
+            "venue": "Liu, \u201cCODE-MVP: learning to represent source code from multiple views with contrastive pre-training,\u201d in Findings of the Association for Computational Linguistics: NAACL 2022, Seattle, WA, United States, July 10-15, 2022, M. Carpuat, M. de Marneffe, and I. V. M. Ru\u0131\u0301z, Eds. Association for Computational Linguistics",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Lachaux",
+                "B. Rozi\u00e8re",
+                "M. Szafraniec"
+            ],
+            "title": "and G",
+            "venue": "Lample, \u201cDOBF: A deobfuscation pre-training objective for programming languages,\u201d in Advances in Neural Information Processing Systems 34: Annual Conference on Neural Information Processing Systems 2021, NeurIPS 2021, December 6-14, 2021, virtual, M. Ranzato, A. Beygelzimer, Y. N. Dauphin, P. Liang, and J. W. Vaughan, Eds.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "W.U. Ahmad",
+                "S. Chakraborty",
+                "B. Ray"
+            ],
+            "title": "and K",
+            "venue": "Chang, \u201cUnified pretraining for program understanding and generation,\u201d in Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, NAACL- HLT 2021, Online, June 6-11, 2021, K. Toutanova, A. Rumshisky, L. Zettlemoyer, D. Hakkani-T\u00fcr, I. Beltagy, S. Bethard, R. Cotterell, T. Chakraborty, and Y. Zhou, Eds. Association for Computational Linguistics",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Huang",
+                "D. Tang",
+                "L. Shou",
+                "M. Gong",
+                "K. Xu",
+                "D. Jiang",
+                "M. Zhou",
+                "N. Duan"
+            ],
+            "title": "Cosqa: 20",
+            "venue": "000+ web queries for code search and question answering,\u201d in Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Language Processing, ACL/IJCNLP 2021, (Volume 1: Long Papers), Virtual Event, August 1-6, 2021, C. Zong, F. Xia, W. Li, and R. Navigli, Eds. Association for Computational Linguistics",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Zeng",
+                "Y. Yu",
+                "S. Li",
+                "X. Xia",
+                "Z. Wang",
+                "M. Geng",
+                "L. Bai",
+                "W. Dong"
+            ],
+            "title": "and X",
+            "venue": "Liao, \u201cdegraphcs: Embedding variable-based flow graph for neural code search,\u201d ACM Trans. Softw. Eng. Methodol., vol. 32, no. 2, pp. 34:1\u201334:27",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "H. Li",
+                "C. Miao",
+                "C. Leung",
+                "Y. Huang",
+                "Y. Huang",
+                "H. Zhang"
+            ],
+            "title": "and Y",
+            "venue": "Wang, \u201cExploring representation-level augmentation for code search,\u201d in Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing, EMNLP 2022, Abu Dhabi, United Arab Emirates, December 7-11, 2022, Y. Goldberg, Z. Kozareva, and Y. Zhang, Eds. Association for Computational Linguistics",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Y. Hao",
+                "L. Dong",
+                "F. Wei"
+            ],
+            "title": "and K",
+            "venue": "Xu, \u201cSelf-attention attribution: Interpreting information interactions inside transformer,\u201d in Thirty-Fifth AAAI Conference on Artificial Intelligence, AAAI 2021, Thirty-Third Conference on Innovative Applications of Artificial Intelligence, IAAI 2021, The Eleventh Symposium on Educational Advances in Artificial Intelligence, EAAI 2021, Virtual Event, February 2-9, 2021. AAAI Press",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A. Vaswani",
+                "N. Shazeer",
+                "N. Parmar",
+                "J. Uszkoreit",
+                "L. Jones",
+                "A.N. Gomez",
+                "L. Kaiser"
+            ],
+            "title": "and I",
+            "venue": "Polosukhin, \u201cAttention is all you need,\u201d in Advances in Neural Information Processing Systems 30: Annual Conference on Neural Information Processing Systems 2017, December 4-9, 2017, Long Beach, CA, USA, I. Guyon, U. von Luxburg, S. Bengio, H. M. Wallach, R. Fergus, S. V. N. Vishwanathan, and R. Garnett, Eds.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "A. van den Oord",
+                "Y. Li",
+                "O. Vinyals"
+            ],
+            "title": "Representation learning with contrastive predictive coding,",
+            "venue": "CoRR, vol",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "K. He",
+                "H. Fan",
+                "Y. Wu",
+                "S. Xie"
+            ],
+            "title": "and R",
+            "venue": "B. Girshick, \u201cMomentum contrast for unsupervised visual representation learning,\u201d in 2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition, CVPR 2020, Seattle, WA, USA, June 13-19, 2020. Computer Vision Foundation / IEEE",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "H. Husain",
+                "H. Wu",
+                "T. Gazit",
+                "M. Allamanis"
+            ],
+            "title": "and M",
+            "venue": "Brockschmidt, \u201cCodesearchnet challenge: Evaluating the state of semantic code search,\u201d CoRR, vol. abs/1909.09436",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Lu",
+                "D. Guo",
+                "S. Ren",
+                "J. Huang",
+                "A. Svyatkovskiy",
+                "A. Blanco",
+                "C.B. Clement",
+                "D. Drain",
+                "D. Jiang",
+                "D. Tang",
+                "G. Li",
+                "L. Zhou",
+                "L. Shou",
+                "L. Zhou",
+                "M. Tufano",
+                "M. Gong",
+                "M. Zhou",
+                "N. Duan",
+                "N. Sundaresan",
+                "S.K. Deng",
+                "S. Fu"
+            ],
+            "title": "and S",
+            "venue": "Liu, \u201cCodexglue: A machine learning benchmark dataset for code understanding and generation,\u201d in Proceedings of the Neural Information Processing Systems Track on Datasets and Benchmarks 1, NeurIPS Datasets and Benchmarks 2021, December 2021, virtual, J. Vanschoren and S. Yeung, Eds.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Z. Yao",
+                "D.S. Weld",
+                "W. Chen"
+            ],
+            "title": "and H",
+            "venue": "Sun, \u201cStaqc: A systematically mined question-code dataset from stack overflow,\u201d in Proceedings of the 2018 World Wide Web Conference on World Wide Web, WWW 2018, Lyon, France, April 23-27, 2018, P. Champin, F. Gandon, M. Lalmas, and P. G. Ipeirotis, Eds. ACM",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "X. Wang",
+                "Y. Wang",
+                "P. Zhou",
+                "F. Mi",
+                "M. Xiao",
+                "Y. Wang",
+                "L. Li",
+                "X. Liu",
+                "H. Wu",
+                "J. Liu"
+            ],
+            "title": "and X",
+            "venue": "Jiang, \u201cSyncoBERT: contrastive learning for syntax enhanced code pre-trained model,\u201d CoRR, vol. abs/2108.04556",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "However, the typical dual-encoder architecture falls short in modeling token-level interactions between query and code, which limits the model\u2019s capabilities. In this paper, we propose a novel approach to address this limitation, introducing a crossencoder architecture for code search that jointly encodes the semantic matching of query and code. We further introduce a Retriever-Ranker (RR) framework that cascades the dualencoder and cross-encoder to promote the efficiency of evaluation and online serving. Moreover, we present a probabilistic hard negative sampling method to improve the cross-encoder\u2019s ability to distinguish hard negative codes, which further enhances the cascade RR framework. Experiments on four datasets using three code PLMs demonstrate the superiority of our proposed method.\nI. INTRODUCTION\nCode search is a crucial task in software engineering, which aims to retrieve relevant code snippets from large code repositories for a given natural language query [1]\u2013[3]. The core of code search is to predict whether queries are relevant to codes. Traditionally, classical information retrieval (IR) methods such as term frequency-inverse document frequency (TF-IDF) have been widely adopted for code search [4]. Specialized rules are often designed to extract features of codes [5], and term frequencies are exploited to identify relevant queries and codes [6]. However, traditional IR methods have some inherent limitations; for instance, the designed rules are hard to cover complex and implicit features about the matching between queries and codes and the term mismatch issue can limit the ability to discover useful codes.\nRecently, deep learning techniques, particularly Pretrained Language Models (PLMs), have demonstrated remarkable success in the code search task, thanks to their ability to learn complex and implicit features [1], [7]. The PLMs employed\nin code search tasks generally undergo two stages: pretraining and finetuning. Pretraining involves training the model with universal pretext tasks to enhance its code understanding ability. These tasks include masked language modeling [8], identifier prediction [7], contrastive learning [9], editing [10], and more. Finetuning involves training the model with the search task to improve its code search ability. Specifically, the search task aims to maximize the relevance score between relevant query and code while minimizing the relevance score between irrelevant query and code. While previous research on PLMs for code search primarily focuses on the pretraining stage, i.e., proposing various training tasks to enhance the model\u2019s code understanding ability, there has been little focus on the finetuning stage. Thus, our paper mainly focuses on improving the finetuning stage for code search.\nDuring the fine-tune stage, pre-trained language models (PLMs) typically employ a dual-encoder architecture for code search, as shown in Figure 1(a). This architecture separately encodes the query and code to obtain their embeddings as\nar X\niv :2\n30 5.\n04 50\n8v 1\n[ cs\n.S E\n] 8\nM ay\nsemantic representations and then computes the relevance score between them based on these embeddings [9]\u2013[11]. However, while the dual-encoder can fully model the tokenlevel interactions within the query and code separately using self-attention mechanisms [12], [13], it cannot model the token-level interactions between them. As a result, the dualencoder\u2019s capability to learn fine-grained interactions between query and code tokens is limited.\nIn this paper, we propose Retriever and Ranker with Probabilistic Hard Negative Sampling method (R2PS) for code search, which is a patch designed to be used with different code PLMs. Compared to previous work that finetunes code PLMs with the dual-encoder architecture, R2PS has the following three advantages:\na) Strong Model Capability: To overcome the dualencoder\u2019s limitations in model capability, we propose a crossencoder architecture for code search, as illustrated in Figure 1(b). The cross-encoder first concatenates the query and code tokens and then encodes the concatenated query and code together. This approach allows the self-attention mechanism in the PLM encoder to model the token-level interactions between query and code, thereby improving the model\u2019s capability.\nb) Balance of Effectiveness and Efficiency: While effective, the cross-encoder requires concatenating each query with all codes in the codebase and encoding all the concatenations for evaluation and online serving. This approach is infeasible when dealing with large codebases containing millions of code snippets. On the other hand, the dual-encoder architecture can encode all codes in the codebase during data preprocessing and only needs to encode the query to find relevant codes based on their embeddings during online serving. To take advantage of both the cross-encoder\u2019s effectiveness and the dual-encoder\u2019s efficiency, we introduce a retriever-ranker framework for code search. This framework consists of a dualencoder as the retriever module to retrieve a small set of possibly relevant codes for the query and a cross-encoder as the ranker module to further rank this small set of codes. In this way, the cross-encoder only needs to encode the query and the retrieved codes, making it efficient for evaluation and online serving.\nc) Reasonable Training Method: To further improve the performance of the cascade RR framework, we propose a probabilistic hard negative sampling strategy to sample negative samples to train the cross-encoder. We remove two kinds of codes from the candidate negative samples according to the relevance scores of the queries and codes calculated by the well-trained dual-encoder. First, we remove codes with low relevance scores, indicating that these codes are irrelevant to the queries. This approach ensures that the cross-encoder only samples codes with high relevance scores as hard negative samples, improving its ability to distinguish relevant code from codes with high relevance scores retrieved by the dualencoder. Second, we remove codes with very high relevance scores, indicating that these codes are possibly relevant to the queries but are not labeled in the dataset. This approach mit-\nigates the risk of sampling false negative samples (unlabeled positive samples) to train the model, thereby improving its performance. Finally, we rescale the relevance scores of the remaining codes returned by the dual-encoder as the sample probability and sample codes according to this probability as negative samples to train the cross-encoder.\nIn summary, the main contributions of our paper are as follows: \u2022 We identify the limitations of the dual-encoder architecture\nand propose an alternative approach using the cross-encoder architecture to improve model\u2019s capability for code search.\n\u2022 We introduce the RR framework, which leverages the strengths of both cross-encoder and dual-encoder architectures for code search.\n\u2022 We propose a novel sampling strategy, probabilistic hard negative sampling, which more effectively trains the crossencoder model by sampling negative codes.\n\u2022 We Conduct comprehensive experiments on four datasets using three code encoders, and demonstrate the superiority of our proposed method."
+        },
+        {
+            "heading": "II. RELATED WORK",
+            "text": "In this section, we briefly review the related work from three aspects, including code search, pretrained language models for software engineering, and finetuning PLMs for code search."
+        },
+        {
+            "heading": "A. Code Search",
+            "text": "Code search aims to find relevant codes for given queries [14], [15]. The core of code search is to predict whether queries are relevant to codes [1], [16]. To determine the relevance score, traditional information retrieval (IR) methods mainly rely on rule-based code search, such as term matching (e.g., term frequency-inverse document frequency, TF-IDF), and manually-designed features based on the analysis of the abstract syntax tree of codes [4]\u2013[6]. However, these methods lack the ability to understand semantic information and have some limitations: (1) The term mismatch problem limits the ability to identify potentially useful codes; (2) Manually-designed features are inadequate for capturing complex and implicit features.\nTo overcome the limitations of IR-based methods, deep learning has been applied to the code search task to learn semantic representations of queries and codes [15]. The relevance score is typically calculated using a factorized query embedding and code embedding [2]. The query embedding is generated using natural language processing (NLP) models such as fastText [15], LSTM [1], or GRU [2]. Various methods have been employed to calculate the code embedding, including LSTM [17], MLP [1], and Graph Neural Network [3]. Code can be represented by various data structures through code static analysis [5], such as Abstract Syntax Tree (AST) [3], variable and function name [1]. To encode these different structures, a variety of models have been proposed [17]. While these techniques reduce the need for human-designed rules, they still require human effort to create effective data structures and train the models on them."
+        },
+        {
+            "heading": "B. Pretrained Language Models (PLMs)",
+            "text": "a) PLMs for NLP: Recent years have seen significant success in the field of natural language processing (NLP) thanks to pre-trained language models (PLMs), which have become the primary paradigm in this area [18]. These models are transformer-based and trained with self-supervised learning using a large set of unlabeled data. The most commonly used pre-training task involves the \u201cmask then predict\u201d strategy, where tokens in a sequence are masked and predicted based on the surrounding tokens. For instance, BERT [18] masks tokens randomly and predicts them based on the left tokens, while GPT [19] masks the latter tokens in a sequence and predicts them based on former tokens. Pre-trained models can then be fine-tuned on many downstream tasks such as sentiment classification and summarization to transfer PLM knowledge, leading to state-of-the-art performance in these tasks.\nb) PLMs for Software Engineering: Motivated by the huge succees of pretrained language models (PLMs) in the NLP field, many researchers introduce PLMs to software engineering field [10], [11], [20]\u2013[22]. Various code PLMs have been trained from different perspectives, with some based on language modeling [8], [23], and others based on coderelevant tasks such as link prediction on abstract syntax tree (AST) and data flow graph (DFG) [7], [11], or contrastive learning with regard to multi-modals about code [9]. Following pretraining, code PLMs can be finetuned on code downstream tasks, such as code search and code generation, significantly outperforming previous models.\nWhile much of the research on code PLMs focuses on designing different pretraining tasks to improve their general ability, little attention has been given to improving the finetuning stage for specific downstream tasks. This suggests that the potential of PLMs for downstream tasks has not been fully exploited. In this paper, we focus on improving the finetuning stage of PLMs for the code search task, exploring ways to make the models more suitable for this task."
+        },
+        {
+            "heading": "C. Finetuning PLMs for Code Search",
+            "text": "When using pre-trained language models (PLMs) for code search, the most commonly employed approach is the dualencoder architecture [7], [9], [21]. In this method, the PLM serves as an encoder to extract query and code embeddings, which are then used to compute the relevance score. Notably, the dual-encoder architecture for fine-tuning code PLMs is similar to prior deep learning approaches for training models on code search tasks [1]. The key difference lies in the choice of encoder. While previous work utilized encoders such as LSTM and GNN, the PLM based models relies on the pretrained Transformer encoder.\nTo optimize the model, various loss functions have been adopted for the code search task. One approach is to treat the task as a binary classification problem, where the objective is to determine whether a query is relevant to a code or not. In this case, a binary classification loss can be utilized to optimize the code search model, as proposed in [24]. However, the code search task requires ranking all codes\naccording to their relevance scores with a query, is actually a ranking task. Therefore, the binary classification loss is not entirely consistent with the ranking setting. To address this, some previous works have proposed using the pairwise loss to optimize the code search model. This approach involves maximizing the relevance score margin between a query and its relevant code compared to its irrelevant code [1], [3], [17], [25]. Furthermore, other studies have proposed optimizing the model by maximizing the relevance scores of a query with its relevant code and simultaneously minimizing the relevance scores of this query with many irrelevant codes [7], [20], [26]."
+        },
+        {
+            "heading": "III. METHOD",
+            "text": "In this section, we present a retriever and ranker framework with a probabilistic hard negative sampling method for code search, which is a flexible and universal patch and can be applied to many code PLMs to improve the performance of previous work for the code search task. We begin by introducing the code search task and the dual-encoder architecture which is typically used for finetune PLMs for code search. We then introduce the cross-encoder architecture and the retrieval and ranker framework for the code search task. We then delve into the details of the probabilistic hard negative sampling method, which is used to train the cross-encoder within the RR framework. Finally, we provide an in-depth analysis of RR/R2PS, highlighting its superior model capabilities and complexity."
+        },
+        {
+            "heading": "A. Task Formulation and Dual-encoder",
+            "text": "Assuming we have a large code corpus containing various code snippets ci, where i = 1, 2, \u00b7 \u00b7 \u00b7 , N , each implementing a specific function. Given a user query q, described in natural language, the objective of code search is to quickly identify and present a small amount of relevant codes to the user based on relevance scores (also known as similarities). The core of code search lies in two perspectives: (1) Precision: precisely estimate the relevance scores of queries and codes; (2) Efficiency: rapidly estimate the relevance scores of the query and all codes in the code corpus. The definitions for used notations in this paper are shown in Table I.\nAs depicted in Figure 1(a), the dual-encoder architecture is commonly used to predict relevance scores for PLM-based code search. Firstly, the query and code are tokenized to token sequence. Then, the PLM encoder maps the query and code token sequence to query embedding and code embedding, respectively, Finally, the relevance score of the query and code is calculate by the dot product of the two embeddings. The dual-encoder architecture can be formulated as:\nsdual(q, c) =< E(q), E(c) >, (1)\nwhere E() denotes the PLM encoder, <,> denotes the dot product operation, q and c denote the token sequence of query and code, respectively. The PLM is essentially a transformerbased model, with self-attention of all tokens in the sequence to learn interactions among the tokens [27]."
+        },
+        {
+            "heading": "B. Cross-encoder and RR Framework",
+            "text": "a) Motivation: Trasnformer-based models [28] are powerful thanks to their self-attention mechanism that enables them to model full token interactions within a sequence. In the Transformer architecture, self-attention can be formulated as follows:\nH \u2032 = softmax( QKT\u221a d )V , (2)\nwhere Q = HW1, K = HW2, V = HW3 are linearly projected by the hidden representation H , H denotes the representation matrix of all tokens in the sequence, with each row corresponding to a specific token, H \u2032 denotes the representation matrix after self-attention operation, \u221a d denotes the scaling factor, softmax(QK T\n\u221a d ) is attention matrix of Transformer.\nFrom element perspective, the i-th token in the sequence can be formualted as:\nh \u2032\ni = l\u2211 j=1 st(< qi,kj >)vj , (3)\nwhere h \u2032\ni, qi, kj , vj denote the representation vectors of i/jth token in the corresponding matrix, < qi,kj > denotes dotproduct of vector qi and kj which can be regarded as the interaction of i-th and j-th tokens, st() denotes the scaling operation and softmax operation about j = 1, 2, \u00b7 \u00b7 \u00b7 , l. Thus, the embedding of each token, h \u2032\ni, is obtained by modeling its interactions with all tokens in the sequence (< qi,kj >, j = 1, 2, \u00b7 \u00b7 \u00b7 , l) and fusing all tokens information according to the interactions.\nTherefore, the dual-encoder for code search can model the token-level interactions within both query tokens and code tokens with Transformer-based encoder E(). Specifically, E(q) models all interactions in the query token sequence q = (sq1, s q 2, \u00b7 \u00b7 \u00b7 , s q l ), including all pairs (s q i , s q j), where i, j = 1, 2, \u00b7 \u00b7 \u00b7 , l; Similarly, E(c) models all interactions in the code token sequence c = (sc1, s c 2, \u00b7 \u00b7 \u00b7 , scm), including all pairs (sci , s c j), where i, j = 1, 2, \u00b7 \u00b7 \u00b7 ,m. However, the model\ncannot directly model token-level interactions between query and code tokens (sqi , s c j) where i = 1, 2, \u00b7 \u00b7 \u00b7 , l and j = 1, 2, \u00b7 \u00b7 \u00b7 ,m, This limitation restricts the model\u2019s capability and effectiveness in code search.\nb) Cross-encoder: To improve the model capability of PLMs for code search, we propose using a cross-encoder to model the token-level interactions between query and code. Specifically, we concatenate the query token sequence and code token sequence to a unified sequence, then use the PLM encoder to map the unified sequence into an embedding, and finally use a neural network head to map the embedding to a scalar that represents the relevance score of the query and code. The cross-encoder architecture can be represented as:\nscross(q, c) = NN(E([q, c])), (4)\nwhere [q, c] = (sq1, s q 2, \u00b7 \u00b7 \u00b7 , s q l , s c 1, s c 2, \u00b7 \u00b7 \u00b7 , scm) denotes the concatenation of query and code, E() denotes the PLM encoder, and NN() denotes the neural network head.\nIn this way, the query tokens and code tokens are inputed into the Transformer model together, and thus all token-level interactions can be effectively modeled, including not only interactions within query (sqi , s q j) and code (s c i , s c j), but also those between query and code (sqi , s c j), (s c j , s q i ). As a result of its ability to learn the cross-interactions between query and code, we refer to this model as the cross-encoder framework. Compared to the dual-encoder, the model capability of the cross-encoder is stronger, making it more precise for code search.\nc) Retriever and Ranker Framework: During the inference stage, the cross-encoder must encode all possible concatenations of each query and all codes in the codebase using the PLM encoder. This enables the cross-encoder to retrieve the relevant code snippets based on their respective relevance scores. However, given that the codebase is typically vast and comprises millions of codes, this process demands a significant amount of computing resources. As a result, the cross-encoder can be slow to provide results when serving online, which can impact its efficiency.\nTo make the cross-encoder practical for code search, we introduce a Retriever and Ranker framework (RR) for code search, as illustrated in Figure 2. The RR framework comprises two cascaded modules: (1) A dual-encoder module is employed as the retriever to identify k codes with the highest relevance scores for a given user query; (2) A cross-encoder module is used as the ranker to rank the k codes further.\nWe explain the rationality behind the efficiency of the RR framework for code search as follows: In the dual-encoder model, we can compute the code embeddings of all the codes in the codebase during pre-processing and store them as E(ci), where i = 1, 2, \u00b7 \u00b7 \u00b7 , N . Therefore, during evaluation and online serving, the retriever only needs to compute the embedding of the given query, E(q), and match it with the pre-calculated code embeddings to calculate the relevance scores. The cross-encoder model then determines the relevance scores between the query and the retrieved k codes, and ranks them accordingly. As a result, the online encoding time for\na query only involves one forward propagation of the dualencoder for the query and k forward propagations of the crossencoder for the concatenations of the query and k codes. This computational process is independent of the number of codes in the codebase. By increasing k, the dual-encoder finds more relevant codes for the cross-encoder to rank, which results in better performance. However, with a smaller value of k, the cross-encoder performs fewer propagations, which reduces the computing cost. Thus, choosing the appropriate value of k can balance the performance and computing cost."
+        },
+        {
+            "heading": "C. Training Method",
+            "text": "The cascaded RR framework consists of two modules that perform distinct functions. The dual-encoder module retrieves data from the codebase, which contains all codes, and its ability to predict the relevance scores of all codes is crucial. On the other hand, the cross-encoder module ranks a small number of retrieved codes that have high relevance scores, as determined by the dual-encoder. Thus, its ability to predict the relevance scores of these potentially relevant codes is of utmost importance. Therefore, it is essential to design different training goals for the two modules to optimize their performance.\nThe goal of training a code search model is to learn a relevance estimation function that assigns higher scores to relevant codes for queries compared to those that are irrelevant. To achieve this, we sample some irrelevant codes as negative samples and aim to maximize the relevance scores of the relevant codes while minimizing the relevance scores of the sampled codes. Our method employs the InfoNCE loss [29], [30] as loss function, which can be formulated as:\nLq = \u2212log es(q,c\n+)/\u03c4 es(q,c+)/\u03c4 + \u2211m i=1 e s(q,c\u2212i )/\u03c4 , (5)\nwhere q is a query, c+ is a relevant code of the query q, and c\u2212i is the set of sampled negative codes, \u03c4 denotes the temperature hyper-parameter, s(q, c) denotes the relevance score of the query-code pair estimated by the PLM encoders. Minimizing this loss will result in increasing the relevance score of the relevant query-code pair s(q, c+) and decreasing the relevance scores of the query with irrelevant codes s(q, c\u2212i ).\nAs mentioned before, it is crucial for the dual-encoder to predict the relevance scores of queries with all codes in the codebase. Therefore, our primary objective is to train the model to enhance its ability to retrieve potentially relevant\ncodes from the entire codebase. To achieve this, we utilize a method of negative sampling wherein we randomly select codes from the entire codebase as negative samples to train the model. In practice, we employ the in-batch negative sampling technique, which treats the codes in the sampled batch as negative samples. Specifically, given a batch data {(qj , cj)}bj=1, where code cj is relevant to query qj , all other codes ci, where i 6= j are deemed as negative samples of query qj . Since the batch data is randomly sampled from the training set, we can consider other codes in the batch as randomly sampled from the training set.\nOn the other side, it is crucial for the cross-encoder to predict the relevance scores the query with possibly relevant codes retrieved by the dual-encoder. To achieve this, we should train the model to improve its ability to identify relevant codes from those retrieved by the dual-encoder. In pursuit of this objective, we utilize a set of codes predicted to be possibly relevant by the dual-encoder as negative samples for the cross-encoder. The dual-encoder is capable of predicting the relevance scores of each query to all codes, and we can select the codes with high relevance scores as the potentially relevant ones. However, we must exercise caution, as the small set of codes with the highest relevance scores may contain false negatives, which are relevant but not labeled. To prevent the inclusion of such false negatives, we exclude the codes with the highest relevance scores predicted by the dual-encoder from our sampling process.\nTo implement above idea, we propose a probabilistic hard negative sampling method, as shown in Figure 3. The specific process contains the following steps. We first calculate the relevance scores of the query q with all codes ci in the training set using the well-trained dual-encoder. We then eliminate two types of codes from the sampling candidates: (1) the (probably) irrelevant codes whose relevance scores are below a threshold \u03c11, and (2) the (probably) false negative codes whose relevance scores are above a threshold \u03c12. Since the number of irrelevant codes is much greater than the number of false negative codes, the remaining codes are still relatively hard negative samples. We refer to these remaining codes as {c\u2217i }Li=1, which satisfy the condition \u03c11 < sdual(q, c\u2217i ) < \u03c12. Next, we rescale the relevance scores of left code candidates\nas a probability distribution using the following formula:\npi = esdual(q,c\n\u2217 i )/\u03c4 \u2032\u2211L j=1 e sdual(q,c\u2217j )/\u03c4 \u2032 , i = 1, 2, \u00b7 \u00b7 \u00b7 , L, (6)\nand then sample m negative samples according to this probability distribution as negative samples. The parameter \u03c4 \u2032 adjusts the smoothness of the distribution; larger \u03c4 \u2032 results in a smoother distribution, allowing us to sample more codes with higher relevance scores according to the dual-encoder. After sampling m negative codes, we can calculate the InfoNCE loss function and optimize the cross-encoder model.\nThrough the use of a probabilistic hard negative sampling strategy, the cross-encoder is able to be more effectively trained to serve as the ranker module within the cascaded RR framework. This framework is referred to as R2PS. Additionally, the cross-encoder can be optimized by implementing an in-batch negative sampling method as the dual-encoder, which we refer to as RR in our paper."
+        },
+        {
+            "heading": "D. Model Analysis",
+            "text": "We conduct some analysis to exhibit the superiority of the RR/R2PS method. First, we demonstrate the model capability of the cross-encoder and provide rationalization for its effectiveness in comparison to the dual-encoder. We then present a complexity analysis of the dual-encoder, crossencoder, and RR framework to demonstrate the efficiency of the RR framework for evaluation and online serving. Finally, we discuss the process of fine-tuning CodeBERT, which is the work most closely related to our paper.\na) Model Capability: The self-attention mechanism for the query tokens in the dual-encoder can be formualted as:\nHq = AqqV c, (7)\nwhere Aqq \u2208 Rl\u2217l denotes the attention matrix to model the interactions between all query tokens, V q,Hq \u2208 Rl\u2217d is the representation matrix of all query tokens. Similarly, the selfattention mechanism for the code tokens in the dual-encoder can be formualted as:\nHc = AccV c, (8)\nwhere Acc \u2208 Rm\u2217m denotes the attention matrix to model the interactions between all token tokens, V c,Hc \u2208 Rm\u2217d is the representation matrix of all code tokens. These two equations can be combined into one as follows:(\nHq Hc\n) = ( Aqq 0 0 Acc )( V q V c ) . (9)\nThe self-attention mechanism of all tokens in the crossencoder can be formualted as:(\nHq Hc\n) = ( Aqq Aqc\nAcq Acc\n)( V q\nV c\n) , (10)\nwhere Aqc \u2208 Rl\u2217m,Acq \u2208 Rm\u2217l denote the interactions between query and code tokens.\nComparing Equation (9) and Equation (10), we can find that the dual-encoder is actually a special case of the cross-encoder\nwith Aqc = 0 and Acq = 0. Hence, it is apparent that the cross-encoder possesses a stronger model capability than the dual-encoder.\nIn Figure 4, we demonstrate the importance of query-code interactions modeled by Aqc and Acq using a case study. To accurately predict the relevance of a query and code, it is essential to examine the various matching relationships between them in detail, as depicted by the same colors in the figure. The matching query and code tokens facilitate strong interactions in Aqc and Acq , which result in that their representations are enhanced by fusing information within these matching tokens each other with Aqc and Acq . This approach enables the model to learn the matching relationships between query and code tokens more effectively.\nb) Complexity Analysis: Assuming that we have M queries to provide them with relevant codes from a codebase containing N codes, we analyze the complexity about the evaluation with different framework. The search process entails computing the relevance scores of all queries against all codes. These relevance scores are represented by a matrix S \u2208 RM\u2217N , where each row corresponds to a query and each column represents a code.\nWith the dual-encoder architecture, S can be factorized by multiplying the embedding matrix of all queries and codes, as expressed in the following equation:\nS = QCT , (11)\nwhere Q \u2208 RM\u2217d and C \u2208 RN\u2217d, d denotes the embedding dimension. Each row in Q and C is the output of PLM encoder for corresponding query and code. Therefore, M rounds of PLM propagation for queries and N rounds of PLM propagation for codes are sufficient. As a result, the dualencoder approach offers a complexity of O(M +N).\nOn the contrary, the dual-encoder cannot factorize S as the dual-encoder. Each element in S must be calculated by propagation of the PLM encoder. S consists of M \u2217N elements, making the complexity of the cross-encoder O(M \u2217N).\nThe RR framework comprises of two cascade modules. Firstly, a dual-encoder is used to retrieve relevant codes from the entire codebase, which has a complexity of O(M + N). Secondly, a cross-encoder is employed to identify relevant codes from the k retrieved codes. For every query, the crossencoder needs to conduct forward propagation k times, re-\nsulting in a complexity of O(M \u2217 k) for the cross-encoder in the RR framework. Therefore, the total complexity of the RR framework can be expressed as O(M \u2217 (1 + k) +N).\nTable II summarizes the complexities of the three frameworks discussed above. The dual-encoder\u2019s complexity of O(M +N) makes it highly efficient to implement for evaluation. However, the cross-encoder\u2019s complexity of O(M \u2217N) makes it infeasible to implement, as the number of queries and codes are often immense. In contrast, the complexity of the RR framework, given that k is always a small number, is of the same magnitude as that of the dual-encoder but much lower than that of the cross-encoder. Therefore, the RR framework is also highly efficient to implement.\nc) Relation with Finetuning CodeBERT: CodeBERT [8] was the pioneering work that leveraged PLM for the code search task. It utilizes the cross-encoder framework for finetuning and trains the search model using binary classification loss, which suffers from the efficiency problem and is not practical for evaluation purposes on all codes in the codebase. The official code of CodeBERT to evaluate their model by ranking the codes from a batch of 1000 codes rather than the full codebase, which is inconsistent with real scenario and may lead to inaccuracies due to high variance.\nTo address the issue of inconsistency between evaluation and real-world application, the research team behind CodeBERT adopted a different approach in their subsequent work [7], [9]. They abandoned the previous method and instead used a dual-encoder framework for code search. Furthermore, based on the experimental results reported in their later work, it appears that they also re-implemented CodeBERT using the dual-encoder framework and reported the results of finetuning CodeBERT with the dual-encoder framework in their subsequent work. In this paper, we have followed their approach and re-implemented the finetune settings for CodeBERT accordingly.\nEven compared to the original CodeBERT implementation which uses a cross-encoder in the official code [8], our method differs in three key ways. First, we use the RR framework to efficiently cascade the dual-encoder and cross-encoder components. Second, we train our model using rank loss and leverage a probabilistic hard negative method to enhance the training of the cross-encoder. This rank loss differs from the classification loss used in the original CodeBERT implementation and is better suited for a code search setting. Finally, we evaluate our model using all codes in the codebase as candidate codes, whereas CodeBERT only considers a batch of 1000 codes for evaluation."
+        },
+        {
+            "heading": "IV. EXPERIMENTS",
+            "text": "In this section, we conduct experiments on four datasets to evaluate our proposed method. The experiments are designed to address the following research questions: \u2022 RQ1: Can our proposed RR/R2PS patch boost the perfor-\nmance of PLMs for the code search task? \u2022 RQ2: Is the cross-encoder inefficient for online serving? If\nso, can our RR framework overcome this efficiency issue? \u2022 RQ3: How does the number of retrieved code snippets\nimpact the performance and efficiency tradeoff? \u2022 RQ4: Does our R2PS method provide a more reasonable\nranking distribution of relevant code snippets?"
+        },
+        {
+            "heading": "A. Experimental Setup",
+            "text": "Our proposed RR/R2PS is actually a patch during the finetuning stage for the code search task, which can be applied to various pretrained language models designed for code. To fully validate the effectiveness and universality of our proposed method, we use three different code PLMs as backbone models of our RR/R2PS patch, including CodeBERT [8], GraphCodeBERT [7], and UniXcoder [9].\na) Datasets: We evaluate using four code search benchmark datasets: CodeSearchNet (CSN) [7], [31], AdvTest [32], StaQC [33], and CosQA [24]. CSN is collected from GitHub and uses the function comments as queries and the rest as codes. It includes six separate datasets with various programming languages including Ruby, JavaScript, Go, Python, Java, and PHP. AdvTest is a challenging variant of CSNPython that anonymizes function and variable names. StaQC is obtained from StackOverFlow with question descriptions as queries and code snippets in answers as codes. CosQA is a human-annotated dataset with queries collected from Bing search engine and candidate codes generated from a finetuend CodeBERT encoder. Table III summarizes the dataset statistics, including the number of relevant query-code pairs in the training, validation, and test set, and the number of codes in the codebase used for evaluation. The codebase for AdvTest is comprised of all codes in the validation and test sets respectively.\nb) Evaluation Metrics: To evaluate the performance of code search, we use Mean Reciprocal Rank (MRR), a commonly used metric for code search in previous research [9].\nMRR calculates the average reciprocal rank of the relevant codes for all queries. It is defined as:\nMRR = 1 |D| \u2211\n(q,c) inD\n1\nrank (q) c\n, (12)\nwhere rank(q)c is the rank of the relevant code c among all code in the codebase for the query q, and |D| is the total number in the dataset.\nc) Baselines: The compared methods include: (1) CodeBERT [8], which was pretrained on the masked language modeling and replaced token detection task; (2) GraphCodeBERT [7], which was pretrained on additional graph relevant tasks such as link prediction of data flow graph; (3) UniXcoder [9], which was pretrained on addtional language modeling task; (4) SyncoBERT [34], which was pretrained on syntax-enhanced contrastive learning task; (5) CodeRetriever [20], which was pretrained on NL-code contrastive learning task. The reported results of CodeBERT, GraphCodeBERT, and UniXcoder are reproduced by us by re-run their official released code, and the performance is nearly the same as their reported results in their paper.\nd) Implementation Details: During the finetune stage, both the query encoder and the code encoder in the dualencoder share parameters, with the same code pre-trained language model (PLM) used to initialize the two encoders. The cross-encoder is also finetuned based on the corresponding code PLMs. However, it does not share parameters with the previous query and code encoders in the dual-encoder framework. In the RR approach, we train the dual-encoder and the cross-encoder together using in-batch negative sampling strategy. On the other hand, the R2PS approach involves a two-step training process: first, we train the dual-encoder with in-batch negative sampling; then, we train the cross-encoder with negative sampling based on relevance scores calculated by the previous well-trained dual-encoder.\nWe follow the same experimental settings as the series work of CodeBERT, GraphCodeBERT, and UniXcoder, including 10 training epochs, a learning rate of 2e-5 with linear decay, and 0 weight decay. We set the temperature hyper-parameter \u03c4 in the InfoNCE loss function to 0.05 for CSN and CosQA datasets, and 0.025 for AdvTest and StaQC. The number of retrieved codes in the RR architecture is 10. For the CosQA dataset, we use the average of the dual-encoder and crossencoder as the ranker module. In the InfoNCE loss, we set the number of negative samples to 31 to fully utilize the GPU memory. In probabilistic hard negative sampling, we set \u03c11 and \u03c12 to keep only a small set of samples beginning from rank 1 by the dual-encoder for CSN, CosQA, and AdvTest without tuning, and a small set of samples beginning from the top 0.4% rank for StaQC. We set the sampling hyper-parameter 1/\u03c4 \u2032 as 0 without tuning. In fact, the default setting without tuning for most hyper-parameters can achieve satisfying performances in our method. However, the hyper-parameters also keep the flexibility to perform well for some rare data distributions. All experiments are conducted in a server consisting of 8 NVIDIA\nA100-SXM4-80GB GPUs. We will release our code and welltrained model when our paper is published."
+        },
+        {
+            "heading": "B. Performance Comparison(RQ1)",
+            "text": "The performance of compared methods in terms of MRR is shown in Table IV. The RR patch was applied to CodeBERT, GraphCodeBERT, and UniXcoder\u2019s backbone models, while the R2PS patch was applied only to UniXcoder, due to computing resource limitation. From this table, we observe the following: (1) Our proposed RR patch significantly improves the performance of all three backbone models, with an average improvement of 4.7 on CodeBERT, 4.1 on GraphCodeBERT, and 2.8 on UniXcoder across the four datasets. Furthermore, the R2PS patch leads to a substantial improvement of 4.1 MRR for UniXcoder. These results demonstrate the effectiveness of our proposed RR/R2PS method for code search. (2) The performance enhancement of UniXcoder with the RR patch is more significant than GraphCodeBERT and CodeBERT, consistent with their performance without the RR patch. This finding suggests that better-performing code PLMs can achieve even stronger performance when used in conjunction with the RR patch. (3) Overall, UniXcoder with R2PS outperforms all other methods, including the latest CodeRetriever, providing further evidence for the superiority of our proposed method."
+        },
+        {
+            "heading": "C. Efficiency Evaluation (RQ2)",
+            "text": "We conducted a comparison of the computing costs of the dual-encoder, cross-encoder, and our RR framework during the online serving stage. To simulate incoming queries in online serving, we simulate the response processing time when the server receives a user query and infers relevant codes before returning them to the user. The code embeddings were precalculated in the pre-processing stage, and the response time did not include the time required to embed codes for the dualencoder. We conducted experiments with codebase scales of 1,000, 10,000, and 100,000 codes, and calculated the average response time for 100 query requests, using an A100 GPU. Our results, presented in Table V, show that: (1) The dual-encoder and the RR achieve response times of no more than 100ms for a codebase with 100,000 codes, which is efficient for online serving. In contrast, the cross-encoder takes approximately 8 minutes to respond for a codebase of 100,000 codes, which is too long for online serving. (2) The response time of the RR is longer than that of the dual-encoder due to the ranker module in the RR framework. However, the extra time is justified considering the significant performance improvement. (3) As the codebase scale increased by 10 times, the computing time for the cross-encoder increases by about 10 times, while the computing time for the dual-encoder and RR increases slowly (much less than 10 times). This is because the cross-encoder requires the encoding of the concatenation of the given queries and all codes in the codebase during online serving, while the dual-encoder and RR framework calculate the embeddings of all codes in the codebase during the data pre-processing stage."
+        },
+        {
+            "heading": "D. Hyper-parameter Analysis (RQ3)",
+            "text": "We conducted experiments to investigate the impact of varying the number of retrieved codes, k, on both the performance and user satisfaction of our framework. Specifically, we measured user satisfaction by evaluating their tolerance for the response time of the system. To this end, we defined the user satisfaction score, S, as follows:\nS = 100\nt+ 50 , (13)\nwhere t denotes the response time of the model in milliseconds, and we added 50ms to simulate additional system costs such as network delay. For instance, if t equals 50ms, the\ntotal waiting time would be 100ms, resulting in S = 1, which indicates high user satisfaction. Conversely, if t is greater than 150ms, the total waiting time would be over 200ms, and S would be less than 0.5, indicating low user satisfaction.\nFrom the result shown in Figure 5. we can observe that: (1) In general, the MRR of RR/R2PS increases with the larger number of retrieved codes k, but the rate of increase slows down with higher k values. This suggests that retrieving more codes can enhance performance, but the improvement becomes less significant as more codes are retrieved. (2) The performance of R2PS is better than R2 in most cases with different k and different datasets, demonstrating the effectiveness of our proposed probabilistic hard negative sampling strategy for code search. This strategy helps in selecting better codes for training the model, resulting in improved performance. (3) User satisfaction decreases as k increases due to the longer forward propagation time required by the cross-encoder. To achieve higher user satisfaction, it is recommended to use a smaller value of k. (4) The performance of R2PS declines slightly in the CSN-python, CSN-Java, and AdvTest datasets with large k values. With fewer retrieved codes, the candidate codes for the cross-encoder are more difficult, whereas with more retrieved codes, the candidate codes are easier. While hard negative sampling in R2PS enhances the model\u2019s ability to handle hard negative samples, its ability to distinguish easier codes may decrease. This explains the decrease in R2PS performance with large k values. (5) Setting k less than 10 causes a significant decline in performance, while k greater than 20 causes a substantial decrease in user satisfaction. Therefore, we recommend setting k between 10 and 20 in our RR/P2PS method."
+        },
+        {
+            "heading": "E. Rank Distribution Analysis (RQ4)",
+            "text": "We conduct experiments to show whether our RR/R2PS patch can help the PLMs to rank the relevant codes to higher position. Specifically, we figure out the distribution of ranks of relevant codes in the test set, as shown in Figure 6. We can observe: Compared to UniXcoder, our RR/R2PS patch can rank a larger number of relevant codes to top-1 position, and R2PS patch performs better than RR from this point. Larger number of relevant codes in the top-1 position means user can find useful information within top-1 result in the list. Thus, our RR/R2PS can help the PLMs become the more effective code search tool. (2) We find that the rank distributions of the two CSN datasets (Python and Java) are similar, while are different from StaQC and AdvTest. The steady improvements of our RR/R2PS patch on these different datasets further validate the universality of our proposed method."
+        },
+        {
+            "heading": "V. CONCLUSION",
+            "text": "In this paper, our aim is to enhance the performance of PLMs for the code search task during the finetune stage. To achieve this, we introduce several novel approaches. Firstly, we propose a cross-encoder for code search, which enhances the model\u2019s capabilities compared to the typical dual-encoder. Next, we propose a retriever and ranker framework for code\nsearch that balances both effectiveness and efficiency. Finally, we propose a probabilistic negative sampling method to further improve the retriever and ranker framework\u2019s effectiveness. We conducted thorough experiments and found that our R2PS system significantly improves performance while incurring an acceptable extra computing cost.\nIn light of our findings, we propose two potential future directions for research. Firstly, while the probabilistic sampling (PS) method we used for negative sampling proved to be effective in our experiments, it was relatively simple as it is only based the relevance scores of the dual-encoder. We suggest exploring more sophisticated and reasonable sampling methods to further enhance the model\u2019s performance. Secondly, while our paper focused solely on the code search task for code PLMs, these models can also be used for other downstream tasks such as code generation and bug fixing. We believe that exploring finetune methods for code PLMs in other downstream tasks would be a meaningful area of research."
+        }
+    ],
+    "title": "Retriever and Ranker Framework with Probabilistic Hard Negative Sampling for Code Search",
+    "year": 2023
+}

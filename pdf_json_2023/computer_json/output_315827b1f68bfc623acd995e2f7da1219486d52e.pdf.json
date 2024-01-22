@@ -1,0 +1,241 @@
+{
+    "abstractText": "Continuous Blood Glucose (CGM) monitors have revolutionized the ability of diabetics to manage their blood glucose, and paved the way for artificial pancreas systems. In this paper we augment CGM data with sensor input collected by a smart phone and use it to provide analytical tools for patients and clinicians. We collected GPS data, activity classifications, and blood glucose data with a custom iOS application over a 9 month period from a single free-living type-1 diabetic patient. This data set is novel in terms of it\u2019s size, the inclusion of GPS data, and the fact that it was collected nonintrusively from a free-living patient. We describe a method to measure the occurrence of lifestyle events based on GPS and activity data, and show that they can capture instances of food consumption and are therefore correlated to changes in blood glucose. Finally, we incorporate these event representations into our system to create useful visualizations and notifications to aid patients in managing their diabetes.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Sam Royston"
+        }
+    ],
+    "id": "SP:ba9d5bb354b0eb97bb364588f09f6465a94f2d36",
+    "references": [
+        {
+            "authors": [
+                "R. Bunescu",
+                "N. Struble",
+                "C. Marling"
+            ],
+            "title": "Blood glucose level prediction using physiological models and support vector regression",
+            "venue": "International Conference on Machine Learning and Applications,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "C P.-G",
+                "A F",
+                "G S",
+                "C C",
+                "EJ G",
+                "M R",
+                "A de Leiva",
+                "ME. H"
+            ],
+            "title": "Artificial neural network algorithm for online glucose prediction from continuous glucose monitoring",
+            "venue": "Diabetes Technol Ther.,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "E D",
+                "F C",
+                "H L",
+                "BW B",
+                "H Z",
+                "L J",
+                "HP C",
+                "DM W",
+                "BA B",
+                "3rd. D. F"
+            ],
+            "title": "Real-time hypoglycemia prediction suite using continuous glucose monitoring: a safety net for the artificial pancreas",
+            "venue": "Diabetes Care,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "M. Eren-Oruklu",
+                "A. Cinara",
+                "D.K. Rollins",
+                "L. Quinn"
+            ],
+            "title": "Adaptive system identification for estimating future glucose concentrations and hypoglycemia",
+            "venue": "alarms. Automatica,",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "M. Ester",
+                "H.-P. Kriegel",
+                "J. Sander",
+                "X. Xu"
+            ],
+            "title": "A density-based algorithm for discovering clusters in large spatial databases with noise",
+            "year": 1996
+        },
+        {
+            "authors": [
+                "T. Kanungo",
+                "D.M. Mount",
+                "N.S. Netanyahu",
+                "C.D. Piatko",
+                "R. Silverman",
+                "A.Y. Wu"
+            ],
+            "title": "An efficient k-means clustering algorithm: Analysis and implementation",
+            "venue": "IEEE Transactions on Pattern Analysis AND Machine Intelligence,",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "Y. LeCun",
+                "S. Chopra",
+                "R. Hadsell",
+                "M. Ranzato",
+                "F.J. Huang"
+            ],
+            "title": "A tutorial on energy-based learning",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "N. Razavian",
+                "D. Sontag"
+            ],
+            "title": "Temporal convolutional neural networks for diagnoses from lab tests",
+            "venue": "Working Paper,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "R.S. Sherwin",
+                "K.J. Kramer",
+                "J.D. Tobin",
+                "P.A. Insel",
+                "J.E. Liljenquist",
+                "M. Berman",
+                "R. Andres"
+            ],
+            "title": "A model of the kinetics of insulin in man",
+            "venue": "The Journal of Clinical Investigation,",
+            "year": 1974
+        },
+        {
+            "authors": [
+                "N.W. Struble"
+            ],
+            "title": "Measuring glycemic variability and predicting blood glucose levels using machine learning regression models",
+            "venue": "Master\u2019s thesis, Ohio University,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "G.S. Watson"
+            ],
+            "title": "Smooth regression analysis",
+            "venue": "The Indian Journal of Statistics,",
+            "year": 1964
+        }
+    ],
+    "sections": [
+        {
+            "text": "tionized the ability of diabetics to manage their blood glucose, and paved the way for artificial pancreas systems. In this paper we augment CGM data with sensor input collected by a smart phone and use it to provide analytical tools for patients and clinicians. We collected GPS data, activity classifications, and blood glucose data with a custom iOS application over a 9 month period from a single free-living type-1 diabetic patient. This data set is novel in terms of it\u2019s size, the inclusion of GPS data, and the fact that it was collected nonintrusively from a free-living patient. We describe a method to measure the occurrence of lifestyle events based on GPS and activity data, and show that they can capture instances of food consumption and are therefore correlated to changes in blood glucose. Finally, we incorporate these event representations into our system to create useful visualizations and notifications to aid patients in managing their diabetes."
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "Type-I Diabetes is an autoimmune disease characterized by the inability to produce insulin, and correspondingly, the inability to regulate blood glucose. Diabetics must manually administer insulin to maintain stable blood glucose levels, and poor control has been linked to a host of dangerous side effects. Effective regulation of blood glucose is difficult and time consuming; our system offloads portions of the data-collection, regulation and prediction workload onto ubiquitous computing hardware. In addition, current trends in wearable tech point towards CGM technology becoming less invasive and possibly being eventually integrated into consumer fitness devices. Blood glucose is an informative variable that can help describe the way one\u2019s metabolism responds to a meal, or lack thereof; given a less-invasive CGM method, this information might prove useful to a variety of\nPermission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. To copy otherwise, to republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee.\nACM\nnon-diabetics as well as the diabetics who depend on it. We believe that as sensor \u201dtraces\u201d generated by mobile devices become more ubiquitous, the following goals serve as important foundational principles for personal health analytics platforms aimed at diabetes and beyond. Correspondingly, the integrated system we are presenting is designed based on these tenets:\nPrioritizing effectiveness at the personal scale The sensitivity of health data may preclude large scale aggregate analyses in some cases, thus we should focus on approaches that work for n = 1. Accordingly, we focus on a large dataset collected from a single, free-living type-1 diabetic.\nContinuous and unobtrusive data collection. All data is collected autonomously by a mobile phone and is then aggregated, cleaned, and analyzed on an remote server. Effects on the subject\u2019s life were minimal during data collection, and participation involved only turning on a mobile application such that it ran as a background process on their iPhone.\nUtilization of ubiquitous contextual data Data in the form of physical activity estimates, GPS location, and food purchase transactions are combined with data from a continuous blood glucose monitor (CGM) to provide representations and machine learning models that are interpretable and actionable.\nHealth application developers are beholden first and foremost to the needs and preferences of the patient. For example, a state-of-the-art model using many external variables for blood glucose prediction is of little use to the patient if it relies on them to actively input a significant fraction of this data. In short, the patient\u2019s time is the ultimate currency and we hope to spend as little of it as possible.\nLet us define a Diabetes Care Action (DCA) as a an action that a patient takes involving food intake, insulin dosage, or lack thereof. DCAs often involve checking one\u2019s blood glucose, if the tools are available. To illustrate the trade-off between data collection and patient utility, consider a single DCA in which the patient inspects the CGM, insulin pump history, thinks about what they have eaten, and makes a decision for action, which could be either corrective or anticipatory. A typical DCA might be some combination of an insulin \u201cbolus\u201d dosage, corrective sugar intake, or pump basal\nar X\niv :2\n30 2.\n01 40\n0v 1\n[ cs\n.H C\n] 2\nF eb\n2 02\nrate update. A diabetic may make many DCAs throughout the course of the day, and depending on the quality of a DCA it may consume somewhere in the range of 15 seconds and 5 minutes of the patients time (a poor quality or \u201dstreamlined\u201d action may be missing certain considerations, like checking the cgm or pump history). If we develop an analytics application that requires 20 minutes of data entry per day, we must be able to show that this time was better spent doing data entry instead of successfully completing diabetes care actions as described above. We anticipate that due to the patients exclusive knowledge of their own experiences and past metabolic reactions, this \u201ctime well spent\u201d trade-off will be nearly impossible to ever justify in favor of data entry; therefore we aim to focus on data collection methods that take up virtually none of the patients time.\nThe techniques required to make sense of the different types of data form a system designed to improve patient knowledge and diabetes management capabilities in real time. In this paper, our contributions are\n\u2022 Introduction of a large single-person data set which offers a novel combination of real-world predictors at a large scale\n\u2022 A method for constructing discrete \u201cevent\u201d features from unstructured smartphone sensor data which are correlated to changes in blood glucose"
+        },
+        {
+            "heading": "2 Motivation and Related work",
+            "text": "Previous work in the analysis and prediction of blood glucose data is comprised of many approaches. Machine learning research in this area is logistically challenging for a few reasons: CGM benchmark Datasets are not publicly available\nDue to the sensitive nature of medical data, datasets from CGM studies are often not released publicly. This creates a problem for reproducibility and prevents direct comparison of different algorithms. For example, a diabetic with good control will generate CGM data with less variance that may be easier to predict for a wide array of regression techniques. In this paper we use the error of static predictions (the last known value), is used to help characterize how \u201ceasy\u201d the data is to predict.\nCGMs are a black box Continuous glucose monitors make use of proprietary techniques to estimate blood glucose levels via interstitial glucose levels. These systems likely include techniques like Kalman filters, but there is little explicit documentation from companies like Medtronic and Dexcom.\nWe can divide the prediction problem into two problem subtypes: Hypoglycemia prediction and exact Blood Glucose prediction. Hypoglycemia prediction frames the problem in a classification setting and attempts to predict whether a window of measurements will result in hypoglycemia (low Blood Glucose) after within some time horizon. Predicting low Blood Glucose is of particular interest because it poses the most immediate threat to the well-being of the patient, and in especially bad cases, if left untreated can result in loss\nof conciousness, seizure, and rarely, death. Dassau et. al. uses a voting system combining a grab-bag of different predictors to achieve high accuracy in predicting hypoglycemic events [3].\nIn contrast, exact Blood Glucose prediction is a regression problem and is often assessed via measuring the RMSE or R2 error between the actual and predicted values. There have been approaches using artificial neural networks [2], as well as support vector machines and kalman filters [1], [12].\nIn [1], a metabolic model which incorporates insulin levels and food intake is fit to the data using a kalman filter, and the metabolic variables defined by this model are used as features for an SVM to make predictions. A prior attempt by [insert] to directly augment time-series blood glucose features with raw activity and dosage data for training a support vector machine for regression (SVR) was unsucessful and highlighted the importance of feature engineering in this problem. Marling et. al., built on this by using a metabolic model, along with patient recorded activities and insulin dosages to compose improved features for an SVM regressor. Marling et. al. reports a small but statistically significant gain between a version of their model which includes activity data, and one that does not. Rollins et. al. [4] appoaches the problem from a signal processing perspective, and data is recorded over 3 weeks from a type-2 diabetic wearing a bio-sensing body suit.\nA goal of many CGM predictive modeling studies is to aid in the development of an artificial pancreas (AP). In pharmacological parlance, the kinetics of insulin absorption [11] and carbohydrate metabolism are slow enough such that classical control-theoretic frameworks are insufficient for effectively controlling blood glucose levels. For this reason there has been interest in solving prediction tasks that could serve future artificial pancreas control systems."
+        },
+        {
+            "heading": "3 Data Discovery and Prediction",
+            "text": "In this system we focus on the of utilization of \u201cevent\u201d features constructed from location and activity data to improve our ability to predict blood glucose changes."
+        },
+        {
+            "heading": "3.1 Dataset",
+            "text": "We introduce a dataset which contains intermittent location, activity, and blood glucose measurements along with other meta-data collected from a 25 year old male type-1 diabetic. Activity Classes (181,635 measurements) Activity classi-\nfications are performed continuously in the background even when the application is not running and thus are the most frequently collected data type. This is a categorical variable that is either \u2019walking\u2019, \u2019running\u2019, \u2019cycling\u2019, \u2019stationary\u2019, \u2019automotive\u2019, \u2019stationaryautomotive\u2019, or \u2019unknown\u2019\nLocations (61,817 measurements) Locations were actively measured via GPS on the iPhone and sent directly to the server while the application runs in the background. The GPS polling policy is administered by the mobile operating system and generate more data when the device is in motion than when it is stationary,\nand no data at all if the device cannot make contact with the gps satellite\nFood Purchases The server queries various bank apis to catalog time-stamped food purchases, which may include other meta-data like the location of the purchase and it\u2019s cost\nBlood Glucose (50,478 measurements) Blood glucose levels (mg/dl) are measured every 5 minutes via a subcutaneous sensor by an external Dexcom CGM device, which communicates via bluetooth with the user\u2019s phone.\nDue to the wide range of sampling frequencies, we preprocessed the data by coercing it into an array of over 2.8 million feature vectors each representing a time-window of 15 seconds. While the CGM test intervals are only every 5 minutes, by taking a snapshot every 15 seconds we were able to capture much more activity data, which is sometimes sampled at a rate upwards of 4 times per minute."
+        },
+        {
+            "heading": "3.2 Identifying Relevant Events",
+            "text": "An important first step to utilizing location and activity data is to identify candidates for when meals and other types of events occur. Raw location and activity data do not constitute viable features on their own, and does not contribute to prediction accuracy [1], therefore we construct specialized features that are representative of visits to different locations."
+        },
+        {
+            "heading": "3.2.1 Activity Imputation",
+            "text": "As seen in Figure 1, while there is some regularity to CGM sampling, location and activity updates occur at irregular intervals determined by iOS internals which are dependent upon factors such as battery life and relative intensity of motion. Therefore robust imputation methods are needed for filling in the incomplete data. In this section we describe methods for imputing activity measurements.\nNearest Neighbor One of the simplest and most effective methods for imputing activity data is by taking the nearest neighbor activity of the time slot we are trying to impute. However, this method is confounded by more complex patterns, e.g. activity measurements which often alternate.\nRolling Mode This method fills in all the missing activity predictions in a sample with the most frequent activity\nin that sample\nBy using Logistic Regression for imputation, we learn more complex relationships between activities by predicting the likelihood of each possible activity as a linear combination of activities over the sample time window. Concretely, our prediction of the activity at time t is\nargmax a\u2208A\n( x \u00b7wa ) In addition, we can conveiniently compute the likelihood of a given activity a as\nexp(x \u00b7wa) \u2211i\u2208A exp(x) \u00b7wa\nWhere x is a one-hot encoding of activities over some time window of width 2k + 1 centered at t, and wa is the |A| \u00d7 2k+ 1 weight matrix corresponding to activity a. Thus the total set of weights W can be interpreted as a tensor of size |A|\u00d7 |A|\u00d7 2k+ 1. The weights W are learned by minimizing the Negative Log-Likelihood loss defined in [9] via the back-propagation algorithm [8]. An important aspect of this method is that we are left with scalar likelihoods to which we can apply thresholding functions."
+        },
+        {
+            "heading": "3.2.2 Filtering and Clustering Locations",
+            "text": "By using one of the activity imputation methods described above we can filter most location measurements by their imputed activity at the time they were measured (although a few may be outside the range k of any observed activities, in which case they cannot be imputed). In the case of the logistic regression imputation method we can filter locations by the likelihood associated with an activity at a given time.\nIn this section we will be only filtering by stationary location measurements, as these are likely to be taken when the user is consuming food. Granted, there are exceptions to this rule, but we treat these situations (i.e. eating while on the go) as unobserved events.\nTo identify important events in a person\u2019s day, we must discretize the latitude/longitude space via clustering. KMeans clustering [7] is inappropriate in this scenario due to the fact that in K-Means, clusters must be convex and space filling. These constraints are a problem since they do not conform to non-convex human movement patterns and assign labels to areas with little or no data, which can lead to poor generalizability. Temporal methods specially designed for GPS data, such as those described described in [6] may also be useful for clustering, but in practice we experinced difficulty in finding the correct parameters for our setting which involved a multitude of visits to the same locations. Density-Based clustering, or DBScan is an agglomerative clustering method with two parameters: eps and MinPts [5]. DBScan builds clusters C deterministically such that they satify the following conditions for \u2200p,q \u2208Ci,\u2200Ci \u2208 C\n1. If p \u2208 Ci and there exists a path p,q consisting of n points pi, ...pn, pi = p, pn = q such that for i < n \u03c2(p,q) = |NE ps(pi)| \u2265MinPts\u2227 pi+1 \u2208NE ps(pi) is true, then q \u2208Ci\n2. Noting that in general \u03c2(p,q) 6= \u03c2(q, p), if p,q \u2208Ci then \u2203o \u2208Ci such that \u03c2(o, p)\u2227 \u03c2(o,q) is true.\nIn words, the above conditions ensure that there is a path between all points p,q \u2208Ci which adheres to the density constraints parameterized by E ps and MinPts. DBScan Makes use of spatial hashing algorithms for efficiency and is ideal for our purposes since it discards points in areas of low density as \u201cnoise\u201d and is capable of learning non-convex clusters. Although it should be noted that without first filtering by the inferred activity, identifying key locations via DBScan becomes difficult due to spurious patterns (e.g. path intersections, where the user travels along paths frequently enough that their intersection is recognised as a cluster).\nOnce the clusters are determined by DBScan, the next steps are to further process the timestamps of the clustered locations as described in section 3.2.3, or to compute the convex hulls corresponding to each cluster for use in map interfaces and potentially for defining geo-fences.\nGeometrically the clusters identified by this method correspond closely to actual restaurants and other frequented locations. However the points eventually used to define all of them are only a small subset of all the gps traces collected."
+        },
+        {
+            "heading": "3.2.3 Pinpointing When Events Occur",
+            "text": "A specific \u201chotspot\u201d identified by the algorithm is spatially defined by a set of latitude-longitude pairs. However, it also corresponds to one or more discrete visits at this destination, each contributing a subset of the lat-lngs that constitute the cluster as a whole. The final step in identifying the key events in a user\u2019s day, is to associate a specific time with an occurance of the event: this task is analogous to\none-dimensional clustering across time. First, to generate a smooth version of the observation impulses, we perform Gaussian kernel density estimation, with a bandwidth h of 2 hours. Gaussian Kernel Density Estimation computes a probability density function \u03c1(y) given measurement times X\n\u03c1(y) = \u2211 x\u2208X exp\n( (y\u2212 x)2\nh2\n) (1)\nThe function \u03c1(y) is smooth and it is trivial to find the set of local maxima over a time interval. These maxima are used to align blood glucose time-series resulting from different visits to the same location. In our system, we align 2-hour windows of blood glucose readings, which allows us to calculate aggregate blood glucose statistics associated with specific location types.\nThere are multiple hyper-parameters within the eventidentification framework, such as the eps and MinPts parameters of the DBScan algorithm and the kernel width parameter of the density estimation step. These hyperparameters were selected to identify events that occur at the frequency of meals, rather than more frequent events like bathroom visits."
+        },
+        {
+            "heading": "3.3 Understanding CGM Dynamics",
+            "text": "In this section we consider the problem of analyzing the data generated by the CGM device. We found that in the correct conditions, linear regression and its variants performed competitively, and outperformed other methods."
+        },
+        {
+            "heading": "3.3.1 Linear Models for Prediction",
+            "text": "A simple linear regression model predicting a single variable (blood glucose t minutes into the future) selects the weights w for a set of features so that we minimize the convex cost function\nf (X,y) = \u2223\u2223\u2223\u2223\u2223\u2223w>X\u2212y\u2223\u2223\u2223\u2223\u2223\u22232\n2 (2)\nWhere X is the n\u00d7m matrix of n samples with m features and y is the vector of n responses and w is the vector of m. When we take our features to be the past k blood glucose readings, the magnitude of the weights w can be interpreted as the importance of each past measurement in\nthe estimate. Variants of (1) such as the Lasso and Ridge Regression, also penalize the weights w by their L1 and L2 norms, respectively, in order to discourage the weights from learning random noise:\nLasso\nf (X,y) = \u2223\u2223\u2223\u2223\u2223\u2223w>X\u2212y\u2223\u2223\u2223\u2223\u2223\u22232\n2 +\u03bb ||w||1 (3)\nThe L1 penalty promotes sparsity in w. This is useful for preventing irrelevant weights from learning spurious noise (i.e. those for values far in the past).\nRidge\nf (X,y) = \u2223\u2223\u2223\u2223\u2223\u2223w>X\u2212y\u2223\u2223\u2223\u2223\u2223\u22232\n2 +\u03bb ||w||22 (4)\nThe L2 penalty constrains the size of the wieghts w.\nElastic Net f (X,y) = \u2223\u2223\u2223\u2223\u2223\u2223w>X\u2212y\u2223\u2223\u2223\u2223\u2223\u22232 2 +\u03b1 ( ||w||2 +\u03bb ||w||1 ) (5)\nThe elastic net uses a weighted combination of the losses employed in Lasso and Ridge regression.\nTotal Variation Regularization f (X,y) = \u2223\u2223\u2223\u2223\u2223\u2223w>X\u2212y\u2223\u2223\u2223\u2223\u2223\u22232\n2 +\u03bb ||O(w)||1\n) (6)\nTV regularization induces sparsity on the finitedifferences operator of the weights O(w) . Intuitively, variation regularizing priors make sense for time series applications like this one, because we can expect that measurements are increasingly similar if taken within a shorter time-span.\nThe models above come with advantages and disadvantages. Each of them defines an efficiently-solved convex optimization problem on w, but a weakness is that they assume a fixed number of observations per sample."
+        },
+        {
+            "heading": "3.3.2 Non-parametric Kernel Regression",
+            "text": "In order to work with unevenly sampled data, we use the Nadaraya and Watson [13] formulation of kernel regression as described in [10]. We would like to compute the expected value of a missing variable at any point in time, with no assumptions about the spacing of the observations.\nf (X,y) = \u2211 (\nw>xi w>\u03b4i \u2212 yi\n)2 (7)\nWhere \u03b4i is the same size as a sample vector xi and for each d j \u2208 \u03b4i and x j \u2208 \u03b4i\nd j = {\n1 x j contains an observation 0 otherwise\nIn short, \u03b4i simply marks which time-slots contain a measurement, regardless of what that measurement it. We can imagine the denominator in (7) as a normalization term which allows for effective learning from data with a variable number of observations. By normalizing with w> \u00b7\u03b4x we ensure the estimate of y does not scale with the number of observations. Note that when w is orthogonal to a vector c \u03b4obs the loss function (6) blows up, thus implying that (6) is not convex. The situations for which w> \u00b7 \u03b4x = 0 can happen in as many ways as there are unique \u03b4i\u2019s. Therefore, learning w via stochastic gradient descent and back-propagation is a natural choice, as these are techniques often used in non-convex settings. Back-propagation has seen recent success applied to training deep neural networks for image classification, but can be applied to learn weights using any differentiable objective. Furthermore, this approach is advantageous in that SGD is an on-line algorithm and therefore does not assume a stationary signal. In fact, we could learn the weights of the linear regression models in section 3.3.1 in an online fashion by using back-propagation, however convergence time might be slower. The main disadvantaage of this approach is that it does not enjoy the guarantees of the convex cost functions discussed in 3.3.1."
+        },
+        {
+            "heading": "3.3.3 Incorporating Exogenous features",
+            "text": "The filtered labels which result from the techniques in section 3.2 can be transformed into a one-hot encoding which describes when then user is stationary at an oft visited location. It remains to determine which locations are significant for blood glucose prediction. In this study, we simply picked a subset of clusters by hand which are food consumption locations as \u201csignificant\u201d (i.e. deli, thai food, pizza), and ignored the rest. This approach has the issue that every observed value is equal to 1 (i.e. True) so that that normalization term (in 6) for the onehot-encoding is the same as numerator. To recast the one-hot encoding as a vector binary valued observations we count any location measurement or purchase as an observation, even in the event that the location is not deemed a \u201crelevant event\u201d. An interesting area for further research is the relationship between the proportion of missing values and the performance gain of (5) over (1).\nf (X,y) = \u2211 ( wbg>xbgi +wexog >xexogi\nwbg>\u03b4bgi +wexog>\u03b4exogi \u2212 yi\n)2 \u0393 (8)"
+        },
+        {
+            "heading": "4 System",
+            "text": "The system is comprised of a web server, mobile application, and an external CGM device manufactured by Dexcom, and handles data collection, analysis, and reporting information to the user. In order to allow more freedom in selecting machine learning tools, all of the analysis workload is performed remotely rather than on the user\u2019s device.\nA significant priority is that our system is able to provide real time analysis and predictions to the user but there are a few hurdles to achieving this.\n\u2022 Some data, like credit card purchases, is not updated in real-time\n\u2022 There are constraints imposed by the device maker\non background app usage, due to battery usage and privacy considerations\nAll of the software currently is deployed in one of two places: the mobile application, or the web-server back-end."
+        },
+        {
+            "heading": "4.1 Mobile Application",
+            "text": "The majority of the relevant data collection is done via the mobile application, which runs on an iphone and was written in Objective-C. The mobile application interfaces with Apple\u2019s HealthKit framework to access data recorded by the CGM and transmitted to the phone via bluetooth. The CoreLocation framework is used to receive frequent highaccuracy location updates as well as set geo-fences for passive tracking.\nInterestingly, Apple\u2019s hardware accelerated activity classification system automatically stores and records inferred activities ranging back 7 days in a local database on the device. This means the while to record location data the application needs to be running in the background, activity data is recorded independently. This feature partly explains the frequency of activity measurements relative to the other data sources. Upon startup, our app synchronises and uploads the activity data that was collected since it last ran."
+        },
+        {
+            "heading": "4.2 Location Tracking",
+            "text": "By far the biggest issue with the mobile data-collection system is the effect of constant location tracking on the battery life of the phone. Although Apple has made considerable optimizations to the collection of location data, which is one reason it is not sampled uniformly, battery life does not exceed 24 hours when tracking is enabled, and in some cases can be less. The rate of collection of GPS coordinates is determined by the user\u2019s speed, likely because stationary location updates are not useful for most applications. A mobile user will cause location updates on the order of 1 per 10 - 15 seconds. If the application adversely effects the battery life of the users device, the utility of the overall system goes down, therefore we employ a geo-fencing strategy that is more power efficient. However this means that the mobile application assumes two distinct data-collection modes: Active Tracking where raw GPS traces are collected to\nform new clusters or \u201chotspots\u2019\nPassive Tracking where the application only reacts to entrances to and exits from previously learned hotspots.\nImplementing passive tracking is relatively straightforward in iOS, as the CoreLocation framework provides a geofencing api. Apple restricts the number of active fences per application to 20, which was not enough to track all the learned clusters in our experience. To work around this we use a nested geo-fence strategy implemented locally on the device to actively update the tracked regions based on the larger superfence the user is currently situated in."
+        },
+        {
+            "heading": "4.3 Server",
+            "text": "Data such as debit card food purchases, which were used in some exploratory analyses, were gathered recurrently by the server. Gathering data from different and sources means that significant work must be done to format the data for ingestion into the machine learning components, long-term storage, and into the correct format for quick downloads to populate front-end visualizations. The server application needs to balance the versatility of a structured database, while storing processed copies of data to be quickly sent to client applications. Each individual measurement is indexed and stored in a MongoDB instance so that complex queries can be performed when needed. However, for most data requests from the user to the server, responses consist of preprocessed, compressed files stripped of irrelevant metadata."
+        },
+        {
+            "heading": "4.4 Data Processing",
+            "text": "Much of the data we are concerned with is not reported at uniform intervals and from separate sources; this means matching timestamps is sometimes the only means to match cooenciding measurements. Relying on timestamps can introduce problems; like if the system clock of a single component gets out of synch with the rest. This was a problem in our system on a few occasions. A possible approach for reducing the number of such failures is to mandate that a single (software) component drives communication with the server, as opposed to the remote database being updated individually by multiple gro on the device. This way data will arrive at the database already grouped with cooenciding entries, and the data cross-referencing point of failure will be at least parially removed."
+        },
+        {
+            "heading": "4.5 Interface",
+            "text": "There are two user interfaces in the application: web and mobile. The mobile application primarily acts as a data collection platform rather than a data visualization toolkit, but nonetheless includes a map interface. The web application frontend is the primary interface for data visualization and takes advantage of MapBox\u2019s webgl support for map annotation. Using these tools it is possible to draw 50,000+ lines on a tiled map interface without a significant performance slowdown. By displaying each and every portion of the user\u2019s recorded path, we aim to make the experience fun and provide a means to jog the user\u2019s memory. We utilize browser based filtering to determine the range over which to display gps information.\nThe relevant clusters determined via the method described in section 3.2 are drawn as convex hulls on the map interface and respond to user interactions. By selecting a cluster, or \u201chotspot\u201d the user can view aggregate CGM statistics corresponding to all the visits at that location."
+        },
+        {
+            "heading": "5 Results",
+            "text": "We used the dataset described in 3.1 to evaluate a battery of prediction methods and interpret the models that are learned. For comparing the different prediction methods, we restricted the test sets to contain only complete observations so that all methods could be compared. In the case of kernel regression, the training set contained incomplete samples as well as the complete ones that the other methods were trained on. We show that kernel regression is able to incorprate the incomplete data to improve prediction performance."
+        },
+        {
+            "heading": "5.1 Activity Prediction",
+            "text": "We used a logistic classifier to impute activities using a window of recent activities as input. We compared the per class f-score (1-vs-all) to the scores of rolling mean and nearest neighbor baselines. We also computed the overall accuracy of each type of imputer. The Logistic classifier outperformed the two baselines overall, largely because it\u2019s ability to learn about the frequent alternation of the Automotive and Stationary-Automotive measurements. For predicting more rare measurements like Walking and Cycling, nearest neighbor performed the best. The main advantage of the logistic classifier system is it\u2019s ability to produce likelyhoods of a given activity for a given time, which comes in handy during the filtering step described in section 3.3.2."
+        },
+        {
+            "heading": "5.2 Event Identification",
+            "text": "In section 3.2 we outlined a method for identifying discrete events within a persons routine using ubiquitous sensor data. In order to show that these events are relevant to diabetes care and analysis, we computed the Pearson correlation between a given type of lifestyle event occurring and the event of blood glucose increasing more than 30mg/dl over a given time interval. We compared the correlations over different time intervals and types of events. Unsurprisingly, the group of events with the highest correlation\nwas the one selected by manually referencing cluster boundaries against locations which were known to be associated with food consumption. While it is not completely clear why general lifestyle event occurrences are more correlated than instances of \u201cstationary\u201d behavior, as detected by the accelerometer, but possible explainations include A bias toward recurrent events It could be the case that\nthe subject is more likely to eat or ingest sugar at a place they have already visited, than at a new location. The lifestyle events described in section 3.2 filters by density and therefore is less likely to identify when the user visits a new location for the first time. If it is true that the user is a creature of habit, then the methods described are more appropriate for detecting when they ingest food.\nApplication activation bias Lifestyle events can only be measured if both activity estimates and location data are available. While activity estimates are made regardless of whether the application is running, the application must be running in the background for location to be tracked. The user may have been biased towards ensuring that the application was active during food ingestion, simply because this is probably the most important event we were trying to track in the study, thus leading to a slight correlation between the presence of location measurements and an increase in blood glucose.\nIn addition, in figure 8 we can see that the maximum correlation is around 60 minutes after the detected event. This makes sense due to to fact that it takes at least 10-15 minutes for any blood glucose increase from food ingestion to be detected by the CGM, and some types of food may lead to gradual increases for hours afterwards."
+        },
+        {
+            "heading": "5.3 Blood Glucose Prediction",
+            "text": "The data was pre-processed so that it had zero-mean and unit-variance. In our experience, linear regression models were surprisingly robust in their predictions and outperformed Support Vector machines both when lagged values are used as features and when features like slope and curvature are used for the SVM. Furthermore, among the linear models total-variation regularization had a slight edge. While Nonparametric kernel regression performed well, there was no difference in the performance between the model using only past blood glucose data (7) and the model which used exogenous information (8). In general, using exogenous data sources in prediction tasks proved to be difficult, and often led to lower performance. Therefore, we would reserve the usage of the features described in section 3.2 for assisting the user in their understanding the relationships between their lifestyle, food habits, and blood glucose dynamics. Figure 8 demonstrates that there is indeed a significant relationship, especially among hotspots designated at possible food locations."
+        },
+        {
+            "heading": "6 Conclusions",
+            "text": "We have described a system for collecting contextual data along with blood glucose measurements, and a method for generating useful features from that data. Furthermore, we\nhave described benchmark blood glucose prediction results using linear models at different time horizons. The main purpose of this work is to demonstrate the possibilities enabled by collecting contextual data along with blood glucose data. The \u201cevent\u201d features allow for concrete association of blood glucose statistics with frequently visited locations. We hope that given more data, contextual features like those described in this paper may contribute to prediction and control systems."
+        },
+        {
+            "heading": "7 References",
+            "text": "[1] R. Bunescu, N. Struble, and C. Marling. Blood glucose level predic-\ntion using physiological models and support vector regression. International Conference on Machine Learning and Applications, 2013.\n[2] P.-G. C, F. A, S. G, C. C, G. EJ, R. M, de Leiva A, and H. ME. Artificial neural network algorithm for online glucose prediction from continuous glucose monitoring. Diabetes Technol Ther., 2010. [3] D. E, C. F, L. H, B. BW, Z. H, J. L, C. HP, W. DM, B. BA, and D. F. 3rd. Real-time hypoglycemia prediction suite using continuous glucose monitoring: a safety net for the artificial pancreas. Diabetes Care, 2010. [4] M. Eren-Oruklu, A. Cinara, D. K. Rollins, and L. Quinn. Adaptive system identification for estimating future glucose concentrations and hypoglycemia alarms. Automatica, 2012. [5] M. Ester, H.-P. Kriegel, J. Sander, and X. Xu. A density-based al-\ngorithm for discovering clusters in large spatial databases with noise. KDD, 1996. [6] J. H. Kang, W. Welbourne, B. Stewart, and G. Borriello. Extracting places from traces of locations. Proceedings of the 2nd ACM international workshop on Wireless mobile applications and services on WLAN hotspots. [7] T. Kanungo, D. M. Mount, N. S. Netanyahu, C. D. Piatko, R. Silverman, and A. Y. Wu. An efficient k-means clustering algorithm: Analysis and implementation. IEEE Transactions on Pattern Analysis AND Machine Intelligence, 2002. [8] Y. LeCun, L. Bottou, G. B. Orr, and K.-R. Muller. Efficient backprop. Technical report, Image-Proccessing Research Dept. AT&T Labs. [9] Y. LeCun, S. Chopra, R. Hadsell, M. Ranzato, and F. J. Huang. A tutorial on energy-based learning. to appear in Predicting Structured Data, 2006. [10] N. Razavian and D. Sontag. Temporal convolutional neural networks for diagnoses from lab tests. Working Paper, 2015. [11] R. S. Sherwin, K. J. Kramer, J. D. Tobin, P. A. Insel, J. E. Liljenquist, M. Berman, and R. Andres. A model of the kinetics of insulin in man. The Journal of Clinical Investigation, 1974. [12] N. W. Struble. Measuring glycemic variability and predicting blood glucose levels using machine learning regression models. Master\u2019s thesis, Ohio University, 2013. [13] G. S. Watson. Smooth regression analysis. The Indian Journal of Statistics, 1964."
+        }
+    ],
+    "title": "Personalized Understanding of Blood Glucose Dynamics via Mobile Sensor Data",
+    "year": 2023
+}

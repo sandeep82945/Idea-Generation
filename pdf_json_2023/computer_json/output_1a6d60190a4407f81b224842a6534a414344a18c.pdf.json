@@ -1,0 +1,108 @@
+{
+    "abstractText": "The pulp and paper manufacturing industry requires precise quality control to ensure pure, contaminant-free end products suitable for various applications. Fungal spore concentration is a crucial metric that affects paper usability, and current testing methods are labor-intensive with delayed results, hindering real-time control strategies. To address this, a machine learning algorithm utilizing time-series data and domain knowledge was proposed. The optimal model employed Ridge Regression achieving an MSE of 2.90 on training and validation data. This approach could lead to significant improvements in efficiency and sustainability by providing real-time predictions for fungal spore concentrations. This paper showcases a promising method for real-time fungal spore concentration prediction, enabling stringent quality control measures in the pulp-and-paper industry.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Md Asif Bin Syed"
+        },
+        {
+            "affiliations": [],
+            "name": "Azmine Toushik"
+        },
+        {
+            "affiliations": [],
+            "name": "Imtiaz Ahmed"
+        }
+    ],
+    "id": "SP:7810853eff4cca8e8f05e62479a7836fe4755424",
+    "references": [
+        {
+            "authors": [
+                "Pratima Bajpai"
+            ],
+            "title": "Basic Overview of Pulp and Paper Manufacturing Process, pages 11\u201339",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Donald E. Hilt",
+                "Donald W"
+            ],
+            "title": "Seegrist, United States. Forest Service., and Northeastern Forest Experiment Station. Ridge, a computer program for calculating ridge regression estimates, volume no.236",
+            "venue": "Upper Darby, Pa, Dept. of Agriculture,",
+            "year": 1977
+        },
+        {
+            "authors": [
+                "Praneeth Reddy",
+                "Sagar Jani"
+            ],
+            "title": "Processminer qcre data challenge: Fungal spores concentration prediction",
+            "venue": "ProcessMiner QCRE Data Challenge",
+            "year": 2023
+        }
+    ],
+    "sections": [
+        {
+            "text": "Index Terms\u2014Fungal Spores Concentration Prediction, Machine Learning\n\u2726"
+        },
+        {
+            "heading": "1 INTRODUCTION",
+            "text": "THE pulp-and-paper manufacturing industry plays apivotal role in providing essential materials for various applications, including packaging, printing, and writing. Ensuring the production of high-quality, contaminant-free paper products is paramount in this sector. As such, stringent quality control measures are a fundamental aspect of the industry\u2019s operations [1].\nQuality control in the pulp-and-paper manufacturing sector involves a comprehensive assessment of various parameters, with a vital focus on the fungal spore concentration. Fungal spores are microscopic particles that can have a detrimental impact on paper quality. When present in excessive amounts, they can lead to a range of issues, including reduced paper strength, increased susceptibility to degradation, and compromised printability. Consequently, addressing fungal spore concentration is essential to meet industry standards and customer expectations.\nCurrent techniques for assessing fungal spore concentration primarily rely on labor-intensive laboratory tests. These methods involve collecting paper samples from the manufacturing process and subjecting them to meticulous analysis, often taking 1-2 days to obtain results. This delay can lead to production inefficiencies and increased costs, highlighting the need for more efficient and real-time monitoring solutions.\n\u2022 M. A. B. Syed and I. Ahmed are with the Department of Industrial and Systems Engineering, West Virginia University, Morgantown, USA. E-mail: ms00110@mix.wvu.edu, imtiaz.ahmed@mail.wvu.edu \u2022 A. T. Wasi is with the Department of Industrial and Production Engineering, Shahjalal University of Science and Technology, Bangladesh. E-mail: azminetoushik.wasi@gmail.com \u2022 \u2020Corresponding Author. \u2022 Code: https://github.com/azminewasi/qcre23-finalist. \u2022 Paper Page: .../qcre2023. \u2022 This work is selected as one of the four finalists of ProcessMiner\nQCRE Data Challenge 2023, and presented on IISE Annual Conference and Expo, 2023.\nMachine learning (ML) has emerged as a promising technology to address these challenges in the pulp-andpaper industry. ML algorithms can be trained to analyze vast amounts of data, including environmental conditions, production parameters, and historical fungal spore data. By processing this information in real-time, ML models can predict fungal spore concentrations within the manufacturing process.\nDelay in quality measurement hinders real-time control strategies, emphasizing the need for precise real-time fungal spore concentration predictions to maintain exceptional quality standards. This study showcases the outcome of a data challenge focused on devising a method to predict fungal spore concentration in the pulp-and-paper production process utilizing time-series data. We propose a machine learning algorithm that synthesizes domain knowledge, based on two crucial assumptions."
+        },
+        {
+            "heading": "1.1 Our Contributions",
+            "text": "Our contributions are summarized into four folds:\n\u2022 We design and develop a novel machine learningbased method utilizing domain knowldge to predict fungal spores concentration effectively considering problem constrains. \u2022 Our model requires much less memory than deep learning models because it does not have as many parameters to train. This low memory requirement makes it easier to integrate into embedded systems with limited memory resources. \u2022 Our model has a closed-form solution which results in a computationally efficient training process. This means that the training time for Ridge Regression is faster than deep learning techniques like recurrent neural networks (RNNs) or convolutional neural networks (CNNs). \u2022 Our model lightweight and easy to deploy on embedded systems because they do not require large\nar X\niv :2\n30 9.\n13 40\n2v 1\n[ cs\n.L G\n] 2\n3 Se\np 20\n23\nprocessing power. This makes them ideal for implementing in resource-constrained devices such as embedded systems or Internet of Things (IoT) devices and sensors in the industry."
+        },
+        {
+            "heading": "2 DATA DESCRIPTION AND EXPLORATORY DATA ANALYSIS",
+            "text": "For this study, we were provided with one training set and one testing set [3]. The training set comprises 1526 observations, containing 113 numerical variables, a single categorical variable, and the target variable, beginning from 2021-01-30 06:23:06. Additionally, the testing data set encompasses 752 observations with an identical variable count, starting from 2021-07-24 06:29:00. To gain an in-depth understanding of the data, we conducted an exploratory data analysis (EDA). The following subsection details the handling of missing values and observed trends for several key variables. qcre2023"
+        },
+        {
+            "heading": "2.1 Problem Formulation and Constrains",
+            "text": "The task at hand involves predicting the target spore concentration for timestamps provided in a dataset. Notably, the timestamps in the test set may not necessarily occur after those in the training data, introducing an element of temporal unpredictability. A critical constraint in this problem lies in the temporal alignment: when predicting the target value for a given test set timestamp (t1), any training data with timestamps beyond t1 is expressly prohibited from being used [3]. This constraint reflects the real-world scenario where predictions must rely solely on historical information up to the prediction point, ensuring that the model\u2019s forecasting capabilities align with chronological precedence. This challenge falls within the realm of timeseries forecasting, where the model\u2019s effectiveness in capturing temporal patterns and dependencies is pivotal to its predictive accuracy."
+        },
+        {
+            "heading": "2.2 Missing Values",
+            "text": "In examining our training data, we assessed the presence of missing values, identifying several variables with missing data, as outlined in the Fig 1. We used most frequent value imputation."
+        },
+        {
+            "heading": "2.3 Analysis of Time dependency of variables",
+            "text": "Besides missing values, we investigated the potential dependency on time. By observing the provided figure, we attempted to discern any time dependency among the features. As depicted in Fig. 2, we found no substantial time dependency for the majority of variables, with a few exceptions (e.g., variable 41)."
+        },
+        {
+            "heading": "3 METHODOLOGY",
+            "text": "Upon reviewing the exploratory data analysis ad considering the project constraint that prohibits training data beyond t1 when predicting t1, we develop the following algorithm depicted in the flow chart shown in Fig 3. The following subsection discusses the components of the algorithm."
+        },
+        {
+            "heading": "3.1 Train-test Splitting",
+            "text": "To evaluate model performance, we devised a distinctive data partitioning strategy. Initially, the first 40% of the dataset was allocated for training, ensuring sufficient data availability. Subsequently, the remaining 60% was divided into testing and training subsets, which were merged with the previous partition. This approach emulates the original problem, providing 750 initial data points for model training."
+        },
+        {
+            "heading": "3.2 Model Architecture",
+            "text": "To mitigate noise, feature selection techniques were employed, including Principal Component Analysis, Random Forest Regressor, and SelectKBest, enabling identification of the most relevant features and enhancing model validity. One example is shown in Figure 5.\nBut, Figure 6 and 7 suggests that the model scores better with all features, rather than top features.\nTABLE 1 Impact of Hyperparameter \u03b1 on Performance Metrics\n\u03b1 0.05 0.1 0.5 0.8 1.5 2 2.5 3\nMAE Value 0.51 0.51 0.51 0.51 0.48 0.43 0.52 0.6 MSE Value 2.9 2.9 2.9 2.9 2.74 2.53 2.94 3.35 RMSE Value 1.7 1.7 1.7 1.7 1.65 1.59 1.72 1.83 R-squared Value 0.98 0.98 0.98 0.98 0.98 0.98 0.98 0.98\nFig. 3. Model Architecture"
+        },
+        {
+            "heading": "3.3 Model Selection and Training",
+            "text": "We conducted experiments with prevalent machine learning algorithms, including Linear, Ridge, and Lasso regression, Random Forest, Extreme Gradient Boosting (XGBoost), and Adaptive Boosting. A constraint required training only on data up to t for predicting t+1. To accommodate this, model parameters were stored in a binary serialization file, enabling efficient parameter updates without retraining on the entire dataset.\nWe found that Ridge Regression [2] performed exceptionally well on our sensor dataset with a large number of input columns. This is likely because Ridge Regression\u2019s regularization technique helps to reduce overfitting and handle multicollinearity, leading to stable coefficient estimates and better predictive performance on new data. it is a regularization technique that helps to reduce overfitting in ML models. It adds a penalty term to the cost function which\nreduces the magnitude of the coefficients, thus limiting the model\u2019s complexity and making it less prone to overfitting. It performs well when there is multicollinearity between the independent variables. Multicollinearity occurs when two or more independent variables are highly correlated with each other, which can lead to unstable and unreliable coefficient estimates in traditional linear regression. The penalty term in Ridge Regression helps to stabilize these estimates by reducing their variance. It can provide a solution even when the data is inconsistent or when the number of samples is smaller than the number of features. This is because it introduces bias into the estimates, which can help to overcome problems caused by inconsistencies in the data."
+        },
+        {
+            "heading": "3.4 Prediction Synthesizing the Domain Knowledge",
+            "text": "From Figure 8, we can notice that target variable seems to be an integer which is divisible by 5. Our initial predictions are a lot close to multiples of 5, like we have 11, 11.5, 10.5 more than 12-12.5 which is a more uncertain stage. From this, we came to two assumptions which we are referring as domain knowledge. The two assumptions are:\n1) All the \u201dy var\u201d are the multipliers of the 5. Our assumption is the measurement scale has the precision of 5. 2) As the concentration cannot be negative so we have chosen any negative prediction as zero.\nThe equation is:\nf(x) =  0, if x \u2264 2.5, or x is an integer multiple of 5, or x < 0 5 \u2217 floor (x/5) + 5, if (x\u2212 0.01) is an integer multiple of 5\n5\u2217 floor (x/5), otherwise\n (1)"
+        },
+        {
+            "heading": "4 RESULTS",
+            "text": "Upon experimenting with training data, partitioned into training and validation sets that emulate the original testing dataset, we observed the following results. Using all available variables as input, alongside selected features via algorithms such as Random Forest, PCA, and SelectKBest, Random Forest demonstrated superior performance in terms of MSE and MAE. Notably, the cleaned and preprocessed original dataset outperformed feature-selected versions. A comparative analysis between the full data and Random Forest models, with respect to MSE and MAE, is provided."
+        },
+        {
+            "heading": "4.1 Ablation Study",
+            "text": "Ridge regression was selected due to its superior performance compared to other algorithms, including Linear Regression, Adaptive Boosting, XGBoost, and Extra Trees Regressor. An optimal hyperparameter tuning was achieved with an alpha value of 2, as it demonstrated enhanced performance relative to alternatives (as shown in table 2).\nTo mitigate overfitting, cross-validation was employed. The outcomes obtained with k=5 are presented, revealing satisfactory results."
+        },
+        {
+            "heading": "5 CONCLUSION",
+            "text": "In this study, we introduce an algorithm to predict fungal spore concentration, encompassing two components: a traditional machine learning approach for real-time training, and domain knowledge synthesis with predictions. Our chosen method effectively balances the bias-variance tradeoff, as demonstrated by strong training results reflecting the problem\u2019s intrinsic model. Future research incorporating controlled deep learning approaches may yield even more accurate solutions."
+        }
+    ],
+    "title": "ML Algorithm Synthesizing Domain Knowledge for Fungal Spores Concentration Prediction",
+    "year": 2023
+}

@@ -1,0 +1,98 @@
+{
+    "abstractText": "Alzheimer\u2019s disease (AD) is a progressive neurodegenerative disease most often associated with memory deficits and cognitive decline. With the aging population, there has been much interest in automated methods for cognitive impairment detection. One approach that has attracted attention in recent years is AD detection through spontaneous speech. While the results are promising, it is not certain whether the learned speech features can be generalized across languages. To fill this gap, the ADReSS-M challenge was organized. This paper presents our submission to this ICASSP-2023 Signal Processing Grand Challenge (SPGC). The model was trained on 228 English samples of a picture description task and was transferred to Greek using only 8 samples. We obtained an accuracy of 82.6% for AD detection, a root-mean-square error of 4.345 for cognitive score prediction, and ranked 2nd place in the competition out of 24 competitors.",
+    "authors": [],
+    "id": "SP:1b33b23e59f34a16eed95a65fde0f0c30d5dac3c",
+    "references": [
+        {
+            "authors": [
+                "Sofia de la Fuente Garcia",
+                "Craig W. Ritchie",
+                "Saturnino Luz"
+            ],
+            "title": "Artificial intelligence, speech, and language processing approaches to monitoring alzheimer\u2019s disease: A systematic review",
+            "venue": "Journal of Alzheimer\u2019s Disease, vol. 78, pp. 1547\u20131574, 2020, 4.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Saturnino Luz",
+                "Fasih Haider",
+                "Davida Fromm",
+                "Ioulietta Lazarou",
+                "Ioannis Kompatsiaris",
+                "Brian MacWhinney"
+            ],
+            "title": "Multilingual alzheimer\u2019s dementia recognition through spontaneous speech: a signal processing grand challenge",
+            "venue": "2023.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Florian Eyben"
+            ],
+            "title": "The geneva minimalistic acoustic parameter set (gemaps) for voice research and affective computing",
+            "venue": "IEEE transactions on affective computing, vol. 7, no. 2, pp. 190\u2013202, 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Florian Eyben",
+                "Martin W\u00f6llmer",
+                "Bj\u00f6rn Schuller"
+            ],
+            "title": "Opensmile: The munich versatile and fast open-source audio feature extractor",
+            "venue": "Proceedings of the 18th ACM International Conference on Multimedia, New York, NY, USA, 2010, MM \u201910, p. 1459\u20131462, Association for Computing Machinery.",
+            "year": 2010
+        }
+    ],
+    "sections": [
+        {
+            "text": "ar X\niv :2\n30 3.\n03 04\n9v 1\n[ ee\nss .A\nS] 6\nM ar\n2 02\ndisease most often associated with memory deficits and cognitive decline. With the aging population, there has been much interest in automated methods for cognitive impairment detection. One approach that has attracted attention in recent years is AD detection through spontaneous speech. While the results are promising, it is not certain whether the learned speech features can be generalized across languages. To fill this gap, the ADReSS-M challenge was organized. This paper presents our submission to this ICASSP-2023 Signal Processing Grand Challenge (SPGC). The model was trained on 228 English samples of a picture description task and was transferred to Greek using only 8 samples. We obtained an accuracy of 82.6% for AD detection, a root-mean-square error of 4.345 for cognitive score prediction, and ranked 2nd place in the competition out of 24 competitors.\nIndex Terms\u2014 Alzheimer\u2019s disease, cross-lingual"
+        },
+        {
+            "heading": "1. INTRODUCTION",
+            "text": "Alzheimer\u2019s disease (AD) is a progressive neurodegenerative disease most often associated with memory deficits and cognitive decline. It is the most common form of dementia and the fifth-leading cause of death among people age 65 or older [1]. With an aging population, there has been much interest in automated methods for cognitive impairment detection, especially ones that are inexpensive and easily scalable. One possibility that has gained a lot of attention in recent years is to analyze spontaneous speech, a readily available medium that can provide insight into the working of the brain. However, most of the proposed approaches have not investigated which speech features can be transferred across languages for AD detection [2].\nHence, ADReSS-M, an ICASSP-2023 Signal Processing Grand Challenge (SPGC), was organized to investigate this matter [3]. The goal is to train a model on English speech from a picture description task and apply it to a different picture description task in Greek. The challenge has two tasks, first to predict the AD diagnosis and second to predict the\n\u2217This research was supported by KU Leuven Special Research Fund grant\nC24M/22/025.\nMini-Mental State Examination (MMSE) score of a participant. The latter is a questionnaire that is used extensively in clinical and research settings to measure cognitive impairment and is scored out of 30 points.\nIn this paper, we present our submission to the challenge.1 The models use a sequence of acoustic features and covariates (age, gender, education) to make the predictions. They are first trained in English, and then they are transferred to Greek using mixed-language batches and parameter averaging. This approach obtained an accuracy of 82.6% for AD detection and 4.345 for cognitive score prediction, compared to 73.9% and 4.955 respectively by the baseline. With this submission, we ranked 2nd place in the competition out of 24 competitors."
+        },
+        {
+            "heading": "2. METHODS",
+            "text": ""
+        },
+        {
+            "heading": "2.1. Datasets",
+            "text": "Two datasets were used in this challenge, one English and one Greek, consisting of audio recordings of healthy controls and AD patients who were asked to describe a picture. The challenge organizers divided the data into three splits: an English training split (n=237, 122 AD), a Greek sample split (n=8, 4 AD), and a Greek test split (n=46, 22 AD). The test statistics were derived from the confusion matrix of the submission and were not known ahead of time. It was known that the splits were balanced for AD, age, and gender [3].\nWe removed one healthy control from the English training split (no cognitive score) and 8 AD patients for balancing (n=228, 114 AD). Finally, in 12 controls where education was not available, we assumed the missing value to be 12 years."
+        },
+        {
+            "heading": "2.2. Preprocessing",
+            "text": "Each audio file is split into ten equal segments. For each segment, a 25-D eGeMAPS [4] feature vector is calculated using openSMILE [5]."
+        },
+        {
+            "heading": "2.3. Model",
+            "text": "Both the AD detection model and the cognitive score prediction model are based on the same architecture. They are\n1Our Code: https://github.com/lcn-kul/madress-2023\nrather small: only 767 and 468 parameters respectively. Each model takes as input a sequence of ten eGeMAPS features and the covariates age, gender and education. The estimated AD probability is also included as a covariate for the cognitive score prediction model. For simplicity, the covariates are concatenated to the eGeMAPS feature sequence.\nThe architecture consists of four parts. First, batch normalization is applied to the input features. Next, the features are down-projected into a smaller hidden space (12- or 8-dimensional respectively), followed by dropout and ReLU activation.\nAfterward, attention pooling is used to collapse the time dimension. The attention weights are calculated using a 2- layer feed-forward network with an intermediate space that is twice as large as the hidden space, followed by softmax such that the weights sum to 1. Between the two layers, dropout and ReLU activation are used.\nThe final step is a linear projection to map the vector to the output space (2- or 1-dimensional respectively). For the cognitive score prediction model, a sigmoid function is used to map the value to the range [0,1]. The MMSE labels are also normalized to the same range."
+        },
+        {
+            "heading": "2.4. English pre-training",
+            "text": "The English data is split into 80% train and 20% validation. The models are trained on the English training data and validated on the Greek sample set. To account for the effects of random initialization, training takes place five times with five different random seeds. The model with the lowest validation loss over the five runs is selected as the pre-trained model."
+        },
+        {
+            "heading": "2.5. Mixed-batch transfer learning",
+            "text": "The pre-trained model is finetuned on the English training data and 4 of the Greek samples (2 AD). Every fifth sample of the mini-batch is replaced by a Greek sample. The model is validated on the English validation data and the 4 held-out Greek samples, inserted in the same way.\nTo improve robustness, we repeat the procedure but swap the 4 training Greek samples with the 4 held-out samples. Finally, the parameters of these two models can be averaged since they are initialized from the same pre-trained model."
+        },
+        {
+            "heading": "2.6. Training details",
+            "text": "The models are implemented using the PyTorch (v.1.11.0) and PyTorch Lightning (v.1.8.6) libraries in Python 3.8. The network is trained using the AdamW optimizer with a weight decay of 1e-2. The learning rate is warmed up linearly for 100 steps and is fixed at 3e-3 afterward. Cross-entropy loss is used for the AD detection model, and mean-square-error loss is used for the cognitive score prediction model. Each model is trained with a batch size of 32 for a total of 30 epochs, and the model with the lowest validation loss is selected."
+        },
+        {
+            "heading": "3. RESULTS",
+            "text": "The challenge allowed for five submissions. So, to test the robustness of the procedure proposed above, the entire procedure was run five times with different random seeds. The test accuracies for the AD detection task in ascending order were 71.7%, 73.9%, 76.1%, 80.4% and 82.6%. The bestperforming model had a specificity of 91.7%, precision of 88.9%, sensitivity of 72.7%, and an F1-score of 80.0%.\nThe root-mean-square errors (RMSE) of the cognitive score prediction task in descending order were 4.837, 4.816, 4.716, 4.713, 4.345. Note that these models use the probabilities of the AD detection model as input. Since the best AD detection model was not known ahead of time, the probabilities of the 5 submitted AD detection models were averaged."
+        },
+        {
+            "heading": "4. CONCLUSIONS",
+            "text": "In this paper, we present our submission for the ADReSS-M challenge. Our approach outperforms the best baseline model and is robust to model initialization. The innovation in our work lies in pre-training and mixed-batch fine-tuning procedure. The actual architecture is extremely simple and we believe with an improved feature extraction network, performance can be further improved."
+        },
+        {
+            "heading": "5. REFERENCES",
+            "text": "[1] \u201c2022 alzheimer\u2019s disease facts and figures,\u201d Alzheimer\u2019s\n& Dementia, vol. 18, no. 4, pp. 700\u2013789, 2022.\n[2] Sofia de la Fuente Garcia, Craig W. Ritchie, and Sat-\nurnino Luz, \u201cArtificial intelligence, speech, and language processing approaches to monitoring alzheimer\u2019s disease: A systematic review,\u201d Journal of Alzheimer\u2019s Disease, vol. 78, pp. 1547\u20131574, 2020, 4.\n[3] Saturnino Luz, Fasih Haider, Davida Fromm, Ioulietta\nLazarou, Ioannis Kompatsiaris, and Brian MacWhinney, \u201cMultilingual alzheimer\u2019s dementia recognition through spontaneous speech: a signal processing grand challenge,\u201d 2023.\n[4] Florian Eyben et al., \u201cThe geneva minimalistic acoustic\nparameter set (gemaps) for voice research and affective computing,\u201d IEEE transactions on affective computing, vol. 7, no. 2, pp. 190\u2013202, 2015.\n[5] Florian Eyben, Martin Wo\u0308llmer, and Bjo\u0308rn Schuller,\n\u201cOpensmile: The munich versatile and fast open-source audio feature extractor,\u201d in Proceedings of the 18th ACM International Conference on Multimedia, New York, NY, USA, 2010, MM \u201910, p. 1459\u20131462, Association for Computing Machinery."
+        }
+    ],
+    "year": 2023
+}

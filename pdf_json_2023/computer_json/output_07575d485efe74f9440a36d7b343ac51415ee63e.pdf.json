@@ -1,0 +1,910 @@
+{
+    "abstractText": "Aligning agent behaviors with diverse human preferences remains a challenging problem in reinforcement learning (RL), owing to the inherent abstractness and mutability of human preferences. To address these issues, we propose AlignDiff, a novel framework that leverages RL from Human Feedback (RLHF) to quantify human preferences, covering abstractness, and utilizes them to guide diffusion planning for zero-shot behavior customizing, covering mutability. AlignDiff can accurately match user-customized behaviors and efficiently switch from one to another. To build the framework, we first establish the multi-perspective human feedback datasets, which contain comparisons for the attributes of diverse behaviors, and then train an attribute strength model to predict quantified relative strengths. After relabeling behavioral datasets with relative strengths, we proceed to train an attribute-conditioned diffusion model, which serves as a planner with the attribute strength model as a director for preference aligning at the inference phase. We evaluate AlignDiff on various locomotion tasks and demonstrate its superior performance on preference matching, switching, and covering compared to other baselines. Its capability of completing unseen downstream tasks under human instructions also showcases the promising potential for human-AI collaboration. More visualization videos are released on https://aligndiff.github.io/.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Zibin Dong"
+        },
+        {
+            "affiliations": [],
+            "name": "Yifu Yuan"
+        },
+        {
+            "affiliations": [],
+            "name": "Jianye Hao"
+        },
+        {
+            "affiliations": [],
+            "name": "Fei Ni"
+        },
+        {
+            "affiliations": [],
+            "name": "Yao Mu"
+        },
+        {
+            "affiliations": [],
+            "name": "Yan Zheng"
+        },
+        {
+            "affiliations": [],
+            "name": "Yujing Hu"
+        },
+        {
+            "affiliations": [],
+            "name": "Tangjie Lv"
+        },
+        {
+            "affiliations": [],
+            "name": "Changjie Fan"
+        },
+        {
+            "affiliations": [],
+            "name": "Zhipeng Hu"
+        }
+    ],
+    "id": "SP:82a0510d9c13e2500c65adc4d9cbb4bd6a6608dc",
+    "references": [
+        {
+            "authors": [
+                "Anurag Ajay",
+                "Yilun Du",
+                "Abhi Gupta",
+                "Joshua B. Tenenbaum",
+                "Tommi S. Jaakkola",
+                "Pulkit Agrawal"
+            ],
+            "title": "Is conditional generative modeling all you need for decision making",
+            "venue": "In The Eleventh International Conference on Learning Representations,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Riad Akrour",
+                "Marc Schoenauer",
+                "Michele Sebag"
+            ],
+            "title": "Preference-based policy learning. In Machine Learning and Knowledge Discovery in Databases: European Conference",
+            "venue": "ECML PKDD,",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "Riad Akrour",
+                "Marc Schoenauer",
+                "Mich\u00e8le Sebag"
+            ],
+            "title": "April: Active preference learning-based reinforcement learning. In Machine Learning and Knowledge Discovery in Databases: European Conference",
+            "venue": "ECML PKDD",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Marcin Andrychowicz",
+                "Filip Wolski",
+                "Alex Ray",
+                "Jonas Schneider",
+                "Rachel Fong",
+                "Peter Welinder",
+                "Bob McGrew",
+                "Josh Tobin",
+                "Pieter Abbeel",
+                "Wojciech Zaremba"
+            ],
+            "title": "Hindsight experience replay",
+            "venue": "In Proceedings of the 31st International Conference on Neural Information Processing Systems,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Dilip Arumugam",
+                "Siddharth Karamcheti",
+                "Nakul Gopalan",
+                "Lawson Wong",
+                "Stefanie Tellex"
+            ],
+            "title": "Accurately and efficiently interpreting human-robot instructions of varying granularities",
+            "venue": "In Proceedings of Robotics: Science and Systems,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Erdem B\u0131y\u0131k",
+                "Dylan P Losey",
+                "Malayandi Palan",
+                "Nicholas C Landolfi",
+                "Gleb Shevchuk",
+                "Dorsa Sadigh"
+            ],
+            "title": "Learning reward functions from diverse sources of human feedback: Optimally integrating demonstrations and preferences",
+            "venue": "The International Journal of Robotics Research,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Ralph Allan Bradley",
+                "Milton E. Terry"
+            ],
+            "title": "Rank analysis of incomplete block designs: I. the method of paired comparisons",
+            "year": 1952
+        },
+        {
+            "authors": [
+                "Serkan Cabi",
+                "Sergio G\u00f3mez Colmenarejo",
+                "Alexander Novikov",
+                "Ksenia Konyushkova",
+                "Scott Reed",
+                "Rae Jeong",
+                "Konrad Zolna",
+                "Yusuf Aytar",
+                "David Budden",
+                "Mel Vecerik"
+            ],
+            "title": "Scaling datadriven robotics with reward sketching and batch reinforcement learning",
+            "venue": "arXiv preprint arXiv:1909.12200,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Huayu Chen",
+                "Cheng Lu",
+                "Chengyang Ying",
+                "Hang Su",
+                "Jun Zhu"
+            ],
+            "title": "Offline reinforcement learning via high-fidelity generative behavior modeling",
+            "venue": "In The Eleventh International Conference on Learning Representations,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Lili Chen",
+                "Kevin Lu",
+                "Aravind Rajeswaran",
+                "Kimin Lee",
+                "Aditya Grover",
+                "Michael Laskin",
+                "Pieter Abbeel",
+                "Aravind Srinivas",
+                "Igor Mordatch"
+            ],
+            "title": "Decision transformer: Reinforcement learning via sequence modeling",
+            "venue": "arXiv preprint arXiv:2106.01345,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Paul F Christiano",
+                "Jan Leike",
+                "Tom Brown",
+                "Miljan Martic",
+                "Shane Legg",
+                "Dario Amodei"
+            ],
+            "title": "Deep reinforcement learning from human preferences",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Scott Emmons",
+                "Benjamin Eysenbach",
+                "Ilya Kostrikov",
+                "Sergey Levine"
+            ],
+            "title": "Rvs: What is essential for offline RL via supervised learning",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Scott Fujimoto",
+                "Shixiang Shane Gu"
+            ],
+            "title": "A minimalist approach to offline reinforcement learning",
+            "venue": "In Thirty-Fifth Conference on Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Federico Galatolo",
+                "Mario Cimino",
+                "Gigliola Vaglini"
+            ],
+            "title": "Generating images from caption and vice versa via CLIP-guided generative latent space search",
+            "venue": "In Proceedings of the International Conference on Image Processing and Vision Engineering,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Jonas Gehring",
+                "Gabriel Synnaeve",
+                "Andreas Krause",
+                "Nicolas Usunier"
+            ],
+            "title": "Hierarchical skills for efficient exploration",
+            "venue": "In Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Prasoon Goyal",
+                "Scott Niekum",
+                "Raymond J. Mooney"
+            ],
+            "title": "Using natural language for reward shaping in reinforcement learning",
+            "venue": "Proceedings of the 28th International Joint Conference on Artificial Intelligence,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Lin Guan",
+                "Sarath Sreedharan",
+                "Subbarao Kambhampati"
+            ],
+            "title": "Leveraging approximate symbolic models for reinforcement learning via skill diversity",
+            "venue": "arXiv preprint arXiv:2202.02886,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Lin Guan",
+                "Karthik Valmeekam",
+                "Subbarao Kambhampati"
+            ],
+            "title": "Relative behavioral attributes: Filling the gap between symbolic goal specification and reward learning from human preferences",
+            "venue": "In The Eleventh International Conference on Learning Representations,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Tuomas Haarnoja",
+                "Aurick Zhou",
+                "Pieter Abbeel",
+                "Sergey Levine"
+            ],
+            "title": "Soft actor-critic: Off-policy maximum entropy deep reinforcement learning with a stochastic actor, 2018",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Dylan Hadfield-Menell",
+                "Smitha Milli",
+                "Pieter Abbeel",
+                "Stuart J Russell",
+                "Anca Dragan"
+            ],
+            "title": "Inverse reward design",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Shengnan Han",
+                "Eugene Kelly",
+                "Shahrokh Nikou",
+                "Eric-Oluf Svee"
+            ],
+            "title": "Aligning artificial intelligence with human values: reflections from a phenomenological perspective",
+            "venue": "AI and SOCIETY,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Shashank Hegde",
+                "Sumeet Batra",
+                "K.R. Zentner",
+                "Gaurav S. Sukhatme"
+            ],
+            "title": "Generating behaviorally diverse policies with latent diffusion models",
+            "venue": "arXiv preprint arXiv:2305.18738,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Jonathan Ho",
+                "Tim Salimans"
+            ],
+            "title": "Classifier-free diffusion guidance",
+            "venue": "NeurIPS",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Jonathan Ho",
+                "Ajay Jain",
+                "Pieter Abbeel"
+            ],
+            "title": "Denoising diffusion probabilistic models",
+            "venue": "In Proceedings of the 34th International Conference on Neural Information Processing Systems,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Michael Janner",
+                "Yilun Du",
+                "Joshua Tenenbaum",
+                "Sergey Levine"
+            ],
+            "title": "Planning with diffusion for flexible behavior synthesis",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Kimin Lee",
+                "Laura Smith",
+                "Pieter Abbeel"
+            ],
+            "title": "Pebble: Feedback-efficient interactive reinforcement learning via relabeling experience and unsupervised pre-training",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Zhixuan Liang",
+                "Yao Mu",
+                "Mingyu Ding",
+                "Fei Ni",
+                "Masayoshi Tomizuka",
+                "Ping Luo"
+            ],
+            "title": "Adaptdiffuser: Diffusion models as adaptive self-evolving planners",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Haohe Liu",
+                "Zehua Chen",
+                "Yi Yuan",
+                "Xinhao Mei",
+                "Xubo Liu",
+                "Danilo Mandic",
+                "Wenwu Wang",
+                "Mark D Plumbley"
+            ],
+            "title": "Audioldm: Text-to-audio generation with latent diffusion models",
+            "venue": "International Conference on Machine Learning,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Yecheng Jason Ma",
+                "Shagun Sodhani",
+                "Dinesh Jayaraman",
+                "Osbert Bastani",
+                "Vikash Kumar",
+                "Amy Zhang"
+            ],
+            "title": "VIP: Towards universal visual reward and representation via value-implicit pre-training",
+            "venue": "NeurIPS",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Dipendra Misra",
+                "John Langford",
+                "Yoav Artzi"
+            ],
+            "title": "Mapping instructions and visual observations to actions with reinforcement learning",
+            "venue": "In Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Fei Ni",
+                "Jianye Hao",
+                "Yao Mu",
+                "Yifu Yuan",
+                "Yan Zheng",
+                "Bin Wang",
+                "Zhixuan Liang"
+            ],
+            "title": "Metadiffuser: Diffusion model as conditional planner for offline meta-rl, 2023",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Manu Orsini",
+                "Anton Raichuk",
+                "Leonard Hussenot",
+                "Damien Vincent",
+                "Robert Dadashi",
+                "Sertan Girgin",
+                "Matthieu Geist",
+                "Olivier Bachem",
+                "Olivier Pietquin",
+                "Marcin Andrychowicz"
+            ],
+            "title": "What matters for adversarial imitation learning",
+            "venue": "In Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Long Ouyang",
+                "Jeffrey Wu",
+                "Xu Jiang",
+                "Diogo Almeida",
+                "Carroll Wainwright",
+                "Pamela Mishkin",
+                "Chong Zhang",
+                "Sandhini Agarwal",
+                "Katarina Slama",
+                "Alex Ray"
+            ],
+            "title": "Training language models to follow instructions with human feedback",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Jongjin Park",
+                "Younggyo Seo",
+                "Jinwoo Shin",
+                "Honglak Lee",
+                "Pieter Abbeel",
+                "Kimin Lee"
+            ],
+            "title": "SURF: Semi-supervised reward learning with data augmentation for feedback-efficient preference-based reinforcement learning",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Deepak Pathak",
+                "Parsa Mahmoudieh",
+                "Michael Luo",
+                "Pulkit Agrawal",
+                "Dian Chen",
+                "Fred Shentu",
+                "Evan Shelhamer",
+                "Jitendra Malik",
+                "Alexei A. Efros",
+                "Trevor Darrell"
+            ],
+            "title": "Zero-shot visual imitation",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Tim Pearce",
+                "Tabish Rashid",
+                "Anssi Kanervisto",
+                "Dave Bignell",
+                "Mingfei Sun",
+                "Raluca Georgescu",
+                "Sergio Valcarcel Macua",
+                "Shan Zheng Tan",
+                "Ida Momennejad",
+                "Katja Hofmann",
+                "Sam Devlin"
+            ],
+            "title": "Imitating human behaviour with diffusion models",
+            "venue": "In The Eleventh International Conference on Learning Representations,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "William Peebles",
+                "Saining Xie"
+            ],
+            "title": "Scalable diffusion models with transformers",
+            "venue": "arXiv preprint arXiv:2212.09748,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Xingang Peng",
+                "Jiaqi Guan",
+                "Qiang Liu",
+                "Jianzhu Ma"
+            ],
+            "title": "MolDiff: Addressing the atom-bond inconsistency problem in 3D molecule diffusion generation",
+            "venue": "In Proceedings of the 40th International Conference on Machine Learning,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Patrick M Pilarski",
+                "Michael R Dawson",
+                "Thomas Degris",
+                "Farbod Fahimi",
+                "Jason P Carey",
+                "Richard S Sutton"
+            ],
+            "title": "Online human training of a myoelectric prosthesis controller via actor-critic reinforcement learning",
+            "venue": "IEEE international conference on rehabilitation robotics,",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "Aditya Ramesh",
+                "Mikhail Pavlov",
+                "Gabriel Goh",
+                "Scott Gray",
+                "Chelsea Voss",
+                "Alec Radford",
+                "Mark Chen",
+                "Ilya Sutskever"
+            ],
+            "title": "Zero-shot text-to-image generation",
+            "venue": "In Proceedings of the 38th International Conference on Machine Learning, Proceedings of Machine Learning Research,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Kashif Rasul",
+                "Calvin Seward",
+                "Ingmar Schuster",
+                "Roland Vollgraf"
+            ],
+            "title": "Autoregressive denoising diffusion models for multivariate probabilistic time series forecasting",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Ali Razavi",
+                "Aaron Van den Oord",
+                "Oriol Vinyals"
+            ],
+            "title": "Generating diverse high-fidelity images with vq-vae-2",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Machel Reid",
+                "Vincent Josua Hellendoorn",
+                "Graham Neubig"
+            ],
+            "title": "DiffusER: Diffusion via edit-based reconstruction",
+            "venue": "In The Eleventh International Conference on Learning Representations,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Nils Reimers",
+                "Iryna Gurevych"
+            ],
+            "title": "Sentence-bert: Sentence embeddings using siamese bertnetworks",
+            "venue": "In Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Robin Rombach",
+                "Andreas Blattmann",
+                "Dominik Lorenz",
+                "Patrick Esser",
+                "Bj\u00f6rn Ommer"
+            ],
+            "title": "Highresolution image synthesis with latent diffusion models",
+            "venue": "In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Olaf Ronneberger",
+                "Philipp Fischer",
+                "Thomas Brox"
+            ],
+            "title": "U-net: Convolutional networks for biomedical image segmentation",
+            "venue": "arXiv preprint arXiv:1505.04597,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "St\u00e9phane Ross",
+                "Geoffrey Gordon",
+                "Drew Bagnell"
+            ],
+            "title": "A reduction of imitation learning and structured prediction to no-regret online learning",
+            "venue": "In Proceedings of the fourteenth international conference on artificial intelligence and statistics,",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "Chitwan Saharia",
+                "William Chan",
+                "Saurabh Saxena",
+                "Lala Li",
+                "Jay Whang",
+                "Emily L. Denton",
+                "Seyed Kamyar Seyed Ghasemipour",
+                "Burcu Karagol Ayan",
+                "Seyedeh Sara Mahdavi",
+                "Raphael Gontijo Lopes",
+                "Tim Salimans",
+                "Jonathan Ho",
+                "David Fleet",
+                "Mohammad Norouzi"
+            ],
+            "title": "Photorealistic text-toimage diffusion models with deep language understanding",
+            "venue": "In Advances in Neural Information Processing Systems,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "John Schulman",
+                "Filip Wolski",
+                "Prafulla Dhariwal",
+                "Alec Radford",
+                "Oleg Klimov"
+            ],
+            "title": "Proximal policy optimization algorithms",
+            "venue": "arXiv preprint arXiv:1707.06347,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Jascha Sohl-Dickstein",
+                "Eric A. Weiss",
+                "Niru Maheswaranathan",
+                "Surya Ganguli"
+            ],
+            "title": "Deep unsupervised learning using nonequilibrium thermodynamics",
+            "venue": "In Proceedings of the 32nd International Conference on International Conference on Machine Learning,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Jiaming Song",
+                "Chenlin Meng",
+                "Stefano Ermon"
+            ],
+            "title": "Denoising diffusion implicit models",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Nisan Stiennon",
+                "Long Ouyang",
+                "Jeffrey Wu",
+                "Daniel Ziegler",
+                "Ryan Lowe",
+                "Chelsea Voss",
+                "Alec Radford",
+                "Dario Amodei",
+                "Paul F Christiano"
+            ],
+            "title": "Learning to summarize with human feedback",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Emanuel Todorov",
+                "Tom Erez",
+                "Yuval Tassa"
+            ],
+            "title": "Mujoco: A physics engine for model-based control",
+            "venue": "In 2012 IEEE/RSJ International Conference on Intelligent Robots and Systems,",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Saran Tunyasuvunakool",
+                "Alistair Muldal",
+                "Yotam Doron",
+                "Siqi Liu",
+                "Steven Bohez",
+                "Josh Merel",
+                "Tom Erez",
+                "Timothy Lillicrap",
+                "Nicolas Heess",
+                "Yuval Tassa"
+            ],
+            "title": "dm control: Software and tasks for continuous control",
+            "venue": "Software Impacts,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Saran Tunyasuvunakool",
+                "Alistair Muldal",
+                "Yotam Doron",
+                "Siqi Liu",
+                "Steven Bohez",
+                "Josh Merel",
+                "Tom Erez",
+                "Timothy Lillicrap",
+                "Nicolas Heess",
+                "Yuval Tassa"
+            ],
+            "title": "dm control: Software and tasks for continuous control",
+            "venue": "Software Impacts,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Mel Vecerik",
+                "Todd Hester",
+                "Jonathan Scholz",
+                "Fumin Wang",
+                "Olivier Pietquin",
+                "Bilal Piot",
+                "Nicolas Heess",
+                "Thomas Roth\u00f6rl",
+                "Thomas Lampe",
+                "Martin Riedmiller"
+            ],
+            "title": "Leveraging demonstrations for deep reinforcement learning on robotics problems with sparse rewards",
+            "venue": "arXiv preprint arXiv:1707.08817,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Zhendong Wang",
+                "Jonathan J Hunt",
+                "Mingyuan Zhou"
+            ],
+            "title": "Diffusion policies as an expressive policy class for offline reinforcement learning",
+            "venue": "In The Eleventh International Conference on Learning Representations,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Aaron Wilson",
+                "Alan Fern",
+                "Prasad Tadepalli"
+            ],
+            "title": "A bayesian approach for policy learning from trajectory preference queries. Advances in neural information processing",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Christian Wirth",
+                "Johannes F\u00fcrnkranz"
+            ],
+            "title": "Preference-based reinforcement learning: A preliminary survey",
+            "venue": "In Proceedings of the ECML/PKDD-13 Workshop on Reinforcement Learning from Generalized Feedback: Beyond Numeric Rewards,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Baiting Zhu",
+                "Meihua Dang",
+                "Aditya Grover"
+            ],
+            "title": "Scaling pareto-efficient decision making via offline multi-objective rl",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Hopper. Hopper"
+            ],
+            "title": "single-legged robot selected from the Gym-MuJoCo locomotion tasks. We use pre-trained PPO (Schulman et al., 2017) agents provided by PEDA (Zhu et al., 2023) to collect a total of 5 million time steps for our datasets. The relative magnitudes of speed and height provided by PEDA are used to generate synthetic labels. Walker. Walker is a simplified humanoid bipedal robot selected from the deepmind control suite",
+            "year": 2023
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1 INTRODUCTION",
+            "text": "One of the major challenges in building versatile RL agents is aligning their behaviors with human preferences (Han et al., 2021; Guan et al., 2023). This is primarily due to the inherent abstractness and mutability of human preferences. The abstractness makes it difficult to directly quantify preferences through a hand-designed reward function (Hadfield-Menell et al., 2017; Guan et al., 2022), while the mutability makes it challenging to design a one-size-fits-all solution since preferences vary among individuals and change over time (Pearce et al., 2023). Addressing these two challenges can greatly enhance the applicability and acceptance of RL agents in real life.\nThe abstractness of human preferences makes manual-designed reward functions not available (Vecerik et al., 2018; Hadfield-Menell et al., 2017). Other sources of information such as image goals or video demonstrations are being incorporated to help agents understand preferred behaviors (Andrychowicz et al., 2017; Pathak et al., 2018; Ma et al., 2022). However, expressing preferences through images or videos is inconvenient for users. Expressing through natural language is a more user-friendly option. Many studies have investigated how to map natural languages to reward signals for language-guided learning (Goyal et al., 2019; Arumugam et al., 2017; Misra et al., 2017). However, due to language ambiguity, grounding agent behaviors becomes difficult, leading to limited effective language instructions. One promising approach is to deconstruct the agent\u2019s behavior into combinations of multiple Relative Behavioral Attributes (RBA) at varying levels of strength (Guan et al., 2023), allowing humans to express preferences in terms of relative attribute strengths.\n\u2217These authors contributed equally to this work. \u2020Corresponding author: Jianye Hao (jianye.hao@tju.edu.cn)\nar X\niv :2\n31 0.\n02 05\n4v 1\n[ cs\n.A I]\n3 O\nct 2\n02 3\nThe primary limitation of this approach is that it merely refines attribute evaluation into a myopic, single-step state-action reward model, ignoring the impact on overall trajectory performance.\nThe mutability of human preferences emphasizes the need for zero-shot behavior customizing. Training agents using an attribute-conditioned reward model fails to overcome this issue (Guan et al., 2023), as it requires constant fine-tuning or even retraining whenever the user\u2019s intention changes, resulting in a poor user experience. To bridge this gap, we need a model to fit diverse behaviors and support retrieving based on the relative attribute strengths without repetitive training. Although standard choices like conditional behavior cloning can achieve similar goals, they are limited by poor expressiveness and fail to capture diverse human preferences (Ross et al., 2011; Razavi et al., 2019; Orsini et al., 2021). Therefore, we focus on powerful conditional generative models, specifically diffusion models, which have demonstrated excellent expressiveness in dealing with complex distributions and superior performance in decision-making tasks with complex dynamics (Janner et al., 2022; Ajay et al., 2023).\nIn this paper, we introduce AlignDiff, a novel framework that leverages RLHF to quantify human preferences, covering abstractness, and utilizes them to guide diffusion planning for zero-shot behavior customizing, covering mutability. We created multi-perspective human feedback datasets containing comparisons for the attributes on diverse behaviors, which were used to train a transformer-based attribute strength model. This model captures the relative strength of attributes on the trajectory level. We then used the attribute strength model to annotate behavioral datasets and trained a diffusion model for planning. Within AlignDiff, agents can accurately match user-customized behaviors and efficiently switch from one to another. Its name, AlignDiff, represents both Alignment Diffusion and aligning to bridge the difference between human preferences and\nagent behaviors. We summarize the main contributions of AlignDiff as follows:\n\u2022 We introduce AlignDiff: a novel framework that leverages RLHF technique to quantify human preferences and utilizes them to guide diffusion planning for zero-shot behavior customizing. \u2022 We establish reusable multi-perspective human feedback datasets through crowdsourcing, which contains diverse human judgments on relative strengths of pre-defined attributes for various tasks. By making our dataset repositories publicly available, we aim to contribute to the wider adoption of human preference aligning. \u2022 We design a set of metrics to evaluate an agent\u2019s preference matching, switching, and covering capability, and evaluate AlignDiff on various locomotion tasks. The results demonstrate its superior performance in all these aspects. Its capability of completing unseen downstream tasks under human instructions also showcases the promising potential for human-AI collaboration."
+        },
+        {
+            "heading": "2 RELATED WORKS",
+            "text": ""
+        },
+        {
+            "heading": "2.1 REINFORCEMENT LEARNING FROM HUMAN FEEDBACK",
+            "text": "Reinforcement Learning from Human Feedback (RLHF) is a powerful technique that can speed up AI training and enhance AI capabilities by leveraging human feedback. (Pilarski et al., 2011; Akrour et al., 2011; Wilson et al., 2012; Akrour et al., 2012; Wirth & Fu\u0308rnkranz, 2013). There are various forms of human feedback (B\u0131y\u0131k et al., 2022; Cabi et al., 2019; Lee et al., 2021), and collecting pairwise comparison feedback on decision trajectories is a common approach in RLHF. This feedback is used to learn reward models for training RL agents, which significantly improves training efficiency and performance, especially in environments with sparse or ill-defined rewards (Christiano et al., 2017; Lee et al., 2021; Park et al., 2022). However, their limitation lies in the focus on optimizing a single objective. In recent years, RLHF has also been applied to fine-tune\nlarge language models (LLMs) by leveraging human preferences to improve truthfulness and reduce toxic outputs (Stiennon et al., 2020; Ouyang et al., 2022). These methods highlight its potential for human preference quantification. RBA (Guan et al., 2023) leverages RLHF to distill human understanding of abstract preferences into an attribute-conditioned reward model, which achieves simple and effective quantification. However, this approach has limitations. It refines the evaluation of attributes into a single step and ignores the impact on the overall trajectory. Furthermore, it requires retraining whenever new preferences emerge."
+        },
+        {
+            "heading": "2.2 DIFFUSION MODELS FOR DECISION MAKING",
+            "text": "Diffusion models, a type of score matching-based generative model (Sohl-Dickstein et al., 2015; Ho et al., 2020), initially gained popularity in the field of image generation (Ramesh et al., 2021; Galatolo et al., 2021; Saharia et al., 2022; Rombach et al., 2022). Their strong conditional generation capabilities have led to success in various domains (Peng et al., 2023; Rasul et al., 2021; Reid et al., 2023; Liu et al., 2023), including decision making (Janner et al., 2022; Liang et al., 2023; Chen et al., 2023; Wang et al., 2023; Pearce et al., 2023; Hegde et al., 2023). One common approach is employing diffusion models to generate decision trajectories conditioned on rewards or other auxiliary information, which are then used for planning (Ajay et al., 2023; Ni et al., 2023). However, these reward-conditioned generations only utilize a small portion of the learned distribution. We propose using human preferences to guide diffusion models to discover and combine diverse behaviors, ensuring the full utilization of the learned trajectory distribution."
+        },
+        {
+            "heading": "3 PRELIMINARIES",
+            "text": "Problem setup: We consider the scenario where human users may want to customize an agent\u2019s behavior at any given time. This problem can be framed as a reward-free Markov Decision Process (MDP) denoted as M = \u27e8S,A, P,\u03b1\u27e9. Here, S represents the set of states, A represents the set of actions, P : S \u00d7 A \u00d7 S \u2192 [0, 1] is the transition function, and \u03b1 = {\u03b11, \u00b7 \u00b7 \u00b7 , \u03b1k} represents a set of k predefined attributes used to characterize the agent\u2019s behaviors. Given a state-only trajectory \u03c4 l = {s0, \u00b7 \u00b7 \u00b7 , sl\u22121}, we assume the existence of an attribute strength function that maps the trajectory to a relative strength vector \u03b6\u03b1(\u03c4 l) = v\u03b1 = [v\u03b11 , \u00b7 \u00b7 \u00b7 , v\u03b1k ] \u2208 [0, 1]k. Each element of the vector indicates the relative strength of the corresponding attribute. A value of 0 for v\u03b1i implies the weakest manifestation of attribute \u03b1i, while a value of 1 represents the strongest manifestation. We formulate human preferences as a pair of vectors (v\u03b1targ,m\n\u03b1), where v\u03b1targ represents the target relative strengths, and m\u03b1 \u2208 {0, 1}k is a binary mask indicating which attributes are of interest. The objective is to find a policy a = \u03c0(s|v\u03b1targ,m\u03b1) that minimizes the L1 norm ||(v\u03b1targ \u2212 \u03b6\u03b1(E\u03c0[\u03c4 l])) \u25e6m\u03b1||1, where \u25e6 denotes the Hadamard product. We learn human preferences from an unlabeled state-action dataset D = {\u03c4}, which contains multiple behaviors. Preference-based Reinforcement Learning (PbRL) (Christiano et al., 2017) is a framework that leverages human feedback to establish reward models for RL training. In PbRL, researchers typically collect pairwise feedback from annotators on decision trajectories (\u03c41, \u03c42). Feedback labels are represented as y \u2208 {(1, 0), (0, 1), (0.5, 0.5)}, where (1, 0) indicates that \u03c41 performs better, (0, 1) indicates that \u03c42 performs better, and (0.5, 0.5) indicates comparable performance. The collected feedback dataset is denoted as Dp = {\u03c41, \u03c42, y} and can be used to train reward models. Denoising Diffusion Implicit Models (DDIM) (Song et al., 2021) are a type of diffusion model that consists of a non-Markovian forward process and a Markovian reverse process for learning the data distribution q(x). The forward process q(xt|xt\u22121,x0) is non-Markovian but designed to ensure that q(xt|x0) = N ( \u221a \u03betx0, (1 \u2212 \u03bet)I). The reverse process p\u03d5(xt\u22121|xt) := N (\u00b5\u03d5(xt, t),\u03a3t) is trained to approximate the inverse transition kernels. Starting with Gaussian noise xT \u223c N (0, I), a sequence of latent variables (xT\u22121, \u00b7 \u00b7 \u00b7 ,x1) is generated iteratively through a series of reverse steps using the predicted noise. The noise predictor \u03f5\u03d5(xt, t), parameterized by a deep neural network, estimates the noise \u03f5 \u223c N (0, I) added to the dataset sample x0 to produce the noisy sample xt. Using DDIM, we can choose a short subsequence \u03ba of length S to perform the reverse process, significantly enhancing sampling speed.\nClassifier-free guidance (CFG) (Ho & Salimans, 2021) is a guidance method for conditional generation, which requires both a conditioned noise predictor \u03f5\u03d5(xt, t, c) and an unconditioned one"
+        },
+        {
+            "heading": "Reward-free",
+            "text": "\u03f5\u03d5(xt, t), where c is the condition variable. By setting a guidance scale w and giving a condition c, we use \u03f5\u0303\u03d5(xt, t, c) = (1 + w)\u03f5\u03d5(xt, t, c)\u2212 w\u03f5\u03d5(xt, t) to predict noise during the reverse process."
+        },
+        {
+            "heading": "4 METHODOLOGY",
+            "text": "We propose AlignDiff, a novel framework that leverages RLHF to quantify human preferences and utilizes them to guide diffusion planning for zero-shot behavior customizing. The process of generalization is depicted in Fig. 2, and the framework consists of four parts. Firstly, we collect multiperspective human feedback through crowdsourcing. Secondly, we use this feedback to train an attribute strength model, which we then use to relabel the behavioral datasets. Thirdly, we train a diffusion model on the annotated datasets, which can understand and generate trajectories with various attributes. Lastly, we can use AlignDiff for inference, aligning agent behaviors with human preferences at any time. Details of each part are discussed in the following sections."
+        },
+        {
+            "heading": "4.1 MULTI-PERSPECTIVE HUMAN FEEDBACK COLLECTION",
+            "text": "We extract a small subset of pairs {(\u03c41, \u03c42)} from the behavioral datasets D and ask human annotators to provide pairwise feedback. Instead of simply asking them to choose a better one between two videos, we request analyzing the relative performance of each attribute \u03b1i, resulting in a feedback dataset Dp = {(\u03c41, \u03c42, yattr)}, where yattr = (y1, \u00b7 \u00b7 \u00b7 , yk). For example (see Fig. 2, part 1\u20dd), to evaluate a bipedal robot with attributes (speed, stride, humanness), the annotators would be provided with two videos and asked to indicate which one has higher speed/bigger stride/better humanness, respectively. This process is crucial for creating a model that can quantify relative attribute strength, as many attributes, such as humanness, can only be evaluated through human intuition. Even for more specific and measurable attributes, such as speed, using human labels helps the model produce more distinct behaviors, as shown by our experiments."
+        },
+        {
+            "heading": "4.2 ATTRIBUTE STRENGTH MODEL TRAINING",
+            "text": "After collecting the feedback dataset, we can train the attribute strength model by optimizing a modified Bradley-Terry objective (Bradley & Terry, 1952). We define the probability that human annotators perceive \u03c41 to exhibit a stronger performance on \u03b1i as follows:\nP\u03b1i [\u03c41 \u227b \u03c42] = exp \u03b6\u0302\u03b1\u03b8,i(\u03c41)\u2211\nj\u2208{1,2} exp \u03b6\u0302 \u03b1 \u03b8,i(\u03c4j)\n(1)\nwhere \u03b6\u0302\u03b1\u03b8,i(\u03c4) indicates the i-th element of \u03b6\u0302 \u03b1 \u03b8 (\u03c4). To approximate the attribute strength function, we optimize the following modified Bradley-Terry objective:\nL(\u03b6\u0302\u03b1\u03b8 ) = \u2212 \u2211\n(\u03c41,\u03c42,yattr)\u2208Dp \u2211 i\u2208{1,\u00b7\u00b7\u00b7 ,k} yi(1) logP \u03b1i [\u03c41 \u227b \u03c42] + yi(2) logP\u03b1i [\u03c42 \u227b \u03c41] (2)\nIt\u2019s worth noting that there are significant differences between learning the attribute strength model and the reward model in RLHF. For instance, one-step state-action pairs cannot capture the attribute strengths, so \u03b6\u0302\u03b1\u03b8 must be designed as a mapping concerning trajectories. Additionally, we aim for \u03b6\u0302\u03b1\u03b8 to accommodate variable-length trajectory inputs. Therefore, we use a transformer encoder as the structure (see Fig. 2, part 2\u20dd), which includes an extra learnable embedding concatenated with the input. The output corresponding to this embedding is then passed through a linear layer to map it to the relative strength vector v\u03b1. After training, we can partition the dataset D into fixedlength trajectories of length H . These trajectories are then annotated using \u03b6\u0302\u03b1\u03b8 , resulting in a dataset DG = {(\u03c4H ,v\u03b1)} for diffusion training.\n4.3 DIFFUSION TRAINING\nWe use relative strength values v\u03b1 and attribute masks m\u03b1 as conditioning inputs c for the diffusion model, resulting in a conditioned noise predictor \u03f5\u03d5(xt,v\u03b1,m\u03b1) and an unconditioned one \u03f5\u03d5(xt). According to our definition of m\u03b1, \u03f5\u03d5(xt) is equivalent to a conditioned noise predictor with a mask where all values are 0. Therefore, we only need one network to represent both types of noise predictors simultaneously. However, the network structure must meet two requirements: 1) m\u03b1 should eliminate the influence of nonrequested attributes on the model while preserving the effect of the interested attributes, and 2) v\u03b1 cannot be simply multiplied with m\u03b1 and fed into the network, as a value of 0 in v\u03b1 still carries specific meanings. To meet these requirements, we design an attribute-oriented encoder. First, we discretize each dimension of the rela-\ntive strength vector into V selectable tokens as follows:\nv\u03b1id = \u230a clip(v \u03b1i , 0, 1\u2212 \u03b4) \u00b7 V \u230b+ (i\u2212 1)V, i = 1, \u00b7 \u00b7 \u00b7 , k (3)\nwhere \u03b4 is a small slack variable. This ensures that each of the V possible cases for each attribute is assigned a unique token. As a result, the embedding layer outputs a vector that contains information about both attribute category and strength. This vector is then multiplied with the mask, passed through a multi-head self-attention layer and a linear layer, and used as a conditioning input to the noise predictor. Furthermore, due to our requirement of a large receptive field to capture the attributes on the trajectory level, we employ a transformer-based backbone, DiT (Peebles & Xie, 2023), for our noise predictor, instead of the commonly used UNet (Ronneberger et al., 2015). To adopt DiT for understanding relative attribute strengths and guiding decision trajectory generation, we made several structural modifications. (See Fig. 2, part AlignDiff Architecture). Combining all the above components, we train a diffusion model with the noise predictor loss.\nL(\u03d5) = E(x0,v\u03b1)\u223cDG,t\u223cUniform(T ),\u03f5\u2208N (0,I),m\u03b1\u223cB(k,p)||\u03f5\u2212 \u03f5\u03d5(xt, t,v \u03b1,m\u03b1)||22 (4)"
+        },
+        {
+            "heading": "4.4 ALIGNDIFF INFERENCE",
+            "text": "With an attribute strength model \u03b6\u0302\u03b1\u03b8 and a noise predictor \u03f5\u03d5, we can proceed to plan with AlignDiff. Suppose at state st, given a preference (v\u03b1,m\u03b1), we use DDIM sampler with a subsequence \u03ba of\nlength S to iteratively generate candidate trajectories in an inpainting manner:\nx\u03bai\u22121 = \u221a \u03be\u03bai\u22121( x\u03bai \u2212 \u221a 1\u2212 \u03be\u03bai \u03f5\u0303\u03d5(x\u03bai)\u221a\n\u03be\u03bai ) +\n\u221a 1\u2212 \u03be\u03bai\u22121 \u2212 \u03c32\u03bai \u03f5\u0303\u03d5(x\u03bai) + \u03c3\u03bai\u03f5\u03bai (5)\nEach \u03c4 in the candidate trajectories satisfies human preference (v\u03b1,m\u03b1) a priori. Then we utilize \u03b6\u0302\u03b1\u03b8 to criticize and select the most aligned one to maximize the following objective:\nJ (\u03c4) = ||(v\u03b1 \u2212 \u03b6\u0302\u03b1\u03b8 (\u03c4)) \u25e6m\u03b1||22 (6)\nThe first step of the chosen plan is executed in the environment. For the convenience of readers, we summarize the training and inference phases of AlignDiff in Algorithm 1 and Algorithm 2. Additionally, to make interaction easier, we add a natural language control interface. By keeping an instruction corpus and using Sentence-BERT (Reimers & Gurevych, 2019) to calculate the similarity between the instruction and the sentences in the corpus, we can find the intent that matches the closest and modify the attributes accordingly."
+        },
+        {
+            "heading": "5 EXPERIMENTS",
+            "text": "We conduct experiments on various locomotion tasks from MuJoCo (Todorov et al., 2012) and DMControl (Tunyasuvunakool et al., 2020a) to evaluate the preference aligning capability of the algorithm. Through the experiments, we aim to answer the following research questions (RQs): Matching (RQ1): Can AlignDiff better align with human preferences compared to other baselines? Switching (RQ2): Can AlignDiff quickly and accurately switch between different behaviors? Covering (RQ3): Can AlignDiff cover diverse behavioral distributions in the dataset? Robustness (RQ4): Can AlignDiff exhibit robustness to noisy datasets and limited feedback?\n5.1 EXPERIMENTAL SETUP\nBenchmarks: We select hopper, walker, and humanoid locomotion tasks as the benchmarks (See Appendix A for more details). Predefined attributes are presented in Table 1. In each experiment, we compare synthetic labels generated by scripts (denote as S) and human labels collected by crowdsourcing (denote as H) separately to demonstrate the generalizability of AlignDiff.\nBaselines: There are several existing paradigms for constructing policies conditioned on human preferences, which we use as baselines in our experiments (See Appendix C for more details):\n\u2022 Goal conditioned behavior clone (GC) leverages supervised learning to train a goal conditioned policy \u03c0(s|v\u03b1,m\u03b1) for imitating behaviors that match human preferences. We implement this baseline following RvS (Emmons et al., 2022). \u2022 Sequence modeling (SM) is capable of predicting the optimal action based on historical data and prompt tokens, allowing it to leverage the simplicity and scalability of Transformer architectures. We adopt the structure of Decision Transformer (DT) (Chen et al., 2021) and incorporate the preference (v\u03b1,m\u03b1) as an additional token in the input sequence. \u2022 TD Learning (TDL) is a classic RL paradigm for learning optimal policies. TD3BC (Fujimoto & Gu, 2021) is one such algorithm designed for offline RL settings. Since a reward model is required to provide supervised training signals for policy optimization, we distill an attribute-conditioned reward model from \u03b6\u0302\u03b1\u03b8 to train TD3BC. This serves as an improved version of RBA.\nThroughout the experiments, all algorithms share the same attribute strength model to ensure fairness. The source of human feedback datasets can be found in Appendix B."
+        },
+        {
+            "heading": "5.2 MATCHING (RQ1)",
+            "text": "Evaluation by attribute strength model: We conducted multiple trials to collect the mean absolute error (MAE) between the evaluated and target relative strengths. For each trial, we sample an initial state s0, a target strengths v\u03b1targ, and a mask m\n\u03b1, as conditions for the execution of each algorithm. Subsequently, the algorithm runs for T steps, resulting in the exhibited relative strengths v\u03b1 evaluated by \u03b6\u0302\u03b8. We then calculated the percentage of samples that fell below pre-designed thresholds to create the MAE curves presented in Fig. 4. The area enclosed by the curve and the axes were used to define a metric, which is presented in Table 2. A larger metric value indicates better performance in matching. Experiments show that AlignDiff performs significantly better than other baselines on the Hopper and Walker benchmarks. On the Humanoid benchmark, AlignDiff is the only one that demonstrates preferences aligning capability, while the other baselines fail to learn useful policies. We also find that AlignDiff exhibits slightly better performance on synthetic labels, which may be attributed to the script evaluation being inherently rational without any noise.\nEvaluation by humans We further conducted a questionnaire-based evaluation. Specifically, we instructed the algorithm to adjust an attribute to three different levels (corresponding to 0.1, 0.5, and 0.9), resulting in three video segments. The order of the videos was shuffled, and human evaluators were asked to sort them. A total of 2,160 questionnaires were collected from 424 human evaluators. The sorting accuracy results are reported in Table 3, in which a higher accuracy indicates better performance in matching human preferences. We observe that AlignDiff performs significantly better than other baselines across different environments. This leads us to conclude that AlignDiff successfully utilizes the powerful conditional generation abilities of diffusion models to exhibit notable differences in the specified attributes. Additionally, we find that sorting accuracy is much higher when using human labels compared to synthetic labels. This suggests that human labels provide a level of intuition that synthetic labels cannot, resulting in better alignment with human preferences. To ensure impartiality, we have also conducted a t-test on the evaluator groups. We refer to Appendix D for more information on the evaluation process.\nInvestigation of the humanness attribute: We conducted a specific human evaluation to assess the humanness attribute, and the results are reported in a separate row of both Table 2 and Table 3. In terms of humanness, we observe that AlignDiff performs significantly better than other baselines. With the aid of human labels, AlignDiff is able to effectively capture the features of human motion patterns and exhibit the most human-like behavior."
+        },
+        {
+            "heading": "5.3 SWITCHING (RQ2)",
+            "text": "Track the changing target attributes: To evaluate the ability of the learned model to switch between different behaviors, we conducted an attribute-tracking experiment on the Walker benchmark. Starting from the same initial state, we ran each algorithm for 800 steps, modifying the target attributes v\u03b1targ at steps (0, 200, 400, 600), and recorded the actual speed and torso height of the robot The tracking curves are presented in Fig. 6. We observe that AlignDiff quickly and accurately tracked the ground truth, whereas the other baselines showed deviations from it, despite demonstrating a trend in attribute changes.\nComplete unseen tasks by attribute instructions: In addition, we tested AlignDiff\u2019s zero-shot capability under human instructions by deploying it to unseen downstream tasks. By adjusting attributes such as speed, torso height, and stride length by the human instructor, the walker robot, which was only trained on locomotion datasets, successfully completed the gap-crossing and obstacle avoidance tasks from Bisk benchmark (Gehring et al., 2021). Fig. 3 presents selected key segments of this test, highlighting the promising potential of AlignDiff for human-AI collaboration."
+        },
+        {
+            "heading": "5.4 COVERING (RQ3)",
+            "text": "To align with complex and variable human intention, AlignDiff requires the capability to cover a diverse range of behaviors within the offline datasets. This investigation aims to determine: Can\nAlignDiff produce the most probable dynamics within the datasets, and even combine different attributes to produce unseen behaviors? We compare the distribution of p(u, v), which represents the likelihood that the algorithm produces trajectories with the actual attribute u given the target strength v, between the algorithm and the datasets. Due to intractability, Monte Carlo methods are used to approximate it, as detailed in Appendix E. We focus on the speed and torso height attributes defined in the Walker benchmark, as the corresponding physical quantities can be directly obtained from the MuJoCo engine. As shown in Fig. 5, we report the distributions corresponding to each algorithm and observe that AlignDiff not only covers the behaviors in the datasets but also fills in the \u201cdisconnected regions\u201d in the ground truth distribution, indicating the production of unseen behaviors.\n5.5 ROBUSTNESS (RQ4)\nWe evaluate the robustness of our algorithm from two aspects: 1) Robustness to dataset noise. We established two additional datasets for the Walker benchmark, where random decision trajectories are mixed into the original datasets at proportions of 20% and 50%, respectively. We train algorithms on the original datasets and these two noisy datasets. The performance is shown in Table 4. The\nexperiment shows that AlignDiff has the best robustness to noise. 2) Robustness to the number of feedback labels. We compare the performance of AlignDiff trained on 10k, 2k, and 500 synthetic labels on the Hopper benchmark, as shown in Table 5. The experiment shows that the performance does not decrease significantly when the number of feedback labels decreases from 10k to 2k, and only some performance loss is observed when the number decreases to 500. This result indicates that AlignDiff can achieve good performance with fewer feedback labels."
+        },
+        {
+            "heading": "6 CONCLUSION",
+            "text": "In this paper, we introduce AlignDiff, a novel framework that achieves zero-shot human preference aligning. Our framework consists of two main components. The first component utilizes RLHF technology to quantify human preferences, addressing the abstractness of human preferences. The second component includes a behavior-customizable diffusion model, which can plan to accurately match desired behaviors and efficiently switch from one to another, addressing the mutability of human preferences. We conducted various experiments to evaluate the algorithm\u2019s capability of preference matching, switching, and covering. The results demonstrate that AlignDiff outperforms other strong baselines with exceptional performance. However, like other diffusion-based RL algorithms (Hegde et al., 2023), AlignDiff is slow at inference time due to the iterative sampling process. Performing faster sampling may mitigate the issue. The ability of AlignDiff to accomplish unseen tasks under human instructions showcases its potential to combine skills and complete complex tasks under the command of higher-level models (e.g. LLMs), which we leave as future work."
+        },
+        {
+            "heading": "A TASKS AND DATASETS",
+            "text": "In this section, we will provide a detailed description of three locomotion tasks that serve as experimental benchmarks, along with an explanation of how we collected the corresponding offline datasets.\nHopper. Hopper is a single-legged robot selected from the Gym-MuJoCo locomotion tasks. We use pre-trained PPO (Schulman et al., 2017) agents provided by PEDA (Zhu et al., 2023) to collect a total of 5 million time steps for our datasets. The relative magnitudes of speed and height provided by PEDA are used to generate synthetic labels.\nWalker. Walker is a simplified humanoid bipedal robot selected from the deepmind control suite benchmarks (Tunyasuvunakool et al., 2020b). To collect an offline dataset, we modify the reward function of the original Walker benchmark and randomly select target velocities and heights. We train 32 policies with SAC (Haarnoja et al., 2018). These policies are used to collect a total of 3.2 million time steps for our datasets. To generate synthetic labels, we retrieve the corresponding physical quantities from the MuJoCo engine to compute and compare the attributes of two trajectories. However, humanness can only be obtained through human feedback, making it infeasible to employ in the synthetic labels setting.\nHumanoid. Humanoid is a 3D bipedal robot designed to simulate a human. To collect an offline dataset, we modify the reward function of the original Humanoid benchmark and randomly select target velocities and heights. We train 40 policies with SAC. These policies are used to collect a total of 4 million time steps for our datasets. To generate synthetic labels, we retrieve the corresponding physical quantities from the MuJoCo engine to compute and compare the attributes of two trajectories. However, humanness can only be obtained through human feedback, making it infeasible to employ in the synthetic labels setting."
+        },
+        {
+            "heading": "B HUMAN FEEDBACK COLLECTION DETAILS",
+            "text": "We recruited a total of 100 crowdsourcing workers to annotate 4,000 feedback labels for each environment. Each worker was assigned to annotate 120 labels. They were given video pairs that lasted for about 3 seconds (100-time steps, generating videos at 30 frames per second) and were asked to indicate which showed stronger performance based on pre-defined attributes. We made sure that each worker was compensated fairly and provided them with a platform that allowed them to save their progress and stop working at any time. There is no reason to believe that crowdsourcing workers experienced any physical or mental risks in the course of these studies. The task description provided to crowdsourcing workers is as follows:\nHopper\nQuestion: For each attribute, which side of the video pair shows a stronger performance? Options: (Left Side, Equal, Right Side) Definitions of pre-defined attributes: \u2022 Speed: The speed at which the agent moves to the right. The greater the distance moved\nto the right, the faster the speed. \u2022 Jump height: If the maximum height the agent can reach when jumping is higher, stronger\nperformance should be selected. Conversely, weaker performance should be selected if the maximum height is lower. If it is difficult to discern which is higher, select equal.\nWalker\nQuestion: For each attribute, which side of the video pair shows a stronger performance? Options: (Left Side, Equal, Right Side) Definitions of pre-defined attributes: \u2022 Speed: The speed at which the agent moves to the right. The greater the distance moved\nto the right, the faster the speed.\n\u2022 Stride: The maximum distance between the agent\u2019s feet. When the agent exhibits abnormal behaviors such as falling, shaking, or unstable standing, weaker performance should be selected.\n\u2022 Leg Preference: If the agent prefers the left leg and exhibits a walking pattern where the left leg drags the right leg, a stronger performance should be selected. Conversely, weaker performance should be selected. If the agent walks with both legs in a normal manner, equal should be selected.\n\u2022 Torso height: The torso height of the agent. If the average height of the agent\u2019s torso during movement is higher, stronger performance should be selected. Conversely, weaker performance should be selected if the average height is lower. If it is difficult to discern which is higher, select equal.\n\u2022 Humanness: The similarity between agent behavior and humans. When the agent is closer to human movement, stronger performance should be selected. When the agent exhibits abnormal behaviors such as falling, shaking, or unstable standing, weaker performance should be selected.\nHumanoid\nQuestion: For each attribute, which side of the video pair shows a stronger performance? Options: (Left Side, Equal, Right Side) Definitions of pre-defined attributes: \u2022 Speed: The speed at which the agent moves to the right. The greater the distance moved\nto the right, the faster the speed. \u2022 Head height: The head height of the agent. If the average height of the agent\u2019s head\nduring movement is higher, stronger performance should be selected. Conversely, weaker performance should be selected if the average height is lower. If it is difficult to discern which is higher, select equal.\n\u2022 Humanness: The similarity between agent behavior and humans. When the agent is closer to human movement, stronger performance should be selected. When the agent exhibits abnormal behaviors such as falling, shaking, or unstable standing, weaker performance should be selected."
+        },
+        {
+            "heading": "C BASELINES DETAILS",
+            "text": "In this section, we introduce the implementation details of each baseline in our experiments, the reasonable and necessary modifications compared to the original algorithm, and the reasons for the modifications."
+        },
+        {
+            "heading": "C.1 GC(GOAL CONDITIONED BEHAVIOR CLONE)",
+            "text": "GC leverages supervised learning to train a goal conditioned policy \u03c0\u03b8(at|st,v\u03b1,m\u03b1). We implement this baseline based on RvS (Emmons et al., 2022) and choose human preferences (v\u03b1,m\u03b1) as w. Following the best practice introduced in RvS, we implement GC policy as a 3-layer MLP, which formulates a truncated Gaussian distribution. Given dataset DG = {\u03c4H ,v\u03b1}, we optimize the policy to maximize: \u2211\n(\u03c4H ,v\u03b1)\u2208DG\n\u2211 1\u2264t\u2264H Em\u03b1\u223cB(k,p)[log \u03c0\u03b8(at|st,v\u03b1,m\u03b1)] (7)\nThe hyperparameters are presented in Table 6. The selection is nearly identical to the choices provided in Emmons et al. (2022)."
+        },
+        {
+            "heading": "C.2 SM(SEQUENCE MODELING)",
+            "text": "SM is capable of predicting the optimal action based on historical data and prompt tokens, allowing it to leverage the simplicity and scalability of Transformer architectures. Following the structure introduced in DT (Chen et al., 2021), we design the structure of the SM baseline as a causal Transformer. In comparison to DT, where reward is present as a signal, our task only involves a target strength vector v\u03b1 and an attribute mask m\u03b1. Therefore, we remove the RTG tokens and instead set the first token as the embedding of (v\u03b1,m\u03b1). During the training phase, SM is queried to predict the current action at based on (v\u03b1,m\u03b1), historical trajectories (s<t, a<t), and the current state st. We optimize SM to minimize:\u2211\n(\u03c4H ,v\u03b1)\u2208DG\n\u2211 1\u2264t\u2264H Em\u03b1\u223cB(k,p)[||f(s\u2264t, a<t,v\u03b1,m\u03b1)\u2212 at||22] (8)\nDuring the inference phase, we use at = f(s\u2264t, a<t,v\u03b1,m\u03b1) as our policy and continuously store state-action pair into the historical trajectory. The hyperparameters are presented in Table 7. The selection is nearly identical to the choices provided in Chen et al. (2021)."
+        },
+        {
+            "heading": "C.3 TDL(TD LEARNING)",
+            "text": "TD learning is a classic RL paradigm for learning optimal policies. Since a reward model is needed to provide supervised training signals, we first need to distill \u03b6\u0302\u03b1\u03b8 into a reward model. Following the approach in RBA, we train an attribute-strength-conditioned reward model, denoted as r\u03b8(st, at,v\n\u03b1,m\u03b1). We begin by using the reward model to define an attribute proximity probability:\nP [\u03c41 \u227b \u03c42|v\u03b1,m\u03b1] = exp\n\u2211 t r\u03b8(s 1 t , a 1 t ,v\n\u03b1,m\u03b1)\u2211 i\u2208{1,2} exp \u2211 t r\u03b8(s i t, a i t,v \u03b1,m\u03b1) (9)\nThis equation represents the probability that attribute strength of \u03c41 is more aligned with (v\u03b1,m\u03b1) compared to \u03c42. Subsequently, we obtain pseudo-labels through the attribute strength model:\ny(\u03c41, \u03c42,v \u03b1) = { (1, 0), if ||(\u03b6\u0302\u03b1(\u03c41)\u2212 v\u03b1) \u25e6m\u03b1||2 \u2264 ||(\u03b6\u0302\u03b1(\u03c42)\u2212 v\u03b1) \u25e6m\u03b1||2 (0, 1), if ||(\u03b6\u0302\u03b1(\u03c41)\u2212 v\u03b1) \u25e6m\u03b1||2 > ||(\u03b6\u0302\u03b1(\u03c42)\u2212 v\u03b1) \u25e6m\u03b1||2\n(10)\nWith these pseudo-labels, we train the distilled reward model by optimizing a cross-entropy loss: \u2212Ev\u03b1Em\u03b1\u223cB(k,p)E(\u03c41,\u03c42)y(1) logP [\u03c41 \u227b \u03c42|v\n\u03b1,m\u03b1] + y(2)P [\u03c42 \u227b \u03c41|v\u03b1,m\u03b1] (11) Intuitively, if executing action at under state st leads to a trajectory that exhibits attribute strength closer to (v\u03b1,m\u03b1), the corresponding reward r\u03b8(st, at,v\u03b1,m\u03b1) will be larger; conversely, if the attribute strength is farther from (v\u03b1,m\u03b1), the reward will be smaller.\nSince the reward model now conditions the attribute strength, we need to define the attributestrength-conditioned Q function Q(s, a,v\u03b1,m\u03b1) and the policy \u03c0(s,v\u03b1,m\u03b1). With all these components, we can establish a TDL baseline on top of TD3BC and optimize the policy by maximizing:\u2211\n(\u03c4H ,v\u03b1)\u2208DG\n\u2211 1\u2264t\u2264H Em\u03b1\u223cB(k,p)[\u03bbQ(st, \u03c0(st,v\u03b1,m\u03b1),v\u03b1,m\u03b1)\u2212 (\u03c0(s,v\u03b1,m\u03b1)\u2212 a)2] (12)\nThe hyperparameters are presented in Table 8 and Table 9. The selection is nearly identical to the choices provided in Fujimoto & Gu (2021)."
+        },
+        {
+            "heading": "D HUMAN EVALUATION DETAILS",
+            "text": "D.1 EVALUATION PROCESS\nHuman evaluation is conducted in the form of questionnaires, which include multiple attribute strength ranking questions. The flow chart of the human evaluation process is summarized in Fig. 7. We collected a total of 270 sets of videos for each algorithm, resulting in a total of 2,160 questionnaires. And we invite a total of 424 human evaluators to participate in the experiment. Before the questionnaire, each evaluator is asked to provide basic demographic information to help us understand the distribution of evaluators. Demographic\ninformation included gender, age, education, and experience with AI. The distribution of evaluators for each task is presented in Fig. 8. In each questionnaire, in addition to the relevant videos mentioned in Section 5.2, we provide evaluators with a task description of the environment and detailed explanations of the attributes being evaluated. The textual descriptions are as follows:\nHopper\nDescription: Hopper is a single-legged robot that adjusts its movement based on predefined attributes. Each attribute, such as Movement Speed, ranges from 0 to 1, with higher values indicating stronger attributes (e.g., a value of 1 represents the fastest speed). In each task, we will set one attribute to three different levels: 0, 1, and 2 (corresponding to attribute strengths of 0.1, 0.5, and 0.9 respectively) for 5 seconds of continued movement, in random order. You will see 3 videos with modified attributes. Your task is to infer the corresponding attribute value for each video. For example, if a video exhibits the strongest attribute performance, you should select 2 from the options below. Each option can only be chosen once. If you find it challenging to determine an attribute for a particular video, you can mark it as None. The None option can be selected multiple times.\nAttribute explanation: \u2022 Movement Speed: The speed of movement, with higher attribute values indicating faster\nspeed. Generally, the faster the movement of the floor grid texture, the faster the speed. \u2022 Jump Height: The maximum height that can be reached by jumping, with higher attribute\nvalues corresponding to higher jump heights. Jump height can be determined by the jump posture or the size of the texture of the floor grid.\nWalker\nDescription: Walker is a bipedal robot that adjusts its movement based on predefined attributes. Each attribute, such as Movement Speed, ranges from 0 to 1, with higher values indicating stronger attributes (e.g., a value of 1 represents the fastest speed). In each task, you\u2019ll be shown a 3-second video of Walker\u2019s past movements and informed about an attribute along with its current strength value. Next, we will set the attribute to three different levels: 0, 1, and 2 (corresponding to attribute strengths of 0.1, 0.5, and 0.9 respectively) for the following 5 seconds of continued movement, in random order. You will see 3 videos with modified attributes. Your task is to infer the corresponding attribute value for each video. For example, if a video exhibits the strongest attribute performance, you should select 2 from the options below. Each option can only be chosen once. If you find it challenging to determine an attribute for a particular video, you can mark it as None. The None option can be selected multiple times.\nAttribute explanation: \u2022 Movement Speed: The speed of movement, with higher attribute values indicating faster\nspeed. Generally, the faster the movement of the floor grid texture, the faster the speed."
+        },
+        {
+            "heading": "D.2 T-TEST FOR HUMAN EVALUATORS",
+            "text": "Classification t-statistic p-value Male/Female 0.2231 0.8234 No experience/Experienced 0.1435 0.8859\nTo ensure the reliability of our designed human evaluation, we conducted a t-test on the group of evaluators to analyze whether there was any bias in the questionnaire. We divide the participants into two groups based on gender and whether they have AI learning experience, respectively. We set the hypothesis that there is no significant difference in the average accuracy of the questionnaire evaluation between the two groups. If the hypothesis is accepted, we can conclude that the questionnaire design is unbiased and the experiment is reliable. If the hypothesis is rejected, we conclude that there is bias in the questionnaire design, which may cause certain groups to make biased judgments, rendering the experimental design unreliable. The results of the t-test for the two groups under the two classification methods are presented in Table 10. The results show that the p-values are higher than the significance level (0.05). Therefore, we can accept the null hypothesis and conclude that the experimental results are reliable."
+        },
+        {
+            "heading": "E DISTRIBUTION APPROXIMATION DETAILS",
+            "text": "For each algorithm, we uniformly sample target strength value v from the interval [0, 1]. Then we conduct each algorithm to obtain the trajectories and their corresponding actual attribute u. These values constitute the setD(u,v). Let umax and umin denote the maximum and minimum values of u in this set, respectively. Next, we divide the attribute strength interval and the actual attribute interval into equidistant segments, resulting in K cells: v \u2208 [0, 1] = \u22c3 i\u2208|K| c v i and u \u2208 [umin, umax] =\u22c3\ni\u2208|K| c u i . We can then use the following equation to obtain the approximation:\nP\u0302ij(u, v) = |{(u, v)|u \u2208 cui , v \u2208 cvj}|\n|D(u,v)| \u2248 \u222b cui \u222b cvj p(u, v) du dv (13)\nF VIDEO CLIPS OF VARIOUS BEHAVIORS PRODUCED BY ALIGNDIFF\nIn this section, we aim to showcase additional behaviors generated by AlignDiff in the form of video segments. Specifically, we employ AlignDiff trained with human labels to generate behaviors. We focus on five attributes: movement speed, torso height, left-right leg preference, humanness defined in the Walker domain, and humanness defined in the Humanoid domain. For each attribute, we provide three video clips starting from a random initial state, with the corresponding attribute values adjusted to [0.9, 0.5, 0.1], respectively."
+        },
+        {
+            "heading": "F.1 WALKER: TORSO HEIGHT",
+            "text": "As illustrated in Fig. 9, when the strength attribute value is 0.9, the walker exhibits minimal knee flexion to maintain a relatively higher torso position. At a value of 0.5, the walker moves in a normal manner. However, when the attribute value is 0.1, the walker adopts a posture close to kneeling, moving near the ground."
+        },
+        {
+            "heading": "F.2 WALKER: LEFT-RIGHT LEG PREFERENCE",
+            "text": "As illustrated in Fig. 10, when the strength attribute value is 0.9, the walker primarily relies on the left leg for movement, while the right leg is scarcely utilized. At a value of 0.5, the walker alternates steps between the left and right legs. However, at 0.1, the walker predominantly relies on the right leg for movement, with minimal use of the left leg."
+        },
+        {
+            "heading": "F.3 WALKER: HUMANNESS",
+            "text": "As illustrated in Fig. 11, when the strength attribute value is 0.9, the walker exhibits a running pattern similar to that of a human. At a value of 0.5, the walker displays a reliance on a single leg, resembling the movement of a person with an injured right leg. However, at 0.1, the walker engages in minimal leg movement, taking small and fragmented steps, deviating significantly from human-like walking."
+        },
+        {
+            "heading": "F.4 HUMANOID:HUMANNESS",
+            "text": "As illustrated in Fig. 12, when the strength attribute value is 0.9, the humanoid is capable of walking with both legs, resembling human locomotion. At a strength value of 0.5, the humanoid can only perform single-leg movements, resembling a person with an injured right leg. When the strength value is 0.1, the humanoid will collapse and exhibit convulsive movements.\nG IMPLEMENTATION DETAILS\nIn this section, we provide more implementation details of AlignDiff."
+        },
+        {
+            "heading": "G.1 ATTRIBUTE STRENGTH MODEL",
+            "text": "\u2022 The attribute strength model utilizes a Transformer Encoder architecture without employing causal masks. We introduce an additional learnable embedding, whose corresponding output is then mapped to relative attribute strengths through a linear layer. The structural parameters of the Transformer and the training hyperparameters are presented in Table 11.\n\u2022 We train a total of three ensembles, and during inference, the average output of the ensembles is taken as the final output.\n\u2022 The direct output of the attribute strength model is a real number without range constraints, but the attribute strengths we define are within the range of 0 to 1. Therefore, we extract the maximum and minimum values of each attribute strength from the dataset of each task and normalize the output attribute values to be within the range of 0 to 1."
+        },
+        {
+            "heading": "G.2 DIFFUSION MODEL",
+            "text": "\u2022 The AlignDiff architecture consists of a DiT structure comprising 12 DiT Blocks. The specific structural and training parameters can be found in Table 12.\n\u2022 For the Walker benchmark, we use a planning horizon of 32, while for Hopper and Humanoid, the planning horizons are set to 100. We find that the length of the planning horizon should be\nchosen to adequately capture the behavioral attributes of the agent, and this principle is followed in selecting the planning horizons for the three tasks in our experiments.\n\u2022 We use 200 diffusion steps, but for Hopper and Walker, we only sample a subsequence of 10 steps using DDIM, and for Humanoid, we use a subsequence of 20 steps.\n\u2022 We employ a guide scale of 1.5 for all tasks. We observed that smaller guide scales result in slower attribute switching but more reliable trajectories, while larger guide scales facilitate faster attribute switching but may lead to unrealizable trajectories.\nAlgorithm 1 AlignDiff training Require: Annotated Dataset DG, epsilon estimator \u03f5\u03d5, unmask probability p\nwhile not done do (x0,v\n\u03b1) \u223c DG t \u223c Uniform({1, \u00b7 \u00b7 \u00b7 , T}) \u03f5 \u223c N (0, I) m\u03b1 \u223c B(k, p) Update \u03f5\u03d5 to minimize Eq. (4)\nend while\nAlgorithm 2 AlignDiff planning Require: epsilon estimator \u03f5\u03d5, attribute strength model \u03b6\u0302\u03b1\u03b8 , target attribute strength v\u03b1, attribute\nmask m\u03b1, S length sampling sequence \u03ba, guidance scale w while not done do\nObserve state st; Sample N noises from prior distribution x\u03baS \u223c N (0, I) for i = S, \u00b7 \u00b7 \u00b7 , 1 do\nFix st for x\u03bai \u03f5\u0303\u03d5 \u2190 (1 + w)\u03f5\u03d5(x\u03bai , \u03bai,v\u03b1,m\u03b1)\u2212 w\u03f5\u03d5(x\u03bai , \u03bai) x\u03bai\u22121 \u2190 Denoise(x\u03bai , \u03f5\u0303\u03d5) // Eq. (5)\nend for \u03c4 \u2190 argmin\nx0 ||(v\u03b1 \u2212 \u03b6\u0302\u03b1\u03b8 (x0)) \u25e6m\u03b1||22 Extract at from \u03c4 Execute at\nend while"
+        }
+    ],
+    "title": "ALIGNDIFF: ALIGNING DIVERSE HUMAN PREFERENCES VIA BEHAVIOR-CUSTOMISABLE DIFFUSION MODEL",
+    "year": 2023
+}

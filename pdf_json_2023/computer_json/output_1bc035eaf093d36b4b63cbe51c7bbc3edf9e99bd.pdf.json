@@ -1,0 +1,134 @@
+{
+    "abstractText": "Detecting fraud is an urgent task to avoid transaction risks. Especially when expanding a business to new cities or countries, developing a totally new model will bring the cost issue and result in forgetting previous knowledge. This study proposes a novel solution based on heterogeneous trade graphs, namely HTG-CFD, to prevent knowledge forgetting of cross-regional fraud detection. Specifically, a novel heterogeneous trade graph is meticulously constructed from original transactions to explore the complex semantics among different types of entities and relationships. Motivated by continual learning, we present a practical and task-oriented forgetting prevention method to alleviate knowledge forgetting in the context of cross-regional detection. Extensive experiments demonstrate that HTG-CFD promotes performance in both cross-regional and single-regional scenarios.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Yujie Li"
+        },
+        {
+            "affiliations": [],
+            "name": "Yuxuan Yang"
+        },
+        {
+            "affiliations": [],
+            "name": "Qiang Gao"
+        },
+        {
+            "affiliations": [],
+            "name": "Xin Yang"
+        }
+    ],
+    "id": "SP:1fd4b993cb7628874d9770c0d3ca7f32d0e27c2d",
+    "references": [
+        {
+            "authors": [
+                "Y. Cen",
+                "X. Zou",
+                "J. Zhang",
+                "H. Yang",
+                "J. Zhou",
+                "J. Tang"
+            ],
+            "title": "Representation learning for attributed multiplex heterogeneous network",
+            "venue": "KDD, 1358\u20131368.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J. Kirkpatrick",
+                "R Pascanu"
+            ],
+            "title": "Overcoming catastrophic forgetting in neural networks",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "C. Li",
+                "J. Yan",
+                "F. Wei",
+                "W. Dong",
+                "Q. Liu",
+                "H. Zha"
+            ],
+            "title": "Selfpaced multi-task learning",
+            "venue": "AAAI.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Z. Liu",
+                "C. Chen",
+                "X. Yang",
+                "J. Zhou",
+                "X. Li",
+                "L. Song"
+            ],
+            "title": "Heterogeneous graph neural networks for malicious account detection",
+            "venue": "CIKM, 2077\u20132085.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Serra",
+                "D. Suris",
+                "M. Miron",
+                "A. Karatzoglou"
+            ],
+            "title": "Overcoming catastrophic forgetting with hard attention to the task",
+            "venue": "ICML, 4548\u20134557.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "B. Tang",
+                "D.S. Matteson"
+            ],
+            "title": "Graph-Based Continual Learning",
+            "venue": "ICLR.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "X. Wang",
+                "H. Ji",
+                "C. Shi",
+                "B. Wang",
+                "Y. Ye",
+                "P. Cui",
+                "P.S. Yu"
+            ],
+            "title": "Heterogeneous graph attention network",
+            "venue": "WWW, 2022\u2013 2032.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "F. Zhou",
+                "C. Cao"
+            ],
+            "title": "Overcoming catastrophic forgetting in graph neural networks with experience replay",
+            "venue": "AAAI, 5, 4714\u2013 4722.",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "heading": "Introduction",
+            "text": "For fraud detection, traditional rule-based methods heavily rely on human prior knowledge, resulting in detection bias and the collapse of tackling more complex patterns. First, real-world transaction data contains various types of attached entities except for the customer and merchant entities. Second, existing solutions are only suitable for a narrow scope owing to the limitation of data collection. However, we usually either use the previously trained model or develop a totally new model, resulting in the uncertainty of capturing financial patterns. Developing a totally new model leads to expensive costs of resources while re-using the learned model can be a more appropriate solution. To remedy the above challenges, this paper investigates a new problem, cross-regional fraud detection (CFD), which aims to continuously detect fraudulent activities in the process of business expansion to new regions. We regard CFD as a continual learning task and propose a novel solution with Heterogeneous Trade Graph Learning for Cross-regional Fraud Detection (HTG-CFD). Firstly, HTG-CFD constructs a comprehensive heterogeneous trade graph (HTG) to expose the complex but semantic interactions among different entities. Next, HTG-CFD builds multiple transaction-like meta-paths and then performs with graph attention networks\n*Corresponding Author (qianggao@swufe.edu.cn). Copyright \u00a9 2023, Association for the Advancement of Artificial Intelligence (www.aaai.org). All rights reserved.\nto learn the complex structure and interactions among various entities. In the end, we devise a novel task-oriented forgetting prevention module including knowledge replay and parameter smoothing to address the forgetting issue."
+        },
+        {
+            "heading": "Methodology",
+            "text": "Problem definition. Given a set of HTGs from n regions (G1, \u00b7 \u00b7 \u00b7 ,Gl, \u00b7 \u00b7 \u00b7 ,Gn) with Gl = (Vl, El,Xl), our task is to learn a series of neural function (\u03a61, \u00b7 \u00b7 \u00b7 ,\u03a6l, \u00b7 \u00b7 \u00b7 ,\u03a6n), and each function \u03a6l : Vl \u2192 Rd maps nodes to a lowdimensional space d, i.e., d \u226a |Vl| and use a dense layer fl : Rd \u2192 {0, 1} to detect whether a node is fraudulent.\nHeterogeneous Trade Graph Contriving. For each HTG Gl, we first build it from l-th region\u2019s structured trade data. Specifically, there are four types of nodes in Gl, i.e., credit card holders Cl, merchants Ml, time slices Sl, and transaction IDs Tl. That is to say, Vl = {Cl,Ml, Sl, Tl}. Next, we generate massive meta-paths to explore the diverse semantic interactions among heterogeneous entities, i.e., TCT (transaction-card holder-transaction), TMT (transaction-merchant-transaction), and TST (transactiontime slice-transaction). Notably, timestamp is a special node type in HTG because the frequency of fraudulent transactions changes abruptly across different times while legitimate transactions are much more stable. To alleviate the scale of timestamps, we split the time slices into 24 fixed intervals. Then, we extend a hierarchical graph attention network to generate each transaction node representation xli.\nPrototype-based Knowledge Replay. As shown in Fig. 1, assume we have finished the learning task of l-th region. In order to preserve the existing knowledge from region l, we sample a small experience buffer Bl from Dl for knowledge replay. Then, we propose a prototype-based replay method to alleviate the training instability problem in the replay. As each transaction in Bl is associated with an attribute vector xli, our prototypes are based on the average attribute vector regarding {xli} |Bl| 1 , which can be defined as:\ncl = 1\nBl \u2211 xli\u2208Bl xli. (1)\nWe then use cl and a Gaussian prior to generating a prototype x\u2032li for each x l i. Finally, we collect a similar buffer B\u2032l and use it with Bl for experience replay together. Notably, we only sample transactions from the last task instead of all trained tasks to avoid memory costs.\nRegularization-based Parameter Smoothing To further alleviate the knowledge forgetting, Inspired by recent smoothing research (Zhou and Cao 2021), we use Fisher Information F to evaluate the importance of the trained parameters \u0398l. For instance, when the new region l+1 arrives, we add a smoothing term to constrain the parameter optimization based on Fl+1, which can be formulated as:\nLsl+1 = \u03bb\n2 \u2211 i Fi+1 (\u0398l+1(i)\u2212\u0398l(i))2 , (2)\nwhere \u03bb is a hand-craft weight. Notably, fraud patterns usually have common characteristics, so it is necessary to consider task similarity in parameter smoothing as well. Inspired by recent multi-task learning (Li et al. 2017), a regularization term can be used to measure the parameter distance. Thus, our final objective is to minimize:\nLl+1 = Lcl+1(y\u0302, y)+Lsl+1+ \u03b3||(||\u0398l+1||2, ||\u0398l||2)||1. (3) where the first term is cross-entropy loss of task l + 1, the second term is the l2,1-norm, and \u03b3 is a hand-craft weight."
+        },
+        {
+            "heading": "Experiments and Results",
+            "text": "Datasets and Baselines We conduct experiments on five regions from a USA financial database (https://kaggle. com/kartik2112/fraud-detection). The proposed HTG-CFD is first compared with three fraud detection baselines: GEM (Liu et al. 2018), GATNE (Cen et al. 2019), HAN (Wang et al. 2019). Then, to verify the effectiveness of forgetting prevention, we also implement popular continual learning methods\u2014EWC (Kirkpatrick, Pascanu et al. 2017), GEM-CL (Tang and Matteson 2020), HAT (Serra et al. 2018)\u2014to tackle the proposed CFD problem.\nResults We conduct experiments under two different settings: single-regional and cross-regional detection. From Table 1, HTG-CFD significantly outperforms the best baseline by 2%-8%. Also, HTG-CFD achieves the best performance on all metrics, indicating that the HTG-CFD is effective in handling knowledge forgetting. Notably, HTG-CFD outperforms HAT which has no forgetting, demonstrating that\nHTG-CFD has a promising knowledge transfer ability that can promote the old tasks\u2019 performances as well. To present the interpretability investigation of the node contribution in HGT, we randomly mask 0%, 30%, 60%, and 90% of nodes for each type. We use Grid Search and SHAP to visualize the importance of each type. As Fig. 2 shows, the more important node type is closer to the top area. Clearly, Customer is most important, followed by TimeSlice."
+        },
+        {
+            "heading": "Acknowledgments",
+            "text": "This work was supported by the National Natural Science Foundation of China (No. 62102326), the Natural Science Foundation of Sichuan Province (No. 22NSFSC3049), and the Special Fund of Chengdu SWUFE & Jiaozi Fintech Innovation Institute (No. CGZH20210107)."
+        }
+    ],
+    "title": "Cross-Regional Fraud Detection via Continual Learning (Student Abstract)",
+    "year": 2023
+}

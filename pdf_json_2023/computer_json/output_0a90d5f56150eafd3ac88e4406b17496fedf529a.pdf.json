@@ -1,0 +1,418 @@
+{
+    "abstractText": "Given a prefix (context), open-ended generation aims to decode texts that are coherent, which do not abruptly drift from previous topics, and informative, which do not suffer from undesired repetitions. In this paper, we propose Look-back , an improved decoding algorithm that leverages the Kullback\u2013Leibler divergence to track the distribution distance between current and historical decoding steps. Thus Lookback can automatically predict potential repetitive phrase and topic drift, and remove tokens that may cause the failure modes, restricting the next token probability distribution within a plausible distance to the history. We perform decoding experiments on document continuation and story generation, and demonstrate that Look-back is able to generate more fluent and coherent text, outperforming other strong decoding methods significantly in both automatic and human evaluations1.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Nan Xu"
+        },
+        {
+            "affiliations": [],
+            "name": "Chunting Zhou"
+        },
+        {
+            "affiliations": [],
+            "name": "Asli Celikyilmaz"
+        },
+        {
+            "affiliations": [],
+            "name": "Xuezhe Ma"
+        }
+    ],
+    "id": "SP:5f3a5b60ca912a7d2bf03ff7d709dc03970ccd27",
+    "references": [
+        {
+            "authors": [
+                "Daniel Adiwardana",
+                "Minh-Thang Luong",
+                "David R So",
+                "Jamie Hall",
+                "Noah Fiedel",
+                "Romal Thoppilan",
+                "Zi Yang",
+                "Apoorv Kulshreshtha",
+                "Gaurav Nemade",
+                "Yifeng Lu"
+            ],
+            "title": "Towards a human-like open-domain chatbot",
+            "venue": "arXiv preprint arXiv:2001.09977",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Kushal Arora",
+                "Timothy J O\u2019Donnell",
+                "Doina Precup",
+                "Jason Weston",
+                "Jackie CK Cheung"
+            ],
+            "title": "The stable entropy hypothesis and entropy-aware decoding: An analysis and algorithm for robust natural language generation",
+            "venue": "arXiv preprint arXiv:2302.06784",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Tom Brown",
+                "Benjamin Mann",
+                "Nick Ryder",
+                "Melanie Subbiah",
+                "Jared D Kaplan",
+                "Prafulla Dhariwal",
+                "Arvind Neelakantan",
+                "Pranav Shyam",
+                "Girish Sastry",
+                "Amanda Askell"
+            ],
+            "title": "Language models are few-shot learners. Advances in neural information processing",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Woon Sang Cho",
+                "Pengchuan Zhang",
+                "Yizhe Zhang",
+                "Xiujun Li",
+                "Michel Galley",
+                "Chris Brockett",
+                "Mengdi Wang",
+                "Jianfeng Gao."
+            ],
+            "title": "Towards coherent and cohesive long-form text generation",
+            "venue": "Proceedings of the First Workshop on Narrative Understanding,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Jwala Dhamala",
+                "Varun Kumar",
+                "Rahul Gupta",
+                "Kai-Wei Chang",
+                "Aram Galstyan."
+            ],
+            "title": "An analysis of the effects of decoding algorithms on fairness in open-ended language generation",
+            "venue": "arXiv preprint arXiv:2210.03826.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Bryan Eikema",
+                "Wilker Aziz."
+            ],
+            "title": "Is map decoding all you need? the inadequacy of the mode in neural machine translation",
+            "venue": "arXiv preprint arXiv:2005.10283.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Angela Fan",
+                "Mike Lewis",
+                "Yann Dauphin."
+            ],
+            "title": "Hierarchical neural story generation",
+            "venue": "Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 889\u2013898, Melbourne, Australia. Association",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Tianyu Gao",
+                "Xingcheng Yao",
+                "Danqi Chen."
+            ],
+            "title": "SimCSE: Simple contrastive learning of sentence embeddings",
+            "venue": "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing, pages 6894\u20136910, Online and Punta Cana, Do-",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "John Hewitt",
+                "Christopher D Manning",
+                "Percy Liang."
+            ],
+            "title": "Truncation sampling as language model desmoothing",
+            "venue": "arXiv preprint arXiv:2210.15191.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Ari Holtzman",
+                "Jan Buys",
+                "Li Du",
+                "Maxwell Forbes",
+                "Yejin Choi."
+            ],
+            "title": "The curious case of neural text degeneration",
+            "venue": "arXiv preprint arXiv:1904.09751.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Shaojie Jiang",
+                "Ruqing Zhang",
+                "Svitlana Vakulenko",
+                "Maarten de Rijke."
+            ],
+            "title": "A simple contrastive learning objective for alleviating neural text degeneration",
+            "venue": "arXiv preprint arXiv:2205.02517.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Xiang Lisa Li",
+                "Ari Holtzman",
+                "Daniel Fried",
+                "Percy Liang",
+                "Jason Eisner",
+                "Tatsunori Hashimoto",
+                "Luke Zettlemoyer",
+                "Mike Lewis."
+            ],
+            "title": "Contrastive decoding: Open-ended text generation as optimization",
+            "venue": "arXiv preprint arXiv:2210.15097.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yixin Liu",
+                "Pengfei Liu",
+                "Dragomir Radev",
+                "Graham Neubig."
+            ],
+            "title": "BRIO: Bringing order to abstractive summarization",
+            "venue": "Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 2890\u20132903,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Joshua Maynez",
+                "Shashi Narayan",
+                "Bernd Bohnet",
+                "Ryan McDonald."
+            ],
+            "title": "On faithfulness and factuality in abstractive summarization",
+            "venue": "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics, pages 1906\u20131919, On-",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Clara Meister",
+                "Tiago Pimentel",
+                "Gian Wiher",
+                "Ryan Cotterell."
+            ],
+            "title": "Typical decoding for natural language generation",
+            "venue": "arXiv preprint arXiv:2202.00666.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Stephen Merity",
+                "Caiming Xiong",
+                "James Bradbury",
+                "Richard Socher."
+            ],
+            "title": "Pointer sentinel mixture models",
+            "venue": "arXiv preprint arXiv:1609.07843.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Moin Nadeem",
+                "Tianxing He",
+                "Kyunghyun Cho",
+                "James Glass."
+            ],
+            "title": "A systematic characterization of sampling algorithms for open-ended language generation",
+            "venue": "Proceedings of the 1st Conference of the Asia-Pacific Chapter of the Association for Compu-",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Catherine Olsson",
+                "Nelson Elhage",
+                "Neel Nanda",
+                "Nicholas Joseph",
+                "Nova DasSarma",
+                "Tom Henighan",
+                "Ben Mann",
+                "Amanda Askell",
+                "Yuntao Bai",
+                "Anna Chen"
+            ],
+            "title": "In-context learning and induction heads",
+            "venue": "arXiv preprint arXiv:2209.11895",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Krishna Pillutla",
+                "Swabha Swayamdipta",
+                "Rowan Zellers",
+                "John Thickstun",
+                "Sean Welleck",
+                "Yejin Choi",
+                "Zaid Harchaoui."
+            ],
+            "title": "Mauve: Measuring the gap between neural text and human text using divergence frontiers",
+            "venue": "Advances in Neural Information Process-",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Alec Radford",
+                "Jeffrey Wu",
+                "Rewon Child",
+                "David Luan",
+                "Dario Amodei",
+                "Ilya Sutskever"
+            ],
+            "title": "Language models are unsupervised multitask learners",
+            "venue": "OpenAI blog,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Yixuan Su",
+                "Tian Lan",
+                "Yan Wang",
+                "Dani Yogatama",
+                "Lingpeng Kong",
+                "Nigel Collier."
+            ],
+            "title": "A contrastive framework for neural text generation",
+            "venue": "arXiv preprint arXiv:2202.06417.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yixuan Su",
+                "Jialu Xu."
+            ],
+            "title": "An empirical study on contrastive search and contrastive decoding for open-ended text generation",
+            "venue": "arXiv preprint arXiv:2211.10797.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Sean Welleck",
+                "Ilia Kulikov",
+                "Stephen Roller",
+                "Emily Dinan",
+                "Kyunghyun Cho",
+                "Jason Weston."
+            ],
+            "title": "Neural text generation with unlikelihood training",
+            "venue": "arXiv preprint arXiv:1908.04319.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Yilin Yang",
+                "Liang Huang",
+                "Mingbo Ma."
+            ],
+            "title": "Breaking the beam search curse: A study of (re-)scoring methods and stopping criteria for neural machine translation",
+            "venue": "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Process-",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Susan Zhang",
+                "Stephen Roller",
+                "Naman Goyal",
+                "Mikel Artetxe",
+                "Moya Chen",
+                "Shuohui Chen",
+                "Christopher Dewan",
+                "Mona Diab",
+                "Xian Li",
+                "Xi Victoria Lin"
+            ],
+            "title": "Opt: Open pre-trained transformer language models. arXiv preprint arXiv:2205.01068",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yao Zhao",
+                "Misha Khalman",
+                "Rishabh Joshi",
+                "Shashi Narayan",
+                "Mohammad Saleh",
+                "Peter J Liu."
+            ],
+            "title": "Calibrating sequence likelihood improves conditional language generation",
+            "venue": "arXiv preprint arXiv:2210.00045.",
+            "year": 2022
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1 Introduction",
+            "text": "Despite the impressive success on generating fluent and accurate sentences for low-entropy tasks such as summarization or translation, large-scale language models (LLMs) still suffer from serious degeneration problems, such as undesired repetitions (Holtzman et al., 2019) and unnatural topic drifts, under open-ended settings (Eikema and Aziz, 2020). Open-ended neural text generation aims to generate coherent and diverse text from LLMs, given contextual prefix (Nadeem et al., 2020; Dhamala et al., 2022), and has spawned a wide range of natural language applications, including contextual text completion (Radford et al., 2019), story generation (Fan et al., 2018), and review generation (Cho et al., 2019).\nTo alleviate the degeneration problem in openended text generation, a number of techniques have\n1Code and resources are available at https://github. com/xunannancy/LookBackDecoding.\nemerged over the recent years, which can be categorized into two directions: i) improved learning proposing new learning objectives, e.g., unlikelihood training (Welleck et al., 2019), contrastive training (Su et al., 2022) and sequence likelihood calibration (Zhao et al., 2022), to compensate for the rooted deficiency of the conventional Maximum Likelihood Estimation (MLE) 2; ii) improved decoding remedying tedious and repetitive generations in decoding search (Su et al., 2022; Li et al., 2022), or combating topic drifts in sampling procedures (Hewitt et al., 2022).\nIn this work, we propose a new decoding algorithm, named Look-back , which pays particular attention to the probability distribution disparity between continuation and history text. Unlike contrastive search (Su et al., 2022; Su and Xu, 2022) which uses cosine similarity between the hidden representation, Look-back leverages the KullbackLeibler (KL) divergence to track the distribution distance between current and historical decoding steps. The main motivation of Look-back is that\n2The correlation between sequence probability and its quality for MLE trained models can be low (Liu et al., 2022).\nar X\niv :2\n30 5.\n13 47\n7v 2\n[ cs\n.C L\n] 2\n3 O\nct 2\n02 3\nKL divergence defines a distance between the probability distributions of decoding steps, which arguably better aligns with the decoding practice. As shown in Figure 1 (a), as the greedy algorithm repeatedly outputs single sentences, the distance with the closest past token distribution decreases towards 0. Besides, when the continuation switches to another topic in Figure 1 (b), the distribution distance of continuation with prefix obtains much higher levels compared with topic-relevant human continuation. Based on our prior observations, for informative and coherent generation, the probability distribution should not be too close to history to guarantee diversity, but relatively close to prefix to maintain coherence.\nExperimentally, through two tasks of openended text generation, including document continuation and story generation, we demonstrate that Look-back outperforms a variety of open-ended decoding algorithms under different scales of pretrained LLMs (GPT2-XL and OPT-6.7B) by producing much more coherent texts \u2013 high mauve score compared with human continuation and high similarity score measured against prefix, while maintaining similar level of diversity."
+        },
+        {
+            "heading": "2 Related Work",
+            "text": "Improved Learning Algorithms Yang et al. (2018); Adiwardana et al. (2020) observed that increasing number of candidates in beam search or sampling leads to worse quality of generated data. They attribute this to the predominant training objective (i.e., Maximum Likelihood Estimation) that might not accurately rank generated sequences by quality (Zhao et al., 2022). Besides, Holtzman et al. (2019) found that searching for the probable sequences always results in short and repetitive texts, which further motivated recent efforts to improve generation via revised learning objectives. Welleck et al. (2019) proposed unlikelihood training to force unlikely generations to be assigned lower probability by the model. To alleviate degeneration, SimCTG (Su et al., 2022) introduced a contrastive training objective to preserve sparseness of the token similarity matrix of the generated text. To avoid unintentionally boosting the probability of other irrelevant tokens in unlikelihood training, Jiang et al. (2022) leveraged contrastive token learning to explicitly teach the LLM to assign negative tokens with a lower probability than positive tokens through more focused contrast be-\ntween the two. Based on a BERTScore-style similarity metric between model decodes and targets measured in the model\u2019s latent space, Zhao et al. (2022) calibrated model-generated sequences with sequence likelihood calibration to better align with reference sequences via different types of losses (e.g., rank and margin loss).\nImproved Decoding Algorithms Liu et al. (2022) observed that search methods (e.g., greedy and beam) which optimize generation probabilities may result in tedious and repetitive outputs in open-ended text generation. Su et al. (2022) complemented the contrastive training with contrastive search for decoding, which selects tokens more distingushable from previous context. Li et al. (2022) observed that degeneration is more prevalent in larger LMs than smaller ones, and proposed contrastive decoding to remove these undesired behavior by factoring out smaller LM\u2019s behavior from the larger LM. On the other hand, truncation sampling methods such as nucleus (Holtzman et al., 2019) and typical (Meister et al., 2022) decoding improve sample quality with more diverse samples compared to direct sampling, but at the expense of poor coherence and undesired topic drift. Hewitt et al. (2022) introduced \u03b7-sampling to truncate words below an entropy-dependent probability threshold. A concurrent work observed the strong correlation between good generation quality and narrow entropy zone, hence proposed entropy-aware decoding to promote good generation by constraining greedy decoding into the narrow entropy zone (Arora et al., 2023).\nWithout extra effort on fine-tuning LMs, the proposed Look-back improves conventional search method with reference from the given prefix and prior generation, so that undesired repetitions and topic drifts can be explicitly alleviated."
+        },
+        {
+            "heading": "3 Background",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Open-ended Text Generation",
+            "text": "Given a sequence of m tokens sampled from natural text C = {x1 . . . xm} as context or prefix, the neural text generation is to decode a n-token continuation using the probability distribution provided by pre-trained LMs: p(xm+1:m+n|C) = n\u220f\nt=1\nP (xt|C, xm+1 . . . xm+t\u22121),\nDegeneration LM (Decoding) Continuation\nPrefix: In addition to live broadcasts FIFA Fan Fests offer food and beverages, merchandise and various entertainment events by local and international artists. The start of 2006 World Cup was\nis marked in green , while unnatural (S3&S4) or stiff (S5) topic drifts are in pink .\nwhere the continuation is generated token-by-token using a particular decoding strategy. For instance, greedy algorithm selects the next token given context with the highest probability, while nucleus sampling (Holtzman et al., 2019) restricts the plausible area of tokens with total mass above a threshold."
+        },
+        {
+            "heading": "3.2 Degeneration Problems",
+            "text": "There are two commonly observed degeneration problems in open-ended text generation: repetition and incoherence.\nRepetition LLMs prefer to overestimate the probability of repeated sequences (Welleck et al., 2019) especially for deterministic algorithms such as greedy and beam search. Although decoding algorithms such as nucleus sampling (Holtzman et al., 2019) have been proposed to interrupt repeating sequences, we can still observe repetitive and tedious continuation even from the state-of-the-art GPT-3 language model (Brown et al., 2020), as shown in Table 1. Besides the consensus that probabilities from conditional LMs often do not accurately rankorder generated sequences by quality (Zhao et al., 2022), a recent study provides a possible way to explain the repetitive generation with the observed analogical sequence copying pattern: prefix matching and copying3 (Olsson et al., 2022).\nIncoherence Sampling algorithms sacrifice coherence for alleviating repetition during decoding.\n3Prefix matching: the attention mechanism in transformerbased LMs attends back to previous tokens that were followed by the current and/or recent tokens. Copying: outputs increased logit of the attended-to token or others similar in embedding space.\nAs shown in Table 1, given probabilities from GPT3 models, nucleus sampling fails to produce coherent generation, switching topic from Burkan\u2019s acute indigestion to Shanny\u2019s way to home with ada-001 (S5). Recent decoding algorithms depend on model confidence to \u201cguarantee\u201d coherence while resolving repetition explicitly with certain heuristics. For example, SimCTG (Su et al., 2022) selects from most probable candidates predicted by LM. Contrastive decoding (Li et al., 2022) exploits coherence nature of the expert LMs. In both S3 and S4 from Table 1, unfortunately, we find that the coherence hypothesis of pretrained LMs in prior work does not always hold in practice: it is likely to produce incoherent sentences when powerful LMs rigorously follow model confidence at each step with greedy algorithm.\n4 Proposed Method: Look-back\nAs presented in Algorithm 1, Look-back first leverages probability distribution distance between current and prior steps to avoid repetitions (\u00a74.1), then incorporates reference from given prefix to mitigate topic drifts (\u00a74.2)."
+        },
+        {
+            "heading": "4.1 Alleviating Repetitions with Reference from Prior Texts",
+            "text": "Signal for Surface or Semantic Repetitions In the decoding process of open-ended text generation, one of the plausible tokens is selected/sampled according to model probability. Inspired by the decisive role of probability distribution, we investigate measuring the distance between current and prior steps in disbrituion space via KL divergence: DKL(pt|p\u2032t) for any 1 \u2264 t\u2032 < t. As the distance\nAlgorithm 1 Look-back Decoding Input: Prefix C = {x1 . . . xm}, language model\nwith vocabulary V , beam size k and threshold \u03b1 Output: Continuation G = {xm+1 . . . xm+n} G \u2190 {} for m+ 1 \u2264 t \u2264 m+ n do\nif KLtmin \u2264 \u03b1 then \u25b7 Alleviate Repetitions for v \u2208 V k do\nqv = softmax(\u2212KLt+1,v|Cmin ) end for xt = v \u223c qv \u25b7 Improve Coherence\nelse xt = argmaxv\u2208V p\u03b8(v|x<t) end if G \u2190 G \u222a {xt}\nend for\nheatmap shown in Figure 2a, for steps generating identical tokens, their corresponding probability distributions stay close to each other than those with dissimilar outputs.\nNote that neither the contrastive training objec-\ntive (SimCTG) (Su et al., 2022) nor its contrastive search decoding algorithm (Su and Xu, 2022) can be directly applied to LLMs such as GPT3, where its hidden states are inaccesible. Fortunately, we can directly detect surface or semantic repetitions from GPT3 by analyzing available probability distribution: step pairs producing either identical token or tokens sharing similar semantic meaning are distinguishable with distribution distance. Take Figure 2b as an instance: output token pairs from decoding steps with closest probability distributions are the 1st and 2nd FAN, city Munich and Frankfurt, location Olympic and R of R\u00f6merberg.\nAs repetitive steps tend to stay extremely close to prior steps with similar outputs in probability distribution space, we calculate the probability distribution distance between the t-th and closest prior step as KLtmin for further analysis:\nKLtmin = min 1\u2264j\u2264t\u22121 KL (p(\u00b7|x<t)\u2225p(\u00b7|x<j))\nAs demonstrated in Figure 2c and Figure 2d, values of KLtmin become flat as repetition-style degenera-\ntion advances4.\nAlleviating Repetitions Since identical or similar repetition pattern could be forecasted via probablity distribution analysis, Look-back attempts to avoid repetitive sentences or phrases prior to actual generation. Practically, when KLtmin has been below a pre-defined threshold \u03b1, an alarm is triggered and Look-back attempts to sample a token from the top-k most probable tokens from the vocabulary V rather than sticking to the top-1 token:\nxt { \u223c Unif(V k), if KLtmin \u2264 \u03b1 = argmaxv\u2208V p\u03b8(v|x<t), Otherwise\nwhere V k is the set of top-k most probable tokens from the vocabulary V . To avoid false positive cases where one step identified with high possibility to repeat may not necessarily lead to undesired repetitions, we do not exclude its most probable token from the plausible candidate set on purpose."
+        },
+        {
+            "heading": "4.2 Improving Coherence with Reference from Given Prefix",
+            "text": "Signal for Topic Drift In open-ended generation, in order to produce sentences coherent with the given prefix, the decoding algorithm is required to provide further elaboration of the major topic conveyed in the prefix. According to the prior observations (e.g., Munich and Frankfurt in Figure 2b), decoding steps with tokens sharing similar semantic meaning are close to each other with respect to probability distribution distance. Therefore, we explore the KL divergence between current and prefix m steps that should keep to the same topic:\nKL t|C min = min1\u2264j\u2264m KL (p(\u00b7|x<t)\u2225p(\u00b7|x<j)\nWhen comparing distribution distance of incoherent generation with natural continuation to the same prefix, the probability distribution divergence maintains a much higher level for generation with obvious topic drift, as shown in Figure 2e.\nImproving Coherence When the model is prone to provide repetitive tokens, one straightforward solution for avoiding repetition is to randomly sample from the top-k plausible tokens. It is likely to result in unnatural topic drift due to undesired sampling choices accumulation over long sequence\n4Spikes in Figure 2d in later decoding steps correspond to multiple tokens for representing one single location, e.g., \u00f6, mer, berg for R\u00f6merberg in Figure 2b.\ndecoding, which is frequently observed in sampling algorithms (Eikema and Aziz, 2020; Maynez et al., 2020). On the other side, the probability distribution distance between current and prefix is able to distinguish whether the generation is ontopic or not. Therefore, Look-back wisely samples from the plausible candidates according to their influence on coherence reflected by next-step distribution distance with prefix:\nKL t+1,v|C min = min1\u2264j\u2264m KL (p(\u00b7|x<t+1, v)\u2225p(\u00b7|x<j))\nxt\n{ \u223c softmax(\u2212KLt+1,v|Cmin ), if KL t min \u2264 \u03b1\n= argmaxv\u2208V p\u03b8(v|x<t), Otherwise where tokens with larger next-step distance to prefix is less likely to be sampled given the softmax operation upon KL divergence."
+        },
+        {
+            "heading": "5 Experiments",
+            "text": "In this section, we first introduce the datasets (\u00a75.1) and automatic metrics (\u00a75.2) used to evaluate the generation quality of the proposed Look-back and other strong decoding baselines (\u00a75.3). We then analyze experimental results evaluated by automatic metrics (\u00a75.5) and human evaluators (\u00a75.6). Lastly, we show effectiveness of different techniques used in Look-back through detailed analyses (\u00a75.7)."
+        },
+        {
+            "heading": "5.1 Datasets",
+            "text": "We consider two applications of open-ended text generation: 1) document continuation on WikiText-103 with articles fitting the Good or Featured article criteria specified by editors on Wikipedia (Merity et al., 2016), and 2) story generation on WritingPrompts, which is a challenging task for inspiring continuations with abstract, highlevel story prompts submitted by online users and continuations responded by others freely on Reddit (Fan et al., 2018)."
+        },
+        {
+            "heading": "5.2 Evaluation Metrics",
+            "text": "We adopt the following automatic metrics to evaluate generation quality:\nRepetition We use rep-n to measure sequencelevel repetition according to the portion of duplicate n-grams (Welleck et al., 2019). For a sequence x, rep-n = 1.0\u2212 |unique n-grams(x)||total n-grams(x) |.\nDiversity Following (Su et al., 2022), we obtain an overall assessment of model repetition by considering repetition at different n-gram levels: diversity = \u220f4 n=2(1.0\u2212 rep-n).\nMAUVE By computing information divergences in a quantized embedding space5, MAUVE (Pillutla et al., 2021) directly compares the learnt distribution from a text generation model to the distribution of human-written continuation.\nCoherence The semantic coherence between prefix and continuation is measured as the cosine similarity between their sentence embeddings represented by SimCSE (Gao et al., 2021).\nResults measured by all metrics range from 0 to 1, and higher scores indicate better generation except rep-n, for which the lower the better."
+        },
+        {
+            "heading": "5.3 Decoding Baselines",
+            "text": "Given pretrained LMs with conventional MLE, we evaluate Look-back together with various decoding algorithms for fair comparisons.\nSearch Methods We consider the competitive contrastive search proposed in SimCTG (Su et al., 2022) that predicts the next token based on both the output distribution and representation similarities between candidates and past tokens6.\nSampling Methods Nucleus sampling (Holtzman et al., 2019) samples the next token from the top-p portion of the probability mass. Typical decoding (Meister et al., 2022) samples from the set of words whose negative log-probabilities are close to the conditional entropy. \u03b7-sampling (Hewitt et al., 2022) truncates any word whose probability is smaller than an entropy-based threshold.\n5We use GPT2-XL for text sequence embedding. 6We disregard greedy and beam search as they kept producing repetitive phrases/sentences in prior studies (Welleck et al., 2019; Holtzman et al., 2019)."
+        },
+        {
+            "heading": "5.4 Implementation Details",
+            "text": "We randomly sample 1,000 instances from the original training data of WikiText-103 and WritingPrompts as our validation and test sets. Given the beginning several tokens as prefix7, we generate 256 tokens with different decoding algorithms and disregard those after the end-of-text token during evaluation. Practically, we consider a sliding window comprising 128 prior tokens to avoid undesired repetitions while allow necessary repetitions of text far from the current decoding step. We perform experiments with pre-trained LMs from different families and scales: GPT2-XL (Radford et al., 2019) and OPT-6.7B (Zhang et al., 2022). The same set of hyperparameters is used to decode from different LMs: the beam size for beam search is 10, p = 0.95 for nucleus, \u03c4 = 0.92 for typical, and \u03b7 = 0.0003 for \u03b7-sampling. We follow the recommended range for k = {5, 8, 10} and \u03b1 = [0.5, 0.9] in SimCTG and select the set based on their MAUVE scores on the validation set. For Look-back , the range of candidate amount k is {5, 8, 10} and the threshold \u03b1 is ranging from [0.5, 1.6]. We select hyperparameters that result in the rep-2 score closest to human\u2019s and the optimal MAUVE performance on the validation set."
+        },
+        {
+            "heading": "5.5 Results",
+            "text": "In Table 2, we show the performance of different decoding algorithms as well as natural human continuation evaluated by automatic metrics. On both datasets, Look-back consistently achieves the highest MAUVE scores and coherence scores, which indicates that the generation of Look-back has token\n7First 32 tokens are used as prefix for WikiText-103, while the original prompts are used for WritingPrompts.\ndistribution closeness with human continuations while staying relevant to the given prefixes. Meanwhile, Look-back is capable of producing texts with similar repetition and diversity level as the natural human text, which implies the fluency and informativeness of the generated text. We also notice that generations from all decoding algorithms obtain relatively low MAUVE and coherence scores on WritingPrompts. This is because the given prefixes are abstract and the human written references are diverse and varied, which results in low coherence and MAUVE w.r.t. various model continuations."
+        },
+        {
+            "heading": "5.6 Human Evaluation",
+            "text": "To further evaluate the quality of generated texts, we randomly sample two sets of 50 examples from WikiText-103 to produce prefixes for GPT2-XL and OPT-6.7B respectively and generate continuations from them. Then, we ask 3 evaluators to compare generated continuations from Look-back and the second best baseline SimCTG in two dimensions: 1) fluency: diverse and natural content without repeated words, phrases or sentences; 2) coherence: well-organized and easy to follow; being consistent with the topics presented in the humanwritten prefix without abrupt topic drifts. We ask annotators to choose one out of three options: the 1st continuation is better, the 2nd is better, or the two are of the same quality. As presented in Table 3, for both evaluation dimensions, the content generated by Look-back is preferred or marked as equally good by evaluators around or more than 70% of the time compared with baseline, which aligns well with the automatic metrics in Table 2."
+        },
+        {
+            "heading": "5.7 Further Analyses",
+            "text": "In this section, we analyze the effectiveness of different techniques used by Look-back individually.\nAnalyzing Probability Distribution Distance. To verify whether decoding with Look-back appropriately constrains the probability distribution distance to past steps, we compare KLtmin to history and KLt|Cmin to prefix of degeneration and different decoding algorithms in Figure 3. Although all improved decoding algorithms keep distance to historical probability distribution to avoid repetitions compared with greedy algorithm (Repetitive in the left column of Figure 3, the probability dis-\ntribution of Look-back (Look-back in the right column of Figure 3 is much closer to the given prefix, which distinguishes it from off-topic continuation compared with other algorithms.\nSoftmax vs. Uniform. According to the softmax operation on KLt|Cmin introduced in \u00a74.2, the closer the next step\u2019s probability distribution to prefix, the more likely the corresponding plausible token is selected to avoid undesired topic drift compared with random sampling. In Table 4, we empirically investigate the impact of plausible token sampling, uniform vs. softmax, on generation quality and find Look-back significantly enhances coherence on both datasets compared with random sampling. Although diversity drops with distribution distance-guided sampling in Look-back , both sampling strategies produce similar level of diverse content as human texts listed in Table 2.\nEffects of Candidate Amount and Threshold \u03b1. In \u00a74.1, the hyperparameter \u03b1 determines whether the current step is likely to produce repetitive continuation while k restricts the range of plausible token candidates. The second best baseline SimCTG has the similar candidate amount parameter k and the \u03b1 to balance model confidence and degeneration penalty. When GPT2-XL is used to decode with Look-back and SimCTG on WikiText-103, we visualize the impact of hyperparameters on generation quality in Figure 4 and Figure 5. The \u03b1 in Look-back is different from that in SimCTG, but both control reliance on model confidence: a larger\n\u03b1 indicates the most probable token is less likely to be adopted, hence more diversity is obtained. We also observe that for Look-back , the relevance of generated text to prefix (high coherence) and human continuation (high MAUVE) is much more robust to various hyperparameter values compared with SimCTG."
+        },
+        {
+            "heading": "5.8 Case Study",
+            "text": "Given a prefix sampled from WikiText-103, we present truncated human continuations as well as generations from Look-back and SimCTG in Table 5 and leave more examples in Appendix Table 6. The prefix is talking about the design of a race car game. Both human and Look-back continuations focus on describing major difficulties encountered during the game design, while SimCTG switches to a different topic by pointing to an online introduction of the game in the second half of continuation. Interestingly, Look-back explains how the team of more than twenty people was formed, which is coherent with the topic in the prefix.\nPrefix: Ridge Racer Revolution was developed over eight months by a team of more than twenty people, most of whom joined just for Ridge Racer Revolution. The biggest difficulties were Human: the link-up mode, rear-view mirror, and running the game at high speeds. Each member had worked on other console games, and they commented that the graphics detail showed the improvements in skill and technique. The team wanted players to enjoy a more in-depth game than the original, so rather than develop a port of Ridge Racer 2, as many features as possible were added. The early designs for the new courses were made... SimCTG: balancing the game, which had to be a mix of arcade and racing elements, along wtih making an open world that felt like the future of video games.\\n\\nIn order to do this, we used Unreal Engine 3, the game engine that powers ... You can learn more about the game by clicking here, but be warned, there are spoilers in this article. If you\u2019re planning on reading this article, I suggest you stop reading now before it spoils the game for you... Look-back : the lack thereof: the original game was built in a single year; Ridge Crash took more. The original developers were all gone, and the original team of programmers, artists, and designers from Ridge Revolution, including the lead programmer at Capcom, had all left the company by 2007...In the end, a new team of twenty-five employees was assembled for Revolution, who took nearly two years to complete the game. In all, this team of more..."
+        },
+        {
+            "heading": "6 Conclusion",
+            "text": "The distance between output distributions signals potential failure modes of text generation, such as dull repetition and incoherence. We propose Look-back , a novel decoding algorithm that utilizes the KL divergence between the current and historic decoding steps, to steer the output distribution into a plausible subspace. Look-back can generate higher-quality text and outperforms several strong decoding algorithms in both automatic and human evaluation. However, KL divergence may not be the optimal measure for text output distributions and we leave the investigation of other measures to future work. In addition, the idea pro-\nposed in this work can also be used for other specialized constrained decoding scenarios, such as preventing hallucination.\nLimitations\nWe discuss the limitations of our work as follows:\n\u2022 Look-back penalizes next tokens that result in low KL divergence with historic output distributions. However, we can not explicitly distinguish if such tokens are natural or undesired repetitions. This may lead to aggressive eliminations of possible outputs. We leave the distinction of different repetitions to future work.\n\u2022 Look-back tends to show a higher bi-gram repetition score than other decoding methods because it encourages the coherence with prefix text at each decoding step. As we use a short prefix text following previous evaluation protocol, which might not be sufficiently informative, we will adopt a more comprehensive evaluation setup in the future or prepend relevant text in the beginning at decoding time.\n\u2022 Most of our evaluations rely on automatic metrics, such as MAUVE scores. However, we found that these metrics may not truthfully reflect the quality of text, for example, MAUVE score is sensitive to the choice of sentence embedding models. In general, open-ended text generation still poses a great challenge to the development of NLG algorithms."
+        }
+    ],
+    "title": "Look-back Decoding for Open-Ended Text Generation",
+    "year": 2023
+}

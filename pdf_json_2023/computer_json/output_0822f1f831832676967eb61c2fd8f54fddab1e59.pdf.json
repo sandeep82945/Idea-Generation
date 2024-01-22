@@ -1,0 +1,839 @@
+{
+    "abstractText": "Dreaming is a fundamental but not fully understood part of human experience that can shed light on our thought patterns. Traditional dream analysis practices, while popular and aided by over 130 unique scales and rating systems, have limitations. Mostly based on retrospective surveys or lab studies, they struggle to be applied on a large scale or to show the importance and connections between different dream themes. To overcome these issues, we developed a new, data-driven mixed-method approach for identifying topics in free-form dream reports through natural language processing. We tested this method on 44,213 dream reports from Reddit\u2019s r/Dreams subreddit, where we found 217 topics, grouped into 22 larger themes: the most extensive collection of dream topics to date. We validated our topics by comparing it to the widely-used Hall and van de Castle scale. Going beyond traditional scales, our method can find unique patterns in different dream types (like nightmares or recurring dreams), understand topic importance and connections, and observe changes in collective dream experiences over time and around major events, like the COVID-19 pandemic and the recent Russo-Ukrainian war. We envision that the applications of our method will provide valuable insights into the intricate nature of dreaming. Introduction Dreaming is a fundamental human experience and a cornerstone of sleep psychology, yet its underlying mechanisms remain elusive. The fascination with the contents and meaning of our dreams dates back to early human civilizations,1 but despite significant progress in dream research, fundamental questions about the physiological and psychological functions of dreaming remain unanswered, leaving us to ponder the question: why do we dream?2 Previous literature on dream analysis suggests that dreaming plays a vital role in learning processes,3 has psychotherapeutic effects,4 and safeguards the brain\u2019s neuroplasticity.5 Recent AI-inspired theories have drawn parallels between the brain\u2019s activity during sleep and the functioning of artificial neural networks. One theory suggests that dreams act as \u201cgarbage collectors\u201d that clear the memory,6 while another posits that they prevent over-fitting of the brain\u2019s neuronal network.7 While the question of why we dream remains open, before we can even begin to answer it, we must first understand the nature of what we dream. This question is important not only for helping us understand the fundamental function of dreams but also as it offers a window into our psyche and what is prominent in people\u2019s minds. Dream content is composed of fragments of waking life experiences and events,8 but these are not veridical replays,9, 10 nor do they represent the entirety of dream content.11 One popular approach to investigating dream content systematically is through content analysis.8 This is a family of methods that analyze quantitatively the elements present in dreams to answer specific questions, such as whether depressed individuals experience more rejection in their dreams,12 how dream content changes from teenage years to adulthood,13 or whether in the times of collective health crises there is a shift in the medical symptoms people dream about.14 Although these studies may seem narrow in scope, they provide a critical foundation for addressing the overarching question of why we dream. The importance of content analysis is evidenced by the development of over 130 scales and rating systems for dream content analysis.15 Early scales tended to score based on the raters\u2019 subjective interpretation of dream symbolism and rarely reported inter-rater reliability.16 Dream research became more systematic with the development of the Hall and van de Castle method16 of dream content analysis, a quantitative system that scores dream reports based on the frequency and type of characters, interactions, activities, emotions, settings, and objects present in the dream. This method relies solely on the dream reports and 1 ar X iv :2 30 7. 04 16 7v 1 [ cs .C Y ] 9 J ul 2 02 3 does not use any additional information provided by the dreamer. Studies using the Hall and van de Castle scales have revealed consistent patterns and norms in dream content across different groups of people, such as gender, age, culture, and personality. For instance, women tend to dream more about family members, friends, and indoor settings, while men tend to dream more about strangers, violence, and outdoor settings. Moreover, research using these scales has demonstrated that dream content correlates with an individual\u2019s waking concerns and interests, such as work, relationships, hobbies, and fears.13 Limited content scope and representatives of existing scales. Traditionally, dream researchers had to manually sift through large numbers of dream reports to gain insights into the range of dream topics.16 Even with recent developments in automated dream analysis,17 most studies continued to rely on experimenter-driven content searches, i.e., supervised approaches for content analysis, such as the Hall and van de Castle method. These methods involve the use of predetermined categories that are often biased towards existing knowledge of dreams. For example, dreams are often characterized as bizarre, involving impossible or improbable events that deviate from everyday experiences,18 which may not fit within the predetermined categories established in the literature. As a result, current approaches to dream analysis may miss important aspects of dream content that fall outside of these predetermined categories. In contrast to traditional methods of dream coding, unsupervised theme discovery from dream reports may provide a fresh perspective and a more comprehensive understanding of the categorization of dream content and its relationship with waking life events. Furthermore, previous studies relied on dream reports collected through retrospective surveys that are susceptible to memory biases, and laboratory studies that may be confounded by the strong impact of the laboratory setting on dream content.19 Therefore, a more ecologically valid approach to studying dream content at the population level is necessary. Our unsupervised mixed-method approach for dream content discovery. Our study addresses the identified research gap (i.e., limited scope and representatives of dream content scales) by developing an unsupervised mixed-method approach for dream content discovery, and by applying it to new large-scale data that more closely approximates spontaneous dream recollections than survey studies. To achieve this, we i) leveraged recent advances in AI for Natural Language Processing (NLP) and ii) used a crowd-sourced dataset of dream self-reports from the r/Dreams community on Reddit. Unlike traditional lab studies, dream experiences shared on r/Dreams are reported voluntarily and spontaneously, enabling us to collect a large set of dream reports and conduct an ecological study. We collected over 44K dream reports from more than 34K Reddit users over the past five years, and applied the BERTopic content analysis method20 to automatically discover topics in each dream report. The resulting taxonomy includes 22 themes that can be broken down into 217 more specific topics. Confirming its validity, we found that most of the themes in our taxonomy align with the dream element categories present in the Hall and Van de Castle scale, but the specific topics inside those themes provide a description of dreams that is much more detailed. Going beyond what was possible with existing scales, our method also allowed to uncover the importance and relationships among specific topics and themes. To demonstrate the applications enabled by our method, we used the metadata from the r/Dreams community, and classified dreams into four types: nightmares, recurring dreams, vivid dreams, and lucid dreams. Our analysis revealed that each type of dream has distinct characteristics and prominent topics. Notably, nightmares were associated with scary and shadowy imagery, and sexual-assault scenes. Vivid dreams featured rich expressions of feelings and topics inducing extreme emotions such as pregnancy and birth, religious figures, war, and aliens. Lucid dreams were characterized by topics of control, and by an overarching theme of mental reflections and interactions. For recurring dreams, we found that the most salient topics were dating, sex, and cheating, with recurring themes related to school and mentions of parts of the human body. Additionally, we investigated the relationship between dream topics and real-life experiences by studying the evolution of topics over the past five years. Our findings showed that the COVID-19 outbreak coincided with a gradual and collective shift in dream content. People started to dream less about people and relationships, feelings, sight and vision, outdoor locations, and movement and action, and more about the human body, especially teeth and blood, violence and death, religious and spiritual themes, and indoor locations. Similarly, after the war in Ukraine started the topics about soldiers and nuclear war both peaked. Results Figure 1 outlines the framework of our study. It consist of three main stages: 1) data preprocessing, which includes collecting dream reports, ideally in an ecological setting, and using NLP methods for cleaning the content; 2) topic modelling, which is the core NLP stage for topic modelling. Once the topics and themes in the dream reports collection are discovered, various applications are supported, and we demonstrate three of those: 3) building a dream topics taxonomy, which allows to uncover the relationships between individual themes and topics, as well as the frequency of each of them in the dream collection; 4) finding topics and themes by dream types, which as an application that uses a proposed measure of topic or theme importance in a dream and odds-ratio analysis to discover topics that are specific to a dream type (or any other dream reports subset of choosing), and 5) finding topics and themes through time, which is an application using the proposed topic or theme importance in a dream to quantify the prevalence of dream topics and themes through time.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Anubhab Das"
+        },
+        {
+            "affiliations": [],
+            "name": "Sanja \u0160\u0107epanovi\u0107"
+        },
+        {
+            "affiliations": [],
+            "name": "Luca Maria Aiello"
+        },
+        {
+            "affiliations": [],
+            "name": "Remington Mallett"
+        },
+        {
+            "affiliations": [],
+            "name": "Deirdre Barrett"
+        },
+        {
+            "affiliations": [],
+            "name": "Daniele Quercia"
+        }
+    ],
+    "id": "SP:a0621fbfc708775cb839982789e3cd05a5a61715",
+    "references": [
+        {
+            "authors": [
+                "Mota-Rolim",
+                "S.A. et al. The dream of god"
+            ],
+            "title": "how do religion and science see lucid dreaming and other conscious states during sleep? Front",
+            "venue": "Psychol. 11, 555731",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "M. Schredl"
+            ],
+            "title": "Characteristics and contents of dreams",
+            "venue": "Int. review neurobiology 92,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "J.A. Hobson",
+                "McCarley",
+                "R.W. The brain as a dream state generator"
+            ],
+            "title": "an activation-synthesis hypothesis of the dream process",
+            "venue": "The Am. journal psychiatry",
+            "year": 1977
+        },
+        {
+            "authors": [
+                "E. Hartmann"
+            ],
+            "title": "Making connections in a safe place: Is dreaming psychotherapy",
+            "venue": "Dreaming 5,",
+            "year": 1995
+        },
+        {
+            "authors": [
+                "D.M. Eagleman",
+                "Vaughn",
+                "D.A. The defensive activation theory"
+            ],
+            "title": "Rem sleep as a mechanism to prevent takeover of the visual cortex",
+            "venue": "Front. neuroscience 15, 632853",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "F. Crick",
+                "G. Mitchison"
+            ],
+            "title": "The function of dream sleep",
+            "venue": "Nature 304,",
+            "year": 1983
+        },
+        {
+            "authors": [
+                "Hoel",
+                "E. The overfitted brain"
+            ],
+            "title": "Dreams evolved to assist generalization",
+            "venue": "Patterns 2, 100244",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M. Schredl"
+            ],
+            "title": "Dream content analysis: Basic principles",
+            "venue": "(Universita\u0308tsbibliothek der Universita\u0308t Heidelberg,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "Payne",
+                "J.D. Memory consolidation",
+                "the diurnal rhythm of cortisol",
+                "the nature of dreams"
+            ],
+            "title": "a new hypothesis",
+            "venue": "Int. review neurobiology 92, 101\u2013134",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "E.J. Wamsley",
+                "M. Tucker",
+                "J.D. Payne",
+                "J.A. Benavides",
+                "R. Stickgold"
+            ],
+            "title": "Dreaming of a learning task is associated with enhanced sleep-dependent memory consolidation",
+            "venue": "Curr. Biol",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "A. Revonsuo",
+                "C. Salmivalli"
+            ],
+            "title": "A content analysis of bizarre elements in dreams",
+            "venue": "Dreaming 5,",
+            "year": 1995
+        },
+        {
+            "authors": [
+                "A.T. Beck",
+                "Ward",
+                "C.H. Dreams of depressed patients"
+            ],
+            "title": "Characteristic themes in manifest content",
+            "venue": "Arch. general psychiatry 5, 462\u2013467",
+            "year": 1961
+        },
+        {
+            "authors": [
+                "A. Fogli",
+                "L. Maria Aiello",
+                "Quercia",
+                "D. Our dreams",
+                "our selves"
+            ],
+            "title": "automatic analysis of dream reports",
+            "venue": "Royal Soc. Open Sci. 7, 192080",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S. \u0160\u0107epanovi\u0107",
+                "L.M. Aiello",
+                "D. Barrett",
+                "Quercia",
+                "D. Epidemic dreams"
+            ],
+            "title": "dreaming about health during the covid-19 pandemic",
+            "venue": "Royal Soc. open science 9, 211080",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C. Winget",
+                "M. Kramer"
+            ],
+            "title": "Dimensions of dreams",
+            "venue": "(University of Florida,",
+            "year": 1979
+        },
+        {
+            "authors": [
+                "V. Elce",
+                "G. Handjaras",
+                "Bernardi",
+                "G. The language of dreams"
+            ],
+            "title": "application of linguistics-based approaches for the automated analysis of dream experiences",
+            "venue": "Clocks & Sleep 3, 495\u2013514",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Colace"
+            ],
+            "title": "Dream bizarreness reconsidered",
+            "venue": "Sleep Hypn",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "C. Picard-Deland",
+                "T. Nielsen",
+                "M. Carr"
+            ],
+            "title": "Dreaming of the sleep lab",
+            "venue": "Plos one 16,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Devlin",
+                "Chang",
+                "M.-W.",
+                "K. Lee",
+                "Toutanova",
+                "K. Bert"
+            ],
+            "title": "Pre-training of deep bidirectional transformers for language understanding",
+            "venue": "arXiv preprint arXiv:1810.04805",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Baumgartner",
+                "S. Zannettou",
+                "B. Keegan",
+                "M. Squire",
+                "J. Blackburn"
+            ],
+            "title": "The pushshift reddit dataset",
+            "venue": "In Proceedings of the international AAAI conference on web and social media,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Keller",
+                "J.W. et al. Use of dreams in therapy"
+            ],
+            "title": "A survey of clinicians in private practice",
+            "venue": "Psychol. Reports 76, 1288\u20131290",
+            "year": 1995
+        },
+        {
+            "authors": [
+                "Grootendorst",
+                "M. Bertopic"
+            ],
+            "title": "Neural topic modeling with a class-based tf-idf procedure",
+            "venue": "arXiv preprint arXiv:2203.05794",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "G.W. Domhoff"
+            ],
+            "title": "The scientific study of dreams: Neural networks, cognitive development, and content analysis",
+            "venue": "(American Psychological Association,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "Hargittai",
+                "E. Potential biases in big data"
+            ],
+            "title": "Omitted voices on social media",
+            "venue": "Soc. Sci. Comput. Rev. 38, 10\u201324",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "F. Siclari",
+                "J.J. LaRocque",
+                "B.R. Postle",
+                "G. Tononi"
+            ],
+            "title": "Assessing sleep consciousness within subjects using a serial awakening paradigm",
+            "venue": "Front. psychology 4,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Nemeth",
+                "G. The route to recall a dream"
+            ],
+            "title": "Theoretical considerations and methodological implications",
+            "venue": "Psychol. Res. 1\u201324",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Schredl",
+                "M. Questionnaires",
+                "diaries as research instruments in dream research"
+            ],
+            "title": "Methodological issues",
+            "venue": "Dreaming 12, 17\u201326",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "C. Sanz",
+                "F. Zamberlan",
+                "E. Erowid",
+                "F. Erowid",
+                "E. Tagliazucchi"
+            ],
+            "title": "The experience elicited by hallucinogens presents the highest similarity to dreaming within a large database of psychoactive substance reports",
+            "venue": "Front. neuroscience 12,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Nielsen",
+                "T. A"
+            ],
+            "title": "The typical dreams of canadian university students",
+            "venue": "Dreaming 13,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "C. YU Kai Ching"
+            ],
+            "title": "Pornography consumption and sexual behaviors as correlates of erotic dreams and nocturnal emissions",
+            "venue": "Dreaming",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "J. Mathes",
+                "M. Schredl",
+                "G\u00f6ritz",
+                "A.S. Frequency of typical dream themes in most recent dreams"
+            ],
+            "title": "An online study",
+            "venue": "Dreaming 24, 57",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Gieselmann",
+                "A. et al. Aetiology",
+                "treatment of nightmare disorder"
+            ],
+            "title": "State of the art and future perspectives",
+            "venue": "J. sleep research 28, e12820",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "R.L. Campbell",
+                "A. Germain"
+            ],
+            "title": "Nightmares and posttraumatic stress disorder (ptsd)",
+            "venue": "Curr. Sleep Medicine Reports",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "B. Sheaves",
+                "S. Rek",
+                "Freeman",
+                "D. Nightmares",
+                "psychiatric symptoms"
+            ],
+            "title": "A systematic review of longitudinal, experimental, and clinical trial studies",
+            "venue": "Clin. Psychol. Rev. 102241",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "A.J. Phelps",
+                "D. Forbes",
+                "Creamer",
+                "M. Understanding posttraumatic nightmares"
+            ],
+            "title": "An empirical and conceptual review",
+            "venue": "Clin. psychology review 28, 338\u2013355",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "B Krakow"
+            ],
+            "title": "Nightmare frequency in sexual assault survivors with ptsd",
+            "venue": "J. anxiety disorders 16,",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "A. Rousseau",
+                "Belleville",
+                "G. The mechanisms of action underlying the efficacy of psychological nightmare treatments"
+            ],
+            "title": "A systematic review and thematic analysis of discussed hypotheses",
+            "venue": "Sleep medicine reviews 39, 122\u2013133",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "R Mallett"
+            ],
+            "title": "The relationship between dreams and subsequent morning mood using self-reports and text analysis",
+            "venue": "Affect. Sci",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M. Blagrove",
+                "L. Farmer",
+                "E. Williams"
+            ],
+            "title": "The relationship of nightmare frequency and nightmare distress to well-being",
+            "venue": "J. sleep research 13,",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "D. Denis",
+                "C.C. French",
+                "A.M. Gregory"
+            ],
+            "title": "A systematic review of variables associated with sleep paralysis",
+            "venue": "Sleep Medicine Rev",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "K. Bulkeley",
+                "Hartmann",
+                "E. Big dreams"
+            ],
+            "title": "An analysis using central image intensity, content analysis, and word searches",
+            "venue": "Dreaming 21, 157",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "E. Wamsley",
+                "C.E. Donjacour",
+                "T.E. Scammell",
+                "G.J. Lammers",
+                "R. Stickgold"
+            ],
+            "title": "Delusional confusion of dreaming and reality in narcolepsy",
+            "venue": "Sleep 37,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "K.J. Holden",
+                "French",
+                "C.C. Alien abduction experiences"
+            ],
+            "title": "Some clues from neuropsychology and neuropsychiatry",
+            "venue": "Cogn. neuropsychiatry 7, 163\u2013178",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "R Mallett"
+            ],
+            "title": "Exploring the range of reported dream lucidity",
+            "venue": "Philos. Mind Sci",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J.M. Windt",
+                "U. Voss"
+            ],
+            "title": "Spontaneous thought, insight, and control in lucid dreams. The Oxf. handbook spontaneous thought: Mind-wandering, creativity, dreaming",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "C. Picard-Deland",
+                "M. Pastor",
+                "E. Solomonova",
+                "T. Paquette",
+                "T. Nielsen"
+            ],
+            "title": "Flying dreams stimulated by an immersive virtual reality task. Conscious",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "G Mainieri"
+            ],
+            "title": "Are sleep paralysis and false awakenings different from rem sleep and from lucid rem sleep? a spectral eeg analysis",
+            "venue": "J. Clin. Sleep Medicine",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R. Mallett"
+            ],
+            "title": "Partial memory reinstatement while (lucid) dreaming to change the dream environment",
+            "venue": "Conscious. Cogn",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "M. Schredl",
+                "C. Fuchs",
+                "Mallett",
+                "R. Differences between lucid",
+                "nonlucid dream reports"
+            ],
+            "title": "A within-subjects design",
+            "venue": "Dreaming",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "U. Voss",
+                "K. Schermelleh-Engel",
+                "J. Windt",
+                "C. Frenzel",
+                "Hobson",
+                "A. Measuring consciousness in dreams"
+            ],
+            "title": "the lucidity and consciousness in dreams scale",
+            "venue": "Conscious. Cogn. 22, 8\u201321",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "R. Mallett",
+                "L. Sowin",
+                "R. Raider",
+                "K.R. Konkoly",
+                "Paller",
+                "K.A. Benefits",
+                "concerns of seeking",
+                "experiencing lucid dreams"
+            ],
+            "title": "benefits are tied to successful induction and dream control",
+            "venue": "Sleep Adv. 3, zpac027",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Schredl",
+                "Bulkeley",
+                "K. Lucid nightmares"
+            ],
+            "title": "An exploratory online study",
+            "venue": "Int. J. Dream Res. 215\u2013219",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Stumbrys",
+                "T. Lucid nightmares"
+            ],
+            "title": "A survey of their frequency, features, and factors in lucid dreamers",
+            "venue": "Dreaming 28, 193",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "R. Ouchene",
+                "N. El Habchi",
+                "A. Demina",
+                "B. Petit",
+                "Trojak",
+                "B. The effectiveness of lucid dreaming therapy in patients with nightmares"
+            ],
+            "title": "A systematic review",
+            "venue": "L\u2019Enc@ACUTEACCENT@ephale",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "R. Vallat",
+                "M. Eskinazi",
+                "A. Nicolas",
+                "P. Ruby"
+            ],
+            "title": "Sleep and dream habits in a sample of french college students who report no sleep disorders",
+            "venue": "J. Sleep Res. 27,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "A. Zadra"
+            ],
+            "title": "Recurrent dreams and their relation to life events and well-being. Trauma dreams",
+            "year": 1996
+        },
+        {
+            "authors": [
+                "P.R. Robbins",
+                "R.H. Tanck"
+            ],
+            "title": "A comparison of recurrent dreams reported from childhood and recent recurrent dreams",
+            "venue": "Imagination, Cogn. Pers. 11,",
+            "year": 1992
+        },
+        {
+            "authors": [
+                "N. Weinstein",
+                "R. Campbell",
+                "M. Vansteenkiste"
+            ],
+            "title": "Linking psychological need experiences to daily and recurring dreams",
+            "venue": "Motiv. Emot",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "T. Duke",
+                "J. Davidson"
+            ],
+            "title": "Ordinary and recurrent dream recall of active, past and non-recurrent dreamers during and after academic stress",
+            "venue": "Dreaming 12,",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "R.E. Propper",
+                "R. Stickgold",
+                "R. Keeley",
+                "Christman",
+                "S.D. Is television traumatic"
+            ],
+            "title": "Dreams, stress, and media exposure in the aftermath of september 11, 2001",
+            "venue": "Psychol. Sci. 18, 334\u2013340",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "M. Gorgoni",
+                "S. Scarpelli",
+                "V. Alfonsi",
+                "De Gennaro",
+                "L. Dreaming during the covid-19 pandemic"
+            ],
+            "title": "A narrative review",
+            "venue": "Neurosci. & Biobehav. Rev. 104710",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "G. Margherita",
+                "Caffieri",
+                "A. An observatory on changes in dreaming during a pandemic"
+            ],
+            "title": "a living systematic review (part 1)",
+            "venue": "J. Sleep Res. e13742",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Schredl",
+                "M. et al. Continuity between waking",
+                "dreaming"
+            ],
+            "title": "A proposal for a mathematical model",
+            "venue": "Sleep Hypn. 5, 38\u201352",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "J. Tuominen",
+                "H. Olkoniemi",
+                "A. Revonsuo",
+                "Valli",
+                "K. \u2018no man is an island\u2019"
+            ],
+            "title": "Effects of social seclusion on social dream content and rem sleep",
+            "venue": "Br. J. Psychol. 113, 84\u2013104",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Domhoff",
+                "G.W. The invasion of the concept snatchers"
+            ],
+            "title": "The origins, distortions, and future of the continuity hypothesis",
+            "venue": "Dreaming 27, 14",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "L Kauhanen"
+            ],
+            "title": "A systematic review of the mental health changes of children and young people before and during the covid-19 pandemic",
+            "venue": "Eur. child & adolescent psychiatry",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Kelly",
+                "P. et al. Lucid dreaming increased during the covid-19 pandemic"
+            ],
+            "title": "An online survey",
+            "venue": "Plos one 17, e0273281",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Solomonova",
+                "E. et al. Stuck in a lockdown"
+            ],
+            "title": "Dreams, bad dreams, nightmares, and their relationship to stress, depression and anxiety during the covid-19 pandemic",
+            "venue": "Plos one 16, e0259040",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Watson",
+                "D. To dream",
+                "perchance to remember"
+            ],
+            "title": "Individual differences in dream recall",
+            "venue": "Pers. individual differences 34, 1271\u20131286",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "M. Coscia",
+                "F.M. Neffke"
+            ],
+            "title": "Network backboning with noisy data",
+            "venue": "IEEE 33rd International Conference on Data Engineering (ICDE),",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M. Bastian",
+                "S. Heymann",
+                "Jacomy",
+                "M. Gephi"
+            ],
+            "title": "an open source software for exploring and manipulating networks",
+            "venue": "In Proceedings of the international AAAI conference on web and social media, vol. 3, 361\u2013362",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "Barrett",
+                "D. Dreams about covid-19 versus normative dreams"
+            ],
+            "title": "Trends by gender",
+            "venue": "Dreaming 30, 216",
+            "year": 2020
+        }
+    ],
+    "sections": [
+        {
+            "text": "Dreaming is a fundamental but not fully understood part of human experience that can shed light on our thought patterns. Traditional dream analysis practices, while popular and aided by over 130 unique scales and rating systems, have limitations. Mostly based on retrospective surveys or lab studies, they struggle to be applied on a large scale or to show the importance and connections between different dream themes. To overcome these issues, we developed a new, data-driven mixed-method approach for identifying topics in free-form dream reports through natural language processing. We tested this method on 44,213 dream reports from Reddit\u2019s r/Dreams subreddit, where we found 217 topics, grouped into 22 larger themes: the most extensive collection of dream topics to date. We validated our topics by comparing it to the widely-used Hall and van de Castle scale. Going beyond traditional scales, our method can find unique patterns in different dream types (like nightmares or recurring dreams), understand topic importance and connections, and observe changes in collective dream experiences over time and around major events, like the COVID-19 pandemic and the recent Russo-Ukrainian war. We envision that the applications of our method will provide valuable insights into the intricate nature of dreaming."
+        },
+        {
+            "heading": "Introduction",
+            "text": "Dreaming is a fundamental human experience and a cornerstone of sleep psychology, yet its underlying mechanisms remain elusive. The fascination with the contents and meaning of our dreams dates back to early human civilizations,1 but despite significant progress in dream research, fundamental questions about the physiological and psychological functions of dreaming remain unanswered, leaving us to ponder the question: why do we dream?2 Previous literature on dream analysis suggests that dreaming plays a vital role in learning processes,3 has psychotherapeutic effects,4 and safeguards the brain\u2019s neuroplasticity.5 Recent AI-inspired theories have drawn parallels between the brain\u2019s activity during sleep and the functioning of artificial neural networks. One theory suggests that dreams act as \u201cgarbage collectors\u201d that clear the memory,6 while another posits that they prevent over-fitting of the brain\u2019s neuronal network.7\nWhile the question of why we dream remains open, before we can even begin to answer it, we must first understand the nature of what we dream. This question is important not only for helping us understand the fundamental function of dreams but also as it offers a window into our psyche and what is prominent in people\u2019s minds. Dream content is composed of fragments of waking life experiences and events,8 but these are not veridical replays,9, 10 nor do they represent the entirety of dream content.11 One popular approach to investigating dream content systematically is through content analysis.8 This is a family of methods that analyze quantitatively the elements present in dreams to answer specific questions, such as whether depressed individuals experience more rejection in their dreams,12 how dream content changes from teenage years to adulthood,13 or whether in the times of collective health crises there is a shift in the medical symptoms people dream about.14 Although these studies may seem narrow in scope, they provide a critical foundation for addressing the overarching question of why we dream. The importance of content analysis is evidenced by the development of over 130 scales and rating systems for dream content analysis.15 Early scales tended to score based on the raters\u2019 subjective interpretation of dream symbolism and rarely reported inter-rater reliability.16 Dream research became more systematic with the development of the Hall and van de Castle method16 of dream content analysis, a quantitative system that scores dream reports based on the frequency and type of characters, interactions, activities, emotions, settings, and objects present in the dream. This method relies solely on the dream reports and\n1\nar X\niv :2\n30 7.\n04 16\n7v 1\n[ cs\n.C Y\n] 9\nJ ul\ndoes not use any additional information provided by the dreamer. Studies using the Hall and van de Castle scales have revealed consistent patterns and norms in dream content across different groups of people, such as gender, age, culture, and personality. For instance, women tend to dream more about family members, friends, and indoor settings, while men tend to dream more about strangers, violence, and outdoor settings. Moreover, research using these scales has demonstrated that dream content correlates with an individual\u2019s waking concerns and interests, such as work, relationships, hobbies, and fears.13\nLimited content scope and representatives of existing scales. Traditionally, dream researchers had to manually sift through large numbers of dream reports to gain insights into the range of dream topics.16 Even with recent developments in automated dream analysis,17 most studies continued to rely on experimenter-driven content searches, i.e., supervised approaches for content analysis, such as the Hall and van de Castle method. These methods involve the use of predetermined categories that are often biased towards existing knowledge of dreams. For example, dreams are often characterized as bizarre, involving impossible or improbable events that deviate from everyday experiences,18 which may not fit within the predetermined categories established in the literature. As a result, current approaches to dream analysis may miss important aspects of dream content that fall outside of these predetermined categories. In contrast to traditional methods of dream coding, unsupervised theme discovery from dream reports may provide a fresh perspective and a more comprehensive understanding of the categorization of dream content and its relationship with waking life events. Furthermore, previous studies relied on dream reports collected through retrospective surveys that are susceptible to memory biases, and laboratory studies that may be confounded by the strong impact of the laboratory setting on dream content.19 Therefore, a more ecologically valid approach to studying dream content at the population level is necessary.\nOur unsupervised mixed-method approach for dream content discovery. Our study addresses the identified research gap (i.e., limited scope and representatives of dream content scales) by developing an unsupervised mixed-method approach for dream content discovery, and by applying it to new large-scale data that more closely approximates spontaneous dream recollections than survey studies. To achieve this, we i) leveraged recent advances in AI for Natural Language Processing (NLP) and ii) used a crowd-sourced dataset of dream self-reports from the r/Dreams community on Reddit. Unlike traditional lab studies, dream experiences shared on r/Dreams are reported voluntarily and spontaneously, enabling us to collect a large set of dream reports and conduct an ecological study. We collected over 44K dream reports from more than 34K Reddit users over the past five years, and applied the BERTopic content analysis method20 to automatically discover topics in each dream report. The resulting taxonomy includes 22 themes that can be broken down into 217 more specific topics. Confirming its validity, we found that most of the themes in our taxonomy align with the dream element categories present in the Hall and Van de Castle scale, but the specific topics inside those themes provide a description of dreams that is much more detailed. Going beyond what was possible with existing scales, our method also allowed to uncover the importance and relationships among specific topics and themes.\nTo demonstrate the applications enabled by our method, we used the metadata from the r/Dreams community, and classified dreams into four types: nightmares, recurring dreams, vivid dreams, and lucid dreams. Our analysis revealed that each type of dream has distinct characteristics and prominent topics. Notably, nightmares were associated with scary and shadowy imagery, and sexual-assault scenes. Vivid dreams featured rich expressions of feelings and topics inducing extreme emotions such as pregnancy and birth, religious figures, war, and aliens. Lucid dreams were characterized by topics of control, and by an overarching theme of mental reflections and interactions. For recurring dreams, we found that the most salient topics were dating, sex, and cheating, with recurring themes related to school and mentions of parts of the human body. Additionally, we investigated the relationship between dream topics and real-life experiences by studying the evolution of topics over the past five years. Our findings showed that the COVID-19 outbreak coincided with a gradual and collective shift in dream content. People started to dream less about people and relationships, feelings, sight and vision, outdoor locations, and movement and action, and more about the human body, especially teeth and blood, violence and death, religious and spiritual themes, and indoor locations. Similarly, after the war in Ukraine started the topics about soldiers and nuclear war both peaked."
+        },
+        {
+            "heading": "Results",
+            "text": "Figure 1 outlines the framework of our study. It consist of three main stages: 1) data preprocessing, which includes collecting dream reports, ideally in an ecological setting, and using NLP methods for cleaning the content; 2) topic modelling, which is the core NLP stage for topic modelling. Once the topics and themes in the dream reports collection are discovered, various applications are supported, and we demonstrate three of those: 3) building a dream topics taxonomy, which allows to uncover the relationships between individual themes and topics, as well as the frequency of each of them in the dream collection; 4) finding topics and themes by dream types, which as an application that uses a proposed measure of topic or theme importance in a dream and odds-ratio analysis to discover topics that are specific to a dream type (or any other dream reports subset of choosing), and 5) finding topics and themes through time, which is an application using the proposed topic or theme importance in a dream to quantify the prevalence of dream topics and themes through time.\n2/24\nDream reports from Reddit In the established literature of dream analysis, dream reports are defined as \u201cthe recollection of mental activity which has occurred during sleep.\u201d2 To gather a dataset of such reports, we turned to Reddit, a social media platform organized in communities known as subreddits. Using the PushShift API21, we collected data from r/Dreams , a subreddit where members share their dreams and engage informally in their interpretation \u2014 which is common in therapy contexts22 \u2014 as well as in providing social and emotional support to other members.\nThe r/Dreams subreddit was established in September 2008, and as of June 2022, it had accumulated 280K subscribers. We collected over 185K posts published on r/Dreams from March 2016 to September 2022; prior to 2016, the community was almost inactive. Authors on r/Dreams annotate their posts with one or more tags selected from a fixed set community-specific labels called flairs. Flairs on r/Dreams denote posts that contain dream reports of a given type (Short Dream, Medium Dream, Long Dream, Nightmare, Recurring Dream, and Lucid Dream) or posts that contain discussions about dreams in general (e.g., Dream Help, Dream Art, or Question). To ensure that we considered only posts that contained dream reports, we only kept the 44,213 unique posts tagged with dream-type flairs (Figure 2a). In our analysis, a dream report was the concatenation of the title and body of each of these posts.\nOur unsupervised mixed-method approach for dream content discovery As mentioned above, the core part of our approach shown in Figure 1 is the unsupervised mixed-method topic modelling and it involves: 2.1) extracting topics using an advanced NLP topic model, such as BERTopic23; 2.2) grouping topics into themes using a clustering method to group embedding representations of individual topics discovered in the previous step into themes, and 2.3) filtering non-dream content and adjusting themes, which is a mixed-method part of the proposed methodology, requiring human, ideally dream experts knowledge to filter out topics or themes that do not pertain to the actual dream content, as well as to adjust any topic to theme associations, if needed. For more details about any of the steps of our approach, please\n3/24\nM ar\nch 2\n01 6\nM ay\n2 01 6 Ju ly 2 01 6\nS ep\nt. 20\n16\nN ov\n. 2 01 6 Ja n. 2 01 7\nM ar\nch 2\n01 7\nM ay\n2 01 7 Ju ly 2 01 7\nS ep\nt. 20\n17\nN ov\n. 2 01 7 Ja n. 2 01 8\nM ar\nch 2\n01 8\nM ay\n2 01 8 Ju ly 2 01 8\nS ep\nt. 20\n18\nN ov\n. 2 01 8 Ja n. 2 01 9\nM ar\nch 2\n01 9\nM ay\n2 01 9 Ju ly 2 01 9\nS ep\nt. 20\n19\nN ov\n. 2 01 9 Ja n. 2 02 0\nM ar\nch 2\n02 0\nM ay\n2 02 0 Ju ly 2 02 0\nS ep\nt. 20\n20\nN ov\n. 2 02 0 Ja n. 2 02 1\nM ar\nch 2\n02 1\nM ay\n2 02 1 Ju ly 2 02 1\nS ep\nt. 20\n21\nN ov\n. 2 02 1 Ja n. 2 02 2\nM ar\nch 2\n02 2\nM ay\n2 02 2 Ju ly 2 02 2\n0\n200\n400\n600\n800\n1000\n1200\n1400\n1600\nAll dreams Nightmares Vivid dreams Lucid dreams Recurring dreams\nN o.\no f d\nre am\ns\n(a) Monthly volume of the dream reports we collected from r/Dreams , together with the volume of dream reports labeled with the four dream types used by the community.\n2 4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 34 36 38 40 42 44 46 48 50 52 54 56 58 60 62\n1\n10\n10 2\n10 3\n10 4\nNo. of dreams per dreamer\nFr eq\nue nc\ny of\nd re\nam er\ns (lo\ng sc\nal e)\n(b) Distribution of number of dreams per user. The majority of users posted less than 10 dreams during the 5 years for which we collected the data. There is only a dozen of prolific dreamers who reported more than 30 dreams.\nFigure 2. Dream reports statistics: (a) temporal, and (b) per dreamer.\n4/24\nrefer to Methods section.\nThe Reddit taxonomy of dream topics Using state-of-the-art topic modeling techniques, we have identified 217 semantically-cohesive topics that emerged from the dream reports analyzed (details in Methods). We assigned to each dream report the list of unique topics that our model was able to extract from the report text. The distribution of number of dreams associated with a topic is broad (Figure SI5), with only 38 topics being associated with at least 1000 dream reports. Table 2 shows the 20 most frequent topics.\nTo offer a more concise representation of dream topics, we automatically clustered the 217 fine-grained topics into 22 themes (see Methods), which we then manually parsed to assess their conformity to categories from the dream coding system by Hall and Van de Castle (HVdC for brevity). HVdC defines 12 categories and several subcategories of elements empirically relevant for quantitative dream analysis. All themes but one (a miscellaneous theme containing diverse topics) matched some HVdC category or subcategory (Table 3).\nAt a high level of abstraction, HVdC views the dream as a cast of characters (i), interacting with each other (ii), while being immersed in some background setting (iii). These three aspects emerged in the most prominent themes extracted from Reddit dream reports. The largest theme, both in terms of the number of topics it contains (17) and the number of dream reports associated with it (20K), is People and relationships. The main topics included in this theme are family members and relationships, and intimacy and romance (see Table 3 and Table 1 SI). Characters and interactions are also represented in themes concerning Animals, Supernatural entities, and Religious and Spiritual, which map directly to the two HVdC subcategories of Animals and Imaginary Characters. Interactions respectively of aggressive and friendly type are represented in the themes Violence and Death and Life Events. The second most frequent group of themes involves events or elements that are typical of well-characterized places, such as home or the workplace. Among them, the most prominent theme is Indoor locations, which includes 16 topics such as house, hospital, and mall. These themes map to different subcategories of the HVdC category of Settings.\nThe remaining themes correspond to the categories of Activities, Objects, Emotions, and Time in the HVdC framework. With respect to Activities, Reddit users more frequently reported their mental activities and perceptions, rather than physical actions, when recounting their dreams. Specifically, visual and auditory sensory experiences were often recounted. The most commonly described categories of Objects included body parts (often with gruesome details) and personal objects, with a particular emphasis on technological devices such as phones or elements from virtual worlds of computer games. Emotions were represented by a single theme, characterized by common formulas for describing emotions of any type, with negative emotions being more prominently featured. Finally, while one theme captured temporal scales, such references were infrequent, appearing in fewer than 1,000 dreams.\nSome of the HVdC categories did not map directly to any of the themes in our taxonomy. This is the case with Misfortune/Fortune, for example. We found that these types of events are usually reported as elements in dreams that were predominantly characterised by other themes, such as Life events, People and relationships, or Violence and death, for example.\nThe emerging themes in the dream reports do not exist in isolation; they often co-occur in the same reports and jointly construct their narratives. Figure 3 presents the backbone of the network of co-occurrence of these themes, where the connections between themes are weighted proportional to the number of dreams in which they co-occur. People and relationships and Indoor locations are the most frequent and central themes, occurring often with many other ones. Feelings are mainly associated with actions and relationships rather than objects or settings; conversely, sensory elements are more associated with settings,\n5/24\nespecially outdoor locations. Some of the central topics, such as relationships and emotions, are highly valued in rating scales by dream researchers. However, other themes, such as indoor/outdoor settings, are frequently omitted in HVdC coding research.\nBesides the prominence of both types of settings, their proportions differ somewhat. Our data show a greater predominance of indoor settings, while HVdC norms indicate lower levels of indoor settings: 49% for males and 61% for females16. This difference could reflect our data, which includes two years of the COVID pandemic, whereas the comparison HVdC studies do not.\nOur findings challenge traditional dream analysis literature that found males mostly dream of male characters.24 The two most recurring topics in our data concern the presence of female characters in dreams, despite the young male dominance in the Reddit user base.25 A possible reason for this contradicting finding could have to do with HVdC ratings not being exactly equivalent to ours. In our method, the strength of association of a dream with topics concerning male characters and indoor settings is stronger the more mentions of male characters and indoor settings appear in the report. Conversely, in HVdC, a male character who is mentioned only once in the dream gets the same score as one who is referred to in every sentence of the report. Likewise, an indoor setting is scored in the same way regardless whether it is inferred from one mention in the dream or whether the dream account is largely a description of an indoor setting. In that sense, our methods allows for a richer characterisation and quantification of dream content.\nTopics and themes by dream type Using odds ratios (see Methods), we uncovered that certain topics (Table 4) and themes (Figure 4) appeared more frequently in dreams of specific types."
+        },
+        {
+            "heading": "Topics and themes in Nightmares",
+            "text": "Results in Table 4 revealed among the top topics specific for nightmares, keywords such as shadows, rape, sexual-assault, scary, creepy, violence, demons, 911, and blood. In terms of themes, Religious and spiritual is the most prominent in nightmares, followed by Feelings, Supernatural entities, and Violence and death, while the least prominent ones were Media and tech and Time, time travel and timelines.\nTopics and themes in Vivid dreams Results presented in Table 4 reveal among topics specific for vivid dreams, keywords such as felt-real, religious, felt-right, felt-wrong, apocalyptic, felt-pain, baby birth and pregnancy, aliens, mirrors, and nuclear war. This has translated into the most prominent themes being Feelings, followed by Sights and vision and Life events.\nTopics and themes in Lucid dreams Results presented in Table 4 reveal among topics specific for lucid dreams, keywords such as control, alternate-reality, and reflection and mirrors, felt-real, couldn-speak, falling, heard-voices and demon. When considering themes, Mental reflection and interactions, followed by Movement and action, Sights and vision, and Feelings were the most prominent.\n6/24\nTopics and themes in Recurring dreams Results in Table 4 revealed among the top topics specific for recurring dreams, keywords such as cheating, ex, teeth, school, house and apartment, time-travel, and sex-dreams. Looking at the themes, we found School, Human body, especially teeth and blood, and Other topics (size, smell, apocalypse, etc.) being those that characterize recurring dreams.\nTopics and themes through time Finally, we studied the evolution of topics and themes over time. We focused on the period with at least 300 monthly dream reports, namely from January 2019 to September 2022. We found that soon after COVID-19 started, there was a gradual collective shift in the content of dreams from r/Dreams (Figure 5).\nAt the very beginning of the COVID-19 outbreak (February-March 2020), and even more so after the first peak of recorded deaths (April 2020), people gradually dreamt less of Sight and vision, Outdoor locations, Movement and action, and Mental reflections and interactions, while they dreamt more of Religious and spiritual figures, Indoor locations, and Human body, especially teeth and blood. An example dream from this period talks about \u201cspitting teeth and cornea onto the palm.\u201d We found a sharp decrease in the frequency of Life events topics in February 2020, while in March 2020 there we recorded a peak of mentions of Human body, especially teeth and blood, which are predominantly found in nightmares, as our previous analysis showed. These trends continued throughout the time of the COVID-19 second death peak (January 2021), from when we also detect a stark decrease in dreams of other People and relationships, Feelings, and, for a while, of Animals and Work.\nFinally, the start of the war in Ukraine (February 2022), is associated with a strong transition on the content of people\u2019s dreams towards violent topics. We found a sharp increase in topics from the themes of Violence and death, and Other topics (size, smell, apocalypse, etc.). Example dreams from the former group talk about \u201cbeing a murderer,\u201d,\u201ctooth falling out,\u201d and \u201cgetting shot in the head.\u201d Example dreams from the second group talked about \u201ctemple spirit monster,\u201d and \u201cbeing attacked by an opossum.\u201d The changes in response to external events were also evident at the level of individual topics, such as those about\n8/24\nsoldiers and nuclear war, which both peaked after the war in Ukraine started (Figure 6)."
+        },
+        {
+            "heading": "Discussion",
+            "text": "The current study advances the field of dream science by implementing a new methodology to study dreams in a more objective and ecological manner and also showcasing how this method can generate new insights into dreams."
+        },
+        {
+            "heading": "Reddit as a source of dreams",
+            "text": "Prior dream research has relied heavily on traditional laboratory, survey, and diary methods. Laboratory studies benefit from monitoring participants with PSG and waking them directly from REM sleep,26 which is known to increase dream recall drastically.27 However, these dreams are not representative of natural dream content, as they are highly influenced by the laboratory setting.19 Survey studies avoid this contextual bias on dream content, but often ask of a \u201crecent\u201d dream, which might be days or weeks prior to the survey response, thus suffering from memory distortion. Lastly, diary studies track dream content in a participant sample through morning diaries.28 While these studies benefit from having dream content collected\n9/24\nfrom ecological settings and with less retrospective bias, these studies are often limited by small sample sizes due to the high burden of participation. In the current study, we extracted morning dream reports from social media, thus capturing dreams in an ecological setting and also at a much larger scale. While other studies have investigated dedicated online dream forums,29 Reddit is one of the most popular social media sites and its usage continues to grow at higher rates than specialized forums, suggesting that the current approach might continue to be a source of population dream content for scientific analysis.\nUnsupervised generation of dream themes In using this ecological data source to generate common dream themes, our results complement previous studies using more traditional survey methods. Though it is widely accepted that dream content varies based on individual personality and cultural differences, previous research suggests there might also be thematic \u201cuniversals\u201d that appear in a disproportionately high amount of dreams. Universal dream themes are typically quantified using surveys with predetermined thematic content developed by the researcher,30, 31 which are biased towards existing knowledge of dreams. In the current study, our unsupervised approach to developing common dream themes confirms some previously developed themes while also offering more specificity within them. For example previous survey studies using the Typical Dreams Questionnaire30 or Dream Motif Scale31 have identified\n10/24\ncommon dream themes of failure, paranoia, snakes/insects and animal symbolism, alien life, fighting, and sex. Our results identified similar themes, while offering a finer-grained view with the subtopics that formed each theme. For example, we observed a popular theme of animals, and animal subtopics included what might be positive animal dreams (kitten, birds) and negative animal dreams (spider, maggots; snake, bite). It is difficult to compare the ranking of our dream themes with prior work, since prior work is heavily-dependent on the method of data collection.32 A notable advance of our approach is the ability to \u201cmap out\u201d the relationship between dream themes presence. The co-occurence of common themes has not been studied extensively before, and future work comparing the co-occurence of waking and dreaming themes might help to uncover what is truly unique about dream content."
+        },
+        {
+            "heading": "Phenomenology of dream subtypes",
+            "text": "Dreams are highly varied experiences, and have long been grouped into subclasses or types of dreams (e.g., nightmares, lucid dreams). However, these dreams are often defined by a single feature (e.g., nightmares as intensely negative dreams) and the phenomenological variety within each subtype is not well understood. The present results offer new insights into the consistent-yet-variable content of nightmares, lucid dreams, vivid dreams, and recurring dreams, some of which have important clinical implications.\nNightmares are defined as intensely negative dreams, sometimes with a secondary requirement that they result in a direct awakening,33 and have immense clinical relevance in PTSD34 and other psychiatric diagnoses.35 Our observation of keywords relating to sexual assault highlight prior observations of uniquely episodic event replay in PTSD patients,36 including survivors of sexual assault.37 The additional observation of increased themes of Feeling and Violence suggest that the episodic replays are highly emotional recreations of violent events, and the inclusion of many escape-related words highlights the helplessness felt by many recurrent nightmare sufferers.38 For nightmare sufferers, the negative affect during dreams39 or the dream recall during the day might increase negative symptoms of other co-morbid diagnoses (e.g., anxiety).40 Lastly, the heightened presence of\n11/24\nsupernatural entities in nightmares might relate to the common state of sleep paralysis, an under-studied and cross-cultural phenomenon that occurs during sleep-wake transitions and frequently involves a feeling of helplessness amidst a hallucinated \u201cdemon\u201d or otherwise frightening figure.41\nVivid dreams are highly realistic (or similarly, well-remembered) dreams. Our unsupervised approach suggests that vivid dreams are not only realistic (e.g., keywords felt-real, real-like), but also that these dreams often contain major life events, strong emotions, and supernatural/religious experiences. Vivid dreams included births and pregnancies, missiles and war, apocalyptic events, and alien invasions. This dream subtype overlaps almost directly with a class of dreams referred to as \u201cbig dreams.\u201d42 Big dreams occur rarely, but when they do, they are highly meaningful experiences that make a significant and long-lasting impression on waking life. Thus, our analysis of vivid dreams might be representative of these dreams, given that they consisted of major life events and religious experiences that likely influenced future thinking. Interestingly, the presence of an Alien invasion theme in vivid/realistic dreams suggests that prior reports of UFO abductions might result from cases of dream-reality confusion,43 where a dreamt abduction is misinterpreted as a memory from waking life.44\nLucid dreams are defined as those that include awareness of the dream while still dreaming,45 sometimes with a secondary requirement of having control over the dream.46 The present unsupervised analysis was consistent with these defining features, with common themes and keywords in lucid dreams such as mental reflection and control. Additionally, our results confirm more recent preliminary findings about lucid dream content, such as frequent episodes of flying47 and an overlap with sleep paralysis.48 Though lucid dreams are generally regarded as more positive in valence than non-lucid dreams,49\u201351 there are more recent reports of extremely negative lucid dreams, or lucid nightmares.52\u201354 Our results offer a cohesive explanation for these differential findings, in that we observed a general heightened realness and emotion in lucid dreams (themes of Feeling and Sights and visions and keywords of felt-real) without attachment to positive or negative valence. Our recent findings, focused on a different subreddit (r/LucidDreaming) suggest that positively-valenced lucid dreams are more likely to occur when dream control is involved,52 and the current results highlight the importance of focusing future clinical applications of lucid dreaming on the dream control rather than simply awareness of the dream (see55 for a review of the clinical efficacy of lucid dreams to treat nightmares).\nA recurrent dream is one that is experienced repeatedly, and these have been estimated to occur at least once in roughly 75% of the population.56, 57 It is likely that the many themes and keywords we observed in recurrent dreams are related to waking anxieties or worries. The limited amount of prior work on recurrent dream phenomenology suggests that recurrent dreams are primarily related to waking anxieties58 and other negative content,59 and also increase in frequency during periods of stress.57, 60 Our analysis extends these findings by observing more specific anxieties in recurrent dream content. The top\n12/24\ntwo themes were related to relationships, particularly negative aspects of relationships (i.e., cheating, ex-partners), and other common themes were even still related to relationships (e.g., sex, dating, crush). Other recurrent dream themes were explicitly negative, and at times ultraviolent; themes regarding serial killers, paralysis, sexual assault, and the apocalypse suggest that recurrent dreams are far more negative than positive or neutral. We suspect that many of these recurrent dreams would also be classified as nightmares (see statistics in Figure SI1), and thus our analysis might help future work in the prediction/monitoring of nightmares via the inclusion of recurrent themes.\nImpact of major collective events on dreams Previous research has revealed that major personal and cultural events might influence dream content. For example, an increase in nightmares was observed after the terrorist attacks of September 11th, 200161 and during the COVID-19 pandemic.62, 63 Dreams during the COVID-19 pandemic have also been shown to include pandemic-related content. The present results expand on these prior findings by offering a finer-grained view into the topical and temporal impact of major events on dreams. Rather than a categorical increase in nightmares or pandemic-related content, our analysis allowed us to identify specific sub-themes of pandemic-related topics and how they change over time. During the COVID-19 pandemic, population dreams transitioned from outdoor to indoor locations and decreased in social interactions, as did our waking experiences during the pandemic. Interestingly, these two effects had qualitatively different time courses, where the location change of dreams was longer-lasting and more persistent than social changes. This might reflect the mass adoption of technical communications (e.g., Zoom gatherings) that occurred while people were still mostly indoors. These effects are consistent with prior work showing a continuity between wake and dream content13, 64 and future work might evaluate how subtopics contribute uniquely to this continuity.64 These results also contribute to hypothesized dream functions, such as the drop in social content contradicting the Social Simulation Theory that predicts a compensatory effect of social activity in dreams.65 We also observed more mental reflections in dreams, which might reflect a \u201ccognitive continuity\u201d hypothesis66 if the population was more reflective during the increased loneliness during the pandemic.67 With the state of mental reflections during waking being less established than location and social changes, our finding suggests that it might be possible in the future to infer waking cognitive changes based on those observed in dream content. Alternatively, the rise in mental reflection during dreams might be representative of the increase in lucid dream frequency during the pandemic.68\nWhile dreams during the COVID-19 pandemic have been investigated at great length14, 62, 63, 69, much less work has been dedicated to observing the influence of the Russo-Ukrainian war on sleep and dream patterns. We observed a population increase in negative war-related topics (e.g., violence, death) after the start of the war, which is notable because our social media sample is expected to be primarily American users and thus not those who were directly exposed to the war. The association between the war and population dreams could be a result of American media exposure (see also61, highlighting a cognitive continuity between dreams and wake, where it is not daily activities per se, but the thought processes and internal imagery that predicts dream content). The negative content of population dreams during the war has important implications, given recent findings that negative dreams, including specifically dreams of death, are predictive of next-day negative affect39 and nightmares have extensive mental health implications.35"
+        },
+        {
+            "heading": "Limitations",
+            "text": "The first limitation of our work has to do with potential biases in the dream reports that we analysed. The first bias is that Reddit users report dreams that they have recalled spontaneously. However, according to the salience hypothesis, dream content that is vivid, new, intense, or strange, is more easily remembered.70 Moreover, personality traits also affect dream recall, so that people with higher openness to experience, and who are prone to imagination and fantasy, more often recall their dreams.70 Finally, the users of Reddit are not a representative sample of the general population; they are known to be more male, young, educated, and urbanites.25\nThe second limitation is about the elements from dream reports not reflecting the dream content. Given the free-form social media format, the r/Dreams users would not always describe only their dream report, but sometimes they would include some contextual information, for example recounting how they felt when they were woken up from the dream, or how the people they dreamt of are related to them in real life. For example, a Reddit user might drop in their dream report a sentence like \u201cIt was about 5 am when I woke up from this dream...\u201d Such contextual information is not a direct description of the dream content, yet it often helps to qualify it and it is therefore useful to our analysis. Dream researchers analysing a small number of dreams could read through each report and manually remove such instances to focus on dream content only. Given the automatic topic extraction method that we employed, such a data cleaning step was not possible. Some common categories of contextual information that were unrelated to the dream experience (e.g., the author explaining when they last time met the person they dreamt of, or what time they woke up from the dream) emerged as independent topics in our topic analysis and we removed them (see Methods, Clustering Topics).\nThe third limitation of our work is shared with other content analysis methods.2 We inevitably lose some dream information that could not be captured by the topics. This also means that our approach cannot represent subtle aspects of the individuality\n13/24\nof each dreamer."
+        },
+        {
+            "heading": "Implications",
+            "text": "Our work has three main implications:\nDeveloping an unsupervised dream content analysis method. The development of dream scoring systems has historically favored certain aspects of dream reports over others, based on assumptions about what are the most emotionally and socially important dimensions in dream analysis, rather than considering all potential topics or types of human experiences. Previous attempts to apply machine learning to dream content analysis have either replicated existing scoring systems13 or focused on specific types of dream content (e.g., symptoms14). In contrast, our study used a deep learning approach that prioritizes no particular topic. By analyzing dream content from an exclusively linguistic standpoint, we were able to discover and quantify themes that have not been previously considered.\nUncovering the first ecological taxonomy of dream topics. Our results demonstrate that many of the themes we discovered align with those captured by existing scoring systems, particularly the Hall and Van de Castle scale, as it includes includes topics such as interpersonal relationships, emotions, and friendly and violent interactions. However, our approach also revealed differences in the frequency of certain topics, such as a significant category of weather-related topics that have not been previously considered in any dream scoring system. The significance of weather as a conversational topic varies, being mentioned as a safe subject for small talk or as the subject of jokes regarding dull conversations. Nevertheless, considering the evolutionary perspective, weather played a crucial role during the era of limited shelters and the absence of temperature controls, which shaped human instincts. Hence, weather likely holds a deep-rooted importance for our well-being and survival. To sum up, our findings support the continued use of traditional scoring systems in clinical psychology research and psychotherapy, where there is a strong rationale for focusing on the more emotional and social content of dreams. At the same time, our results suggest that AI tools can provide a more detailed and nuanced understanding of dream content, and may be mature enough to support dream analysts in their work.\nCollaborating with AI in scientific discovery. The AI\u2019s ability to categorize dream content in ways unknown to human researchers is reminiscent of the scenario when chess and go-playing programs began surpassing human players. These programs didn\u2019t merely excel at the strategies employed by humans, instead, they developed unique strategies that had never been observed by humans before. It was assumed that humans approached both games based on evolutionary instincts developed for social interactions, while the AI adopted a more objective perspective, solely focusing on the game rules without any assumptions influenced by human endeavors. Similarly, AI comprehends texts based solely on their intrinsic content, without filtering them through instinctual categories primarily designed for interactions during waking states."
+        },
+        {
+            "heading": "Methods",
+            "text": ""
+        },
+        {
+            "heading": "Data pre-processing",
+            "text": "For the purpose of topical analysis, we employed the en_core_web_sm model from Spacy (spacy.io) to segment dream reports into individual sentences. The corpus consisted of 44,213 dream reports, for a total of 761,619 sentences. On average, each dream report contains 17 sentences and 290 words. Notably, recurring dreams tended to be shorter, with 14 sentences and 253 words, while lucid dreams were longer, with 27 sentences and 465 words (Table 1). It is worth mentioning that the distribution of dream reports was not concentrated among a few individuals; the majority of users shared a single dream report, whereas only a small group of frequent users contributed more than 30 dream reports (Figure 2b).\nWe discarded the top frequent 10,000 sentences with the fewest characters. These sentences typically contained non-dream related content, such as greetings to the reader (hello, hi, etc.), sentences consisting solely of special characters, and similar instances. This step of removing a significant number of sentences that were not relevant to the dream report itself ensured that our subsequent labeling process for non-dream topics was sufficient to preserve predominantly dream topics."
+        },
+        {
+            "heading": "Topic Modelling",
+            "text": "Our topic modelling procedure consisted of the following five steps: i) extracting topics, ii) grouping topics into themes, iii) building dream topics taxonomy, iv) finding topics and themes by dream type, and v) finding topics and themes through time."
+        },
+        {
+            "heading": "Extracting topics",
+            "text": "BERTopic23 is largely based on a neural model that is designed to identify latent topics within document collections. Unlike conventional topic modeling techniques such as Latent Dirichlet Allocation, BERTopic leverages semantic information by utilizing embeddings as an initial step to cluster documents into semantically cohesive topics. Each discovered topic in BERTopic is described by a list of 10 topic words, which are the most distinctive words associated with that particular topic. The topics are numbered based on their frequency rank, indicating their prevalence within the corpus.\n14/24\nIn its default configuration, BERTopic assigns a single topic to each document. However, our manual inspection of the dream reports revealed that most dreams cannot be adequately characterized by a single topic. Instead, they often encompass multiple topics, such as the dream\u2019s location, the people involved, and the emotions experienced by the dreamer. Additionally, dreams are known for combining various elements from waking experiences, resulting in a sense of bizarreness. To address this, our initial alternative was to modify BERTopic to associate a distribution of topics with each dream report. We tested this approach by allowing up to ten topics per report. Subsequently, we applied a threshold to the probabilities associated with each topic to identify the relevant topics for each report. However, we encountered two issues with this method. Firstly, due to the substantial variability in the length of dream reports, we often missed relevant topics in longer dreams. Secondly, even with varying the threshold, over 55% of dreams ended up being associated with no topic, resulting into a considerable loss of data. To mitigate this issue, we opted to consider individual dream sentences as input documents for BERTopic. Applying BERTopic at sentence-level is a practice recommended by the BERTopic authors on the official website of the tool. Such a solution enabled us to associate over 88% of dream reports with at least one topic.\nTo establish robust topic representations, we configured the hyperparameters of BERTopic. We set the minimum frequency threshold (min_df) to 10, ensuring that a word appears in at least 10 sentences before it is considered for inclusion in the topic representation. This criterion helped to ensure that topics were formed based on words with a reasonable level of occurrence within the dream reports. Additionally, we employed the Maximal Marginal Relevance (MMR) algorithm with a diversity parameter set to 0.4. The MMR algorithm was utilized to enhance the diversity of the topic words, preventing dreams from being described solely by near-synonyms. By incorporating this diversity measure, the resulting topics encompassed a wider range of relevant terms, capturing distinct aspects and avoiding redundant or similar descriptions within the topic representation.\nOur model successfully extracted a total of 288 topics which included both dreaming and non-dreaming subjects. An exhaustive manual inspection of the topic words demonstrated a significant degree of semantic coherence across the majority of topics: for most topics, the top four topic words provided sufficient information to understand the essence of the topic. To ensure topic specificity, we excluded all instances of the terms \u201cdream\u201d and \u201cdreams\u201d from the list of topic words associated with each topic. Furthermore, we aggregated topics related to multiple sentences within the same dream, consolidating them into a comprehensive list. This approach allowed us to capture the overarching themes and content associated with individual dreams more effectively.\nGrouping topics into themes To provide a concise overview of the 288 identified topics, we used clustering techniques to group them into broader, yet semantically-coherent themes. To achieve this, we used the Sentence Transformer model all-mpnet-base-v220 to project each topic word into a 768-dimensional embedding space. For each topic t, every word wt within that topic was assigned a probability (ptw) by BERTopic, indicating its contribution to the overall representation of the topic. To compute an embedding for a topic (\u2212\u2192t ), we calculated the weighted sum of the embeddings of its topic words, where each word\u2019s embedding was weighted by its normalized probability (ptw):\n\u2212\u2192t = \u2211 wt emb(wt) \u00b7 ptw, (1)\nwhere emb is the sentence transformer model that maps the topic words into embeddings, and wt are all the words associated with topic t.\nTo facilitate semantic clustering of the topics, we standardized their embeddings and reduced their dimensionality from 768 to 10 using UMAP. We then explored two clustering algorithms, K-Means and DBSCAN, applied to the reduced topic embeddings. Through manual inspection, we observed that the K-Means clustering method effectively generated semantically coherent clusters, with most topics within each cluster sharing a cohesive theme. We also observed that K-Means with 20 clusters produced the result with the best quality. Further details on the analysis can be found in Section SI2.1.\nFiltering non-dream content and adjusting themes K-Means give us 20 clusters that contained dreaming and non-dreaming topic clusters, as well as a mixture of both. Despite the potential inclusion of non-relevant elements in dream reports, BERTopic\u2019s remarkable semantic capabilities proved highly effective in distinguishing the actual recollections from other content. Leveraging this capability, we employed a filtering process to exclude non-dream themes and topics from our analysis.\nTo achieve this, we manually classified each theme into one of five categories:\n1. Dream-related content \u2013 encompassing elements such as dream locations, animals, and people.\n2. Dream types \u2013 including nightmares and recurring dreams.\n15/24\n3. Dreaming-waking interface topics \u2013 covering experiences like waking up crying or feeling confused, as well as being awakened by an alarm.\n4. Waking phenomena \u2013 addressing aspects such as mental health issues and the date and time of the dream.\n5. Social media artifacts \u2013 encompassing elements like expressions of gratitude to the reader or requests for dream interpretation.\nTo assign these categories, we relied on the 10 topic words associated with each topic within a theme. In cases where necessary, we also consulted three representative dream sentences generated by BERTopic, along with 20 randomly sampled dream sentences. In most instances, the topics naturally fell into one of the predefined categories, allowing us to filter out entire themes comprising non-dream content.\nWe found three non-dream clusters: Dream types, Dreaming-waking interface topics, and Social media artifacts as discussed in the above. Notably, Waking phenomena was not present as a coherent cluster. We had to manually inspect all the 288 topics and top corresponding dream sentences, which allowed us to separate out this category. For example, from the theme Time, Time Travel, and Timelines, we excluded topics such as \u20185am currently clock checked phone\u2019 and \u2018date 2018 June.\u2019 Similarly, in the theme Mental Reflection and Interactions, we omitted topics such as \u2018interpret, does really mean\u2019 and \u2018don remember details.\u2019 After this filtering step, we ended up with the final 217 dream topics.\nIn addition, some composite clusters contained divergent dream themes (i.e., semantically dissimilar overarching themes). For instance, there was a cluster talking about Outdoor environment and space, which could be deconstructed into three themes: Outdoor locations, and Space and Weather. So, we manually split up such clusters (and also carried out minimal re-adjustment of topics into appropriate clusters (e.g., our largest topic (0 lady, face, looked, head) was incorrectly present in a cluster which we later termed Other topics, and which is as a catch-all for topics which did not fit into a semantically coherent cluster. We moved this topic into People and relationships).\nAfter carrying out this whole process, we end up with 217 topics clustered into 22 dream themes.\nBuilding dream topics taxonomy (co-occurrence network) To create a taxonomy of dream topics, we employed a network-based approach that explores the interplay between dream themes and their constituent topics within dream reports. To facilitate this analysis, we conducted an initial assessment of the frequency distributions of both topics and themes across the entire corpus of dream reports.\nFor topics, we linked each one to a dream report (/dreamer) if the topic was found at least once in the report (in all dream reports of that dreamer), and counted the number of dreams (/dreamers) associated with each topic. In Table 2, we present the topic name, top 4 topic words, number of dreams, and number of dreamers for the top 20 most frequent topics. Full statistics (e.g., the 10 topic words and number of sentences associated with each topic) for these and the rest of the topics, can be found in the Supplementary Information File (see Data Availability section).\nSimilarly, we linked a dream report (/dreamer) to a theme, if any of the theme\u2019s constituent topics was found at least once in the report (/in all dream reports of that dreamer). Additionally, we computed the number of topics in each theme associated with corresponding dream reports (dreamers). In Table 3, we present the theme name, top 3 topics associated with it, the total number of topics in it, and number of dreams, and number of dreamers associated with it. Additionally, we linked to a corresponding HVdC category each theme for which such a link is found. The full list of topics belonging to each theme can be found in Table SI1.\nHaving these frequencies at hand, we built the co-occurrence network of dream themes as follows. Each node in the network represents a theme, and pairs of themes were connected by an edge if they co-occurred in a dream report. The edges were weighted by the number of dream reports in which such a co-occurrence was found. This undirected network had a single connected component with 22 nodes and edge weights ranging from 13 to 7643 (Mean = 762.31 \u00b1 928.54 and median = 482.0).\nFor the purpose of visualization, we used backboning to sparsify the network by preserving the most important edges. We used noise-corrected backboning71\u2014a technique that relies on a statistical null-model to identify and prune non-salient edges\u2014with a backboning threshold of 3.8 (which reduced the network from 231 to 46 edges). We used Gephi72 to visualize this network (see Figure 3). We scaled the size of the nodes according to the number of dreams associated with each theme.\nFinding topics and themes by dream type (odds-ratio analysis) In addition to discovering common topics across all dreams, we studied whether specific types of dreams (i.e., nightmares, lucid, vivid, and recurring dreams) are characterised by particular topics and themes. Odds-ratio metric allowed us to do so as it compares the odds of a topic occurring in the specific type of dreams (e.g., recurring) to the odds of the same topic occurring in the rest of dreams. We first assigned the dream reports to the corresponding dream types by searching for relevant keywords (\u2018nightmar\u2019, \u2018recurring\u2019 or \u2018re-occurring\u2019, \u2018lucid\u2019, \u2018vivid\u2019) in Reddit post title and body or, if the dream type had a corresponding flair (which were present for nightmares and recurring dreams only). If either of these conditions were satisfied, we assigned the dream to the experimental subset; else to the control subset.\n16/24\nFirst, we defined a topic or theme t\u2019s importance in a dream d as:\nIt,d = # sentences mentioning topic t in d\n# total sentences in d (2)\nWe then computed the odds ratio for all topics and themes across the 4 dream types as follows:\nOdds Ratio (DT, t) = Odds of DT association with t\nOdds of the rest of dreams association with t =\n\u2211d\u2208DT It,d # dreams in DT that do not contain t\n\u2211d /\u2208DT It,d # dreams that are not in DT that do not contain t\n(3)\nwhere DT is a dream type, t is a topic or theme.\nFinding topics and themes through time Analyzing the temporal dynamics of dream topics and themes holds particular significance, especially in light of major events such as the COVID-19 pandemic, known to have a substantial impact on collective dreaming patterns.14, 73, 74\nFor our analysis, we focused on a monthly timescale, leveraging data spanning from January 2019 to August 2022, encompassing a total of 44 months. The inclusion criterion for each month required a minimum of 300 dream reports, ensuring robust statistical representation. Throughout this period, February 2019 recorded the lowest number of dreams (n = 366), whereas January 2021 exhibited the highest dream count (n = 1573). The average number of dreams per month was 925\u00b1332, with a median of 935 dreams per month.\nWe used topic/ theme importance in a dream (It,d) introduced in Equation 2 to calculate topic/ theme importance at a given point in time m (i.e., month) as follows:\nIt,m = \u2211(d posted at time m) It,d\n# dreams posted at time m (4)\nWe tracked z-scores of topic/ theme importances It,m through time, to understand the relative change of a topic/ theme w.r.t. itself:\nzIt,m = It,m \u2212\u00b5It,m\n\u03c3It,m (5)\nTo additionally improve the quality of signals, we used the centered average with a window length of 5 for smoothing the temporal plots:\nz\u0303It,m = (t+2)\n\u2211 t=(t\u22122) zIt,m . (6)"
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "L.M.A acknowledges the support from the Carlsberg Foundation through the COCOONS project (CF21-0432). The funder had no role in study design, data collection and analysis, decision to publish, or preparation of the manuscript."
+        },
+        {
+            "heading": "Author contributions statement",
+            "text": "A.D., S.\u0160, and L.M.A. conceived and designed the experiment(s), A.D. conducted the experiment(s), A.D., S.\u0160, L.M.A., R.M., D.B., and D.Q. analysed the results. All authors wrote and reviewed the manuscript."
+        },
+        {
+            "heading": "Data Availability Statement",
+            "text": "The data generated in this study is publicly available and can be accessed at https://doi.org/10.6084/m9.figshare.23618064.v2.\n20/24\nSupplementary Information"
+        },
+        {
+            "heading": "1 Data statistics (Extended)",
+            "text": "Fig. SI1, SI2, SI3 & SI4 provide additional insights into the dream reports. We were able to geolocate 4.04% (n=1784) of all dream reports (distributed amongst 3.22% (n=1423) users) at the US state level. Fig. SI2 demonstrates representative coverage of our data in all 50 US states; using the aforementioned data subset.\nVivid dreams Nightmares Lucid dreams Recurring dreams\nVivid dreams\nNightmares\nLucid dreams\nRecurring dreams\n1120\n399 616\n710 1339 407 400\n600\n800\n1000\n1200\nFigure SI1. Heatmap that shows no. of dreams present across two dream types simultaneously\n106.0 106.5 107.0 107.5 State population (log scale)\n100.75\n101.25\n101.75\nN o.\no f d\nre am\ner s\npe r s\nta te\n(l og\ns ca\nle )\n=0.82, r=0.89, p=0.00\n106.0 106.5 107.0 107.5 State population (log scale)\n100.75\n101.25\n101.75\n102.25\nN o.\no f d\nre am\ns pe\nr s ta\nte (l\nog s\nca le\n)\n=0.86, r=0.87, p=0.00\n100.75 101.25 101.75 No. of dreamers per state (log scale)\n100.75\n101.25\n101.75\n102.25\nN o.\no f d\nre am\ns pe\nr s ta\nte (l\nog s\nca le\n) =1.05, r=0.99, p=0.00\nFigure SI2. Correlation plots b/w 1. US state population, 2. No. of dreamers per state, and 3. No. of dreams per state"
+        },
+        {
+            "heading": "2 Methods & Implementation Details (Extended)",
+            "text": ""
+        },
+        {
+            "heading": "2.1 Details of Topic Modelling",
+            "text": "BERTopic embeds all the documents into vectors, projects them onto a lower dimensional space using UMAP, clusters the reduced embeddings using HDBSCAN (Hierarchical Density-based Spatial Clustering of Applications with Noise), and finally generates the topic names using a class-based variation of TF-IDF, namely c-TF-IDF.\nIn the application of BERTopic, we set the hyperparameters of the all-mpnet-base-v2 sentence transformer model such that the min. no. of dream sentences required to form a topic is 100 (min_topic_size = 100) and it automatically merges similar topics together using HDBSCAN (Hierarchical Density-Based Spatial Clustering of Applications with Noise) (nr_topic = \u2018auto\u2019).\nAfter fitting the model, we used its functionality to update the topic representation i.e., modify the topic words to remove English stop words and take into account both unigrams and bigrams as topic words/phrases. This is particularly important for 2-word phrases like sleep paralysis, recurring dreams and, serial killers which we found, quite frequently mentioned in the extracted dataset of topics.\n21/24\n0 10M 20M 30M 40M 0\n5\n10\n15\n20\n25\n0 50 100 0\n5\n10\n15\n20\n25\n0 50 100 150 0\n5\n10\n15\n20\n25\nState population No. of dreamers per state No. of dreams per state\nFr eq\nue nc\ny\nFigure SI3. Distribution of state population & no. of dreams, dreamers per state\n16\n18\n20\n250\n300\n350\nJa n.\n20 19\nMa\nrch 20\n19\nMa y 2\n01 9\nJu ly\n20 19\nSe\npt. 20\n19\nNo v.\n20 19\nJa\nn. 20\n20\nMa rch\n20 20\nMa\ny 2 02 0 Ju ly 20 20 Se pt. 20 20 No v. 20 20 Ja n. 20 21\nMa\nrch 20\n21\nMa y 2\n02 1\nJu ly\n20 21\nSe\npt. 20\n21\nNo v.\n20 21\nJa\nn. 20\n22\nMa rch\n20 22\nMa\ny 2 02 2 Ju ly 20 22\n1400\n1600\nM ea\nn #\nse nt\nen ce s M ea n # w or ds\nM ea\nn #\nch ar\nac te\nrs\nFigure SI4. Evolution of dream length over time\nThe probabilities of all topic words for each topic sum to 1; however since we removed \u201cdream\u201d and \u201cdreams\u201d topic words, we had to re-normalize the topic word probabilities to ensure they summed to 1.\nFig. SI5 captures the distribution of no. of dreams reports, dreamers & the no. of dream sentences linked to a topic. There were 1982 (4.48%) dreams distributed amongst 1277 dreamers which weren\u2019t associated with any topic at all. While there were 4978 (11.26%) dreams amongst 3416 dreamers which weren\u2019t associated with any dreaming topics or themes.\nFig. SI6 shows the plots for selecting the no. of clusters, post application of K-Means to topic embeddings.\n0 2.5k 5k 7.5k 10k 12.5k\n1\n10\n10 2\n0 2.5k 5k 7.5k 10k\n1\n10\n10 2\n0 10k 20k 30k 40k 50k\n1\n10\n10 2\nNo. of dream reports linked to a topic No. of dreamers linked to a topic No. of dream sentences linked to a topic\nFr eq\nue nc\ny of\nto pi\ncs (l\nog s\nca le\n)\nFigure SI5. Distribution of no. of dreams, dreamers & dream sentences linked to a topic\n22/24\n5 10 15 20 25 30 No. of clusters (k)\n0.29\n0.30\n0.31\n0.32\n0.33\n0.34\nS ilh\nou et\nte s\nco re\nSilhouette plot\n5 10 15 20 25 30 No. of clusters (k)\n0.6\n0.8\n1.0\n1.2\n1.4\n1.6\n1.8\nG ap\ns ta\ntis tic\nGap statistic plot\n5 10 15 20 25 30 No. of clusters (k)\n50\n100\n150\n200\n250\n300\n350\n400\nS um\no f s\nqu ar\ned d\nis ta\nnc es\nElbow plot\nFigure SI6. Selection of no. of clusters (k) for K-Means\n0 1 2 3 4 5\n40\n60\n80\n100\n120\nN o.\no f e\ndg es\nx =\n3. 8\n92\n94\n96\n98\n100\n% o\nf n od\nes in\ng ia\nnt c\non ne\nct ed\nc om\npo ne\nnt\nFigure SI7. Backboning graph for theme network with backboning threshold = 3.8"
+        },
+        {
+            "heading": "2.2 Details of building dream topics taxonomy (co-occurrence network)",
+            "text": "Fig. SI7 shows the plot used to determine the backboning threshold for visualizing the theme co-occurrence network."
+        },
+        {
+            "heading": "2.3 Details of finding topics and themes through time",
+            "text": "We did not include dreams from September 2022 (last month in our dataset) in temporal analyses as we only collected data up until 7th September 2022. Manual inspection revealed that, during 2018, the temporal curves for the raw z-scores were quite noisy to accurately infer anything, hence we further restricted our analyses from January 2019 to August 2022. For July and August 2022, since we did not have the data from the subsequent months for smoothing, we used min_periods = 0 for the rolling function in Pandas which helped to compute the average by excluding the subsequent months\u2019 data. For calculating the smoothed z-scores of January and February 2019, we leveraged the values from November and December 2018, prior to discarding them, as discussed above."
+        },
+        {
+            "heading": "3 Results (Extended)",
+            "text": "Table SI1 provides an exhaustive list of dream topics and themes they belong to; as discovered by our proposed methodology.\n23/24\nTable SI1. Full list of dream topics binned into various themes\nTheme no. Theme Topics\n0 People and relationships 0 lady, face, looked, head; 2 dream, girl-dream, dreamt, ve; 8 ex, years, dating, talk; 11 dreams-mean, staring, talk, people-dream; 16 dream-dad, dad-dream, dream-mom, mom-dream; 19 mum, aunt, mom-came, called-mom; 80 ex-boyfriend, dreams, having-dreams, relationship; 92 hugged, hug, kissed, arms; 106 names, remember-faces, characters, man-woman; 107 ll, nickname, named, mr; 115 crush, falling-love, fell-love, fall-love; 117 sex-dream, sexual, wet-dream, dream-sex; 169 versions, different-person, identity, perfect; 186 relationship, brother, mother-father, wife; 213 cheating, having-dreams, dream-boyfriend, relationship; 243 brother-dream, younger-brother, dream-younger, talking-little; 258 clowns, little-girl, creepy, costume\n1 Indoor locations 5 mall, restaurant, eating, ice-cream; 7 bus, driving, cars, train-station; 13 doors, house, rooms, mansion; 36 toilet, shower, restroom, bathrooms; 37 house-dream, dream-house, apartment, childhood-home; 42 elevator, stairs, floors, escalator; 50 hospital, surgery, nurse, doctors; 60 flying, airport, helicopter, planes; 116 universes, alternate-reality, different-dimension, travel; 147 911, dial, emergency, ambulance; 170 portals, dimension, tunnel, hell; 220 roller-coaster, rollercoaster, rides, wheel; 250 house, amp-x200b, window, walking; 273 maze, hyper, tunnels, runner; 275 tier, different-levels, sam, happens-time; 277 elevators, dreams, reoccurring-dreams, recurrent\n2 Violence and death\n14 death, died-dream, going-die, death-dream; 43 pistol, shooting, shot-head, shotgun; 44 police, officer, officers, kidnapped; 46 nuke, war, fires, missile; 49 soldiers, hitler, russia, world-war; 76 serial-killer, dream-killing, killed-dream, killers; 83 tw, warning, nsfw, sexual-assault; 101 passed-away, cancer, away-years, father-passed; 156 rape, sexually-assaulted, abuse, nightmares; 158 jail, dream, court, police-car; 205 fight, vs, duel, eachother; 209 violent, disturbing, dreams-past, weird-dreams; 238 killed, putting-hands, fighting, beat; 268 violence, person-real, want-hurt, hate; 279 intruder, breaking, recurring, recurring-dream\n3 Mental reflection and interactions 26 know-make, sure-don, know-think, know-sure; 40 yeah, like-wtf, hell, like-fuck; 52 asked-doing, tell, help, begged; 53 know, okay, yeah, know-going; 61 don-want, needed, doing-don, remember-doing; 120 said-yes, respond, didn-answer, yes-did; 122 know-knew, knew-didn, knew-don, known; 127 matter, case, know-isn, mattered; 139 lied, did-don, wish, don-just; 151 plan, care, notices, did-just; 161 confused-just, im, kinda-confused, just-really; 175 couldn-just, couldn-time, couldn-didn, know-able; 195 make-sense, makes, logic, sense-like; 217 miss, say-love, loved, dearly; 218 remember-saying, said-words, understand, mumbling; 233 oh, say, reply, asked-said; 235 doesn-exist, didn-exist, just-know, indication; 253 realised, exploring, felt-confused, bathroom-looked\n4 Feelings 20 felt-real, dream-felt, real-dream, real-like; 39 woke-crying, started-crying, woke-tears, crying-dream; 64 feel-pain, painful, pain-dream, felt-pain; 75 relieved, felt-peace, happiness, felt-happy; 81 expression, tears, shock, nervous; 119 wasn-scary, scary-just, frightening, scariest; 129 ve-felt, felt-feeling, feeling-felt, haven-felt; 132 feel-right, felt-wrong, wasn-right, feel; 134 shocked, shock, surprise, disbelief; 136 crying, gasped, terrified, fear; 160 felt-sad, kind-sad, feel-sad, distraught; 172 upset, angry, livid, got-pissed; 194 guilt, felt-guilty, feel-guilty, remorse; 201 panic, panicking, panicked, started-panic; 242 really-creepy, weird-creepy, creepiest, sounds; 266 calm, calmed, tried-calm, feel-calm\n5 Sights and vision 4 lights, sun, pitch-black, wearing; 87 reflection, looked-mirror, looking-mirror, mirrors; 140 blinded, vision-blurry, blur, recite; 174 disappeared, went-look, window, lost; 211 faded-away, existence, outline, suddenly-felt; 212 stared, head-looked, looked-eyes, looking-direction; 215 blurry, quality, picture, coated; 222 sight, seen, walkway, bodies; 226 sight, majestic, really-pretty, stunning; 259 mirrors, looking-mirror, bathroom-mirror, dream-looked; 264 decided-look, kept-looking, look, looking-looked\n6 Animals 10 kitten, lion, birds, owl; 48 spider, maggots, batman, thanos; 88 snakes, alligator, turtle, bite; 176 horse, goats, brown, granny; 191 bear, polar, fence, started-chasing; 203 wolf, pack, grey, attack; 241 bees, stung, swarm, buzzing; 263 rat, traps, bites, swarming; 265 monkeys, enclosure, jungle, goo; 267 dinosaur, park, spawn, edges; 276 bunny, glitched, grey, hopping; 282 toad, poison, green, psychedelic; 284 deer, saw, tried-bite, road\n7 Other topics (size, smell, apocalypse, etc.) 25 dream-ends, story, endings, recurring-theme; 86 huge, inches, like-size, big-small; 99 pov, 3rd-person, person-perspective, person-view; 111 room-starts, walking, family, house-starts; 112 really-cool, pretty, neat, thought-cool; 118 apocalyptic, dream-end, world-dreams, earth; 142 look-like, hair, skinny, face; 153 thousands, total, maybe-20, voodoo; 166 apocalypse, world-end, cosmic, event; 173 gay, trans, gender, feminine; 181 started-normal, normal-like, normal-looked, completely-normal; 188 smell, smelled-like, rot, disgusting; 199 describing, hard, try-best, properly; 206 coincidence, connection, thought, uncanny; 207 scene-changed, things-changed, switched, shifting; 214 chaos, disaster, mess, society; 216 dream-like, like-ve, haven-dream, like-long; 227 horrible, good-bad, bad-just, know-good; 239 knew, travelling, end-finally, didn-finish; 261 know-sounds, sounds-weird, weird-know, crazy; 262 scientists, experiments, laboratory, discover\n8 Outdoor locations 12 beach, ocean, swim, river; 29 path, garden, hills, plants; 105 cave, tunnels, underground, tower; 114 forest, field, grass, dream-starts; 202 wooden, driving, bridges, unfinished; 249 islands, beings, coast, plans\n9 Personal objects 33 dressed, mask, naked, clothing; 56 phones, ringing, check-phone, battery; 74 pages, pen, ink, letters; 143 boxes, necklace, rings, cardboard-box; 145 shoes, pair, barefoot, sock; 146 crystals, statues, stone, gems; 163 backpack, bags, suitcase, packing; 164 knives, axe, pocket-knife, kitchen; 177 projector, remote, screen, television; 180 dolls, porcelain, voodoo, haunted; 193 counting, lottery, significance, noticed; 224 blankets, bed, pillow, felt; 246 paintings, art, wall, canvas; 255 eggs, ipad, scrambled, cracking; 270 keys, pocket, puzzle, box; 274 tattoos, artist, sleeve, piercing; 281 coins, drawer, wallet, rare\n10 School 15 classroom, teachers, principal, student; 27 school-dream, dream-school, college, dream-high; 269 tests, failed, exam, professor\n11 Movement and action\n67 left, wanted-leave, time-leave, wanted-home; 85 continued-walking, continue, street, walk-home; 95 run, started-running, run-like, sprinting; 98 falling, hit-ground, fall-ground, let-fall; 124 lungs, couldn-breathe, like-couldn, heart; 128 remove, string, try-pull, tugged; 135 control, couldn-control, control-body, hopeless; 141 hid, closet, stairs, underneath; 144 escape, escaped, way-escape, managed-escape; 237 lose, round, hockey, scissors; 272 queue, line-people, waiting-line, standing-line; 280 dream-running, running-dream, run-fast, dream-run\n12 Supernatural entities 28 creature, bite, mouth, face; 96 shadows, shadowy-figure, dark-figure, entity; 97 zombies, zombie-apocalypse, outbreak, like-zombie; 125 aliens, invasion, grey, race; 178 dragon, chinese, bearded, red; 184 alien, invasion, abducted, jar; 189 robots, ai, giant, colony; 192 zombie-apocalypse, zombies, outbreak, walking-dead; 197 ghosts, haunted, like-ghost, saw; 278 vampires, gang, hunter, glowing-red; 283 clones, disabled, machine, scientist\n13 Sounds and lack thereof 41 singing, songs, lyrics, stage; 77 voices, heard-voice, hear-voice, voice-head; 89 footsteps, ghost, noises, ringing; 100 paralyzed, able, speak, couldn-speak; 121 silent, sound, went-silent, eerily; 182 speak, couldn-speak, mouth, whisper; 223 laughter, couldn-hear, hear-talking, couldn-understand\n14 Media and tech 31 theater, anime, movie-like, tv; 57 minecraft, games, vr, game-like; 90 game-dream, dream-playing, vr, video-games; 219 cartoon, documentary, girl-guy, lisa; 236 batman, marvel, thanos, loki; 285 spongebob, episode, freeze, robots\n15 Religious and spiritual 66 demons, devil, monster, demonic; 68 church, cult, lot-people, dream-god; 70 demon, devil, demons, angel; 109 religious, atheist, catholic, supernatural; 110 hell, purgatory, afterlife, heaven-hell; 137 powers, abilities, superpowers, telekinesis; 229 cult, leaders, satanic, ritual\n16 Life events 59 birth, babies, pregnancy, newborn; 72 party, invited, having-party, brother; 78 giving-birth, dreamt, dream, twins; 190 party, party-dream, dream-party, dinner; 198 wedding, ceremony, aisle, venue; 252 wedding, getting-married, engaged, ceremony\n17 Human body, especially teeth and blood 35 blood, skin, humanoid, arms; 108 teeth, falling, tongue, pain; 130 teeth, tooth, falling, gums; 133 blood, like-blood, covered-blood, splatter; 254 bodies, corpses, dead-bodies, body-parts\n18 Work 47 new-job, boss, jobs, shift\n19 Weather, especially storms\n79 rain, tornado, hurricane, started-raining; 104 snow, snowing, cold, winter; 271 tornado, storms, april, category\n20 Time, time travel and timelines 102 timeline, time-travel, time-skip, like-time; 165 time-travel, dream-world, universes, dream-time; 187 noon, 00am, early-morning, evening\n21 Space 159 sun, earth, eclipse, phases; 221 space, space-ship, nasa, oxygen; 251 meteors, earth, asteroid, coming\n24/24"
+        }
+    ],
+    "title": "Dream Content Discovery from Reddit with an Unsupervised Mixed-Method Approach",
+    "year": 2023
+}

@@ -1,0 +1,180 @@
+{
+    "abstractText": "In this letter, we propose a Gaussian mixture model (GMM)-based channel estimator which is learned on imperfect training data, i.e., the training data are solely comprised of noisy and sparsely allocated pilot observations. In a practical application, recent pilot observations at the base station (BS) can be utilized for training. This is in sharp contrast to state-of-theart machine learning (ML) techniques where a training dataset consisting of perfect channel state information (CSI) samples is a prerequisite, which is generally unaffordable. In particular, we propose an adapted training procedure for fitting the GMM which is a generative model that represents the distribution of all potential channels associated with a specific BS cell. To this end, the necessary modifications of the underlying expectation-maximization (EM) algorithm are derived. Numerical results show that the proposed estimator performs close to the case where perfect CSI is available for the training and exhibits a higher robustness against imperfections in the training data as compared to state-of-the-art ML techniques.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Benedikt Fesl"
+        },
+        {
+            "affiliations": [],
+            "name": "Nurettin Turan"
+        }
+    ],
+    "id": "SP:c21c15d74e9e20c83d259778c20a4f9d1d547257",
+    "references": [
+        {
+            "authors": [
+                "H. Ye",
+                "G.Y. Li",
+                "B.-H. Juang"
+            ],
+            "title": "Power of Deep Learning for Channel Estimation and Signal Detection in OFDM Systems",
+            "venue": "IEEE Wireless Commun. Lett., vol. 7, no. 1, pp. 114\u2013117, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Soltani",
+                "V. Pourahmadi",
+                "A. Mirzaei",
+                "H. Sheikhzadeh"
+            ],
+            "title": "Deep Learning-Based Channel Estimation",
+            "venue": "IEEE Commun. Lett., vol. 23, no. 4, pp. 652\u2013655, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "D. Neumann",
+                "T. Wiese",
+                "W. Utschick"
+            ],
+            "title": "Learning the MMSE Channel Estimator",
+            "venue": "IEEE Trans. Signal Process., vol. 66, no. 11, pp. 2905\u20132917, Jun. 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Koller",
+                "B. Fesl",
+                "N. Turan",
+                "W. Utschick"
+            ],
+            "title": "An Asymptotically MSE- Optimal Estimator Based on Gaussian Mixture Models",
+            "venue": "IEEE Trans. Signal Process., vol. 70, pp. 4109\u20134123, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Baur",
+                "B. Fesl",
+                "M. Koller",
+                "W. Utschick"
+            ],
+            "title": "Variational Autoencoder Leveraged MMSE Channel Estimation",
+            "venue": "56th Asilomar Conf. Signals, Syst., Comput., 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S. Jaeckel",
+                "L. Raschkowski",
+                "K. B\u00f6rner",
+                "L. Thiele"
+            ],
+            "title": "QuaDRiGa: A 3- D Multi-Cell Channel Model With Time Evolution for Enabling Virtual Field Trials",
+            "venue": "IEEE Trans. Antennas Propag., vol. 62, no. 6, pp. 3242\u2013 3256, 2014.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "J.-W. Choi",
+                "Y.-H. Lee"
+            ],
+            "title": "Optimum Pilot Pattern for Channel Estimation in OFDM Systems",
+            "venue": "IEEE Trans. Wireless Commun., vol. 4, no. 5, pp. 2083\u20132088, Sep. 2005.",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "C.M. Bishop"
+            ],
+            "title": "Pattern Recognition and Machine Learning (Information Science and Statistics)",
+            "venue": "Berlin, Heidelberg: Springer-Verlag,",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "B. Fesl",
+                "M. Joham",
+                "S. Hu",
+                "M. Koller",
+                "N. Turan",
+                "W. Utschick"
+            ],
+            "title": "Channel Estimation based on Gaussian Mixture Models with Structured Covariances",
+            "venue": "56th Asilomar Conf. Signals, Syst., Comput., 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D. Neumann",
+                "M. Joham",
+                "L. Weiland",
+                "W. Utschick"
+            ],
+            "title": "Low-Complexity Computation of LMMSE Channel Estimates in Massive MIMO",
+            "venue": "Proc. 19th Int. ITG Workshop Smart Antennas, 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "R.J.A. Little",
+                "D.B. Rubin"
+            ],
+            "title": "Statistical Analysis with Missing Data",
+            "year": 2002
+        }
+    ],
+    "sections": [
+        {
+            "text": "ar X\niv :2\n30 1.\n06 48\n8v 2\n[ ee\nss .S\nP] 1\n3 Fe\nb 20\n23 1\nIndex Terms\u2014Robust channel estimation, imperfect data, generative model, Gaussian mixture, OFDM system.\nI. INTRODUCTION\nC HANNEL estimation plays a crucial role in enhancing wireless communications systems. Recently, ML approaches were successfully leveraged for channel estimation. The goal is to exploit a priori information about all possible channels of mobile terminals (MTs) associated with a specific BS cell and its radio propagation environment to improve the channel estimation quality. This is generally intractable to model analytically but is represented in terms of a training dataset that is available at the BS.\nThereby, different learning techniques can be distinguished. In end-to-end learning, the channel estimation is not performed explicitly, but a network is trained to directly perform signal detection [1]. A different approach is to learn a nonlinear regression mapping from the pilot observation in the input to a channel estimate at the output of a network by utilizing groundtruth CSI samples [2], [3]. In contrast to that, it was recently proposed to train a generative model that represents the channel distribution of the whole BS cell, which is afterwards leveraged for channel estimation [4], [5].\nA common prerequisite of ML-based approaches is the availability of a representative training dataset consisting of perfect CSI samples. However, the construction of such a dataset is a challenging task in practice. One possibility is to perform costly measurement campaigns for each BS, which is\nThis work was partly funded by Huawei Sweden Technologies AB, Lund. The authors are with Professur fu\u0308r Methoden der Signalverarbeitung, Technische Universita\u0308t Mu\u0308nchen, 80333 Mu\u0308nchen, Germany (email: benedikt.fesl@tum.de; nurettin.turan@tum.de; joham@tum.de; utschick@tum.de).\n\u00a9This work has been submitted to the IEEE for possible publication. Copyright may be transferred without notice, after which this version may no longer be accessible.\ngenerally unaffordable. A different attempt is to use channel simulators, e.g., [6]. The inherent problem of simulators is the mismatch between the real and the artificially generated data, leading to performance losses. Another problem is that the BS environment may change over time which is difficult to track. This leads to the idea of utilizing pilot observations, which are received in great numbers at the BS during regular operation and capture the environmental information, as training data. Although the data aggregation is then cheap and the dataset can be continuously updated to account for varying conditions, the dataset contains imperfections, e.g., noise and sparse pilot allocations. However, these imperfections can be mitigated by specific training adaptations since they follow a known model.\nContributions: In this letter, we propose an adaptation of the EM algorithm to fit a GMM with noisy, and possibly sparsely allocated, pilot observations. We derive new update steps for the GMM parameters that take the system model, i.e., the model of the imperfections, into account. Additionally, we show that imposing structural features to the covariances of the GMM acts as a regularization which enhances the channel estimation performance, especially for sparse pilot allocations. It is discussed that the presented method is particularly robust against imperfections in the training data, in contrast to commonly used regression-based ML techniques. Finally, the discussed properties are verified with simulations for both a spatial and a doubly-selective fading model.\nNotation: The identity matrix of dimension N \u00d7 N is denoted by IN . The column-wise vectorization and the trace of a matrix is denoted by vec(\u00b7) and tr(\u00b7), respectively. We denote a positive semi-definite (PSD) matrix C which fulfills xHCx \u2265 0 for all x 6= 0 as C 0."
+        },
+        {
+            "heading": "II. SYSTEM AND CHANNEL MODELS",
+            "text": "We consider the general system model of pilot observations\ny = Ah+ n, (1)\nwhere A\u2208 CM\u00d7N is the known observation matrix, h \u2208 CN is the wireless channel with an unknown probability density function (PDF) fh, and additive white Gaussian noise (AWGN) n \u223c NC(0,Cn = \u03c32 IM ). In this letter, we consider the following two instances of (1)."
+        },
+        {
+            "heading": "A. Spatial System Model",
+            "text": "Consider a single-input multiple-output (SIMO) system where a BS equipped with N antennas serves single-antenna MTs in a single-user uplink transmission. After correlating the pilot sequence for a single snapshot we obtain y = h+n, following the model in (1) with M = N and A = IN .\n2 We work with a spatial channel model [3] where channels\nare modeled conditionally Gaussian: h|\u03b4 \u223c NC(0,C\u03b4). The random vector \u03b4 collects the angles of arrival and path gains of the main propagation clusters between a MT and the BS. A different spatial channel covariance matrix C\u03b4 is computed for each sample by means of the steering vector of a uniform linear array (ULA) antenna array at the BS, cf. [3]."
+        },
+        {
+            "heading": "B. Doubly-Selective Fading System Model",
+            "text": "In this case, we consider a single-input single-output (SISO) transmission in the spatial domain over a doubly-selective fading channel h = vec(H), where H \u2208 CNc\u00d7Nt represents the time-frequency response of the channel for Nc carriers and Nt time slots. This is a typical setup in orthogonal frequency-division multiplexing (OFDM) systems. When only Np positions of the Nt \u00d7 Nc time-frequency response are occupied by pilot symbols, there is a selection matrix A \u2208 {0, 1}Np\u00d7NcNt which represents the pilot positions. This leads to observations as described in (1) where N = NcNt and M = Np. In this work, we consider a diamond-shaped pilot allocation scheme which is known to be mean square error (MSE)-optimal [7].\nFor the construction of a scenario-specific channel dataset, we use the QuaDRiGa channel simulator [6]. We consider an urban macrocell (UMa) scenario following the 3GPP 38.901 specification, where the BS is placed at a height of 25m and covers a sector of 120\u00b0. Each MT is either placed indoors (80%) or outdoors (20%) and moves with a certain velocity v in a random direction, which is captured by a drifting model."
+        },
+        {
+            "heading": "III. LEARNING A GMM FROM IMPERFECT DATA",
+            "text": ""
+        },
+        {
+            "heading": "A. Scenario-Specific Imperfect Training Dataset",
+            "text": "Having access to training data that represent the environment of a BS cell, i.e., the typically complex and intractable channel PDF fh, in combination with ML techniques, has been shown to substantially improve the channel estimation performance. The common prerequisite of these data-aided techniques is the availability of a training dataset H consisting of perfect CSI samples, i.e., L channel realizations H = {h\u2113}L\u2113=1. However, this assumption is impractical if the training data are collected at a BS during regular operation. That is, the training data stem from certain pilot positions at a finite signal-to-noise ratio (SNR), i.e., Y = {y\u2113}L\u2113=1, cf. (1). Note that these data can be pre-processed in different ways, e.g., by denoising or interpolating the pilot positions. Although these training data are corrupted by various imperfections, the statistical information about the system model can be utilized to mitigate these effects, as shown in the following."
+        },
+        {
+            "heading": "B. GMM-based Channel Estimator with Adapted Training",
+            "text": "In [4], a channel estimator was introduced that is based on a GMM whose application consists of two phases. First, in an offline training phase a K-components GMM of the form\nf (K) h (h) =\nK \u2211\nk=1\n\u03c0kNC(h;\u00b5k,Ck), (2)\nwhere \u03c0k, \u00b5k, and Ck are the mixing coefficients, means, and covariances of the kth GMM component, respectively, is fitted by maximum likelihood optimization with the wellknown EM algorithm, cf. [8, Sec. 9.2], via training samples from H in order to approximate the underlying distribution fh of the channels in the whole BS cell. Due to the Gaussianity of the noise with the known covariance matrix Cn and the known observation matrix A, the PDF of the observations fy can be approximated by means of the GMM f (K) y (y) = \u2211K\nk=1 \u03c0kNC(y;A\u00b5k,Cy,k), where Cy,k = ACkA H + Cn, which can be straightforwardly computed once (2) is known, cf. (1). Second, the trained GMM is leveraged to perform channel estimation by computing a convex combination of linear minimum mean square error (MMSE) estimates for a given pilot signal y, i.e.,\nh\u0302GMM =\nK \u2211\nk=1\n\u03b3k(y) ( CkA HC\u22121y,k(y \u2212A\u00b5k) + \u00b5k ) (3)\nwhere \u03b3k(y) is the responsibility of the kth component, i.e., the probability that the component k is responsible for the observation y [8, Sec. 9.2]. In [9], the estimator was extended to impose structural features to the channel covariances Ck in the training of the GMM for saving complexity and memory.\nHowever, so far, the GMM was trained on a dataset comprised of perfect channels H, cf. Section III-A. If we naively replace H with the noisy, possibly pre-processed, training data Y from pilot observations (1), a severe performance loss can be expected due to the imperfections in the training data. Therefore, in the following, we propose adapted training procedures for the GMM that drastically alleviates the effects of the imperfect training data by utilizing the knowledge of the system model (1) and possibly existing structural features of the covariances.\nWe first discuss the case of training data that is corrupted by AWGN following the model in (1) with A = IN , cf. Section II-A. The main idea is to adapt the EM algorithm such that the PDF fy of the observations is approximated by the GMM f (K) y (y). Due to zero-mean AWGN, the updates of the mixing coefficients \u03c0k and the means \u00b5k are unchanged with respect to the classical EM algorithm, cf. [8, Sec. 9.2]. However, we would like to include the constraint that Cy,k = Ck + Cn, following the model (1). The GMM for the channel distribution (2) can then be directly obtained since Cn is known. The derivation for the update of Ck is given in the following.\nTheorem 1. Given noisy pilot observations Y , the maximum likelihood solution C\u2217k for the covariance in the EM algorithm is given by computing the eigenvalue decomposition (EVD)\nC\u0302y,k \u2212Cn = V diag(\u03be)V H (4)\nwith C\u0302y,k = 1 Nk\n\u2211L\n\u2113=1 \u03b3k,\u2113(y\u2113 \u2212 \u00b5k)(y\u2113 \u2212 \u00b5k) H, Nk =\n\u2211L\n\u2113=1 \u03b3k,\u2113, and \u03b3k,\u2113 being the responsibility of component k for data point y\u2113. Afterwards, an elementwise truncation of the negative eigenvalues via \u03bePSD = max(0, \u03be) is performed such that\nC\u2217k = V diag(\u03be PSD)V H. (5)\n3 Proof. The maximization of the expected complete loglikelihood, cf. [8, Sec. 9.3], of the pilot observations with respect to the kth channel covariance Ck is given by\nC\u2217k = argmax Ck 0\nK \u2211\nj=1\nL \u2211\n\u2113=1\n\u03b3j,\u2113 logNC(y\u2113;\u00b5j ,Cj +Cn) (6)\n= argmax Ck 0\nL \u2211\n\u2113=1\n\u03b3k,\u2113 logNC(y\u2113;\u00b5k,Ck +Cn) (7)\n= argmax Ck 0\n\u2212 log det(Ck +Cn)\u2212 tr(C\u0302y,k(Ck +Cn) \u22121)\n(8)\nwhere from (6) to (7) it is used that the maximization depends only on the kth GMM component, and (8) follows from the definition of the Gaussian PDF and C\u0302y,k from above. Thus, the optimization simplifies to a maximization of the Gaussian likelihood of the kth GMM component. The optimal solution for the case of a Gaussian likelihood is derived in [10, Appendix] and is obtained with the EVD and the truncation of the negative eigenvalues. This can be applied to (8) through a substitution of C\u0302y,k which yields the solution in (5).\nNext, we consider the case where the pilot observations stem from the OFDM model in Section II-B, i.e., only a few channel entries are observed according to the pilot pattern represented by A. To adapt the training procedure, we combine the insights from Theorem 1 together with the EM algorithm for missing entries, cf. [11, Chapter 11]. We first define a selection matrix A\u0304\u2208 {0, 1}(NcNt\u2212Np)\u00d7NcNt which represents the positions that are not allocated with pilots, i.e., AA\u0304T = 0. After an initial interpolation step, one EM iteration is performed in the usual way to have initial estimates of the GMM parameters. The updates of the mixing coefficients \u03c0k and means \u00b5k are again unchanged with respect to the classical EM algorithm due to the zero-mean AWGN. The adapted updates of the covariances Ck are derived in the following.\nTheorem 2. Given sparsely allocated and noisy pilot observations Y , first, a linear MMSE estimate of the unobserved and noisy channel entries y\u0304\u2113,k is computed via the current statistics of the kth GMM component as\ny\u0304k,\u2113 = A\u0304\u00b5k + A\u0304CkA T(ACkA T+Cn) \u22121(y\u2113\u2212A\u00b5k). (9)\nAfterwards, a fully interpolated sample, given as y\u0302k,\u2113 = ATy\u2113 + A\u0304 Ty\u0304k,\u2113, is used to update\nC\u0302y,k = 1\nNk\nL \u2211\n\u2113=1\n\u03b3k,\u2113(y\u0302k,\u2113\u2212\u00b5k)(y\u0302k,\u2113\u2212\u00b5k) H+A\u0304T\u03a3kA\u0304 (10)\nwhere Nk = \u2211L \u2113=1 \u03b3k,\u2113 and\n\u03a3k = A\u0304CkA\u0304 T\u2212A\u0304CkA T(ACkA T+Cn) \u22121ACkA\u0304 T. (11)\nFinally, to account for the AWGN, the update of the channel covariance matrix C\u2217k is computed via the EVD of C\u0302y,k\u2212Cn and the truncation of the negative eigenvalues, cf. Theorem 1.\nProof. The steps (9)\u2013(11) are derived in the EM algorithm for missing data, cf. [11, Chapter 11], where the additional covariance term (11) accounts for the estimated covariance\nof the missing entries. Given the estimate of the observation covariance C\u0302y,k in (10), the subsequent projection via the EVD to get the maximum likelihood estimation of the channel covariance C\u2217k is a direct consequence of Theorem 1.\nAdditionally, it is possible to enforce covariances with a specific structure [9]. In this letter, we are focusing especially on the case of block-Toeplitz covariances, constructed as Ck = Q H diag(ck)Q, where Q is a truncated 2Ddiscrete Fourier transform (DFT) matrix. This structure fits particularly well in the OFDM case [9]. It is important to mention that the imposed structural constraints on the covariances can be understood as a regularization technique. Interestingly, as shown later in Section IV, this regularization allows for performance gains, especially in the case of sparse pilot allocations.\nAlgorithm 1 summarizes the proposed adapted EM algorithm for fitting the GMM in the OFDM case from Section II-B with noisy and sparsely allocated pilot observations with structured covariances. If we consider the spatial model from Section II-A, the steps 8, 9, and 14 can be omitted. For unstructured covariances, the steps 2, 20, 21, and 22 are dropped."
+        },
+        {
+            "heading": "C. Discussion about Robustness",
+            "text": "The first stage of training the GMM is equivalent to learn a generative model that represents the channel distribution of the whole BS cell. On the one hand, this generative model allows to leverage prior information about the distribution of the channels in the whole BS cell that enhances the channel estimation performance [4]. On the other hand, it can be adapted to imperfections in the training data as discussed above which is motivated by model-based insights. This is a fundamental difference to common learning-based estimators that are trained to learn a regression mapping between pilot observations and channel estimates, which inherently rely on perfect CSI samples, e.g., [1]\u2013[3]. Thus, the proposed GMM approach allows for a more robust solution with respect to various imperfections in the training data because of its ability to adapt the training procedure accordingly and introduce structural regularization, cf. Section III-B.\nAn important advantage of the GMM estimator is that only the training phase must be changed in contrast to [4] where perfect training CSI is assumed to be available. Thus, the online complexity and the number of parameters of the estimator do not change. Furthermore, the GMM is universal and requires further adaptation only in case of changing parameters of the propagation environment which can be conveniently tracked with the frequently received pilots at the BS. Additionally, it has to be trained only once for a given SNR and can then be applied to any other SNR value, which is in contrast to learning-based estimators where the dependency on the SNR is crucial, e.g., [2], [3]. Fortunately, since the proposed covariance updates in Theorem 1 and Theorem 2 are the maximum likelihood solutions, all favorable properties of the EM algorithm, such as a monotonically increasing likelihood, are preserved.\n4 Algorithm 1 Adapted EM with Structured Covariances.\nRequire: Y , K , A, Cn, {\u00b5 (1) k ,C (1) k , \u03c0 (1) k } K k=1, Q, i = 1, imax\n1: Get selection matrix A\u0304 such that AA\u0304T = 0 2: Initialize {c\n(1) k \u2190 QC (1) k Q H}Kk=1 3: while i < imax and convergence criterion not met do 4: {C (i) y,k \u2190 AC (i) k A T +Cn} K k=1 5: for k = 1 to K do 6: for \u2113 = 1 to L do 7: \u03b3k,\u2113 \u2190 \u03c0 (i) k NC(y\u2113;A\u00b5 (i) k ,C (i) y,k ) \u2211\nK j=1 \u03c0 (i) j NC(y\u2113;A\u00b5 (i) j ,C (i) y,j\n) {E-step}\n8: y\u0304k,\u2113 \u2190 A\u0304\u00b5 (i) k + A\u0304C (i) k A TC (i),\u22121 y,k (y\u2113 \u2212A\u00b5 (i) k )\n9: y\u0302k,\u2113 \u2190 ATy\u2113 + A\u0304Ty\u0304k,\u2113 {interpolated sample} 10: end 11: Nk \u2190 \u2211L\n\u2113=1 \u03b3k,\u2113 12: \u03c0\n(i+1) k \u2190 Nk L {mixing coefficient update}\n13: \u00b5 (i+1) k \u2190 1 Nk \u2211L \u2113=1 \u03b3k,\u2113y\u0302k,\u2113 {mean update} 14: \u03a3k \u2190 A\u0304C (i) k A\u0304 T \u2212 A\u0304C (i) k A TC (i),\u22121 y,k AC (i) k A\u0304 T 15: y\u0302k,\u2113 \u2190 y\u0302k,\u2113 \u2212 \u00b5 (i+1) k 16: C (i+1) y,k \u2190 1 Nk L \u2211\n\u2113=1\n\u03b3k,\u2113y\u0302k,\u2113y\u0302 H k,\u2113 + A\u0304 T\u03a3kA\u0304\n17: Vk, \u03bek \u2190 EVD(C (i+1) y,k \u2212Cn) 18: \u03bePSDk \u2190 max(0, \u03bek) {elementwise max} 19: C (i+1) k \u2190 Vk diag(\u03be PSD k )V H k 20: \u0398k \u2190 Q ( C (i),\u22121 k C (i+1) k C (i),\u22121 k \u2212C (i),\u22121 k ) QH 21: c (i+1) k \u2190 c (i) k + diag ( diag(c (i) k )\u0398k diag(c (i) k ) ) 22: C (i+1) k \u2190 Q H diag(c (i+1) k )Q {covariance update} 23: end 24: i\u2190 i+ 1 25: end 26: return {\u00b5 (i) k ,C (i) k ,\u03c0 (i) k } K k=1"
+        },
+        {
+            "heading": "IV. SIMULATION RESULTS",
+            "text": "We present numerical results to evaluate the proposed method for two different channel models in comparison to state-of-the-art estimators. We set E[\u2016h\u20162] = N such that the SNR = 1/\u03c32. We choose K = 64 GMM components which is practically reasonable [4]. We utilize L = 105 training samples for all data-based approaches, and evaluate on 104 test samples of different MTs that are not part of the training data."
+        },
+        {
+            "heading": "A. Spatial Channel Model",
+            "text": "We first evaluate the channel estimation performance for the spatial model from Section II-A with A = IN . The GMM estimator which is based on perfect CSI is denoted by \u201cGMM H\u201d, whereas the GMM estimator that is naively used without any modifications on training data from Y is denoted by \u201cGMM mismatch\u201d. The proposed approach with adapted training from Section III-B is denoted by \u201cGMM Y\u201d. We analyze the performance in comparison with the following baseline estimators. The curve labeled \u201cgenie\u201d represents the utopian MMSE estimator that has full knowledge of C\u03b4 for each sample. We further evaluate the least squares (LS) solution h\u0302LS = y. We include the convolutional neural network (CNN) estimator from\n\u221210 \u22125 0 5 10 15 20 25 30\n10 0\n10 \u22121\n10 \u22122\n10 \u22123\n10 \u22124\nSNR [dB]\nN o rm\nal iz\ned M\nS E\ngenie LS CNN GMM H GMM mismatch GMM Y\nFig. 1. Spatial channel model from Section II-A with N = 128 BS antennas and one propagation cluster. The SNR is the same for training and evaluation.\n[3], that learns a regression mapping, labeled \u201cCNN\u201d. The CNN consists of two layers with rectified linear unit (ReLU) activation and we use the truncated DFT matrix for the input/output transform, cf. [3]. To achieve a fair comparison, the CNN estimator is trained on data from Y , which clearly introduces an unavoidable mismatch in the learning phase.\nIn Fig. 1, the channel estimation performance of the above discussed estimators is shown for N = 128 BS antennas and one propagation cluster, consisting of multiple sub-paths. The depicted SNR is the same in both training and evaluation, i.e., a different set of training data Y is given for each SNR value, which mimics a realistic situation. The GMM estimator with perfect CSI H performs very close to the genie-MMSE estimator which is in accordance with the findings in [4]. If the GMM estimator is fitted naively with data from Y without modifications to the training procedure, this leads to a severe performance loss of about 5dB for the whole SNR range. However, with the proposed modifications, a performance close to the perfect CSI case, and thus to the genie-MMSE estimator, is possible, purely based on training data from Y . The CNN estimator has a substantial performance loss as compared to the proposed estimator, especially in the high SNR regime."
+        },
+        {
+            "heading": "B. Doubly-Selective Fading Channel Model",
+            "text": "We consider a typical OFDM frame structure of Nc = 12 carriers having a spacing of 15kHz, yielding a bandwidth of 180kHz, and Nt = 14 time slots, cf. Section II-B. In both the training and the test dataset we consider MTs which move with a fixed but random velocity between three and 130km/h, i.e., each MT in the datasets has a velocity drawn from the uniform distribution v \u223c U(3, 130)km/h. This should represent a practical BS environment where different MTs are moving with a different velocity. We evaluate once again the GMM estimator with perfect CSI from H and a naive version where the GMM is fitted with linearly interpolated data from Y , labeled \u201cGMM lin-int\u201d. The proposed approach with adapted training from Section III-B and linear interpolation as initialization is denoted by \u201cGMM Y\u201d. In the OFDM case, we can impose structural features to the covariances as regularization on the adapted approach. In this letter, we focus on block-Toeplitz matrices as discussed in [9], labeled as\n5 \u221210 \u22125 0 5 10 15 20 25 30 10 0 10 \u22121 10 \u22122 10 \u22123 10 \u22124\nSNR [dB]\nN o rm\nal iz\ned M\nS E\nlin-int GMM H\nsamp-cov lin-int GMM lin-int\nGMM Y GMM Y toep\nChannelNet\nFig. 2. OFDM model from Section II-B with Nc = 12, Nt = 14, and Np = 18. The SNR is the same for training and evaluation.\n5 8 13 18 25 32\n10 \u22122\n10 \u22121\nPilots Np\nN o rm\nal iz\ned M\nS E\nlin-int GMM H\nsamp-cov lin-int GMM lin-int\nGMM Y GMM Y toep\nChannelNet\nFig. 3. OFDM model from Section II-B with Nc = 12, Nt = 14, and SNR = 15dB. The SNR is the same for training and evaluation.\n\u201cGMM Y toep\u201d. We compare our proposed methods with the typically used linear interpolator, labeled \u201clin-int\u201d, and with a linear MMSE estimator based on a cell-wide global sample covariance computed with linearly interpolated data from Y , labeled as \u201csamp-cov lin-int\u201d. In this case the genie-MMSE estimator is not computable since no covariance statistics are provided from the simulator [6]. We also compare with the ML-based ChannelNet from [2] (we adopt the same architecture and hyperparameters) where the training data are comprised of linearly interpolated samples from Y for a fair comparison.\nIn Fig. 2, the performances of the above discussed estimators are evaluated for Np = 18 pilots over different SNR values. It can be seen that the ChannelNet has no performance improvement over linear interpolation, which is a consequence of the imperfect training data. The sample covariance and the naive GMM approach based on linearly interpolated training data exhibit some performance improvement over linear interpolation in the low and medium SNR range, whereas for high SNRs, an error floor because of the imperfections in the training data can be observed. The adapted GMM version without structural constraints is performing close to the perfect CSI case in the low SNR range, but also seems to saturate for high SNRs. In this SNR-region, the block-Toeplitz structured adapted GMM performs especially well, showing performance gains over all other approaches even for high SNR values. This leads to the conclusion that the structural regularization, which is possible with the GMM, is of great value when having noisy training data with missing entries.\nIn Fig. 3, we show a similar setup as above for a fixed SNR of 15dB over varying numbers of pilots. Thereby, linear interpolation and the ChannelNet perform worst with a saturation at a high error floor, which was similarly observed before. It can be seen that the differences between the sample covariance, naive GMM, and adapted (unconstrained) GMM become more distinctive for higher numbers of pilots where the adapted version is outperforming them and has a decreasing gap to the perfect CSI based GMM. This can be reasoned with a dominating systematic error for sparse pilot allocations. In contrast, the block-Toeplitz based adapted GMM shows a substantial performance gain over the baselines even for low numbers of pilots, which is an effect of the structural regularization. As expected, the difference between the structurally unconstrained and constrained adapted GMM decreases for higher numbers of pilots."
+        },
+        {
+            "heading": "V. CONCLUSION",
+            "text": "In this letter, a GMM-based robust channel estimator was proposed which can be applied in spatial and OFDM systems. Thereby, the training data are purely comprised of sparsely allocated and noisy pilot observations, without perfect CSI samples. Simulation results demonstrated that the performance of the proposed adapted GMM estimator is close to the version which utilizes perfect training CSI with the same online complexity and memory overhead. Additionally, state-of-theart baselines are outperformed. Based on these findings, the superior robustness properties against imperfect training data of the generative model-aided estimator in contrast to regressionbased ML approaches were discussed. In future work, one may also account for imperfections due to interference which is not considered in this letter."
+        }
+    ],
+    "title": "Learning a Gaussian Mixture Model from Imperfect Training Data for Robust Channel Estimation",
+    "year": 2023
+}

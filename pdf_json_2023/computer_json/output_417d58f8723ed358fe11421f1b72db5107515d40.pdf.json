@@ -1,0 +1,941 @@
+{
+    "abstractText": "Serverless functions provide elastic scaling and a fine-grained billing model, making Function-as-a-Service (FaaS) an attractive programming model. However, for distributed jobs that benefit from largescale and dynamic parallelism, the lack of fast and cheap communication is a major limitation. Individual functions cannot communicate directly, group operations do not exist, and users resort to manual implementations of storage-based communication. This results in communication times multiple orders of magnitude slower than those found in HPC systems. We overcome this limitation and present the FaaS Message Interface (FMI). FMI is an easy-to-use, high-performance framework for general-purpose point-to-point and collective communication in FaaS applications. We support different communication channels and offer a model-driven channel selection according to performance and cost expectations.Wemodel the interface after MPI and show that message passing can be integrated into serverless applications with minor changes, providing portable communication closer to that offered by high-performance systems. In our experiments, FMI can speed up communication for a distributed machine learning FaaS application by up to 162x, while simultaneously reducing cost by up to 397 times.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Marcin Copik"
+        },
+        {
+            "affiliations": [],
+            "name": "Roman B\u00f6hringer"
+        },
+        {
+            "affiliations": [],
+            "name": "Alexandru Calotoiu"
+        },
+        {
+            "affiliations": [],
+            "name": "Torsten Hoefler"
+        }
+    ],
+    "id": "SP:e1c8f69b1d60042376e919b72bb23e1f14b715e8",
+    "references": [
+        {
+            "authors": [
+                "Joao Carreira",
+                "Pedro Fonseca",
+                "Alexey Tumanov",
+                "Andrew Zhang",
+                "Randy Katz"
+            ],
+            "title": "Cirrus: A Serverless Framework for End-to-End ML Workflows",
+            "venue": "Association for Computing Machinery,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Daniel Barcelona-Pons",
+                "Marc S\u00e1nchez-Artigas",
+                "Gerard Par\u00eds",
+                "Pierre Sutra",
+                "Pedro Garc\u00eda-L\u00f3pez"
+            ],
+            "title": "On the FaaS Track: Building Stateful Distributed Applications with Serverless Architectures. In Proceedings of the 20th International Middleware Conference (Davis, CA, USA) (Middleware \u201919)",
+            "venue": "Association for Computing Machinery,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Ingo M\u00fcller",
+                "Renato Marroqu\u00edn",
+                "Gustavo Alonso"
+            ],
+            "title": "Lambada: Interactive Data Analytics on Cold Data Using Serverless Cloud Infrastructure",
+            "venue": "In Proceedings of the 2020 ACM SIGMOD International Conference on Management of Data",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jiawei Jiang",
+                "Shaoduo Gan",
+                "Yue Liu",
+                "Fanlin Wang",
+                "Gustavo Alonso",
+                "Ana Klimovic",
+                "Ankit Singla",
+                "Wentao Wu",
+                "Ce Zhang"
+            ],
+            "title": "Towards Demystifying Serverless Machine Learning Training",
+            "venue": "In ACM SIGMOD International Conference on Management of Data (SIGMOD",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Qifan Pu",
+                "Shivaram Venkataraman",
+                "Ion Stoica"
+            ],
+            "title": "Shuffling, Fast and Slow: Scalable Analytics on Serverless Infrastructure",
+            "venue": "In 16th USENIX Symposium on Networked Systems Design and Implementation (NSDI 19). USENIX Association,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Matthew Perron",
+                "Raul Castro Fernandez",
+                "David DeWitt",
+                "Samuel Madden"
+            ],
+            "title": "Starling: A Scalable Query Engine on Cloud Functions",
+            "venue": "In Proceedings of the 2020 ACM SIGMOD International Conference on Management of Data. ACM, Portland OR USA,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Sadjad Fouladi",
+                "Riad S. Wahby",
+                "Brennan Shacklett",
+                "William Zeng",
+                "Rahul Bhalerao",
+                "Anirudh Sivaraman",
+                "George Porter",
+                "Keith Winstein"
+            ],
+            "title": "Encoding, Fast and Slow: Low-Latency Video Processing Using Thousands of Tiny Threads",
+            "venue": "In Proceedings of the 14th USENIX Conference on Networked Systems Design and Implementation",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Marcin Copik",
+                "Alexandru Calotoiu",
+                "Torsten Hoefler"
+            ],
+            "title": "Software Resource Disaggregation for HPC with Serverless Computing",
+            "venue": "In ACM Student Research Competition (SRC), ACM/IEEE Supercomputing. Poster. https://sc22",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Marcin Copik",
+                "Marcin Chrapek",
+                "Alexandru Calotoiu",
+                "Torsten Hoefler"
+            ],
+            "title": "Software Resource Disaggregation for HPC with Serverless Computing",
+            "venue": "Technical Report",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Ana Klimovic",
+                "Yawen Wang",
+                "Patrick Stuedi",
+                "Animesh Trivedi",
+                "Jonas Pfefferle",
+                "Christos Kozyrakis"
+            ],
+            "title": "Pocket: Elastic Ephemeral Storage for Serverless Analytics",
+            "venue": "In Proceedings of the 12th USENIX Conference on Operating Systems Design and Implementation",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Ernie Chan",
+                "Marcel Heimlich",
+                "Avi Purkayastha",
+                "Robert van de Geijn"
+            ],
+            "title": "Collective communication: theory, practice, and experience",
+            "venue": "Concurrency and Computation: Practice and Experience 19,",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "M. Barnett",
+                "L. Shuler",
+                "R. van de Geijn",
+                "S. Gupta",
+                "D.G. Payne",
+                "J. Watts"
+            ],
+            "title": "Interprocessor collective communication library (InterCom)",
+            "venue": "In Proceedings of IEEE Scalable High Performance Computing",
+            "year": 1994
+        },
+        {
+            "authors": [
+                "Rolf Rabenseifner"
+            ],
+            "title": "Automatic MPI counter profiling of all users: First results on a CRAY T3E 900-512",
+            "venue": "In Proceedings of the message passing interface developer\u2019s and user\u2019s conference,",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "Michael McCool",
+                "James Reinders",
+                "Arch Robison"
+            ],
+            "title": "Structured Parallel Programming: Patterns for Efficient Computation (1st ed.)",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Sergei Gorlatch"
+            ],
+            "title": "Send-Receive Considered Harmful: Myths and Realities of Message Passing",
+            "venue": "ACM Trans. Program. Lang. Syst. 26,",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "Peter Sanders",
+                "Jochen Speck",
+                "Jesper Larsson Tr\u00e4ff"
+            ],
+            "title": "Two-Tree Algorithms for Full Bandwidth Broadcast, Reduction and Scan",
+            "venue": "Parallel Comput. 35,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "Rajeev Thakur",
+                "William D. Gropp"
+            ],
+            "title": "Improving the Performance of Collective Operations in MPICH",
+            "venue": "In Recent Advances in Parallel Virtual Machine and Message Passing Interface,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "Bibo Tu",
+                "Jianping Fan",
+                "Jianfeng Zhan",
+                "Xiaofang Zhao"
+            ],
+            "title": "Performance analysis and optimization of MPI collective operations on multi-core clusters",
+            "venue": "The Journal of Supercomputing 60,",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Shigang Li",
+                "Torsten Hoefler",
+                "Marc Snir"
+            ],
+            "title": "NUMA-Aware Shared-Memory Collective Communication for MPI. In Proceedings of the 22nd International Symposium on High-Performance Parallel and Distributed Computing (New York, New York, USA) (HPDC \u201913)",
+            "venue": "Association for Computing Machinery,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Surabhi Jain",
+                "Rashid Kaleem",
+                "Marc Gamell Balmana",
+                "Akhil Langer",
+                "DmitryDurnov",
+                "Alexander Sannikov",
+                "Maria Garzaran"
+            ],
+            "title": "Framework for Scalable Intra- Node Collective Operations Using Shared Memory. In Proceedings of the International Conference for High Performance Computing, Networking, Storage, and Analysis (Dallas, Texas) (SC \u201918)",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Cedric Renggli",
+                "Saleh Ashkboos",
+                "Mehdi Aghagolzadeh",
+                "Dan Alistarh",
+                "Torsten Hoefler"
+            ],
+            "title": "SparCML: High-Performance Sparse Communication for Machine Learning. In Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis (Denver, Colorado) (SC \u201919)",
+            "venue": "Association for Computing Machinery,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Jelena Pje\u0161ivac-Grbovi\u0107",
+                "Thara Angskun",
+                "George Bosilca",
+                "Graham E. Fagg",
+                "Edgar Gabriel",
+                "Jack J. Dongarra"
+            ],
+            "title": "Performance analysis of MPI collective operations",
+            "venue": "Cluster Computing 10,",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "P. Husbands",
+                "J.C. Hoe"
+            ],
+            "title": "MPI-StarT: Delivering Network Performance to Numerical Applications",
+            "venue": "In SC \u201998: Proceedings of the 1998 ACM/IEEE Conference on Supercomputing",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "Johann Schleier-Smith",
+                "Vikram Sreekanti",
+                "Anurag Khandelwal",
+                "Joao Carreira",
+                "Neeraja J Yadwadkar",
+                "Raluca Ada Popa",
+                "Joseph EGonzalez",
+                "Ion Stoica",
+                "andDavid A Patterson"
+            ],
+            "title": "What serverless computing is and should become: The next phase of cloud computing",
+            "venue": "Commun. ACM 64,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "V. Gim\u00e9nez-Alventosa",
+                "Germ\u00e1n Molt\u00f3",
+                "Miguel Caballer"
+            ],
+            "title": "A framework and a performance assessment for serverless MapReduce on AWS Lambda",
+            "venue": "Future Generation Computer Systems",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Mike Wawrzoniak",
+                "Ingo M\u00fcller",
+                "Gustavo Alonso"
+            ],
+            "title": "Boxer: Data Analytics on Network-enabled Serverless Platforms",
+            "venue": "In 11th Annual Conference on Innovative Data Systems Research (CIDR\u201921)",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Torsten Hoefler",
+                "Andrew Lumsdaine",
+                "Jack Dongarra"
+            ],
+            "title": "Towards Efficient MapReduce UsingMPI",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "Marcin Copik",
+                "Alexandru Calotoiu",
+                "Konstantin Taranov",
+                "Torsten Hoefler"
+            ],
+            "title": "FaasKeeper: a Blueprint for Serverless Services",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Joseph M Hellerstein",
+                "Jose Faleiro",
+                "Joseph E Gonzalez",
+                "Johann Schleier-Smith",
+                "Vikram Sreekanti",
+                "Alexey Tumanov",
+                "Chenggang Wu"
+            ],
+            "title": "Serverless computing: One step forward, two steps back",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Brad Calder",
+                "Ju Wang",
+                "Aaron Ogus",
+                "Niranjan Nilakantan",
+                "Arild Skjolsvold",
+                "Sam McKelvie",
+                "Yikang Xu",
+                "Shashwat Srivastav",
+                "Jiesheng Wu",
+                "Huseyin Simitci",
+                "Jaidev Haridas",
+                "Chakravarthy Uddaraju",
+                "Hemal Khatri",
+                "Andrew Edwards",
+                "Vaman Bedekar",
+                "Shane Mainali",
+                "Rafay Abbasi",
+                "Arpit Agarwal",
+                "Mian Fahim ul Haq",
+                "Muhammad Ikram ul Haq",
+                "Deepali Bhardwaj",
+                "Sowmya Dayanand",
+                "Anitha Adusumilli",
+                "Marvin McNett",
+                "Sriram Sankaran",
+                "Kavitha Manivannan",
+                "Leonidas Rigas"
+            ],
+            "title": "Windows Azure Storage: A Highly Available Cloud Storage Service with Strong Consistency",
+            "venue": "In Proceedings of the Twenty-Third ACM Symposium on Operating Systems",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "Joshua Hursey",
+                "Jeffrey M. Squyres",
+                "Timothy I. Mattox",
+                "Andrew Lumsdaine"
+            ],
+            "title": "The Design and Implementation of Checkpoint/Restart Process Fault Tolerance for Open MPI",
+            "venue": "IEEE International Parallel and Distributed Processing Symposium",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "Adam Langley",
+                "Alistair Riddoch",
+                "Alyssa Wilk",
+                "Antonio Vicente",
+                "Charles Krasic",
+                "Dan Zhang",
+                "Fan Yang",
+                "Fedor Kouranov",
+                "Ian Swett",
+                "Janardhan Iyengar",
+                "Jeff Bailey",
+                "Jeremy Dorfman",
+                "Jim Roskind",
+                "Joanna Kulik",
+                "Patrik Westin",
+                "Raman Tenneti",
+                "Robbie Shade",
+                "RyanHamilton",
+                "Victor Vasiliev",
+                "Wan-Teh Chang",
+                "Zhongyi Shi"
+            ],
+            "title": "The QUIC Transport Protocol: Design and Internet-Scale Deployment. In Proceedings of the Conference of the ACM Special Interest Group on Data Communication (Los Angeles, CA, USA) (SIGCOMM \u201917)",
+            "venue": "Association for Computing Machinery,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Matt Holdrege",
+                "Pyda Srisuresh"
+            ],
+            "title": "IP Network Address Translator (NAT) Terminology and Considerations",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "Bryan Ford",
+                "Pyda Srisuresh",
+                "Dan Kegel"
+            ],
+            "title": "Peer-to-Peer Communication across Network Address Translators",
+            "venue": "In Proceedings of the Annual Conference on USENIX Annual Technical Conference (ATEC \u201905). USENIX Association,",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "J.L. Eppinger"
+            ],
+            "title": "TCP Connections for P2P Apps: A Software Approach to Solving the NAT Problem",
+            "venue": "Technical Report ISRI-05-",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "Torsten Hoefler",
+                "Dmitry Moor"
+            ],
+            "title": "Energy, Memory, and Runtime Tradeoffs for Implementing Collective Communication Operations",
+            "venue": "Supercomputing Frontiers and Innovations 1,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Pitch Patarasuk",
+                "Xin Yuan"
+            ],
+            "title": "Bandwidth optimal all-reduce algorithms for clusters of workstations",
+            "venue": "J. Parallel and Distrib. Comput. 69,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "Thilo Kielmann",
+                "Rutger F.H. Hofman",
+                "Henri E. Bal",
+                "Aske Plaat",
+                "Raoul A.F. Bhoedjang"
+            ],
+            "title": "MagPIe: MPI\u2019s Collective Communication Operations for Clustered Wide Area Systems",
+            "venue": "In Proceedings of the Seventh ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming (Atlanta, Georgia,",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "Mohammed Alfatafta",
+                "Zuhair AlSader",
+                "Samer Al-Kiswany"
+            ],
+            "title": "COOL: A Cloud-Optimized Structure for MPI Collective Operations",
+            "venue": "IEEE 11th International Conference on Cloud Computing (CLOUD)",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Peter Sanders",
+                "Jochen Speck",
+                "Jesper Larsson Tr\u00e4ff"
+            ],
+            "title": "Full Bandwidth Broadcast, Reduction and Scan with Only Two Trees. In Proceedings of the 14th European Conference on Recent Advances in Parallel Virtual Machine and Message Passing Interface (Paris, France) (PVM/MPI\u201907)",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "Xi Luo",
+                "Wei Wu",
+                "George Bosilca",
+                "Yu Pei",
+                "Qinglei Cao",
+                "Thananon Patinyasakdikul",
+                "Dong Zhong",
+                "Jack Dongarra"
+            ],
+            "title": "HAN: a Hierarchical AutotuNed Collective Communication Framework",
+            "venue": "IEEE International Conference on Cluster Computing (CLUSTER)",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jelena Pje\u0161ivac-Grbovi\u0107",
+                "George Bosilca",
+                "Graham E. Fagg",
+                "Thara Angskun",
+                "Jack J. Dongarra"
+            ],
+            "title": "MPI collective algorithm selection and quadtree encoding",
+            "venue": "Parallel Comput. 33,",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "S.S. Vadhiyar",
+                "G.E. Fagg",
+                "J. Dongarra"
+            ],
+            "title": "Automatically Tuned Collective Communications",
+            "venue": "In SC \u201900: Proceedings of the 2000 ACM/IEEE Conference on Supercomputing",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "Paul Sack andWilliamGropp"
+            ],
+            "title": "Faster Topology-Aware Collective Algorithms through Non-Minimal Communication. In Proceedings of the 17th ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming (New Orleans, Louisiana, USA) (PPoPP \u201912)",
+            "venue": "Association for Computing Machinery,",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "N.T. Karonis",
+                "B.R. de Supinski",
+                "I. Foster",
+                "W. Gropp",
+                "E. Lusk",
+                "J. Bresnahan"
+            ],
+            "title": "Exploiting hierarchy in parallel computer networks to optimize collective operation performance",
+            "venue": "In Proceedings 14th International Parallel and Distributed Processing Symposium",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "Mohammadreza Bayatpour",
+                "Sourav Chakraborty",
+                "Hari Subramoni",
+                "Xiaoyi Lu",
+                "Dhabaleswar K. (DK) Panda"
+            ],
+            "title": "Scalable Reduction Collectives with Data Partitioning-Based Multi-Leader Design. In Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis (Denver, Colorado) (SC \u201917)",
+            "venue": "Association for Computing Machinery,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "A.A. Awan",
+                "K. Hamidouche",
+                "A. Venkatesh",
+                "D.K. Panda"
+            ],
+            "title": "Efficient Large Message Broadcast Using NCCL and CUDA-Aware MPI for Deep Learning. In Proceedings of the 23rd European MPI Users\u2019 Group Meeting (Edinburgh, United Kingdom) (EuroMPI 2016)",
+            "venue": "Association for Computing Machinery,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Mohammadreza Bayatpour",
+                "JahanzebMaqbool Hashmi",
+                "Sourav Chakraborty",
+                "Hari Subramoni",
+                "Pouya Kousha",
+                "Dhabaleswar K. Panda"
+            ],
+            "title": "SALaR: Scalable and Adaptive Designs for Large Message Reduction Collectives",
+            "venue": "IEEE International Conference on Cluster Computing (CLUSTER)",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Marcin Copik",
+                "Konstantin Taranov",
+                "Alexandru Calotoiu",
+                "Torsten Hoefler"
+            ],
+            "title": "rFaaS: Enabling High Performance Serverless with RDMA and Leases",
+            "venue": "IEEE International Parallel and Distributed Processing Symposium (IPDPS)",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Klaus Satzke",
+                "Istemi Ekin Akkus",
+                "Ruichuan Chen",
+                "Ivica Rimac",
+                "Manuel Stein",
+                "Andre Beck",
+                "Paarijaat Aditya",
+                "Manohar Vanga",
+                "Volker Hilt"
+            ],
+            "title": "Efficient gpu sharing for serverless workflows",
+            "venue": "In Proceedings of the 1st Workshop on High Performance Serverless Computing",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jaewook Kim",
+                "Tae Joon Jun",
+                "Daeyoun Kang",
+                "Dohyeun Kim",
+                "Daeyoung Kim"
+            ],
+            "title": "Gpu enabled serverless computing framework",
+            "venue": "In 2018 26th Euromicro International Conference on Parallel, Distributed and Network-based Processing (PDP)",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Seyed H. Mirsadeghi",
+                "Ahmad Afsahi"
+            ],
+            "title": "Topology-Aware Rank Reordering for MPI Collectives",
+            "venue": "IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW). 1759\u20131768",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Abhinav Bhatele",
+                "Todd Gamblin",
+                "Steven H. Langer",
+                "Peer-Timo Bremer",
+                "Erik W. Draeger",
+                "Bernd Hamann",
+                "Katherine E. Isaacs",
+                "Aaditya G. Landge",
+                "Joshua A. Levine",
+                "Valerio Pascucci",
+                "Martin Schulz",
+                "Charles H. Still"
+            ],
+            "title": "Mapping applications with collectives over sub-communicators on torus networks. In SC \u201912",
+            "venue": "Proceedings of the International Conference on High Performance Computing, Networking, Storage and Analysis",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Simon Pickartz",
+                "Carsten Clauss",
+                "Stefan Lankes",
+                "Antonello Monti"
+            ],
+            "title": "Enabling Hierarchy-Aware MPI Collectives in Dynamically Changing Topologies. In Proceedings of the 24th European MPI Users\u2019 Group Meeting (Chicago, Illinois) (EuroMPI \u201917)",
+            "venue": "Association for Computing Machinery,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Marcin Copik",
+                "Tobias Grosser",
+                "Torsten Hoefler",
+                "Paolo Bientinesi",
+                "Benjamin Berkels"
+            ],
+            "title": "Work-Stealing Prefix Scan: Addressing Load Imbalance in Large- Scale Image Registration",
+            "venue": "IEEE Transactions on Parallel and Distributed Systems",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "G.E. Blelloch"
+            ],
+            "title": "Scans as primitive parallel operations",
+            "venue": "IEEE Trans. Comput. 38,",
+            "year": 1989
+        },
+        {
+            "authors": [
+                "Peter Sanders",
+                "Jesper Larsson Tr\u00e4ff"
+            ],
+            "title": "Parallel Prefix (Scan) Algorithms for MPI",
+            "venue": "Dongarra (Eds.)",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "Torsten Hoefler",
+                "Christian Siebert",
+                "Andrew Lumsdaine"
+            ],
+            "title": "Group Operation Assembly Language - A Flexible Way to Express Collective Communication",
+            "venue": "In 2009 International Conference on Parallel Processing",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "Ana Klimovic",
+                "Yawen Wang",
+                "Christos Kozyrakis",
+                "Patrick Stuedi",
+                "Jonas Pfefferle",
+                "Animesh Trivedi"
+            ],
+            "title": "Understanding Ephemeral Storage for Serverless Analytics",
+            "venue": "In 2018 USENIX Annual Technical Conference (USENIX ATC 18). USENIX Association,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Ao Wang",
+                "Jingyuan Zhang",
+                "Xiaolong Ma",
+                "Ali Anwar",
+                "Lukas Rupprecht",
+                "Dimitrios Skourtis",
+                "Vasily Tarasov",
+                "Feng Yan",
+                "Yue Cheng"
+            ],
+            "title": "InfiniCache: Exploiting Ephemeral Serverless Functions to Build a Cost-Effective Memory Cache",
+            "venue": "In 18th USENIX Conference on File and Storage Technologies (FAST 20)",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Juan A. Rico-Gallego",
+                "Juan C. D\u00edaz-Mart\u00edn",
+                "Ravi ReddyManumachu",
+                "Alexey L. Lastovetsky"
+            ],
+            "title": "A Survey of Communication Performance Models for High- Performance Computing",
+            "venue": "ACMComput. Surv",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Marcin Copik",
+                "Grzegorz Kwasniewski",
+                "Maciej Besta",
+                "Michal Podstawski",
+                "Torsten Hoefler"
+            ],
+            "title": "SeBS: A Serverless Benchmark Suite for Function-as-a- Service Computing",
+            "venue": "In Proceedings of the 22nd International Middleware Conference (Middleware \u201921). Association for Computing Machinery",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P. Baldi",
+                "P. Sadowski",
+                "D. Whiteson"
+            ],
+            "title": "Searching for Exotic Particles in High-Energy Physics with Deep Learning",
+            "venue": "Nature Communications",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Qifan Pu",
+                "Shivaram Venkataraman",
+                "Ion Stoica"
+            ],
+            "title": "Shuffling, fast and slow: Scalable analytics on serverless infrastructure",
+            "venue": "In 16th USENIX Symposium on Networked Systems Design and Implementation (NSDI",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Sadjad Fouladi",
+                "Francisco Romero",
+                "Dan Iter",
+                "Qian Li",
+                "Shuvo Chatterjee",
+                "Christos Kozyrakis",
+                "Matei Zaharia",
+                "Keith Winstein"
+            ],
+            "title": "From Laptop to Lambda: Outsourcing Everyday Jobs to Thousands of Transient Functional Containers",
+            "venue": "USENIX Annual Technical Conference (USENIX ATC 19)",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Eric Jonas",
+                "Shivaram Venkataraman",
+                "Ion Stoica",
+                "Benjamin Recht"
+            ],
+            "title": "Occupy the Cloud: Distributed Computing for the 99",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Ashraf Mahgoub",
+                "Li Wang",
+                "Karthick Shankar",
+                "Yiming Zhang",
+                "Huangshi Tian",
+                "Subrata Mitra",
+                "Yuxing Peng",
+                "Hongqi Wang",
+                "Ana Klimovic",
+                "Haoran Yang"
+            ],
+            "title": "SONIC}: Application-aware Data Passing for Chained Serverless Applications",
+            "venue": "USENIX Annual Technical Conference (USENIX ATC",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Istemi Ekin Akkus",
+                "Ruichuan Chen",
+                "Ivica Rimac",
+                "Manuel Stein",
+                "Klaus Satzke",
+                "Andre Beck",
+                "Paarijaat Aditya",
+                "Volker Hilt"
+            ],
+            "title": "SAND: Towards High- Performance Serverless Computing",
+            "venue": "In Proceedings of the 2018 USENIX Conference on Usenix Annual Technical Conference (Boston, MA, USA) (USENIX ATC \u201918). USENIX Association,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Vikram Sreekanti",
+                "Chenggang Wu",
+                "Xiayue Charles Lin",
+                "Johann Schleier-Smith",
+                "Joseph E. Gonzalez",
+                "JosephM. Hellerstein",
+                "Alexey Tumanov"
+            ],
+            "title": "Cloudburst: Stateful Functions-as-a-Service",
+            "venue": "Proc. VLDB Endow. 13,",
+            "year": 2020
+        }
+    ],
+    "sections": [
+        {
+            "text": "CCS CONCEPTS \u2022Networks\u2192Cloud computing; \u2022Computer systems organization \u2192 Cloud computing; \u2022 Computing methodologies \u2192 Parallel algorithms; \u2022 General and reference\u2192 Measurement; Performance; Evaluation.\nKEYWORDS high-performance computing, I/O, serverless, function-as-a-service, faas\nFMI open-source implementation: https://github.com/spcl/fmi TCPunchopen-source implementation: https://github.com/spcl/TCPunch"
+        },
+        {
+            "heading": "1 INTRODUCTION",
+            "text": "Function as a Service (FaaS) is an emerging programming paradigm popular in cloud applications. In FaaS, users focus on writing application code decomposed into a set of functions. Users are not concerned with deploying code and managing the underlying compute and storage infrastructure. Instead, function invocations are executed by the cloud provider on dynamically provisioned\n\u2217These two authors contributed equally.\nservers. Thus, users never allocate servers (serverless computing) and are charged only for computing time and memory resources used (pay\u2013as\u2013you\u2013go billing). Small, stateless functions do not need to communicate \u2013 they simply write their results to storage, and future functions can continue from there. Thanks to the fine-grained billing model, functions are a popular programming model for irregular and unbalanced workloads.\nFunctions are used for distributed and stateful computations in data analytics, linear algebra, processing of multimedia, machine learning, and high-performance computing [1\u20139]. These workloads benefit from the fast and cheap scalability of ephemeral function workers. However, such functions run longer and have a significant internal state. This makes storing the entire state and continuing execution later once new inputs become available inefficient \u2014 they need a cheap and fast way of exchanging data to become an efficient backend for distributed computations. Still, they lack a native and high-performance communication interface.\nIn HPC, communication in a distributed system is done using the Message Passing Interface (MPI). In contrast to virtual machines and HPC applications, serverless functions execute in sandboxes that provide strict isolation but are prevented from accepting incoming network connections (Sec. 3.2.1). To communicate, functions rely on slow object storage, in-memory caches, and storage optimized for serverless functions \u2014 these are primarily designed to improve performance [10], but introduce a user-managed and persistent component that defeats the purpose of serverless computing. Users need a flexible choice between fast and cheap network communication and slower, more expensive, and durable storage-based exchange. Unfortunately, while serverless computing is an elastic solution for computing and resource allocations, it remains surprisingly inflexible when it comes to communication. The performance and price of serverless messaging is already a critical problem, as messages exchanged over object storage come with double-digit millisecond latency and cost $6 per million.\nThe importance of collective operations is known in the HPC community [11, 12] \u2014 they are used in virtually all MPI jobs [13]. Collectives offer a portable interface for standard parallel programming patterns [14]. Replacing send\u2013receive messages with collectives makes it easier to program, debug, andmaintain, and can boost performance [15]. From the user\u2019s point of view, collectives provide \"division of labor: the programmer thinks in terms of these primitives and the library is responsible for implementing them efficiently\" [16]. This separation is crucial in the black-box serverless world with major differences between cloud providers.\nar X\niv :2\n30 5.\n08 76\n3v 1\n[ cs\n.D C\n] 1\n5 M\nay 2\n02 3\nAt the same time, high performance communication requires finely tuned algorithms according to network topology, number of participants, message size, application, and even the memory hierarchy [17\u201322]. However, the entire communication hierarchy that includes nodes, racks, sockets, processes, and caches is hidden from the user in serverless. This is an additional motivation for the cloud provider to implement hierarchical and multi-protocol communication [23], such that serverless applications benefit from standardized message-passing operations with high-performance implementations. The world of collective specializations is rich and remains concealed behind system abstractions, and serverless should benefit from it (Sec. 3.3).\nThe community identified the lack of support for efficient group communication as a fundamental limitation of serverless computing [1, 24, 25]: applications would benefit from the high performance and versatility of collectives, but need a framework to hide the complexity of the cloud system.\nIn this work, we provide the first direct general-purpose communication framework for FaaS: the FaaS Message Interface (FMI). FMI is an easy\u2013to\u2013use, high-performance framework where the implementation details of point-to-point and collective operations are hidden behind a standardized interface inspired by MPI, providing portability between clouds and runtime adaption. We use MPI as our guide as it has established itself as the communication solution for distributed memory systems. We have implemented and extensively evaluated multiple communication channels with respect to both price and performance, and they are all included in the current library implementation. Having determined that direct communication over TCP is the best solution in all scenarios, we also implement a general-purpose TCP hole punching solution to allow functions to communicate directly, even behind NAT gateways. While we implement FMI on AWS Lambda, the design of our library is independent of the cloud provider and can be ported to any serverless provider. Furthermore, FMI can be wrapped around an existing MPI implementation, allowing for a seamless port of FaaS applications to HPC clusters. Concretely, we make the following contributions:\n\u2022 We introduce a library for message passing that provides common and standardized abstractions for serverless pointto-point and group communication. \u2022 We provide analytical models for communication channels in FaaS and discuss the performance-price trade-offs of serverless communication. \u2022 We demonstrate the application of FMI to serverless machine learning and present a reduction of communication overhead by a factor of up to 162x and reducing cost by up to 397 times compared to existing solutions."
+        },
+        {
+            "heading": "2 BACKGROUND",
+            "text": "Distributed FaaS applications already implement many group and collective operations patterns across concurrent functions, prominent examples being MapReduce in data analytics [3, 26\u201328], reduce-scatter in machine learning [1, 4], and scan in video encoding [7]. Furthermore, serverless applications need direct communication to offer performance competetive with persistent servers [29].\nHowever, the inter\u2013function communication remains the Achilles\u2019 heel of serverless. Inspired by the statement: \"Storage is not a reasonable replacement for directly-addressed networking, even with direct I/O \u2014it is at least one order of magnitude too slow.\" [30], we list different communication channels and conduct a detailed performance (Sec. 4) and cost analysis of these cloud systems (Sec. 5):\n\u2022 Object Storage. These systems offer persistent storage for large objects with high throughput, strong consistency [31], data reliability [32\u201334], and a cost linear in the number of operations and size of stored data. \u2022 Key-Value Storage.NoSQL databases offer low latency and throughput scaled to the workload [35, 36]. However, they only support small objects (400kB in DynamoDB) and have high costs for write operations. \u2022 In-Memory and Hybrid Storage. In-memory stores such as Redis [37] and memcached [38] offer higher performance at the cost of manual scalability management by the user and non-serverless resource provisioning. Serverless-optimized storage uses multiple tiers of memory and disk [10]. The costs depend on the memory size and the time it remains in use. \u2022 Direct Communication. Direct network connections could offer high performance without incurring any costs. We discuss a prototype implementation in Sec. 3\nToday\u2019s serverless functions tend to communicate using cloud proxies for messaging. Functions cannot establish direct connections which would provide higher performance at a lower cost."
+        },
+        {
+            "heading": "3 FAAS MESSAGE INTERFACE",
+            "text": "In this section, we discuss FMI, the FaaS Message Interface for point\u2013to\u2013point and collective communication as well as the assumptions made by our approach. We then discuss communication channels tested for FMI (Sec. 3.2). We model the interface of FMI after the proven interface of MPI (Sec. 3.5) and implement a selection of the most common collective operations in serverless applications (Sec. 3.3). We design FMI to be modular - our design makes no assumptions about the underlying cloud system. This is crucial as cloud systems change quickly and often contain proprietary components. FMI can be extended with new communication channels, collective operations, and support for programming languages other than C/C++ and Python."
+        },
+        {
+            "heading": "3.1 Assumptions",
+            "text": "Isolation of serverless functions. Small, stateless functionswork well in isolation by writing results to storage and can be scheduled independently from each other. However, the type of functions used in more complex serverless workflows [1\u20137] are neither stateless nor independent of each other, requiring complex task dependencies and communication over cloud storage. We dispense with the assumption that FaaS functions should be considered in isolation \u2014 the evolving nature of the serverless computingmakes it deprecated in many practical scenarios.\nSimultaneous scheduling.We assume that all functions that will be part of the same communication entity, or communicator,\ncan be scheduled simultaneously. A timer is started as soon as the first function joins the group communicator. If all functions scheduled to join do not do so before the timer expires, then all functions exit with an error.\nFault tolerance. In FaaS, individual functions can retry on failure. In FMI, there is no recovery mechanism for individual communicator members. If a function fails or a communication channel times out, the entire communicator exits with an error. Users can implement fault-tolerant policies on top of FMI, similar to such approaches in MPI. We propose using group membership combined with timeouts to ensure all functions are scheduled simultaneously, and that failure is detected. Furthermore, FMI can be used in combination with techniques such as checkpoint/restart [39] to provide fault-tolerant execution in the serverless cloud.\nDirect Communication. We assume that direct communication between functions without cloud proxies is possible on the platform. Ideally, cloud providers offer an interface for managed TCP or RMA connection setup. As an alternative, NAT hole punching is discussed in the next section."
+        },
+        {
+            "heading": "3.2 Communication Channels",
+            "text": "While communicators are responsible for data conversion and serialization, channels are the medium for data exchange and operate on raw memory. We broadly classify them in direct and mediated channels. In mediated channels, the communication is done over storage or other indirect means.\nMediated channel examples are object storage (AWS S3), keyvalue database (DynamoDB), in-memory cache (Redis), and we create direct channels using TCP connections. Programmers could add new channels to the library with little effort and benefit from other existing FMI features - such as the implementations of collective operations. For example, support for QUIC could be added to provide reliable and secure communication on top of UDP [40]. If a channel provides more specialized mechanisms, such as support for reductions, it is added by overriding default collective algorithms.\nIdeally, cloud providers would provide direct communication between functions as a service. Until such time, we provide a method that allows direct communication using TCP in the current serverless ecosystem. We first summarize communication over Network Address Translation (NAT), highlight the obstacles to using it in the serverless ecosystem, and suggest hole punching as a solution.\n3.2.1 Network Address Translation (NAT). Function instances are placed in sandboxes behind a NAT gateway [41]. The gateway hides the endpoint by rewriting the internal address with an external one in packet headers. An outgoing communication creates an entry in the translation table. This enables replies sent to the external address to be forwarded to the intended recipient. Packets are dropped when there is no entry in the translation table. Therefore, the party initiating the communication can be behind a NAT gateway but not the recipient. Thus, when both parties are behind a NAT gateway, direct communication is not possible.\n3.2.2 Hole Punching. One technique to circumvent the restricted direct communication for endpoints behind a NAT is hole punching [42, 43]. This approach relies on a publicly reachable relay server to create mappings in the translation table and exchange the other\nparty\u2019s address with each participant. Functions connect to the hole-punching coordinator and wait for the other party to request a connection. Then, participants attempt to connect simultaneously using the existing address mappings from the previous step (Fig. 1)."
+        },
+        {
+            "heading": "3.3 Collective Communication",
+            "text": "Decades of research into collective operations have led to many optimized communication protocols. Collective algorithms have different time, memory, and energy trade-offs [44]. The cost of operations is another fundamental characteristic of communication via cloud storage. Modern collective operations are extensively tuned: MPI collectives are specialized for network transport protocols [45\u201348], network topology [49\u201353], and even for specific needs of applications, such as bandwidth and sparsity optimizations in machine learning [21, 54\u201356].\nCloud providers must be the ones to apply such optimizations as the abstraction layer prevents users from understanding the system\u2019s architecture, and the opportunities for improvement are no less complex than for MPI. Serverless heterogeneity is increasing with RMA [57] as well as GPUs [58, 59], and the dynamically changing topology of workers presents additional challenges [60\u201362].\nWe implement the following collective operations from the MPI standard [63]: broadcast, barrier, gather, scatter, reduce, allreduce, and scan. The algorithms selected differ depending on the communication channel used, and should be modified and updated according to user needs and cloud system configuration. For example, the scan operation can use a depth-optimal but workinefficient algorithm [64] that is impractical on channels with high data movement cost.\nMediated channels. In broadcast, the root process uploads the object to the object storage, and other functions download it, benefiting from the scalable bandwidth of the storage. In barrier, each function uploads a 1-byte object and polls until all data is available. Polling is implemented using the list operation on the storage \u2013 this counts the number of objects and succeeds when the count equals the number of functions in the communicator. In gather, functions upload their buffers to storage, and the root node polls for data while scatter follows an inverted communication pattern. Similarly, the root node downloads the data and applies the\nreduction in reduce and allreduce. Finally, in scan, each function polls for the partial result of its predecessor, applies the scan operator, and uploads the result.\nDirect channels. This case is similar to the MPI use case, so broadcast, gather, scatter, and reduce are implemented with a binomial tree to avoid the bandwidth limitations of a single function. Allreduce uses recursive doubling [17], barrier is implemented as an allreduce with one-byte input and the no-op reduction operator and scan is implemented with a two-phase tree-based operation [65, 66]."
+        },
+        {
+            "heading": "3.4 Implementation",
+            "text": "The FMI library is implemented in roughly 1,900 lines of C++ code, as well as Infrastructure\u2013as\u2013a\u2013Code in the form of AWS Lambda layers and CloudFormation templates [67]. FMI users can use layers to integrate the message-passing library into serverless applications without any build steps. Furthermore, we implement a hole punching library and server, TCPunch, as we found no open-source solution for C/C++. The server stores address translations in memory and disseminate them to parties that are trying to establish connections. TCPunch does not contain any FMI-specific logic and exposes a simple interface, allowing other applications to easily integrate it1.\nPortability Our approach is platform-agnostic and can be ported to any serverless platform that upholds the main assumptions (Sec. 3.1). New cloud systems can be supported by implementing the interface of mediated channels in terms of available storage and database systems. In particular, FMI can be used in open-source, self-hosted, and Kubernetes-based serverless platforms without any modifications. FMI requires system administrators only to deploy hole punching instances on virtual machines and containers.\nFurthermore, FMI can be seamlessly ported to HPC systems by wrapping the MPI library to benefit from optimizations and support for high-speed networking that existing MPI implementations provide. Thus, a single codebase can be used for scaling parallel processing on both MPI ranks in an HPC cluster and serverless functions in a public cloud.\nPractical ExperiencesWe have deployed FMI with NAT hole punching successfully on the AWS cloud. However, we observed unexpected timeouts between some functions, which required repeating the hole-punching procedure to create a new pair of connected sockets. An analysis reveals that the source of the problem is TCP acknowledgments that never arrive at the destination, caused by the interference of NAT gateways with TCP timestamps and using Ethernet jumbo frames on EC2 virtual machines. Timestamps are enabled by default in the TCP stack of many Linux distributions. Disabling them resolves the issue in user-controlled environments like virtual machines, self-hosted serverless platforms, and Kubernetes instances. However, preventing the issue entirely in environments such as AWS Lambda requires support from the cloud provider, as functions running on this platform operate in a restricted environment.\n1For details on the source code and configuration of hole punching and message passing, we refer readers to a technical report: https://www.research-collection.ethz. ch/handle/20.500.11850/532425"
+        },
+        {
+            "heading": "3.5 Interface",
+            "text": "The FMI interface is based on MPI, so programmers familiar with MPI can use it without adjustment. The interface is designed with compatibility in mind: we primarily extend the MPI interface with modern C++ features, e.g., we remove the need for explicit typing in many operations:\n#include <fmi.h> // The functions are part of a communicator comm // Here, the communicator contains 3 functions // Each function has a unique id: 0, 1, 2 // Defining send buffer: FMI::Comm::Data<std::vector<int>> vec({0, 1, 2}); // Defining receive buffer: FMI::Comm::Data<std::vector<int>> recv(1); // Collective operation comm.scatter(vec, recv, 0); // Test that each function got the correct data assert(recv.get()[0] == my_id);\nLanguages. Support for new languages can be easily added by implementing a wrapper around the communicator library. We demonstrate the support for Python, with the help of the Boost.Python library:\nimport fmi # Defining a datatype: dtype = fmi.types(fmi.datatypes.int) # Root function sends data: if my_id == 0:\ncomm.bcast(42, 0, dtype) # All other functions receive data: else:\nassert comm.bcast(None, 0, dtype) == 42\nCommunicators. As in MPI, all message-passing operations are based on the concept of a communicator. Each communicator is uniquely named and is based on a group of \ud835\udc41 FaaS functions, each one with a unique identifier in the range [0, \ud835\udc41 ) [68]. Since each function pair in a communicator is independent of each other, communicators can parallelize the hole punching process to accommodate the increasing number of functions. Therefore, an application can create multiple communicators with different numbers of peers or lifetimes, and providing the flexibility needed to support the many communication patterns of serverless. For collectives that reduce data, such as (all)reduce and scan, users can provide an arbitrary function object as a reduction operation.\nConcurrent invocation of multiple parallel functions can be implemented in existing FaaS systems, and we envision that future serverless runtimes will provide this natively."
+        },
+        {
+            "heading": "4 COMMUNICATION CHANNEL PERFORMANCE",
+            "text": "An ideal communication channel should support both low latency and high throughput communication. Many cloud technologies can be used for serverless communication, but none fulfills all requirements (Tab. 1).\nAdditional requirements for serverless storage include elastic scaling with serverless parallelism and efficient support for arbitrary object sizes [69]. The latter is necessary to support the different communication patterns of serverless applications that can involve both fine-grained messaging and exchanging large data objects. Furthermore, serverless storage offers message persistence\nfor fault tolerance. In-memory caches can access some past messages while the instance is running but are lost upon releasing the resource. While persistence can be useful for fault tolerance, not all application require saving each message.\nAn aspect to consider is that not all communication channels support push messages \u2014 messages where the receiver blocks and waits for data to arrive. Instead, the recipient must actively and frequently poll the channel to verify if the expected message is available \u2014 also known as pull messages. Active polling introduces additional complexity (Sec. 4.1) and adds an important performancecost trade-off (Sec. 5).\nFinally, not all systems support a truly serverless deployment where no resource provisioning by the user is required. Until establishing direct communication channels is offered as a service by cloud providers a hole-punching server must be set up \u2013 it requires minimal resources as its only responsibility is to accept connection requests. Many tenants can use hole punching simultaneously, and the service scales horizontally according to the traffic.\nOn the other hand, setting up the Redis cluster requires a significant amount of work, and right-sizing the cluster is the user\u2019s responsibility. The system traffic must be monitored since an underprovisioned Redis cluster will not lead to failures but instead cause performance degradation, complicating server management further.\nTo understand the performance implications of selected cloud communication channels, we consider two scenarios: With a single sender and a single receiver, we examine point\u2013to\u2013point communication, the basic building block of all communication operations (Sec. 4.2). Then, we consider a one-to-many scenario with one sender and a variable number of receivers. This benchmark intentionally stresses bandwidth scalability of the different channels (Sec. 4.3), so we explicitly do not use algorithmical optimizations in this step."
+        },
+        {
+            "heading": "4.1 Benchmarking Setup",
+            "text": "We analyze the following communication channels in the AWS cloud: S3 (object storage), ElastiCache Redis (in-memory data store), DynamoDB (NoSQL key-value store), and direct TCP communication with NAT hole punching. For all of them, we implement the message exchange in serverless Lambda functions written in C++. We assign 2 GiB of RAM to Lambda functions to provide functions with sufficient I/O bandwidth and decrease the likelihood of functions\u2019 co-location in a single virtual machine [70]. We run the experiments in the cloud region eu-central-1.\nThe S3 and DynamoDB stores do not require additional configuration beyond creating cloud resources. We use the pay\u2013as\u2013 you\u2013go billing model for DynamoDB, and we deploy Redis on the cache.t3.small instance with 1.37 GiB RAM and two vCPUs. The\nhole punching server fits on a t2.micro instance (1 GiB RAM, one vCPU) as it only stores a few bytes per connection during setup and it costs less than 1.5\u00a2 per hour.\nPolling. To communicate over S3, DynamoDB, or Redis, the producer creates an object or an item in a predetermined location. Unfortunately, there is no explicit notification mechanism to inform consumers that data is available. It is possible to launch new functions asynchronously on data updates but not notify existing functions. For small, short-running functions, this is no issue. However, for large stateful functions stopping and resuming is inefficient. Therefore, consumers must poll the store using the predetermined key until they get the data. We implement a hybrid backoff strategy to reduce the number of required GET operations, as each one million reads costs approximately $0.5: for the first 100 retries, the backoff time is linearly increased from 1 ms to 100 ms, followed by setting the backoff time to 2x retries, i.e., 202 ms, 204 ms. We bound the maximum number of retries to 500. This is unnecessary for ElastiCache Redis as polling here does not incur additional costs - in contrast to cloud-managed S3 and DynamoDB, read requests in Redis are free."
+        },
+        {
+            "heading": "4.2 Point\u2013to\u2013Point",
+            "text": "To measure point\u2013to\u2013point communication, we execute a pingpong benchmark and report half of the round-trip time. For storagebased communication, the time includes both put and get requests. For small messages (Fig. 2a), inter-function TCP is the fastest and can achieve microsecond latency. For large messages (Fig. 2b), direct communication over TCP remains the fastest option with a reasonably symmetrical density, concentrated around the mean.\nFor the next experiment, we vary message size from 1 byte to 1 MiB and present the median bandwidth (Fig. 3). Direct communication remains the fastest communication channel for all data sizes, with the difference to cloud storage being smaller for larger sizes: the relative overhead of the cloud proxy becomes smaller compared to the transmission time. While other authors have reported high read bandwidths for S3 [69], our measurements include both the send\u2013receive (put\u2013get) communication and the overhead of polling. The write bandwidth of S3 cannot currently exceed 70 MB/s for objects up to 10 MB [69], limiting throughput."
+        },
+        {
+            "heading": "4.3 One\u2013To\u2013Many",
+            "text": "To test a one-to-many communication, we use one Lambda producer that sends messages to multiple consumers. This experiment allows us to assess bandwidth limitations and performance with multiple functions receiving from one source. We vary the message size and present the aggregated bandwidth across all 8 receivers in Fig. 4. While direct communication results in the highest bandwidth,\nthe difference to Redis and S3 decreases with the number of participants. For messages larger than 10 KiB, there is a strong increase in communication time due to bandwidth limitations. Both Redis and S3 scale well in this benchmark, as the latter offers automatic scaling with user count.\nWe investigated the feasibility of increasing the number of consumers beyond 64. S3 handles scalability with 128 consumers well, but we observe irregular failures on Redis with 128 and 256 consumers, likely due to resource limitations. Our hole punching server easily supported the connection setup with 256 functions, even with a t2.micro instance. However, the producer\u2019s bandwidth becomes the bottleneck as the number of consumers grow, highlighting the need for specialized algorithms for collective communication."
+        },
+        {
+            "heading": "5 THE PRICE OF PERFORMANCE",
+            "text": "When modeling and designing HPC collectives [18, 71], time, memory, and energy trade-offs [44] must be considered. In the serverless world, we must also consider the price of cloud operations. The price\u2013performance trade-off has always been a major issue in serverless [72]: allocating more powerful instances decreases computation time and resource occupancy but does not always lead to lower costs. Therefore we include both the cost of data transfer and the runtime functions spent transmitting data. We use the alpha-beta model for time \u2014 one of the simplest ways to describe parallel communication. This model considers \ud835\udefc , the latency of the communication channel, and \ud835\udefd , the inverse of its bandwidth. The time to send a message of size \ud835\udc60 becomes \ud835\udc47 = \ud835\udefc + \ud835\udc60 \u00b7 \ud835\udefd .\nTo compare direct andmediated channels we consider the latency and bandwidth of two functions in a point-to-point communication. We report parameter values for AWS in Tab. 2. The results show that the in-memory store outperforms object storage in both bandwidth and latency, but they are both inferior to direct communication.\nWe consider the cost per second of executing serverless functions, hosting in-memory cache, and using cloud storage (Tab. 3). We do not incorporate the fixed fee per function invocation in this analysis, as these costs are the same for each communication channel and are negligible for long-running functions.\nDirect communication. As we have seen in Sec. 4.3, TCP communication has no inherent cost, but limited bandwidth \u2013 and thus the increased communication time might generate higher costs. The cost of direct communication is limited to the runtime spent in communication by participating FaaS functions, but we consider the hole punching service currently needed by adding the cost of the virtual machine (\ud835\udc5dhps) running the service.\nMediated channels. For object storage or in-memory data stores, we define a minimal transfer time as the least time it takes\nfor a piece of data to be written to the intermediary storage by a function and then read by another - therefore, assuming there is no time spent waiting and polling for the data to become available. The actual transfer time will be longer in practice, as the functions sending and receiving are unlikely to be perfectly synchronized. This will require additional polling on the part of the receiving function, and therefore result in delays. When using object storage such as S3 or DynamoDB for communication, there are no additional infrastructure costs because the system is managed by the provider and charged on a per-use basis. We further assume that all data is ephemeral and immediately deleted after execution, which leads to negligible storage costs. We therefore only pay for the uploads (\ud835\udc5ds3,u, \ud835\udc5dddb,u) and downloads (\ud835\udc5ds3,d, \ud835\udc5dddb,d). For communication over an in-memory data store, only infrastructure costs for the store are incurred (\ud835\udc5dredis), and these only depend on how long the instance runs.\nCost of FaaS functions. The total cost of communication is the sum of the cost to run the FaaS functions during the communication and the cost of moving the data through the channel. One exchange with \ud835\udc43 participants, each with\ud835\udc40 GiB of RAM, that takes \ud835\udc61 seconds on average has a cost that can be calculated as follows:\n\ud835\udc50function = \ud835\udc43 \u2217 \ud835\udc61 \u2217 \ud835\udc5dfaas \u2217\ud835\udc40 (1)\nThe cost of Lambda instances increases linearly with memory allocation, hence the\ud835\udc40 term in the cost equation. The average used for the time \ud835\udc61 may not necessarily be representative for the individual experienced communication times, but remains a useful approximation given the large number of FaaS functions serverless systems commonly handle.\nPrice-performance analysis. We compute the cost and time required by each communication channel to communicate 1MB between two 2GiB Lambda functions a million times by instantiating the models previously described and present the results in Tab. 4.\nDirect communication is more than four times cheaper and faster than all alternatives."
+        },
+        {
+            "heading": "6 EVALUATION",
+            "text": "We now evaluate the performance and efficiency of our messagepassing interface. We focus our evaluation on collective operations, as the point-to-point performance has been analyzed in Sec. 4.2. We first examine the scaling of FMI Collectives on AWS Lambda (Sec. 6.1). We then compare FMI\u2019s performance against MPI on virtual machines (Sec. 6.2), and quantify the overheads brought by the serverless environment (Sec. 6.3). Finally, we demonstrate how the integration of FMI into a serverless machine learning framework improves performance and decreases costs (Sec. 6.4)."
+        },
+        {
+            "heading": "6.1 Performance of FMI Collectives in FaaS",
+            "text": "To evaluate FMI\u2019s collectives on a FaaS platform, we use AWS Lambda functions with 2 GiB RAM. We deploy C++ functions using the native runtime for AWS Lambda and compile functions with GCC 9.5. We use AWS SDK C++ 1.9.225 for communication over Redis and AWS, and native TCP/IP sockets. For Redis, we use one\ncache.t3.small (1.37 GiB RAM, 2 vCPUs) instance, and set the polling interval for S3 to 20ms.\nWe evaluate collective operators with the following operations:\n\u2022 allreduce: Adding an integer per process. \u2022 bcast: Broadcasting an integer. \u2022 gather: The root receives 5,000 integers in total. \u2022 reduce: Adding an integer per process. \u2022 scan: Prefix sum with an integer per process. \u2022 scatter: The root sends 5,000 integers in total.\nEach operation is preceded with a barrier to synchronize workers, and we measure the maximum time across all workers needed to complete the collective operation. We repeat all experiments 30 times.\nThe results are summarized in Figure 5. In Redis, communication times grow sharply for some algorithms. This demonstrates the limitation of using a provisioned service where the user is responsible for scaling resources, and the correct instance size is not always known a priori. Choosing the minimal size that supports a given workload can be time-consuming and expensive as communication times gradually increase, which often leads to overprovisioning. S3 storage performs the worst on all benchmarks due to high latency on small objects, and only a broadcast operation with a large number of workers demonstrates the benefits of automatic bandwidth scalability. On all algorithms, the direct TCP communication achieves the lowest latency.\nFurthermore, we observe that the average memory consumption does not exceed 100 MB. However, functions need large memory allocations to achieve sufficient network bandwidth as resources are scaled with the memory alloction [72].\nDirect TCP communication enabled by FMI is necessary to achieve high performance collective operations."
+        },
+        {
+            "heading": "6.2 Comparison of FMI and MPI in Virtual Machines",
+            "text": "To compare the performance of FMI and MPI, we deploy both on virtual machines for an unbiased comparison, since MPI is not available on FaaS platforms.\nSetup. We execute the MPI benchmarks on t2.xlarge virtual machines, running Ubuntu 20.04.1 VMs with 16 GiB of RAM and 4 vCPUs. We configure both Open MPI and FI to use one rank per node when using up to eight peers, and we use up to 4 processes per node otherwise. We use Open MPI 4.0.3 with the default configuration, which uses the TCP transfer layer for communication. We use a non-tuned FMI installation with direct communication.\nPerformance. The performance and variance of FMI collectives is comparable to Open MPI (Fig. 6). We repeat the evaluation of each collective operation 1,000 times, after discarding a first warmup measurement, and use a barrier before each experiment. Our implementation of the collectives is competitive and our framework does not introduce significant overhead.\nFMI is competitive with established MPI implementations, bringing the HPC message-passing performance closer to the serverless world."
+        },
+        {
+            "heading": "6.3 Evaluating the Overhead of FaaS Platforms",
+            "text": "Thanks to FMI, we can quantify the performance losses incurred by the serverless environment by comparing operations executed in virtual machines (IaaS) and FaaS. We deploy FMI and OpenMPI again on virtual machines and use the default co-location settings of OpenMPI. Then, we compare it against FMI deployment in serverless functions (Sec. 6.1). Results presented in Figure 7 show that communication performance on serverless functions can be worse, even if using identical software and communication algorithms. Furthermore, the better performance achieved by MPI is explained by its ability to use shared memory for communication when ranks are located on the same machine. On the other hand, the opaque infrastructure in serverless functions prevents using local means of communication, as functions are unaware of co-location and always use the NAT hole punching for communication, even when both parties are on the same machine."
+        },
+        {
+            "heading": "6.4 Practical Case Study: Distributed Machine Learning",
+            "text": "To demonstrate the benefits of integrating FMI into serverless applications, we use LambdaML, a state-of-the-art framework for distributed machine learning on AWS Lambda, using distributed K-Means with the DynamoDB backend as it was shown to be the best performing [4]. For FMI, we replace the allreduce provided by the author with the corresponding FMI collective. We use the HIGGS [73] dataset with 1 MB file per function. Lambda functions are configured with 1 GiB RAM, and we run the training for 10 epochs. We use autoscaling for DynamoDB and direct communication over TCP in FMI.\nPerformance. Figure 8 presents the distribution of communication times per epoch, i.e., how much time passed between functions ready to exchange data until they accumulate the centroids of the\n2The annotation denotes the speedup of the median communications time provided by FMI. No measurements beyond 64 functions are provided for DynamoDB due to outliers and timeouts.\ncurrent epoch, averaged across ten epochs. FMI significantly reduces both the median and maximum communication time by up to 105 and 1224 times, respectively, when running with 64 functions. We did not increase the number of functions beyond 64 for DynamoDB due to the timeouts and outliers we observed for 64 functions. In contrast, FMI scaled well with good performance and few outliers up to 256 functions. The performance benefits of using FMI stem from replacing DynamoDB with a direct communication channel, and replacing a sequential reduction algorithm of LambdaML with a parallel collective operation in FMI. A further cause is the base64 serialization of binary data that is needed in communication using DynamoDB \u2014 FMI directly operates on binary data. Furthermore, we avoid unnecessary buffer copies by using numpy arrays on top of existing memory buffers from the C++ library.\nCost. We estimate the cost of moving data and running the Lambda function for the duration of the communication epoch. For FMI, we assume an hourly cost of running the hole punching service. For DynamoDB, we assume one read and write unit per second for each function, as this is the minimum traffic AWS\nrequires each function to provision. This assumption is rather optimistic because one function can generate multiple reads during one collective operation in LambdaML\u2019s implementation, as functions repeatedly send requests until an item becomes visible. Therefore, our estimation of the monetary benefits of using FMI is conservative.\nDespite this pessimistic approximation, FMI results in significantly cheaper communication costs (Fig. 9). When using only a few functions, the cost is relatively similar because of the the hourly cost of the hole punching server. At 64 functions, a user pays approximately $7.52 for 1000 epochs of communication with DynamoDB while using FMI lowers these costs to less than $0.02, a reduction by a factor of 397. This trend will increase with more functions as communication time increases significantly. However, FMI infrastructure costs are practically independent of the number of functions, due to the limited requirements of the hole punching server.\nIntegration.We integrate FMI into the K-Means benchmarks with only four lines of code changed.\nFMI can be integrated into serverless applications with minimal overhead, providing performance and cost improvements of two degrees of magnitude."
+        },
+        {
+            "heading": "7 RELATEDWORK",
+            "text": "Multiple works partially address communication in serverless environments and implement specialized systems for given workloads (Table 5). In contrast, FMI provides a modular, high-performance, and general-purpose solution, with support for various communication channels and a model-driven selection at runtime.\nEphemeral Storage for Serverless. Pocket [10] is a specialized data store for intermediate data in serverless, with automatic resource scaling and multiple storage tiers. Pocket is orthogonal to our work and can be integrated into FMI as a cheaper alternative to in-memory stores. Locus [74] and Crucial [2] include specialized communication channels for serverless analytics and distributed synchronization.\nServerless Communication. Emerging frameworks support stateful and distributed FaaS jobs, but many of them focus on domain-specific optimizations. Systems such as gg [75], mu [7], and PyWren [76] are designed to handle general-purpose tasks, and\nthey use cloud stores, dedicated in-memory caches, and messaging servers.\nOther systems target specific workloads and execution patterns. LambdaML [4] and Cirrus [1] are specialized frameworks for machine learning, using custom parameter servers and dedicated stores for intermediate data. Lambada [3] and Starling [6] implements communication specialized for data analytics, including multi-level exchanges and pipelining to minimize the cost and high latency of object storage operations. Boxer [27] extends Lambada with TCP hole punching. While Boxer implements transparent hole punching for query processing, our solution offers a collection of algorithms to target all serverless workloads that can benefit from inter-function communication. Furthermore, we provide collective operations with an MPI-compatible interface to support HPC applications. Finally, the modular FMI system supports adding domainspecific communication optimizations, similarly to the multitude of specializations for MPI collectives.\nServerless Platforms. SONIC [77] extends OpenLambda with application-aware data passing. SAND [78] implements a dedicated hierarchical message bus, and Cloudburst [79] adds co-located caches and an autoscaling key-value store. The optimized communication channels available on a given platform can be integrated into FMI, letting users benefit from the high performance of message-based communication while hiding the complexity and specialization."
+        },
+        {
+            "heading": "8 CONCLUSIONS",
+            "text": "We propose FMI: an easy-to-use, modular, high-performance framework for general-purpose point-to-point and group communication in FaaS.We benchmark communication channels available in serverless, implement direct TCP communication, and derive performance and cost models that support the selection of optimal protocols. FMI introduces collective communication to serverless, simplifying distributed computing and allowing cloud providers to hide platform-specific optimizations. The FMI interface can be wrapped around existing MPI implementations, improving the portability of applications between serverless functions and clusters.\nWe evaluate FMI by comparing the performance of its communication to MPI, and demonstrate the benefits of FMI in a case study of distributed machine learning, showing easy integration and decreased communication time by up to 162x. FMI brings serverless applications closer to the performance of MPI communication in HPC and lifts one of the most critical limitations of serverless computing."
+        },
+        {
+            "heading": "ACKNOWLEDGMENTS",
+            "text": "This project has received funding from the European Research Council (ERC) under the European Union\u2019s Horizon 2020 program (grant agreement PSAP, No. 101002047), and EuroHPC-JU funding under grant agreements DEEP-SEA, No. 95560 and RED-SEA, No. 955776). We thank Amazon Web Services for supporting this research with credits through the AWS Cloud Credit for Research program."
+        }
+    ],
+    "title": "FMI: Fast and Cheap Message Passing for Serverless Functions",
+    "year": 2023
+}

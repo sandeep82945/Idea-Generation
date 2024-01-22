@@ -1,0 +1,170 @@
+{
+    "abstractText": "Cut-cell meshes are an attractive alternative to avoid common mesh generation problems. For hyperbolic problems they pose additional challenges, as elements can become arbitrarily small, leading to prohibitive time step restrictions for explicit time stepping methods. To alleviate this small cell problem we consider a particular stabilization method, the Domain of Dependence (DoD) method. So far, while posessing many favorable theoretical properties, in two dimensions the DoD method was essentially restricted to the transport equation. In this work we extend the DoD method to the acoustic wave equation in two dimensions and provide numerical results for validation.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Gunnar Birke"
+        },
+        {
+            "affiliations": [],
+            "name": "Christian Engwer"
+        },
+        {
+            "affiliations": [],
+            "name": "Sandra May"
+        },
+        {
+            "affiliations": [],
+            "name": "Florian Streitb\u00fcrger"
+        }
+    ],
+    "id": "SP:bc30a2576079abdbdbc1d361b5f36121c191b4ed",
+    "references": [
+        {
+            "authors": [
+                "P. Bastian",
+                "M. Blatt",
+                "A. Dedner",
+                "N.-A. Dreier",
+                "C. Engwer",
+                "R. Fritze",
+                "C. Gr\u00e4ser",
+                "C. Gr\u00fcninger",
+                "D. Kempf",
+                "R. Kl\u00f6fkorn",
+                "M. Ohlberger",
+                "O. Sander"
+            ],
+            "title": "The Dune framework: Basic concepts and recent developments, Comput",
+            "venue": "and Math. with Appl., 81, 75-112,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P. Bastian",
+                "M. Blatt",
+                "A. Dedner",
+                "C. Engwer",
+                "R. Kl\u00f6fkorn",
+                "R. Kornhuber",
+                "M. Ohlberger",
+                "O. Sander"
+            ],
+            "title": "A Generic Grid Interface for Parallel and Adaptive Scientific Computing",
+            "venue": "Part II: Implementation and Tests in DUNE, Computing, 82, 121-138",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "P. Bastian",
+                "C. Engwer"
+            ],
+            "title": "An unfitted finite element method using discontinuous Galerkin, Int",
+            "venue": "Jour. for Num. Meth. in Eng., 79, 12, 1557-1576",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "G. Birke",
+                "C. Engwer",
+                "F.S. May"
+            ],
+            "title": "Streitb\u00fcrger: DoD Stabilization of linear hyperbolic PDEs on general cut-cell meshes",
+            "venue": "Proc. Appl. Math. Mech.,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C. Engwer",
+                "F. Heimann"
+            ],
+            "title": "Dune-UDG: A Cut-Cell Framework for Unfitted Discontinuous Galerkin Methods, Advances in DUNE (Springer Berlin",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "C. Engwer",
+                "S. May",
+                "A. N\u00fc\u00dfing",
+                "F. Streitb\u00fcrger"
+            ],
+            "title": "A stabilized DG cut cell method for discretizing the linear transport equation, SIAM J",
+            "venue": "Sci. Comput. 42, 6, A3677A3703",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "C. Engwer",
+                "A. N\u00fc\u00dfing"
+            ],
+            "title": "Geometric Reconstruction of Implicitly Defined Surfaces and Domains with Topological Guarantees, ACM Trans",
+            "venue": "on Math. Soft., 44, 2, Art. No. 14",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "A. Giuliani"
+            ],
+            "title": "A two-dimensional stabilized discontinuous Galerkin method on curvilinear embedded boundary grids, SIAM J",
+            "venue": "Sci. Comput. 44, 1, A389-A415",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Luk\u00e1cov\u00e1-Medvidov\u00e1",
+                "K. Morton",
+                "G. Warnecke"
+            ],
+            "title": "Finite Volume Evolution Galerkin Methods for Hyperbolic Systems",
+            "venue": "SIAM J. Sci. Comput,",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "S. May",
+                "F. Streitb\u00fcrger"
+            ],
+            "title": "DoD Stabilization for non-linear hyperbolic conservation laws on cut cell meshes in one dimension, Appl",
+            "venue": "Math. Comput. 419, Art. 126854",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S. Schoeder",
+                "S. Sticko",
+                "G. Kreiss",
+                "M. Kronbichler"
+            ],
+            "title": "High-order cut discontinuous Galerkin methods with local time stepping for acoustics, Int",
+            "venue": "J. Numer. Meth. Engrg. 121, 13, 2979-3003",
+            "year": 2020
+        }
+    ],
+    "sections": [
+        {
+            "text": "Keywords: cut-cells, small cell problem, discontinuous Galerkin method, DoD stabilization, wave equation"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "The generation of traditional body fitted meshes can become very involved and time consuming, when working with complex geometries. One possible alternative is the use of cut-cell meshes. The drawback is that one has no control over the cut-cell shapes, in particular cut-cells can become arbitrarily small. Explicit time stepping methods, which are commonly used to simulate hyperbolic conservation laws, require a time step size that is chosen based on the smallest cell in the mesh. This becomes infeasible on a cut-cell mesh. Instead, one likes to choose the time step based on the size of the larger uncut cells. This is referred to as the small cell problem.\nAs discontinuous Galerkin (dG) methods are attractive to solve hyperbolic partial differential equations (PDEs), different stabilization approaches have been developed in recent years to handle the small cell problem on cut-cell meshes, see for example [8], [11]. We consider the Domain of Dependence (DoD) stabilization method which was introduced in [6] for the linear transport equation and extended, in one space dimension, to non-linear equations in [10]. In two dimensions, the method was originally restricted to certain flow/geometry combinations, e. g. a flow parallel to a domain boundary. In [4] the stabilization was generalized for P 0 discretizations of linear systems to handle triangular cut-cells with multiple inflow or outflow faces.\nar X\niv :2\n30 4.\n04 32\n3v 1\n[ m\nat h.\nN A\n] 9\nA pr\nIn this contribution we extend the lowest order DoD stabilization such that it can be applied to the acoustic wave equation. The main difference is that the wave equation cannot be written as a system of coupled transport equations, as the system is not globally diagonalizable. This adds significant complications in deriving the stabilization term. We focus on a P 0 dG discretization here, the development of appropriate higher-order stabilization terms for the acoustic wave equation is ongoing research. The construction of the DoD stabilization went hand in hand with an L2-stability analysis for the semi-discretization in space, see [10,12,4], and the terms were designed such that we regain the spatial stability properties of the original dG scheme. This also holds true for the acoustic wave equation and the analysis was an important cornerstone in the development of the stabilization term. As the actual L2-stability proof goes beyond the scope of this paper, we add appropriate remarks where necessary to understand the design of the actual formulation.\nThe outline of the paper is as follows: We first describe the problem setup and the underlying dG scheme. Then we introduce the DoD stabilization for the acoustic wave equation. We conclude with numerical results to validate our findings."
+        },
+        {
+            "heading": "2 Problem setup",
+            "text": "Let \u2126 \u2282 R2 be an open domain. We consider the acoustic wave equation for the solution u = (p, v1, v2) given by\nut +A1ux +A2uy = 0 in \u2126,\n\u03c4u = g on \u2202\u2126,\nu(\u00b7, 0) = u0 in \u2126,\nwith p being the pressure, v = (v1, v2) t being the velocity and \u03c4 being a boundary operator imposing an inflow boundary condition for incoming waves. The system matrices are given as\nA1 = ( 0 c 0 c 0 0 0 0 0 ) and A2 = ( 0 0 c 0 0 0 c 0 0 ) .\nHere c > 0 denotes the speed of sound. We want to stress that A1A2 6= A2A1. In our numerical tests we choose \u2126 = [0, 1]2 and discretize it by a structured grid M\u0302h. We then introduce an artificial cut, a straight line going through the square, starting at (x0, 0) and having an angle \u03b3 relative to the x-axis. This creates an internal boundary with two subdomains which we will resolve by a cut-cell mesh Mh. A sketch is contained in Fig. 1. The wave equation is then solved in the whole domain \u2126.\nOur discrete function space is defined as Vh = V0h = {vh \u2208 L2(\u2126)3 : (vh)i \u2223\u2223 E \u2208 P0(E)\u2200 1 \u2264 i \u2264 3, E \u2208Mh}.\nWe define the sets of internal and external faces as\nF inth = {F = \u2202E1 \u2229 \u2202E2 : E1, E2 \u2208Mh, E1 6= E2, |F | > 0}, Fexth = {F = \u2202E \u2229 \u2202\u2126 : E \u2208Mh, |F | > 0}\nand the set of neighbor cells N (E) := {E\u2032 \u2208Mh : |E\u0304\u2032 \u2229 E\u0304| > 0}. So for any internal face F \u2208 F inth there are always two unique elements E1, E2 \u2208Mh such that E\u03041\u2229E\u03042 = F . This face will often be denoted by FE1,E2 = FE2,E1 . We fix once and for all an orientation on F = FE1,E2 by setting its outer normal vector n to be n = nF = nF (x) := nE1(x) for x \u2208 F where nE1 is the outer unit normal field on \u2202E1. The flux matrix in normal direction on the face F will be denoted by\nAF := (nF )1A1 + (nF )2A2 = OF\u039bFO t F\nwhere OF\u039bFO t F is an eigenvalue decomposition of the matrix AF with \u039bF being a diagonal matrix and OF being an orthonormal matrix. Based on this, we define matrices which encode the flux directions as\nA+F = OF\u039b + AO t F , A \u2212 F = OF\u039b \u2212 FO t F , with (\u039b \u00b1 F )i,i =\n1\n2\n( |(\u039bF )i,i| \u00b1 (\u039bF )i,i ) .\nNote that AF = A + F + A \u2212 F . We also introduce a generalization of the absolute value for such flux matrices by |AF | = A+F \u2212A\u2212F . An element vh \u2208 Vh is multi-valued on any internal face F \u2208 F inth . We define its average and jump by\n{{vh}} := 1 2 (vh \u2223\u2223 E1 + vh \u2223\u2223 E2 ), JvhK := vh \u2223\u2223 E1 \u2212 vh \u2223\u2223 E2 .\nFor exterior faces F \u2208 Fexth we simply choose the unit outer normal and extend the definition of jump and average appropriately.\nThe (unstabilized) upwind semi-discretization in space is then given as: Find uh(t) \u2208 Vh such that\n(\u2202tuh(t), vh)L2(\u2126) + a upw h (uh(t), vh) + lh(vh) = 0 \u2200 vh \u2208 Vh (1)\nwith\naupwh (uh, vh) = \u2211\nF\u2208F inth\n\u222b F \u3008AF {{uh}}, JvhK\u3009+ 1 2 \u3008|AF | JuhK , JvhK\u3009ds\n+ \u2211\nF\u2208Fexth\n\u222b F \u3008A+Fuh, vh\u3009ds,\nlh(vh) = \u2212 \u2211\nF\u2208Fexth\n\u222b F \u3008A\u2212F g, vh\u3009ds.\nHere, \u3008\u00b7, \u00b7\u3009 denotes the standard scalar product in l2. While we use an upwind flux here, we want to note that our following construction for the stabilization terms also holds for the Lax-Friedrichs flux, where some terms cancel. We skipped this for brevity. Discretization in time is then accomplished by the explicit Euler scheme. If the time step choice does not reflect the size of smaller cut-cells, this causes stability issues, which is why we need stabilization terms."
+        },
+        {
+            "heading": "3 Stabilization",
+            "text": "The main idea of the DoD stabilization is to extend the numerical domain of dependence of the neighbor cells of a small cut-cell by introducing additional numerical fluxes on the cut-cell boundary depending on the extrapolated solutions of the neighbor elements.\nLet I \u2282 Mh be the set of cut-cells which are supposed to be stabilized (in practise this set will be chosen based on a volume fraction with respect to the background cells). For simplicity we assume that cells in I are not neighbors of each other. The P 0 stabilization fluxes are collected in a term\nJ0h(uh, vh) = \u2211 E\u2208I J0,Eh (uh, vh)\nand the stabilized scheme reads: Find uh(t) \u2208 Vh such that for any vh \u2208 Vh\n(\u2202tuh(t), vh)L2(\u2126) + ah(uh(t), vh) + J 0 h(uh(t), vh) + lh(vh) = 0.\nFor any E \u2208 Mh we introduce a map LextE : Vh(E) \u2192 P0(\u2126)3, called an extension operator, such that LextE (uh) \u2223\u2223 E = uh \u2223\u2223 E . The cell stabilization terms J0,Eh (uh, vh) then contain extended fluxes\n\u03b7E \u2211\n(E1,E2)\u2208N (E)\n\u222b FE,E2 \u2329 (\u03c9FE,E1A + FE,E2 )sym(LextE1 (uh)\u2212 uh \u2223\u2223 E ), JvhK \u232a ds,\nwith appropriate weighting matrices \u03c9FE,E1 \u2208 R3\u00d73 and a penalty parameter \u03b7E \u2208 (0, 1]. Here, we have denoted the symmetrization 12 (A + At) for a matrix A \u2208 R3\u00d73 by Asym. This introduces a direct mass transport from E1 to E2\nfor any pair (E1, E2) of neighbors of a small cut-cell E. (For a triangular cutcell, the sum contains 9 terms.) This is a result of the inherent nature of the wave equation, creating waves in all possible directions. The weighting matrices describe how much of an inflow coming from E1 is transported to E2. Figure 2 shows an illustration. Similarly to what was proposed in [4], we require for the weighting matrices that\n\u2211 E2\u2208N (E) \u222b FE,E2 \u03c9E,E1A + FE,E2 ds = \u2212 \u222b FE,E1\nA\u2212FE,E1ds \u2200 E1 \u2208 N (E), (2a)\u2211 E1\u2208N (E) \u03c9FE,E1 = Id3\u00d73. (2b)\nThe first equation describes how incoming flow is distributed among the cutcell\u2019s neighbors while the second equation ensures that the overall amount of flow over a single face is preserved.\nIn [4] we were able to prove a discrete dissipation and L2-stability result. One key step of the proof is an application of the binomial formula relying on the symmetry of the matrices \u03c9FE,E1A + FE,E2 , which holds given simultaneously diagonalizable (equivalently, commuting) system matrices. For the acoustic equation this matrix product will in general not be symmetric and the proof breaks down. A working fix is to instead take the symmetrization of the matrix \u03c9FE,E1A + FE,E2 .\nTaking the symmetrization is not enough by itself though since the resulting flux matrices potentially possess negative eigenvalues leading to incorrect fluxes. This can be corrected by introducing terms \u2212\u03ba\u03b7E \u2211\n(E1,E2)\u2208N (E)\n\u222b FE,E2 \u2329 (\u03c9FE,E1A + FE,E2 )\u2212sym(LextE1 (uh)\u2212uh \u2223\u2223 E2 ),LextE1 (vh)\u2212vh \u2223\u2223 E2 \u232a ds.\nFor any \u03ba \u2265 1 this term ensures L2-stability of the semi-discrete form. We observe that certain choices of \u03ba significantly improve the numerical approximation; the optimal choice still needs to be investigated. Note that this new term has an opposite sign, uses the negative part of the symmetrized form, and subtracts the solution from cell neighbor E2 (instead of the cut-cell E).\nPutting those components together leads to a cell stabilization term\nJ0,Eh (uh, vh) = \u03b7E \u2211\n(E1,E2)\u2208N (E)\n\u222b FE,E2 \u2329 (\u03c9FE,E1A + FE,E2 )sym(LextE1 (uh)\u2212 uh \u2223\u2223 E ), JvhK \u232a ds\n\u2212 \u03ba\u03b7E \u2211\n(E1,E2)\u2208N (E)\n\u222b FE,E2 \u2329 (\u03c9FE,E1A + FE,E2 )\u2212sym(LextE1 (uh)\u2212 uh \u2223\u2223 E2 ),LextE1 (vh)\u2212 vh \u2223\u2223 E2 \u232a ds.\nFor this formulation together with the properties (2a) and (2b) one can prove L2-stability for the semi-discretization in space. Unfortunately the proof is too long for this contribution to be included.\nThe weighting matrices can be directly computed from (2a). Due to the system matrices being divergence-free, this equation is equivalent to\n\u03c9FE,E1 ( \u2211 E2\u2208N (E) |FE,E2 |A\u2212FE,E2 ) = |FE,E1 |A\u2212FE,E1 .\nThe matrix ( \u2211 E2\u2208N (E) |FE,E2 |A \u2212 FE,E2 ) is invertible since on a triangular cutcell we got three summands, each of rank one, and the three column spaces are linearly independent. Thus we have\n\u03c9FE,E1 = |FE,E1 |A \u2212 FE,E1 ( \u2211 E2\u2208N (E) |FE,E2 |A\u2212FE,E2 )\u22121 ."
+        },
+        {
+            "heading": "4 Numerical results",
+            "text": "We present numerical results to support our findings. Our implementation uses the DUNE framework [1,2], in particular the dune-udg module [3,5] and the TPMC library [7]. We consider an analytic test case [9] with\nu(x, y, t) = 1\nc \u2212 cos(2\u03c0ct)(sin(2\u03c0x) + sin(2\u03c0y))sin(2\u03c0ct) cos(2\u03c0x) sin(2\u03c0ct) cos(2\u03c0y)  Initial condition u0 and inflow boundary conditions g are given by the exact solution. The speed of sound is chosen as c = 12 , the final time is T = 0.3. For the CFL-condition we choose \u2206t = 0.3\u2206xc where \u2206x = 1 N with N being the number of fundamental cells in one direction of the grid. We choose values for N from the set {400, .., 1200}, starting at 400 and with a stepsize of 23. In our experiments\nthe volume fractions of cut-cells are in the interval [7.24 \u00b7 10\u221210, 5.37 \u00b7 10\u22125]. For the cut angle we set \u03b3 = 35\u25e6 and choose x0 = 0.2001 for the start of the cut. We classify a cell E \u2208Mh as a small cut-cell if |E|(1/N)2 \u2264 0.4. The penalty parameter \u03b7E is chosen as (1\u2212 \u03b7E) = |E|\u2206tcmaxF\u2282\u2202E |F | .\nWe compute the L2-error of the discrete solution at the final time T with respect to the exact solution. We also compute the pointwise error at certain quadrature points, which gives an approximation to the error in the L\u221e-norm. We will display results for \u03ba \u2208 {1.0, 7.5} to display the effect of this additional parameter.\nThe computed errors are plotted in figure 3. We observe the expected convergence order in the L2-norm in all components, regardless of the choice of \u03ba. For the L\u221e-norm the situation differs. The pressure component shows again optimal convergence behavior, independent of \u03ba. However for the velocity components the convergence order is influenced by the choice of \u03ba and we obtain better absolute errors and a better convergence order (at the cost of some mild wiggles) for a larger \u03ba = 7.5. The wiggles suggest that the parameter \u03ba should be chosen cell dependent, but how to choose it exactly requires further investigation."
+        },
+        {
+            "heading": "5 Discussion and Outlook",
+            "text": "We presented an extension of the DoD stabilization to the acoustic wave equation for P 0 trial and test functions on a structured grid with triangular cut-cells. We observed a decent convergence behavior in our numerical test setup. We note that the new parameter \u03ba included in the extension has a considerable influence\non the measured error. Its precise effect and optimal choice will be investigated more in the future. An extension to higher-order approximations, as well as to non-linear systems, e. g. the Euler equations, is ongoing research.\nAcknowledgements The authors acknowledge support by the Deutsche Forschungsgemeinschaft as project 439956613 under contract numbers EN 1042/5-1 and MA 7773/4-1/2, as well as under Germany\u2019s Excellence Strategy EXC 2044 390685587, Mathematics Mu\u0308nster: Dynamics \u2013 Geometry \u2013 Structure."
+        }
+    ],
+    "title": "Domain of Dependence stabilization for the acoustic wave equation on 2D cut-cell meshes",
+    "year": 2023
+}

@@ -1,0 +1,904 @@
+{
+    "abstractText": "The vision-based perception for autonomous driving has undergone a transformation from the bird-eye-view (BEV) representations to the 3D semantic occupancy. Compared with the BEV planes, the 3D semantic occupancy further provides structural information along the vertical direction. This paper presents OccFormer, a dual-path transformer network to effectively process the 3D volume for semantic occupancy prediction. OccFormer achieves a long-range, dynamic, and efficient encoding of the camera-generated 3D voxel features. It is obtained by decomposing the heavy 3D processing into the local and global transformer pathways along the horizontal plane. For the occupancy decoder, we adapt the vanilla Mask2Former for 3D semantic occupancy by proposing preserve-pooling and classguided sampling, which notably mitigate the sparsity and class imbalance. Experimental results demonstrate that OccFormer significantly outperforms existing methods for semantic scene completion on SemanticKITTI dataset and for LiDAR semantic segmentation on nuScenes dataset. Code is available at https://github.com/zhangyp15/ OccFormer.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Yunpeng Zhang"
+        },
+        {
+            "affiliations": [],
+            "name": "Zheng Zhu"
+        },
+        {
+            "affiliations": [],
+            "name": "Dalong Du"
+        }
+    ],
+    "id": "SP:f16c9dc8aa7fff5a6dff181b9191b89501aa28a2",
+    "references": [
+        {
+            "authors": [
+                "Adil Kaan Akan",
+                "Fatma G\u00fcney"
+            ],
+            "title": "Stretchbev: Stretching future instance prediction spatially and temporally",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Jens Behley",
+                "Martin Garbade",
+                "Andres Milioto",
+                "Jan Quenzel",
+                "Sven Behnke",
+                "Cyrill Stachniss",
+                "Jurgen Gall"
+            ],
+            "title": "Semantickitti: A dataset for semantic scene understanding of lidar sequences",
+            "venue": "In ICCV, 2019",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Holger Caesar",
+                "Varun Bankiti",
+                "Alex H Lang",
+                "Sourabh Vora",
+                "Venice Erin Liong",
+                "Qiang Xu",
+                "Anush Krishnan",
+                "Yu Pan",
+                "Giancarlo Baldan",
+                "Oscar Beijbom"
+            ],
+            "title": "nuscenes: A multimodal dataset for autonomous driving",
+            "venue": "In CVPR,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Anh-Quan Cao",
+                "Raoul de Charette"
+            ],
+            "title": "Monoscene: Monocular 3d semantic scene completion",
+            "venue": "In CVPR,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Nicolas Carion",
+                "Francisco Massa",
+                "Gabriel Synnaeve",
+                "Nicolas Usunier",
+                "Alexander Kirillov",
+                "Sergey Zagoruyko"
+            ],
+            "title": "End-toend object detection with transformers",
+            "venue": "In ECCV,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Liang-Chieh Chen",
+                "George Papandreou",
+                "Iasonas Kokkinos",
+                "Kevin Murphy",
+                "Alan L Yuille"
+            ],
+            "title": "Deeplab: Semantic image segmentation with deep convolutional nets, atrous convolution, and fully connected crfs",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Qi Chen",
+                "Sourabh Vora",
+                "Oscar Beijbom"
+            ],
+            "title": "Polarstream: Streaming object detection and segmentation with polar pillars",
+            "venue": "NeurIPS,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Xiaokang Chen",
+                "Kwan-Yee Lin",
+                "Chen Qian",
+                "Gang Zeng",
+                "Hongsheng Li"
+            ],
+            "title": "3d sketch-aware semantic scene completion via semi-supervised structure prior",
+            "venue": "In CVPR,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Bowen Cheng",
+                "Ishan Misra",
+                "Alexander G Schwing",
+                "Alexander Kirillov",
+                "Rohit Girdhar"
+            ],
+            "title": "Masked-attention mask transformer for universal image segmentation",
+            "venue": "In CVPR, 2022",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Bowen Cheng",
+                "Alex Schwing",
+                "Alexander Kirillov"
+            ],
+            "title": "Perpixel classification is not all you need for semantic segmentation",
+            "venue": "NeurIPS, 2021",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Ran Cheng",
+                "Christopher Agia",
+                "Yuan Ren",
+                "Xinhai Li",
+                "Liu Bingbing"
+            ],
+            "title": "S3cnet: A sparse semantic scene completion network for lidar point clouds",
+            "venue": "In CoRL,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Ran Cheng",
+                "Ryan Razani",
+                "Ehsan Taghavi",
+                "Enxu Li",
+                "Bingbing Liu"
+            ],
+            "title": "2-s3net: Attentive feature fusion with adaptive feature selection for sparse semantic segmentation network",
+            "venue": "In CVPR,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Tiago Cortinhal",
+                "George Tzelepis",
+                "Eren Erdal Aksoy"
+            ],
+            "title": "Salsanext: Fast, uncertainty-aware semantic segmentation of lidar point clouds",
+            "venue": "In International Symposium on Visual Computing,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Alexey Dosovitskiy",
+                "Lucas Beyer",
+                "Alexander Kolesnikov",
+                "Dirk Weissenborn",
+                "Xiaohua Zhai",
+                "Thomas Unterthiner",
+                "Mostafa Dehghani",
+                "Matthias Minderer",
+                "Georg Heigold",
+                "Sylvain Gelly"
+            ],
+            "title": "An image is worth 16x16 words: Transformers for image recognition at scale",
+            "venue": "In ICLR,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Whye Kit Fong",
+                "Rohit Mohan",
+                "Juana Valeria Hurtado",
+                "Lubing Zhou",
+                "Holger Caesar",
+                "Oscar Beijbom",
+                "Abhinav Valada"
+            ],
+            "title": "Panoptic nuscenes: A large-scale benchmark for lidar panoptic segmentation and tracking",
+            "venue": "RA-L,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Andreas Geiger",
+                "Philip Lenz",
+                "Raquel Urtasun"
+            ],
+            "title": "Are we ready for autonomous driving? the kitti vision benchmark suite",
+            "venue": "In CVPR,",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Rohit Girdhar",
+                "Joao Carreira",
+                "Carl Doersch",
+                "Andrew Zisserman"
+            ],
+            "title": "Video action transformer network",
+            "venue": "In CVPR,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Kaiming He",
+                "Xiangyu Zhang",
+                "Shaoqing Ren",
+                "Jian Sun"
+            ],
+            "title": "Deep residual learning for image recognition",
+            "venue": "In CVPR, 2016",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Anthony Hu",
+                "Zak Murez",
+                "Nikhil Mohan",
+                "Sof\u0131\u0301a Dudas",
+                "Jeffrey Hawke",
+                "Vijay Badrinarayanan",
+                "Roberto Cipolla",
+                "Alex Kendall"
+            ],
+            "title": "Fiery: future instance prediction in bird\u2019seye view from surround monocular cameras",
+            "venue": "In ICCV,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Junjie Huang",
+                "Guan Huang",
+                "Zheng Zhu",
+                "Dalong Du"
+            ],
+            "title": "Bevdet: High-performance multi-camera 3d object detection in bird-eye-view",
+            "venue": "arXiv preprint arXiv:2112.11790,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Yuanhui Huang",
+                "Wenzhao Zheng",
+                "Yunpeng Zhang",
+                "Jie Zhou",
+                "Jiwen Lu"
+            ],
+            "title": "Tri-perspective view for visionbased 3d semantic occupancy prediction",
+            "venue": "arXiv preprint arXiv:2302.07817,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Alexander Kirillov",
+                "Yuxin Wu",
+                "Kaiming He",
+                "Ross Girshick"
+            ],
+            "title": "Pointrend: Image segmentation as rendering",
+            "venue": "In CVPR,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "H.W. Kuhn",
+                "Bryn Yaw"
+            ],
+            "title": "The hungarian method for the assignment problem",
+            "venue": "Naval Res. Logist. Quart,",
+            "year": 1955
+        },
+        {
+            "authors": [
+                "Alex H Lang",
+                "Sourabh Vora",
+                "Holger Caesar",
+                "Lubing Zhou",
+                "Jiong Yang",
+                "Oscar Beijbom"
+            ],
+            "title": "Pointpillars: Fast encoders for object detection from point clouds",
+            "venue": "In CVPR,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Youngwan Lee",
+                "Jonghee Kim",
+                "Jeffrey Willette",
+                "Sung Ju Hwang"
+            ],
+            "title": "Mpvit: Multi-path vision transformer for dense prediction",
+            "venue": "In CVPR,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Jie Li",
+                "Kai Han",
+                "Peng Wang",
+                "Yu Liu",
+                "Xia Yuan"
+            ],
+            "title": "Anisotropic convolutional networks for 3d semantic scene completion",
+            "venue": "In CVPR,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jie Li",
+                "Yu Liu",
+                "Dong Gong",
+                "Qinfeng Shi",
+                "Xia Yuan",
+                "Chunxia Zhao",
+                "Ian Reid"
+            ],
+            "title": "Rgbd based dimensional decomposition residual network for 3d semantic scene completion",
+            "venue": "In CVPR,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Shijie Li",
+                "Xieyuanli Chen",
+                "Yun Liu",
+                "Dengxin Dai",
+                "Cyrill Stachniss",
+                "Juergen Gall"
+            ],
+            "title": "Multi-scale interaction for realtime lidar data segmentation on an embedded platform",
+            "venue": "RA- L,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Yinhao Li",
+                "Zheng Ge",
+                "Guanyi Yu",
+                "Jinrong Yang",
+                "Zengran Wang",
+                "Yukang Shi",
+                "Jianjian Sun",
+                "Zeming Li"
+            ],
+            "title": "Bevdepth: Acquisition of reliable depth for multi-view 3d object detection",
+            "venue": "arXiv preprint arXiv:2206.10092,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yanghao Li",
+                "Hanzi Mao",
+                "Ross Girshick",
+                "Kaiming He"
+            ],
+            "title": "Exploring plain vision transformer backbones for object detection",
+            "venue": "In ECCV,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Zhiqi Li",
+                "Wenhai Wang",
+                "Hongyang Li",
+                "Enze Xie",
+                "Chonghao Sima",
+                "Tong Lu",
+                "Qiao Yu",
+                "Jifeng Dai"
+            ],
+            "title": "Bevformer: Learning bird\u2019s-eye-view representation from multi-camera images via spatiotemporal transformers",
+            "venue": "arXiv preprint arXiv:2203.17270,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Tsung-Yi Lin",
+                "Piotr Doll\u00e1r",
+                "Ross Girshick",
+                "Kaiming He",
+                "Bharath Hariharan",
+                "Serge Belongie"
+            ],
+            "title": "Feature pyramid networks for object detection",
+            "venue": "In CVPR,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Venice Erin Liong",
+                "Thi Ngoc Tho Nguyen",
+                "Sergi Widjaja",
+                "Dhananjai Sharma",
+                "Zhuang Jie Chong"
+            ],
+            "title": "Amvnet: Assertion-based multi-view fusion network for lidar semantic segmentation",
+            "venue": "arXiv preprint arXiv:2012.04934,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Yingfei Liu",
+                "Tiancai Wang",
+                "Xiangyu Zhang",
+                "Jian Sun"
+            ],
+            "title": "Petr: Position embedding transformation for multi-view 3d object detection",
+            "venue": "arXiv preprint arXiv:2203.05625,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Ze Liu",
+                "Yutong Lin",
+                "Yue Cao",
+                "Han Hu",
+                "Yixuan Wei",
+                "Zheng Zhang",
+                "Stephen Lin",
+                "Baining Guo"
+            ],
+            "title": "Swin transformer: Hierarchical vision transformer using shifted windows",
+            "venue": "In ICCV,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Ze Liu",
+                "Jia Ning",
+                "Yue Cao",
+                "Yixuan Wei",
+                "Zheng Zhang",
+                "Stephen Lin",
+                "Han Hu"
+            ],
+            "title": "Video swin transformer",
+            "venue": "In CVPR,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Ilya Loshchilov",
+                "Frank Hutter"
+            ],
+            "title": "Decoupled weight decay regularization",
+            "venue": "In ICLR,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Andres Milioto",
+                "Ignacio Vizzo",
+                "Jens Behley",
+                "Cyrill Stachniss"
+            ],
+            "title": "Rangenet++: Fast and accurate lidar semantic segmentation",
+            "venue": "In IROS,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Lang Peng",
+                "Zhirong Chen",
+                "Zhangjie Fu",
+                "Pengpeng Liang",
+                "Erkang Cheng"
+            ],
+            "title": "Bevsegformer: Bird\u2019s eye view semantic segmentation from arbitrary camera rigs",
+            "venue": "arXiv preprint arXiv:2203.04050,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Jonah Philion",
+                "Sanja Fidler"
+            ],
+            "title": "Lift, splat, shoot: Encoding images from arbitrary camera rigs by implicitly unprojecting to 3d",
+            "venue": "In ECCV,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Charles R Qi",
+                "Wei Liu",
+                "Chenxia Wu",
+                "Hao Su",
+                "Leonidas J Guibas"
+            ],
+            "title": "Frustum pointnets for 3d object detection from rgb-d data",
+            "venue": "In CVPR,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Cody Reading",
+                "Ali Harakeh",
+                "Julia Chae",
+                "Steven L Waslander"
+            ],
+            "title": "Categorical depth distribution network for monocular 3d object detection",
+            "venue": "In CVPR,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Christoph B Rist",
+                "David Emmerichs",
+                "Markus Enzweiler",
+                "Dariu M Gavrila"
+            ],
+            "title": "Semantic scene completion using local deep implicit functions on lidar data",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Thomas Roddick",
+                "Roberto Cipolla"
+            ],
+            "title": "Predicting semantic map representations from images using pyramid occupancy networks",
+            "venue": "In CVPR,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Luis Roldao",
+                "Raoul de Charette",
+                "Anne Verroust-Blondet"
+            ],
+            "title": "Lmscnet: Lightweight multiscale 3d semantic completion",
+            "venue": "In 3DV. IEEE,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Shaoshuai Shi",
+                "Xiaogang Wang",
+                "Hongsheng Li"
+            ],
+            "title": "Pointrcnn: 3d object proposal generation and detection from point cloud",
+            "venue": "In CVPR,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Shuran Song",
+                "Fisher Yu",
+                "Andy Zeng",
+                "Angel X Chang",
+                "Manolis Savva",
+                "Thomas Funkhouser"
+            ],
+            "title": "Semantic scene completion from a single depth image",
+            "venue": "In CVPR,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Pei Sun",
+                "Henrik Kretzschmar",
+                "Xerxes Dotiwalla",
+                "Aurelien Chouard",
+                "Vijaysai Patnaik",
+                "Paul Tsui",
+                "James Guo",
+                "Yin Zhou",
+                "Yuning Chai",
+                "Benjamin Caine"
+            ],
+            "title": "Scalability in perception for autonomous driving: Waymo open dataset",
+            "venue": "In CVPR,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Haotian Tang",
+                "Zhijian Liu",
+                "Shengyu Zhao",
+                "Yujun Lin",
+                "Ji Lin",
+                "Hanrui Wang",
+                "Song Han"
+            ],
+            "title": "Searching efficient 3d architectures with sparse point-voxel convolution",
+            "venue": "In ECCV,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Ashish Vaswani",
+                "Noam Shazeer",
+                "Niki Parmar",
+                "Jakob Uszkoreit",
+                "Llion Jones",
+                "Aidan N Gomez",
+                "\u0141ukasz Kaiser",
+                "Illia Polosukhin"
+            ],
+            "title": "Attention is all you need",
+            "venue": "In NeurIPS,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Yufei Xu",
+                "Qiming Zhang",
+                "Jing Zhang",
+                "Dacheng Tao"
+            ],
+            "title": "Vitae: Vision transformer advanced by exploring intrinsic inductive bias",
+            "venue": "NeurIPS,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Xu Yan",
+                "Jiantao Gao",
+                "Jie Li",
+                "Ruimao Zhang",
+                "Zhen Li",
+                "Rui Huang",
+                "Shuguang Cui"
+            ],
+            "title": "Sparse single sweep lidar point cloud segmentation via learning contextual shape priors from scene completion",
+            "venue": "In AAAI,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Dongqiangzi Ye",
+                "Zixiang Zhou",
+                "Weijia Chen",
+                "Yufei Xie",
+                "Yu Wang",
+                "Panqu Wang",
+                "Hassan Foroosh"
+            ],
+            "title": "Lidarmultinet: Towards a unified multi-task network for lidar perception",
+            "venue": "arXiv preprint arXiv:2209.09385,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Maosheng Ye",
+                "Rui Wan",
+                "Shuangjie Xu",
+                "Tongyi Cao",
+                "Qifeng Chen"
+            ],
+            "title": "Drinet++: Efficient voxel-as-point point cloud segmentation",
+            "venue": "arXiv preprint arXiv:2111.08318,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Tianwei Yin",
+                "Xingyi Zhou",
+                "Philipp Kr\u00e4henb\u00fchl"
+            ],
+            "title": "Centerbased 3d object detection and tracking",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Xumin Yu",
+                "Yongming Rao",
+                "Ziyi Wang",
+                "Zuyan Liu",
+                "Jiwen Lu",
+                "Jie Zhou"
+            ],
+            "title": "Pointr: Diverse point cloud completion with geometry-aware transformers",
+            "venue": "In ICCV,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Jiahui Zhang",
+                "Hao Zhao",
+                "Anbang Yao",
+                "Yurong Chen",
+                "Li Zhang",
+                "Hongen Liao"
+            ],
+            "title": "Efficient semantic scene completion network with spatial group convolution",
+            "venue": "In ECCV,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Qiming Zhang",
+                "Yufei Xu",
+                "Jing Zhang",
+                "Dacheng Tao"
+            ],
+            "title": "Vitaev2: Vision transformer advanced by exploring inductive bias for image recognition and beyond",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Yang Zhang",
+                "Zixiang Zhou",
+                "Philip David",
+                "Xiangyu Yue",
+                "Zerong Xi",
+                "Boqing Gong",
+                "Hassan Foroosh"
+            ],
+            "title": "Polarnet: An improved grid representation for online lidar point clouds semantic segmentation",
+            "venue": "In CVPR,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Yunpeng Zhang",
+                "Zheng Zhu",
+                "Wenzhao Zheng",
+                "Junjie Huang",
+                "Guan Huang",
+                "Jie Zhou",
+                "Jiwen Lu"
+            ],
+            "title": "Beverse: Unified perception and prediction in birds-eye-view for vision-centric autonomous driving",
+            "venue": "arXiv preprint arXiv:2205.09743,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Sixiao Zheng",
+                "Jiachen Lu",
+                "Hengshuang Zhao",
+                "Xiatian Zhu",
+                "Zekun Luo",
+                "Yabiao Wang",
+                "Yanwei Fu",
+                "Jianfeng Feng",
+                "Tao Xiang",
+                "Philip HS Torr"
+            ],
+            "title": "Rethinking semantic segmentation from a sequence-to-sequence perspective with transformers",
+            "venue": "In CVPR,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Brady Zhou",
+                "Philipp Kr\u00e4henb\u00fchl"
+            ],
+            "title": "Cross-view transformers for real-time map-view semantic segmentation",
+            "venue": "In CVPR,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Xizhou Zhu",
+                "Weijie Su",
+                "Lewei Lu",
+                "Bin Li",
+                "Xiaogang Wang",
+                "Jifeng Dai"
+            ],
+            "title": "Deformable DETR: Deformable transformers for end-to-end object detection",
+            "venue": "In ICLR,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Xinge Zhu",
+                "Hui Zhou",
+                "Tai Wang",
+                "Fangzhou Hong",
+                "Yuexin Ma",
+                "Wei Li",
+                "Hongsheng Li",
+                "Dahua Lin"
+            ],
+            "title": "Cylindrical and asymmetrical 3d convolution networks for lidar segmentation",
+            "venue": "In CVPR,",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1. Introduction",
+            "text": "The accurate perception of 3D surroundings constitutes the foundation of modern autonomous driving systems. Though LiDAR-based methods [24, 46, 64, 45, 41, 55], with explicit depth measurements, have been dominating the leading performance on public datasets [16, 3, 48, 2], vision-based approaches still offer advantages in terms of cost-effectiveness, stability, and generality. The past years have witnessed the prosperity of Bird-Eye-View representations for vision-based 3D perception. With the multiview camera images as input, various attempts for 2D-to3D transformation [40, 31, 20, 29] have been proposed for applications including 3D object detection [20, 31, 34], semantic map construction [40, 62, 44, 39], and motion pre-\n*Corresponding author.\ndiction [19, 1, 60]. Considering these tasks require either rigid bounding boxes or BEV-oriented predictions, the collapse of 3D scenes into 2D ground planes has demonstrated an excellent trade-off between performance and efficiency. However, the holistic understanding of the 3D scene, especially for real-world obstacles with variable shapes, can hardly be recovered with the condensed BEV feature maps. To this end, this paper focuses on building a fine-grained 3D representation, namely 3D semantic occupancy, for the surrounding environment with multi-view images.\nThe task of 3D semantic occupancy prediction aims to reconstruct the surrounding 3D environment with finegrained geometry and semantics, which is also known as 3D semantic scene completion when the LiDAR point cloud is taken as input. For the driving scenes, most existing methods [45, 11, 8, 26, 52] still rely on the expensive LiDAR sensors for explicit depth measurements. The seminar work MonoScene [4] proposed the first monocular framework for 3D semantic occupancy prediction. It first constructs the 3D feature with sight projection and then processes it with a classical 3D UNet. However, the 3D convolution suffers from several limitations. First, it reasons the semantics within a relatively fixed receptive field, while different semantic classes may distribute following various patterns. Also, its spatial invariance cannot well process the sparse and discontinuous 3D features, generated from the state-of-the-art practices for image-to-3D transformation [40, 20, 29]. Finally, the 3D convolution filters can consume massive parameters. Therefore, we believe a longrange, dynamic, and efficient method for encoding 3D features is needed to pave the way.\nInspired by the widespread success of vision transformers [14, 35] in various vision tasks [5, 61, 17, 56, 35, 30], we are motivated to utilize the attention mechanism for building the encoder-decoder network for 3D semantic occupancy prediction. For the encoder part, we propose the dual-path transformer block to unleash the capacity of selfattention while limiting the quadratic complexity. Specifically, the local path operates along each 2D BEV slice with the shared windowed attention to capture the fine-grained\nar X\niv :2\n30 4.\n05 31\n6v 1\n[ cs\n.C V\n] 1\n1 A\npr 2\n02 3\ndetails, while the global path performs on the collapsed BEV feature to obtain scene-level understanding. Finally, the dual-path outputs are adaptively fused to generate the output 3D feature volume. The dual-path designs appropriately break down the challenging processing of 3D feature volumes and we demonstrate its clear advantage over the classic 3D convolutions. For the decoder part, we are the first to adapt the state-of-the-art method Mask2Former [9] for 3D semantic occupancy prediction. We further propose to use max-pooling rather than the default bilinear for computing the masked regions for attention, which can better preserve the minor classes. Additionally, the classguided sampling is proposed to capture the foreground areas for more effective optimization. Experimental results demonstrate the superiority of OccFormer over existing state-of-the-art methods. For 3D semantic scene completion on SemanticKITTI [2] dataset, OccFormer outperforms MonoScene by 1.24% mIoU, which makes an 11% relative improvement and ranks first on the test leaderboard among all monocular methods. We also evaluate OccFormer on nuScenes [3] dataset for LiDAR semantic segmentation, following TPVFormer [21]. Our method surpasses TPVFormer by 1.4% mIoU and generates more complete and realistic predictions for 3D semantic occupancy prediction."
+        },
+        {
+            "heading": "2. Related Work",
+            "text": ""
+        },
+        {
+            "heading": "2.1. Camera-based BEV Perception",
+            "text": "Considering the dimension gap between the 2D image input and the 3D prediction, recent studies for vision-based 3D perception first construct the BEV feature representations and then perform various downstream tasks on the BEV space [20, 29, 31, 39, 60, 40, 62, 42, 19, 1, 44]. To transform the perspective image features into the BEV features, LSS [40] and its follow-ups [42, 29, 19, 60] predict the pixel-wise depth distribution to project the image features into 3D points, which are then voxelized into the BEV features. Other methods like BEVFormer [31] utilize the deformable attention [63, 50] to update the BEV queries with corresponding image features. In this paper, we extend the BEV-based perception to 3D semantic occupancy prediction, which further contains the structural information along the height dimension."
+        },
+        {
+            "heading": "2.2. 3D Semantic Occupancy Prediction",
+            "text": "Since 3D semantic occupancy prediction is also known as 3D semantic scene completion (SSC), we also review the related SSC methods. SSCNet [47] first proposes the problem of semantic scene completion, which jointly reasons the geometry and semantics. The follow-ups usually employ the geometrical inputs with explicit depth information [45, 26, 52, 11, 8, 43]. Recently, MonoScene [4] builds the first monocular method for semantic scene com-\npletion, which employs the 3D UNet to process the voxel features generated by sight projection. TPVFormer [21] proposes the tri-perspective view representation to describe the 3D scene for semantic occupancy prediction. Despite its simplicity, the tri-plane format is susceptible to the deficiency of fine-grained semantic information, leading to inferior performance. In this paper, we re-advocate the representation power of dense 3D features and propose the transformer-based encoder-decoder network for 3D semantic occupancy prediction."
+        },
+        {
+            "heading": "2.3. Efficient 3D Network",
+            "text": "On the field of 3D semantic scene completion, extensive attempts have been proposed to improve the efficiency of 3D networks. EsscNet [57] partitions the non-empty voxels into different groups and conduct 3D sparse convolution within each group. DDRNet [27] replaces the 3D convolution with three consecutive 1D convolution layers along each dimension. AIC-Net [26] further equips each 1D layer with various kernel sizes for anisotropic processing. LMSCNet [45] uses the 2D UNet to process the collapsed BEV features and finally expands the height dimension for 3D segmentation. S3CNet [11] turns to the sparse convolution for outdoor point clouds. These methods are mostly targeted for LiDAR points with convolutional structures. In this paper, we propose the dual-path transformer to efficiently process the camera-generated 3D feature volumes with transformer-based modules."
+        },
+        {
+            "heading": "3. Approach",
+            "text": ""
+        },
+        {
+            "heading": "3.1. Overview",
+            "text": "The overall pipeline of OccFormer is illustrated in Fig. 1. With the monocular image or multi-camera images as the input, the multi-scale features are first extracted by the image encoder, and then lifted to 3D feature volume, which are briefly introduced in the following paragraphs. The 3D feature is further processed by the dual-path transformer encoder (Sec. 3.2) to produce multi-scale voxel features with local and global semantics. Finally, the transformer occupancy decoder (Sec. 3.3) fuses multi-scale features and formulates the occupancy prediction as the transformer-based mask classification for decoding.\nImage Encoder. The image encoder aims to extract geometric and semantic features within the perspective view, which provides the foundation of the later-generated 3D feature volume. The image encoder consists of a backbone network for extracting multi-scale features and a neck for further fusion. The output of the image encoder is one fused feature map with 116 of the input resolution. We use F2d \u2208 RN\u00d7C\u00d7H\u00d7W to represent the extracted features, where N is the number of camera views, C is the channel number, and (H,W ) refers to the resolution.\nInput Image Image Encoder\nTransformer Occupancy Decoder\nDepth Distribution Voxel Pooling\nDepth Net\nContext Net\n3D Feature Volume\nMasked Attention\nQuery Features\nMask\nContext Feature\nDual-path\nTransformer Blocks\nConv Dual-path\nTransformer Blocks\nConv Dual-path\nTransformer Blocks\nDual-path Transformer Encoder\nMulti-Scale\n3D\nDeformable\nAttention\nVoxel Features\nAdd & Norm\nSelf-Attention Add & Norm\nFFN Add & Norm\nL \u00d7\nFigure 1: The framework of the proposed OccFormer for camera-based 3D semantic occupancy prediction. The pipeline consists of the image encoder for extracting multi-scale 2D features, the image-to-3D transformation for lifting the 2D features to 3D volumes, and the transformer-based encoder-decoder for obtaining 3D semantic features and predicting the 3D semantic occupancy.\nImage-to-3D Transformation. Inspired by recent studies on lifting multi-view images to the Bird-Eye-View representations [40, 20, 29, 31], we extend the LSS [40] paradigm for image-to-3D transformation. Specifically, the encoded image features F2d are processed to generate the context feature F2dcon \u2208 RN\u00d7Ccon\u00d7H\u00d7W and the discrete depth distribution D \u2208 RN\u00d7D\u00d7H\u00d7W . Then the outer product F2dcon \u2297 D is employed to create the point cloud representation P \u2208 RNDHW\u00d7Ccon . Finally, the voxelpooling is conducted to create the 3D feature volume F3d \u2208 RCcon\u00b7X\u00b7Y \u00b7Z , where (X,Y, Z) denotes the resolution of the 3D volume."
+        },
+        {
+            "heading": "3.2. Dual-path Transformer Encoder",
+            "text": "To pursue long-range, dynamic, and efficient processing of the 3D feature volumes, we propose the dual-path transformer block to build the 3D encoder. Inspired by recent advances that introduce locality into the transformer [51, 58, 25], we also design the encoder as a hybrid structure. The encoder consists of a series of dual-path transformer blocks, while one 3D convolution layer is inserted between two consecutive blocks to introduce locality and optionally perform the downsampling. The detailed structure of the dual-path transformer block is shown in Fig. 2. With the input 3D feature, the local and global pathways first aggregate semantic information along the horizontal direction in parallel. Next, the dual-path outputs are fused through the sigmoid-weighted summation. Finally, the skip connection is applied to ensure the residual learning [18]. We introduce the dual-path processing with more details in the following paragraph.\nThe local path is mainly targeted to extract the fine-\ngrained semantic structures. Since the horizontal direction contains the most variations, we believe the parallel processing of all BEV slices with one shared encoder is able to keep most of the semantic information. Specifically, we merge the height dimension into the batch dimension and employ the windowed self-attention [35] as the local feature extractor, which can dynamically attend to long-range regions with moderate computations. On the other hand, the global path aims to efficiently capture the scene-level semantic layouts. To this end, the global path starts by getting the BEV feature by average pooling along the height dimension. The same windowed self-attention from the local path is utilized to process the BEV feature for neighbouring semantics. Since we find the global self-attention on the BEV plane can consume excessive memories, the ASPP [6] is applied instead to capture the global contexts. In practice, we employ the bottleneck structure [18] to reduce the channel number by 4\u00d7 for ASPP. Finally, the scene-level information from the global path is propagated to the entire 3D volume from the local path. Assume the dual-path outputs are Flocal \u2208 RC\u00b7X\u00b7Y \u00b7Z and Fglobal \u2208 RC\u00b7X\u00b7Y , the combined output Fout is computed as:\nFout = Flocal + \u03c3(WFlocal) \u00b7 unsqueeze(Fglobal,\u22121) (1)\nwhere W refers to the FFN for generating the aggregation weights along the height dimension, \u03c3(\u00b7) is the sigmoid function, and \u201cunsqueeze\u201d expands the global 2D feature along the height. Although the dual-path processing only performs 2D reasoning along the horizontal direction, their combination effectively aggregates essential information for semantic reasoning, including local semantic structures and global semantic layouts. Additionally, the dual-\npath transformer encoder has fewer parameters and requires less computation than classic 3D convolutions, benefiting from shared modules and mostly 2D reasoning."
+        },
+        {
+            "heading": "3.3. Transformer Occupancy Decoder",
+            "text": "Inspired by the recent mask classification models [10, 9] for image segmentation, we also formulate the 3D semantic occupancy as predicting a set of binary 3D masks associated with corresponding class labels. Following Mask2Former [9], our transformer occupancy decoder includes the pixel decoder (Sec. 3.3.1) for per-voxel embeddings and the transformer decoder (Sec. 3.3.2) for per-query embeddings and class predictions. The final mask predictions are derived from the dot product between these two embeddings. Also, we introduce two essential modifications to effectively improve the occupancy predictions, including the preserve-pooling (Sec. 3.3.3) and the classguided sampling (Sec. 3.3.4). Formally, the input multiscale feature volumes from the transformer encoder are denoted as {F3di \u2208 RCi\u00b7Xi\u00b7Yi\u00b7Zi} Nl i=1, where Nl is the level number, Ci is the channel number, and (Xi, Yi, Zi) is the volume size."
+        },
+        {
+            "heading": "3.3.1 Pixel Decoder",
+            "text": "With multi-scale 3D features as input, the pixel decoder is tasked with aggregating multi-level semantics and creating high-resolution voxel embeddings. Since each feature level places different emphasis on low-level details and highlevel semantics, we employ the multi-scale deformable attention [63], tailored for 3D, to facilitate effective intrascale and inter-scale interactions. Take the level-i feature F3di as an example, its corresponding real-world coordinates P3di \u2208 RXi\u00b7Yi\u00b7Zi\u00b73 are first computed. Then the features are processed to create the sampling offsets \u22063dj and the attention weights W3dj for all levels j = 1, \u00b7 \u00b7 \u00b7 , Nl. Finally, the updating process is formulated as in Eq. (2):\nF3di = F 3d i + Nl\u2211 j=1 [ W3dj F 3d j ( P3di + \u2206 3d j )] (2)\nwhere F3d ( P3d + \u22063d ) conducts the trilinear feature sampling at the corresponding positions. With the above interactions, each processed feature volume is enhanced by the multi-scale semantic information, which facilitates the following transformer decoder. The feature volume with the highest resolution is projected to generate the per-voxel embeddings Evoxel \u2208 RCE \u00b7X\u00b7Y \u00b7Z , where CE is the embedding dimension."
+        },
+        {
+            "heading": "3.3.2 Transformer Decoder",
+            "text": "With the input multi-scale voxel features and the parameterized query features, the transformer decoder performs an iterative updating of the query features towards the desired class segments, as shown in Fig. 1. Within each iteration layer l, the queries features Ql first attends to their corresponding foreground regions through the masked attention:\nQl+1 = softmax [ Ml\u22121 +WqQl ( WkF 3d l )T ] WvF 3d l +Ql (3)\nwhere F3dl is the 3D voxel feature, Ml\u22121 is the attention mask from the previous layer, and (Wq,Wk,Wv) are linear projection layers. The self-attention is then conducted to exchange context information, followed by the FFN for feature projection. At the end of each iteration, each query feature qi is projected to predict its semantic logits pi and the mask embedding Emaski . The latter is further transformed into the binary 3D mask Mi by a dot product with the pervoxel embeddings Evoxel and a sigmoid function. The final 3D semantic occupancy prediction Y is formulated as:\nY = Nq\u2211 i=1 pi \u00b7Mi (4)\nwhere Nq is the number of query features."
+        },
+        {
+            "heading": "3.3.3 Preserve-Pooling",
+            "text": "When converting the high-resolution mask predictions into the low-resolution attention masks for the next iteration, Mask2Former [9] employs the bilinear interpolation for downsampling. The operation is sufficient to protect the local structures because the image segmentation masks are more complete and contiguous. However, we found its trivial adaptation, namely trilinear interpolation, cannot well handle the 3D semantic occupancy prediction. Since the LiDAR-generated segmentation masks for 3D objects are usually partial and sparse, the trilinear downsampling can remove the local structures or even the entire objects. To this end, we propose the preserve-pooling by simply using the max-pooling for downsampling the attention masks. Despite a minor modification, we demonstrate its effectiveness in the ablation studies (Sec. 4.5)."
+        },
+        {
+            "heading": "3.3.4 Class-Guided Sampling",
+            "text": "For efficient training, Mask2Former uniformly (or further with importance sampling [22]) samples K points in the image space when computing the matching costs and final losses. However, in the 3D occupancy space, the uniform sampling struggles to capture foreground regions, particularly the minor classes, due to sparsity and class imbalance. To address this issue, we propose the class-guided sampling method. More specifically, we first compute the class frequencies nc \u2208 RNc from the training set, where Nc is the number of classes. Then we compute their reciprocal wc = 1/nc and normalize its minimum to 1 with wc = wc/min(wc). Finally, the sampling weights are computed as wc = (wc) \u03b2 , where \u03b2 is a hyper-parameter.\nDuring training, each voxel is assigned a sampling weight according to its ground-truth class. We then use the multinomial distribution to sample K voxel positions for matching and supervision. Note that for nuScenes dataset with only sparse LiDAR point supervisions, we simply use the LiDAR points and random coordinates in a 1:1 ratio as the sampled points."
+        },
+        {
+            "heading": "3.4. Loss Functions",
+            "text": "Following Mask2Former [10], we compute the bipartite matching between the predicted and ground-truth segments, considering only the sampled positions. The matching cost includes the class loss and the binary mask loss. With the optimal matching computed by the Hungarian algorithm [23], the mask classification loss Lmask-cls is computed following the matching cost. Besides, the intermediate depth distribution for view transformation is supervised by the projections of LiDAR points, with the binary crossentropy loss Ldepth following BEVDepth [29]. The final training loss is a simple summation: L = Lmask-cls +Ldepth."
+        },
+        {
+            "heading": "4. Experiments",
+            "text": ""
+        },
+        {
+            "heading": "4.1. Datasets",
+            "text": "The SemanticKITTI dataset [2] is based on the popular KITTI Odometry Benchmark [16] and focuses on the semantic scene understanding with LiDAR points and front cameras. OccFormer is evaluated by its task of semantic scene completion, but with the monocular left camera as input following MonoScene [4]. Specifically, the ground-\ntruth semantic occupancy is represented as the 256\u00d7 256\u00d7 32 voxel grids. Each voxel is 0.2m\u00d70.2m\u00d70.2m large and annotated with 21 semantic classes (19 semantics, 1 free, 1 unknown). Following [4, 21], the 22 sequences are split into 10/1/11 for train/val/test.\nThe nuScenes dataset [3] is a large-scale autonomous driving dataset, collected in Boston and Singapore. The dataset includes 1000 driving sequences from various scenes. Each sequence lasts for around 20 seconds and the key-frames are annotated at 2Hz with 3D bounding boxes. The Panoptic nuScenes dataset [15] further extends the nuScenes dataset to provide the annotations for LiDAR semantic segmentation. Similar to TPVFormer [21], we train OccFormer with sparse LiDAR point supervisions for 3D semantic occupancy prediction. We follow the official protocol to split the total scenes into train/val/test splits with 700/150/150 scenes. We report quantitative results for the LiDAR segmentation and qualitative visualizations for the 3D semantic occupancy prediction."
+        },
+        {
+            "heading": "4.2. Implementation Details",
+            "text": "Network Structures. Considering the image backbone network, we adopt EfficientNetB7 [4] on SemanticKITTI and ResNet-101 [18] on nuScenes, following the compared methods [4, 21]. The view transformer creates the 3D feature volume of size 128\u00d7128\u00d716, with 128 channels. The transformer encoder consists of 4 stages with 2 dual-path transformer blocks each. The generated multi-scale 3D features are projected to 192 channels and processed the multiscale deformable self-attention with 6 layers. The transformer decoder mainly follows the implementation from Mask2Former [9]. We increase the number of sampling points to 50176 (4\u00d7) and set \u03b2 as 0.25 for the class-guided sampling. The predicted occupancy is upsampled 2\u00d7 to 256\u00d7256\u00d732 for full-scale evaluation."
+        },
+        {
+            "heading": "3 74.1M 494.2 36.42 12.95",
+            "text": "Training Setup. Unless specified, we train the model for 30 epochs on SemanticKITTI dataset and 24 epochs on nuScenes dataset. The AdamW [37] optimizer with initial learning rate 1e-4 and weight decay 0.01 is used. The learning rate is decayed by a multi-step scheduler. All models are trained with a batch size of 8 on 8 RTX 3090 GPUs with 24G memory. For data augmentation, we use random resize, rotation, and flip for the image space and 3D flip for the 3D volume space, following recent practices for BEVbased 3D object detection [20, 29, 60]."
+        },
+        {
+            "heading": "4.3. Metrics",
+            "text": "We report the mean intersection over union (mIoU) for both the semantic scene completion (SSC) and the LiDAR segmentation tasks. Also, the intersection over union (IoU) for the class-agnostic scene completion (SC) task is reported. To infer the LiDAR segmentation results, the LiDAR points are only used to query their corresponding semantic logits from the predicted 3D semantic occupancy volume."
+        },
+        {
+            "heading": "4.4. Main Results",
+            "text": "Semantic Scene Completion. As shown in Tab. 1, we report the quantitative comparison of existing monocular methods for the semantic scene completion task on SemanticKITTI test set. We can observe that OccFormer out-\nperforms all existing competitors, especially for the more challenging task of semantic scene completion. Compared with the recent TPVFormer [21], our method achieves a remarkable boost of 1.06 mIoU, demonstrating the effectiveness of OccFormer for semantic scene completion. Also, we report the results on SemanticKITTI validation set in Tab. 2. OccFormer achieves comparable IoU for scene completion and significantly better performance for the SSC mIoU.\nLiDAR Semantic Segmentation. Following the practices from TPVFormer [21], the LiDAR semantic segmentation task is utilized as a quantitative indicator for the 3D semantic occupancy prediction. As shown in Tab. 3, our method outperforms the only vision-based method TPVFormer and achieves comparable performance with the state-of-the-art LiDAR-based methods. Note that our method requires only one model to perform both the LiDAR segmentation and the semantic occupancy prediction, while the TPVFormer [21] model trained for LiDAR segmentation cannot produce reasonable occupancy predictions. The results on nuScenes validation set is included in Appendix A.1."
+        },
+        {
+            "heading": "4.5. Ablation Studies",
+            "text": "The ablation is conducted on SemanticKITTI validation set and from three perspectives: the dual-path encoder, the pixel decoder, and the transformer decoder.\nAblation on the Dual-path Encoder. In Tab. 4, we ablate the dual-path design for the 3D feature extraction and compare it with other baseline methods. First, both the local and global paths contribute to the final performance positively. Since the local and global pathways focus on the fine-grained structures and the scene-level semantic layouts respectively, their complementary influence is quite understandable. Also, our dual-path transformer encoder achieves a better trade-off than the vanilla 3D convolution and the 3D windowed attention proposed in [36].\nAblation on the Pixel Decoder. In Tab. 5, we compare different structures for the pixel decoder, which aims to fuse multi-scale features and generate the per-voxel mask embeddings. Thanks to the dynamic receptive field and multiscale aggregation, the multi-scale 3D deformable attention\nperforms better than the classic FPN [32], tailored for 3D. Therefore, we utilize the 6-layer multi-scale 3D deformable attention as the pixel decoder for OccFormer.\nAblation on the Transformer Decoder. In Tab. 6, we ablate the methods of resizing attention masks and sampling points for supervision. Despite the state-of-the-art performance for 2D segmentation, the naive adaptation of Mask2Former [9] for 3D semantic occupancy prediction achieves inferior performance, only 11.61 mIoU. Compared with the tri-linear interpolation, we employ the max-pooling to preserve the fine-grained 3D predictions during downsampling, which achieves a boost of about 0.5 mIoU. On the other hand, the proposed class-guided sampling significantly outperforms the default uniform sampling because it can better adapt to the task of 3D semantic occupancy prediction, with a lot more \u201cpixels\u201d but much sparser supervisions than the 2D counterpart."
+        },
+        {
+            "heading": "4.6. Qualitative Results",
+            "text": "Semantic Scene Completion. In Fig. 3, we visualize the predicted results of semantic scene completion on SemanticKITTI validation set from MonoScene [4] and our proposed OccFormer. Compared with MonoScene, our method can better understand the scene-level semantic layout and hallucinate the invisible regions. Also, OccFormer is good at recovering the object structures and reasoning about the interactions among neighbouring semantic classes. For example, the predicted buildings (in golden yellow) are more complete and located properly with the surrounding vegetation (in dark green), while MonoScene\ncan generate the entangled results.\nLiDAR Segmentation and 3D Semantic Occupancy. We visualize the predictions for LiDAR segmentation and 3D semantic occupancy in Fig. 4. Note that TPVFormer generates the required outputs with two separately trained models, while our method uses one single model. Nonetheless, OccFormer still achieves more accurate results on LiDAR segmentation. More importantly, the predicted 3D semantic occupancy from OccFormer is more contiguous, complete, and realistic than TPVFormer. For example, the predicted driveable surface is more contiguous and the foreground objects like cars and traffic cones have more accurate structures."
+        },
+        {
+            "heading": "5. Conclusion",
+            "text": "In this paper, we have presented OccFormer, a dualpath transformer network for camera-based 3D semantic occupancy prediction. To effectively process the cameragenerated 3D voxel features, we have proposed the dualpath transformer block, which efficiently captures the finegrained details and scene-level layouts with the local and global pathways. Also, we have been the first to employ mask classification models for 3D semantic occupancy prediction. Given the inherent sparsity and class imbalance, the proposed preserve-pooling and class-guided sampling have significantly improved the performance. OccFormer has achieved state-of-the-art performance for semantic scene completion on SemanticKITTI test set and for camera-based LiDAR segmentation on nuScenes test set."
+        },
+        {
+            "heading": "A. More Experiments",
+            "text": "A.1. LiDAR Segmentation Results\nIn Tab. 7, we report the LiDAR segmentation performance on nuScenes validation set with different backbones and input sizes. For the implementation of BEVFormer for LiDAR segmentation, we follow the settings from TPVFormer [21]. When ResNet-50 [18] is taken as the backbone network, OccFormer with smaller input sizes can notably outperform TPVFormer. When the larger backbone and input sizes are adopted, the advantage of OccFormer is reduced possibly due to the saturation of vision-based methods. Besides, OccFormer is the first method to achieve 70%+ mIoU for LiDAR segmentation with only multi-view images as input.\nAlso, we note that TPVFormer, specifically trained for 3D semantic occupancy, has unsatisfactory performance in LiDAR segmentation. It indicates that the predicted semantic occupancy from TPVFormer, despite reasonable visualizations, fails to contain accurate 3D positions. By contrast, our method can mitigate the problem by jointly solving both predictions.\nA.2. More Ablation Studies\nDetailed Network Structures. As shown in Tab. 9, more detailed structures in the dual-path transformer encoder are ablated. First, the soft weight for fusing the dual-path outputs is removed and we observe an obvious drop in SSC mIoU from 13.46 to 12.73. Second, we remove the windowed attention in the global path, whose weights are shared with the local path, and observe a degradation of around 0.5 mIoU. Finally, we demonstrate the effectiveness of the bottleneck ASPP from the global path, which can extract long-range information for scene-level semantic layouts.\nAugmentations In Tab. 10, we ablate the employed augmentation techniques to train OccFormer. Since the attention mechanism, with strong capacities, is prone to overfitting, these augmentation techniques are essential for reducing over-fitting and improving performance. Also, we find that the 3D augmentation which jointly transforms the 3D feature and the ground-truth semantic occupancy is more important. When it is disabled, the best performance is achieved at the 9th epoch, despite the total training sched-\nule of 30 epochs.\nA.3. Analysis\nClass-Guided Sampling. Since the 3D feature volume contains a vast number of positions to supervise, a more effective sampling method is required to enable efficient training. As shown in Fig. 5, the proposed class-guided sampling can greatly improve the supervision signals for rare classes. Quantitatively, the class-wise comparison between uniform sampling and our class-guided sampling is presented in Tab. 8. Despite minor degradation in larger classes including road, sidewalk, and parking, the classguided sampling demonstrates a remarkable boost in fewer classes, such as truck, person, bicyclist, and traffic sign. The different patterns from different sampling methods also offer an approach for the model ensemble."
+        },
+        {
+            "heading": "B. More Visualizations",
+            "text": "In Fig. 6, we provide more qualitative results for 3D semantic occupancy prediction on nuScenes validation set. Though OccFormer takes multi-view 2D images as input and is trained with sparse LiDAR points, it can predict dense results for background classes including vegetation, driveable surface, and building. Also, the foreground objects like cars, pedestrians, and trucks can be located accurately. The predicted 3D semantic occupancy can serve as a comprehensive and fine-grained understanding of the surrounding environment. The video demos on SemanticKITTI and nuScenes datasets are also available at the project page1."
+        }
+    ],
+    "title": "OccFormer: Dual-path Transformer for Vision-based 3D Semantic Occupancy Prediction",
+    "year": 2023
+}

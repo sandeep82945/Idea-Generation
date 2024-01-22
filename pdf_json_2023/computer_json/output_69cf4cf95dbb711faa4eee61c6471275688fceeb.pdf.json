@@ -1,0 +1,925 @@
+{
+    "abstractText": "Achieving a reliable LiDAR-based object detector in autonomous driving is paramount, but its success hinges on obtaining large amounts of precise 3D annotations. Active learning (AL) seeks to mitigate the annotation burden through algorithms that use fewer labels and can attain performance comparable to fully supervised learning. Although AL has shown promise, current approaches prioritize the selection of unlabeled point clouds with high uncertainty and/or diversity, leading to the selection of more instances for labeling and reduced computational efficiency. In this paper, we resort to a novel kernel coding rate maximization (KECOR) strategy which aims to identify the most informative point clouds to acquire labels through the lens of information theory. Greedy search is applied to seek desired point clouds that can maximize the minimal number of bits required to encode the latent features. To determine the uniqueness and informativeness of the selected samples from the model perspective, we construct a proxy network of the 3D detector head and compute the outer product of Jacobians from all proxy layers to form the empirical neural tangent kernel (NTK) matrix. To accommodate both one-stage (i.e., SECOND) and two-stage detectors (i.e., PV-RCNN), we further incorporate the classification entropy maximization and well trade-off between detection performance and the total number of bounding boxes selected for annotation. Extensive experiments conducted on two 3D benchmarks and a 2D detection dataset evidence the superiority and versatility of the proposed approach. Our results show that approximately 44% box-level annotation costs and 26% computational time are reduced compared to the state-of-the-art AL method, without compromising detection performance.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Yadan Luo"
+        },
+        {
+            "affiliations": [],
+            "name": "Zhuoxiao Chen"
+        },
+        {
+            "affiliations": [],
+            "name": "Zhen Fang"
+        },
+        {
+            "affiliations": [],
+            "name": "Zheng Zhang"
+        },
+        {
+            "affiliations": [],
+            "name": "Zi Huang"
+        },
+        {
+            "affiliations": [],
+            "name": "Mahsa Baktashmotlagh"
+        }
+    ],
+    "id": "SP:fb09ba06c1f648c393beaa48073601bb297b8cf5",
+    "references": [
+        {
+            "authors": [
+                "Sharat Agarwal",
+                "Himanshu Arora",
+                "Saket Anand",
+                "Chetan Arora"
+            ],
+            "title": "Contextual diversity for active learning",
+            "venue": "In Proc",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "Oisin Mac Aodha",
+                "Neill D.F. Campbell",
+                "Jan Kautz",
+                "Gabriel J. Brostow"
+            ],
+            "title": "Hierarchical subquery evaluation for active learning on a graph",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Sanjeev Arora",
+                "Simon S. Du",
+                "Zhiyuan Li",
+                "Ruslan Salakhutdinov",
+                "Ruosong Wang",
+                "Dingli Yu"
+            ],
+            "title": "Harnessing the power of infinitely wide deep nets on small-data tasks",
+            "venue": "In Proc. International Conference on Learning Representations (ICLR),",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jordan T. Ash",
+                "Surbhi Goel",
+                "Akshay Krishnamurthy",
+                "Sham M. Kakade"
+            ],
+            "title": "Gone fishing: Neural active learning with fisher embeddings",
+            "venue": "In Proc. Annual Conference on Neural Information Processing (NeurIPS),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Jordan T. Ash",
+                "Chicheng Zhang",
+                "Akshay Krishnamurthy",
+                "John Langford",
+                "Alekh Agarwal"
+            ],
+            "title": "Deep batch active learning by diverse, uncertain gradient lower bounds",
+            "venue": "In Proc. International Conference on Learning Representations (ICLR),",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "William H. Beluch",
+                "Tim Genewein",
+                "Andreas N\u00fcrnberger",
+                "Jan M. K\u00f6hler"
+            ],
+            "title": "The power of ensembles for active learning in image classification",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Shubhang Bhatnagar",
+                "Sachin Goyal",
+                "Darshan Tank",
+                "Amit Sethi"
+            ],
+            "title": "PAL : Pretext-based active learning",
+            "venue": "In Proc. British Machine Vision Conference (BMVC),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Jacob Binia",
+                "Moshe Zakai",
+                "Jacob Ziv"
+            ],
+            "title": "On the epsilon -entropy and the rate-distortion function of certain nongaussian processes",
+            "venue": "IEEE Transactions on Information Theory,",
+            "year": 1974
+        },
+        {
+            "authors": [
+                "Jiwoong Choi",
+                "Ismail Elezi",
+                "Hyuk-Jae Lee",
+                "Cl\u00e9ment Farabet",
+                "Jose M. Alvarez"
+            ],
+            "title": "Active learning for deep object detection via probabilistic modeling",
+            "venue": "In Proc. International Conference on Computer Vision (ICCV),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Mario Christoudias"
+            ],
+            "title": "Raquel Urtasun",
+            "venue": "and Trevor Darrell. Unsupervised feature selection via distributed coding for multi-view object recognition. In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR)",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "Gui Citovsky",
+                "Giulia DeSalvo",
+                "Claudio Gentile",
+                "Lazaros Karydas",
+                "Anand Rajagopalan",
+                "Afshin Rostamizadeh",
+                "Sanjiv Kumar"
+            ],
+            "title": "Batch active learning at scale",
+            "venue": "In Proc. Annual Conference on Neural Information Processing (NeurIPS),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Thomas M. Cover",
+                "Joy A. Thomas"
+            ],
+            "title": "Elements of information theory (2",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "Jiajun Deng",
+                "Shaoshuai Shi",
+                "Peiwei Li",
+                "Wengang Zhou",
+                "Yanyong Zhang",
+                "Houqiang Li"
+            ],
+            "title": "Voxel R-CNN: towards high performance voxel-based 3d object detection",
+            "venue": "In Proc. AAAI Conference on Artificial Intelligence (AAAI),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Shengheng Deng",
+                "Zhihao Liang",
+                "Lin Sun",
+                "Kui Jia"
+            ],
+            "title": "VISTA: boosting 3d object detection via dual cross-view spatial attention",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Pan Du",
+                "Suyun Zhao",
+                "Hui Chen",
+                "Shuwen Chai",
+                "Hong Chen",
+                "Cuiping Li"
+            ],
+            "title": "Contrastive coding for active learning under class distribution mismatch",
+            "venue": "In Proc. International Conference on Computer Vision (ICCV),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Ehsan Elhamifar",
+                "Guillermo Sapiro",
+                "Allen Y. Yang",
+                "S. Shankar Sastry"
+            ],
+            "title": "A convex optimization framework for active learning",
+            "venue": "In Proc. International Conference on Computer Vision (ICCV),",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "M. Everingham",
+                "L. Van Gool",
+                "C.K.I. Williams",
+                "J. Winn"
+            ],
+            "title": "and A",
+            "venue": "Zisserman. The PASCAL Visual Object Classes Challenge 2007 ",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "Di Feng",
+                "Xiao Wei",
+                "Lars Rosenbaum",
+                "Atsuto Maki",
+                "Klaus Dietmayer"
+            ],
+            "title": "Deep active learning for efficient training of a lidar 3d object detector",
+            "venue": "In Proc. Intelligent Vehicles Symposium,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Alexander Freytag",
+                "Erik Rodner",
+                "Joachim Denzler"
+            ],
+            "title": "Selecting influential examples: Active learning with expected model output changes",
+            "venue": "In Proc. European Conference on Computer Vision (ECCV),",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Yarin Gal",
+                "Zoubin Ghahramani"
+            ],
+            "title": "Dropout as a bayesian approximation: Representing model uncertainty in deep learning",
+            "venue": "In Proc. International Conference on Machine Learning (ICML),",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Andreas Geiger",
+                "Philip Lenz",
+                "Raquel Urtasun"
+            ],
+            "title": "Are we ready for autonomous driving? the KITTI vision benchmark suite",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Yuhong Guo"
+            ],
+            "title": "Active instance sampling via matrix partition",
+            "venue": "In Proc. Annual Conference on Neural Information Processing (NeurIPS),",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "Ali Harakeh",
+                "Michael Smart",
+                "Steven L. Waslander"
+            ],
+            "title": "Bayesod: A bayesian approach for uncertainty estimation in deep object detectors",
+            "venue": "In Proc. International Conference on Robotics and Automation (ICRA),",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Mahmudul Hasan",
+                "Amit K. Roy-Chowdhury"
+            ],
+            "title": "Context aware active learning of activity recognition models",
+            "venue": "In Proc. International Conference on Computer Vision (ICCV),",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Chenhang He",
+                "Ruihuang Li",
+                "Shuai Li",
+                "Lei Zhang"
+            ],
+            "title": "Voxel set transformer: A set-to-set approach to 3d object detection from point clouds",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Neil Houlsby",
+                "Ferenc Huszar",
+                "Zoubin Ghahramani",
+                "M\u00e1t\u00e9 Lengyel"
+            ],
+            "title": "Bayesian active learning for classification and preference learning",
+            "venue": "CoRR, abs/1112.5745,",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "Long-Kai Huang",
+                "Junzhou Huang",
+                "Yu Rong",
+                "Qiang Yang",
+                "Ying Wei"
+            ],
+            "title": "Frustratingly easy transferability estimation",
+            "venue": "In Proc. International Conference on Machine Learning (ICML),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Arthur Jacot",
+                "Cl\u00e9ment Hongler",
+                "Franck Gabriel"
+            ],
+            "title": "Neural tangent kernel: Convergence and generalization in neural networks",
+            "venue": "In Proc. Annual Conference on Neural Information Processing (NeurIPS),",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Ajay J. Joshi",
+                "Fatih Porikli",
+                "Nikolaos Papanikolopoulos"
+            ],
+            "title": "Multi-class active learning for image classification",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "Chieh-Chi Kao",
+                "Teng-Yok Lee",
+                "Pradeep Sen",
+                "Ming-Yu Liu"
+            ],
+            "title": "Localization-aware active learning for object detection",
+            "venue": "In Proc. Asian Conference on Computer (ACCV),",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Kwanyoung Kim",
+                "Dongwon Park",
+                "Kwang In Kim",
+                "Se Young Chun"
+            ],
+            "title": "Task-aware variational adversarial active learning",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Yoon-Yeong Kim",
+                "Kyungwoo Song",
+                "JoonHo Jang",
+                "Il- Chul Moon"
+            ],
+            "title": "LADA: look-ahead data acquisition via augmentation for deep active learning",
+            "venue": "In Proc. Annual Conference on Neural Information Processing (NeurIPS),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Andreas Kirsch",
+                "Joost van Amersfoort",
+                "Yarin Gal"
+            ],
+            "title": "Batchbald: Efficient and diverse batch acquisition for deep bayesian active learning",
+            "venue": "In Proc. Annual Conference on Neural Information Processing (NeurIPS),",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Alex H. Lang",
+                "Sourabh Vora",
+                "Holger Caesar",
+                "Lubing Zhou",
+                "Jiong Yang",
+                "Oscar Beijbom"
+            ],
+            "title": "Pointpillars: Fast encoders for object detection from point clouds",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Jaehoon Lee",
+                "Lechao Xiao",
+                "Samuel S. Schoenholz",
+                "Yasaman Bahri",
+                "Roman Novak",
+                "Jascha Sohl-Dickstein",
+                "Jeffrey Pennington"
+            ],
+            "title": "Wide neural networks of any depth evolve as linear models under gradient descent",
+            "venue": "In Neural Tangent Kernel: Convergence and Generalization in Neural Networks,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "David D. Lewis",
+                "Jason Catlett"
+            ],
+            "title": "Heterogeneous uncertainty sampling for supervised learning",
+            "venue": "In Proc. International Conference on Machine Learning (ICML),",
+            "year": 1994
+        },
+        {
+            "authors": [
+                "Peng Liu",
+                "Lizhe Wang",
+                "Rajiv Ranjan",
+                "Guojin He",
+                "Lei Zhao"
+            ],
+            "title": "A survey on active deep learning: From model driven to data driven",
+            "venue": "ACM Computing Surveys,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Wei Liu",
+                "Dragomir Anguelov",
+                "Dumitru Erhan",
+                "Christian Szegedy",
+                "Scott E. Reed",
+                "Cheng-Yang Fu",
+                "Alexander C. Berg"
+            ],
+            "title": "SSD: single shot multibox detector",
+            "venue": "In Proc. European Conference on Computer Vision (ECCV),",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Xin Liu",
+                "Zhongdao Wang",
+                "Yali Li",
+                "Shengjin Wang"
+            ],
+            "title": "Selfsupervised learning via maximum entropy coding",
+            "venue": "CoRR, abs/2210.11464,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Zhuoming Liu",
+                "Hao Ding",
+                "Huaping Zhong",
+                "Weijia Li",
+                "Jifeng Dai",
+                "Conghui He"
+            ],
+            "title": "Influence selection for active learning",
+            "venue": "In Proc. International Conference on Computer Vision (ICCV),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Yadan Luo",
+                "Zhuoxiao Chen",
+                "Zijian Wang",
+                "Xin Yu",
+                "Zi Huang",
+                "Mahsa Baktashmotlagh"
+            ],
+            "title": "Exploring active 3d object detection from a generalization perspective",
+            "venue": "In Proc. International Conference on Learning Representations (ICLR),",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Yi Ma",
+                "Harm Derksen",
+                "Wei Hong",
+                "John Wright"
+            ],
+            "title": "Segmentation of multivariate mixed data via lossy data coding and compression",
+            "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence.,",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "David J.C. MacKay"
+            ],
+            "title": "Information-based objective functions for active data selection",
+            "venue": "Journal of Neural Computation,",
+            "year": 1992
+        },
+        {
+            "authors": [
+                "Mohamad Amin Mohamadi",
+                "Wonho Bae",
+                "Danica J. Sutherland"
+            ],
+            "title": "Making look-ahead active learning strategies feasible with neural tangent kernels",
+            "venue": "CoRR, abs/2206.12569,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Hieu Tat Nguyen",
+                "Arnold W.M. Smeulders"
+            ],
+            "title": "Active learning using pre-clustering",
+            "venue": "Proc. International Conference on Machine Learning (ICML),",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "Roman Novak",
+                "Jascha Sohl-Dickstein",
+                "Samuel S. Schoenholz"
+            ],
+            "title": "Fast finite width neural tangent kernel",
+            "venue": "Proc. International Conference on Machine Learning (ICML),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Younghyun Park",
+                "Soyeong Kim",
+                "Wonjeong Choi",
+                "Dong-Jun Han",
+                "Jaekyun Moon"
+            ],
+            "title": "Active learning for object detection with evidential deep learning and hierarchical uncertainty aggregation",
+            "venue": "In Proc. International Conference on Learning Representations (ICLR),",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Amin Parvaneh",
+                "Ehsan Abbasnejad",
+                "Damien Teney",
+                "Gholamreza (Reza) Haffari",
+                "Anton van den Hengel",
+                "Javen Qinfeng Shi"
+            ],
+            "title": "Active learning by feature mixing",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Pengzhen Ren",
+                "Yun Xiao",
+                "Xiaojun Chang",
+                "Po-Yao Huang",
+                "Zhihui Li",
+                "Brij B. Gupta",
+                "Xiaojiang Chen",
+                "Xin Wang"
+            ],
+            "title": "A survey of deep active learning",
+            "venue": "ACM Computing Surveys,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Dan Roth",
+                "Kevin Small"
+            ],
+            "title": "Margin-based active learning for structured output spaces",
+            "venue": "In Proc. European Conference on Machine Learning (ECML),",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "Nicholas Roy",
+                "Andrew McCallum"
+            ],
+            "title": "Toward optimal active learning through monte carlo estimation of error reduction",
+            "venue": "In Proc. International Conference on Machine Learning (ICML),",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "Soumya Roy",
+                "Asim Unmesh",
+                "Vinay P. Namboodiri"
+            ],
+            "title": "Deep active learning for object detection",
+            "venue": "In Proc. British Machine Vision Conference (BMVC),",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "David Schinagl",
+                "Georg Krispel",
+                "Horst Possegger",
+                "Peter M. Roth",
+                "Horst Bischof"
+            ],
+            "title": "Occam\u2019s laser: Occlusion-based attribution maps for 3d object detectors on lidar data",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Sebastian Schmidt",
+                "Qing Rao",
+                "Julian Tatsch",
+                "Alois C. Knoll"
+            ],
+            "title": "Advanced active learning strategies for object detection",
+            "venue": "In Proc. Intelligent Vehicles Symposium,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Ozan Sener",
+                "Silvio Savarese"
+            ],
+            "title": "Active learning for convolutional neural networks: A core-set approach",
+            "venue": "In Proc. International Conference on Learning Representations (ICLR),",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Burr Settles",
+                "Mark Craven",
+                "Soumya Ray"
+            ],
+            "title": "Multipleinstance active learning",
+            "venue": "In Proc. Annual Conference on Neural Information Processing (NeurIPS),",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "Guangsheng Shi",
+                "Ruifeng Li",
+                "Chao Ma"
+            ],
+            "title": "Pillarnet: Realtime and high-performance pillar-based 3d object detection",
+            "venue": "In Proc. European Conference on Computer Vision (ECCV),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Shaoshuai Shi",
+                "Chaoxu Guo",
+                "Li Jiang",
+                "Zhe Wang",
+                "Jianping Shi",
+                "Xiaogang Wang",
+                "Hongsheng Li"
+            ],
+            "title": "PV-RCNN: pointvoxel feature set abstraction for 3d object detection",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Shaoshuai Shi",
+                "Xiaogang Wang",
+                "Hongsheng Li"
+            ],
+            "title": "Pointrcnn: 3d object proposal generation and detection from point cloud",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Pei Sun",
+                "Henrik Kretzschmar",
+                "Xerxes Dotiwalla",
+                "Aurelien Chouard",
+                "Vijaysai Patnaik",
+                "Paul Tsui",
+                "James Guo",
+                "Yin Zhou",
+                "Yuning Chai",
+                "Benjamin Caine",
+                "Vijay Vasudevan",
+                "Wei Han",
+                "Jiquan Ngiam",
+                "Hang Zhao",
+                "Aleksei Timofeev",
+                "Scott Ettinger",
+                "Maxim Krivokon",
+                "Amy Gao",
+                "Aditya Joshi",
+                "Yu Zhang",
+                "Jonathon Shlens",
+                "Zhifeng Chen",
+                "Dragomir Anguelov"
+            ],
+            "title": "Scalability in perception for autonomous driving: Waymo open dataset",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Dan Wang",
+                "Yi Shang"
+            ],
+            "title": "A new active labeling method for deep learning",
+            "venue": "In Proc. International Joint Conference on Neural Networks (IJCNN),",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Jiaxi Wu",
+                "Jiaxin Chen",
+                "Di Huang"
+            ],
+            "title": "Entropy-based active learning for object detection with progressive diversity constraint",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yan Yan",
+                "Yuxing Mao",
+                "Bo Li"
+            ],
+            "title": "SECOND: sparsely embedded convolutional detection",
+            "venue": "Sensors, 18(10):3337,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Bin Yang",
+                "Wenjie Luo",
+                "Raquel Urtasun"
+            ],
+            "title": "PIXOR: realtime 3d object detection from point clouds",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Yi Yang",
+                "Zhigang Ma",
+                "Feiping Nie",
+                "Xiaojun Chang",
+                "Alexander G. Hauptmann"
+            ],
+            "title": "Multi-class active learning by uncertainty sampling with diversity maximization",
+            "venue": "International Journal of Computer Vision,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Zetong Yang",
+                "Yanan Sun",
+                "Shu Liu",
+                "Jiaya Jia"
+            ],
+            "title": "3dssd: Point-based 3d single stage object detector",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Zetong Yang",
+                "Yanan Sun",
+                "Shu Liu",
+                "Xiaoyong Shen",
+                "Jiaya Jia"
+            ],
+            "title": "STD: sparse-to-dense 3d object detector for point cloud",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Donggeun Yoo",
+                "In So Kweon"
+            ],
+            "title": "Learning loss for active learning",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Weiping Yu",
+                "Sijie Zhu",
+                "Taojiannan Yang",
+                "Chen Chen"
+            ],
+            "title": "Consistency-based active learning for object detection",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition Workshops (CVPRW),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yaodong Yu",
+                "Kwan Ho Ryan Chan",
+                "Chong You",
+                "Chaobing Song",
+                "Yi Ma"
+            ],
+            "title": "Learning diverse and discriminative representations via the principle of maximal coding rate reduction",
+            "venue": "In Proc. Annual Conference on Neural Information Processing (NeurIPS),",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Tianning Yuan",
+                "Fang Wan",
+                "Mengying Fu",
+                "Jianzhuang Liu",
+                "Songcen Xu",
+                "Xiangyang Ji",
+                "Qixiang Ye"
+            ],
+            "title": "Multiple instance active learning for object detection",
+            "venue": "In Proc. IEEE Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1. Introduction",
+            "text": "Being a crucial component in the realm of scene understanding, LiDAR-based 3D object detection [34, 58, 59, 63] identifies and accurately localizes objects in a 3D scene with the oriented bounding boxes and semantic labels. This\ntechnology has facilitated a wide range of applications in environmental perceptions, including robotics, autonomous driving, and augmented reality. With the recent advancements in 3D detection models [14, 25, 53], highly accurate recognition of objects can be achieved through point cloud projection [64], point feature extraction [34, 57, 59, 66, 67] or voxelization [13, 58, 63]. However, achieving such performance often comes at the expense of requiring a large volume of labeled point cloud data, which can be costly and time-consuming.\nTo mitigate the labeling costs and optimize the value of annotations, active learning (AL) [37, 49] has emerged as a promising solution. Active learning involves iteratively selecting the most beneficial samples for label acquisition from a large pool of unlabeled data until the labeling budget is exhausted. This selection process is guided by the selection criteria based on sample uncertainty [29, 36, 48, 50] and/or diversity [16, 22, 55, 65]. Both measures are used to assess the informativeness of the unlabeled samples. Aleatoric uncertainty-driven approaches search for samples that the model is least confident of by using metrics like maximum entropy [62] or estimated model changes [44,68]. On the other hand, epistemic uncertainty based methods attempt to find the most representative samples to avoid sample redundancy by using greedy coreset algorithms [55] or clustering based approaches [5].\nWhile active learning has proven to be effective in reducing labeling costs for recognition tasks, its application in LiDAR-based object detection has been limited [18,30,54]. This is largely due to its high computational costs and involvement of both detection and regression tasks, which pose significant challenges to the design of the selection criteria. A very recent work CRB [41] manually designed three heuristics that allow the acquisition of labels by hierarchically filtering out concise, representative, and geometrically balanced unlabelled point clouds. While effective, it remains unclear how to characterize the sample informativeness for both classification and regression tasks with one unified measurement.\nIn this paper, we propose a novel AL strategy called ker-\nar X\niv :2\n30 7.\n07 94\n2v 1\n[ cs\n.C V\n] 1\n6 Ju\nl 2 02\nnel coding rate maximization (KECOR) for efficient and effective active 3D detection. To endow the model with the ability to reason about the trade-off between information and performance autonomously, we resort to the coding rate theory and modify the formula from feature selection to sample selection, by replacing the covariance estimate with the empirical neural tangent kernel (NTK). The proposed KECOR strategy allows us to pick the most informative point clouds from the unlabeled pool such that their latent features require the maximal coding length for encoding. To characterize the non-linear relationships between the latent features and the corresponding box predictions spending the least computational costs, we train a proxy network of the 3D detector head with labeled samples and extract the outer product of Jacobians from all proxy layers to form the NTK matrix of all unlabeled samples. Empirical studies evidence that the NTK kernel not only captures non-linearity but takes the aleatoric and epistemic uncertainties into joint consideration, assisting detectors to recognize challenging objects that are of sparse structure. To accommodate both one-stage (i.e., SECOND) and two-stage detectors (i.e., PV-RCNN), we further incorporate the classification entropy maximization into the selection criteria. Our contributions are summarized as below: 1. We propose a novel information-theoretic based crite-\nrion KECOR for cost-effective 3D box annotations that allows for the greedy search of informative point clouds by maximizing the kernel coding rate.\n2. Our framework is flexible to accommodate different choices of kernels and 3D detector architectures. Empirical NTK kernel used in KECOR demonstrates a strong capacity to unify both aleatoric and epistemic uncertainties from the model perspective, which helps detectors learn a variety of challenging objects.\n3. Extensive experiments have been conducted on both 3D benchmarks (i.e., KITTI and Waymo Open) and 2D object detection dataset (i.e., PASCAL VOC07), verifying the effectiveness and versatility of the proposed approach. Experimental results show that the proposed approach achieves a 44.4% reduction of annotations and up to 26.4% less running time compared to the state-of-theart active 3D detection methods."
+        },
+        {
+            "heading": "2. Related Work",
+            "text": ""
+        },
+        {
+            "heading": "2.1. Active Learning (AL)",
+            "text": "Active learning has been widely applied to image classification and regression tasks, where the samples that lead to unconfident predictions (i.e., aleatoric uncertainty) [7, 15, 19, 29, 32, 36, 48, 50, 51, 56, 61, 61, 68] or not resemble the training set (i.e., epistemic uncertainty) [2,16,22,24, 44,45,55,65] will be selected and acquired for annotations. Hybrid methods [5, 11, 26, 31, 33, 40, 43] unify both types of uncertainty to form an acquisition criterion. Examples\ninclude BADGE [5] and BAIT [4], which select a batch of samples that probably induce large and diverse changes to the model based on the gradients and Fisher information. AL for Detection. Research on active learning for object detection [9, 23, 30, 52, 69, 71] has not bee as widespread as that for image classification, due in part to the challenges in quantifying aleatoric and epistemic uncertainties in bounding box regression. Kao et al. [30] proposed two metrics to quantitatively evaluate the localization uncertainty, where the samples containing inconsistent box predictions will be selected. Choi et al. [9] predicted the parameters of the Gaussian mixture model and computes epistemic uncertainty as the variance of Gaussian models. Agarwal et al. [1] proposed a contextual diversity measurement for selecting unlabeled images containing objects in diverse backgrounds. Park et al. [47] determined epistemic uncertainty by using evidential deep learning along with hierarchical uncertainty aggregation to effectively capture the context within an image. Wu et al. [62] introduced a hybrid approach, which utilizes an entropy-based nonmaximum suppression to estimate uncertainty and a diverse prototype strategy to ensure diversity. Nevertheless, the application of active learning to 3D point cloud detection is still under-explored due to the high computational costs, which makes AL strategies such as adding additional detection heads [9] or augmentations [69] impractical. Previous solutions [6, 18, 20, 54] rely on generic metrics such as Shannon entropy [61], localization tightness [30] for measuring aleatoric uncertainty. Only a recent work CRB [41] exploited both uncertainties jointly by greedily searching point clouds that have concise labels, representative features and geometric balance. Different from CRB that hierarchically filters samples with three criteria, in this work, we derive an informatic-theoretic criterion, namely kernel coding rate, that enables informativeness measurement in a single step and saves computational costs by 26%."
+        },
+        {
+            "heading": "2.2. Coding Rate",
+            "text": "Entropy, rate distortion [8, 12] and coding rate [42] are commonly used measurements to quantify the uncertainty and compactness of a random variable Z. They can be interpreted as the \u201cgoodness\u201d of the latent representations in deep neural networks with respect to generalizability [39], transferability [27] and robustness. Entropy H(Z) calculates the expected value of the negative logarithm of the probability, while it is not well-defined for a continuous random variable with degenerate distributions [70]. To address this, rate distortion R(Z, \u03f5) is proposed in the context of lossy data compression, which quantifies the minimum average number of binary bits required to represent Z. Given the calculation difficulty of distortion rate, coding rate R(Z) emerges as a more feasible solution for quantifying random variables from a complex distribution (refer to Section 3.2). Unlike prior works mentioned above, our\nwork explores a new kernel coding rate for sample selection in active learning rather than feature selection."
+        },
+        {
+            "heading": "2.3. Neural Tangent Kernel",
+            "text": "Neural tangent kernel (NTK) [3, 28, 35, 46] is a kernel that reveals the connections between infinitely wide neural networks trained by gradient descent and kernel methods. NTK enables the study of neural networks using theoretical tools from the perspective of kernel methods. There have been several studies that have explored the properties of NTK: Jacot et al. [28] proposed the concept of NTK and showed that it could be used to explain the generalization of neural networks. Lee et al. [35] expanded on this work and demonstrated that the dynamics of training wide but finite-width NNs with gradient descent can be approximated by a linear model obtained from the first-order Taylor expansion of that network around its initialization. In this paper, rather than exploring the interpretability of infinitewidth neural networks, we explore empirical (i.e., finitewidth) neural tangent kernels to improve linear kernels and non-linear RBF kernels. The NTK is used to characterize the sample similarity based on 3D detector head behaviors, which naturally takes aleatoric and epistemic uncertainties into consideration."
+        },
+        {
+            "heading": "3. Preliminaries",
+            "text": "In this section, we present the mathematical formulation of the problem of active learning for 3D object detection, along with the establishment of the necessary notations."
+        },
+        {
+            "heading": "3.1. Problem Formulation",
+            "text": "3D Object Detection. The typical approach for detecting objects in an orderless point cloud Pi involves training a 3D object detector to identify and locate the objects of interest, consisting of a set of 3D bounding boxes and their labels Bi = {bk, yk}k\u2208[Ni], with Ni indicating the number of bounding boxes in the i-th point cloud. Each\npoint in Pi = {(x, y, z, r)} is represented by xyz spatial coordinates and additional features such as reflectance r. The box annotations bk \u2208 R7 include the relative center xyz spatial coordinates to the object ground planes, the box size, the heading angle, and the box label yk \u2208 RC , where C indicates the number of classes. As illustrated in Figure 1, modern 3D detectors extract latent features mi = g(Pi;\u03b8g) \u2208 Rd through projection [64], PointNet encoding [34,57,59,66,67] or voxelization [13,58,63], where dimension d = W \u00d7 H \u00d7 F is the product of width W , length H , and channels F of the feature map. The detection head h(\u00b7;\u03b8h) uses mi as inputs and generates detection outcomes B\u0302i = {b\u0302k, y\u0302k}:\nPi g(\u00b7;\u03b8g)7\u2212\u2212\u2212\u2212\u2192 mi h(\u00b7;\u03b8h)7\u2212\u2212\u2212\u2212\u2192 B\u0302i. (1)\nActive Learning Setup. In an active learning setup, a small set of labeled point clouds DL = {Pi,Bi}i\u2208L and a large pool of raw point clouds DU = {Pj}j\u2208U are given at training time, where L and U are the index sets corresponding to DL and DU , respectively, and the cardinality of each set satisfy that |L| \u226a |U |. During each active learning round r \u2208 {1, . . . , R}, a subset of point clouds D\u2217r is selected from DU based on a defined active learning policy. The labels of 3D bounding boxes for the chosen point clouds are queried from an oracle \u2126 : P 7\u2192 B to create a labeled set DS = {Pj ,Bj}Pj\u2208D\u2217r . The 3D detection model is pretrained with DL for active selection and then retrained with DS\u222aDL. The process is repeated until the selected samples reach the final budget B, i.e., \u2211R r=1 |D\u2217r | = B."
+        },
+        {
+            "heading": "3.2. Coding Rate",
+            "text": "As explained in Section 2.2, information theory [12] defines the coding rate R(\u00b7, \u03f5) [42] as a measure of lossy data compression, quantifying the achievability of maximum compression while adhering to a desired error upper bound. It is commonly used as an empirical estimation of rate distortion [8, 12] indicating the minimal number of bi-\nnary bits required to represent random variable Z with the expected decoding error below \u03f5. Given a finite set of n samples Z = [z1, z2, ..., zn] \u2208 Rd\u00d7n, the coding rate [42] with respect to Z and a distortion \u03f5 is given by:\nR(Z, \u03f5) = 1\n2 log det(I+\nd\n\u03f52n \u03a3\u0302), (2)\nwhere I is the d-dimensional identify matrix and \u03a3\u0302 = ZZT \u2208 Rd\u00d7d is an estimate of covariance. Theoretical justifications have been provided in [42] that the coding vectors in Z can be explained by packing \u03f5-balls into the space spanned by Z (sphere packing [12]) or by computing the number of bits needed to quantize the SVD of Z subject to the precision. As coding rate produces a good estimate of the compactness of latent features, a few attempts [10, 39] have been made in the areas of multi-view learning and contrastive learning, which select informative features from d dimensions by maximizing the coding rate."
+        },
+        {
+            "heading": "4. Proposed Approach",
+            "text": ""
+        },
+        {
+            "heading": "4.1. Kernel Coding Rate Maximization",
+            "text": "The core task in pool-based active learning is to select the most informative samples from the unlabeled pool DU , which motivates us to replace the covariance estimate of features with the kernel matrix of samples in the coding rate formula (see Equation (2)). To each point cloud subset D = {Pi}ni=1 \u2282 DU of size n, we refer to this new coding length RK(M, \u03f5) as the kernel coding rate, which represents the minimal number of bits to encode features M:\nM = g(D,\u03b8g) = [m1,m2, ...,mn] \u2208 Rd\u00d7n. The latent features extracted from g(\u00b7;\u03b8g) can help find the most informative samples irrespective of the downstream tasks of classification and/or regression. We mathematically define the kernel coding rate RK(M, \u03f5) as:\nRK(M, \u03f5) := 1\n2 log det(I+\nn\n\u03f52d KM,M), (3)\nwith the kernel matrix KM,M = [K(mi,mj)] \u2208 Rn\u00d7n. In each round r \u2208 {1, . . . , R}, we use greedy search to find an optimal subset D\u2217r with size n from the unlabeled pool DU by maximizing the kernel coding rate:\nD\u2217r = argmax D\u2282DUwith|D|=n RK(M, \u03f5), (4)\nwhere M = g(D;\u03b8g). Notably, in the above equation, we consider positive semi-definite (PSD) kernel K : m\u00d7m\u2192 R, which characterizes the similarity between each pair of embeddings of point clouds, and hence, helps with avoiding redundancy. The most basic type of PSD kernel to consider is linear kernel, which is defined by the dot product between two features: KLinear(mi,mj) = \u27e8mi,mj\u27e9 = mTimj . (5) This kernel can be computed very quickly yet it has limitations when dealing with high-dimensional input variables,\nsuch as in our case where d = W \u00d7 L \u00d7 F . The linear kernel may capture the noise and fluctuations in the data instead of the underlying pattern, making it less generalizable to the unseen data. Therefore, while the linear kernel can be a useful starting point, it may be necessary to consider other PSD kernels that are better suited to the specific characteristics of the point cloud data at hand. More discussion on non-linear kernels (e.g., Laplace RBF kernel) is provided in the supplementary material. In the following subsection, we explain a more appropriate PSD kernel K to be used in KECOR, where we can jointly consider aleatoric and epistemic uncertainties from the model perspective.\n4.1.1 Empirical Neural Tangent Kernel KNTK Compared with linear kernel, empirical neural tangent kernel (NTK) [28, 46] defined as the outer product of the neural network Jacobians, has been shown to lead to improved generalization performance in deep learning models. The yielded NTK matrix quantifies how changes in the inputs affect the outputs and captures the relationships between the inputs and outputs in a compact and interpretable way.\nTo efficiently compute the NTK kernel matrix, we first consider a (L + 1)-layer fully connected neural network f(\u00b7;\u03b8) : m 7\u2192 B\u0302 as a proxy network for the detection head h(\u00b7;\u03b8h), as shown in Figure 1. The l-th layer in the proxy network f has dl neurons, where l ranges from 0 to L. In the forward pass computation, the output from the l-th layer is defined as,\nf (l)(mi;\u03b8 (l)) = \u03c3( 1\u221a dl W (l)f (l\u22121)(mi) + \u03b2b (l)), (6)\nwhere \u03b2 \u2265 0 is a constant controlling the effect of bias and f0(mi) = mi. \u03c3(\u00b7) stands for a pointwise nonlinear function. Note that the weight matrix W (l) \u2208 Rdl\u00d7dl\u22121 is rescaled by 1/ \u221a dl to avoid divergence, which refers to NTK parameterization [28]. For notation simplicity, we denote f (l)(mi;\u03b8\n(l)) as f (l)i . We omit the bias term and rewrite Equation (6) as\nf (l) i = W\u0303 (l)m\u0303 (l\u22121) i , (7)\nwhere W\u0303 (l) = [W (l), b(l)] \u2208 Rdl\u00d7(dl\u22121)+1, m\u0303(l\u22121)i = [ \u03c3\u221a\ndl f (l\u22121) i ;\u03c3\u03b2] \u2208 Rdl\u22121+1. We denote all parameters in the proxy network as \u03b8 = [W\u0303 (1), . . . , W\u0303 (L)]. To endow the proxy network f with the capability to mimic the behavior of the detector head, we train the proxy f with the labeled data DL by using an empirical regression loss function L : RdL \u2192 R+ e.g., mean squared error (MSE) to supervise the 3D box and ROI predictions. It is found that training neural networks using the MSE loss involves solving a linear regression problem with the kernel trick [28], where the kernel KNTK is defined as the derivative of the output of a neural network with respect to its inputs at the l-th layer, evaluated at the initial conditions:\nKNTK(mi,mj) = \u27e8\u2207\u03b8f (l)(mi),\u2207\u03b8f (l)(mj)\u27e9. (8)\nBy incorporating Equation (7) and the chain rule, we obtain the factorization of derivates as the ultimate form of empirical NTK kernel:\nKNTK(mi,mj) = L\u2211 l=1 \u27e8df (L) i df (l) i ( m\u0303 (l\u22121) i )T , df (L) j df (l) j ( m\u0303 (l\u22121) j )T \u27e9F\n= L\u2211 l=1 \u2329 m\u0303 (l\u22121) i , m\u0303 (l\u22121) j \u232a \u00b7\n\u2329 df\n(L) i df (l) i , df (L) j df (l) j\n\u232a ,\nwhere \u27e8\u00b7, \u00b7\u27e9F indicates the Frobenius inner product. The above equation demonstrates that the NTK kernel is constructed by taking into account the gradient contributions from multiple layers, which naturally captures the epistemic uncertainty in the detector\u2019s behavior.\n4.1.2 Last-layer Gradient Kernel KLast To verify the validity of aggregating gradients from multiple layers, we derive a simplified variant of the NTK kernel KNTK, which only considers the gradients w.r.t the parameters from the last layer of the proxy network:\nKLast(mi,mj) = \u27e8\u2207W\u0303 (L)f (l)(mi),\u2207W\u0303 (L)f (l)(mj)\u27e9. (9)\nWe have conducted extensive experiments to compare the impact of different kernels selected in the kernel coding rate maximization criteria as shown in Section 5.4.1. Empirical results suggest that the one-stage detectors generally favor KLast while two-stage detectors tend to perform better with KNTK on 3D detection recognition tasks."
+        },
+        {
+            "heading": "4.2. Acquisition Function",
+            "text": "As described in Equation (4), our approach selects the most informative point clouds based on the extracted features m and gradient maps and thereby facilitate downstream predictions in the detector head. However, for twostage detectors like PV-RCNN, the classification prediction is made in the region proposal network (refer to dotted boxes and lines in Figure 1) before feeding features into the detector head. Therefore, the features m alone cannot determine the informativeness for the box classification task. To make the proposed KECOR strategy applicable to both onestage and two-stage detectors, we introduce the modified acquisition function by including an entropy regularization term as below:\nD\u2217r = argmax D\u2282DUwith|D|=n RK(M, \u03f5) + \u03c3entH(Y\u0302 ), (10)\nwhereH(\u00b7) represents the mean entropy of all classification logits generated from the classifier. The effect of the hyperparameter \u03c3ent is studied in Section 5.4.2. The overall algorithm is summarized in the supplementary material."
+        },
+        {
+            "heading": "5. Experiments",
+            "text": ""
+        },
+        {
+            "heading": "5.1. Experimental Setup",
+            "text": "3D Point Cloud Detection Datasets. KITTI [21] is one of the most representative datasets for point cloud based object detection. The dataset consists of 3,712 training samples (i.e., point clouds) and 3,769 val samples. The dataset includes a total of 80,256 labeled objects with three commonly used classes for autonomous driving: cars, pedestrians, and cyclists. The Waymo Open dataset [60] is a challenging testbed for autonomous driving, containing 158,361 training samples and 40,077 testing samples. The sampling intervals for KITTI and Waymo are set to 1 and 10, respectively. To fairly evaluate baselines and the proposed method on KITTI dataset [21], we follow the work of [58]: we utilize Average Precision (AP) for 3D and Bird Eye View (BEV) detection, and the task difficulty is categorized to EASY, MODERATE, and HARD, with a rotated IoU threshold of 0.7 for cars and 0.5 for pedestrian and cyclists. The results evaluated on the validation split are calculated with 40 recall positions. To evaluate on Waymo dataset [60], we adopt the officially published evaluation tool for performance comparisons, which utilizes AP and the Average Precision Weighted by Heading (APH). The respective IoU thresholds for vehicles, pedestrians, and cyclists are set to 0.7, 0.5, and 0.5. Regarding detection difficulty, the Waymo test set is further divided into two levels. LEVEL 1 (and LEVEL 2) indicates there are more than five inside points (at least one point) in the ground-truth objects. 2D Image Detection Dataset. On the PASCAL VOC 2007 dataset [17], we use 4,000 images in the trainval set for training and 1,000 images in the test set for testing. For active selection, we set 500 labeled images as random initialization. Then n =500 images are labeled at each cycle until reaching 2,000. The trained SSD [38] detectors are evaluated with mean Average Precision (mAP) at IoU = 0.5 on VOC07. Unspecified training details are the same as in [9]. Implementation Details. To ensure the reproducibility of the baselines and the proposed approach, we implement KECOR based on the public ACTIVE-3D-DET [41] toolbox that can accommodate most of the public LiDAR detection benchmark datasets. The hyperparameter \u03c3ent is fixed to 0.1 and 0.5 on the KITTI and Waymo Open datasets, respectively. The hyperparameter \u03b2 is set to 0.1, which is consistent with [42]. For the proxy network, we build twolayer fully connected networks, with the latent dimensions d1 and d2 fixed to 256. The source code and other implementation details of active learning protocols can be found in the supplementary material for reference."
+        },
+        {
+            "heading": "5.2. Baselines",
+            "text": "For fair comparisons, eleven active learning baselines are included in our experiments: RAND is a random sampling method selecting n samples. ENTROPY [61] is an\nuncertainty-based approach that selects n samples with the highest entropy of predicted labels. LLAL [68] is an uncertainty-based method using an auxiliary network to predict indicative loss and select samples that are likely to be mispredicted. CORESET [55] is a diversity-based method that performs core-set selection using a greedy furthest-first search on both labeled and unlabeled embeddings. BADGE [5] is a hybrid approach that selects instances that are both diverse and of high magnitude in a hallucinated gradient space. The comparison involved four variants of deep active learning (MC-MI [18], MCREG [41], CRB [41]), and two adapted from 2D detection, LT/C [30] and CONSENSUS [54]) for 3D detection. MCMI used Monte Carlo dropout and mutual information to determine the uncertainty of point clouds, while MC-REG used M -round MC-DROPOUT to determine regression uncertainty and select top-n samples with the greatest variance for label acquisition. LT/C measures class-specific localization tightness, while CONSENSUS calculates the variation ratio of minimum IoU value for each RoI-match of 3D boxes. To testify the active learning performance on the 2D detection task, we compare KECOR with AL-MDN [9] approach, which predicts the parameter of Gaussian mixture model and computes epistemic uncertainty as the variance of Gaussian modes."
+        },
+        {
+            "heading": "5.3. Results on KITTI and Waymo Open Datasets",
+            "text": "To validate the effectiveness of the proposed KECOR, active learning approaches were evaluated under various settings on the KITTI and Waymo Open datasets.\nResults of PV-RCNN on KITTI. Figure 6 depicts the 3D mAP scores of PV-RCNN trained by different AL approaches with an increasing number of selected 3D bounding boxes. Specifically, ENTROPY selects point clouds with the least number of bounding boxes, as higher classification entropy indicates less chance of containing objects in point clouds. To elaborate further, the number of bounding boxes selected by MC-REG is generally high and of a large variance, as more instances contained in point clouds will trigger higher aleatoric uncertainty in the box regression. It is observed that AL methods KECOR, CRB and BAIT which jointly consider aleatoric and epistemic uncertainties, effectively balance between annotation costs and 3D detector performance across all detection difficulty levels. Among these three methods, the proposed KECOR outperforms CRB and BAIT, reducing the number of required annotations by 36.8% and 64.0%, respectively, without compromising detection performance. A detailed AP score for each class is reported in Table 1 when the box-level annotation budget is set to 800 (i.e., 1% queried bounding boxes). It is worth noting that the AP scores yield by KECOR are observed to be higher than all other AL baselines. The BEV scores and the detailed analysis are provided in the supple-\nmentary material. Results of SECOND on KITTI. We further test the active learning performance of one-stage detector SECOND on the KITTI dataset. Table 2 reports the 3D mAP and BEV mAP scores across different difficulty levels with around 1,400 bounding boxes. A performance gain of KECOR over the state-of-the-art approach CRB is about 3.5% and 2.8% on average with respect to 3D and BEV mAP scores. Figure 3 shows a more intuitive trend that KECOR achieves a higher boost on the recognition mAP at the MODERATE and HARD levels. This implies that the incorporated NTK kernel helps capture the objects that are of sparse point clouds and generally hard to learn, which enhances the detector\u2019s capacity on identifying challenging objects. Results of PV-RCNN on Waymo Open. To study the scalability and effectiveness of KECOR, we conduct experiments on the large-scale Waymo Open dataset, the results of which are illustrated in Figure 4a and Figure 4b for different difficulty levels. The proposed approach surpasses all existing AL approaches by a large margin, which verifies the validity of the proposed kernel coding rate maximization strategy. Notably, KECOR saves around 44.4% 3D annotations than CRB when reaching the same detection performance."
+        },
+        {
+            "heading": "5.4. Ablation Study",
+            "text": "We conducted a series of experiments to understand the impact of kernels and the coefficient \u03c3ent on the performance of our approach on the KITTI dataset. The central tendency of the performance (e.g., mean mAP) and variations (e.g., error bars) are reported based on outcomes from\nthe two trials for each variant."
+        },
+        {
+            "heading": "5.4.1 Impact of Kernels",
+            "text": "We conducted experiments on KITTI to evaluate the effect of kernels on the proposed method, and the active learning results yielded with the PV-RCNN and SECOND backbones are reported in Figure 5a and Table 2, respectively. We refer the variants of KECOR with the linear kernel, Laplace RBF kernel, last-layer gradient kernel, and NTK kernel as to KECOR-LINEAR, KECOR-RBF, KECORLAST and KECOR, respectively. Figure 5a shows that KECOR achieves the highest mAP scores (68.67%) among KECOR-LINEAR (66.82%) and KECOR-LAST (68.31%) at the moderate difficulty level. Regarding the box-level annotation costs, KECOR acquires a comparable amount as KECOR-LAST, while KECOR-LINEAR requires 1.91 times more bounding boxes. Table 2 shows that KECOR-LAST and KECOR gain a relative 7.6% and 5.5% improvement, respectively, over KECOR-LINEAR on the 3D mAP and BEV mAP scores with the SECOND detector. In particular, KECOR surpasses the variant KECOR-RBF by 2.5% and 1.9% on 3D mAP and BEV mAP, respectively. The performance gains evidence that the applied NTK kernel not only captures the non-linear relationship between the inputs and outputs, but also the aleatoric uncertainty for both tasks."
+        },
+        {
+            "heading": "5.4.2 Impact of Coefficient \u03c3ent",
+            "text": "We delve into the susceptibility of our method to various values of the coefficient \u03c3ent, which varies in {0, 0.01, 0.05, 0.1, 0.3}. The performances of different variants are measured using the mean average precision\n(mAP) results on the KITTI dataset. The detection performance for the last round and the total amount of queried 3D bounding boxes for each variant are summarized in the barplot (Figure 5c) and the parallel plot (Figure 5d). The results show that different values of \u03c3ent only had a limited impact on the 3D mAP scores, with variations up to 2.8%, 3.0% and 2.5% across different difficulty levels, which affirms the resilience of the proposed method to the selection of \u03c3ent. Notably, the variant of KECOR without the classification entropy term (\u03c3ent = 0) produces approximately 3 times more bounding boxes to annotate than other variants as shown in Figure 5c. We infer this was attributed to the higher entropy of point clouds containing fewer repeated objects, which regularizes the acquisition criteria and ensures a minimal annotation cost. We provide an additional study on the impact of \u03c3ent on the Waymo Open dataset in the supplementary material."
+        },
+        {
+            "heading": "5.5. Analysis on Running Time",
+            "text": "To ensure the proposed approach is efficient and reproducible, we have conducted an analysis of the average runtime yielded by the proposed KECOR and the state-of-theart active 3D detection method CRB on two benchmark datasets, i.e., KITTI and Waymo Open. The training hours of each approach are reported in Table 3. With different choices on base kernels, our finding indicates that KECOR outperforms CRB in terms of running efficiency, achieving a relative improvement of 5.2% \u223c 6.4% on the KITTI dataset and of 24.0% \u223c 26.4% on the large-scale Waymo Open dataset. These results suggest that KECOR is a highly effec-\ntive and efficient approach for active 3D object detection, especially for large datasets, and has the potential to benefit real-world applications."
+        },
+        {
+            "heading": "5.6. Results on 2D Object Detection",
+            "text": "To examine the versatility of the proposed KECOR strategy, we conducted additional experiments on the task of 2D object detection. To ensure a fair comparison with ALMDN [9], we adopt the SSD [38] architecture with VGG16 as the backbone. With a fixed budget for acquiring labeled images, KECOR demonstrates superior performance over AL-MDN in the early cycles as shown in Figure 4c. As the green dotted line indicates, KECOR requires only 1,187 box annotations to achieve the same level of mAP scores, while AL-MDN requires 1,913 annotations, resulting in approximately 38% savings in labeling costs. These results evidence that KECOR effectively trades off between annotation costs and detection performance. 6. Conclusion\nThis paper studies a novel informative-theoretic acquisition criterion for the active 3D detection task, which well balances a trade-off between the quantity of selected bounding boxes and the yielded detection performance. By maximizing the kernel coding rate, the informative point clouds\nare identified and selected, which bring in unique and novel knowledge for both 3D box classification and regression. The proposed KECOR is proven to be versatile to one-stage and two-stage detectors and also applicable to 2D object detection tasks. The proposed strategy achieves superior performance on benchmark datasets and also significantly reduces the running time and labeling costs simultaneously."
+        },
+        {
+            "heading": "A. More Discussions on Laplace RBF Kernel",
+            "text": "Recall that in Section 4.1, we have discussed that the linear kernel KLinear can be a useful starting point, it may be necessary to consider other PSD kernels that are better suited to the specific characteristics of the point cloud data at hand. The Laplace Radial Basis Function (RBF) kernel, also known as the Laplacian kernel, is a popular choice of kernel in machine learning algorithms. The Laplace RBF kernel maps the input features into a higher-dimensional feature space, where non-linear relationships can be more easily captured. This kernel function for two latent features mi and mj can be mathematically represented as follows:\nKRBF(mi,mj) = exp(\u2212 \u2225mi \u2212mj\u2225\n\u03c3 ), (11)\nwhere \u03c3 indicates a hyperparameter that controls the width of the kernel. \u03c3 is empirically set to 1.0. The Laplace RBF kernel has a sharp cutoff beyond a distance of \u03c3, which makes it less sensitive to outliers than the Gaussian RBF kernel. More experimental results and analysis can be found in Section E."
+        },
+        {
+            "heading": "B. The Algorithm of KECOR",
+            "text": "In this section, we elaborate on the entire workflow of the proposed KECOR approach for active 3D detection. As illustrated in Algorithm 1, the training and selection process includes three stages: (I) detection pre-training with the labeled set (Line 4), (II) active selection (Line 9) from the unlabeled pool, and (III) detection re-training with the updated labeled set (Line 19). Notably, in the pretraining stage, the proxy network is jointly learned to predict the outputs from the detector head h. The outputs can be ROI (forground confidence) only for SECOND [63] or with box regression for PV-RCNN [58]. The training of the proxy network is iterated by 10 and 20 epochs for KITTI and Waymo Open datasets. When the training of the detection model and proxy network converges, we move to the next active selection stage in which n informative point clouds will be selected based on the kernel coding rate maximization criterion presented in Equation (10). The selected point clouds are expected to bring novel and unique knowledge for the following re-training of the detector. The whole process will be gone through multiple times, until the number of selected point clouds reaches the pre-defined budget B.\nAlgorithm 1 THE PSEUDOCODE OF KECOR. 1: Inputs:\nDL: a set of labeled point clouds DU : a set of unlabeled point clouds \u2126: annotators B: a total budget for selection g(\u00b7;\u03b8g): a feature extractor h(\u00b7;\u03b8h): a detector head f(\u00b7;\u03b8): a proxy network of detector head count: a counter of point clouds selected\n2: Outputs: g(\u00b7;\u03b8g): the trained feature extractor h(\u00b7;\u03b8h): the trained detector head 3: count\u2190 0 4: procedure PRE-TRAIN DETECTOR(g,h,f ,DL) 5: Train g and h with detection loss 6: Train f with regression loss L 7: end procedure 8: while count < B do 9: procedure ACTIVE SELECTION(g,f ,DU )\n10: Extract features and gradients from g and f 11: Extract classification entropy for P \u2208 DU 12: Calculate KNTK for any subset D \u2282 DU 13: Select the optimal subset D\u2217r \u25b7 refer to Eq. (10) 14: end procedure 15: DU \u2190 DU\\D\u2217r \u25b7 remove the selected subset 16: DS \u2190 \u2126(D\u2217r) \u25b7 query labels from annotators 17: DL \u2190 DL \u222a DS 18: count += n \u25b7 number of selected data n = |D\u2217r | 19: procedure RE-TRAIN DETECTOR(g,h,f ,DL) 20: Train g and h with detection loss 21: Train f with regression loss L 22: end procedure 23: end while\nC. Implementation Details\nFollowing the same setting in [41], the batch sizes for training and evaluation are fixed to 6 and 16 on both KITTI and Waymo Open datasets. The Adam optimizer is adopted with a learning rate initiated as 0.01, and scheduled by one cycle scheduler. The number of MC-DROPOUT stochastic passes is set to 5. Active Learning Protocols. For all experiments, we first randomly select m fully labeled point clouds from the training set as the initial DL. With the annotated data, the 3D detector is trained with E epochs, which is then freezed to select n candidates from DU for label acquisition. We set the m and n to 2.5 \u223c 3% point clouds (i.e., n = m = 100 for KITTI, n = m = 400 for Waymo Open) to trade-off between reliable model training and high computational costs. The aforementioned training and selection steps will alternate for R rounds. Empirically, we set E = 30, R = 6\nfor KITTI, and fix E = 40, R = 5 for Waymo Open. All 3D detection experiments are conducted on a GPU cluster with three V100 GPUs and the runs on the VOC07 dataset are conducted on a server with two NVIDIA GeForce RTX 2080 Ti. The runtime for an active learning experiment on KITTI and Waymo is around 11 hours and 65 hours, respectively. Note that, training PV-RCNN on the full set typically requires 40 GPU hours for KITTI and 800 GPU hours for Waymo."
+        },
+        {
+            "heading": "D. Additional Results on the KITTI Dataset",
+            "text": "In this section, we provide an additional study on the BEV mAP scores on the KITTI dataset across different difficulty levels. The detector backbone is set to PV-RCNN for all AL approaches. The results of the compared AL baselines and the proposed KECOR are plotted in Figure 6. A similar trend is observed to the one shown in Figure 2 in the main body. The proposed KECOR demonstrates a higher performance boost over the state-of-the-art CRB and BAIT at the moderate and hard levels.\nE. Performance of KRBF on the KITTI Dataset To study the performance of the non-linear KRBF, we conducted a series of experiments on the KITTI dataset, with both one-stage and two-stage detectors. The experimental results are shown in Figure 7, where the top row is with SECOND and the bottom row is with PV-RCNN, respectively. It can be observed that the Laplace RBF kernel performs better than the linear kernel with SECOND, yet very similar results with PV-RCNN. It implies that the onestage detectors may have a simpler architecture, thus needing the non-linear kernel to help capture the non-linear relationship among the features. However, the performance of KECOR equipped with RBF kernel is still inferior to KLast and KNTK, which evidence that the empirical NTK kernel can capture not only the non-linear relationship between the inputs and outputs, but also measure the aleatoric uncertainty, thus helping detectors to identify more challenging objects.\nF. Impact of Kernels on Waymo Open\nIn addition to the ablation study on KITTI, we also run experiments on the Waymo Open dataset to examine the impact of kernels. The plots are illustrated in Figure 8. Similar to what we observed in KITTI, the KECOR and KECORLAST achieve better performance on both APH at different difficulty levels. However, we also notice that the KECORLINEAR does not select too many bounding boxes while it selects 2 times more bounding boxes on the KITTI dataset when reaching the same performance. We reason it is because, in Waymo datasets, most frames of point clouds are densely labeled and there are other irrelevant objects (e.g., signs) that may trigger high entropy scores. Hence, to tradeoff between the information and annotation costs, KECOR tends to prefer the point clouds having more information, yielding a slightly higher number of bounding boxes to annotate. How to lower the annotation costs on Waymo will leave an open question in future work.\nG. Impact of \u03c3ent on Waymo Open\nTo study the impact of coefficient \u03c3ent on the Waymo Open dataset, we depict the results in the last round with regard to different evaluation metrics in Figure 9. We run three trials with the values of \u03c3ent varying in {0.1, 0.5, 0.7} considering the high computational costs. The variant of KECOR with the \u03c3ent = 0.7 achieves the lowest performance. We infer this performance drop is caused by the dominance of the classification entropy regularization term. To trade-off between the high volume of information by kernel coding rate maximization and the lower costs of box annotation by classification entropy regularization, we select 0.5 as the value of \u03c3ent for the rest of the experiments on the Waymo Open dataset."
+        }
+    ],
+    "title": "KECOR: Kernel Coding Rate Maximization for Active 3D Object Detection",
+    "year": 2023
+}

@@ -1,0 +1,128 @@
+{
+    "abstractText": "Numerical integration or interpolation of high-dimensional functions is subject to the curse of dimensionality on full tensor grids. One remedy to this problem is sparse grid approximations. The additional construction effort is often worth spending, especially for underlying functions whose evaluation is time-consuming. In the following, a Julia implementation of a local Lagrangian adaptive hierarchical sparse grid collocation method is presented, which is suitable for memory-heavy objects generated on distributed workers.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Maximilian Bittens"
+        },
+        {
+            "affiliations": [],
+            "name": "Robert L. Gates"
+        }
+    ],
+    "id": "SP:4f748f788ff278b5deec77072f59c073be803d7d",
+    "references": [
+        {
+            "authors": [
+                "I. Babu\u0161ka",
+                "F. Nobile",
+                "R. Tempone"
+            ],
+            "title": "A stochastic collocation method for elliptic partial differential equations with random input data",
+            "venue": "SIAM Journal on Numerical Analysis,",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "M. Bittens"
+            ],
+            "title": "VTUFileHandler: A VTU library in the Julia language that implements an algebra for basic mathematical operations on VTU data",
+            "venue": "Journal of Open Source Software,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "R.L. Gates",
+                "M.R. Bittens"
+            ],
+            "title": "A multilevel adaptive sparse grid stochastic collocation approach to the non-smooth forward propagation of uncertainty in discretized problems",
+            "venue": "arXiv Preprint arXiv:1509.01462",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "X. Ma",
+                "N. Zabaras"
+            ],
+            "title": "An adaptive hierarchical sparse grid collocation algorithm for the solution of stochastic differential equations",
+            "venue": "Journal of Computational Physics,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "F. Nobile",
+                "R. Tempone",
+                "C.G. Webster"
+            ],
+            "title": "A sparse grid stochastic collocation method for partial differential equations with random input data",
+            "venue": "SIAM Journal on Numerical Analysis,",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "W.J. Schroeder",
+                "L.S. Avila",
+                "W. Hoffman"
+            ],
+            "title": "Visualizing with VTK: A tutorial",
+            "venue": "IEEE Computer Graphics and Applications,",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "S.A. Smolyak"
+            ],
+            "title": "Quadrature and interpolation formulas for tensor products of certain classes of functions",
+            "venue": "Doklady Akademii Nauk,",
+            "year": 1963
+        },
+        {
+            "authors": [
+                "Bittens",
+                "Gates"
+            ],
+            "title": "DistributedSparseGrids.jl: A Julia library implementing an Adaptive Sparse Grid collocation method",
+            "venue": "Journal of Open Source Software,",
+            "year": 2023
+        }
+    ],
+    "sections": [
+        {
+            "text": "Software \u2022 Review \u2022 Repository \u2022 Archive\nEditor: Vincent Knight Reviewers:\n\u2022 @ericneiva \u2022 @matt-graham\nSubmitted: 22 November 2022 Published: 07 March 2023\nLicense Authors of papers retain copyright and release the work under a Creative Commons Attribution 4.0 International License (CC BY 4.0)."
+        },
+        {
+            "heading": "Statement of need",
+            "text": "DistributedSparseGrids.jl is a Julia package for integrating and interpolating functions with generic return types. There are other approaches to sparse grid approximation written in the Julia language, such as SparseGrids.jl, AdaptiveSparseGrids.jl, GalerkinSparseGrids.jl, and Tasmanian.jl. However, there is no Julia package available at the moment that is suitable if the solution of the underlying (discretized) physical problem is time and resource-consuming, requiring it to be solved on either a server or cluster environment, or the solution is memoryheavy, like a Vector, Matrix, or, for example, a complete finite element solution."
+        },
+        {
+            "heading": "Introduction",
+            "text": "Sparse tensor product quadrature rules, mitigating the curse of dimensionality occurring in full tensor grid constructions, were provided first by Smolyak (1963). In the last two decades, collocation methods have been prominent in solving stochastic partial differential equations, as shown in Babu\u0161ka et al. (2007) and Nobile et al. (2008). Ma & Zabaras (2009) were able to once again increase the efficiency of the collocation approach by introducing an error-adaptive formulation of the method, which will serve as a basis for the collocation method described in this project. For more information about the theory of the method implemented, see, e.g., Gates & Bittens (2015)."
+        },
+        {
+            "heading": "Features",
+            "text": "In the following, some key features of the implemented approach are listed."
+        },
+        {
+            "heading": "Arbitrary return types",
+            "text": "DistributedSparseGrids.jl defines a HierarchicalCollocationPoint{N,CP,RT}, where N is the number of dimensions, CP <: AbstractCollocationPoint{N,CT<:Real}, and RT is a generic return type. RT can be conveniently defined as the type most suitable for studying the problem\nBittens, & Gates. (2023). DistributedSparseGrids.jl: A Julia library implementing an Adaptive Sparse Grid collocation method. Journal of Open Source Software, 8(83), 5003. https://doi.org/10.21105/joss.05003.\n1\nat hand, such as a Float64, a Vector{Float64}, or a Matrix{Float64}, for example. Suppose the underlying physical problem stores its data in the VTU file format (Schroeder et al., 2000). In that case, the Julia project VTUFileHandler.jl (Bittens, 2022) can be used; it implements all operators needed to use complete result files with the sparse grid."
+        },
+        {
+            "heading": "In-place operations",
+            "text": "Computing the weights for the hierarchical basis as well as performing interpolation and integration relies heavily on the use of arithmetic operators, which allocate memory. This can be a problem, especially if the result type is memory heavy. Therefore, DistributedSparseGrids.jl defines in-place variants to all of these actions given in-place variants for the arithmetic operators are defined. For further information, see the documentation."
+        },
+        {
+            "heading": "Distributed computing",
+            "text": "If the function\u2019s runtime to be evaluated is long, it may be necessary to distribute the load to several workers. Julia provides this functionality out-of-the-box via the Distributed interface. Due to the hierarchical construction of the basis and the level-wise adaptive refinement indicator, it seems necessary to include this interface in the sparse grid for a performant application of distributed computing. DistributedSparseGrids.jl uses all workers included by the Distributed.addprocs command if the distributed_init_weights! function is used to determine the hierarchical weights."
+        },
+        {
+            "heading": "Additional features",
+            "text": "\u2022 Nested one-dimensional Clenshaw-Curtis rule \u2022 Smolyak\u2019s sparse grid construction \u2022 Local hierarchical Lagrangian basis \u2022 Different pointsets (open, closed, halfopen) \u2022 Adaptive refinement \u2022 Multi-threaded calculation of basis coefficients with Threads.@threads \u2022 Integration \u2022 Experimental: integration over \ud835\udc4b\u223c(\ud835\udc56) (the \ud835\udc4b\u223c(\ud835\udc56) notation indicates the set of all variables\nexcept \ud835\udc4b\ud835\udc56)."
+        },
+        {
+            "heading": "Example",
+            "text": "Below, an example of an adaptive sampling of a function with a curved singularity in 2D is provided. Figure 1 shows an illustration of the sparse grid approximation.\nusing DistributedSparseGrids\nusing Distributed\nusing StaticArrays\nimport PlotlyJS\nfunction sparse_grid(N::Int,pointprobs,nlevel=6,RT=Float64,CT=Float64)\n# define collocation point\nCPType = CollocationPoint{N,CT}\n# define hierarchical collocation point\nHCPType = HierarchicalCollocationPoint{N,CPType,RT}\n# init grid\nasg = init(AHSG{N,HCPType},pointprobs)\n# set of all collocation points\ncpts = Set{HierarchicalCollocationPoint{N,CPType,RT}}(collect(asg))\n# fully refine grid nlevel-1 times\nBittens, & Gates. (2023). DistributedSparseGrids.jl: A Julia library implementing an Adaptive Sparse Grid collocation method. Journal of Open Source Software, 8(83), 5003. https://doi.org/10.21105/joss.05003.\n2\nfor i = 1:nlevel-1\nunion!(cpts,generate_next_level!(asg))\nend\nreturn asg\nend\n# Sparse Grid with 4 initial levels\npp = @SVector [1,1]\nasg = sparse_grid(2, pp, 4)\n# add 2 worker\nar_worker = addprocs(2)\n@everywhere begin\nusing StaticArrays\n# Function with curved singularity\nfun1(x::SVector{2,Float64},ID::String) =\n(1.0-exp(-1.0*(abs(2.0 - (x[1]-1.0)^2.0 -\n(x[2]-1.0)^2.0) +0.01)))/(abs(2-(x[1]-1.0)^2.0-(x[2]-1.0)^2.0)+0.01)\nend\n# calculate weights on master\ninit_weights!(asg, fun1)\n# adaptive refine\nfor i = 1:20\n# call generate_next_level! with tol=1e-5 and maxlevels=20\ncpts = generate_next_level!(asg, 1e-5, 20)\n# calculate weights on all worker\ndistributed_init_weights!(asg, collect(cpts), fun1, ar_worker)\nend\n# plot\nsurfplot = PlotlyJS.surface(asg, 100)\ngridplot = PlotlyJS.scatter3d(asg)\nPlotlyJS.plot([surfplot, gridplot])\nBittens, & Gates. (2023). DistributedSparseGrids.jl: A Julia library implementing an Adaptive Sparse Grid collocation method. Journal of Open Source Software, 8(83), 5003. https://doi.org/10.21105/joss.05003.\n3"
+        }
+    ],
+    "title": "DistributedSparseGrids.jl: A Julia library implementing an Adaptive Sparse Grid collocation method",
+    "year": 2023
+}

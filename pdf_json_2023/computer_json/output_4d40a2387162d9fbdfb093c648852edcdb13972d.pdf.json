@@ -1,0 +1,123 @@
+{
+    "abstractText": "The Speech Wikimedia Dataset is a publicly available compilation of audio with transcriptions extracted from Wikimedia Commons. It includes 1780 hours (195 GB) of CC-BY-SA licensed transcribed speech from a diverse set of scenarios and speakers, in 77 different languages. Each audio file has one or more transcriptions in different languages, making this dataset suitable for training speech recognition, speech translation, and machine translation models.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Rafael Mosquera G\u00f3mez"
+        },
+        {
+            "affiliations": [],
+            "name": "Julian Eusse"
+        },
+        {
+            "affiliations": [],
+            "name": "Daniel Galvez"
+        },
+        {
+            "affiliations": [],
+            "name": "Ryan Hileman"
+        },
+        {
+            "affiliations": [],
+            "name": "Kurt Bollacker"
+        },
+        {
+            "affiliations": [],
+            "name": "David Kanter"
+        }
+    ],
+    "id": "SP:9cd725fb58996110661e28be0c241ee0022ba8f3",
+    "references": [
+        {
+            "authors": [
+                "P. Lison",
+                "J. Tiedemann"
+            ],
+            "title": "OpenSubtitles2016: Extracting large parallel corpora from movie and TV subtitles",
+            "venue": "In Proceedings of the Tenth International Conference on Language Resources and Evaluation",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "A.S. Maiya"
+            ],
+            "title": "ktrain: A low-code library for augmented machine learning",
+            "venue": "CoRR, abs/2004.10703,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Radford",
+                "J.W. Kim",
+                "T. Xu",
+                "G. Brockman",
+                "C. McLeavey",
+                "I. Sutskever"
+            ],
+            "title": "Robust speech recognition via largescale weak supervision, 2022",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C. Wang",
+                "M. Rivi\u00e8re",
+                "A. Lee",
+                "A. Wu",
+                "C. Talnikar",
+                "D. Haziza",
+                "M. Williamson",
+                "J.M. Pino",
+                "E. Dupoux"
+            ],
+            "title": "Voxpopuli: A large-scale multilingual speech corpus for representation learning, semi-supervised learning and interpretation",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "ar X\niv :2\n30 8.\n15 71\n0v 1\n[ cs\n.A I]\n3 0\nA ug\n2 02\n3\navailable compilation of audio with transcriptions extracted from Wikimedia Commons. It includes 1780 hours (195 GB) of CC-BY-SA licensed transcribed speech from a diverse set of scenarios and speakers, in 77 different languages. Each audio file has one or more transcriptions in different languages, making this dataset suitable for training speech recognition, speech translation, and machine translation models."
+        },
+        {
+            "heading": "1. Introduction",
+            "text": "Speech research has witnessed remarkable advancements in recent years, largely driven by the availability of vast amounts of data. Tasks such as automatic speech recognition (ASR), speaker recognition, and speech translation have reached robust results even in the presence of background noise, jargon, and different accents. Nevertheless, one of the fundamental challenges in speech research is the scarcity of multilingual datasets.\nIn this paper, we introduce the Speech Wikimedia Dataset, a supervised dataset consisting of 1780 hours of audio files, each with one one or more transcripts. The last point bears repeating: much (approximately 25%) of the dataset has multiple associated transcripts, each having its own language, which is rare in datasets sourced from the internet. The dataset is specifically curated from Wikimedia Commons to address some of the key challenges in the speech recognition, machine translation, and speech translation spaces, particularly the need for diverse multilingual data and appropriate licensing for academic and commercial usage.\nThe paper is organized as follows. In section 2, we describe the dataset itself and training tasks that it can support; in\n*Equal contribution 1Factored.ai 2NVIDIA 3Talon Voice 4Long Now Foundation 5MLCommons. Correspondence to: Daniel Galvez <dgalvez@nvidia.com>.\nProceedings of the 40 th International Conference on Machine Learning, Honolulu, Hawaii, USA. PMLR 202, 2023. Copyright 2023 by the author(s).\nsection 3, we describe related work; in section 4, we describe some limitations of the dataset today; in section 5, we conclude with some future work that this dataset can enable."
+        },
+        {
+            "heading": "2. Dataset Description",
+            "text": "To construct the Speech Wikimedia dataset, we downloaded raw video and audio from Wikimedia Commons (\u201chttps://commons.wikimedia.org\u201d), which allows only content that is \u201dfree\u201d (wik). For our purposes, this means data under CC-BY or CC-BY-SA license, or otherwise public domain. After downloading, the data was converted to 16kHz monochannel FLAC using ffmpeg. The data is uploaded to Huggingface at https://huggingface.co/datasets/MLCommons/speech-wikimedia\nWe give statistics for three possible tasks that this dataset can be used for: speech recognition, speech translation, and machine translation."
+        },
+        {
+            "heading": "2.1. Licensing Information",
+            "text": "Given that all data is public domain, CC-BY-licensed, or CC-BY-SA licensed, we are licensing the dataset as CCBY-SA. Following the requirements imposed by the CCBY and CC-BY-SA licenses of our sources, accreditation is provided in the linked credits.json file."
+        },
+        {
+            "heading": "2.2. Audio with Subtitles in the Same Language for Speech Recognition Task",
+            "text": "In order to determine the amount of data available for the ASR task we used only those audios and transcriptions where the language coincided. Since Wikimedia Commons\u2019s transcripts\u2019 filenames contain the language of the contained text, we simply extracted the languages from these filenames. For example, the file \u201cElephants Dream.ogv.en.srt\u201d is in English, as indicated by the \u201c.en.\u201d substring.\nGiven that we didn\u2019t initially have the audio language for each file, Whisper\u2019s (Radford et al., 2022) language detection pipeline was used. A total of 77 different languages were detected, with English, Dutch, German, Russian, and Spanish being the most common. 69.07% of the 1780 hour\ndataset comprises audio-transcription pairs in the same language. We present the number of transcribed hours of each language in Table 1 in the appendix."
+        },
+        {
+            "heading": "2.3. Audio with Subtitles in Different Languages for Speech Translation Task",
+            "text": "For speech translation, we focused on audio-transcript pairs that had different languages, which corresponds to 31% of the rest of the 1780 hours. After filtering audios and transcriptions with unknown languages, we were left with a total of 628.8 hours of audio with transcripts in different languages. We present the hours of audio for the 20 most common language pairs in Table 2 in the appendix."
+        },
+        {
+            "heading": "2.4. Transcript Language Pairs (Bitexts) for Machine Translation Task",
+            "text": "While the speech translation task relies on audio from one language with a transcription from another language, machine translation focuses on pure text translation. We find paired texts by enumerating all pairs of transcripts associated with a single audio. This is interesting in particular because approximately 10.93% of the audio files have transcripts in at least three languages.\nIn Table 3 in the appendix, we present total hours, number of words and occurrences of different pairs of languages for the 20 most common language pairs in the dataset."
+        },
+        {
+            "heading": "2.5. Topic Distribution and Audio Content",
+            "text": "We were also interested in determining which topics were covered across the dataset. In order to analyze this, we ran a zero shot classifier (Maiya, 2020) with labels ranging different topics, and recorded the hours of audio for each of the topics. Results are depicted in Table 4 in the Appendix section. Popular topics were current events, history, and general non-fiction references.\nBased on listening to several files, we also discovered that several audios are public speeches, music, and clearly pronounced single words, probably for pronunciation dictionaries like wiktionary."
+        },
+        {
+            "heading": "3. Related Work",
+            "text": "In this section we provide an overview of previous, similar datasets.\nMozilla Common Voice (Ardila et al., 2020) is a CC0licensed 17,690-hour public domain corpus of single speaker read speech in 108 languages created by volunteers. In contrast, Speech Wikimedia has much more diverse audio sources.\nMultilingual Librispeech (Pratap et al., 2020) is a CC-BY\ndataset of 50,500 hours of transcribed read speech in eight languages; 6,000 of its hours are non-English. Meanwhile, our dataset contains 77 languages, and the majority of the data is also in English.\nVoxPopuli (Wang et al., 2021) is CC0-licensed dataset containing an unsupervised set of 400,000 hours in 23 languages, and 1,500 hours of transcribed audio in 15 languages. Like our dataset, it also contains a subset suitable for a speech translation task.\nMultilingual Spoken Words Corpus (Mazumder et al., 2021) is a CC-BY licensed 6,000-hour dataset, containing more than 340,000 keywords in 50 different languages. It is for training keyword spotting models, not speech recognition models.\nopensubtitles (Lison & Tiedemann, 2016) is a machine translation dataset containing 1,782 language pairings extracted from movie subtitles in 62 languages. Given the data source, it is not licensed for commercial usage. In contrast, the Speech Wikimedia Dataset has 929 language pairings from 77 languages."
+        },
+        {
+            "heading": "4. Limitations",
+            "text": "The raw data is available publicly online on Hugging Face as mentioned before; however, this data is not yet processed via forced alignment of audio to transcript and bitext word alignment for transcript to transcript, and thus not able to be used immediately in training models.\nWe removed all video data when converting to FLAC. In future work, this data could be helpful for a multimodal task.\nWhile collecting this dataset, we realized that there is also a collection of audio data in Wikimedia Commons without any transcripts. We have not explored this subset and have not made it available at this time, however.\nGiven the small size of the dataset, we are not providing a training-test split."
+        },
+        {
+            "heading": "5. Conclusions",
+            "text": "We introduce the Speech Wikimedia Dataset, a collection of audio files with transcriptions in multiple languages extracted form Wikimedia Commons. The dataset encompasses over 1,780 hours of transcribed speech in multiple languages. The CC-BY-SA license enables commercial usage. This is the first non-read multilingual speech dataset allowing for commercial usage that we are aware of other than VoxPopuli."
+        }
+    ],
+    "title": "Speech Wikimedia: A 77 Language Multilingual Speech Dataset",
+    "year": 2023
+}

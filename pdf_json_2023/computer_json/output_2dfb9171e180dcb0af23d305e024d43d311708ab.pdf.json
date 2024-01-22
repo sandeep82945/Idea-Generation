@@ -1,0 +1,518 @@
+{
+    "abstractText": "Modern large language models (LLMs) that rely on attention mechanisms are typically trained with fixed context lengths which enforce upper limits on the length of input sequences that they can handle at evaluation time. To use these models on sequences longer than the train-time context length, one might employ techniques from the growing family of context length extrapolation methods \u2014 most of which focus on modifying the system of positional encodings used in the attention mechanism to indicate where tokens or activations are located in the input sequence. We conduct a wide survey of existing methods of context length extrapolation on a base LLaMA or LLaMA 2 model, and introduce some of our own design as well \u2014 in particular, a new truncation strategy for modifying the basis for the position encoding. We test these methods using three new evaluation tasks (FreeFormQA, AlteredNumericQA, and LongChat-Lines) as well as perplexity, which we find to be less fine-grained as a measure of long context performance of LLMs. We release the three tasks publicly as datasets on HuggingFace. We discover that linear scaling is the best method for extending context length, and show that further gains can be achieved by using longer scales at evaluation time. We also discover promising extrapolation capabilities in the truncated basis. To support further research in this area, we release three new 13B parameter long-context models which we call Giraffe: 4k and 16k context models trained from base LLaMA-13B, and a 32k context model trained from base LLaMA2-13B. We also release the code to replicate our results.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Arka Pal"
+        },
+        {
+            "affiliations": [],
+            "name": "Deep Karkhanis"
+        },
+        {
+            "affiliations": [],
+            "name": "Manley Roberts"
+        },
+        {
+            "affiliations": [],
+            "name": "Samuel Dooley"
+        },
+        {
+            "affiliations": [],
+            "name": "Arvind Sundararajan"
+        },
+        {
+            "affiliations": [],
+            "name": "Siddartha Naidu Abacus.AI"
+        }
+    ],
+    "id": "SP:2aad42d3cd0d5204f10588b1cb5ba86cdb898626",
+    "references": [
+        {
+            "authors": [
+                "Ashish Vaswani",
+                "Noam Shazeer",
+                "Niki Parmar",
+                "Jakob Uszkoreit",
+                "Llion Jones",
+                "Aidan N. Gomez",
+                "Lukasz Kaiser",
+                "Illia Polosukhin"
+            ],
+            "title": "Attention is all you need, 2023",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Dan Hendrycks",
+                "Collin Burns",
+                "Steven Basart",
+                "Andy Zou",
+                "Mantas Mazeika",
+                "Dawn Song",
+                "Jacob Steinhardt"
+            ],
+            "title": "Measuring massive multitask language understanding, 2021",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Mark Chen",
+                "Jerry Tworek",
+                "Heewoo Jun",
+                "Qiming Yuan",
+                "Henrique Ponde de Oliveira Pinto",
+                "Jared Kaplan",
+                "Harri Edwards",
+                "Yuri Burda",
+                "Nicholas Joseph",
+                "Greg Brockman",
+                "Alex Ray",
+                "Raul Puri",
+                "Gretchen Krueger",
+                "Michael Petrov",
+                "Heidy Khlaaf",
+                "Girish Sastry",
+                "Pamela Mishkin",
+                "Brooke Chan",
+                "Scott Gray",
+                "Nick Ryder",
+                "Mikhail Pavlov",
+                "Alethea Power",
+                "Lukasz Kaiser",
+                "Mohammad Bavarian",
+                "Clemens Winter",
+                "Philippe Tillet",
+                "Felipe Petroski Such",
+                "Dave Cummings",
+                "Matthias Plappert",
+                "Fotios Chantzis",
+                "Elizabeth Barnes",
+                "Ariel Herbert-Voss",
+                "William Hebgen Guss",
+                "Alex Nichol",
+                "Alex Paino",
+                "Nikolas Tezak",
+                "Jie Tang",
+                "Igor Babuschkin",
+                "Suchir Balaji",
+                "Shantanu Jain",
+                "William Saunders",
+                "Christopher Hesse",
+                "Andrew N. Carr",
+                "Jan Leike",
+                "Josh Achiam",
+                "Vedant Misra",
+                "Evan Morikawa",
+                "Alec Radford",
+                "Matthew Knight",
+                "Miles Brundage",
+                "Mira Murati",
+                "Katie Mayer",
+                "Peter Welinder",
+                "Bob McGrew",
+                "Dario Amodei",
+                "Sam McCandlish",
+                "Ilya Sutskever",
+                "Wojciech Zaremba"
+            ],
+            "title": "Evaluating large language models trained on code, 2021",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Leo Gao",
+                "Stella Biderman",
+                "Sid Black",
+                "Laurence Golding",
+                "Travis Hoppe",
+                "Charles Foster",
+                "Jason Phang",
+                "Horace He",
+                "Anish Thite",
+                "Noa Nabeshima",
+                "Shawn Presser",
+                "Connor Leahy"
+            ],
+            "title": "The pile: An 800gb dataset of diverse text for language modeling, 2020",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Ofir Press",
+                "Noah A. Smith",
+                "Mike Lewis"
+            ],
+            "title": "Train short, test long: Attention with linear biases enables input length extrapolation, 2022",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yutao Sun",
+                "Li Dong",
+                "Barun Patra",
+                "Shuming Ma",
+                "Shaohan Huang",
+                "Alon Benhaim",
+                "Vishrav Chaudhary",
+                "Xia Song",
+                "Furu Wei"
+            ],
+            "title": "A length-extrapolatable transformer, 2022",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Hugo Touvron",
+                "Thibaut Lavril",
+                "Gautier Izacard",
+                "Xavier Martinet",
+                "Marie-Anne Lachaux",
+                "Timoth\u00e9e Lacroix",
+                "Baptiste Rozi\u00e8re",
+                "Naman Goyal",
+                "Eric Hambro",
+                "Faisal Azhar",
+                "Aurelien Rodriguez",
+                "Armand 12 Joulin",
+                "Edouard Grave",
+                "Guillaume Lample"
+            ],
+            "title": "Llama: Open and efficient foundation language models, 2023",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Hugo Touvron",
+                "Louis Martin",
+                "Kevin Stone",
+                "Peter Albert",
+                "Amjad Almahairi",
+                "Yasmine Babaei",
+                "Nikolay Bashlykov",
+                "Soumya Batra",
+                "Prajjwal Bhargava",
+                "Shruti Bhosale",
+                "Dan Bikel",
+                "Lukas Blecher",
+                "Cristian Canton Ferrer",
+                "Moya Chen",
+                "Guillem Cucurull",
+                "David Esiobu",
+                "Jude Fernandes",
+                "Jeremy Fu",
+                "Wenyin Fu",
+                "Brian Fuller",
+                "Cynthia Gao",
+                "Vedanuj Goswami",
+                "Naman Goyal",
+                "Anthony Hartshorn",
+                "Saghar Hosseini",
+                "Rui Hou",
+                "Hakan Inan",
+                "Marcin Kardas",
+                "Viktor Kerkez",
+                "Madian Khabsa",
+                "Isabel Kloumann",
+                "Artem Korenev",
+                "Punit Singh Koura",
+                "Marie-Anne Lachaux",
+                "Thibaut Lavril",
+                "Jenya Lee",
+                "Diana Liskovich",
+                "Yinghai Lu",
+                "Yuning Mao",
+                "Xavier Martinet",
+                "Todor Mihaylov",
+                "Pushkar Mishra",
+                "Igor Molybog",
+                "Yixin Nie",
+                "Andrew Poulton",
+                "Jeremy Reizenstein",
+                "Rashi Rungta",
+                "Kalyan Saladi",
+                "Alan Schelten",
+                "Ruan Silva",
+                "Eric Michael Smith",
+                "Ranjan Subramanian",
+                "Xiaoqing Ellen Tan",
+                "Binh Tang",
+                "Ross Taylor",
+                "Adina Williams",
+                "Jian Xiang Kuan",
+                "Puxin Xu",
+                "Zheng Yan",
+                "Iliyan Zarov",
+                "Yuchen Zhang",
+                "Angela Fan",
+                "Melanie Kambadur",
+                "Sharan Narang",
+                "Aurelien Rodriguez",
+                "Robert Stojnic",
+                "Sergey Edunov",
+                "Thomas Scialom"
+            ],
+            "title": "Llama 2: Open foundation and fine-tuned chat models, 2023",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Tom Kwiatkowski",
+                "Jennimaria Palomaki",
+                "Olivia Redfield",
+                "Michael Collins",
+                "Ankur Parikh",
+                "Chris Alberti",
+                "Danielle Epstein",
+                "Illia Polosukhin",
+                "Matthew Kelcey",
+                "Jacob Devlin",
+                "Kenton Lee",
+                "Kristina N. Toutanova",
+                "Llion Jones",
+                "Ming-Wei Chang",
+                "Andrew Dai",
+                "Jakob Uszkoreit",
+                "Quoc Le",
+                "Slav Petrov"
+            ],
+            "title": "Natural questions: a benchmark for question answering research",
+            "venue": "Transactions of the Association of Computational Linguistics,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Jianlin Su",
+                "Yu Lu",
+                "Shengfeng Pan",
+                "Ahmed Murtadha",
+                "Bo Wen",
+                "Yunfeng Liu"
+            ],
+            "title": "Roformer: Enhanced transformer with rotary position",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Peter Shaw",
+                "Jakob Uszkoreit",
+                "Ashish Vaswani"
+            ],
+            "title": "Self-attention with relative position representations, 2018",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Lianmin Zheng",
+                "Wei-Lin Chiang",
+                "Ying Sheng",
+                "Siyuan Zhuang",
+                "Zhanghao Wu",
+                "Yonghao Zhuang",
+                "Zi Lin",
+                "Zhuohan Li",
+                "Dacheng Li",
+                "Eric. P Xing",
+                "Hao Zhang",
+                "Joseph E. Gonzalez",
+                "Ion Stoica"
+            ],
+            "title": "Judging llm-as-a-judge with mt-bench and chatbot arena, 2023",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Shouyuan Chen",
+                "Sherman Wong",
+                "Liangjian Chen",
+                "Yuandong Tian"
+            ],
+            "title": "Extending context window of large language models via positional interpolation, 2023",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Keyulu Xu",
+                "Mozhi Zhang",
+                "Jingling Li",
+                "Simon S. Du",
+                "Ken ichi Kawarabayashi",
+                "Stefanie Jegelka"
+            ],
+            "title": "How neural networks extrapolate: From feedforward to graph neural networks, 2021",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Anian Ruoss",
+                "Gr\u00e9goire Del\u00e9tang",
+                "Tim Genewein",
+                "Jordi Grau-Moya",
+                "R\u00f3bert Csord\u00e1s",
+                "Mehdi Bennani",
+                "Shane Legg",
+                "Joel Veness"
+            ],
+            "title": "Randomized positional encodings boost length generalization of transformers, 2023",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Dacheng Li",
+                "Rulin Shao",
+                "Anze Xie",
+                "Ying Sheng",
+                "Lianmin Zheng",
+                "Joseph E. Gonzalez",
+                "Ion Stoica",
+                "Xuezhe Ma",
+                "Hao Zhang"
+            ],
+            "title": "How long can open-source llms truly promise on context length",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Nelson F. Liu",
+                "Kevin Lin",
+                "John Hewitt",
+                "Ashwin Paranjape",
+                "Michele Bevilacqua",
+                "Fabio Petroni",
+                "Percy Liang"
+            ],
+            "title": "Lost in the middle: How language models use long contexts, 2023",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Lianmin Zheng",
+                "Wei-Lin Chiang",
+                "Ying Sheng",
+                "Siyuan Zhuang",
+                "Zhanghao Wu",
+                "Yonghao Zhuang",
+                "Zi Lin",
+                "Zhuohan Li",
+                "Dacheng Li",
+                "Eric. P Xing",
+                "Hao Zhang",
+                "Joseph E. Gonzalez",
+                "Ion Stoica"
+            ],
+            "title": "Judging llm-as-a-judge with mt-bench and chatbot arena, 2023",
+            "year": 2023
+        }
+    ],
+    "sections": [
+        {
+            "text": "We test these methods using three new evaluation tasks (FreeFormQA, AlteredNumericQA, and LongChat-Lines) as well as perplexity, which we find to be less fine-grained as a measure of long context performance of LLMs. We release the three tasks publicly as datasets on HuggingFace. We discover that linear scaling is the best method for extending context length, and show that further gains can be achieved by using longer scales at evaluation time. We also discover promising extrapolation capabilities in the truncated basis. To support further research in this area, we release three new 13B parameter long-context models which we call Giraffe: 4k and 16k context models trained from base LLaMA-13B, and a 32k context model trained from base LLaMA2-13B. We also release the code to replicate our results.1"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "In recent years, transformers [1] have become the dominant neural network architecture in a variety of natural language modelling tasks [2, 3], by dint of their flexibility and their amenability to being trained on extremely large datasets [4, 5]. Subsequently, a popular term that has been adopted for these neural networks is \u2018Large Language Models\u2019 (LLMs) \u2014 with the \u2018Large\u2019 referring both to the training dataset size as well as their parameter count (and indeed, the associated training and environmental cost).\nA key element of the standard transformer architecture is its inherent insensitivity to the ordering of the input elements. Attention is naturally a set-like operation in which the position of the elements does not matter [1]. However, the order of elements is crucial for many important tasks such as parsing natural language, coding, forecasting, etc. Thus it is necessary to inject positional information into the inputs of the LLM, typically in the form of positional encodings.\nOne possible desideratum of a positional encoding scheme is context length extrapolation: the ability to use the LLM for inference on input lengths longer than those it was trained on. Due to the quadratic complexity growth of the attention mechanism in transformers, it is often infeasible to train on large context lengths. The benefit of increased context length is diverse - allowing reading longer documents and papers,\n\u2217Correspondence to arka@abacus.ai. 1Github repo at: https://github.com/abacusai/Long-Context.\nar X\niv :2\n30 8.\n10 88\n2v 1\n[ cs\n.A I]\n2 1\nA ug\n2 02\nmore internal consistency in long conversations with users in LLM-powered chatbots, working on bigger codebases, and so on. We can break context length extrapolation down into two main paradigms. First, there is finetuned extrapolation where a model previously pretrained on shorter contexts is allowed to finetune, or update model weights based on the longer context length. Additionally, there is zero-shot extrapolation where a model previously pretrained on short contexts is immediately evaluated on longer context lengths with the same weights as the shorter context model.\nIn this paper, we focus primarily on zero-shot extrapolation and make the following key contributions:\nBenchmark of different context extrapolation schemes We conduct a survey of methods for context length extrapolation with a pretrained base model, and try a few of our own inventions as well. In particular, we present a new truncated basis for position encodings. The focus in this paper on pretrained models is also different from other work in the literature [6, 7], which tend to instead train from scratch with a chosen positional encoding scheme. As mentioned above, although LLMs have been successful, training them is a costly enterprise. Well known closed-source model include GPT-4 [8] and Claude [9]. Recently the open-source LLaMA [10] has been released by a team at Meta AI, and this was followed by the improved LLaMA2 [11]. In our view, the resources required to train competitive base models of this nature will remain constrained to a few large players. Therefore, it is imperative to be able to modify the models as desired for the end user\u2014ideally, with a fraction of the compute power applied. Our main findings are that:\n\u2022 Linear interpolation is the best as a context length extrapolation method.\n\u2022 All context length extrapolation methods show degradation on task accuracy, even for lengths where they provide otherwise coherent output (and perplexity scores are still reasonable).\n\u2022 Further context length increase can be achieved by utilising a higher scale factor at evaluation time than finetune time, but seemingly only up to a factor of 2x.\nPublic release of LLM weights and evaluation datasets We release the weights of two new 13B models trained from base LLaMA with an extended context length of 16k 2 and a context length of 4k3 on HuggingFace. We also release a 13B model trained to a length of 32k from base LLaMA 24. We call this family of models Giraffe. In addition, we release three datasets (LongChat-Lines5, FreeFormQA6 and AlteredNumericQA7) to evaluate long context performance of these, and other, models. LongChat-Lines is a key-value fine-grained retrieval task. FreeFormQA and AlteredQA are question-answering datasets based on the Natural Questions Dataset [12]. Some existing work [6, 7] focuses only on perplexity on a document corpus evaluation set as their measure of extrapolation performance. We find that perplexity scores are not as sensitive a measure of long context performance as our introduced tasks."
+        },
+        {
+            "heading": "2 Related Work",
+            "text": "RoPE In this work, we examine the efficacy of the positional encoding choice of LLaMA [10] for context lengths longer than the base model was trained on. The positional encoding used by LLaMA is RoPE (Rotary Position Embedding) [13]. RoPE works by rotating slices of the query and key projection matrices at different speeds. Thus for example even if the query and key are projected to the same encoding, they will be rotated by different amounts depending on their position in the sequence. If they are subsequently unaligned, their dot product will be smaller relative to what it would be if they were not rotated at all. Conversely, they\n2https://huggingface.co/abacusai/Giraffe-v1-delta-13b-scaled-16 3https://huggingface.co/abacusai/Giraffe-v1-delta-13b-scaled-4 4https://huggingface.co/abacusai/Giraffe-v2-13b-32k 5https://huggingface.co/datasets/abacusai/LongChat-Lines 6https://huggingface.co/datasets/abacusai/WikiQA-Free_Form_QA 7https://huggingface.co/datasets/abacusai/WikiQA-Altered_Numeric_QA\ncould become more aligned, leading to a larger dot product and attention score. In RoPE, this rotation is happening at different speeds on all 2-slices of the query and key in the embedding dimension, allowing the model to build a complex function of attention scores over distances. One of the main appeals of utilising the RoPE method is that it ensures mathematically that the attention score function is dependent only on the relative distance between a query and a key, rather than their absolute positions. This is considered to be a desirable property of LLMs [13, 14].\nALiBi Although RoPE was successful in this aim, the work on ALiBi [6] demonstrated that RoPE was not able to perform zero-shot context length extrapolation. The ALiBi paper showed that RoPE quickly degraded as it was tested on context lengths longer than the model had seen during training; it also introduced its own proposed alternative that showed superior extrapolation ability on their benchmarks. However, ALiBi has its own shortcomings; its use of simple linear functions for modulating the attention scores over distance means that it cannot represent as complex distance-attention-functions as the Fourier basis of RoPE. In addition, ALiBi uses a single such function per head, further reducing expressive power. This may explain why, although ALiBi does extrapolate, models which utilize it have worse performance than RoPE-based models on benchmarks such as MMLU [2] and the LMSys arena which measures human preferences [15].\nxPos Sun et al. [7] examine why RoPE fails to extrapolate successfully and determines that this is due to the effect of the high frequency components causing residual noise in the attention score even when tokens are long distances apart. They attempt to address this by adding an exponentially decaying amplitude term to RoPE. This new method, called xPos, decays these noisy high frequency components faster than low frequency components. This method shows good results on from-scratch training of LLMs [7], and the intuition driving it aligns with our own hypotheses on the deficiency of RoPE. However, Sun et al. do not experiment in our setting of interest: taking a model pretrained with RoPE and seeing if it can be coaxed (via limited finetuning) to learn the xPos encoding instead. Furthermore, their experiments demonstrate that Blockwise Causal Attention is necessary for them to achieve extrapolation.\nLinear Scaling/Positional Interpolation This simple but effective context length extrapolation technique was concurrently reported by kaiokendev [16] and by a team at Meta [17]. The method that is used here is to simply divide the position vector by a scaling factor which fits the input within the context length of the original model. The intuition of this technique is to utilize the LLM\u2019s interpolation capability, rather than relying on extrapolation. It is a well known phenomenon that neural networks tend to interpolate within a range of previously seen values better than they extrapolate outside that range (e.g. [18]). In the specific case of positional encodings, [17] claim that positional interpolation avoids the risk of massive numerical explosion in attention values associated with extrapolation. We perform many experiments on this scheme and variations of it and report the results in this paper.\nRandomized Positional Encodings Ruoss et al present this method in [19]. During training they randomly generate their position vector by drawing N many samples uniformly without replacement from the range [1, L], where N is the training context length and L is a large value that is greater than the (assumed to be known prior) maximum evaluation context length. These sampled positions are then sorted in increasing order and act as the position inputs that the model sees at evaluation time. During evaluation, the position inputs [1, ..., M] are given to the model. The authors claim improved performance on context length extrapolation. We independently arrived at a similar idea to this paper but instead randomized by drawing from sub-integer positions approximately in the range [1, N]; see Section 4 for further details. We also note that Ruoss et al investigate the use of such a scheme for training LLMs from scratch, whereas we are primarily interested in post-hoc finetuning a pretrained LLM with randomization to enable context length extrapolation."
+        },
+        {
+            "heading": "3 Assessing Long Context Extrapolation",
+            "text": "The main question posed in this paper revolves around extending the context length capacity of LLMs. To evaluate this, a commononly used metric in the literature is perplexity [6, 7, 13]. However, as we show in Section 5.3, perplexity is somewhat coarse-grained for evaluating how well the model can use longer context windows. Our intuition is that \u2014 in many natural language datasets \u2014 a reasonable perplexity score can be achieved even if the model is only attending to information in a limited range (the final 512 tokens, say) of the context window. For example, a positional encoding scheme which simply masks out any elements of the context (and inner key and query activations in the attention heads) that are greater in length than what the model was trained on should succeed in achieving a reasonable perplexity score, but would fare poorly on the tasks we describe below.\nWe expand upon existing work to look at the accuracy of a model when presented with problems which have verifiable answers. In using this metric, we can evaluate how the model is using the additional contextual information in order to respond to prompts. We rely on two types of evaluation tasks to assess models\u2019 ability to extract and use information from long input contexts: the first is key-value retrieval tasks and the other is question answering tasks. By using these two types of tasks, we enforce the requirement of the model to attend to the full context in order to obtain high accuracies. We consider the retrieval task to be a more pure test of information retrieval free of many natural language biases. However, the retrieval task is a somewhat artificial construct which the LLM will likely not have seen during training, so we also include question answering to replicate more real-world tasks.\nLongChat-Lines We start with a synthetic fine-grained key-value retrieval task first proposed in [20] and also used by [21]. While these works are excellent given the standard contexts of LLMs, they lack the longer context lengths that are needed to evaluate our experiments. Thus, we utilize the same task as [20, 21], but generate additional samples of longer context lengths. This task gives the model a prompt with lines of the form:\n\u2022 line grotesque-classmate: REGISTER CONTENT is < 42527 >\n\u2022 line imperfect-bull: REGISTER CONTENT is < 3119 >\n\u2022 line supreme-inversion: REGISTER CONTENT is < 13960 >\n\u2022 ...\nThe model is asked to memorize the value corresponding to the REGISTER CONTENT for each line and is asked at the end to retrieve the value for a specific line. By varying the number of lines in the prompt, we can control the context length. We release longer length versions of this task than in [20], and we also release the generation script for this task.\nWikiQA We also create two new datasets from the Natural Questions [12] dataset with longer context evaluations specifically in mind which we collectively term WikiQA. In this evaluation, the prompt given to the LLM is in the format of a Wikipedia document followed by a question pertaining to that document; the model is asked to answer the question. We ensure the answer to the question is a short answer which is either a single word or a small sentence that has an exact string match in the document given to the LLM as input. We call this task Free Form QA (FFQA).\nA potential issue in a Wikipedia based dataset however is that the model could perhaps correctly answer from its pretrained corpus and not specifically using the information in the context. To resolve this, we have created another \u201caltered\u201d dataset, which we call Altered Numeric QA (AltQA). This dataset consists only of questions which have numerical answers. Here, we change the answer and every occurrence of the answer in the document to a different number, thus ensuring that the LLM must attend to the context, and only the context, in order to give a correct answer. The modification is made as follows:\n\u2022 If the answer is a year, which is quite frequent, (i.e. it is between 1000-2100), we change it to a different random value within +/- 10 of the original value. We treat years as a special case so as not to disrupt the overall coherence of the document by having highly anachronistic date values.\n\u2022 If the answer is any other number, we change it to a different random number which has the same number of digits.\nFigure 1 highlights examples from our WikiQA dataset. Since the contexts in our application are long, the location of the answer within the context could play a significant role in the model\u2019s ability to answer the question. Therefore, we utilize both of the WikiQA tasks to conduct analysis on the performance of the LLM as both the answer location moves within the document (in the beginning 10%, the last 10%, or randomly anywhere else), as well as with the question given at the beginning or the end of the prompt \u2014 in a bid to replicate the analyses of [22]."
+        },
+        {
+            "heading": "4 Context Length Extrapolation Techniques",
+            "text": "We examine several context length extrapolation techniques, including existing approaches (or slight variations on them) as well as our own newly proposed approaches."
+        },
+        {
+            "heading": "4.1 Existing Context Length Extrapolation Techniques",
+            "text": "Several methods exist to adapt RoPE positional encodings to longer context lengths. We evaluated the following techniques.\nLinear Scaling/Positional Interpolation Here, the position vector is divided by a scaling factor. Hence if the original model was trained on a range of positions [0, 1, ..., 2048], say, then the new model will see instead [ 0x , 1 x , ..., 2048 x ] where x is the scaling factor.\nxPos We wanted to examine whether a checkpoint trained with the base model\u2019s RoPE encoding scheme could be finetuned to the xPos [7] scheme. On top of the programming hurdle of patching the entire attention module to handle xPos\u2019 unique transformation of keys and queries, the major issue presented by this sort of adaptation is xPos\u2019 sensitivity to floating point precision. The method relies on scaling the key by numeric values with large (absolute) exponents; these later cancel in the dot product with the query. For long contexts, however, the large values can actually exceed the magnitude supported by float16. We chose to\nwork around this by performing the core attention operation in float32 at the cost of a 2X training slow down.\nRandomized Position Encodings Here we randomize the distances between the position values uniformly in the range [\u03f5, 2] for 0 < \u03f5 \u226a 1, rather than using the typical [0, 1, ..., n] which has fixed intervals of size 1. The intuition behind this approach is that by showing the model many different intra-position distances at finetuning time, the model will be able to generalize to any choice of fine-grained positions at evaluation time, thereby allowing for an effective increase in context length by choosing smaller divisions. This has some similarity to the procedure described in Ruoss et al. [19]. We set an upper bound of 2 so that the model will in expectation see a final position of n (as E[X] \u2248 1 for X \u223c U(\u03f5, 2)). We also set a positive, non-zero lower bound of \u03f5 in order to avoid issues with position aliasing due to limited numerical precision."
+        },
+        {
+            "heading": "4.2 Newly Proposed Context Length Extrapolation Techniques",
+            "text": "Power Scaling In the original RoPE, the basis that is used is given by:\n\u0398 = {\u03b8i = 10000\u2212 2(i\u22121) d | i \u2208 {1, 2, . . . , d 2 }} (1)\nwhere d is the embedding dimension. We use instead the basis given by:\n\u0398\u2217 = { \u03b8\u2217i = \u03b8i ( 1\u2212 2i\nd\n)k | i \u2208 {1, 2, . . . , d\n2 }\n} (2)\nwhere k is a parameter to be set. By applying this transformation, the high frequency (short distance) elements of the basis are less affected than the low frequency (long distance) elements, which are made even lower in frequency \u2013 see Figure 2. By doing so, our hope was that the model would have to perform less complex extrapolation for the low frequencies where it has not seen the full range of the periodic function during train time, and thereby extrapolate better. A potential issue however is that the model relies on specific relationships across frequencies that a linear transform preserves but a non-linear transformation destroys.\nTruncated Basis Beginning from Equation 1, we instead use the basis given by applying:\n\u03b8\u2217i =  \u03b8i for \u03b8i \u2265 b, \u03c1 for a < \u03b8i < b,\n0 for \u03b8\u2217i \u2264 a. (3)\nWhere \u03c1 is a fixed value that is relatively small, and a and b are chosen cutoff values. The idea here is that we wish to preserve the high frequency components of the basis but set the low frequency elements to a constant value\u2014in this case, 0. By doing so with a judicious choice of cutoff a, the model will have experienced all values of the basis in the context length used during finetuning (due to the periodic nature of the sine and cosine functions) and should therefore extrapolate better to larger context lengths for evaluation. However, the model still needs to be able to distinguish between distances that span the entire context it was trained on, so we include the \u03c1 fixed frequency as well. In summary, we hope that with this basis the model can avoid the issue of having to learn complicated coefficients in the entire RoPE basis by instead learning smooth functions at longer distances (as demonstrated in the paper [17]).\nIn Figure 2, we visually compare the frequencies produced by the standard RoPE basis, power scaling, and truncation."
+        },
+        {
+            "heading": "5 Results & Discussion",
+            "text": "In the following experiments, we finetuned a base LLaMA-13B model on a portion of the RedPajama dataset [5] which has been modified so that each data sample has a size of exactly 4096 tokens. We trained with each positional encoding approach until the evaluation loss roughly plateaued. Loss curves can be found in Appendix B.\nWe then further applied instruction finetuning (IFT) with the Vicuna dataset [23] and using LoRA [24] on the base model. However, we discovered that although IFT did boost accuracies on LongChat-Lines, it did not significantly change the range of contexts that the base model was able to deal with (see Figure 5 in Appendix C). This we found to be a marked contrast with the WikiQA variants; there, IFT was necessary for the model to produce any meaningful results at all. Hence for LongChat-Lines, we used non-IFT models; for WikiQA, we performed evaluation on a subset of the more promising models with additional IFT."
+        },
+        {
+            "heading": "5.1 Finetuned Context Length Extrapolation",
+            "text": "LongChat-Lines We conducted evaluations on LongChat-Lines with the techniques described in Section 4 and report the results in Table 1. We expected all models to be able to perform with a non-zero accuracy until at least 4200 given that the model is finetuned on context lengths of 4096 and convergence is achieved in all cases. However, this turned out not to be the case for xPos, which was not able to perform the task at all. We suspect this may be because xPos is too different from the RoPE basis for the model to be able to adapt in finetuning; as we see in Appendix B, the training and evaluation loss for xPos was not able to reach the same values as the other methods. This may also be a product of the numerical precision issues that are encountered in the implementation of xPos.\nLinear scaling is able to achieve successful context length extrapolation. It is worth mentioning here that we would expect scaling with a factor of x to achieve non-zero accuracies up to 2048 \u00b7 x, due to the base model being trained on a context length of 2048. Although this is observed with linear scaling with a factor of 4, we see in Table 1 much quicker degradation as context length increases with a scaling factor of 16. By context length 17 500 it is already recording 0% accuracy even though we naively would expect reasonable\n2048 , b =\n2\u03c0\n2048 , \u03c1 =\n1\n16\n2\u03c0\n2048 . Randomization uses a\nlower bound parameter of \u03f5 = 116 . Evaluations are all performed without additional instruction finetuning.\nperformance up to roughly 32 000 context length. We believe that this indicates that there are limits to the interpolation methodology and are interested in examining this further in future work.\nThe power basis, although it performs best at the shortest context, also decays fastest and is unable to show any extrapolation performance beyond 4200 context at all.\nThe randomized position approach may appear to be extrapolating based on the results in the table. However, this is likely due to how we evaluated the model. At train time, the model samples distances uniformly in [\u03f5, 2] as described in Section 4. At evaluation time, it is unclear a priori what the best choice of positions is. We tried a range of different approaches: fixed distances of size 1, uniform random in [\u03f5, 2] and uniform random in [\u03f5, 1]. We found best results for extrapolation with the latter, so we report this. We hoped that by reducing the upper bound further, we could coax the desired context length extrapolation from the model. However, going to [\u03f5, 0.5] and below significantly degraded the performance of the model. Our conclusion from this is that the model cannot independently learn to represent each position without knowing the other positions as well. An interesting avenue for future work would be to condition the Q-proj and K-proj matrices on the sampled positions during training (and evaluation).\nThe truncated basis does seem to offer true context length extrapolation, as it is able to achieve non-zero accuracies on context lengths outside any values it has seen before. Although the performance does degrade as the length increases and the current manifestation of this is inferior in performance to linear scaling, we believe that this may be a direction of investigation that can lead to better extrapolation performance. Truncation can also be combined with linear scaling, as we discuss in Section 5.2.\nWikiQA Variants We further conducted evaluations of the linear scaling and truncated basis approaches on the WikiQA variants described in Section 4. Unlike the retrieval task, we found that models were unable to perform this task successfully without any instruction finetuning, so we performed this analysis on only a few approaches of interest. The results are shown in Tables 2 and 3. They largely match the pattern seen in LongChat-Lines\u2014linear scaling with scale factor 4 is able to perform the task up to 7500 context but not beyond, whilst scale factor 16 is able to surpass this cutoff but with a slope-off in accuracy. As with LongChat-Lines, we see that the models appear to show some degradation of accuracy as context length increases. We see again that the truncated basis is able to extrapolate successfully to about the same context length as in LongChat-Lines with comparable accuracies to linear scaling with scale 4, but again seemingly cannot go further than a context length of about 8k."
+        },
+        {
+            "heading": "2000 0.72 0.69 0.74",
+            "text": ""
+        },
+        {
+            "heading": "3800 0.72 0.73 0.73",
+            "text": ""
+        },
+        {
+            "heading": "7500 0.62 0.70 0.46",
+            "text": ""
+        },
+        {
+            "heading": "1900 0.44 0.47 0.46",
+            "text": ""
+        },
+        {
+            "heading": "3800 0.49 0.44 0.55",
+            "text": ""
+        },
+        {
+            "heading": "7600 0.46 0.45 0.36",
+            "text": ""
+        },
+        {
+            "heading": "5.2 Zero-Shot Linear Scaling",
+            "text": "In the previous section, we examined the performance of linear scaling using the same value at finetuning time as at evaluation time. In this section, we instead investigate the effect of using a different scaling factor at evaluation time than what the model was trained on. In Table 4, we show results for this strategy as evaluated on LongChat-Lines. We find in general that if the model is trained with a scale factor of x, then the model can successfully evaluate zero-shot with a scale factor of 2x (with some reduction of accuracy within the range of context lengths the model could previously handle). It also appears that at a scale factor of 16, the model is no longer able to increase its effective context length by using this approach. We also find that evaluating with >2x leads to the model breaking and being unable to perform the task.\nWe show that zero-shot linear scaling can be applied successfully after finetuning with the truncated basis. Interestingly, whilst for linear scaling using a longer scale factor at evaluation time results in a deterioration of the accuracy on context lengths the model could previously handle, this does not appear to be the case for the truncated basis\u2014instead, the range of context lengths that the model achieves non-zero accuracy on increases, and accuracy improves among context lengths the model was finetuned on."
+        },
+        {
+            "heading": "5.3 Comparing Perplexity To Tasks",
+            "text": "In Section 3, we introduced two tasks which specifically require a long-context LLM to extract answers from throughout the entire text, arguing that these tasks may assess long context performance better than raw perplexity. To analyze how perplexity fares as compared to these tasks, we report perplexities on a held out set of the RedPajama dataset for a subset of our trained models (see Table 5). Perplexity scores do show a large increase when a context length is reached that the model is completely unable to deal with (for example, beyond 2k on the base LLaMA model, or beyond 8k on the linear scale 4 model). However, they are appear less effective for showing the decrease in long-context capability within that effective range. In particular, while we observe a steep slope-off in performance on LongChat-Lines and the WikiQA variants as the context length increases for the linear scale 4 and truncated basis columns of Table 1), this degradation is not strongly reflected in the perplexity scores at those contexts. However, the linear scale 16 model does appear to have well-correlated perplexity and accuracy on our tasks. Perhaps most tellingly, we see\nthe shortcoming of perplexity for between-model comparisons. According to Table 5, the truncated basis performs best at 8k and below; however, in Tables 1, 2 and 3 truncated is significantly lower in performance compared to the linear scaled models at 8k context.\nPerplexity is commonly used in the literature to measure long context performance [13, 7], but we believe these results show it is not in itself a sufficient measure of long context performance, but is best utilised with other tasks which additionally probe the capabilities of the LLM."
+        },
+        {
+            "heading": "5.4 Analysis of question and answer positioning",
+            "text": "For the WikiQA variants, we performed a stratified analysis of the effect of the position of the answer and the question. As described in Section 4, we looked at the impact of placing the answer within the first 10% of the document, the last 10%, or elsewhere randomly. We also examined the effect of putting the question at the beginning or the end of the prompt. The results are shown in Tables 6 and 7, performed on the model with linear scaling with a factor of 16, with additional instruction finetuning."
+        },
+        {
+            "heading": "2000 0.74 0.68 0.66 0.70 0.69",
+            "text": ""
+        },
+        {
+            "heading": "3800 0.70 0.67 0.66 0.63 0.73",
+            "text": ""
+        },
+        {
+            "heading": "7500 0.69 0.63 0.65 0.61 0.70",
+            "text": ""
+        },
+        {
+            "heading": "1900 0.37 0.40 0.36 0.27 0.47",
+            "text": ""
+        },
+        {
+            "heading": "3800 0.40 0.30 0.32 0.24 0.44",
+            "text": ""
+        },
+        {
+            "heading": "7600 0.35 0.34 0.35 0.24 0.45",
+            "text": "We aimed to build on a similar analysis from [22]. However, we were not able to replicate the results shown in that paper on the LongChat-13B (16K) model (to which our modeling approach is most comparable). On both FreeFormQA and AlteredNumericQA, we observed no clear trend with regards to the location of the answer within the prompt and the model\u2019s accuracy up to 15k context length. There also did not appear to be a significant impact on the location of the question for AlteredNumericQA, but there is a noticeable impact observed for FreeFormQA where having the question at the end appears to have a significant improvement in accuracy. However, at 24k and 32k context lengths we see a clear indication in both datasets for both the answer at the end and question at the end returning superior accuracy to their placements elsewhere. These results are a marked contrast to those in [22]. Our take away from this is that there is plausibly a great deal of task-conditional variability in the performance of LLMs with regards to how well they can utilize all portions of the context; even small differences in task construction can lead to large differences in observed trends."
+        },
+        {
+            "heading": "6 Conclusion and Limitations",
+            "text": "In this paper we examined multiple approaches to finetuning a pretrained base LLaMA and LLaMA2 LLM that has a limited context length such that it is capable of extrapolating zero-shot to new, longer context lengths. We compared the methods using perplexity, as well as two custom tasks that probe long context performance; we find that the custom tasks offer a more fine-grained understanding of long context performance than perplexity. We showed that the method of linear interpolation performed best at context length extrapolation, and found some promise in the potential of using a new basis which we termed the truncated basis. We release three models which we call Giraffe that extend the context length of the base LLaMA and LLaMA 2 models using the method of linear interpolation.\nThere is significant room for building on the work presented in this paper. We note that all methods show\na degradation in accuracy on our evaluation tasks as context length increases, even though perplexity often remains reasonable and the model can still produce coherent outputs. This is a shortcoming that would be of interest to address, and in our view is necessary for claiming \u2018true\u2019 long context extrapolation ability of a model.\nThe limitations of this work are that we only conducted our perplexity analysis on a single document dataset. Future work could look to replicate this analysis on other datasets. Additionally, we focused specifically on context-length extrapolation from a pretrained base model, and in particular the LLaMA and LLaMA 2 models trained with RoPE positional encodings. Future work could investigate whether the analysis herein extends to other positional encoding types and models. Future work could also address the limitations of the linear interpolation method. We see some evidence on the LongChat-Lines task in particular of accuracy degradation as the scale factor is increased. What is the limit of the size of scale factor of this method? Is there a point beyond which it simply does not improve the range of contexts it can handle? Furthermore, can the truncated basis approach which seems to show signs of true extrapolation capability be modified in a manner to gain parity with or surpass the linear interpolation method? We believe these are some potential future directions of interest."
+        },
+        {
+            "heading": "A LLaMA 2",
+            "text": "As we were finalising this paper, Meta released LLaMA 2 [11]. We verified that similar results of context length extrapolation were achievable with LLaMA 2 by the linear interpolation method. We applied the same method as described in Section 4, training LLaMA 2-13B on a portion of the RedPajama dataset modified such that each data sample has a size of exactly 4096 tokens. We then also applied instruction finetuning with the Vicuna dataset. We used a scale of 8. Performance is shown in tables 8 and 9.\nWe see that the model is able to achieve non-zero accuracies on LongChat-Lines up to a context length of 22000, further than any of the models we tested in the main paper. The model is also able to achieve non-zero performance on the WikiQA variants up to 32k context. However, we do see diminishing accuracy in both tasks as the context length increases. It is also worth noting that the accuracies on both tasks are slightly lower than LLaMA 1 with scale 16 on the context lengths which both models are capable of producing non-zero results."
+        },
+        {
+            "heading": "B Loss Curves",
+            "text": "C Impact of IFT\nAs mentioned in Section 5 of the main text, we found that instruction-fine-tuning with the Vicuna dataset did improve accuracies on LongChat-Lines, but did not change the span of non-zero contexts for a given model. Figure 5 shows this on the model with linear interpolation with scale 4."
+        }
+    ],
+    "title": "Giraffe: Adventures in Expanding Context Lengths in LLMs",
+    "year": 2023
+}

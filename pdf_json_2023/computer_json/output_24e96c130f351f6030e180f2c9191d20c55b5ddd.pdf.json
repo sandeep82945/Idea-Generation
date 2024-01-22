@@ -1,0 +1,84 @@
+{
+    "abstractText": "Integrated sensing and communication (ISAC) system has been envisioned as a promising technology to be applied in future applications requiring both communication and highaccuracy sensing. Different from most research focusing on theoretical analysis and optimization in the area of ISAC, we implement a reconfigurable distributed antennas and reflecting surfaces (RDARS)-aided ISAC system prototype to achieve the dual-functionalities with the communication signal. A RDARS, composed of programmable elements capable of switching between reflection mode and connected mode, is introduced to assist in uplink signal transmission and sensing. The developed RDARS-aided ISAC prototype achieves reliable user localization without compromising the communication rate, showcasing its potential for future 6G systems.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Jintao Wang"
+        },
+        {
+            "affiliations": [],
+            "name": "Chengwang Ji"
+        },
+        {
+            "affiliations": [],
+            "name": "Jiajia Guo"
+        },
+        {
+            "affiliations": [],
+            "name": "Shaodan Ma"
+        }
+    ],
+    "id": "SP:2e42391a09c6e91fda4d579f5a64a2b0b3000d18",
+    "references": [
+        {
+            "authors": [
+                "F. Liu",
+                "Y. Cui",
+                "C. Masouros",
+                "J. Xu",
+                "T.X. Han",
+                "Y.C. Eldar",
+                "S. Buzzi"
+            ],
+            "title": "Integrated sensing and communications: Toward dual-functional wireless networks for 6G and beyond",
+            "venue": "IEEE Journal on Selected Areas in Communications, vol. 40, no. 6, pp. 1728\u20131767, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Z. Shao",
+                "X. Yuan",
+                "W. Zhang",
+                "M. Di Renzo"
+            ],
+            "title": "Joint localization and information transfer for RIS aided full-duplex systems",
+            "venue": "2022 IEEE Global Communications Conference, pp. 3253\u20133258, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C. Ma",
+                "X. Yang",
+                "J. Wang",
+                "G. Yang",
+                "S. Ma"
+            ],
+            "title": "Reconfigurable distributed antennas and reflecting surface (RDARS): A new architecture for wireless communications",
+            "venue": "arXiv preprint arXiv:2303.06950, 2023.",
+            "year": 2023
+        }
+    ],
+    "sections": [
+        {
+            "text": "Index Terms\u2014Reconfigurable distributed antennas and reflecting surfaces (RDARS), Integrated sensing and communication system (ISAC), Localization"
+        },
+        {
+            "heading": "I. BACKGROUND",
+            "text": "With the explosive growth in demands of wireless communication, the integrated sensing and communications (ISAC) system has been envisioned as one of the key enabling technologies in 6G systems. ISAC leverages a shared platform to enhance spectrum and hardware efficiencies by integrating communication and sensing functionalities, effectively utilizing shared resources. To achieve simultaneous sensing and communications, most of the current research focuses on the theoretical study of ISAC systems, such as joint waveform design, joint signal processing, and performance optimization [1]. In this paper, we design a novel reconfigurable surfaceaided integrated sensing and communication prototype to simultaneously achieve communication and user localization functions. Different from the conventional reconfigurable intelligent surface (RIS)-aided ISAC systems [2], our prototype utilizes the recently proposed reconfigurable distributed antennas and reflecting surface (RDARS) architecture [3] to realize user localization and enhance communication performance simultaneously."
+        },
+        {
+            "heading": "II. TECHNICAL DESIGN",
+            "text": "The architecture diagram of the proposed uplink ISAC system is shown in Fig. 1, where the low-cost and low-energyconsumption RDARS is deployed to assist in the uplink signal transmission and user localization.\nThe RDARS [3] is composed of a number of passive elements, each of which can be dynamically programmed to operate on two working modes, namely, the reflection mode and the connected mode as shown in Fig. 1. The element under the reflection mode works as the conventional RIS to dynamically adjust the wireless channels into favorable ones. On the other hand, the element working on the connected mode serves as the remote receive antenna to receive the signal directly. Flexible configurations are available for the number and locations of the connected elements. A thorough performance analysis and experiment test can be found in [3]. By introducing such an appealing structure of RDARS, both the communication and sensing performance will be improved significantly."
+        },
+        {
+            "heading": "A. Hardware Description",
+            "text": "The developed hardware platform of RDARS-aided ISAC system with one base station (BS) and one user equipment (UE), each with a single antenna, is shown in Fig. 2. The system is working at 3.7GHz with 20 MHz bandwidth, using a standard 3GPP LTE radio frame structure.\n1) Transceiver: Both the BS and the UE utilize the software-defined radio (SDR) platform, composed of the PXI hardware architecture and the LabVIEW programming software, to realize real-time communication, including videostreaming transmission. Specifically, the BS consists of a USRP-2954, multiple FlexRIO 7976R FPGA modules, and\n\u00a9 2023 IEEE. Personal use of this material is permitted. Permission from IEEE must be obtained for all other uses, in any current or future media, including reprinting/republishing this material for advertising or promotional purposes, creating new collective works, for resale or redistribution to servers\nor lists, or reuse of any copyrighted component of this work in other works.\nar X\niv :2\n30 8.\n07 99\n1v 1\n[ ee\nss .S\nP] 1\n5 A\nug 2\n02 3\nOmni Antenna\nUSRP-2954\nBS\nHost\nUE\nRDARS\nUE\nOmni Antenna\nUSRP-2974 c\n\nx\ny\nz in\nNetwork cable\nRF cable\noff-axis angle:\nout\nazimuth angle\nin out\n\nind\noutd\nRDARS controller\nxoy\nFig. 2. The RDARS-aided ISAC system prototype.\none PXIe-1085 chassis for real-time baseband signal processing, including modulation, channel estimation, fast Fourier transform, etc. The UE is equipped with one USRP-2974 for uplink signal transmission. Both signal processing and sensing are performed at the BS.\n2) RDARS: Furthermore, the RDARS operates within the 3.4GHz-3.8GHz frequency band and consists of 256 elements, each equipped with a 2-bit phase shifter when performing reflection mode and also can be switched to the connected mode as needed. The mode and the phase shift of each element can be dynamically and independently controlled by the RDARS controller with a total 512-bit control signal delivered through the control link using the User Datagram Protocol (UDP). In this prototype, we select a elements serving in the connected mode, and the remaining 256\u2212a elements in the reflection mode are encoded to generate a specific reflection beam towards BS. Both the number and positions of the a connected elements can be flexibly configured."
+        },
+        {
+            "heading": "B. Main Algorithm Design",
+            "text": "For the software design, we develop a two-stage sensing scheme to achieve user localization, while maintaining communication performance. The two-stage localization scheme includes beam sweeping and range estimation.\n1) Beam Sweeping: Due to the special structure of RDARS, the 2-bit phase shifter of each element under reflection mode can be programmed to form the designated beam for specific directions. And BS has the capability of controlling the phase of each element working on reflecting mode by generating the unique phase coding matrix. In view of the beam width of RDARS, the beam sweeping overhead can be reduced by separating the beam space into finite blocks. With the fixed deployments of BS and RDARS, a 2D azimuth-elevation sweeping scheme is proposed to determine the optimal incident angle based on the measured received signal strength indication (RSSI). The proposed beam sweeping scheme can help exploit the angle information of the user without affecting the communication performance.\n2) Range Estimation: Based on the obtained optimal azimuth and elevation angles of the user, we first derive the angle between UE-RDARS and BS-RDARS based on the geometry\nFig. 3. Field test result.\nrelationship. On the other hand, the received power at the BS\u2019s antenna and the RDARS\u2019s connected elements can be measured based on the RSSI information. Even without prior knowledge of path loss parameters, the range between the user and RDARS can be substantially estimated with the measured received powers and geometry equations. However, due to the signal fluctuations incurred by shadow fading and imperfect hardware implementation, it\u2019s necessary to compensate that by virtue of some calibration algorithms. Consequently, the location of the user is obtained with the proposed two-stage scheme.\nThe field test result of the proposed RDARS-aided ISAC system is shown in Fig. 3. The RSSI fluctuations are illustrated in the field test during the beam sweeping, with one peak in accordance with the optimal beam. And the best output of the beam sweeping is less than 5\u00b0 from the ground truth. The range estimation also shows better performance than some relevant works. At the same, the data rate of uplink communications with 64-QAM modulation achieves 81.8 Mbit/s, which demonstrates the developed prototype realizes integrated sensing and communication functionalities simultaneously.\nIII. CONCLUSION In this paper, we develop an uplink RDARS-aided ISAC system prototype to simultaneously achieve communication signal transmission and user location estimation. The proposed RDARS-ISAC prototype provides an insightful precedent for integrating the existing communication network with sensing functionalities, such as indoor localization, without any additional hardware resources.\nACKNOWLEDGMENT This work was supported in part by the Science and Technology Development Fund, Macau SAR under Grants 0087/2022/AFJ and SKL-IOTSC(UM)-2021-2023, in part by the National Natural Science Foundation of China under Grant 62261160650. REFERENCES [1] F. Liu, Y. Cui, C. Masouros, J. Xu, T. X. Han, Y. C. Eldar, and S. Buzzi,\n\u201cIntegrated sensing and communications: Toward dual-functional wireless networks for 6G and beyond,\u201d IEEE Journal on Selected Areas in Communications, vol. 40, no. 6, pp. 1728\u20131767, 2022. [2] Z. Shao, X. Yuan, W. Zhang, and M. Di Renzo, \u201cJoint localization and information transfer for RIS aided full-duplex systems,\u201d 2022 IEEE Global Communications Conference, pp. 3253\u20133258, 2022. [3] C. Ma, X. Yang, J. Wang, G. Yang, and S. Ma, \u201cReconfigurable distributed antennas and reflecting surface (RDARS): A new architecture for wireless communications,\u201d arXiv preprint arXiv:2303.06950, 2023."
+        }
+    ],
+    "title": "Demo: Reconfigurable Distributed Antennas and Reflecting Surface (RDARS)-aided Integrated Sensing and Communication System",
+    "year": 2023
+}

@@ -1,0 +1,925 @@
+{
+    "abstractText": "Recurrent Neural Networks (RNNs) have been widely used in Natural Language Processing (NLP) tasks given its superior performance on processing sequential data. However, it is challenging to interpret and debug RNNs due to the inherent complexity and the lack of transparency of RNNs. While many explainable AI (XAI) techniques have been proposed for RNNs, most of them only support local explanations rather than global explanations. In this paper, we present DeepSeer, an interactive system that provides both global and local explanations of RNN behavior in multiple tightlycoordinated views for model understanding and debugging. The core of DeepSeer is a state abstraction method that bundles semantically similar hidden states in an RNN model and abstracts the model as a finite state machine. Users can explore the global model behavior by inspecting text patterns associated with each state and Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org. CHI \u201923, April 23\u201328, 2023, Hamburg, Germany \u00a9 2023 Copyright held by the owner/author(s). Publication rights licensed to ACM. ACM ISBN 978-1-4503-9421-5/23/04. . . $15.00 https://doi.org/10.1145/3544548.3580852 the transitions between states. Users can also dive into individual predictions by inspecting the state trace and intermediate prediction results of a given input. A between-subjects user study with 28 participants shows that, compared with a popular XAI technique, LIME, participants using DeepSeer made a deeper and more comprehensive assessment of RNN model behavior, identified the root causes of incorrect predictions more accurately, and came up with more actionable plans to improve the model performance.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Zhijie Wang"
+        },
+        {
+            "affiliations": [],
+            "name": "Yuheng Huang"
+        },
+        {
+            "affiliations": [],
+            "name": "Da Song"
+        },
+        {
+            "affiliations": [],
+            "name": "Lei Ma"
+        },
+        {
+            "affiliations": [],
+            "name": "Tianyi Zhang"
+        }
+    ],
+    "id": "SP:c6cd00362994d05a1f9e2c39eff1ef624a1b5030",
+    "references": [
+        {
+            "authors": [
+                "Mart\u00edn Abadi",
+                "Ashish Agarwal",
+                "Paul Barham",
+                "Eugene Brevdo",
+                "Zhifeng Chen",
+                "Craig Citro",
+                "Greg S. Corrado",
+                "Andy Davis",
+                "Jeffrey Dean",
+                "Matthieu Devin",
+                "Sanjay Ghemawat",
+                "Ian Goodfellow",
+                "Andrew Harp",
+                "Geoffrey Irving",
+                "Michael Isard",
+                "Yangqing Jia",
+                "Rafal Jozefowicz",
+                "Lukasz Kaiser",
+                "Manjunath Kudlur",
+                "Josh Levenberg",
+                "Dandelion Man\u00e9",
+                "Rajat Monga",
+                "Sherry Moore",
+                "Derek Murray",
+                "Chris Olah",
+                "Mike Schuster",
+                "Jonathon Shlens",
+                "Benoit Steiner",
+                "Ilya Sutskever",
+                "Kunal Talwar",
+                "Paul Tucker",
+                "Vincent Vanhoucke",
+                "Vijay Vasudevan",
+                "Fernanda Vi\u00e9gas",
+                "Oriol Vinyals",
+                "Pete Warden",
+                "Martin Wattenberg",
+                "Martin Wicke",
+                "Yuan Yu",
+                "Xiaoqiang Zheng"
+            ],
+            "title": "TensorFlow: Large-Scale Machine Learning on Heterogeneous Systems. https://www.tensorflow.org/ Software available from tensorflow.org",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Amina Adadi",
+                "Mohammed Berrada"
+            ],
+            "title": "Peeking inside the black-box: a survey on explainable artificial intelligence (XAI)",
+            "venue": "IEEE access",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Julius Adebayo",
+                "Michael Muelly",
+                "Ilaria Liccardi",
+                "Been Kim"
+            ],
+            "title": "Debugging Tests for Model Explanations",
+            "venue": "Advances in Neural Information Processing Systems",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Saleema Amershi",
+                "Max Chickering",
+                "Steven M Drucker",
+                "Bongshin Lee",
+                "Patrice Simard",
+                "Jina Suh"
+            ],
+            "title": "Modeltracker: Redesigning performance analysis tools for machine learning",
+            "venue": "In Proceedings of the 33rd Annual ACM Conference on Human Factors in Computing Systems",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Saleema Amershi",
+                "DanWeld",
+                "Mihaela Vorvoreanu",
+                "Adam Fourney",
+                "Besmira Nushi",
+                "Penny Collisson",
+                "Jina Suh",
+                "Shamsi Iqbal",
+                "Paul N Bennett",
+                "Kori Inkpen"
+            ],
+            "title": "Guidelines for human-AI interaction",
+            "venue": "In Proceedings of the 2019 chi conference on human factors in computing systems",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Alejandro Barredo Arrieta",
+                "Natalia D\u00edaz-Rodr\u00edguez",
+                "Javier Del Ser",
+                "Adrien Bennetot",
+                "Siham Tabik",
+                "Alberto Barbado",
+                "Salvador Garc\u00eda",
+                "Sergio Gil-L\u00f3pez",
+                "Daniel Molina",
+                "Richard Benjamins"
+            ],
+            "title": "Explainable Artificial Intelligence (XAI): Concepts, taxonomies, opportunities and challenges toward responsible AI",
+            "venue": "Information Fusion",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Elnaz Barshan",
+                "Marc-Etienne Brunet",
+                "Gintare Karolina Dziugaite"
+            ],
+            "title": "Relatif: Identifying explanatory training samples via relative influence",
+            "venue": "In International Conference on Artificial Intelligence and Statistics. PMLR,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "David Bau",
+                "Bolei Zhou",
+                "Aditya Khosla",
+                "Aude Oliva",
+                "Antonio Torralba"
+            ],
+            "title": "Network dissection: Quantifying interpretability of deep visual representations",
+            "venue": "In Proceedings of the IEEE conference on computer vision and pattern recognition",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Tom Bocklisch",
+                "Joey Faulkner",
+                "Nick Pawlowski",
+                "Alan Nichol"
+            ],
+            "title": "Rasa: Open source language understanding and dialogue management",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Markus B\u00f6gl",
+                "Wolfgang Aigner",
+                "Peter Filzmoser",
+                "Tim Lammarsch",
+                "Silvia Miksch",
+                "Alexander Rind"
+            ],
+            "title": "Visual analytics for model selection in time series analysis",
+            "venue": "IEEE transactions on visualization and computer graphics 19,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Carrie J Cai",
+                "Jonas Jongejan",
+                "Jess Holbrook"
+            ],
+            "title": "The effects of examplebased explanations in a machine learning interface",
+            "venue": "In Proceedings of the 24th international conference on intelligent user interfaces",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Kyunghyun Cho",
+                "Bart van Merri\u00ebnboer",
+                "Dzmitry Bahdanau",
+                "Yoshua Bengio"
+            ],
+            "title": "On the Properties of Neural Machine Translation: Encoder\u2013Decoder Approaches",
+            "venue": "In Proceedings of SSST-8, Eighth Workshop on Syntax, Semantics and Structure in Statistical Translation",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Arun Das",
+                "Paul Rad"
+            ],
+            "title": "Opportunities and challenges in explainable artificial intelligence (xai): A survey",
+            "venue": "arXiv preprint arXiv:2006.11371",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jonathan Dodge",
+                "Q Vera Liao",
+                "Yunfeng Zhang",
+                "Rachel KE Bellamy",
+                "Casey Dugan"
+            ],
+            "title": "Explaining models: an empirical study of how explanations impact fairness judgment",
+            "venue": "In Proceedings of the 24th international conference on intelligent user interfaces",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Xiaoning Du",
+                "Yi Li",
+                "Xiaofei Xie",
+                "Lei Ma",
+                "Yang Liu",
+                "Jianjun Zhao"
+            ],
+            "title": "Marble: Model-based robustness analysis of stateful deep learning systems",
+            "venue": "In Proceedings of the 35th IEEE/ACM International Conference on Automated Software Engineering",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Xiaoning Du",
+                "Xiaofei Xie",
+                "Yi Li",
+                "Lei Ma",
+                "Yang Liu",
+                "Jianjun Zhao"
+            ],
+            "title": "Deepstellar: Model-based quantitative analysis of stateful deep learning systems",
+            "venue": "In Proceedings of the 2019 27th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Mary T Dzindolet",
+                "Scott A Peterson",
+                "Regina A Pomranky",
+                "Linda G Pierce",
+                "Hall P Beck"
+            ],
+            "title": "The role of trust in automation reliance",
+            "venue": "International journal of human-computer studies 58,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "Jeffrey L Elman"
+            ],
+            "title": "Finding structure in time",
+            "venue": "Cognitive science 14,",
+            "year": 1990
+        },
+        {
+            "authors": [
+                "Philippe Fournier-Viger",
+                "Antonio Gomariz",
+                "Ted Gueniche",
+                "Esp\u00e9rance Mwamikazi",
+                "Rincy Thomas"
+            ],
+            "title": "TKS: efficient mining of top-k sequential patterns",
+            "venue": "In International Conference on Advanced Data Mining and Applications",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Antonio Gulli"
+            ],
+            "title": "AG\u2019s corpus of news articles. http://groups.di.unipi.it/ ~gulli/AG_corpus_of_news_articles.html",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "Sandra G Hart",
+                "Lowell E Staveland"
+            ],
+            "title": "Development of NASA-TLX (Task Load Index): Results of empirical and theoretical research",
+            "venue": "In Advances in psychology",
+            "year": 1988
+        },
+        {
+            "authors": [
+                "Jonathan L Herlocker",
+                "Joseph A Konstan",
+                "John Riedl"
+            ],
+            "title": "Explaining collaborative filtering recommendations",
+            "venue": "In Proceedings of the 2000 ACM conference on Computer supported cooperative work",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "Sepp Hochreiter",
+                "J\u00fcrgen Schmidhuber"
+            ],
+            "title": "Long short-termmemory",
+            "venue": "Neural computation 9,",
+            "year": 1997
+        },
+        {
+            "authors": [
+                "Fred Hohman",
+                "Andrew Head",
+                "Rich Caruana",
+                "Robert DeLine",
+                "Steven M Drucker"
+            ],
+            "title": "Gamut: A design probe to understand how data scientists understand machine learning models",
+            "venue": "In Proceedings of the 2019 CHI conference on human factors in computing systems",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Zhihua Jin",
+                "Yong Wang",
+                "Qianwen Wang",
+                "Yao Ming",
+                "Tengfei Ma",
+                "Huamin Qu"
+            ],
+            "title": "Gnnlens: A visual analytics approach for prediction error diagnosis of graph neural networks",
+            "venue": "IEEE Transactions on Visualization and Computer Graphics",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Minsuk Kahng",
+                "Pierre Y Andrews",
+                "Aditya Kalro",
+                "Duen Horng Chau"
+            ],
+            "title": "Activis: Visual exploration of industry-scale deep neural network models",
+            "venue": "IEEE transactions on visualization and computer graphics 24,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Andrej Karpathy",
+                "Justin Johnson",
+                "Li Fei-Fei"
+            ],
+            "title": "Visualizing and understanding recurrent networks",
+            "venue": "arXiv preprint arXiv:1506.02078",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Harmanpreet Kaur",
+                "Harsha Nori",
+                "Samuel Jenkins",
+                "Rich Caruana",
+                "Hanna Wallach",
+                "Jennifer Wortman Vaughan"
+            ],
+            "title": "Interpreting Interpretability: Understanding Data Scientists\u2019 Use of Interpretability Tools for Machine Learning",
+            "venue": "In Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Been Kim",
+                "Martin Wattenberg",
+                "Justin Gilmer",
+                "Carrie Cai",
+                "James Wexler",
+                "Fernanda Viegas"
+            ],
+            "title": "Interpretability beyond feature attribution: Quantitative testing with concept activation vectors (tcav)",
+            "venue": "In International conference on machine learning. PMLR,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Ren\u00e9 F Kizilcec"
+            ],
+            "title": "How much information? Effects of transparency on trust in an algorithmic interface",
+            "venue": "In Proceedings of the 2016 CHI Conference on Human Factors in Computing Systems",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Pang Wei Koh",
+                "Kai-Siang Ang",
+                "Hubert H.K. Teo",
+                "Percy Liang"
+            ],
+            "title": "On the Accuracy of Influence Functions for Measuring Group Effects",
+            "venue": "In Advances in Neural Information Processing Systems",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Pang Wei Koh",
+                "Percy Liang"
+            ],
+            "title": "Understanding black-box predictions via influence functions",
+            "venue": "In International Conference on Machine Learning",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Jiwei Li",
+                "Xinlei Chen",
+                "Eduard Hovy",
+                "Dan Jurafsky"
+            ],
+            "title": "Visualizing and Understanding Neural Models in NLP",
+            "venue": "In Proceedings of the 2016 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Rongjian Li",
+                "Wenlu Zhang",
+                "Heung-Il Suk",
+                "Li Wang",
+                "Jiang Li",
+                "Dinggang Shen",
+                "Shuiwang Ji"
+            ],
+            "title": "Deep learning based imaging data completion for improved brain disease diagnosis",
+            "venue": "In International conference on medical image computing and computer-assisted intervention",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Q Vera Liao",
+                "Daniel Gruen",
+                "Sarah Miller"
+            ],
+            "title": "Questioning the AI: informing design practices for explainable AI user experiences",
+            "venue": "In Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Zachary C Lipton"
+            ],
+            "title": "The Mythos of Model Interpretability: In machine learning, the concept of interpretability is both important and slippery",
+            "venue": "Queue 16,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Gang Liu",
+                "Jiabao Guo"
+            ],
+            "title": "Bidirectional LSTM with attention mechanism and convolutional layer for text classification",
+            "venue": "Neurocomputing",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Shusen Liu",
+                "Zhimin Li",
+                "Tao Li",
+                "Vivek Srikumar",
+                "Valerio Pascucci",
+                "Peer-Timo Bremer"
+            ],
+            "title": "Nlize: A perturbation-driven visual interrogation tool for analyzing and interpreting natural language inference models",
+            "venue": "IEEE transactions on visualization and computer graphics 25,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Scott M Lundberg",
+                "Su-In Lee"
+            ],
+            "title": "A Unified Approach to Interpreting Model Predictions",
+            "venue": "In Advances in Neural Information Processing Systems 30,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Shiqing Ma",
+                "Yousra Aafer",
+                "Zhaogui Xu",
+                "Wen-Chuan Lee",
+                "Juan Zhai",
+                "Yingqi Liu",
+                "Xiangyu Zhang"
+            ],
+            "title": "LAMP: data provenance for graph based machine learning algorithms through derivative computation",
+            "venue": "In Proceedings of the 2017 11th Joint Meeting on Foundations of Software Engineering",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Shiqing Ma",
+                "Yingqi Liu",
+                "Wen-Chuan Lee",
+                "Xiangyu Zhang",
+                "Ananth Grama"
+            ],
+            "title": "MODE: automated neural network model debugging via state differential analysis and input selection",
+            "venue": "In Proceedings of the 2018 26th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Geoffrey J McLachlan",
+                "Kaye E Basford"
+            ],
+            "title": "Mixture models: Inference and applications to clustering",
+            "year": 1988
+        },
+        {
+            "authors": [
+                "Yao Ming",
+                "Shaozu Cao",
+                "Ruixiang Zhang",
+                "Zhen Li",
+                "Yuanzhe Chen",
+                "Yangqiu Song",
+                "Huamin Qu"
+            ],
+            "title": "Understanding hidden memories of recurrent neural networks",
+            "venue": "IEEE Conference on Visual Analytics Science and Technology (VAST)",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Christoph Molnar"
+            ],
+            "title": "Interpretable machine learning. Lulu",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Gr\u00e9goireMontavon",
+                "Wojciech Samek",
+                "Klaus-Robert M\u00fcller"
+            ],
+            "title": "Methods for interpreting and understanding deep neural networks",
+            "venue": "Digital Signal Processing",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Sugeerth Murugesan",
+                "Sana Malik",
+                "Fan Du",
+                "Eunyee Koh",
+                "Tuan Manh Lai"
+            ],
+            "title": "Deepcompare: Visual and interactive comparison of deep learning model performance",
+            "venue": "IEEE computer graphics and applications 39,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Takamasa Okudono",
+                "Masaki Waga",
+                "Taro Sekiyama",
+                "Ichiro Hasuo"
+            ],
+            "title": "Weighted automata extraction from recurrent neural networks via regression on state spaces",
+            "venue": "In Proceedings of the AAAI Conference on Artificial Intelligence,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Chris Olah",
+                "Arvind Satyanarayan",
+                "Ian Johnson",
+                "Shan Carter",
+                "Ludwig Schubert",
+                "Katherine Ye",
+                "Alexander Mordvintsev"
+            ],
+            "title": "The building blocks of interpretability",
+            "venue": "Distill 3,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Zi Peng",
+                "Jinqiu Yang",
+                "Tse-Hsun Chen",
+                "Lei Ma"
+            ],
+            "title": "A first look at the integration of machine learning models in complex autonomous driving systems: A case study on apollo",
+            "venue": "In Proceedings of the 28th ACM Joint Meeting on European Software Engineering Conference and Symposium on the Foundations of Software Engineering",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Guillaume Rabusseau",
+                "Tianyu Li",
+                "Doina Precup"
+            ],
+            "title": "Connecting weighted automata and recurrent neural networks through spectral learning",
+            "venue": "In The 22nd International Conference on Artificial Intelligence and Statistics. PMLR,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Amir Hossein Akhavan Rahnama",
+                "Henrik Bostr\u00f6m"
+            ],
+            "title": "A study of data and label shift in the LIME framework",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Marco Tulio Ribeiro",
+                "Sameer Singh",
+                "Carlos Guestrin"
+            ],
+            "title": " Why should i trust you?\" Explaining the predictions of any classifier",
+            "venue": "In Proceedings of the 22nd ACM SIGKDD international conference on knowledge discovery and data mining",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Marco Tulio Ribeiro",
+                "Sameer Singh",
+                "Carlos Guestrin"
+            ],
+            "title": "Anchors: Highprecision model-agnostic explanations",
+            "venue": "In Proceedings of the AAAI conference on artificial intelligence,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Tobias Schneider",
+                "Joana Hois",
+                "Alischa Rosenstein",
+                "Sabiha Ghellal",
+                "Dimitra Theofanou-F\u00fclbier",
+                "Ansgar RS Gerlicher"
+            ],
+            "title": "ExplAIn Yourself! Transparency for Positive UX in Autonomous Driving",
+            "venue": "In Proceedings of the 2021 CHI Conference on Human Factors in Computing Systems",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Ramprasaath R Selvaraju",
+                "Michael Cogswell",
+                "Abhishek Das",
+                "Ramakrishna Vedantam",
+                "Devi Pariah",
+                "Dhruv Batra"
+            ],
+            "title": "Grad-cam: Visual explanations from deep networks via gradient-based localization",
+            "venue": "In Proceedings of the IEEE international conference on computer vision",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Karen Simonyan",
+                "Andrea Vedaldi",
+                "Andrew Zisserman"
+            ],
+            "title": "Deep inside convolutional networks: Visualising image classification models and saliency maps",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Daniel Smilkov",
+                "Nikhil Thorat",
+                "Been Kim",
+                "Fernanda Vi\u00e9gas",
+                "Martin Wattenberg"
+            ],
+            "title": "Smoothgrad: removing noise by adding noise",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Hendrik Strobelt",
+                "Sebastian Gehrmann",
+                "Hanspeter Pfister",
+                "Alexander M Rush"
+            ],
+            "title": "Lstmvis: A tool for visual analysis of hidden state dynamics in recurrent neural networks",
+            "venue": "IEEE transactions on visualization and computer graphics 24,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Ashish Vaswani",
+                "Noam Shazeer",
+                "Niki Parmar",
+                "Jakob Uszkoreit",
+                "Llion Jones",
+                "Aidan N Gomez",
+                "\u0141ukasz Kaiser",
+                "Illia Polosukhin"
+            ],
+            "title": "Attention is all you need",
+            "venue": "Advances in neural information processing systems",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Gail Weiss",
+                "Yoav Goldberg",
+                "Eran Yahav"
+            ],
+            "title": "Extracting automata from recurrent neural networks using queries and counterexamples",
+            "venue": "In International Conference on Machine Learning",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Xiaofei Xie",
+                "Wenbo Guo",
+                "Lei Ma",
+                "Wei Le",
+                "Jian Wang",
+                "Lingjun Zhou",
+                "Yang Liu",
+                "Xinyu Xing"
+            ],
+            "title": "RNNrepair: Automatic RNN repair via model-based analysis",
+            "venue": "In International Conference on Machine Learning",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Bing Yu",
+                "Hua Qi",
+                "Qing Guo",
+                "Felix Juefei-Xu",
+                "Xiaofei Xie",
+                "Lei Ma",
+                "Jianjun Zhao"
+            ],
+            "title": "DeepRepair: Style-Guided Repairing for Deep Neural Networks in the Real-World Operational Environment",
+            "venue": "IEEE Transactions on Reliability 71,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Matthew D Zeiler",
+                "Rob Fergus"
+            ],
+            "title": "Visualizing and understanding convolutional networks",
+            "venue": "In European conference on computer vision",
+            "year": 2014
+        }
+    ],
+    "sections": [
+        {
+            "text": "Permission to make digital or hard copies of all or part of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for components of this work owned by others than the author(s) must be honored. Abstracting with credit is permitted. To copy otherwise, or republish, to post on servers or to redistribute to lists, requires prior specific permission and/or a fee. Request permissions from permissions@acm.org. CHI \u201923, April 23\u201328, 2023, Hamburg, Germany \u00a9 2023 Copyright held by the owner/author(s). Publication rights licensed to ACM. ACM ISBN 978-1-4503-9421-5/23/04. . . $15.00 https://doi.org/10.1145/3544548.3580852\nthe transitions between states. Users can also dive into individual predictions by inspecting the state trace and intermediate prediction results of a given input. A between-subjects user study with 28 participants shows that, compared with a popular XAI technique, LIME, participants using DeepSeer made a deeper and more comprehensive assessment of RNN model behavior, identified the root causes of incorrect predictions more accurately, and came up with more actionable plans to improve the model performance.\nCCS CONCEPTS \u2022 Human-centered computing \u2192 Interactive systems and tools; \u2022 Computing methodologies \u2192 Machine learning; \u2022 Software and its engineering\u2192 Software testing and debugging.\nKEYWORDS Explainable AI, Model Debugging, Recurrent Neural Networks, Visualization\nACM Reference Format: Zhijie Wang, Yuheng Huang, Da Song, Lei Ma, and Tianyi Zhang. 2023. DeepSeer: Interactive RNN Explanation and Debugging via State Abstraction. In Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems (CHI \u201923), April 23\u201328, 2023, Hamburg, Germany. ACM, New York, NY, USA, 20 pages. https://doi.org/10.1145/3544548.3580852\nar X\niv :2\n30 3.\n01 57\nWARNING: The toxicity detection example in the usage scenario contains some content that might be distracting."
+        },
+        {
+            "heading": "1 INTRODUCTION",
+            "text": "Deep neural networks (DNNs) have been increasingly adopted in practice due to their superior performance on real-world challenging tasks, e.g., self-driving [49], virtual assistant [9], and disease diagnosis [34]. The rapid development of deep learning systems brings opportunities, but also challenges and concerns. One of the major concerns arises from the interpretability of DNNs [36]. Unlike traditional software whose decision logic is manually programmed in the form of source code, a DNN model includes a large number of neurons connected by non-linear functions, whose weights are automatically learned from training data. The internal states of traditional software can be easily inspected and analyzed by setting breakpoints and checking runtime values. However, the internal states of a DNN model are high-dimensional vectors rather than symbolic values. It is hard to tell what kinds of patterns a DNN model has learned by inspecting these vectors or why the model makes a specific prediction. Therefore, this internal complexity and inscrutability of DNNs lead to significant debugging challenges, as well as concerns about the trustworthiness and reliability of DNNs.\nAlthough there is a recently growing interest in improving the interpretability of DNNs in the ML, HCI, and Visualization communities, many existing techniques treat a DNN model as a black box and generate model-agnostic explanations such as feature importance, without revealing the inner workings of the DNN model [32, 39, 53, 54]. While there are some techniques for visualizing the hidden states in a DNN model, many of them focus on convolutional neural networks (CNNs) [8, 48, 57]. In this work, we are particularly interested in recurrent neural networks (RNNs). Compared with other kinds of DNNs, recurrent neural networks (RNNs) are capable of processing sequential data with variable lengths, such as text and audio. The recurrent architecture affords an internal memory in RNNs, which is proven effective for learning temporal patterns in sequential data. Yet this architecture also poses challenges in visualizing the internal states of RNNs. Unlike CNNs which have a fixed number of layers and neurons in each layer, RNNs are unbounded. Furthermore, instead of treating each layer separately, which is a common practice in CNN visualization, it is important to visualize the dynamics of RNN units, i.e., the temporal patterns embedded in a sequence of hidden states.\nIn this paper, we present DeepSeer, an interactive system that allows model developers to understand and debug RNN models. Our key insight is to treat an RNN model as a stateful system. By clustering and abstracting semantic similar hidden states, an RNN model can be represented as a finite-state machine (FSM), which is much smaller and more navigable compared with the original RNN model. Furthermore, instead of directly visualizing the values of hidden states as in prior work [59],DeepSeer projects hidden states to a more interpretable representation\u2014the common words and phrases associated with these states. By inspecting the transitions among states, users can quickly identify the temporal patterns learned by the model.\nTo assess the overall usefulness of DeepSeer, we conducted a between-subjects user study with 28 programmers of various levels of expertise in ML and RNNs. Given a pre-trained RNN model, participants were asked to complete a model understanding task followed by a debugging task using either DeepSeer or a popular XAI tool, LIME [53]. We found that in the model understanding task, participants usingDeepSeer providedmore insightful answers about the model behavior, pinpointed model limitations more precisely, and gave more useful and diverse suggestions about how to improve the assigned model. Furthermore, in the model debugging task, participants using DeepSeer identified the reasons for the misclassifications more correctly than participants using LIME.\nIn summary, this work makes the following contributions:\n\u2022 System.We design and develop an interactive system for understanding and debugging the internal behavior of RNNs. We first leverage the state abstraction method to abstract an RNN model as a finite state machine through bundling semantically similar hidden states. Then we design and implement three tightlycoordinated views: state diagram view, pattern summary view, and instance view to visualize and interpret the internal behavior of an RNN model from different perspectives. We have opensourced our system on GitHub 1. \u2022 Visualizations and interactions. We propose a set of visualization and interaction designs to facilitate the interpretation and debugging of RNNs at different granularities. Specifically, we combined state diagrams, responsive tooltips, state traces, color highlighting, filtering, instancematching, and pattern summarization to simultaneously show the global model behavior, instancelevel explanations, critical patterns, and similar instances. \u2022 Evaluation. A between-subjects user study demonstrates the usefulness of DeepSeer to ML developers when understanding the overall behavior of a model and debugging misclassifications."
+        },
+        {
+            "heading": "2 BACKGROUND: RECURRENT NEURAL NETWORKS",
+            "text": "Recurrent Neural Networks (RNNs) are a type of deep neural network that is specifically designed for processing sequential input, e.g., text data. In this section, we briefly introduce the basics of it.\nAs shown in Fig. 2, an RNN model takes sequential inputs {\ud835\udc651, \ud835\udc652, . . . , \ud835\udc65\ud835\udc47 }. The RNN model first initializes its hidden state vector \u210e0 \u2208 R\ud835\udc41 , where \ud835\udc41 is the dimension of this hidden state vector. At a time step \ud835\udc61 , the RNNmodel takes an input \ud835\udc65\ud835\udc61 (1 \u2264 \ud835\udc61 \u2264 \ud835\udc47 ) to update its internal hidden state from the last time step \u210e\ud835\udc61\u22121 to the new hidden state \u210e\ud835\udc61 . This process can also be seen as maintaining and updating the \u201chidden memory\u201d of an RNN model. Therefore, to understand an RNN model, it is important to interpret such \u201cmemory\u201d maintained in different hidden states [43, 59].\nTo make a prediction at time step \ud835\udc61 , an RNN model transforms the hidden state \u210e\ud835\udc61 into the desired output format \ud835\udc66\ud835\udc61 . For instance, to perform a classification task, the hidden state \u210e\ud835\udc61 is usually fed into an MLP (multilayer perceptron) network to project \u210e\ud835\udc61 into \ud835\udc62\ud835\udc61 \u2208 R\ud835\udc3e , where \ud835\udc3e is the number of classes. Then a probability distribution \ud835\udc5d\ud835\udc61 is computed through a \u201csoftmax\u201d function:\n1https://github.com/momentum-lab-workspace/DeepSeer\n\ud835\udc5d\ud835\udc61 = softmax(\ud835\udc62\ud835\udc61 )\n\ud835\udc5d\ud835\udc56\ud835\udc61 = \ud835\udc52\ud835\udc62 \ud835\udc56 \ud835\udc61\u2211\ud835\udc3e\n\ud835\udc57=1 \ud835\udc52 \ud835\udc62 \ud835\udc57 \ud835\udc61\nfor \ud835\udc56 = 1, . . . , \ud835\udc3e (1)\nThe prediction result at time step \ud835\udc61 is further computed by finding a label \ud835\udc58 which produces the maximum probability \ud835\udc5d\ud835\udc58\ud835\udc61 .\nNote that the process of updating the hidden state \u210e\ud835\udc61 can be achieved by different types of RNN units, such as the Elman RNN cell [18], long short-term memory (LSTM) [23], and gated recurrent unit (GRU) [12]. In our user study sessions, we use GRU, which shows better efficiency compared with other variants. Note that our proposed system only requires access to the hidden states and does not require access to the updating process inside an RNN unit. Therefore, it can be generalized to different types of RNN units."
+        },
+        {
+            "heading": "3 RELATEDWORK",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Explainable AI",
+            "text": "Our work is most related to Explainable AI (XAI), since it promotes model interpretability by abstracting a DNN model as a finite state machine (i.e., a global explanation) and by rendering the state trace of a given instance (i.e., a local explanation). Previous studies have shown that supporting model interpretability can increase user acceptance and trust of the system [17, 22, 30, 55], improve fairness [14], and improve human-AI team performance [11]. A good interpretation should be in an interpretable domain [45], i.e., mapping any of abstract concepts (e.g., numeric vectors) into a domain (e.g., images, texts) that the human can understand. Our work is inspired by this principle\u2014instead of visualizing hidden state values as in some prior work [59], we map hidden states back to linguistic patterns in the text corpus. In this way, users can easily recognize what patterns an RNN model has learned from the training data.\nExisting XAI methods can be roughly grouped into two categories: model-agnostic methods and model-aware methods. Modelagnostic methods [39, 53, 54] treat the model to be explained as a black box. LIME [53] is a well-known technique in this category. Given an input instance, it learns a simpler and interpretable model (also known as a surrogate model), such as a linear regression model, to approximate a complex model using the training data near the given instance. By rendering the feature\u2019s importance in the surrogate model, LIME generates a local explanation for the\nprediction of the given instance. However, these model-agnostic methods usually ignore the internal behavior of a model when generating explanations. Specifically, given an RNN model, they do not take the transitions between different hidden states into account. On one side, this may lead to low-fidelity explanations [52]. On the other hand, advanced user groups such as model developers may find it insufficient to debug model behavior [59]. To address this challenge,DeepSeer is designed to investigate the internal behavior of an RNN model via a novel finite state machine abstraction.\nUnlike model-agnostic methods, model-aware methods try to open up the black box of a DNN. Among different model-aware methods, our work is most related to attribution-based methods and influence function methods. Attribution-based methods [56, 58, 64] often use activation or gradient information in a DNN model to compute the importance score for input features, e.g., pixels in an image, tokens in a sentence. For example, Karpathy et.al. [27] presents a visualization that maps neurons\u2019 activation to individual characters in a sentence. This visualization is only applicable to individual sentences (i.e., local explanations), which becomes hard to interpret with a large number of sentences. Our work differs in a way that we aggregate words and phrases with similar hidden states from many sentences in a finite state diagram while also providing a way to delve into the state trace of individual sentences. Influence function methods [7, 31, 32] compute the influence of an individual training instance based on gradients and identify a set of instances that have a big impact on model predictions. Our design of influential patterns and possible buggy patterns draws inspirations from these methods. Specifically, DeepSeer summarizes short text patterns which usually significantly affect model predictions or have led to possible bugs by analyzing the hidden states of training data.\nWe further refer readers to existing surveys and literature reviews [2, 6, 44] for more details about different XAI methods."
+        },
+        {
+            "heading": "3.2 DNN Debugging, Testing, and Repairing",
+            "text": "Several explainable AI techniques have been used to understand and debug model errors [3, 29, 32, 53]. For example, Ribeiro et.al. conducted a user study with 27 participants and showed that the explanations generated by LIME could be used to detect spurious correlations learned by a model. Koh et.al. [32] have shown that influence functions can be used to debug domain mismatch. However, Adebayo et.al. [3] found that post-hoc model explanations, especially attribution-based methods, are sometimes ineffective for detecting certain kinds of bugs such as label error and out-ofdistribution error.\nIn parallel, the Software Engineering (SE) community has developed several techniques by adapting traditional SE techniques to debug, test, and repair DNN models [40, 41, 62, 63]. DeepRepair [63] uses a style-transfer-based data augmentation method to repair DNN models. RNNRepair [62] identifies influential instances for retraining and remediates two types of incorrect predictions at the sample and segment levels. MODE [41] presents a debugging workflow by first conducting model state differential analysis and then selecting training instances for retraining. LAMP [40] provides data provenance information by computing the importance of input\nthrough automated differentiation. These techniques focus on automating the debugging and retraining pipeline and do not involve humans in the loop. Our work differs from these techniques in two ways. First, DeepSeer aims to provide a comprehensive understanding of model behavior by abstracting RNNs as a state diagram and identifying influential patterns, going beyond diagnosing model prediction errors. Second, to enable model developers to diagnose model errors, DeepSeer renders the intermediate prediction results of input and provides affordances for investigating how individual words and phrases influence the prediction result, rather than automatically localizing the root cause of a model error."
+        },
+        {
+            "heading": "3.3 RNN Visualization",
+            "text": "Many DNN visualization techniques have been proposed to help users understand and analyze the inner workings of DNN models. The most related visualization techniques to us are those specifically designed for RNNs [27, 43, 59]. Karpathy et.al. [27] visualizes which characters in an input sentence the RNN attends to based on the activation function output. Li et.al. [33] use a gradient-based salience score, rather than neuron activation, to measure the importance of each word in an input sentence. The salience scores are then visualized in a heatmap. Both visualizations are static and can only visualize the hidden states of a single input at a time. Strobelt et.al. [59] extend them by building an interactive visualization approach called LSTMVis. LSTMVis renders individual hidden states in a parallel coordinates plot. It allows users to interactively select specific segments of an input sentence and search for other inputs with similar hidden states. However, given that RNNs typically have hundreds or even thousands of hidden states, visualizing individual hidden states can lead to significant cognitive overhead for users. To address this issue, DeepSeer clusters similar hidden states to an abstract state and represents an RNN model as a finite state machine. This significantly reduces the number of states users need to keep track of and also allows DeepSeer to directly visualize the finite state machine to provide a global view of the entire model rather than individual hidden states. Our work is also related to RNNVis [43]. RNNVis clusters similar hidden states as memory chips and renders text inputs associated with each cluster as word clouds. However, unlike a finite state machine, this design does not capture the transition between hidden states or render longer linguistic patterns beyond common words. Furthermore, DeepSeer provides additional features to facilitate model inspection and debugging, e.g., rendering intermediate prediction results, summarizing influential patterns and buggy patterns, etc."
+        },
+        {
+            "heading": "4 DESIGN GOALS AND SYSTEM OVERVIEW",
+            "text": "In this section, we first summarize the design goals of our system based on a literature review. Then, we present a system overview to discuss how our system design supports each design goal."
+        },
+        {
+            "heading": "4.1 User Needs and Design Goals",
+            "text": "To understand the needs of RNN developers, we perform a literature review of previous papers that have done a formative study of interpreting DL models, have done a user study of existing tools, or have discussed the challenges and opportunities of explaining and\ndebuggingDLmodels. Based on the literature review, we summarize the following design goals for DeepSeer: G1. Help users understand the overall behavior of an RNN model. Previous studies have shown that model developers prefer to have a high-level understanding of what has been learned by the model [13, 35, 43]. For instance, Kaur et al. surveyed 197 ML developers about the interpretability tool\u2019s capabilities, and 61% of responses mentioned the importance of global explanations [28]. Specifically, Ming et al. highlighted the importance of rendering the semantic information captured by the hidden states of an RNN model [43]. Thus, DeepSeer should help model developers understand the overall behavior of an RNNmodel, especially the semantic information learned by its hidden states. G2. Help users understand the model decision-making process on a specific input of interest.When inspecting individual prediction results, especially incorrect ones, model developers wish to understand why the model makes such a prediction on the particular input [5, 24, 35]. For instance, through a formative study with nine ML developers, Hohman et al. [24] found that users wanted to see how different features contributed to the model\u2019s decision. Furthermore, Kahng et al. interviewed fifteen Facebook developers and found that a natural way for them to understand complex models was to inspect the model behavior on individual examples [26]. The importance of local explanation is also confirmed by the largescale survey [28]\u201465% of respondents considered local explanations important."
+        },
+        {
+            "heading": "G3. Help and assist users in searching for similar data.",
+            "text": "Through a user-centered design process with two NLP developers, Liu et al. found that NLP developers typically follow an \u201cexplorationcentric\u201d approach to discover and debug errors in anNLPmodel [38]. That is, developers prefer to inspect and compare predictions among similar input examples to get insights. Therefore, traceability should also be provided to help users easily explore similar examples when debugging a model prediction [24]. Specifically, Strobelt et al. highlighted that matching similar examples for RNN could help developers validate an interpretation hypothesis [59]. G4. Help users summarize the common characteristics of input data. Inspecting individual data points can be tedious and time-consuming, hindering insight discovery. Kahng et al. found that model developers at Facebook often curated subsets of data with common characteristics to understand how a model behaves at high-level categorization [26]. Furthermore, helping users identify common input characteristics is particularly useful for error analysis. Jin et al. found that ML developers usually needed to examine the characteristics shared by a set of wrong predictions and verify whether error patterns formed by these characteristics make sense [25]. However, this is often manually done by users based on their domain knowledge. Therefore, DeepSeer should support users in identifying and examining common characteristics of inputs, especially mispredicted inputs."
+        },
+        {
+            "heading": "4.2 System Overview",
+            "text": "To support users gaining a high-level understanding of what has been learned by an RNN model (G1), we choose to render an RNN model as a state diagram in which each node is a group of similar\nhidden states from the RNNmodel, as shown Figure 3 A\u25cb. Compared with the original RNN model, which has hundreds or thousands of hidden states, the state diagram is much smaller after state clustering and thus more navigable. Furthermore, DeepSeer binds each node with the text patterns memorized by the corresponding hidden states to help users interpret the semantic meaning of the hidden states. Compared with an alternative design of directly visualizing the hidden states values [27, 59], which are high-dimensional arrays and hard to interpret, the state diagram is easier to navigate and inspect.\nTo help users understand the model decision-making process on specific inputs (G2), DeepSeer visualizes the intermediate model prediction result after an RNN model reads each word in an input sentence (Figure 3 D\u25cb). In this way, users can easily see which word sways the decision of the model and contributes more to the final result. To support G3, DeepSeer allows users to search input sentences with similar text patterns (i.e., have the same keyword or\nfollow the same regular expression) or with similar model behavior pattern (i.e., have the same state or follow the same state trace) in an instance view (Figure 3 C\u25cb). To help users find common patterns (G4), DeepSeer proactively identifies frequent text patterns that have a high influence on model prediction results, as well as patterns that are shared among incorrect predictions (Fig. 3 B\u25cb). Such common patterns can also serve as a complementary global explanation method (G1), since it provides more straightforward starting points for investigation if users find a state diagram overwhelming."
+        },
+        {
+            "heading": "5 DESIGN AND IMPLEMENTATION",
+            "text": ""
+        },
+        {
+            "heading": "5.1 State Abstraction",
+            "text": "To generate a state diagram from an RNN model, we develop a method that clusters semantically related hidden states of the RNN model into an abstract state. Our work is inspired by the modelbased analysis of stateful RNNs [15, 16, 47, 51, 61]. These works apply various techniques to extract interpretable state transition\nmodels (e.g., discrete-time Markov chain, automata) from stateful RNNs. By turning complex RNNs into interpretable state transition models, black boxes are turned into more transparent models and thus improve the model interpretability, which also provides the possibility for further analysis. We choose to build on top of a stateof-the-art method, DeepStellar [16], since it is demonstrated to be effective in various tasks, including adversarial detection [16], DNN testing [16], and DNN repair [62]. Previous work has also shown that abstracted states can make the same prediction as the original RNN model in 97% of test data [62].\nTo obtain the FSM representation for a trained RNN, we abstract over both the states and the transitions. Appendix A presents the algorithm for state abstraction. Here we briefly summarize how it works. For each instance in the training data, our method first records the intermediate hidden vectors {\u210e1, \u210e2, . . . , \u210e\ud835\udc59 } during inference, where \u210e\ud835\udc56 (1 \u2264 \ud835\udc56 \u2264 \ud835\udc59) is a concrete hidden state of an RNN model. \ud835\udc59 denotes the number of tokens in a sentence. Our method then applies Principle Component Analysis (PCA) for dimension reduction on all concrete states collected from training data before abstraction. Different from DeepStellar [16], which uses an interval-based method for states abstraction, our method applies Gaussian Mixture Model (GMM) [42] to cluster similar concrete states. GMM addresses two key limitations in the interval-based method: 1) newly generated hidden vectors can fall outside the interval at test time, resulting in unknown states; 2) the number of states grows exponentially with \ud835\udc58 dimension and\ud835\udc5a intervals (\ud835\udc5a\ud835\udc58 ), and too many states can be hard to visualize. With state abstraction, the model prediction process on a given input can be modeled as a sequence of abstract states. We call this state sequence the trace of model prediction.\nWe conducted a quantitative analysis of the faithfulness of state abstraction. We measured the prediction consistency between the abstracted and original models in the three different NLP tasks from the usage scenario (Section 6) and the user study (Section 7.2). The\nprediction consistency on the test data is 99%, 97%, and 85%, respectively. This implies that abstracted models can faithfully represent the behavior of RNNs. Appendix B includes the experiment details.\nDifferent from the previous work focusing on state abstraction technique itself or using the technique for model testing and repairing, our work is the first to extend this technique for interactive model explanation and debugging with a more accessible user interface. Our work integrates state abstraction into a \u201chuman-in-theloop\u201d approach for the first time to support users in understanding and debugging an RNN model with rich interaction mechanisms. In the following subsections, we will introduce the interactive features of DeepSeer built on top of state abstraction."
+        },
+        {
+            "heading": "5.2 State Diagram View",
+            "text": "The State Diagram View visualizes the finite state machine that is abstracted from the given RNN in the previous step. It provides an overview of the model behavior and helps users understand the semantic meanings of its hidden states. Users can navigate through different state nodes to explore what prediction result a state often leads to and how many times this state has been visited. Specifically, each state is color-coded based on how frequently the input instances going through this state have a specific prediction result. The size of a state node is determined by howmany input sentences have visited this node during the training time. For example, in Fig. 4 A\u25cb, since the RNN model makes two possible predictions\u2014 positive comment or negative comment, all nodes are assigned to two distinct colors\u2014blue for positive comments and red for negative comments. Since there are fewer red nodes and the red nodes have a much smaller size than blue nodes, one can interpret that the training dataset has more positive comments than negative comments and the RNN model is more likely to make a positive prediction. The width of an edge between two states indicates how frequently this transition has occurred during the training time.\nThe RNN model moves from one state to another state when it reads more words from a given input sentence.\nWhen a user hovers the mouse over a state, a tooltip is rendered to provide more details about this state, e.g., the number of training instances that go over this state and is eventually predicted to a specific result (Fig. 4 A\u25cb). When users click on a state, an information card (Fig. 4 B\u25cb) popped up showing the phrases and words that are frequently associated with this state in the training data. This feature allows users to interpret the semantic information memorized by hidden states. Clicking on a state also updates the instance view to filter out the input instances that do not visit this state during model prediction."
+        },
+        {
+            "heading": "5.3 Pattern Summary View",
+            "text": "The Pattern Summary View renders common patterns based on frequent state transitions during the training time. Basically, a frequent subsequence of states is viewed as a pattern, which can be further converted into a sequence of words based on the words or phrases associated with each state. DeepSeer identifies two kinds of patterns: Influential Patterns and Possible Buggy Patterns.\nInfluential Patterns are patterns that change the model\u2019s intermediate predictions, e.g., changing from a positive comment to a negative comment after reading certain words in the middle of a given input sentence. To identify influential patterns learned from the training data, DeepSeer first identifies the pivoting points (i.e., the point where the intermediate prediction changes) in the state trace of each training instance. Then DeepSeer splits each state\ntrace into subsequences based on the pivoting points. These subsequences are sorted based on their frequency and rendered in a descending order in the pattern summary view.\nPossible Buggy Patterns are mined only from incorrectly predicted instances from the training data. These patterns indicate the cases where the RNN model does not learn well and thus makes a misprediction. To identify buggy patterns, DeepSeer first divides the training data \ud835\udc46 into two subsets according to the correctness of their prediction results. Let\u2019s denote the subset only include correct predictions as \ud835\udc46\ud835\udc50 and the subset only include false predictions as \ud835\udc46\ud835\udc53 , respectively. Then we use TKS [19] (Top-K Sequential pattern mining) to mine frequent subsequence patterns from each subset. A subsequence pattern is considered possibly buggy if it only occurs in the misclassified inputs (\ud835\udc46\ud835\udc53 ), not in the correctly classified inputs (\ud835\udc46\ud835\udc50 ). These buggy patterns are sorted based on their frequency and rendered in a descending order in the pattern summary view.\nUsers can click on a specific pattern to see the top frequent phrases associated with this pattern (Fig. 5 A\u25cb). This pattern summary view allows users to know what patterns the model has learned, and how these patterns would affect the model\u2019s predictions. Furthermore, Possible Buggy Patterns allows users to recognize potential prediction risks of an RNN model. Clicking on a pattern will update the instance view to filter out data instances that do not follow the selected pattern."
+        },
+        {
+            "heading": "5.4 Instance View",
+            "text": "The Instance View (Fig. 6) is a scrollable data grid of the raw data used to train or test the model. The rows of the data grid are individual data instances, and the columns are: Index, State Trace,\nExplore Data Instances DeepSeer provides features like filtering, sorting, etc.\nInspect Data Distribution Summary of data distribution after filtering.\nKeyword Searching Matching results are highlighted in each data instance. A\nB C\nText, Prediction, Human Label, and Correctness of the data instance. Users can sort and filter the data instances by each column (Fig. 6 A\u25cb). Users can use the TRAIN/TEST tab to switch between training and test instances. The distributions of human labels and model prediction results are summarized and rendered on top of this view (Fig. 6 B\u25cb). As users filter the data instances, these distributions are also updated accordingly. Users can also search for specific input data based on keywords or regular expressions (Fig. 6 C\u25cb). The matched results will be highlighted for better visualization. For each instance, its words and states are colored based on the intermediate prediction results. Clicking on a row in the instance view will update the state diagram view to render the state transitions of the selected data instance."
+        },
+        {
+            "heading": "5.5 Intermediate Prediction Results",
+            "text": "The previous sections describe how users can use different views to achieve an overall understanding of the model behavior. Previous studies have shown that it is also important to allow users to inspect and debug model predictions on individual instances [39, 53, 56]. To support instance-level inspection and debugging, DeepSeer allows users to enter an input sentence in the text box in Fig. 7. After clicking on the magnifier button, DeepSeer renders the state trace of the model prediction on the given input. Furthermore, each word in the input sentence is colored based on the intermediate prediction result. For example, in Fig. 7 B\u25cb, \u201cred\u201d and \u201cblue\u201d indicate negative comments and positive comments respectively. RNN typically uses the final hidden state after reading the entire sentence to compute the class probabilities. In DeepSeer, the hidden state after reading each word in a sentence is fed into the output layer to generate intermediate predictions. Through these intermediate predictions, users can inspect how the prediction result has changed over time as the RNN model reads more words in the input sentence. The pattern summary view is also updated with only influential patterns\nand possible buggy patterns related to the given input sentence. With these supports, users can quickly find suspicious words or phrases when debugging an incorrect model prediction."
+        },
+        {
+            "heading": "6 USAGE SCENARIO",
+            "text": "Suppose Alice is a model developer, and she trains a toxicity detection RNN model using the Toxic dataset 2. This model predicts whether a sentence has a positive tone or negative tone. Her model achieves 95% accuracy on the training data but only 89% on the test data. Alice uses DeepSeer to figure out why there is such a performance drift."
+        },
+        {
+            "heading": "6.1 Visualizing and Understanding an RNN Model",
+            "text": "Alice first attends to the state diagram view, which gives her an overview of the trained RNN model as a finite state machine (Figure 3 A\u25cb). In this state diagram, each node represents a group of similar hidden states in the RNN model. A blue node indicates that the model is more likely to give a Positive intermediate prediction after visiting this state, while a red node indicates that the model is more likely to give a Negative intermediate prediction. Alice hovers her mouse over a red node named State 39. As shown in Figure 4, a tooltip then pops up showing that the model makes a negative intermediate prediction 39, 948 times while only 5, 046 times for positive ones, after visiting this state. When Alice clicks on the node of State 39, an information card is displayed on the right (Figure 4 A\u25cb), showing common words and phrases associated with the state, such as \u201cstupid\u201d, \u201cidiot\u201d, and \u201cstupid and\u201d. Alice glances over several sentences with these words in the instance view below (Figure 3 C\u25cb) to check whether they are hate comments. In this way,\n2https://www.kaggle.com/c/jigsaw-unintended-bias-in-toxicity-classification\nAlice confirms that her RNN model indeed learns some meaningful patterns from the training data.\nWhile inspecting text patterns associated with each state is helpful, Alice finds it cumbersome to check all states in the state diagram. So she switches to the pattern summary view (Fig. 3 B\u25cb) to understand the model from another perspective. This view shows text patterns that have a significant impact on the model prediction (i.e., influential patterns). Alice finds some interesting patterns such as \u201cmore fake news\u201d and \u201cstupid enough to\u201d. When Alice clicks on one of the patterns, \u201chypocrisy\u201d (Fig. 5 A\u25cb), it is expanded to show a list of other frequent patterns that are associated with the same state sequence, 13\u25cb\u2192 9\u25cb\u2192 9\u25cb, sorted by frequency.3 For example, this state sequence also memorizes \u201csuck it up\u201d (12 sentences), \u201cignorant of\u201d (6 sentences), and \u201csuck and blow\u201d (4 sentences) in the training data. As Alice clicks on each pattern, the instance view is also updated to filter training and test data that does not follow the clicked pattern. Alice is also curious about which text patterns may cause incorrect model predictions. So she switches to the list of possible buggy patterns. These buggy patterns are summarized from misclassified sentences only, rather than the entire training dataset. Alice sees some patterns such as \u201c...\u201d, \u201c!!!\u201d, and \u201c???\u201d (Fig. 5 B\u25cb). It seems that her model learns some spurious correlations between punctuation and prediction results, which may have contributed to many errors. To prevent the model from learning these spurious\n3 This single word, \u201chypocrisy\u201d, is associated with a sequence of three states, since it is tokenized into three tokens (hypo-, -cri-, -sy) in the training set, each of which is bound to one state. Such a tokenization mechanism is widely used in NLP to address out-of-vocabulary issues.\ncorrelations, Alice plans to remove this punctuation to clean the training data, which may lead to better model performance."
+        },
+        {
+            "heading": "6.2 Debugging an RNN Model",
+            "text": "Now Alice wants to dig into the data and investigates why some sentences are misclassified after having a high-level understanding of the model behavior. So she turns to the instance view (Figure 3 C\u25cb), which shows all training and test data in a paginated table. Alice first notices that the training data is not balanced. There are significantly more positive sentences (92062) than negative ones (7938). Alice then switches to the test data and finds misclassified sentences using the filtering feature on the Correctness column (Figure 6 A\u25cb). She copied a misclassified sentence to the text box and run the instance-level model explanation feature on it (Figure 7). Each word in the sentence is colored based on the intermediate prediction result. A state trace is also rendered below.\nAlice quickly notices a few words that her RNN model considers negative during the prediction, such as \u201cugly head.\u201d Even though such insulting words have been recognized by the model, this sentence is eventually predicted positive. It seems the model quickly forgets these insulting words after seeing the subsequent words in the sentence. For example, after seeing \u201cquarters\u201d, the intermediate prediction changes from negative to positive.\nTo verify this hypothesis, Alice searches sentences that contain \u201cquarters\u201d in the training set using the keyword search feature in the instance view. Alice finds 27 positive sentences and only 1 negative one that contains \u201cquarters\u201d in the training set (Fig. 8). Since\nmany sentences with \u201cquarters\u201d are positive, the model may have learnt a spurious correlation between \u201cquarters\u201d and the positive sentiment. Alice further confirms her hypothesis by looking at the corresponding state, State 22, associated with the word \u201cquarters\u201d. Alice finds that State 22 is a positive state. Therefore, Alice concludes that one reason for this misclassification is data imbalance, where most sentences with \u201cquarters\u201d are labelled as positive. To address this, Alice believes that one possible solution is to collect more data with this keyword to balance her training set and then re-train her model. Furthermore, given that the model quickly forgets an insulting word, Alice also plans to experiment with the long short-memory (LSTM) architecture with the attention mechanism, which can handle information in the memory for a longer time compared with a vanilla RNN."
+        },
+        {
+            "heading": "7 USER STUDY",
+            "text": "We conducted a between-subjects study with 28 participants to evaluate the effectiveness and usability of DeepSeer. We used LIME [53], a well-known tool for interpreting and debugging machine learning models, as a comparison baseline. Though LIME is not specialized for RNNs, it is a widely-used tool to understand and debug models. It has 10.3K stars and 1.7K forks on GitHub 4, and its Python package has been downloaded 16M times on PyPI 5. Therefore we choose it as a more realistic baseline. Given a model prediction, LIME can generate an explanation with importance scores for elements in the input data (e.g., words in an input sentence). To enable a fair comparison, we built an interface for LIME similar to DeepSeer. The interface includes the existing visualizations provided by LIME and also includes the Instance View as in DeepSeer. It does not include the state diagram view and the pattern summary view, which are the novel contributions of DeepSeer. We investigated the following research questions to assess the overall usefulness of DeepSeer compared with LIME: \u2022 RQ1: To what extent does DeepSeer enhance users\u2019 understanding of an RNN model compared with a commonly used model explanation and debugging tool? \u2022 RQ2: To what extent does DeepSeer improve the accuracy of identifying the root cause of a misprediction of an RNN model compared with a commonly used model explanation and debugging tool?"
+        },
+        {
+            "heading": "7.1 Participants",
+            "text": "We recruited 28 participants (5 female and 23 male) through several graduate student mailing lists of the CS department and the ECE department at the University of Alberta.6 All participants had at least basic machine learning background. 15 participants were Ph.D. students, and the rest were Master\u2019s students. 23 participants had 4https://github.com/marcotcr/lime 5https://pepy.tech/project/lime 6This human-participated study is approved by the university\u2019s research ethics office.\n2-5 years of machine learning experience, 3 participants had more than 5 years, and 2 participants had about 1 year. Regarding their RNN experience, 9 participants had more than 2 years of experience, 7 participants had 1 year, and 12 participants had less than 1 year. Participants also self-reported their familiarity with developing RNN models in a 7-point Likert scale question. The median is 5, with 1 referring to \u201cI have only heard about RNNs but never used it\u201d and 7 referring to \u201cI\u2019m able to build an RNN model by myself.\u201d 25 participants said they had not used any debugging tools for DL, while 3 participants said they have used Tensorboard [1]. The studies were conducted on Zoom. Both DeepSeer and LIME were deployed as web applications that participants could access from their personal computers."
+        },
+        {
+            "heading": "7.2 RNN Models",
+            "text": "Since DeepSeer is designed for visualizing and debugging RNN models, we trained two RNN models for two popular ML tasks. For each RNN model, the dimension of a hidden state vector is 256. The first ML task is to predict whether a question asked on Quora is sincere or insincere. It is originally from a featured competition from Kaggle, a popular online machine learning and data science community [50]. In this task, our RNN model is trained on 100,000 Quora questions, each of which is labeled as sincere or insincere. The training accuracy of this RNN model is 93.93%, and the test accuracy is 89.07%. The second ML task is to predict the topic of a news article from a news corpus called AG\u2019s News [20]. This task is a well-known benchmark for topic classification research [65]. In this task, our RNN model is trained on 109,886 news articles labeled into four news topics, including \u201cSports\u201d, \u201cBusiness\u201d, \u201cWorld\u201d, and \u201cScience and Technology.\u201d The training accuracy of this RNN model is 91.57%, and the test accuracy is 87.68%. DeepSeer abstracts each RNN model into 40 states. This number is decided empirically to achieve a good balance between accuracy and the cognitive effort of inspecting a state diagram. We further provide a faithfulness analysis of the abstracted model in Appendix C. During a user study session, we randomly assigned one of the two RNN models to a participant to finish the model understanding and debugging tasks. Interface of DeepSeer for each task can be found in Appendix D."
+        },
+        {
+            "heading": "7.3 Protocol",
+            "text": "We design a between-subjects user study where users experience one condition and one RNNmodel in each study session. We choose a between-subjects design rather than a within-subjects design since experiencing one condition takes around 60 minutes. Experiencing two conditions in a within-subjects design would require 120 minutes, which is too long and can lead to significant fatigue and frustration. At the beginning of each session, we asked the participants for their permission for recording. Given that this was a between-subjects study, each participant was assigned to only one RNN model in one condition. In each session, participants were only allowed to use the given tool: DeepSeer in the experiment condition or LIME [53] in the control condition. The assigned RNN models and conditions were counterbalanced across participants. At the beginning of each study session, participants were asked to first watch a 5-min tutorial video of the assigned tool, and then\nspend 5 minutes familiarizing themselves with the tool. Then, participants were given 30 minutes to use the assigned tool to explore an assigned RNNmodel and share their understanding of the model behavior through a questionnaire. The questionnaire included three main questions: (1) What insights have you got about the model\u2019s performance and behavior? (2) Did you find any bugs or limitations of the RNN model? If yes, what kind of bugs have you found? (3) How will you further improve the model? After filling out the model understanding questionnaire, participants were given 10 minutes to debug 5 incorrect model predictions using the assigned tool. For each incorrect prediction, they were asked to write down why the input data was misclassified and submit their answers through a questionnaire. At the end of the study session, participants were asked to fill out a survey to share their experiences. In particular, the post-study survey included the NASA Task Load Index (TLX) questions [21] to measure the cognitive load of the study. Each participant received a $25 Amazon gift card as compensation for their time."
+        },
+        {
+            "heading": "8 USER STUDY RESULTS",
+            "text": "This section describes the results of the between-subjects user study. We first present and analyze participants\u2019 performance differences onmodel understanding and debugging tasks when usingDeepSeer and LIME. Then we present participants\u2019 perception on DeepSeer\u2019s tool features as well as cognitive load. For brevity, we use P1-P14 to denote the participants using DeepSeer, and P15-P28 to denote the participants using LIME [53]."
+        },
+        {
+            "heading": "8.1 RQ1: User Performance on Model Understanding",
+            "text": "To evaluate user performance on model understanding, two authors manually assessed and coded participants\u2019 responses and counted\nthe number of correct insights about model behavior shared by participants. Specifically, these two authors had 4 meetings to develop a codebook and resolve labeling inconsistencies. Eventually, 651 codes were generated and categorized into 32 themes. The final Cohen\u2019s Kappa score is 0.9061. Note that one insight is considered correct only if both two authors agree.\nOverall, participants using DeepSeer provided more insights (53 vs. 21) than participants using LIME. Themean difference of insights provided per participant (2.3) is statistically significant (Welch\u2019s t-test: \ud835\udc5d = 0.0003). Fig. 9 provides a breakdown of different kinds of insights shared by participants. Participants using DeepSeer shared much more insights about global model behavior, model performance, and buggy behavior. For instance, P12 said, \u201cIt looks like the model is placing a lot of weight in the latter half of an input sentence.\u201d P9 wrote, \u201cthis model is often confused by the Business and Science categories.\u201d Furthermore, participants using DeepSeer often referred to text patterns and states when describing model behavior, while participants using LIME mostly referred to specific keywords. P25 said, \u201cit is not easy to summarize patterns [with LIME] when the size of dataset is large and there are many classes.\u201d Since LIME is designed for local explanations, it is not surprising that only 2 participants using LIME were able to derive global explanations for an assigned RNN model.\nParticipants using DeepSeer also provided more useful and diverse suggestions about model improvement compared with LIME users (Fig. 9 (C)). Note that a suggestion is considered useful if it is related to the root causes of observed model misprediction and is accepted as an effective model improvement mechanism in the ML community. In particular, 5 participants using DeepSeer noticed the error pattern of forgetting previous tokens after reading more tokens and suggested adding an attention layer, while only 2 participants using LIME noticed this. P10 wrote, \u201cFor many\nfalse predictions, the model is likely to give the right prediction at the beginning, but then turns to the wrong direction. Probably we could reduce the length of temporal dependencies with something like the attention mechanism.\u201d Finally, participants using DeepSeer spent 27 min 53 s (\ud835\udf0e = 2 min 44 s) on average, while participants using LIME spent 28 min 19 s (\ud835\udf0e = 3 min 15 s). We do not observe a significant difference in task completion time."
+        },
+        {
+            "heading": "8.2 RQ2: User Performance on Model Debugging",
+            "text": "To evaluate user performance on the model debugging task, we counted the number of reasonable explanations provided by participants over five misclassified sentences. To assess the correctness of participants\u2019 answers, two authors first manually inspected the hidden states of the RNN and also the training data to diagnose the five misclassifications. Their investigation results were used as the ground-truth misclassification explanations. Then, they checked whether the participants\u2019 explanations were consistent with the ground truth.\nAs shown in Table 1, participants usingDeepSeer provided more reasonable explanations for misclassification. Participants using DeepSeer provided 4.3 reasonable explanations for 5 misclassified sentences on average, while participants using LIME only provided 1.9 reasonable explanations. The mean difference of 2.4 is statistically significant (Welch\u2019s t-test, \ud835\udc5d < 0.0001).\nFurthermore, we counted the number of correct fault-inducing keywords mentioned by participants. Participants using DeepSeer identified more correct fault-inducing keywords than those using LIME (mean: 4.9 vs. 2.1). The mean difference of 2.8 is statistically significant (Welch\u2019s t-test, \ud835\udc5d < 0.0001). In addition, participants using LIME misrecognized more keywords (mean: 3.5 vs. 0.9) as fault-inducing keywords (Welch\u2019s t-test, \ud835\udc5d < 0.0001). This is because LIME first learns a surrogate sparse linear model to simulate the RNN model and then computes word importance based on the linear model. This sometimes leads to unreliable explanations. Some participants also noticed this during the study. P22 commented, \u201cin some cases, I found that the tool [LIME] did not generate a reliable explanation.\u201d\nOne interesting observation is that participants using DeepSeer were capable of identifying more complex error patterns beyond word patterns. For example, P9 answered, \u201cAt the very beginning, \u2018football\u2019 indicates the model to predict sports, which is exactly what the model does. But when \u2018UK\u2019 appears, the state transits to \u2018world\u2019 [related state] and got stuck there.\u201d None of the LIME users provided such insights, since LIME treats individual words separately and cannot capture the dynamics of the model\u2019s decision process.\nFinally, participants using DeepSeer completed this task in an average of 9 min 9 s (\ud835\udf0e = 1 min 21 s), while participants using\nLIME took an average of 9 min 25 s (\ud835\udf0e = 0 min 11 s). There is no significant difference in task completion time."
+        },
+        {
+            "heading": "8.3 User Perception and Cognitive Load",
+            "text": "Our post-study survey solicited participants\u2019 feedback on all key features of DeepSeer. Overall, participants considered DeepSeer\u2019s visual encoding and interface intuitive, helpful, and clear. Among 14 participants, 13 of them self-reported that they would like to use DeepSeer when developing and debugging RNN models in the future, while 1 participant stayed neutral. The median is 6.5 on a 7-point Likert scale (1\u2014I don\u2019t want to use it at all, 7\u2014I will definitely use it if available). We report participants\u2019 qualitative feedback on the key features of DeepSeer from both post-study survey and user study recordings below. Intermediate Prediction Results. All 14 participants using DeepSeer found the on-demand intermediate prediction results provided by DeepSeer useful. The median rating is 7 out of 7. P9 mentioned, \u201cstepping through intermediate predictions help me understand whymodel makes a wrong prediction. For example, the text is apparently about sports. However, the model goes into state 20 which is not quite related to sports.\u201d Moreover, participants also liked the color-coding of intermediate prediction results. State Diagram. Among 14 participants, 11 of them considered the state diagram in DeepSeer useful. The median rating is 6. P12 commented, \u201cextracting an RNN model as a state diagram is nice, and I think it will also be helpful when interpreting [RNN models] with more complex data such as medical data.\u201d While the majority of participants did not find the state diagram overwhelming, 3 found it slightly overwhelming and 1 found it very overwhelming. 7 out of 14 participants found it useful to interact with the state diagram, e.g., seeing statistical distribution over states and keywords associated with each state. Pattern Summaries. 9 out of 14 participants found that seeing the patterns in the pattern summary view and filtering the dataset based on a specific pattern are useful (median rating: 6). P2 mentioned, \u201cit is good for us to see inside of the model and find the bug with possibly buggy patterns.\u201d In particular, participants also mentioned that the pattern summary view is helpful for debugging. P8 said, \u201cI can click the buggy patterns to check related sentences. This helps me identify why model usually mis-classify [sentences] with these patterns.\u201d Searching and Filtering Instances.Most participants agreed that it is useful to interact with each data instance in the instance view (median rating: 7) and search for similar instances (median rating: 7). P4 mentioned, \u201cI like the colors associated with each label, I feel this helped a lot with looking at examples. I also liked how it clearly showed examples with their true class and prediction. Also, the ability\nto also filter examples by correctness, prediction, and the true label was very helpful for me.\u201d Limitations and Suggestions. 5 out of 14 participants pointed out that it would be better if DeepSeer could provide additional statistical information about model accuracy, e.g., confusion matrix. 1 participant suggested that adding the confidence score for the explanation could help them make more informed decisions. 1 participant found the state diagram mentally demanding. P6 said, \u201cstate diagram seemed a bit hard to interpret by just looking at it and probably wouldn\u2019t be immediately intuitive to a user opening this application up initially.\u201d Cognitive Overhead. In the post-study survey, participants rated the cognitive load of the study via the NASATLX questionnaire [21]. Fig. 11 shows their ratings for the five NASA TLX questions. We found that there was no significant difference when usingDeepSeer vs. LIME in terms of hurry, performance, effort, and frustration (Welch\u2019s t-test: \ud835\udc5d = 0.7731, \ud835\udc5d = 0.7244, \ud835\udc5d = 0.6916, and \ud835\udc5d = 0.5620). Since DeepSeer renders much more information about model behavior (e.g., a state diagram, a pattern view, on-demand intermediate prediction results), participants using DeepSeer felt more mental demand (median value: 5 vs. 4, Welch\u2019s t-test: \ud835\udc5d = 0.0011)."
+        },
+        {
+            "heading": "9 DISCUSSION",
+            "text": ""
+        },
+        {
+            "heading": "9.1 Design Implications",
+            "text": "The user study results suggest that DeepSeer helps users achieve a more comprehensive understanding of the assigned model, and perform better on model debugging compared with the baseline tool, LIME [53]. We believe this is largely attributed to DeepSeer\u2019s interactive support for explaining the model\u2019s global and local behavior. While a few studies have discussed about the importance of global and local explanations [24, 45], our work provides specific insights on how to support global and local explanations in a unified interface for RNN models.\nIn DeepSeer, global explanations are mainly rendered in the State Diagram View and the Pattern Summary View. The abstracted state diagram helps users interpret the hidden states and complex\ntransitions among these states, while the summarized text patterns help users quickly identify either influential or buggy patterns learned by the model. These global explanations boost users\u2019 understanding and debugging process. Despite all the benefits of global explanations, we found it still necessary for participants to have the instance-level explanation to contextualize their understanding of model behavior. In particular, given a specific state or text pattern, user study participants often got curious about how it sounds in different texts. In the post-study survey, they highly appreciated the Intermediate Prediction Results feature. DeepSeer allows users to zoom into local explanations by actively filtering instances based on selected states or patterns, as well as zooming back to the model\u2019s global behavior by tracing back to the state diagram. Through these ways, global and local explanations are served as a synergistic loop for model understanding and debugging.\nFurthermore, we find that users cared about how the given explanations are derived from the internal decision-making process of an RNN model. When using LIME [53], 4 out of 14 participants using LIME questioned the explanations (highlighted keywords) given by LIME. For instance, P24 commented in the post-study\nsurvey, \"I hope LIME can provide a reason why some words have a high sincere or insincere score.\" As a more tangible and actionable solution,DeepSeer not only communicates the correlation between specific features in an input to a prediction result, but also communicates the internal decision-making process of a model. DeepSeer renders model\u2019s decision-making process in two ways. First, it renders the transition between different internal states of the model in the state diagram view. Second, for an individual prediction, it renders the intermediate prediction results as well as their correspondence to the internal states of a model. By inspecting such a decision-making process, users can better understand how the model arrives at a specific prediction and gain more trust from the generated explanations.\nAs an interactive XAI tool, it is also important to provide users with interpretable explanations, especially for RNN models. Note that a few prior techniques have tried to visualize the decision process of RNN [27, 59]. However, they usually only directly visualize the value of each hidden state. For instance, LSTMVis [59] visualizes the change of hidden state values in parallel coordinates. Given that hidden state values are essentially numerical values in a high-dimensional space, it is challenging to interpret their semantic meanings. To address this challenge, DeepSeer bundles hidden states with associated words and phrases in a text corpus and visualizes the transition between them as a state diagram. In this way, the internal decision-making process becomes more interpretable to non-experts."
+        },
+        {
+            "heading": "9.2 Target Users and User Expertise",
+            "text": "DeepSeer is designed for any developers who needs to train and debug an RNN model by themselves. They can be experienced ML developers, regular software developers who just started learning RNNs, or students who use RNN in a course project. In the user study, we recruited participants with diverse expertise in RNN, including 4 participants with less than 1 year of RNN experience, 5 with 1 year, 3 with 2\u20145 years, and 2 with more than 5 years. Our further analysis shows that, while participants with more RNN experience performed slightly better, the difference was not significant (Fig. 12). This implies the effectiveness of fDeepSeer is not strongly correlated to their expertise."
+        },
+        {
+            "heading": "9.3 Generalization to Different ML Tasks and Models",
+            "text": "Though our work has only evaluated DeepSeer on sentiment analysis and topic modeling tasks, we believeDeepSeer can generalize to different NLP Tasks as well. To reuse DeepSeer for other tasks, one may consider adapting the color mapping mechanism for abstract states. For example, for machine translation tasks, one can color each state according to the part-of-speech tag. By inspecting each state\u2019s color and associated words, users could interpret if an RNN model is translating a sentence correctly.\nIn this work, we focused on RNNs, which is a representative model architecture for processing sequential data. In addition to RNNs, it may be possible to useDeepSeer to interpret RNN variants such as Bidirectional-LSTM [37] or Transformers [60]. While the principle of Bidirectional-LSTM is similar to a naive RNN, some adaptions to the state abstraction method are required. For instance, one should consider collecting the model\u2019s hidden states when processing the input text in both two directions. Since transformers are permutation-invariant, they process all words in an input sentence at the same time, not sequentially. Therefore, we can no longer bundle a word with a hidden state. However, one can treat the output of each hidden layer as a concrete state. Then the transition can be built among different hidden layers instead of among different words."
+        },
+        {
+            "heading": "9.4 Limitations and Future Work",
+            "text": "One limitation of our user study design is that the comparison baseline, LIME [53], is designed for generating local explanations instead of global explanations. Thus, we cannot directly compare the global explanation effectiveness of DeepSeer to LIME. Besides, LIME is not specialized for RNN. While there are RNN-specific tools, such as LSTMVis [59] and RNNVis [43], we failed to run them on our RNN models after several attempts due to version compatibility issues. Both LSTMVis and RNNVis were built years ago on out-of-dated DL frameworks (TensorFlow r0.12 and Torch 7), which can no longer be used to analyze DL models built by later framework versions. Significant efforts are needed to re-implement them. Therefore, we consider such re-implementation out of the scope of this work. An alternative solution can be creating variants of DeepSeer by disabling some key features as baselines, which can help us better attribute the success of DeepSeer to individual features. This is worth investigating in future work.\nAs we are researchers from an R1 university, we do not have access to professional developers and data scientists who build RNN models in their work. Instead, we recruited graduate students who have experience in building RNN models. ML practitioners may share more interesting insights compared with graduate students.\nAdditionally, our user study has only evaluated DeepSeer on RNNs for sentiment analysis and topic classification. To comprehensively investigate the usefulness of DeepSeer, one can consider leveraging DeepSeer to understand and debug RNN models for other tasks, beyond text classification, e.g., machine translation.\nFurthermore, our current design only supports visualizing and analyzing one RNN model. Once the bugs are identified with the help of DeepSeer, re-training the RNN model is needed. Therefore, a possible future direction is to develop tool support for comparing\ntwo or more versions of an RNN model [46]. Besides, one can also improveDeepSeer by designing tool support for model tracking [4] and model selection [10]."
+        },
+        {
+            "heading": "10 CONCLUSION",
+            "text": "In this paper, we present a novel system called DeepSeer to help ML developers understand and debug recurrent neural networks. DeepSeer makes use of a state abstraction method that bundles semantically similar hidden states of an RNN model and abstracts it to a finite state machine. Through DeepSeer, users can explore both the model\u2019s global and local behavior, and also debug incorrect predictions. We demonstrate DeepSeer\u2019s usefulness and usability through a between-subjects user study with 28 model developers on two different RNN models. The results show that DeepSeer\u2019s tightly-coordinated views brought developers a deeper understanding of an RNN model compared with a popular XAI technique, LIME. Furthermore, participants using DeepSeer were able to identify the root causes of more incorrect predictions and provide more actionable plans to improve the RNN model. In the end, we discuss the design implications from DeepSeer, and propose several promising future work directions."
+        },
+        {
+            "heading": "ACKNOWLEDGMENTS",
+            "text": "We would like to thank all anonymous participants in the user study and anonymous reviewers for their valuable feedback. This work was supported in part by Amii RAP program, Canada CIFAR AI Chairs Program, the Natural Sciences and Engineering Research Council of Canada (NSERC No.RGPIN-2021-02549, No.RGPAS-202100034, No.DGECR-2021-00019), as well as JSPS KAKENHI Grant No.JP20H04168, JST-Mirai Program Grant No.JPMJMI20B8."
+        },
+        {
+            "heading": "A STATE ABSTRACTION",
+            "text": "In this section, we present the technical details of state abstraction for an RNN model. The core idea is to extract all possible hidden states of an RNN model using training data and then group similar hidden states to build a finite state machine (FSM). Algorithm A1 shows the procedure of state abstraction of an RNN model.\nAlgorithm A1: State abstraction of an RNN model. Input: a trained RNN model \ud835\udc45, training data X\ud835\udc61\ud835\udc5f\ud835\udc4e\ud835\udc56\ud835\udc5b , PCA\ndimension \ud835\udc58 , number of states \ud835\udc5b Output: PCA model \ud835\udc43 , GMM model \ud835\udc3a , an abstraction\nmodel \ud835\udc34 = {\ud835\udc43,\ud835\udc3a} 1 H \u2190 {}; 2 for \ud835\udc65 in X\ud835\udc61\ud835\udc5f\ud835\udc4e\ud835\udc56\ud835\udc5b do 3 \ud835\udc3b \u2190 record_hidden_states(\ud835\udc45, \ud835\udc65); 4 H .append(\ud835\udc3b ); 5 end 6 \ud835\udc43 = PCA(H , \ud835\udc58); 7 \ud835\udc3a = GMM(\ud835\udc43 (H), \ud835\udc5b); 8 return \ud835\udc34;\nAlgorithm A1 takes two inputs: a trained RNN model \ud835\udc45 and training data \ud835\udc4b\ud835\udc61\ud835\udc5f\ud835\udc4e\ud835\udc56\ud835\udc5b , as well as two parameters: PCA (principal component analysis) dimension \ud835\udc5d and number of abstracted states \ud835\udc5b. Given a trained RNN model, we first iterate through all the training data X\ud835\udc61\ud835\udc5f\ud835\udc4e\ud835\udc56\ud835\udc5b to collect all possible hidden statesH from the RNN model (Line 1:5). Line 3 records all the hidden states \ud835\udc3b in an RNN model when processing a specific input instance \ud835\udc65 . Suppose an input instance \ud835\udc65 has \ud835\udc59 words, then \ud835\udc59 different hidden states will be producedwhen the RNNmodel processes these \ud835\udc59 words sequentially. For example, given the sentence \u201cI loveMachine Learning\u201d, the RNN model will process four words: \u201cI\u201d, \u201clove\u201d, \u201cmachine\u201d, and \u201clearning\u201d sequentially. Therefore, four different hidden state vectors will be produced and recorded when the RNN model processes this sentence.\nAfter recording all the hidden states using the training data, we create a PCA model \ud835\udc58 to reduce the dimension of these hidden states into \ud835\udc5d (Line 6). Meanwhile, we also obtain a PCA model \ud835\udc43 . Now we abstract |\ud835\udc43 (H)| dimension reduced hidden states into \ud835\udc5b abstracted states. Different from the prior work [16], which uses a grid-based method, we adopt a GMM (Gaussian mixture model [42]) \ud835\udc3a to cluster these dimension-reduced hidden states (Line 7). After executing Line 7, we obtain a GMMmodel\ud835\udc3a . Our abstracted model \ud835\udc34\ud835\udc60 has now been built, which consists of a PCA model \ud835\udc43 and a GMM model \ud835\udc3a . Note that both PCA and GMM are implemented with scikit-learn with default parameters except \u201cn_components\u201d.\nIn our usage scenario and user study, we set the PCA dimension \ud835\udc58 as 20 and the number of states \ud835\udc5b as 40. We further show that the abstraction model using this setting can provide consistent predictions compared with the original RNN model in Appendix B."
+        },
+        {
+            "heading": "B FAITHFULNESS OF STATE ABSTRACTION",
+            "text": "In this section, we show that the abstracted model (i.e., the finite state machine) can make consistent predictions as the original RNN model in three different tasks, one from the usage scenario\n(Section 6) and the other two from the user study (Section 7.2). We measure the prediction consistency between the finite statemachine and the original RNN. Suppose the dataset is \ud835\udc4b = {\ud835\udc651, \ud835\udc652, . . . , \ud835\udc65\ud835\udc41 }, the abstracted model is F , and the RNN model is R. The prediction consistency can be calculated through Eq. 2.\n\ud835\udc5d\ud835\udc5f\ud835\udc52\ud835\udc51\ud835\udc56\ud835\udc50\ud835\udc61\ud835\udc56\ud835\udc5c\ud835\udc5b_\ud835\udc50\ud835\udc5c\ud835\udc5b\ud835\udc60\ud835\udc56\ud835\udc60\ud835\udc61\ud835\udc52\ud835\udc5b\ud835\udc50\ud835\udc66 = \u2211\ud835\udc41 \ud835\udc56=1 F (\ud835\udc65\ud835\udc56 ) == \ud835\udc45(\ud835\udc65\ud835\udc56 )\n\ud835\udc41 (2)\nTable B1 shows the prediction consistency of the two models in each task on the training and test data separately.We can see that for the binary classification models (Toxic and Quora), the abstraction models can provide highly consistent predictions (consistency is 99% and 97%) compared with the original RNN models on both training and test data. For the multi-classification model (AGNews), the abstraction model can still provide very consistent predictions (consistency is 86%). These results demonstrate the faithfulness of our state abstraction technique."
+        },
+        {
+            "heading": "C NUMBER OF ABSTRACTED STATES",
+            "text": "During our user study, we set the number of abstracted states to 40. This number is empirically decided to achieve a good balance between the prediction consistency to the original RNN and the cognitive effort of inspecting a state diagram. To further show that this setting will not affect the abstraction model\u2019s faithfulness, we report the abstracted models\u2019 prediction consistency w.r.t. the number of states of all three models in Fig. C1.\nAs we can see, a lower number of states will lead to a lower prediction consistency. However, when the number of states is larger than 40, the prediction consistency stays largely the same. Therefore, we choose this number of states, 40, throughout our motivating example and user study."
+        },
+        {
+            "heading": "D ML TASKS D.1 ML Task 1: Sentimental Analysis (Quora dataset)",
+            "text": "Task Description:\nIn this task, participants were given an RNN model trained on the Quora dataset.\nQuora dataset is collected from quora.com, where each text in the dataset is labeled as \u201cSincere\u201d or \u201cInsincere\u201d. An insincere question is defined as a question intended to make a statement rather than look for helpful answers.\nParticipants first used the tool to understand the model. They were asked to use the tool to explore the model\u2019s behaviours and performance on training data and test data. After exploring, participants were asked to share their findings, e.g., Did they find any insights? Did they find any bugs? How would they improve this model?\nThen participants were given 5 misclassified sentences. Participants had 10 minutes in total to finish the following task: for each sentence, participants needed to find out why this sentence is misclassified with the help of DeepSeer.\nD.2 ML Task 2: Topic Classification (AGNews dataset)\nTask Description:\nTable B1: Quantitative comparison between the abstraction model predictions to the original RNN\u2019s predictions.\nPrediction consistency on training set Prediction consistency on test set Toxic 99.88% 99.88% Quora 97.30% 97.04%\nAGNews 86.28% 85.59%\nNumber of States\nP re\ndi ct\nio n\nC on\nsi st\nen cy\n(% )\n99.0\n99.2\n99.4\n99.6\n99.8\n100.0\n25 30 35 40 45 50 55 60\nConsistency on Training Set Consistency on Test Set\n(a) Prediction consistency between the original RNNmodel and the abstracted model on Toxic dataset.\nNumber of States\nP re\ndi ct\nio n\nC on\nsi st\nen cy\n(% )\n95.0\n95.6\n96.2\n96.8\n97.4\n98.0\n25 30 35 40 45 50 55 60\nConsistency on Training Set Consistency on Test Set\n(b) Prediction consistency between the original RNNmodel and the abstracted model on Quora dataset.\nNumber of States\nP re\ndi ct\nio n\nC on\nsi st\nen cy\n(% )\n80.0\n81.4\n82.8\n84.2\n85.6\n87.0\n25 30 35 40 45 50 55 60\nConsistency on Training Set Consistency on Test Set\n(c) Prediction consistency between the original RNNmodel and the abstracted model on AGNews dataset.\nFigure C1: Prediction consistencyw.r.t. the number of states of all three RNN models\u2019 abstracted models.\nIn this task, participants were given an RNN model trained on the AGNews dataset.\nAGNews dataset is a collection of news articles. This RNN model classifies each text into different topics, including World, Sports, Business, and Sci/Tech.\nParticipants first used the tool to understand the model. They were asked to use the tool to explore the model\u2019s behaviours, and performance on training data and test data. After exploring, participants were asked to share their findings, e.g., Did they find any insights? Did they find any bugs? How would they improve this model?\nThen participants were given 5 misclassified sentences. Participants had 10 minutes in total to finish the following task: for each sentence, participants needed to find out why this sentence is misclassified with the help of DeepSeer.\nFigure D2: The interface of DeepSeer used for ML task 1 (Quora dataset).\nFigure D3: The interface of DeepSeer used for ML task 2 (AGNews dataset)."
+        }
+    ],
+    "title": "DeepSeer: Interactive RNN Explanation and Debugging via State Abstraction",
+    "year": 2023
+}

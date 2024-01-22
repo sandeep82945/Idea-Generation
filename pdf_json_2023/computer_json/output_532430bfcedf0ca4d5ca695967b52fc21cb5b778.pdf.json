@@ -1,0 +1,812 @@
+{
+    "abstractText": "With the rapid advancement of large language models (LLMs), there is a pressing need for a comprehensive evaluation suite to assess their capabilities and limitations. Existing LLM leaderboards often reference scores reported in other papers without consistent settings and prompts, which may inadvertently encourage cherry-picking favored settings and prompts for better results. In this work, we introduce GPT-Fathom, an open-source and reproducible LLM evaluation suite built on top of OpenAI Evals1. We systematically evaluate 10+ leading LLMs as well as OpenAI\u2019s legacy models on 20+ curated benchmarks across 7 capability categories, all under aligned settings. Our retrospective study on OpenAI\u2019s earlier models offers valuable insights into the evolutionary path from GPT-3 to GPT-4. Currently, the community is eager to know how GPT-3 progressively improves to GPT-4, including technical details like whether adding code data improves LLM\u2019s reasoning capability, which aspects of LLM capability can be improved by SFT and RLHF, how much is the alignment tax, etc. Our analysis sheds light on many of these questions, aiming to improve the transparency of advanced LLMs.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Shen Zheng"
+        },
+        {
+            "affiliations": [],
+            "name": "Yuyu Zhang"
+        },
+        {
+            "affiliations": [],
+            "name": "Yijie Zhu"
+        },
+        {
+            "affiliations": [],
+            "name": "Chenguang Xi"
+        },
+        {
+            "affiliations": [],
+            "name": "Pengyang Gao"
+        },
+        {
+            "affiliations": [],
+            "name": "Xun Zhou"
+        },
+        {
+            "affiliations": [],
+            "name": "Kevin Chen-Chuan Chang"
+        }
+    ],
+    "id": "SP:c86a3a6c23bb1b7bfd5c90d46aca3d4425bfec80",
+    "references": [
+        {
+            "authors": [
+                "Rohan Anil",
+                "Andrew M. Dai",
+                "Orhan Firat",
+                "Melvin Johnson",
+                "Dmitry Lepikhin",
+                "Alexandre Passos",
+                "Siamak Shakeri",
+                "Emanuel Taropa",
+                "Paige Bailey",
+                "Zhifeng Chen",
+                "Eric Chu",
+                "Jonathan H. Clark",
+                "Laurent El Shafey",
+                "Yanping Huang",
+                "Kathy Meier-Hellstern"
+            ],
+            "title": "PaLM 2 technical report, 2023",
+            "venue": "URL https://arxiv.org/abs/2305.10403",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Jacob Austin",
+                "Augustus Odena",
+                "Maxwell I. Nye",
+                "Maarten Bosma",
+                "Henryk Michalewski",
+                "David Dohan",
+                "Ellen Jiang",
+                "Carrie J. Cai",
+                "Michael Terry",
+                "Quoc V. Le",
+                "Charles Sutton"
+            ],
+            "title": "Program synthesis with large language models",
+            "venue": "CoRR, abs/2108.07732,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Edward Beeching",
+                "Cl\u00e9mentine Fourrier",
+                "Nathan Habib",
+                "Sheon Han",
+                "Nathan Lambert",
+                "Nazneen Rajani",
+                "Omar Sanseviero",
+                "Lewis Tunstall",
+                "Thomas Wolf"
+            ],
+            "title": "Open LLM leaderboard",
+            "venue": "https: //huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Jonathan Berant",
+                "Andrew Chou",
+                "Roy Frostig",
+                "Percy Liang"
+            ],
+            "title": "Semantic parsing on Freebase from question-answer pairs",
+            "venue": "In Proceedings of the 2013 Conference on Empirical Methods in Natural Language Processing,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Radford",
+                "Ilya Sutskever",
+                "Dario Amodei"
+            ],
+            "title": "Language models are few-shot learners",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 1901
+        },
+        {
+            "authors": [
+                "S\u00e9bastien Bubeck",
+                "Varun Chandrasekaran",
+                "Ronen Eldan",
+                "Johannes Gehrke",
+                "Eric Horvitz",
+                "Ece Kamar",
+                "Peter Lee",
+                "Yin Tat Lee",
+                "Yuanzhi Li",
+                "Scott Lundberg",
+                "Harsha Nori",
+                "Hamid Palangi",
+                "Marco Tulio Ribeiro",
+                "Yi Zhang"
+            ],
+            "title": "Sparks of artificial general intelligence: Early experiments with gpt-4, 2023",
+            "venue": "URL https://arxiv.org/abs/2303.12712",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Mark Chen",
+                "Jerry Tworek",
+                "Heewoo Jun",
+                "Qiming Yuan",
+                "Henrique Pond\u00e9 de Oliveira Pinto",
+                "Jared Kaplan",
+                "Harrison Edwards",
+                "Yuri Burda",
+                "Nicholas Joseph",
+                "Greg Brockman",
+                "Alex Ray",
+                "Raul Puri",
+                "Gretchen Krueger",
+                "Michael Petrov",
+                "Heidy Khlaaf",
+                "Girish Sastry",
+                "Pamela Mishkin",
+                "Brooke Chan",
+                "Scott Gray"
+            ],
+            "title": "Evaluating large language models trained on",
+            "venue": "code. CoRR,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Yew Ken Chia",
+                "Pengfei Hong",
+                "Lidong Bing",
+                "Soujanya Poria"
+            ],
+            "title": "InstructEval: Towards holistic evaluation of instruction-tuned large language models, 2023",
+            "venue": "URL https://arxiv.org/ abs/2306.04757",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Aakanksha Chowdhery",
+                "Sharan Narang",
+                "Jacob Devlin",
+                "Maarten Bosma",
+                "Gaurav Mishra",
+                "Adam Roberts",
+                "Paul Barham",
+                "Hyung Won Chung",
+                "Charles Sutton",
+                "Sebastian Gehrmann",
+                "Parker Schuh",
+                "Kensen Shi",
+                "Sasha Tsvyashchenko",
+                "Joshua Maynez",
+                "Abhishek Rao",
+                "Parker Barnes",
+                "Yi Tay",
+                "Noam Shazeer",
+                "Vinodkumar Prabhakaran",
+                "Emily Reif",
+                "Nan Du"
+            ],
+            "title": "Palm: Scaling language modeling with pathways, 2022",
+            "venue": "URL https://arxiv.org/abs/2204.02311",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Jonathan H. Clark",
+                "Eunsol Choi",
+                "Michael Collins",
+                "Dan Garrette",
+                "Tom Kwiatkowski",
+                "Vitaly Nikolaev",
+                "Jennimaria Palomaki"
+            ],
+            "title": "TyDi QA: A benchmark for information-seeking question answering in typologically diverse languages",
+            "venue": "Transactions of the Association for Computational Linguistics,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Peter Clark",
+                "Isaac Cowhey",
+                "Oren Etzioni",
+                "Tushar Khot",
+                "Ashish Sabharwal",
+                "Carissa Schoenick",
+                "Oyvind Tafjord"
+            ],
+            "title": "Think you have solved question answering? Try ARC, the AI2 reasoning challenge",
+            "venue": "CoRR, abs/1803.05457,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Karl Cobbe",
+                "Vineet Kosaraju",
+                "Mohammad Bavarian",
+                "Mark Chen",
+                "Heewoo Jun",
+                "Lukasz Kaiser",
+                "Matthias Plappert",
+                "Jerry Tworek",
+                "Jacob Hilton",
+                "Reiichiro Nakano",
+                "Christopher Hesse",
+                "John Schulman"
+            ],
+            "title": "Training verifiers to solve math word problems",
+            "venue": "CoRR, abs/2110.14168,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Dheeru Dua",
+                "Yizhong Wang",
+                "Pradeep Dasigi",
+                "Gabriel Stanovsky",
+                "Sameer Singh",
+                "Matt Gardner"
+            ],
+            "title": "DROP: A reading comprehension benchmark requiring discrete reasoning over paragraphs",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Nouha Dziri",
+                "Ximing Lu",
+                "Melanie Sclar",
+                "Xiang Lorraine Li",
+                "Liwei Jiang",
+                "Bill Yuchen Lin",
+                "Peter West",
+                "Chandra Bhagavatula",
+                "Ronan Le Bras",
+                "Jena D. Hwang",
+                "Soumya Sanyal",
+                "Sean Welleck",
+                "Xiang Ren",
+                "Allyson Ettinger",
+                "Zaid Harchaoui",
+                "Yejin Choi"
+            ],
+            "title": "Faith and fate",
+            "venue": "Limits of transformers on compositionality,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Yao Fu",
+                "Litu Ou",
+                "Mingyu Chen",
+                "Yuhao Wan",
+                "Hao Peng",
+                "Tushar Khot"
+            ],
+            "title": "Chain-of-Thought Hub: A continuous effort to measure large language models\u2019 reasoning performance, 2023",
+            "venue": "URL https: //arxiv.org/abs/2305.17306",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Samuel Gehman",
+                "Suchin Gururangan",
+                "Maarten Sap",
+                "Yejin Choi",
+                "Noah A. Smith"
+            ],
+            "title": "RealToxicityPrompts: Evaluating neural toxic degeneration in language models",
+            "venue": "In Findings of the Association for Computational Linguistics: EMNLP",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Dan Hendrycks",
+                "Collin Burns",
+                "Steven Basart",
+                "Andy Zou",
+                "Mantas Mazeika",
+                "Dawn Song",
+                "Jacob Steinhardt"
+            ],
+            "title": "Measuring massive multitask language understanding",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Dan Hendrycks",
+                "Collin Burns",
+                "Saurav Kadavath",
+                "Akul Arora",
+                "Steven Basart",
+                "Eric Tang",
+                "Dawn Song",
+                "Jacob Steinhardt"
+            ],
+            "title": "Measuring mathematical problem solving with the MATH",
+            "venue": "dataset. CoRR,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Ari Holtzman",
+                "Jan Buys",
+                "Li Du",
+                "Maxwell Forbes",
+                "Yejin Choi"
+            ],
+            "title": "The curious case of neural text degeneration",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Yuzhen Huang",
+                "Yuzhuo Bai",
+                "Zhihao Zhu",
+                "Junlei Zhang",
+                "Jinghan Zhang",
+                "Tangjun Su",
+                "Junteng Liu",
+                "Chuancheng Lv",
+                "Yikai Zhang",
+                "Jiayi Lei",
+                "Yao Fu",
+                "Maosong Sun",
+                "Junxian He"
+            ],
+            "title": "C-Eval: A multi-level multi-discipline Chinese evaluation suite for foundation models",
+            "venue": "arXiv preprint arXiv:2305.08322,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Shima Imani",
+                "Liang Du",
+                "Harsh Shrivastava"
+            ],
+            "title": "MathPrompter: Mathematical reasoning using large language models. In Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 5: Industry Track)",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Mandar Joshi",
+                "Eunsol Choi",
+                "Daniel Weld",
+                "Luke Zettlemoyer"
+            ],
+            "title": "TriviaQA: A large scale distantly supervised challenge dataset for reading comprehension",
+            "venue": "In Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers),",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Tom Kwiatkowski",
+                "Jennimaria Palomaki",
+                "Olivia Redfield",
+                "Michael Collins",
+                "Ankur Parikh",
+                "Chris Alberti",
+                "Danielle Epstein",
+                "Illia Polosukhin",
+                "Jacob Devlin",
+                "Kenton Lee",
+                "Kristina Toutanova",
+                "Llion Jones",
+                "Matthew Kelcey",
+                "Ming-Wei Chang",
+                "Andrew M. Dai",
+                "Jakob Uszkoreit",
+                "Quoc Le",
+                "Slav Petrov"
+            ],
+            "title": "Natural questions: A benchmark for question answering research",
+            "venue": "Transactions of the Association for Computational Linguistics,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Guokun Lai",
+                "Qizhe Xie",
+                "Hanxiao Liu",
+                "Yiming Yang",
+                "Eduard Hovy"
+            ],
+            "title": "RACE: Large-scale ReAding comprehension dataset from examinations",
+            "venue": "In Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Aitor Lewkowycz",
+                "Anders Johan Andreassen",
+                "David Dohan",
+                "Ethan Dyer",
+                "Henryk Michalewski",
+                "Vinay Venkatesh Ramasesh",
+                "Ambrose Slone",
+                "Cem Anil",
+                "Imanol Schlag",
+                "Theo Gutman-Solo",
+                "Yuhuai Wu",
+                "Behnam Neyshabur",
+                "Guy Gur-Ari",
+                "Vedant Misra"
+            ],
+            "title": "Solving quantitative reasoning problems with language models",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Xuechen Li",
+                "Tianyi Zhang",
+                "Yann Dubois",
+                "Rohan Taori",
+                "Ishaan Gulrajani",
+                "Carlos Guestrin",
+                "Percy Liang",
+                "Tatsunori B. Hashimoto"
+            ],
+            "title": "AlpacaEval: An automatic evaluator of instruction-following models",
+            "venue": "https://github.com/tatsu-lab/alpaca_eval,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Percy Liang",
+                "Rishi Bommasani",
+                "Tony Lee",
+                "Dimitris Tsipras",
+                "Dilara Soylu",
+                "Michihiro Yasunaga",
+                "Yian Zhang",
+                "Deepak Narayanan",
+                "Yuhuai Wu",
+                "Ananya Kumar",
+                "Benjamin Newman",
+                "Binhang Yuan"
+            ],
+            "title": "Holistic evaluation of language models",
+            "venue": "Transactions on Machine Learning Research,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Stephanie Lin",
+                "Jacob Hilton",
+                "Owain Evans"
+            ],
+            "title": "TruthfulQA: Measuring how models mimic human falsehoods",
+            "venue": "In Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Denis Paperno",
+                "Germ\u00e1n Kruszewski",
+                "Angeliki Lazaridou",
+                "Ngoc Quan Pham",
+                "Raffaella Bernardi",
+                "Sandro Pezzelle",
+                "Marco Baroni",
+                "Gemma Boleda",
+                "Raquel Fern\u00e1ndez"
+            ],
+            "title": "The LAMBADA dataset: Word prediction requiring a broad discourse context. In Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Keisuke Sakaguchi",
+                "Ronan Le Bras",
+                "Chandra Bhagavatula",
+                "Yejin Choi"
+            ],
+            "title": "WinoGrande: An adversarial winograd schema challenge at scale",
+            "venue": "Commun. ACM,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "John Schulman",
+                "Filip Wolski",
+                "Prafulla Dhariwal",
+                "Alec Radford",
+                "Oleg Klimov"
+            ],
+            "title": "Proximal policy optimization algorithms. CoRR, abs/1707.06347, 2017",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Freda Shi",
+                "Mirac Suzgun",
+                "Markus Freitag",
+                "Xuezhi Wang",
+                "Suraj Srivats",
+                "Soroush Vosoughi",
+                "Hyung Won Chung",
+                "Yi Tay",
+                "Sebastian Ruder",
+                "Denny Zhou",
+                "Dipanjan Das",
+                "Jason Wei"
+            ],
+            "title": "Language models are multilingual chain-of-thought reasoners",
+            "venue": "In The Eleventh International Conference on Learning Representations,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Aarohi Srivastava",
+                "Abhinav Rastogi",
+                "Abhishek Rao",
+                "Abu Awal Md Shoeb",
+                "Abubakar Abid",
+                "Adam Fisch",
+                "Adam R. Brown",
+                "Adam Santoro",
+                "Aditya Gupta",
+                "Adri\u00e0 Garriga-Alonso"
+            ],
+            "title": "Beyond the imitation game: Quantifying and extrapolating the capabilities of language models",
+            "venue": "Transactions on Machine Learning Research,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Mirac Suzgun",
+                "Nathan Scales",
+                "Nathanael Sch\u00e4rli",
+                "Sebastian Gehrmann",
+                "Yi Tay",
+                "Hyung Won Chung",
+                "Aakanksha Chowdhery",
+                "Quoc Le",
+                "Ed Chi",
+                "Denny Zhou",
+                "Jason Wei"
+            ],
+            "title": "Challenging BIGbench tasks and whether chain-of-thought can solve them. In Findings of the Association for Computational Linguistics: ACL 2023",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Hugo Touvron",
+                "Thibaut Lavril",
+                "Gautier Izacard",
+                "Xavier Martinet",
+                "Marie-Anne Lachaux",
+                "Timoth\u00e9e Lacroix",
+                "Baptiste Rozi\u00e8re",
+                "Naman Goyal",
+                "Eric Hambro",
+                "Faisal Azhar",
+                "Aurelien Rodriguez",
+                "Armand Joulin",
+                "Edouard Grave",
+                "Guillaume Lample"
+            ],
+            "title": "LLaMA: Open and efficient foundation language models, 2023a. URL https://arxiv.org/abs/2302.13971",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Hugo Touvron",
+                "Louis Martin",
+                "Kevin Stone",
+                "Peter Albert",
+                "Amjad Almahairi",
+                "Yasmine Babaei",
+                "Nikolay Bashlykov",
+                "Soumya Batra",
+                "Prajjwal Bhargava",
+                "Shruti Bhosale",
+                "Dan Bikel",
+                "Lukas Blecher",
+                "Cristian Canton Ferrer",
+                "Moya Chen",
+                "Guillem Cucurull",
+                "David Esiobu",
+                "Jude Fernandes",
+                "Jeremy Fu",
+                "Wenyin Fu",
+                "Brian Fuller"
+            ],
+            "title": "Llama 2: Open foundation and fine-tuned chat models, 2023b. URL https://arxiv.org/abs/2307.09288",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Ashish Vaswani",
+                "Noam Shazeer",
+                "Niki Parmar",
+                "Jakob Uszkoreit",
+                "Llion Jones",
+                "Aidan N Gomez",
+                "\u0141 ukasz Kaiser",
+                "Illia Polosukhin"
+            ],
+            "title": "Attention is all you need",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Jason Wei",
+                "Xuezhi Wang",
+                "Dale Schuurmans",
+                "Maarten Bosma",
+                "brian ichter",
+                "Fei Xia",
+                "Ed H. Chi",
+                "Quoc V Le",
+                "Denny Zhou"
+            ],
+            "title": "Chain of thought prompting elicits reasoning in large language models",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Thomas Wolf",
+                "Lysandre Debut",
+                "Victor Sanh",
+                "Julien Chaumond",
+                "Clement Delangue",
+                "Anthony Moi",
+                "Pierric Cistac",
+                "Tim Rault",
+                "Remi Louf",
+                "Morgan Funtowicz",
+                "Joe Davison",
+                "Sam Shleifer",
+                "Patrick von Platen",
+                "Clara Ma",
+                "Yacine Jernite",
+                "Julien Plu",
+                "Canwen Xu",
+                "Teven Le Scao",
+                "Sylvain Gugger",
+                "Mariama Drame",
+                "Quentin Lhoest",
+                "Alexander Rush"
+            ],
+            "title": "Transformers: State-of-the-art natural language processing",
+            "venue": "In Proceedings of the 2020 Conference on Empirical Methods in Natu-",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Rowan Zellers",
+                "Ari Holtzman",
+                "Yonatan Bisk",
+                "Ali Farhadi",
+                "Yejin Choi"
+            ],
+            "title": "HellaSwag: Can a machine really finish your sentence",
+            "venue": "In Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Lianmin Zheng",
+                "Wei-Lin Chiang",
+                "Ying Sheng",
+                "Siyuan Zhuang",
+                "Zhanghao Wu",
+                "Yonghao Zhuang",
+                "Zi Lin",
+                "Zhuohan Li",
+                "Dacheng Li",
+                "Eric. P Xing",
+                "Hao Zhang",
+                "Joseph E. Gonzalez",
+                "Ion Stoica"
+            ],
+            "title": "Judging LLM-as-a-judge with MT-Bench and Chatbot Arena, 2023",
+            "venue": "URL https://arxiv. org/abs/2306.05685",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Wanjun Zhong",
+                "Ruixiang Cui",
+                "Yiduo Guo",
+                "Yaobo Liang",
+                "Shuai Lu",
+                "Yanlin Wang",
+                "Amin Saied",
+                "Weizhu Chen",
+                "Nan Duan"
+            ],
+            "title": "AGIEval: A human-centric benchmark for evaluating foundation models, 2023",
+            "venue": "URL https://arxiv.org/abs/2304.06364",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "man"
+            ],
+            "title": "2017) on top of text-davinci-002; 4) gpt-3.5-turbo-0301, a chat",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "F OUR RESULTS VS"
+            ],
+            "title": "OFFICIAL SCORES To verify the correctness of our implementation, we first compare our evaluation results with the officially reported scores from GPT-4 technical report (OpenAI, 2023) and Microsoft\u2019s early experiments with GPT-4 (Bubeck et al., 2023)",
+            "venue": "To ensure an apple-to-apple comparison,",
+            "year": 2023
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1 INTRODUCTION",
+            "text": "Recently, the advancement of large language models (LLMs) is arguably the most remarkable breakthrough in Artificial Intelligence (AI) in the past few years. Based on the Transformer (Vaswani et al., 2017) architecture, these LLMs are trained on massive Web-scale text corpora. Despite their straightforward method of using a self-supervised objective to predict the next token, leading LLMs demonstrate exceptional capabilities across a range of challenging tasks (Bubeck et al., 2023), even showing a potential path towards Artificial General Intelligence (AGI). With the rapid progress of LLMs, there is a growing demand for better understanding these powerful models, including the distribution of their multi-aspect capabilities, limitations and risks, and directions and priorities of their future improvement. It is critical to establish a carefully curated evaluation suite that measures LLMs in a systematic, transparent and reproducible manner. Although there already exist many LLM leaderboards and evaluation suites, some key challenges are yet to be addressed: \u2022 Inconsistent settings: The evaluation settings, such as the number of in-context example \u201cshots\u201d,\nwhether Chain-of-Thought (CoT; Wei et al. 2022) prompting is used, methods of answer parsing and metric computation, etc., often differ across the existing LLM works. Moreover, most of the released LLMs do not disclose their prompts used for evaluation, making it difficult to reproduce the reported scores. Different settings and prompts may lead to very different evaluation results, which may easily skew the observations. Yet, many existing LLM leaderboards reference scores from other papers without consistent settings and prompts, which may inadvertently encourage cherry-picking favored settings and prompts for better results. To achieve reliable conclusions, it is crucial to make apples-to-apples LLM comparisons with consistent settings and prompts. \u2217Leading co-authors with equal contribution. \u2020Work done during an internship at ByteDance.\nar X\niv :2\n30 9.\n16 58\n3v 5\n[ cs\n.C L\n] 1\n9 D\nec 2\n\u2022 Incomplete collection of models and benchmarks: For the moment, when compared to OpenAI\u2019s leading models such as GPT-4, all the other LLMs (particularly open-source models) exhibit a substantial performance gap. In fact, it takes OpenAI nearly three years to evolve from GPT3 (released in 2020/06) to GPT-4 (released in 2023/03). Existing LLM leaderboards primarily focus on the latest models, while missing a retrospective study on OpenAI\u2019s earlier models and its mysterious path from GPT-3 to GPT-4. Besides the coverage of models, many existing works assess LLMs on merely one or a few aspects of capabilities, which is not sufficient to provide a comprehensive view to deeply understand the strength and weakness of the evaluated LLMs.\n\u2022 Insufficient study on model sensitivity: LLMs are known to be sensitive to the evaluation setting and the formatting of prompt (Liang et al., 2023). However, many existing works only focus on the benchmark score under one specific setting, while overlooking the impacts of model sensitivity on the overall usability of LLMs. In fact, it is unacceptable that a slightly rephrased prompt could cause the LLM to fail in responding it correctly. Due to the lack of systematic study on model sensitivity, this potential vulnerability in LLMs remains not well understood.\nThese challenges hinder a comprehensive understanding of LLMs. To dispel the mist among LLM evaluations, we introduce GPT-Fathom, an open-source and reproducible LLM evaluation suite developed based on OpenAI Evals1. We evaluate 10+ leading open-source and closed-source LLMs on 20+ curated benchmarks in 7 capability categories under aligned settings. We also evaluate legacy models from OpenAI to retrospectively measure their progressive improvement in each capability dimension. Our retrospective study offers valuable insights into OpenAI\u2019s evolutionary path from GPT-3 to GPT-4, aiming to help the community better understand this enigmatic path. Our analysis sheds light on many community-concerned questions (e.g., the gap between OpenAI / non-OpenAI models, whether adding code data improves reasoning capability, which aspects of LLM capability can be improved by SFT and RLHF, how much is the alignment tax, etc.). With reproducible evaluations, GPT-Fathom serves as a standard gauge to pinpoint the position of emerging LLMs, aiming to help the community measure and bridge the gap with leading LLMs. We also explore the impacts of model sensitivity on evaluation results with extensive experiments of various settings.\nBenchmarks constantly play a pivotal role in steering the evolution of AI and, of course, directing the advancement of LLMs as well. There are many great existing LLM evaluation suites. By comparing GPT-Fathom with previous works, we summarize the major difference as follows: 1) HELM (Liang et al., 2023) primarily uses answer-only prompting (without CoT) and has not included the latest leading models such as GPT-4 (as of the time of writing); 2) Open LLM Leaderboard (Beeching et al., 2023) focuses on open-source LLMs, while we jointly consider leading closed-source and open-source LLMs; 3) OpenCompass (Contributors, 2023) evaluates latest open-source and closedsource LLMs (all released after 2023/03), while we cover both leading LLMs and OpenAI\u2019s earlier models to decipher the evolutionary path from GPT-3 to GPT-4; 4) InstructEval (Chia et al., 2023) is designed for evaluating instruction-tuned LLMs, while we evaluate both base and SFT / RLHF models; 5) AlpacaEval (Li et al., 2023) evaluates on simple instruction-following tasks as a quick and cheap proxy of human evaluation, while we provide systematic evaluation of various aspects of LLM capabilities; 6) Chatbot Arena (Zheng et al., 2023) evaluates human user\u2019s dialog preference with a Elo rating system, while we focus on automatic and reproducible evaluation over popular benchmarks; 7) Chain-of-Thought Hub (Fu et al., 2023) focuses on evaluating the reasoning capability of LLMs with CoT prompting, while we support both CoT and answer-only prompting settings and evaluate various aspects of LLM capabilities.\nThe key contributions of our work are summarized as follows:\n\u2022 Systematic and reproducible evaluations under aligned settings: We provide accurate evaluations of 10+ leading LLMs on 20+ curated benchmarks across 7 capability categories. We carefully align the evaluation setting for each benchmark. Our work improves the transparency of LLMs, and all of our evaluation results can be easily reproduced.\n\u2022 Retrospective study on the evolutionary path from GPT-3 to GPT-4: We evaluate not only leading LLMs, but also OpenAI\u2019s earlier models, to retrospectively study their progressive improvement and better understand the path towards GPT-4 and beyond. Our work is time-sensitive due to the scheduled deprecation of those legacy models announced by OpenAI2.\n1https://github.com/openai/evals 2https://openai.com/blog/gpt-4-api-general-availability\n\u2022 Identify novel challenges of advanced LLMs: We discover the seesaw phenomenon of LLM capabilities, even on the latest GPT-4 model. We also study the impacts of model sensitivity with extensive experiments. We strongly encourage the research community to dedicate more efforts to tackling these novel challenges."
+        },
+        {
+            "heading": "2 METHOD",
+            "text": "Imagine the ultimate superset of LLM evaluations: a holistic collection that evaluates every LLM on every benchmark under every possible setting. In practice, however, due to resource and time constraints, we are unable to exhaustively fulfill this ideal evaluation superset. Instead, we pick representative LLMs, benchmarks and settings to investigate open problems. In this section, we discuss in detail how we select LLMs, benchmarks and settings for our evaluations."
+        },
+        {
+            "heading": "2.1 LLMS FOR EVALUATION",
+            "text": "The goal of GPT-Fathom is to curate a high-quality collection of representative LLMs and benchmarks, helping the community better understand OpenAI\u2019s evolutionary path and pinpoint the position of future LLMs. To achieve this goal, we mainly consider evaluating these types of LLMs: 1) OpenAI\u2019s leading models; 2) OpenAI\u2019s major earlier models3; 3) other leading closed-source models; 4) leading open-source models. As a result, we select OpenAI\u2019s models (illustrated in Figure 1), PaLM 2 (Anil et al., 2023), Claude 24, LLaMA (Touvron et al., 2023a) and Llama 2 (Touvron et al., 2023b) for evaluation. Due to the limited space, refer to Appendix A for the detailed model list."
+        },
+        {
+            "heading": "2.2 BENCHMARKS FOR EVALUATION",
+            "text": "We consider the following criteria for benchmark selection: 1) cover as many aspects of LLM capabilities as possible; 2) adopt widely used benchmarks for LLM evaluation; 3) clearly distinguish strong LLMs from weaker ones; 4) align well with the actual usage experience of LLMs. Accordingly, we construct a capability taxonomy by initially enumerating the capability categories (task types), and then populating each category with selected benchmarks.\nKnowledge. This category evaluates LLM\u2019s capability on world knowledge, which requires not only memorizing the enormous knowledge in the pretraining data but also connecting fragments of\n3https://platform.openai.com/docs/model-index-for-researchers 4https://www.anthropic.com/index/claude-2\nknowledge and reasoning over them. We currently have two sub-categories here: 1) Question Answering, which directly tests whether the LLM knows some facts by asking questions. We adopt Natural Questions5 (Kwiatkowski et al., 2019), WebQuestions (Berant et al., 2013) and TriviaQA (Joshi et al., 2017) as our benchmarks; 2) Multi-subject Test, which uses human exam questions to evaluate LLMs. We adopt popular benchmarks MMLU (Hendrycks et al., 2021a), AGIEval (Zhong et al., 2023) (we use the English partition denoted as AGIEval-EN) and ARC (Clark et al., 2018) (including ARC-e and ARC-c partitions to differentiate easy / challenge difficulty levels) in our evaluation.\nReasoning. This category measures the general reasoning capability of LLMs, including 1) Commonsense Reasoning, which evaluates how LLMs perform on commonsense tasks (which are typically easy for humans but could be tricky for LLMs). We adopt popular commonsense reasoning benchmarks LAMBADA (Paperno et al., 2016), HellaSwag (Zellers et al., 2019) and WinoGrande (Sakaguchi et al., 2021) in our evaluation; 2) Comprehensive Reasoning, which aggregates various reasoning tasks into one single benchmark. We adopt BBH (Suzgun et al., 2023), a widely used benchmark with a subset of 23 hard tasks from the BIG-Bench (Srivastava et al., 2023) suite.\nComprehension. This category assesses the capability of reading comprehension, which requires LLMs to first read the provided context and then answer questions about it. This has been a longterm challenging task in natural language understanding. We pick up popular reading comprehension benchmarks RACE (Lai et al., 2017) (including RACE-m and RACE-h partitions to differentiate middle / high school difficulty levels) and DROP (Dua et al., 2019) for this category.\nMath. This category specifically tests LLM\u2019s mathematical capability. Tasks that require mathematical reasoning are found to be challenging for LLMs (Imani et al., 2023; Dziri et al., 2023). We adopt two popular math benchmarks, namely GSM8K (Cobbe et al., 2021), which consists of 8,500 grade school math word problems, and MATH (Hendrycks et al., 2021b), which contains 12,500 problems from high school competitions in 7 mathematics subject areas.\nCoding. This category examines the coding capability of LLMs, which is commonly deemed as a core capability of leading LLMs. We pick up popular benchmarks HumanEval (Chen et al., 2021) and MBPP (Austin et al., 2021), both of which are natural language to code datasets that require LLMs to generate self-contained Python programs that pass a set of held-out test cases. Following Chen et al. (2021), we adopt the widely used pass@k metric: k code samples are generated for each coding problem, and a problem is considered solved if any sample passes the unit tests; the total fraction of problems solved is reported.\nMultilingual. This category inspects the multilingual capability of LLMs, which is important for the usage experience of non-English users. Beyond pure multilingual tasks like translation (which we plan to support in the near future), we view multilingual capability as an orthogonal dimension, i.e., LLMs can be evaluated on the intersection of a fundamental capability and a specific language, such as (\u201cKnowledge\u201d, Chinese), (\u201cReasoning\u201d, French), (\u201cMath\u201d, German), etc. Nonetheless, given that most existing benchmarks focus solely on English, we currently keep \u201cMultilingual\u201d as a distinct capability category in parallel with the others. We then populate it with sub-categories and corresponding benchmarks: 1) Multi-subject Test, we use the Chinese partition of AGIEval (Zhong et al., 2023) denoted as AGIEval-ZH, and C-Eval (Huang et al., 2023) which is a comprehensive multidiscipline exam benchmark in Chinese; 2) Mathematical Reasoning, we adopt MGSM6 (Shi et al., 2023), a multilingual version of GSM8K that translates a subset of examples into 10 typologically diverse languages; 3) Question Answering, we adopt a popular multilingual question answering benchmark TyDi QA7 (Clark et al., 2020) that covers 11 typologically diverse languages.\nSafety. This category scrutinizes LLM\u2019s propensity to generate content that is truthful, reliable, non-toxic and non-biased, thereby aligning well with human values. To this end, we currently have two sub-categories (and plan to support more benchmarks in the future): 1) Truthfulness, we employ\n5For Natural Questions, we evaluate in the closed-book setting, where only the question is provided, without a context document.\n6For MGSM, we evaluate the average score over the 10 language partitions, including Bengali, Chinese, French, German, Japanese, Russian, Spanish, Swahili, Telugu and Thai.\n7For TyDi QA, we evaluate in the no-context setting, where no gold passage is provided. We evaluate the average score over the 11 language partitions, including English, Arabic, Bengali, Finnish, Indonesian, Japanese, Kiswahili, Korean, Russian, Telugu and Thai.\nTruthfulQA8 (Lin et al., 2022), a benchmark designed to evaluate LLM\u2019s factuality; 2) Toxicity, we adopt RealToxicityPrompts (Gehman et al., 2020) to quantify the risk of generating toxic output.\nNote that the categories above are based on our own interpretation of LLM capabilities, which is by no means the exclusive approach to systematically evaluating LLMs. Additionally, some benchmarks may necessitate a range of capabilities. For instance, both \u201cKnowledge\u201d and \u201cReasoning\u201d could influence the performance on MMLU. For the sake of simplicity, we just assign each benchmark to a primary capability category for evaluation. Due to the limited space, refer to Appendix B for details of dataset splits and source of prompts.\nApart from the capability categories listed above, we also plan to support more LLM capabilities in the future, such as long-context understanding, multi-turn conversation, open-domain generation, LLM-based autonomous agent, etc., some of which may require subjective assessment or using a powerful LLM to automatically evaluate LLMs such as Li et al. (2023)."
+        },
+        {
+            "heading": "2.3 DETAILS OF BLACK-BOX EVALUATION",
+            "text": "Both black-box and white-box evaluation methods are popular for evaluating LLMs. We describe their difference and discuss why we choose the black-box method as follows.\nBlack-box evaluation: Given the test prompt, LLM first generates free-form response; the response is then parsed into the final answer for computing the evaluation metric against the reference answer. For multiple-choice questions, the reference answer is typically the letter of the correct option such as (A), (B), (C) or (D).\nWhite-box evaluation: Given the test prompt, LLM generates per-token likelihood for each option; the per-token likelihood is then normalized for length and optionally normalized by answer context as described in Brown et al. (2020). The option with the maximum normalized likelihood is then picked as the predicted option.\nGPT-Fathom adopts the black-box method throughout all evaluations, since 1) the per-token likelihood for input prompt is usually not provided by closed-source LLMs; 2) the white-box method manually restricts the prediction space, thus the evaluation result would be no worse than random guess in expectation; while for the black-box method, a model with inferior capability of instruction following may get 0 score since the output space is purely free-form. In our opinion, instruction following is such an important LLM capability and should be taken into consideration in evaluation.\nBase models are known to have weaker capability of instruction following due to lack of fine-tuning. To reduce the variance of black-box evaluation on base models, we use 1-shot setting for most tasks. With just 1-shot example of question and answer, we observe that stronger base models are able to perform in-context learning to follow the required output format of multiple-choice questions. Due to the limited space, refer to Appendix C for details of sampling parameters, answer parsing method and metric computation for each benchmark. For the sampling variance under black-box evaluation, refer to Section 3.2 for our extensive experiments and detailed discussions."
+        },
+        {
+            "heading": "3 EXPERIMENTS",
+            "text": ""
+        },
+        {
+            "heading": "3.1 OVERALL PERFORMANCE",
+            "text": "Table 1 summarizes the main evaluation results of GPT-Fathom. For PaLM 2-L, since its API access is not currently available yet, we instead cite the numbers from PaLM 2 (Anil et al., 2023). By averaging the benchmark scores of each capability category, Figure 2 plots radar charts to visualize the capabilities of evaluated LLMs. Table 2 compares the performance of Claude 2 and OpenAI\u2019s latest models. We\u2019re still on the waitlist of Claude 2\u2019s API access, so we evaluate OpenAI\u2019s latest models (including Web-version GPT-3.5 and GPT-4) under the same settings used by Claude 24.\nFrom the overall performance of OpenAI\u2019s models, we observe a remarkable leap from GPT-3 to GPT-4 across all facets of capabilities, with the GPT-3.5 series serving as a pivotal intermediary stage, which was kicked off by code-davinci-002, a fairly strong base model pretrained on a\n8For TruthfulQA, we evaluate in the multiple-choice setting.\nhybrid of text and code data. In the following section, we conduct detailed analysis on the progressive performance of OpenAI\u2019 models, as well as the performance of other leading closed-source / open-source LLMs. Our study aims to unveil OpenAI\u2019s mysterious path from GPT-3 to GPT-4, and shed light on many community-concerned questions."
+        },
+        {
+            "heading": "3.2 ANALYSIS AND INSIGHTS",
+            "text": "Caveats \u2022 The analysis below is based on our benchmarking results and publicly available in-\nformation of the evaluated LLMs. \u2022 As claimed in OpenAI\u2019s model index3, their models generally used the best available\ndatasets at the time of training. As a result, our analysis on OpenAI\u2019s models may not serve as a rigorous ablation study.\nOpenAI vs. non-OpenAI LLMs. The overall performance of GPT-4, which is OpenAI\u2019s leading model, is crushing the competitors on most benchmarks. As reported in Table 1, PaLM 2-L clearly outperforms gpt-3.5-turbo-0613 on \u201cReasoning\u201d and \u201cMath\u201d tasks, but still falls be-\nhind gpt-4-0613 on all capability categories except for \u201cMultilingual\u201d. As described in Anil et al. (2023), PaLM 2 is pretrained on multilingual data across hundreds of languages, confirming the remarkable multilingual performance achieved by PaLM 2-L that beats GPT-4.\nTable 2 indicates that Claude 2 indeed stands as the leading non-OpenAI model. Compared to gpt-4-0613 (up-to-date stable API version of GPT-4), Claude 2 achieves slightly worse performance on \u201cKnowledge\u201d and \u201cComprehension\u201d tasks, but slightly better performance on \u201cMath\u201d and \u201cCoding\u201d tasks. Noticeably, the upgraded gpt-3.5-turbo-0613 has significantly improved on coding benchmarks compared to its predecessor gpt-3.5-turbo-0301 with striking pass@1 scores: 80.0 on HumanEval and 98.0 on MBPP. Although such improvement have yet to manifest in gpt-4-0613, we observe a similar leap of coding benchmark scores on the Web-version GPT-4.\nClosed-source vs. open-source LLMs. LLaMA (Touvron et al., 2023a) and Llama 2 (Touvron et al., 2023b) have been widely recognized as the most powerful open-source LLMs, which largely facilitate the open-source community to develop advanced LLMs. Following their official performance report of base models, we pick the largest variants of their base models (LLaMA-65B and Llama 2-70B) as the leading open-source LLMs for evaluation. Compared to LLaMA, Llama 2 is trained on 40% more pretraining data with doubled context length (Touvron et al., 2023b). As expected, Llama 2-70B outperforms LLaMA-65B on most benchmarks, especially on \u201cReasoning\u201d and \u201cComprehension\u201d tasks. The radar chart in Figure 2c highlights the capability distribution of Llama 2-70B, which achieves similar performance on \u201cSafety\u201d against gpt-3.5-turbo-0613, but still clearly underperforms on the other dimensions, especially \u201cMath\u201d, \u201cCoding\u201d and \u201cMultilingual\u201d. We strongly encourage the open-source community to improve these capabilities of opensource LLMs.\nOpenAI API-based vs. Web-version LLMs. According to OpenAI\u2019s blog9, the dated API models (such as gpt-4-0613) are pinned to unchanged models, while the Web-version models are subject to model upgrades at anytime and may not have the same behavior as the dated API-based models. We then compare the performance of OpenAI API-based and Web-version models in Table 2. We observe that the dated API models gpt-3.5-turbo-0613 and gpt-4-0613, consistently perform slightly better than their front-end counterparts, i.e., Web-version GPT-3.5 (serving ChatGPT) and Web-version GPT-4. Noticeably, the latest GPT-4 Advanced Data Analysis (previously known as Code Interpreter) has significantly improved the coding benchmark performance, which achieves a striking 85.2 pass@1 score on HumanEval.\nSeesaw phenomenon of LLM capabilities. By comparing the performance of OpenAI API models dated in 2023/03 and 2023/06, we note the presence of a so-called \u201cseesaw phenomenon\u201d, where certain capabilities exhibit improvement, while a few other capabilities clearly regress. As reported in Table 1, we observe that gpt-3.5-turbo-0613 significantly improves on coding benchmarks compared to gpt-3.5-turbo-0301, but its score on MATH dramatically degrades from 32.0 to 15.0. GPT-4 also shows similar phenomenon, where gpt-4-0314 achieves 78.6 on LAMBADA and gpt-4-0613 boosts its performance to a remarkable 87.8, but its score on MGSM plummets from 82.2 to 68.7. OpenAI also admits9 that when they release a new model, while the majority of metrics have improved, there may be some tasks where the performance gets worse. The seesaw\n9https://openai.com/blog/function-calling-and-other-api-updates\nphenomenon of LLM capabilities is likely a universal challenge, not exclusive to OpenAI\u2019s models. This challenge may obstruct LLM\u2019s path towards AGI, which necessitates a model that excels across all types of tasks. Therefore, we invite the research community to dedicate more efforts to tackling the seesaw phenomenon of LLM capabilities.\nImpacts of pretraining with code data. Codex-12B (Chen et al., 2021) represents OpenAI\u2019s preliminary effort to train LLMs on code data. Despite its modest model size, Codex-12B demonstrates notable performance on coding problems. Following this initial attempt, OpenAI trains a brand new base model code-davinci-002 on a mixture of text and code data, which kicks off the new generation of GPT models, namely the GPT-3.5 Series. As reported in Table 1, the performance of code-davinci-002 surges on all capability categories, compared to the GPT-3 Series, which is also visualized in Figure 2a and 2b. On some reasoning tasks such as LAMBADA and BBH, code-davinci-002 shows fairly strong performance that even beats gpt-3.5-turbo-0301 and gpt-3.5-turbo-0613. This suggests that incorporating code data into LLM pretraining could universally elevate its potential, particularly in the capability of reasoning.\nImpacts of SFT and RLHF. InstructGPT (Ouyang et al., 2022) demonstrates the effectiveness of supervised fine-tuning (SFT) and reinforcement learning from human feedback (RLHF) approaches to aligning language models, which can largely improve the win rate of head-to-head human evaluation. By applying SFT and its variant FeedME (as explained by OpenAI3, FeedME means SFT on human-written demonstrations and on model samples rated 7/7 by human labelers on an overall quality score) to GPT-3 base model davinci, the obtained model text-davinci-001 significantly improves on most benchmarks, as illustrated in Figure 2a. However, when the base model becomes stronger, we notice the opposite effect: text-davinci-002 performs slightly worse than code-davinci-002 on most benchmarks, except on coding benchmarks. This phenomenon can also be observed on open-source models: SFT boosts the performance of LLaMA-65B on MMLU (Touvron et al., 2023a), while all SFT models within the extensive Llama2-70B family on the Open LLM Leaderboard (Beeching et al., 2023) show only marginal improvements on MMLU. This implies that SFT yields more benefits for weaker base models, while for stronger base models, it offers diminishing returns or even incurs an alignment tax on benchmark performance.\nOn top of the SFT model text-davinci-002, by applying RLHF with PPO algorithm (Schulman et al., 2017), the obtained model text-davinci-003 has comparable or slightly worse performance on most benchmarks compared to the strong base model code-davinci-002, except for coding benchmarks. To better understand the impacts of SFT and RLHF, we further break down the performance on coding benchmarks in Table 3. Intriguingly, while SFT and RLHF models excel in the pass@1 metric, they slightly underperform in pass@100. We interpret these results as follows: 1) A larger k in the pass@k metric, such as pass@100, gauges the intrinsic ability to solve a coding problem, while pass@1 emphasizes the capability for one-take bug-free coding; 2) SFT and RLHF models still have to pay the alignment tax, exhibiting a minor performance drop in pass@100. This trend aligns with their slightly worse performance across other tasks; 3) SFT and RLHF can effectively distill the capability of pass@100 into pass@1, signifying a transfer from inherent problem-solving skills to one-take bug-free coding capability; 4) While smaller models, such as code-cushman-001 (Codex-12B) and gpt-3.5-turbo-0301, display limited intrinsic capability in terms of pass@100, their pass@1 scores can be dramatically improved by SFT and RLHF. This is good news for research on low-cost small-size LLMs.\nTable 4: Ablation study on number of \u201cshots\u201d.\nTable 5: Ablation study on CoT prompting.\nBenchmark Setting Prompt Template LLaMA-65B Llama 2- 70B\ncodedavinci-\n002\ntextdavinci-\n002\ntextdavinci-\n003 gpt-3.5turbo0301 gpt-40314\nTriviaQA 1-shot <q1>\\nAnswer: <a1>\\n<q>\\nAnswer: 75.4 74.0 82.9 77.6 81.6 77.8 92.0 Q: <q1>\\nA: <a1>\\nQ: <q>\\nA: 73.4 55.5 82.6 78.6 82.5 83.2 92.3 MMLU 5-shot <q1>\\nAnswer: <a1>\\n . . . <q5>\\nAnswer: <a5>\\n<q>\\nAnswer: 60.1 67.8 68.3 64.5 65.3 67.7 82.0 Q: <q1>\\nA: <a1>\\n . . . Q: <q5>\\nA: <a5>\\nQ: <q>\\nA: 55.7 64.8 68.3 63.5 65.4 66.6 83.7\nBased on the observations above and recognizing that the state-of-the-art LLMs can inherently tackle complicated tasks (albeit possibly succeed after many sampling trials), we anticipate that LLMs have yet to reach their full potential. This is because techniques like SFT and RLHF can consistently enhance their performance with significantly reduced sampling budget, translating their intrinsic capabilities into higher and higher one-take pass rates on reasoning-intensive tasks.\nImpacts of the number of \u201cshots\u201d. To explore the influence of the number of \u201cshots\u201d (in-context learning examples) on LLM benchmark performance, we carry out an ablation study, with the results summarized in Table 4. As expected, performance generally improves with an increased number of \u201cshots\u201d, however, the improvement rate quickly shrinks beyond 1-shot in-context examples, particularly for stronger models. For instance, gpt-4-0314 achieves 94.9 on ARC-c with 1-shot example, and only marginally increases to 95.6 with 25-shot examples. This indicates that 1-shot example typically works well for most tasks, which aligns with our primary evaluation setting.\nImpacts of CoT prompting. We further explore the impact of using Chain-of-Thought (CoT; Wei et al. 2022) prompting on LLM benchmark performance. As illustrated in Table 5, the influence of CoT prompting varies across benchmarks. On tasks that are knowledge-intensive, like MMLU, CoT has minimal or even slightly negative impact on performance. However, for reasoning-intensive tasks, such as BBH and GSM8K, CoT prompting markedly enhances LLM performance. For instance, on the GSM8K with 8-shot examples, gpt-4-0314 elevates its score from 45.7 to an impressive 92.1 when CoT prompting is employed.\nPrompt sensitivity. Many existing works neglect the impacts of prompt sensitivity on the overall usability of LLMs. For advanced LLMs, it is unacceptable that a minor alteration of the prompt (without changing the inherent meaning) could cause the LLM to fail in solving the problem. Many existing LLM leaderboards reference scores from other papers without consistent settings and prompts, which may inadvertently encourage cherry-picking favored settings and prompts for better results. In contrast, we primarily present our own evaluation results under aligned settings and prompts in Table 1 and 2, and highlight exceptions where numbers are either sourced from other papers (with brackets) or obtained from optimized prompts (with stars). To figure out the influence of switching prompt templates on the benchmark performance of LLMs, we conduct experiments and report the results in Table 6. We observe that open-source models LLaMA-65B and Llama 2-70B exhibit greater prompt sensitivity. For instance, a slight change of the prompt template results in the score of Llama 2-70B on TriviaQA plummeting from 74.0 to 55.5. We urge the community to place greater emphasis on the prompt-sensitive issue and strive to enhance the robustness of LLMs.\nSampling variance. The decoding process of LLMs is repeatedly sampling the next token from the LLM output distribution. Various hyperparameters, including the temperature T and the nucleus sampling (Holtzman et al., 2020) parameter topp, can be adjusted to modify the sampling behavior. In our evaluations, we set topp = 1.0 and T = 0 on nearly all tasks, with the exception of coding\nbenchmarks where T = 0.8. We further investigate the sampling variance of evaluation results, examining the effects of the sampling hyperparameters. Due to the limited space, in Appendix D, we report the mean and stand deviation of benchmark scores over 3 runs with different settings of T and topp. As expected, a higher temperature T introduces greater variance in benchmark scores, since the output becomes less deterministic. Notably, LLMs (especially base models) tend to underperform with a higher temperature T . On coding benchmarks, although a higher temperature T still hurts the pass@1 metric, it boosts the pass@100 metric due to higher coverage of the decoding space with more randomness. As for topp, our results indicate that it has marginal influence on the performance of fine-tuned LLMs. Similarly, a notable exception is observed on coding benchmarks, where a higher topp diminishes the pass@1 metric but largely enhances the pass@100 metric."
+        },
+        {
+            "heading": "4 CONCLUSIONS AND FUTURE WORK",
+            "text": "In this work, we present GPT-Fathom, an open-source and reproducible evaluation suite that comprehensively measures the multi-dimensional capabilities of LLMs under aligned settings. Our retrospective study on OpenAI\u2019s models helps the community better understand the evolutionary path from GPT-3 to GPT-4, and sheds light on many questions that the community is eager to explore, such as the gap between leading closed-source / open-source LLMs, the benefits of pretraining with code data, the impacts of SFT and RLHF, etc. Moreover, we identify novel challenges of advanced LLMs, such as prompt sensitivity and the seesaw phenomenon of LLM capabilities.\nIn the future, we plan to further extend GPT-Fathom by 1) adding additional evaluation benchmarks under existing capability categories; 2) supporting more capability aspects, such as long-context understanding, multi-turn conversation, open-domain generation, LLM agent and even multi-modal capability; 3) evaluating more leading LLMs, including both open-source and closed-source models.\nAcknowledgments. The authors would like to thank Yao Fu for the suggestions on benchmark selection. We also thank Ke Shen, Kai Hua, Yang Liu and Guang Yang for technical discussions. We gratefully acknowledge the funding support and feedback from Liang Xiang. This work was made possible by all the benchmarks used for evaluation. We appreciate the creators of these benchmarks."
+        },
+        {
+            "heading": "A DETAILS OF EVALUATED LLMS",
+            "text": "The LLMs selected for evaluation are organized as follows.\n1. OpenAI\u2019s models (illustrated in Figure 1):\n\u2022 GPT-3 Series: 1) davinci (GPT-3; Brown et al. 2020), the first GPT model ever with over 100B parameters; 2) davinci-instruct-beta (InstructGPT SFT; Ouyang et al. 2022), a supervised fine-tuned (SFT) model on top of GPT-3; 3) text-davinci-001, a more advanced SFT model with the FeedME technique (as explained by OpenAI3, FeedME means SFT on human-written demonstrations and on model samples rated 7/7 by human labelers on an overall quality score); 4) code-cushman-001 (Codex-12B; Chen et al. 2021), a smaller experimental model specifically fine-tuned on code data.\n\u2022 GPT-3.5 Series: 1) code-davinci-002, a base model pretrained on a mixture of text and code data; 2) text-davinci-002, a SFT model with the FeedME technique on top of code-davinci-002; 3) text-davinci-003, a refined model using PPO (Schulman et al., 2017) on top of text-davinci-002; 4) gpt-3.5-turbo-0301, a chatoptimized model on top of text-davinci-003; 5) gpt-3.5-turbo-0613, an updated API version in lieu of gpt-3.5-turbo-0301; 6) Web-version GPT-3.5, which is currently (at the time of writing in 2023/09) serving ChatGPT on OpenAI\u2019s website; 7) gpt-3.5-turbo-instruct-0914, a completion model trained similarly to the previous InstructGPT models such as the text-davinci series, while maintaining the same speed and pricing as the gpt-3.5-turbo models10; 8) gpt-3.5-turbo-1106, an updated API version in lieu of gpt-3.5-turbo-0613.\n\u2022 GPT-4: 1) gpt-4-0314, the initial API version of GPT-4, which is a new GPT generation with striking performance improvements over GPT-3.5; 2) gpt-4-0613, an updated API version in lieu of gpt-4-0314; 3) Web-version GPT-4, which is currently (at the time of writing in 2023/09) serving GPT-4 on OpenAI\u2019s website; 4) Web version GPT-4 Advanced Data Analysis (Code Interpreter), a recently upgraded Web-version GPT4 with functionalities of advanced data analysis and sandboxed Python code interpreter; 5) gpt-4-1106-preview, an early-access API of the upgraded model GPT-4 Turbo11.\n2. Other leading closed-source models:\n\u2022 PaLM 2 (Anil et al., 2023): released by Google in 2023/05, which is a set of strong LLMs with huge improvements over its predecessor PaLM (Chowdhery et al., 2022). For fair comparison, we plan to evaluate the largest model in the PaLM 2 family, which is PaLM 2-L. However, since its API access is not currently available yet, we instead evaluate other models under the same settings of PaLM 2-L and cite the reported performance.\n\u2022 Claude 2: released by Anthropic in 2023/07, which is currently commonly recognized as the most competitive LLM against OpenAI\u2019s leading models. We\u2019re still on the waitlist of its API access, so we evaluate OpenAI\u2019s latest models under the same settings of Claude 2 and cite the reported performance.\n3. Leading open-source models:\n\u2022 LLaMA (Touvron et al., 2023a): released by Meta in 2023/02, which is a set of powerful open-source LLMs with different model sizes. We evaluate LLaMA-65B, the largest variant of its base model.\n\u2022 Llama 2 (Touvron et al., 2023b): released by Meta in 2023/07, which is the upgraded version of LLaMA. We evaluate the largest variant of its base model, which is Llama 2-70B.\n10https://platform.openai.com/docs/models/gpt-3-5 11https://openai.com/blog/new-models-and-developer-products-announced-at-devday"
+        },
+        {
+            "heading": "B DETAILS OF BENCHMARK DATASETS",
+            "text": "In Table 7, we clarify the source of few-shot prompts and test samples for each benchmark."
+        },
+        {
+            "heading": "C DETAILS OF EVALUATION",
+            "text": "C.1 SAMPLING HYPERPARAMETERS\nFor coding evaluations, we sample 100 responses per question with temperature T = 0.8. For all the other evaluations, we use T = 0. The default topp = 1.0 is applied across all of our evaluations.\nC.2 EVALUATION PROMPTS\nWe provide our evaluation prompts for all the benchmarks in Table 8. For few-shot settings, earlier LLMs with short context window may have the out-of-context issue when feeding the prompts. To address this issue, we use as many \u201cshots\u201d as possible to fit in the context window of LLMs.\nC.3 ANSWER PARSING AND METRIC COMPUTATION\nIn this section, we outline the methods employed to parse the answers of the models from their responses for different tasks:\nMultiple-choice questions. We inspect the output for options such as (A), (B), (C), (D), etc. The option corresponding to a match is determined. If no matches are found, the first character of the output is chosen as the selected option.\nCoding problems. We evaluate LLMs on HumanEval and MBPP as the coding benchmarks. Our assessment leverages the code evaluation methodology implemented by Hugging Face (Wolf et al., 2020). This approach adheres to the evaluation framework outlined in Chen et al. (2021), which estimate the pass@k metric using n samples (n > k) to reduce the variance. We use n = 100 for all the evaluations on coding benchmarks.\nLAMBADA. Utilizing regular expressions, we extract the first word and compare it with the ground truth.\nDROP. We check if the model\u2019s output aligns with any of the provided candidate answers.\nTyDi QA. The F1 score is employed to measure performance.\nClosed-book question answering. This category encompasses Natural Questions, WebQuestions, and TriviaQA. We check if the model\u2019s output aligns with any of the provided candidate answers.\nMGSM. The final number in the output is extracted as the model\u2019s answer.\nGSM8K. The initial step is to extract the first number following the CoT prompt \u201cSo the answer is\u201d. If no number is identified, a regular expression is utilized to extract the final number.\nMATH. In line with the official benchmark settings, we initially filter the answers to retain only the last boxed element. The content within the boxed braces is then taken as the answer."
+        },
+        {
+            "heading": "D DETAILS OF EXPERIMENTS",
+            "text": "In Table 9 and 10, we report the mean and stand deviation of benchmark scores over 3 runs, with different settings of T and topp."
+        },
+        {
+            "heading": "E COMPLETE RESULTS OF LLAMA / LLAMA 2 FAMILY",
+            "text": "We evaluate the entire LLaMA / Llama 2 family, including models ranging from 7B to 65B / 70B parameters, and report the complete results in Table 11."
+        },
+        {
+            "heading": "F OUR RESULTS VS. OFFICIAL SCORES",
+            "text": "To verify the correctness of our implementation, we first compare our evaluation results with the officially reported scores from GPT-4 technical report (OpenAI, 2023) and Microsoft\u2019s early experiments with GPT-4 (Bubeck et al., 2023). To ensure an apple-to-apple comparison, we align the evaluation settings on each benchmark, as summarized in Table 12. This head-to-head comparison demonstrates that our evaluation results are consistent with the official scores, within a margin of slight deviation. Since the official prompts and in-context examples for evaluation are not publicly available, the slight deviation is totally reasonable. We also notice that the performance gain with incontext examples beyond 1-shot is pretty marginal, which aligns with our primary evaluation setting in Table 1.\nWe also compare our evaluation results with the official scores reported in LLaMA (Touvron et al., 2023a) and Llama 2 (Touvron et al., 2023b). Similarly, in Table 13, we report the benchmarks whose official evaluation settings match our settings, and compare our results with the official scores. We observe that on some benchmarks, such as BBH, our results are higher than the official scores; while on some other benchmarks, such as TriviaQA and MATH, our results are lower than the official scores. This phenomenon is consistent with our conclusion that LLaMA and Llama 2 are pretty prompt-sensitive (refer to Table 6). To be more specific, take MATH as an example, since we use the exact same setting and prompt as we evaluate OpenAI models on this benchmark, and our evaluation result of GPT-4 matches the official scores (Table 12), we argue that the prompt sensitivity of LLaMA / Llama 2 models explains the performance gap of our evaluation and their official scores.\nFor coding benchmarks HumanEval and MBPP, the official LLaMA and Llama 2 papers use different temperature T to evaluate pass@1 (T = 0.1) and pass@100 (T = 0.8). In contrast, we follow OpenAI\u2019s setting on coding evaluation (Chen et al., 2021) and uniformly use T = 0.8 for all our evaluations on coding benchmarks. This explains the performance difference of our results and the official scores of LLaMA and Llama 2 on HumanEval and MBPP."
+        }
+    ],
+    "title": "GPT-FATHOM: BENCHMARKING LARGE LANGUAGE MODELS",
+    "year": 2023
+}

@@ -1,0 +1,398 @@
+{
+    "abstractText": "Data-flow programming models have become a popular choice for writing parallel applications as an alternative to traditional work-sharing parallelism. They are better suited to write applications with irregular parallelism that can present load imbalance. However, these programming models suffer from overheads related to task creation, scheduling and dependency management, limiting performance and scalability when tasks become too small. At the same time, many HPC applications implement iterative methods or multi-step simulations that create the same directed acyclic graphs of tasks on each iteration. By giving application programmers a way to express that a specific loop is creating the same task pattern on each iteration, we can create a single task DAG once and transform it into a cyclic graph. This cyclic graph is then reused for successive iterations, minimizing task creation and dependency management overhead. This paper presents the taskiter, a new construct we propose for the OmpSs-2 and OpenMP programming models, allowing the use of directed cyclic task graphs (DCTG) to minimize runtime overheads. Moreover, we present a simple immediate successor locality-aware heuristic that minimizes task scheduling overhead by bypassing the runtime task scheduler. We evaluate the implementation of the taskiter and the immediate successor heuristic in 8 iterative benchmarks. Using small task granularities, we obtain a geometric mean speedup of 2.56x over the reference OmpSs-2 implementation, and a 3.77x and 5.2x speedup over the LLVM and GCC OpenMP runtimes, respectively. INDEX TERMS taskiter, data-flow programming, ompss-2, openmp, iterative applications",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "DAVID \u00c1LVAREZ"
+        },
+        {
+            "affiliations": [],
+            "name": "VICEN\u00c7 BELTRAN"
+        }
+    ],
+    "id": "SP:9d0305b24fc0f239d29130382ea6d86c1dd71040",
+    "references": [
+        {
+            "authors": [
+                "Matteo Frigo",
+                "Charles E. Leiserson",
+                "Keith H. Randall"
+            ],
+            "title": "The implementation of the cilk-5 multithreaded language",
+            "venue": "In Proceedings of the ACM SIGPLAN 1998 Conference on Programming Language Design and Implementation,",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "Alejandro Duran",
+                "Roger Ferrer",
+                "Eduard Ayguad\u00e9",
+                "Rosa M. Badia",
+                "Jesus Labarta"
+            ],
+            "title": "A proposal to extend the openmp tasking model with dependent tasks",
+            "venue": "International Journal of Parallel Programming,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "George Bosilca",
+                "Aurelien Bouteiller",
+                "Anthony Danalis",
+                "Mathieu Faverge",
+                "Thomas Herault",
+                "Jack J. Dongarra"
+            ],
+            "title": "Parsec: Exploiting heterogeneity to enhance scalability",
+            "venue": "Computing in Science & Engineering,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "C\u00e9dric Augonnet",
+                "Samuel Thibault",
+                "Raymond Namyst",
+                "Pierre-Andr\u00e9 Wacrenier"
+            ],
+            "title": "Starpu: A unified platform for task scheduling on heterogeneous multicore architectures",
+            "venue": "Euro-Par 2009 Parallel Processing,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "Thierry Gautier",
+                "Jo\u00e3o V.F. Lima",
+                "Nicolas Maillard",
+                "Bruno Raffin"
+            ],
+            "title": "Xkaapi: A runtime system for data-flow task programming on heterogeneous architectures",
+            "venue": "IEEE 27th International Symposium on Parallel and Distributed Processing,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "James Reinders"
+            ],
+            "title": "Intel threading building blocks - outfitting C++ for multicore processor parallelism",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "Clyde P. Kruskal",
+                "Carl H. Smith"
+            ],
+            "title": "On the notion of granularity",
+            "venue": "The Journal of Supercomputing,",
+            "year": 1988
+        },
+        {
+            "authors": [
+                "Thierry Gautier",
+                "Christian Perez",
+                "J\u00e9r\u00f4me Richard"
+            ],
+            "title": "On the impact of openmp task granularity",
+            "venue": "Evolving OpenMP for Evolving Architectures,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Andrea Ros\u00e0",
+                "Eduardo Rosales",
+                "Walter Binder"
+            ],
+            "title": "Analysis and optimization of task granularity on the java virtual machine",
+            "venue": "ACM Trans. Program. Lang. Syst.,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Dana Akhmetova",
+                "Gokcen Kestor",
+                "Roberto Gioiosa",
+                "Stefano Markidis",
+                "Erwin Laure"
+            ],
+            "title": "On the application task granularity and the interplay with the scheduling overhead in many-core shared memory systems",
+            "venue": "IEEE International Conference on Cluster Computing,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Antoni Navarro",
+                "Sergi Mateo",
+                "Josep Maria Perez",
+                "Vicen\u00e7 Beltran",
+                "Eduard Ayguad\u00e9"
+            ],
+            "title": "Adaptive and architecture-independent task granularity for recursive applications",
+            "venue": "VOLUME",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "David \u00c1lvarez",
+                "Kevin Sala",
+                "Marcos Maro\u00f1as",
+                "Aleix Roca",
+                "Vicen\u00e7 Beltran"
+            ],
+            "title": "Advanced synchronization techniques for task-based runtime systems",
+            "venue": "In Proceedings of the 26th ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Artur Podobas",
+                "Mats Brorsson",
+                "Vladimir Vlassov"
+            ],
+            "title": "Turbob\u0142ysk: Scheduling for improved data-driven task performance with fast dependency resolution",
+            "venue": "Using and Improving OpenMP for Devices, Tasks,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Gilberto Contreras",
+                "Margaret Martonosi"
+            ],
+            "title": "Characterizing and improving the performance of intel threading building blocks",
+            "venue": "IEEE International Symposium on Workload Characterization,",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "Jason Evans"
+            ],
+            "title": "A scalable concurrent malloc(3) implementation for freebsd",
+            "venue": "In BSDCan,",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "Emery D. Berger",
+                "Kathryn S. McKinley",
+                "Robert D. Blumofe",
+                "Paul R. Wilson"
+            ],
+            "title": "Hoard: A scalable memory allocator for multithreaded applications",
+            "venue": "In Proceedings of the Ninth International Conference on Architectural Support for Programming Languages and Operating Systems, ASPLOS IX,",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "Jixiang Yang",
+                "Qingbi He"
+            ],
+            "title": "Scheduling parallel computations by work stealing: A survey",
+            "venue": "International Journal of Parallel Programming,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Francesc Lordan",
+                "Enric Tejedor",
+                "Jorge Ejarque",
+                "Roger Rafanell",
+                "Javier \u00c1lvarez",
+                "Fabrizio Marozzo",
+                "Daniele Lezzi",
+                "Ra\u00fcl Sirvent",
+                "Domenico Talia",
+                "Rosa M. Badia"
+            ],
+            "title": "Servicess: An interoperable programming framework for the cloud",
+            "venue": "Journal of Grid Computing,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Peter Thoman",
+                "Herbert Jordan",
+                "Thomas Fahringer"
+            ],
+            "title": "Adaptive granularity control in task parallel programs using multiversioning",
+            "venue": "Euro-Par 2013 Parallel Processing,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Antoni Navarro",
+                "Sergi Mateo",
+                "Josep Maria Perez",
+                "Vicen\u00e7 Beltran",
+                "Eduard Ayguad\u00e9"
+            ],
+            "title": "Adaptive and architecture-independent task granularity for recursive applications",
+            "venue": "Scaling OpenMP for Exascale Performance and Portability,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Umut A. Acar",
+                "Vitaly Aksenov",
+                "Arthur Chargu\u00e9raud",
+                "Mike Rainey"
+            ],
+            "title": "Provably and practically efficient granularity control",
+            "venue": "In Proceedings of the 24th Symposium on Principles and Practice of Parallel Programming,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M. Maro\u00f1as",
+                "K. Sala",
+                "S. Mateo",
+                "E. Ayguad\u00e9",
+                "V. Beltran"
+            ],
+            "title": "Worksharing tasks: An efficient way to exploit irregular and fine-grained loop parallelism",
+            "venue": "IEEE 26th International Conference on High Performance Computing, Data, and Analytics (HiPC),",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Rupanshu Soi",
+                "Michael Bauer",
+                "Sean Treichler",
+                "Manolis Papadakis",
+                "Wonchan Lee",
+                "Patrick McCormick",
+                "Alex Aiken",
+                "Elliott Slaughter"
+            ],
+            "title": "Index launches: Scalable, flexible representation of parallel task groups. In Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis, SC \u201921",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Daniel Orozco",
+                "Elkin Garcia",
+                "Robert Pavel",
+                "Rishi Khan",
+                "Guang R. Gao"
+            ],
+            "title": "Polytasks: A compressed task representation for hpc runtimes",
+            "venue": "Languages and Compilers for Parallel Computing,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Ewan Crawford",
+                "Jack Frankland"
+            ],
+            "title": "Opencl command-buffer extension: Design and implementation",
+            "venue": "In International Workshop on OpenCL, IWOCL\u201922,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Chenle Yu",
+                "Sara Royuela",
+                "Eduardo Qui\u00f1ones"
+            ],
+            "title": "Enhancing openmp tasking model: Performance and portability",
+            "venue": "OpenMP: Enabling Massive Node-Level Parallelism,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Ananya Muddukrishna",
+                "Peter A. Jonsson",
+                "Mats Brorsson"
+            ],
+            "title": "Localityaware task scheduling and data distribution for openmp programs on numa systems and manycore processors",
+            "venue": "Sci. Program.,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Simone Economo",
+                "Sara Royuela",
+                "Eduard Ayguad\u00e9",
+                "Vicen\u00e7 Beltran"
+            ],
+            "title": "A toolchain to verify the parallelization of ompss-2 applications",
+            "venue": "In Maciej Malawski and Krzysztof Rzadca, editors, Euro-Par 2020: Parallel Processing,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Marcos Maro\u00f1as",
+                "Xavier Teruel",
+                "Vicen\u00e7 Beltran"
+            ],
+            "title": "Openmp taskloop dependences",
+            "venue": "OpenMP: Memory, Devices, and Tasks - 17th International Workshop on OpenMP,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Ferran Pallar\u00e8s Roca"
+            ],
+            "title": "Extending ompss programming model with task reductions: A compiler and runtime approach",
+            "venue": "Bachelor\u2019s thesis, Barcelona School of Informatics, Universitat Polite\u0300cnica de Catalunya,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Michael Allen Heroux",
+                "Jack. Dongarra"
+            ],
+            "title": "Toward a new metric for ranking high performance computing systems",
+            "venue": "VOLUME 10,",
+            "year": 2013
+        }
+    ],
+    "sections": [
+        {
+            "text": "INDEX TERMS taskiter, data-flow programming, ompss-2, openmp, iterative applications\nI. INTRODUCTION Task-based programming models, pioneered by Cilk [1], have become popular for writing parallel applications since they are better suited than work-sharing models (such as OpenMP\u2019s parallel for) to uncover parallelism from dynamic and irregular applications. Generally, these models allow programmers to express parallelism in a tree-like manner, recursively creating tasks. Under this nested-parallel structure, the cost of spawning each task is small, and scheduling can be done optimally through work-stealing.\nHowever, not all parallel applications can be easily written in a tree-like or recursive structure. To give programmers greater flexibility when writing parallel programs, data-flow programming models appeared as a subset of task-based programming. In data-flow programming, parallelism is expressed as a directed acyclic graph (DAG) of tasks, where edges represent dependence relations needed to preserve\nsequential consistency. Some examples of these programming models include OpenMP Tasks [2], OmpSs-2 [3], PaRSEC [4], StarPU [5], Xkaapi [6] and TBB Graphs [7].\nAmongst data-flow programming models, some rely on users building the task DAG manually through a special syntax, and then scheduling these DAGs. This paradigm often comes at the cost of having to substantially alter a program to adapt it to the data-flow model.\nOther data-flow programming models such as OpenMP and OmpSs-2 tasking rely instead on implicit DAG creation. In this paradigm, users annotate their source code with tasks, and specify their data dependencies. Then, a runtime will build the DAG online, defining dependency relations based on the specified data dependencies. This model provides more productivity than manually defining the task DAG. Furthermore, the runtime can use the provided data dependencies to infer data-locality information, which can then be\nVOLUME 10, 2022 1\nThis work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/\n\u00c1lvarez et al.: Optimizing Iterative Data-flow Scientific Applications using Directed Cyclic Graphs\nleveraged during scheduling. However, the cost of the extra productivity of implicit data-flow programming models is a larger tasking overhead. Creating tasks becomes more complex as data dependencies must be registered and tracked. Moreover, data-flow programs usually have a single thread creating tasks, which can become a bottleneck. Finally, scheduling becomes more challenging as well: as data-flow programming does not necessarily exhibit a recursive task creation pattern, and dependencies can have one-to-many relations, work-stealing scheduling algorithms can suffer from high contention.\nIn this scenario, data-flow programs must regulate the size of the created tasks to minimize the relative impact of tasking overheads. This forces data-flow programmers to strike a balance in task granularity. We define task granularity as the duration of each task in an application [8].\nWhen the granularity is too small, task creation, scheduling and dependency management become a bottleneck [9]\u2013 [12], and tasks cannot be created fast enough to feed all cores. This situation produces two adverse effects which hinder performance: First, some cores remain idle, as not enough work is being created. Second, as the number of tasks ready to execute is very low, there is little chance of applying locality-aware scheduling policies. However, when tasks are too coarse, there may not be enough tasks to feed all cores, the program can suffer from load imbalance, and locality-aware scheduling policies may lose effectiveness as task working sets grow and stop fitting in cache.\nThus, we want to create tasks in a balanced region, where granularity is not too fine nor too coarse. This is normally achieved through granularity tuning, but there are relevant situations where tuning is impossible. For example, when the problem size is too small or when scaling out an application. In these cases, it is critical that the runtime efficiently supports small task granularities.\nTo overcome this issue, data-flow programming models have been optimized over time to minimize these task management overheads [13]\u2013[15]. Task creation is generally optimized using scalable memory allocators [16], [17]. Task scheduling is optimized with scalable scheduling techniques, such as work-stealing variants [18] or delegationbased schedulers [13]. Finally, task dependency management requires fine-grained locking or wait-free implementations to achieve good performance. However, these optimizations may not be enough to achieve competitive performance when very fine-grained tasks are needed.\nAt the same time, many HPC applications present an iterative pattern, creating the same tasks with the same dependencies for each iteration. This results in identical tasks and dependency graphs concatenated one after the other. For example, this happens in iterative methods and solvers, machine learning training phases and multi-step simulations. As such, iterative programs can spend a significant amount of time creating, scheduling and managing tasks and dependencies that are the same for each iteration.\nThis paper presents and implements two techniques that\ndrastically reduce the main sources of runtime overhead in iterative data-flow applications.\nFirst, we propose a new taskiter construct for the OmpSs2 [3] and OpenMP [2] programming models. The taskiter construct annotates loops where each iteration generates the same directed acyclic graph (DAG) of tasks and dependencies. The runtime system then leverages this information to construct a directed cyclic task graph (DCTG) based on the DAG of the first iteration. Dependencies between different iterations are considered and linked in this new directed cyclic graph. In the DCTG, task descriptors and dependency structures are reused for each iteration, drastically reducing task creation and dependency management overheads for any iterations after the first one. The taskiter construct does not create any implicit barriers between iterations or after the construct, allowing it to be transparently mixed with successor or predecessor tasks or taskiter constructs.\nSecondly, we present a new immediate successor scheduling technique that preserves data locality while drastically reducing scheduling overheads by bypassing the scheduler. Unlike the taskiter, this technique is not restricted to iterative applications.\nWe note that both proposals can be implemented in other data-flow programming models [4]\u2013[6], [19], since the ideas are generally applicable. However, we focus on OpenMP and OmpSs-2 in order to provide a working implementation that can be compared to the current state-of-the-art.\nFinally, we will show in the evaluation how both contributions present a particular synergy that results in significant performance improvements for small granularities.\nSpecifically, our contributions are as follows:\n1) We propose the taskiter construct for OmpSs-2 and OpenMP to reduce runtime overheads in iterative dataflow applications. 2) We present the immediate successor scheduling technique designed to forego most of the scheduling overhead and maximize data locality. 3) We implement both the taskiter construct and the scheduling policy on the state-of-the-art Nanos6 OmpSs-2 implementation, which is competitive with mainstream OpenMP implementations [13]. 4) We evaluate the taskiter construct on 8 iterative benchmarks and find an average speedup of 3x with a geometric mean of 2.56x for small task granularities.\nThe rest of this document is structured as follows: Section II reviews the current state of the art, Section III introduces the taskiter construct and Section IV introduces the immediate successor technique. Then, we evaluate our contributions in Section V, and present the conclusions in Section VI."
+        },
+        {
+            "heading": "II. RELATED WORK",
+            "text": "The effects of task granularity on application performance have been thoroughly studied in literature [9]\u2013[12]. Moreover, several proposals to reduce task management and scheduling overhead have been proposed."
+        },
+        {
+            "heading": "2 VOLUME 10, 2022",
+            "text": "This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/\n\u00c1lvarez et al.: Optimizing Iterative Data-flow Scientific Applications using Directed Cyclic Graphs\nA. TASK MANAGEMENT OVERHEAD\nTasking overhead can be tackled through granularity tuning, runtime optimizations and model-oriented solutions.\nAutomatic granularity tuning has been actively researched for task-based programming models. Multiversioning [20] can generate compiler transformations with different task granularities and choose the most appropriate at runtime. Another work explored using cut-off mechanisms [21], where the runtime decides the optimal cut-off point based on a userprovided cost function. Finally, in [22] authors propose an automatic oracle-guided granularity control mechanism for Cilk in which users may elide providing cost functions in some cases.\nSome works have focused on optimizations that can be applied to task-based runtimes to reduce synchronization overheads and scale better [13], [15]. Both granularity tuning and runtime optimizations are complementary approaches, which can be combined with model-oriented solutions such as the taskiter.\nOther approaches have focused on reducing task overheads by decreasing the total number of tasks that have to be created. Worksharing tasks [23] and Chapel\u2019s coforall construct [24] can parallelize all iterations from a loop using a single task, reducing their overhead. Similarly, Index Launches [25] can automatically compact several task launches in a loop without need for explicit annotation. Polytasks [26] also merge several similar tasks when they are created at the same time, provided tasks are managed through queues. These approaches reduce the total number of tasks created by an application. In contrast, the proposed taskiter focuses on task reuse, and both approaches can be freely combined, as they are complementary.\nIn [14], the authors propose the dep_pattern clause to cache data dependency patterns reducing dependency management overhead. Our proposal goes further, not only caching dependency structures but preventing task creation altogether. Moreover, the dep_pattern clause must be placed on a parent task, which in OpenMP would prevent placing dependencies between iterations to overlap their execution.\nAnother approach is task DAG caching, provided by the CUDA Graph API [27], which allows GPU programmers to record a graph of kernel invocations and memory copy operations and re-invoke them, removing a significant amount of overhead. The graph API was also motivated by applications with an iterative structure, like machine learning training. However, CUDA Graphs require a barrier between iterations, which prevents the overlap of kernels from multiple iterations and limits the applicability of policies like the immediate successor. Similarly, OpenCL\u2019s Command-buffer [28] allows programmers to record a DAG of OpenCL commands and then submit it multiple times in iterative applications. TBB Graphs [29] also allow task graphs that contain cycles, but the programmer must explicitly instantiate all nodes and edges of a task graph manually.\nA task DAG caching proposal for OpenMP is the taskgraph clause for the target and task constructs [30]. Similar to CUDA Graphs, authors present a way to record and re-play task DAGs for OpenMP tasks. However, the approach requires task DAGs to be defined inside their own dependency domain with an implicit barrier at the end. This barrier limits the applicability of policies like the immediate successor. Moreover, dependencies between tasks inside the construct and tasks outside it or in other replays are not allowed, breaking the data-flow execution model. The taskgraph model is a caching strategy and not a task DAG transformation like the one proposed in this paper.\nThese task caching proposals can potentially improve the performance of iterative applications. However, as we will show in the experimental evaluation, the taskiter construct outperforms task caching approaches."
+        },
+        {
+            "heading": "B. SCHEDULING",
+            "text": "Many works have tackled overhead reduction in task scheduling, either through work-stealing [18] or global-queue techniques [13]. Moreover, there have been proposals for localityaware scheduling, mainly focused on preventing remote accesses on NUMA systems [31]. However, our focus is not on optimal locality but on improving locality while simultaneously eliminating most of the scheduling overhead.\nThe philosophy for our scheduling work is similar to Cilk\u2019s work-first principle [1]: to remove scheduling overheads from worker threads. However, the heuristic we propose in Section IV is adapted for data-flow applications, works well under any amount of available parallelism, and provides additional locality improvements.\nIII. THE TASKITER CONSTRUCT Iterative applications often generate the same dependency graph on each iteration. Dependencies always form a directed acyclic graph of tasks, enforcing restrictions on execution order to maintain serial consistency. Additionally, some task instances from an iteration i will depend on task instances from previous iterations, as we avoid using global barriers. An example of this pattern is shown in the left part of Figure 1, showing two iterations of an iterative application, which models a Gauss-Seidel method with a 4-block matrix. Dependencies between task instances of the same iteration are shown in solid lines, and dashed lines indicate dependencies between iterations.\nThe taskiter construct is designed to prevent creating and executing the same DAG for each iteration. Instead, the programmer can express that a loop generates the same DAG N times. The programming model runtime will instead generate a directed cyclic task graph (DCTG), as shown in the right part of Figure 1. To build the DCTG the runtime executes the first iteration of the loop and generates a regular task DAG. When the first iteration ends, the left and right sides of the DAG are connected, as shown in Figure 1. This representation is then used to execute the remaining\nVOLUME 10, 2022 3\nThis work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/\n\u00c1lvarez et al.: Optimizing Iterative Data-flow Scientific Applications using Directed Cyclic Graphs\nIteration 0 Iteration 1\n\u2026\nWithout taskiter\n3\n1\n2\n4\n3\n1\n2\n4\nIteration 1..N\n3\n1\n2\n4\nWith taskiter\nFIGURE 1: Example iterative application, pictured on the left without using the taskiter construct, and on the right when using the taskiter construct.\nTask 10 Task 20 Task 30\nTask 40\nTask 10 Task 20 Task 30\nTask 40 Task 11 Task 12\n\u2026\nTime\nWithout iteration pipelining:\nWith iteration pipelining:\nTask 11\nTask 21 Task 31\nTask 41Task 21 Task 31\nTask 41\nFIGURE 2: Possible execution trace of the application pictured in Figure 1, with and without inserting barriers between iterations. Task ij refers to task i from the previous figure in iteration j.\nN \u2212 1 iterations, skipping task creation and significantly minimizing dependency management overheads.\nSpecifically, dependency management consists of two main components. First, when tasks are created, the runtime must track which tasks are declaring a dependency on each memory location and then apply some logic to transform this information into dependencies between tasks. The second component is dependency release, which tracks the outstanding dependencies for each task, and schedules them when all predecessors have finished. While we cannot remove the overhead of dependency release, as it has to be done for every iteration, we can skip the first dependency management component and calculate the dependencies only in the first iteration.\nIn essence, we create the task instances and their related data structures once and then reuse the same data structures for all following iterations.\nMoreover, the proposed DCTG representation is much more compact in memory than creating the task instances for every iteration. This leads to lower memory usage, which may otherwise be a problem for data-flow programming models when the number of task instances is very large.\nThis model makes it possible to execute task instances\nfrom different iterations simultaneously in a pipelining effect, as the DCTG has no implicit barrier between iterations. This pipelining effect is shown on Figure 2, where thanks to iteration pipelining, the available parallelism is improved. Note that many previous approaches described in Section II did not allow pipelining.\nAdditionally, dependencies from task instances on the first and last iterations can be matched to tasks outside the taskiter construct, maintaining the data-flow model. Note that the task instances of the first iteration can be executed while building the DCTG, not introducing any performance penalty.\nThe syntax of the taskiter construct for OpenMP and OmpSs-2 is defined as the following:\n#pragma omp taskiter [clause [...]] new-line loop\n#pragma oss taskiter [clause [...]] new-line loop\nThe loop can be any loop statement, provided it fulfills the"
+        },
+        {
+            "heading": "4 VOLUME 10, 2022",
+            "text": "This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/\n\u00c1lvarez et al.: Optimizing Iterative Data-flow Scientific Applications using Directed Cyclic Graphs\n1 #pragma omp taskiter 2 for (int timestep = 0; timestep < N; ++timestep) { 3 for (int R = 1; R < numRowBlocks - 1; ++R) { 4 for (int C = 1; C < numColumnBlocks - 1; ++C) { 5 #pragma omp task \\ 6 depend(in: reps[R-1][C], reps[R+1][C]) \\ 7 depend(in: reps[R][C-1], reps[R][C+1]) \\ 8 depend(inout: reps[R][C]) 9 computeBlock(rows, cols, R, C, matrix);\n10 } 11 } 12 }\nListing 1: Taskiter applied to a sample Gauss-Seidel Heat Equation application. reps is a matrix of representatives (one per matrix block)\nfollowing conditions: 1) The dependency graph generated by the tasks inside\nthe construct must remain constant for each iteration. However, nested tasks do not have this restriction. 2) The program must remain valid if the code inside the loop body but outside any task is executed only once. This condition can be ignored if the update clause is specified, which we explain later on.\nThe first condition is what the user is actually annotating with the taskiter construct: that the dependency graph for the loop repeats itself and thus can be optimized to a cyclic graph. However, this only needs to be true for first-level tasks (created directly in the loop body), but not for tasks created in deeper nesting levels, allowing irregularity between iterations.\nThe second condition allows the implementation to execute the loop body only once, and programs can generally be adapted to fulfill this condition by taskifying any code that is inside the loop body.\nFor example, we can apply the taskiter construct to an example Gauss-Seidel solver, which iterates through all blocks of a matrix in a wave-front pattern. This results in the code displayed in Listing 1. This code would fulfill the requirements of the taskiter, and it only requires the addition of Line 1 from the plain tasks version of this solver.\nIn the current implementation, users must find suitable loops to apply the construct manually, similar to other OmpSs-2 and OpenMP constructs. The complexity of determining suitable loops to apply the taskiter on varies depending on the specific application. Generally, tracking usages of the induction variable in a loop is a straightforward way to determine if the task DAG changes, and does not require a full analysis of the target application. Moreover, this proposal could be combined with existing static and dynamic analysis tools [32] to facilitate the usage of the taskiter construct.\nTwo new clauses can be combined with the proposed construct:\n\u2022 All clauses accepted in the task construct, since the taskiter is a task on itself. \u2022 The unroll(n) clause performs loop unrolling, executing the initial n iterations instead of one. This clause\n1 int A; 2 #pragma omp task depend(out: A) 3 A = 1; 4 5 #pragma omp taskiter depend(in: A) depend(out: A) 6 for (int i = 0; i < N; ++i) { 7 #pragma omp task depend(in: A) 8 ... 9 #pragma omp task depend(out: A)\n10 ... 11 } 12 13 #pragma omp task depend(in: A) 14 print(A);\nListing 2: Using dependencies between sibling tasks and tasks inside a taskiter region\ncan be used for loops with a regular dependency graph each n iterations. For example, a loop that behaves differently for even and odd iterations can be unrolled two times to generate the cyclic dependency graph. Moreover, with the unroll clause it is possible to have inter-iteration dependencies of distance up to n. \u2022 A taskiter with the update clause will generate a cyclic dependency graph for its tasks only once, but the loop body will be executed for each iteration. Each time the loop body is executed, the parameters used to create each task instance will be recorded, allowing tasks in the generated DCTG to have different parameters for each iteration.\nUse of the taskloop construct inside a taskiter is allowed, including taskloops with dependencies [33].\nThe taskiter construct itself can also have dependencies, which can be used to express a dependency from the first and last iterations of the taskiter to its sibling tasks. This is demonstrated in Listing 2, where using dependencies is convenient because the task in Line 13 can be created before the full DAG of the taskiter in Line 5 is registered.\nTask reductions are also supported inside a taskiter region. Nevertheless, OpenMP task reductions imply barriers between iterations, which is precisely what we try to avoid. In order to efficiently support reductions inside a taskiter region, in OmpSs-2 we syncrhonize the combination of reductions with dependencies instead of barriers [34].\nThe loop that is transformed by the taskiter does not need to perform a constant number of iterations, and thus executing the next iteration can depend on an arbitrary condition. However, when the loop does not have a run-time constant amount of iterations, the implementation must guarantee that the condition is checked between iterations and the taskiter is stopped when the condition becomes false. Otherwise, when the number of iterations is a run-time constant, the runtime is free to overlap execution of tasks instances from as many different iterations as the dependencies permit.\nA. IMPLEMENTATION When an OmpSs-2 or OpenMP compiler encounters a taskiter construct, it encapsulates one iteration of the following\nVOLUME 10, 2022 5\nThis work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/\n\u00c1lvarez et al.: Optimizing Iterative Data-flow Scientific Applications using Directed Cyclic Graphs\nloop as a task. That task is instantiated and passed to the runtime with the number of iterations to execute and a flag indicating it is a taskiter. This special task is queued for execution and will execute the loop\u2019s body once, creating any child tasks and registering the initial DAG. However, every child task instance will inherit an iteration counter from the taskiter to track how many times the task instance has to be executed.\nWhen the runtime has finished executing the first body of the loop, it will access the bottom map, which is a data structure containing the last task that has declared a dependency on each memory location. It will match those tasks to the top map, which contains the first task that depends on each memory location. If locations match, there is a dependency from one iteration to the next, and we create an edge between the last and first tasks depending on that location. This edge is marked as crossing the iteration boundary.\nAn example of the top and bottom map structures is shown in Figure 3. The pictured dependency graph corresponds to the attached code fragment. In this example, for memory location A, the top map points to task instance T1, which is the first to declare a dependency on A. Likewise, T2 is the last task instance to declare a dependency on A. Therefore, there is a cross-iteration dependency where T1 depends on the previous iteration\u2019s T2. With these data structures, finding the cross-iteration dependencies is reduced to matching all entries from the bottom map to the ones on the top map.\nWhenever a child task finishes, it decreases its iteration counter, and unless it reaches zero, it will try to execute again if its dependencies are satisfied. Each task instance has two data structures that track outstanding dependencies: for even and odd iterations. This way, we do not have to reinitialize the data structures after each iteration. We can track dependencies simultaneously for the current and next iterations without inserting implicit barriers. Moreover, this technique allows us to maintain the wait-freedom of Nanos6\u2019s dependency system.\nFor applications where the transformed loop does not have a run-time constant number of iterations, a special task is inserted in the DCTG, which we call a control task. This control task depends on every leaf task, and every root task has a cross-iteration dependency on the previous iteration\u2019s control task. Inside the body of this inserted task, we check the loop\u2019s condition. If the condition is false, the taskiter is cancelled and finishes.\nBy default, taskiters with control tasks cannot pipeline tasks from different iterations, since the control task serializes iteration execution. However, these control tasks are strided when the taskiter is unrolled, providing means to overlap execution from different iterations. For example, on a taskiter with unroll(2), the control task executed after iteration i does not control the execution of iteration i + 1, but instead controls the execution of i + 2. This would allow a rolling window of two iterations being pipelined, and can be increased with larger unroll values.\nIV. IMMEDIATE SUCCESSOR Using the taskiter, we can minimize the overhead of task creation and dependency management. However, reducing those overheads shifts the contention to the remaining source of overhead: task scheduling. After introducing the taskiter in our benchmarks, we observed that the scheduler could become the bottleneck, limiting application performance. Specifically, the speed at which tasks are inserted and requested from the scheduler grows significantly, and so does contention on the locking system of the scheduler. The reference OmpSs-2 implementation currently features a delegation-based centralized scheduler based on [13], but the same contention can be observed in work-stealing implementations when there are few creators.\nThis section presents a scheduling policy that maximizes data locality for data-flow applications and can be applied without acquiring any scheduler lock. This way, we minimize the number of times any thread has to access the scheduler, reducing contention.\nThis heuristic is based on a straightforward successor locality principle. When one task has a dependency relation with another task, defined by the list of memory locations in their dependency clauses, they probably share a part of their working set. The reasoning behind this principle is straightforward. Data dependencies specify which memory locations a task will access. If two tasks declare a dependency on the same location, both tasks will contain a memory reference to the same location, sharing a part of their working set.\nFormally, we define the working set of a task ti \u2208 T as W(ti), representing the set of all memory locations that ti accesses during its execution. Then, we can define a dependency relation, on which a task t1 depends on a task t0 as t1 \u227b t0. This denotes constraints in execution order and means that t1 and t0 share at least one memory location on the declared data dependencies."
+        },
+        {
+            "heading": "6 VOLUME 10, 2022",
+            "text": "This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/\n\u00c1lvarez et al.: Optimizing Iterative Data-flow Scientific Applications using Directed Cyclic Graphs\nThen, we propose the successor locality principle:\n\u2200t0, t1 \u2208 T, t1 \u227b t0 \u2192 W(t0) \u2229 W(t1) \u0338= \u2205\nWhile it is possible to create a program on which the above statement is not valid, it matches the patterns observable on most HPC applications written using a data-flow model.\nData locality is paramount when scheduling tasks because it allows applications to exploit the memory hierarchy when the working sets fit in any cache level.\nWe can leverage this successor locality principle to bypass the task scheduler while simultaneously preserving data locality. We do this through the immediate successor mechanism, which works as follows:\n1) Whenever a task finishes its execution, the worker thread executing it releases its dependencies and can mark one or more successor tasks as ready. 2) The first task with the highest priority marked as ready is kept into a local per-worker variable, becoming the immediate successor. The priority of a task is calculated from the priority clause, which is specified by the user. 3) The rest of ready tasks (if any) are placed onto the scheduler for other workers to grab. 4) If the worker has an immediate successor task, the scheduler is bypassed, and the task is executed next.\nNote that we choose the first ready task amongst the ones with the highest priority as the immediate successor. However, choosing the first one is arbitrary, as every ready task follows the successor locality principle.\nWhile this policy is simple, it minimizes the number of times the scheduler is invoked, preventing contention. Moreover, as we show during experimentation, it achieves significant speedups for some applications thanks to its localitypreserving property.\nThere is a trade-off when applying the immediate successor mechanism. Bypassing the scheduler can be problematic when executing applications that rely on specific scheduling policies (for example, task priorities). We can solve this issue by modifying step 2 of the immediate successor algorithm, and adding a tunable probability that ready tasks are not marked as immediate successors, allowing threads to enter the scheduler every once in a while.\nV. EXPERIMENTAL EVALUATION To evaluate both the taskiter and the immediate successor (IS) policy, we implemented both features on top of the reference implementation for OmpSs-2. Most changes were located in the Nanos6 runtime, although we added compiler support for the construct in clang. Our changes in the Nanos6 runtime only add a small constant overhead to dependency management for tasks inside a taskiter, which does not depend on the number of iterations.\nSoftware artifacts, including the changes to Nanos6, benchmark sources and scripts to reproduce the experimental evaluation, will be publicly available upon acceptance."
+        },
+        {
+            "heading": "A. METHODOLOGY",
+            "text": "We conducted the evaluation for the taskiter on a node equipped with an AMD EPYC 7742 (Rome) processor with 64 cores clocked at 2.25 GHz and SMT disabled. The system has 1TiB of main memory at 3200MHz. The software stack was composed of a CentOS Linux 8.1 distribution with a Linux 4.17 kernel.\nWe measured the performance when varying task granularity on a set of data-flow benchmarks. We used a combination of smaller benchmarks and larger established HPC applications. The goal is to gather a wide variety of computational patterns representing many scientific applications. Following, we include a brief description of each benchmark and explain their relevance for this experiment:\n\u2022 The Multisaxpy benchmark performs a loop of n Single A \u00b7 X + Y kernels over two arrays. Each iteration is embarrassingly parallel, stressing mainly task creation and scheduling. Dependent tasks share the totality of their working set, but this working set only fits in cache when task granularity is small. Thus, this application can clearly show the effect of low-overhead localityaware scheduling policies. \u2022 The acoustic Full-Waveform Inversion is a proxy application for exploration geophysics. It implements an iterative method to generate high-resolution subsoil velocity models through collected seismic data. The FWI is divided into a forward propagation and a backward propagation phase, both acting on the modeled threedimensional soil. Each created task has a large number of many-to-many dependencies, placing stress on dependency management performance. \u2022 The N-Body simulation performs several timesteps of the interaction of forces in a particle system. This benchmark is strongly compute-bound, thus data locality is generally not impactful. It places uniform stress on the components of data-flow runtimes, thus providing a reasonable estimate of the amount of overhead introduced. \u2022 The Heat Gauss-Seidel equation solver that was showcased in Listing 1. This application is a parallel stencil that displays a wave-front pattern. This implies that the amount of available parallelism varies throughout its execution. As such, this benchmark is sensitive to the introduction of barriers between iterations, as it prevents overlapping the execution of several iterations to hide the parallelism variations. It is strongly memory-bound. \u2022 The Heat (while), is the same application with a variable iteration count instead of a fixed number of iterations. It checks the solution\u2019s convergence by computing a residual for each iteration. \u2022 The HPCCG is a proxy application for the Conjugate Gradients algorithm, which finds the solution to a sparse system of partial differential equations. It uniformly stresses the components of data-flow runtimes (like the N-Body), is memory-bound, and has 14 different task regions.\nVOLUME 10, 2022 7\nThis work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/\n\u00c1lvarez et al.: Optimizing Iterative Data-flow Scientific Applications using Directed Cyclic Graphs\n\u2022 The HPCG [35] (High Performance Conjugate Gradients) benchmark, with a fixed iteration count, is an industry-standard benchmark for supercomputers. It features 41 different taskified parallel kernels, together with some wave-front phases. It is designed to reproduce computational and data access patterns representing a wide scientific application set. Moreover, task granularity varies during HPCG\u2019s execution, making granularity tuning challenging. This benchmark is sensitive to both data locality and runtime overheads. \u2022 The HPCG (while) variant is the HPCG benchmark with a variable iteration count, checking for convergence on each iteration.\nWe run two experiments to evaluate the proposed extensions. In the first experiment, we evaluate the performance of our taskiter and immediate successor policy using two task granularities: one where tasks are small, simulating a strong scaling scenario, and another where granularity is optimal. The main goal is to find out if the proposed extensions deliver performance improvements in two scenarios: an optimal case, where granularity tuning has already been manually done for each application, and a case where task granularity is constrained by the problem size or the number of total cores, and thus is inevitably small. We evaluate each proposal in isolation and then combine it with the rest.\nIn the second experiment, we do a granularity study for each benchmark comparing the optimized Nanos6 against the reference implementation, other OpenMP runtimes and work-sharing versions of the benchmarks. Both experiments were repeated ten times, and we plot the standard error in every figure.\nFinally, after presenting the results, analyze the HPCG benchmark using execution traces.\nB. EXPERIMENT 1: EVALUATION OF PROPOSED EXTENSIONS In the first experiment, we measure the normalized performance, which is the performance of a specific execution relative to the maximum performance of all executions. This normalized performance is obtained based on the figure of merit provided by each application, and absolute performance figures for all granularities are presented later in Section V-C. We run the experiment on two different configurations to observe the most relevant task granularities: First, at the optimal granularity, where performance is in the optimal region. Second, when tasks are too small but still more than 50% peak performance is achieved. This second scenario simulates a strong scaling situation, thus evaluating the scalability of each solution. These granularities were obtained by running a granularity study for each benchmark and selecting: the task size which delivers the maximum performance, and the smallest task size that results in more than 50% of the maximum performance. The complete granularity study is available in Section V-C.\nIn this experiment, we test seven variants of the Nanos6 runtime to verify the effect of both the taskiter and the\nimmediate successor policy: 1) Tasks is the base OmpSs-2 version of the application,\nusing tasks with dependencies, and no immediate successor. 2) Tasks + Immediate Successor (IS) is the same as the Tasks version but applies the immediate successor policy. However, this immediate successor is only applied inside the synchronization mechanism for the task scheduler. 3) Tasks + IS Outside Scheduler is the Tasks version using the immediate successor policy and bypassing the scheduler when possible. 4) Task Caching is the application adapted to simulate a task caching approach. We implemented the semantics of the taskgraph construct [30], where all data structures are cached between iterations, but without transformation or matching. In other words, it is a taskiter with a barrier between iterations. of dependencies between one iteration and the next. 5) Taskiter is the application adapted to use a taskiter to transform the main loop into a cyclic graph. 6) Taskiter + Immediate Successor (IS) is the same as the Taskiter version but applies the immediate successor policy inside the scheduler\u2019s synchronization mechanism. 7) Taskiter + IS Outside Scheduler is the Taskiter version using the immediate successor policy and bypassing the scheduler when possible.\nNote that we split the evaluation for the IS policy into two parts. First, we apply the logic behind the immediate successor policy, but every task still has to go through the existing scheduler queues (the Immediate Successor version). This way, we can measure when performance increases thanks to better data locality instead of just the reduction of scheduling overhead. In the second part, we also use the immediate successor to bypass the scheduler altogether when an appropriate candidate is found, reducing the contention in the scheduler (the IS Outside Scheduler version).\nAdditionally, we compare every result with two different OpenMP runtimes: the GOMP runtime provided by GCC 10.2.0 and the LLVM OpenMP Runtime on its 13.0.0-rc1 version. We chose to compare against the GCC runtime as a reference implementation for OpenMP, and against the LLVM runtime because it is based on the Intel OpenMP runtime, which is known to have very competitive performance.\nFigure 4a shows the performance of each evaluated version versus the maximum figure of merit for each benchmark. Note that we stack the improvements of the immediate successor policies. For instance, the solid orange color bar refers to the Tasks version, while lighter orange bars show how the Tasks version performs when combined with the two immediate successor policies.\nGenerally, reducing overheads should have little effect on optimal granularities, but any locality improvements may be noticeable. There are several key insights we can extract from these results. First, if we focus exclusively on the Tasks"
+        },
+        {
+            "heading": "8 VOLUME 10, 2022",
+            "text": "This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/\n\u00c1lvarez et al.: Optimizing Iterative Data-flow Scientific Applications using Directed Cyclic Graphs\nversus the Taskiter version, we observe that performance remains very similar. This is expected as these runs happen with optimal granularities, and task creation overhead does not limit performance. However, when we introduce the immediate successor policy, we can achieve higher peak performance on the HPCCG, HPCG and multisaxpy benchmarks, thanks to increased data locality. Moreover, there is a significant difference between placing the IS policy inside and outside the scheduler locking system. This difference is explained by the implementation details of the IS inside the scheduler, where immediate successors are placed in a shared array. When a thread enters the scheduler with no assigned immediate successor, it will try to grab a task from the global queue. If no tasks are found, it will steal another thread\u2019s immediate successor, which can have detrimental effects on data locality. When the IS is implemented outside the scheduler, successors can not be stolen by other threads, thus preserving data locality better and resulting in higher performance, even if there was no contention in the scheduler.\nFor all benchmarks, the performance of the studied versions is either competitive or superior to other OpenMP runtimes.\nFigure 4b shows the same results for smaller granularities, where we measure the scalability of each version. Again, we normalized the performance to that of the best-performing version. In this case, the Tasks version always performs better than other OpenMP runtimes, which confirms that our baseline is already a very scalable runtime. In turn, the Taskiter version shows a better performance for small granularities than Tasks, thanks to its reduced task creation and dependency management overheads. We find that the most scalable and best-performing version is the Taskiter +\nIS Outside Scheduler. We can also observe the synergistic effects of both contributions for small granularities. For example, in the HPCG benchmark, the IS policy produces no performance improvement for the Tasks version but strongly affects the Taskiter version\u2019s performance. This is observed in many benchmarks, where the Tasks + IS Outside Scheduler has a much smaller speedup than the Taskiter + IS Outside Scheduler version due to the synergy between both contributions. Specifically, when not using the taskiter, the immediate successor policy may not be able to find a suitable successor task, since that task may not have been created yet. However, when using the taskiter construct, every task is already created after the first iteration, thus providing more opportunities to apply locality-based policies. We analyze further the HPCG\u2019s case in Section V-D.\nThe Task Caching version in optimal granularities either works similarly to the base Tasks and Taskiter version or causes a slowdown in cases like the Heat equation, where adding a barrier between iterations decreases the available parallelism due to its wave-front pattern. In small granularities, the performance of task caching generally sits between the Tasks and Taskiter versions as a middle-ground. However, it is outperformed by the construct proposed in this paper in all experiments."
+        },
+        {
+            "heading": "C. EXPERIMENT 2: COMPARISON AGAINST THE BASELINE",
+            "text": "The second experiment evaluates performance on a more extensive range of task granularities for the Taskiter + IS Outside Scheduler version against both the GOMP and LLVM runtimes and a work-sharing OpenMP version of each application. The work-sharing versions were done using omp\nVOLUME 10, 2022 9\nThis work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/\n\u00c1lvarez et al.: Optimizing Iterative Data-flow Scientific Applications using Directed Cyclic Graphs\nfor constructs on the parallelizable parts of each benchmark, without major code changes except for the Heat application, where the code was adapted to iterate on the matrix\u2019s elements diagonally so the loop could be parallelized.\nWith this comparison, we want to show how the proposed improvements affect the scalability of data-flow applications. Moreover, we will show how the changes can make data-flow programs compete and outperform work-sharing.\nOverall, results from Figure 5 show that both the taskiter and the immediate successor policy improve the performance of data-flow iterative applications. We measure task granularity on instructions per task, as it is a metric that does not vary between different versions and directly correlates with time. Note that work-sharing versions have a fixed task granularity, and hence are represented as straight lines.\nOne result that stands out is Figure 5a, where there is a very notable performance difference for specific granularities in the Multisaxpy benchmark. In this benchmark, starting at a granularity of 219, the task\u2019s working set fits into its L3 cache slice. Therefore, if another task using the same data is immediately scheduled into the same core, all of its working set is hot in cache, which is precisely what the immediate successor policy does. The task creation improvement provided by the taskiter also allows us to apply these locality policies more effectively, producing a synergistic effect. On the other hand, the LLVM and GOMP runtimes do not have this locality policy implemented and schedule other tasks instead, and the work-sharing version has to finish one iteration before the next one starts. We achieve an 8.75x speedup in the optimal granularity compared to the OpenMP baseline."
+        },
+        {
+            "heading": "10 VOLUME 10, 2022",
+            "text": "This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/\n\u00c1lvarez et al.: Optimizing Iterative Data-flow Scientific Applications using Directed Cyclic Graphs\nAnother relevant insight is the Gauss-Seidel heat equation in Figures 5d and 5e. In the first variant, where the number of iterations is fixed, the peak performance obtained is the same for all runtimes, and the difference is seen in the smaller granularities only. However, when we check the residual at each iteration, the performance of LLVM and GOMP drops due to the barriers introduced by task reductions. In OmpSs2, reductions do not imply barriers, and the implementation of the taskiter allows to overlap execution of tasks belonging to different iterations, maintaining the available parallelism. This is also why the taskiter is the only version able to outperform work-sharing parallelism in Figure 5e.\nMoreover, our proposals outperform work-sharing parallelism and the base OmpSs-2 and OpenMP tasking implementations in the HPCG benchmark shown in Figures 5g and 5h.\nD. HPCG EXECUTION TRACES\nSo far, we have seen the performance improvements that both the taskiter and the immediate successor policy can deliver. However, we can also leverage the instrumentation included in Nanos6 to obtain execution traces and study exactly how our contributions affect each application. We chose to study the HPCG benchmark, which is affected by both contributions and showcases its synergistic effects. We obtained execution traces of the application for the granularity highlighted in Figure 5g, and we show these traces in Figure 6. In all the traces, each row represents one of the 64 cores of the machine. The x-axis represents time, and each color is a different task type, which we use to identify different phases of the application. The time scale of each trace is the same, but only three iterations are shown. For each trace, we provide a not to scale zoomed section of a small subset of the execution.\nThe first trace displayed in Figure 6a shows the baseline tasks version of the HPCG benchmark. Colors denote tasks from different application phases, revealing an iterative pattern. Arrows below the trace highlight the task creator core. This thread executes the main task, which creates all other tasks to be executed by the rest of the cores.\nWhen we introduce the immediate successor policy, as seen in Figure 6b, task creation remains the same, but task scheduling changes. In contrast to the well-defined phases on the previous trace, tasks are instead executed in a different order in some instances (see the zoomed-in section). This happens because each orange task depends on a yellow task, and the immediate successor policy decides to schedule one after the other. Note that sections that display this pattern are shorter than in the previous trace because better data locality causes tasks to execute faster, as part of the working set is hot in the cache. Moreover, as shown in the zoomedin section, this produces an unexpected side-effect. As tasks execute faster, the task creator cannot keep up and fails to create tasks fast enough to feed all the cores, producing a starvation scenario.\nThe taskiter solves this starvation problem in Figure 6c. In this case, the task creation is done only during the first iteration, and then a DCTG is constructed, and there is no need to create tasks again. The first iteration is as slow as the other cases, but the following iterations are much shorter because task creation does not limit performance. Moreover, as all tasks are created, we can apply the immediate successor policy more effectively, maximizing locality and exploiting the memory hierarchy better."
+        },
+        {
+            "heading": "VI. CONCLUSIONS",
+            "text": "In this work, we have presented a new directive for OmpSs2 and OpenMP, the taskiter. We have shown how it fits naturally into iterative HPC applications and delivers significant performance gains thanks to reducing task creation and dependency management overheads. We also have combined the taskiter with a scalable and straightforward immediate successor heuristic that preserves data locality while reducing scheduling overheads. Moreover, combining both proposals results in a strong synergistic effect, as having faster task creation provides more chances to apply the proposed heuristic.\nOur evaluation shows that applying both techniques to data-flow iterative applications delivers significant scalability improvements and speedups, achieving an average speedup of 3x (2.56x geomean) for small granularities compared to the Nanos6 reference implementation and a 4.62x and 7.02x speedup (3.78x and 5.2x geomean) over the LLVM and GCC OpenMP runtimes, respectively. Moreover, the resulting data-flow applications using the right granularity can compete with or outperform work-sharing on all benchmarks.\nIn future work, we plan to extend the taskiter construct to support device tasks in heterogeneous applications to expand its applicability further."
+        },
+        {
+            "heading": "12 VOLUME 10, 2022",
+            "text": "This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/\n\u00c1lvarez et al.: Optimizing Iterative Data-flow Scientific Applications using Directed Cyclic Graphs\n[13] David \u00c1lvarez, Kevin Sala, Marcos Maro\u00f1as, Aleix Roca, and Vicen\u00e7 Beltran. Advanced synchronization techniques for task-based runtime systems. In Proceedings of the 26th ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming, PPoPP \u201921, page 334\u2013347, New York, NY, USA, 2021. Association for Computing Machinery. [14] Artur Podobas, Mats Brorsson, and Vladimir Vlassov. Turbob\u0142ysk: Scheduling for improved data-driven task performance with fast dependency resolution. In Luiz DeRose, Bronis R. de Supinski, Stephen L. Olivier, Barbara M. Chapman, and Matthias S. M\u00fcller, editors, Using and Improving OpenMP for Devices, Tasks, and More, pages 45\u201357, Cham, 2014. Springer International Publishing. [15] Gilberto Contreras and Margaret Martonosi. Characterizing and improving the performance of intel threading building blocks. In 2008 IEEE International Symposium on Workload Characterization, pages 57\u201366, 2008. [16] Jason Evans. A scalable concurrent malloc(3) implementation for freebsd. In BSDCan, 4 2006. [17] Emery D. Berger, Kathryn S. McKinley, Robert D. Blumofe, and Paul R. Wilson. Hoard: A scalable memory allocator for multithreaded applications. In Proceedings of the Ninth International Conference on Architectural Support for Programming Languages and Operating Systems, ASPLOS IX, page 117\u2013128, New York, NY, USA, 2000. Association for Computing Machinery. [18] Jixiang Yang and Qingbi He. Scheduling parallel computations by work stealing: A survey. International Journal of Parallel Programming, 46(2):173\u2013197, Apr 2018. [19] Francesc Lordan, Enric Tejedor, Jorge Ejarque, Roger Rafanell, Javier \u00c1lvarez, Fabrizio Marozzo, Daniele Lezzi, Ra\u00fcl Sirvent, Domenico Talia, and Rosa M. Badia. Servicess: An interoperable programming framework for the cloud. Journal of Grid Computing, 12(1):67\u201391, Mar 2014. [20] Peter Thoman, Herbert Jordan, and Thomas Fahringer. Adaptive granularity control in task parallel programs using multiversioning. In Felix Wolf, Bernd Mohr, and Dieter an Mey, editors, Euro-Par 2013 Parallel Processing, pages 164\u2013177, Berlin, Heidelberg, 2013. Springer Berlin Heidelberg. [21] Antoni Navarro, Sergi Mateo, Josep Maria Perez, Vicen\u00e7 Beltran, and Eduard Ayguad\u00e9. Adaptive and architecture-independent task granularity for recursive applications. In Bronis R. de Supinski, Stephen L. Olivier, Christian Terboven, Barbara M. Chapman, and Matthias S. M\u00fcller, editors, Scaling OpenMP for Exascale Performance and Portability, pages 169\u2013 182, Cham, 2017. Springer International Publishing. [22] Umut A. Acar, Vitaly Aksenov, Arthur Chargu\u00e9raud, and Mike Rainey. Provably and practically efficient granularity control. In Proceedings of the 24th Symposium on Principles and Practice of Parallel Programming, PPoPP \u201919, page 214\u2013228, New York, NY, USA, 2019. Association for Computing Machinery. [23] M. Maro\u00f1as, K. Sala, S. Mateo, E. Ayguad\u00e9, and V. Beltran. Worksharing tasks: An efficient way to exploit irregular and fine-grained loop parallelism. In 2019 IEEE 26th International Conference on High Performance Computing, Data, and Analytics (HiPC), pages 383\u2013394, Dec 2019. [24] Bradford L Chamberlain. Chapel. In Pavan Balaji, editor, Programming Models for Parallel Computing, chapter 6, pages 129\u2013159. MIT Press, 2015. [25] Rupanshu Soi, Michael Bauer, Sean Treichler, Manolis Papadakis, Wonchan Lee, Patrick McCormick, Alex Aiken, and Elliott Slaughter. Index launches: Scalable, flexible representation of parallel task groups. In Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis, SC \u201921, New York, NY, USA, 2021. Association for Computing Machinery. [26] Daniel Orozco, Elkin Garcia, Robert Pavel, Rishi Khan, and Guang R. Gao. Polytasks: A compressed task representation for hpc runtimes. In Sanjay Rajopadhye and Michelle Mills Strout, editors, Languages and Compilers for Parallel Computing, pages 268\u2013282, Berlin, Heidelberg, 2013. Springer Berlin Heidelberg. [27] NVIDIA. Cuda c programming guide, 2021. [28] Ewan Crawford and Jack Frankland. Opencl command-buffer extension:\nDesign and implementation. In International Workshop on OpenCL, IWOCL\u201922, New York, NY, USA, 2022. Association for Computing Machinery. [29] Intel Corporation. oneapi threading building blocks (onetbb), 2022. [30] Chenle Yu, Sara Royuela, and Eduardo Qui\u00f1ones. Enhancing openmp\ntasking model: Performance and portability. In Simon McIntoshSmith, Bronis R. de Supinski, and Jannis Klinkenberg, editors, OpenMP: Enabling Massive Node-Level Parallelism, pages 35\u201349, Cham, 2021. Springer International Publishing.\n[31] Ananya Muddukrishna, Peter A. Jonsson, and Mats Brorsson. Localityaware task scheduling and data distribution for openmp programs on numa systems and manycore processors. Sci. Program., 2015, January 2016. [32] Simone Economo, Sara Royuela, Eduard Ayguad\u00e9, and Vicen\u00e7 Beltran. A toolchain to verify the parallelization of ompss-2 applications. In Maciej Malawski and Krzysztof Rzadca, editors, Euro-Par 2020: Parallel Processing, pages 18\u201333, Cham, 2020. Springer International Publishing. [33] Marcos Maro\u00f1as, Xavier Teruel, and Vicen\u00e7 Beltran. Openmp taskloop dependences. In Naoya Maruyama, Bronis R. de Supinski, and Mohamed Wahib, editors, OpenMP: Memory, Devices, and Tasks - 17th International Workshop on OpenMP, IWOMP 2021, Bristol, UK, October 14-16 September, 2021, Proceedings, Lecture Notes in Computer Science, 2021. [34] Ferran Pallar\u00e8s Roca. Extending ompss programming model with task reductions: A compiler and runtime approach. Bachelor\u2019s thesis, Barcelona School of Informatics, Universitat Polit\u00e8cnica de Catalunya, 1 2017. [35] Michael Allen Heroux and Jack. Dongarra. Toward a new metric for ranking high performance computing systems. 6 2013.\nDAVID \u00c1LVAREZ received his Bachelor\u2019s Degree degree in informatics engineering in 2019 and his MSc degree in innovation and research in informatics in 2021, both from the Universitat Polit\u00e8cnica de Catalunya (UPC) in Barcelona, Spain.\nSince 2019, he has been with the System Tools and Advanced Runtimes (STAR) research group of the Barcelona Supercomputing Center (BSC), focusing on task-based programming models for HPC, low-level parallel runtimes and heteroge-\nneous computing. He is currently a PhD Student and a Part-time Lecturer in the Computer Architecture Department (DAC) at UPC.\nDR. VICEN\u00c7 BELTRAN holds a Ph.D. in computer architecture (2009) and a BSc/MSc degree in computer engineering (2004), both from the Universitat Polit\u00e8cnica de Catalunya (UPC) in Barcelona, Spain.\nSince 2009, he has been Senior Researcher at the Barcelona Supercomputing Center (BSC), where he works on parallel and distributed programming models, and system software for HPC systems. He has participated in several EU and\nindustrial projects such as DEEP/-ER/EST and INTERTWinE. He currently leads the System Tools and Advanced Runtimes (STAR) group that focuses on research crossing multiple layers of the system software stack, from OS, runtimes, and low-level APIs to programming models, tools, and applications.\nVOLUME 10, 2022 13\nThis work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/"
+        }
+    ],
+    "title": "Optimizing Iterative Data-flow Scientific Applications using Directed Cyclic Graphs",
+    "year": 2023
+}

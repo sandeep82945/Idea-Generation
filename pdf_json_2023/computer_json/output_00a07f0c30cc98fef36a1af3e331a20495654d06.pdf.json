@@ -1,0 +1,599 @@
+{
+    "abstractText": "Background Genomic prediction has become widespread as a valuable tool to estimate genetic merit in animal and plant breeding. Here we develop a novel genomic prediction algorithm, called deepGBLUP, which integrates deep learning networks and a genomic best linear unbiased prediction (GBLUP) framework. The deep learning net\u2010 works assign marker effects using locally\u2010connected layers and subsequently use them to estimate an initial genomic value through fully\u2010connected layers. The GBLUP framework estimates three genomic values (additive, dominance, and epistasis) by leveraging respective genetic relationship matrices. Finally, deepGBLUP predicts a final genomic value by summing all the estimated genomic values. Results We compared the proposed deepGBLUP with the conventional GBLUP and Bayesian methods. Extensive experiments demonstrate that the proposed deepGBLUP yields state\u2010of\u2010the\u2010art performance on Korean native cattle data across diverse traits, marker densities, and training sizes. In addition, they show that the proposed deepGBLUP can outperform the previous methods on simulated data across various heritabilities and quantitative trait loci (QTL) effects. Conclusions We introduced a novel genomic prediction algorithm, deepGBLUP, which successfully integrates deep learning networks and GBLUP framework. Through comprehensive evaluations on the Korean native cattle data and simulated data, deepGBLUP consistently achieved superior performance across various traits, marker densities, training sizes, heritabilities, and QTL effects. Therefore, deepGBLUP is an efficient method to estimate an accurate genomic value. The source code and manual for deepGBLUP are available at https:// github. com/ gywns 6287/ deepG BLUP. *Correspondence: Yeong Jun Koh yjkoh@cnu.ac.kr Seung Hwan Lee slee46@cnu.ac.kr 1 Department of Bio\u2010AI Convergence, Chungnam National University, 305\u2010764 Daejeon, Korea 2 Division of Animal and Dairy Science, Chungnam National University, 305\u2010764 Daejeon, Korea 3 Department of Computer Science and Engineering, Chungnam National University, 305\u2010764 Daejeon, Korea 4 Department of Animal Science, Michigan State University, East Lansing, MI, USA Background The use of DNA marker information for the prediction of genetic merit in animal and plant breeding and susceptibility to disease in human medicine has become widespread. Genomic prediction has primarily utilized many thousands of DNA markers, most commonly single nucleotide polymorphisms (SNPs), that cover the entire genome to predict the genetic merit and phenotypes of Page 2 of 13 Lee et al. Genetics Selection Evolution (2023) 55:56 individuals. In humans, genomic prediction has been widely used to predict disease risk and highly polygenic complex human traits [1, 2]. In agriculture, genomic prediction is used to estimate a genomic value (GV), which is then used to make selection decisions in a breeding population. Genomic best linear unbiased prediction (GBLUP) is one of the most commonly used statistical models for genomic prediction [3]. It adopts a mixed model approach that uses a genomic relationship matrix (GRM) built from genotypes instead of a traditional pedigreebased relationship matrix. Even though this method showed state-of-the-art performance in many populations, it still has some limitations. First, it approximates a traditional infinitesimal model, which assumes an equal genetic variance for all SNPs. To resolve this limitation, Bayesian models [4, 5] assume that some SNPs have zero effects, whereas others have small to moderate effects. However, these methods require unknown parameters to be calculated by multiple iterations, which is time-consuming. Fragomeni et al. [6] and Wang et al. [7] derived the optimal weights of SNPs to allow unequal variances for each SNP in the GBLUP equation, but they only brought a negligible improvement in simulation data. Ren et al. [8] developed a weighting method to construct a weighted GRM, but it required additional priorities to estimate SNP effects. Furthermore, the conventional GBLUP method only accounts for additive marker effects due to its reliance on a linear model. To interfuse nonlinearity effects into GBLUP, some studies focused on deriving GRM with dominance effects [9, 10] and epistatic interactions [11, 12]. However, the line of research that directly leverages the non-linearity to GV estimation was less studied. Deep learning is a good alternative method to solve these problems. Recent advances in deep neural networks have outperformed the state-of-the-art in various fields, such as computer vision, machine translation, autonomous driving, and audio recognition [13\u201317]. In particular, the use of local information has led to these successes. Convolutional neural network (CNN), which is the most common structure for computer vision, constitutes a weights-shared filter operation for the adjacent region of an input image [18]. Recurrent neural network (RNN) has been commonly used in sequence-to-sequence problems, such as speech recognition or natural language processing [14]. It takes information from previous sequence positions to extract information from a current sequence position. These two networks hypothesize that adjacent regions with similar patterns could provide shared features between them. More recently, the transformer [16], an advanced deep learning method, has achieved superior performance in the computer vision [17] and the natural language processing [19]. It also exploits a relative position to extract informative features from input data. The local information can also be exploited in genomic prediction. The general concept of genomic prediction relies on the linkage disequilibrium (LD) between genetic markers and the unknown quantitative trait loci (QTL). With high-density SNP panels, the markers co-segregate with the causal mutations, allowing the effects of causal variants to be indirectly estimated through adjacent markers [5, 20]. Therefore, it is essential to carefully use the information of adjacent markers for accurate genomic prediction. However, previous deep learning networks, such as CNN or RNN, are not suitable to estimate adjacent marker effects, since they assign marker effects based primarily on sequence patterns. In SNP array data, adjacent markers often lose a functional relation (e.g. protein coding) due to varying distances between them. In other words, adjacent SNPs with the same pattern but located in different loci can have different functional effects from each other. Practically, simple fully-connected networks that do not use local information usually perform better than other local-based networks in genomic prediction [21, 22]. In this regard, a new local-based network is needed to capture the effects of adjacent markers considering their distinct loci. There have been many attempts to leverage deep learning networks for genomic prediction. Zingaretti et al. [23] explored CNN for genomic prediction of polyploid outcrossing species. Montesinos-L\u00f3pez et al. [24] used various deep learning architectures for multi-environment genomic predictions of complex traits in plants. Pook et  al. [25] applied locally-connected layers on simulated maize and real Arabidopsis data. However, as these methods cannot achieve a sufficient accuracy even with more complex parameters than conventional methods, they quickly reach the limit to their uses in real-world applications. To this end, we propose a novel algorithm, which is a joint deep learning networks and GBLUP framework (deepGBLUP) for accurate genomic prediction. Given the SNP sequence data, the proposed deepGBLUP first extracts the effects of adjacent markers using a locally connected layer (LCL). Figure 1 compares LCL with the common CNN. LCL works similarly to CNN, except that weights in each filter are unshared. Therefore, distinct weight sets are used for adjacent markers located at different loci. Then, deepGBLUP estimates an initial GV from the effects of adjacent markers through a fully-connected layer. However, this initial GV lacks a concrete genetic relationship, which may Page 3 of 13 Lee et al. Genetics Selection Evolution (2023) 55:56 generate un-reliable results as in the previous studies [23\u201325]. The genetic relationship between training and test individuals is crucial for genomic prediction. To address this, we leveraged a well-modified GBLUP framework that can utilize genomic relationships (i.e. GRM) for a GV estimation. The proposed GBLUP framework estimates additive, dominance, and epistatic GV using three types of GRM. The implementation details about the GBLUP framework are available in the Methods section. Then, the proposed deepGBLUP estimates a final GV by summing the initial, additive, dominance, and epistatic GV. We evaluated deepGBLUP using a Korean native cattle dataset that covers diverse marker densities, training sizes, and traits. In addition, we validated its performance on simulated data involving various ranges of heritabilities and QTL effects. Fig. 1 Example of a convolution neural network and a locally connected layer. a Convolution neural networks (CNN); b Locally\u2010connected layer (LCL). Different colors mean different weight sets Page 4 of 13 Lee et al. Genetics Selection Evolution (2023) 55:56 Methods Korean native cattle dataset The Korean native cattle population used in this study included 10,000 individuals (animals were born between 2010 and 2017, and samples were collected between 2013 and 2019) with phenotypic measurements for carcass weight (CWT/kg), eye-muscle area (EMA/cm ), backfat thickness (BF/mm), and marbling score (MS). CWT was measured by scales on beef production rails in the slaughterhouse. BF, EMA, and MS at the junction between the 12th and 13th ribs were manually measured by human experts after a 24-h chill. Genomic DNA of the animals was extracted from longissimus-thoracis muscle samples using a DNeasy Blood and Tissue Kit (Qiagen, Valencia, CA). In total, 10,000 samples were genotyped using the Illumina Bovine SNP50 BeadChip. SNP quality control was performed using the PLINK1.9 software [26] based on the following filtering criteria: SNPs with a minor allele frequency < 0.001, a call rate < 0.1 and those located on the sex chromosomes were removed, i.e. 1853 SNPs, and the post-filter missing rate was 0.6% of the genotypes. These missing SNPs were then imputed with Eagle v2.4 [27]. Finally, 44,314 SNPs were used in the study, which are defined as the 50K set. Furthermore, we selected 10K, 5K, and 1K evenly distributed markers from the 50K set to evaluate deepGBLUP performance across marker densities. All experimental procedures were approved by the National Institute of Animal Science (NIAS) in the Rural Development Administration (RDA) of South Korea, and all samples were taken under public animal health and welfare guidelines. Simulated dataset We used the Qmsim1.10 [28] software to simulate 10,000 individual genotypes. In the simulated data, 49,980 SNPs were uniformly distributed across the 29 chromosomes. According to the Korean breeding program [29], the Korean cattle population has been established, starting with a few outstanding individuals. To imitate the mutations and LD structures of the Korean native cattle, a historical population was simulated with 200 individuals (100 males and 100 females) for 1000 generations and maintaining constant population size by random mating. Then the population size was gradually increased to 10,000 individuals (5000 males and 5000 females) for 20 additional generations (1001th\u20131020th). We used these simulated genotypes as a basis and modeled 21 phenotypes with three heritabilities h2 (0.5, 0.3, and 0.1) and seven QTL effect combinations, including additive (a), dominance (d), epistasis (e), additive + dominance (a+d), additive + epistasis (a + e), dominance + epistasis (d + e), and additive + dominance + epistasis (a + d + e). To model each phenotype, we first drew the polygenic effects of all SNPs from a N (0, 1) distribution. The weighted sum of the SNPs by their polygenic effects was used as an individual\u2019s polygenic effect, where SNPs were coded as 0, 1, and 2 for the reference homozygote, heterozygote, and alternate homozygote genotype, respectively. To simulate QTL effects, we randomly selected 1000 additive, 1000 dominance, and 1000 epistasis QTL from the 49,980 SNP set. It should be noted that each QTL was selected from loci that were free from any other QTL. The additive effects (a) were computed by the weighted sum of 1000 additive QTL by their effects from a N (0, 1) distribution. For the dominance effects (d), we re-coded the genotypes of 1000 dominance QTL to 0, 1, and 1, resulting in an additive and a dominance effect of equal size. As with the additive effects, individual dominance was calculated by the weighted sum of dominance genotypes by their effects drawn from a N (0, 1) distribution. To model the epistatic effects (e), we followed the simulation scheme in [11]. Specifically, one of the nine possible configurations of the 499,500 QTL pairs was randomly chosen to have a N (0, 1) distributed effect. For instance, when the marker pair xc, xl is drawn, only the configuration (xc = 0, xl = 2) has an effect. We calculated the individual epistasis (e) by summing the total epistasis effect of QTL pairs. We standardized the variance of each effect to restrain them into the target heritabilities (0.5, 0.3, and 0.1). Let \u03c3 2 p be a phenotype variance, which was set to 100 in this study. We first drew the residuals of the individuals from",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Hyo\u2010Jun Lee"
+        },
+        {
+            "affiliations": [],
+            "name": "Jun Heon Lee"
+        },
+        {
+            "affiliations": [],
+            "name": "Cedric Gondro"
+        },
+        {
+            "affiliations": [],
+            "name": "Yeong Jun Koh"
+        },
+        {
+            "affiliations": [],
+            "name": "Seung Hwan Lee"
+        }
+    ],
+    "id": "SP:140537f7de6a3dcc797caae4075bb7e99390c99c",
+    "references": [
+        {
+            "authors": [
+                "G Abraham",
+                "M. Inouye"
+            ],
+            "title": "Genomic risk prediction of complex human disease and its clinical application",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "CG de Los",
+                "AI Vazquez",
+                "R Fernando",
+                "YC Klimentidis",
+                "D. Sorensen"
+            ],
+            "title": "Prediction of complex human traits using the genomic best linear unbiased predic\u2010 tor",
+            "venue": "PLoS Genet",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "BJ Hayes",
+                "PM Visscher",
+                "ME. Goddard"
+            ],
+            "title": "Increased accuracy of artificial selection by using the realized relationship matrix",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "TH Meuwissen",
+                "BJ Hayes",
+                "ME. Goddard"
+            ],
+            "title": "Prediction of total genetic value using genome\u2010wide dense marker",
+            "venue": "maps. Genetics",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "M Erbe",
+                "B Hayes",
+                "L Matukumalli",
+                "S Goswami",
+                "P Bowman",
+                "C Reich"
+            ],
+            "title": "Improving accuracy of genomic predictions within and between dairy cattle breeds with imputed high\u2010density single nucleotide polymor\u2010 phism panels",
+            "venue": "J Dairy Sci",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "BO Fragomeni",
+                "DA Lourenco",
+                "Y Masuda",
+                "A Legarra",
+                "I. Misztal"
+            ],
+            "title": "Incorporation of causative quantitative trait nucleotides in single\u2010step GBLUP",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "H Wang",
+                "I Misztal",
+                "I Aguilar",
+                "A Legarra",
+                "W. Muir"
+            ],
+            "title": "Genome\u2010wide association mapping including phenotypes from relatives without genotypes",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "D Ren",
+                "L An",
+                "B Li",
+                "L Qiao",
+                "W. Liu"
+            ],
+            "title": "Efficient weighting methods for genomic best linear\u2010unbiased prediction (BLUP) adapted to the genetic architec\u2010 tures of quantitative traits",
+            "venue": "Heredity (Edinb)",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y Da",
+                "C Wang",
+                "S Wang",
+                "G. Hu"
+            ],
+            "title": "Mixed model methods for genomic predic\u2010 tion and variance component estimation of additive and dominance effects using SNP markers",
+            "venue": "PLoS One",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "ZG Vitezica",
+                "L Varona",
+                "A. Legarra"
+            ],
+            "title": "On the additive and dominant variance and covariance of individuals within the genomic selection",
+            "venue": "scope. Genet\u2010",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "JW Martini",
+                "N Gao",
+                "DF Cardoso",
+                "V Wimmer",
+                "M Erbe",
+                "RJ Cantet"
+            ],
+            "title": "Genomic prediction with epistasis models: on the marker\u2010coding\u2010 dependent performance of the extended GBLUP and properties of the categorical epistasis model (CE)",
+            "venue": "BMC Bioinformatics",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "ZG Vitezica",
+                "A Legarra",
+                "MA Toro",
+                "L. Varona"
+            ],
+            "title": "Orthogonal estimates of variances for additive, dominance, and epistatic effects in populations",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M Tan",
+                "Q. Le"
+            ],
+            "title": "Efficientnet: Rethinking model scaling for convolutional neural networks",
+            "venue": "In Proceedings of the 36th International Conference on Machine Learning:",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "K Cho",
+                "B Van Merri\u00ebnboer",
+                "C Gulcehre",
+                "D Bahdanau",
+                "F Bougares",
+                "H Schwenk"
+            ],
+            "title": "Learning phrase representations using RNN encoder\u2010decoder for statistical machine translation",
+            "venue": "In Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing:",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "K He",
+                "X Zhang",
+                "S Ren",
+                "J. Sun"
+            ],
+            "title": "Deep residual learning for image recognition",
+            "venue": "In Proceedings of the 2016 IEEE Conference on Computer Vision and Pat\u2010 tern Recognition:",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "A Vaswani",
+                "N Shazeer",
+                "N Parmar",
+                "J Uszkoreit",
+                "L Jones",
+                "AN Gomez"
+            ],
+            "title": "Attention is all you need",
+            "venue": "In Proceedings of the 31st International Confer\u2010 ence on Neural Information Processing Systems:",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "A Dosovitskiy",
+                "L Beyer",
+                "A Kolesnikov",
+                "D Weissenborn",
+                "X Zhai",
+                "T Unterthiner"
+            ],
+            "title": "An image is worth 16x16 words: Transformers for image recognition at scale",
+            "venue": "In Proceedings of the 9th International Conference on Learning Representations:",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A Krizhevsky",
+                "I Sutskever",
+                "GE. Hinton"
+            ],
+            "title": "Imagenet classification with deep convolutional neural networks",
+            "venue": "Commun ACM",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J Devlin",
+                "MW Chang",
+                "K Lee",
+                "Bert Toutanova K"
+            ],
+            "title": "Pre\u2010training of deep bidirectional transformers for language understanding",
+            "venue": "In Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies:",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "K Kizilkaya",
+                "R Fernando",
+                "D. Garrick"
+            ],
+            "title": "Genomic prediction of simulated multi\u2010 breed and purebred performance using observed fifty thousand single nucleotide polymorphism genotypes",
+            "venue": "J Anim Sci",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "P Bellot",
+                "CG de Los",
+                "M. P\u00e9rez\u2010Enciso"
+            ],
+            "title": "Can deep learning improve genomic prediction of complex human traits",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "P\u00e9rez\u2010Enciso M",
+                "Zingaretti LM"
+            ],
+            "title": "A guide on deep learning for complex trait genomic prediction",
+            "venue": "Genes (Basel)",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "LM Zingaretti",
+                "SA Gezan",
+                "LFV Ferr\u00e3o",
+                "LF Osorio",
+                "A Monfort",
+                "PR Mu\u00f1oz"
+            ],
+            "title": "Exploring deep learning for complex trait genomic prediction in polyploid outcrossing species",
+            "venue": "Front Plant Sci",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A Montesinos\u2010L\u00f3pez",
+                "OA Montesinos\u2010L\u00f3pez",
+                "D Gianola",
+                "J Crossa",
+                "CM. Hern\u00e1ndez\u2010Su\u00e1rez"
+            ],
+            "title": "Multi\u2010environment genomic prediction of plant traits using deep learners with dense architecture",
+            "venue": "(Bethesda)",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "T Pook",
+                "J Freudenthal",
+                "A Korte",
+                "H. Simianer"
+            ],
+            "title": "Using local convolutional neural networks for genomic prediction",
+            "venue": "Front Genet",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S Purcell",
+                "B Neale",
+                "K Todd\u2010Brown",
+                "L Thomas",
+                "MA Ferreira",
+                "D Bender"
+            ],
+            "title": "PLINK: a tool set for whole\u2010genome association and population\u2010based linkage analyses",
+            "venue": "Am J Hum Genet",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "PR Loh",
+                "P Danecek",
+                "PF Palamara",
+                "C Fuchsberger",
+                "YA Reshef",
+                "HK Finucane"
+            ],
+            "title": "Reference\u2010based phasing using the Haplotype Reference Consor\u2010 tium panel",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Sargolzaei M",
+                "Schenkel FS"
+            ],
+            "title": "QMSim: a large\u2010scale genome simulator for livestock",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "SH Lee",
+                "BH Park",
+                "A Sharma",
+                "CG Dang",
+                "SS Lee",
+                "TJ Choi"
+            ],
+            "title": "Hanwoo cattle: origin, domestication, breeding strategies and genomic selection",
+            "venue": "J Anim Sci Technol",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "JW Martini",
+                "V Wimmer",
+                "M Erbe",
+                "H. Simianer"
+            ],
+            "title": "Epistasis and covariance: how gene interaction translates into genomic relationship",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "D Hendrycks",
+                "K. Gimpel"
+            ],
+            "title": "Gaussian error linear units (gelus)",
+            "venue": "arXiv preprint arXiv:",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "I Loshchilov",
+                "F. Hutter"
+            ],
+            "title": "Decoupled Weight Decay Regularization",
+            "venue": "In Pro\u2010 ceedings of the International Conference on Learning Representations:",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "K. Meyer"
+            ],
+            "title": "An \u201caverage information\u201d restricted maximum likelihood algo\u2010 rithm for estimating reduced rank genetic covariance matrices or covari\u2010 ance functions for animal models with equal design matrices",
+            "year": 1997
+        },
+        {
+            "authors": [
+                "I Misztal",
+                "S Tsuruta",
+                "T Strabel",
+                "B Auvray",
+                "T Druet",
+                "D Lee"
+            ],
+            "title": "BLUPF90 and related programs (BGF90)",
+            "venue": "In Proceedings of the 7th world congress on genetics applied to livestock production:",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "G de los Campos",
+                "P. P\u00e9rez\u2010Rodr\u00edguez"
+            ],
+            "title": "Bayesian generalized linear regres\u2010 sion",
+            "venue": "R package version",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "J Han",
+                "C Gondro",
+                "K Reid",
+                "JP. Steibel"
+            ],
+            "title": "Heuristic hyperparameter optimization of deep learning models for genomic prediction",
+            "venue": "(Bethesda)",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "\u00a9 The Author(s) 2023. Open Access This article is licensed under a Creative Commons Attribution 4.0 International License, which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if changes were made. The images or other third party material in this article are included in the article\u2019s Creative Commons licence, unless indicated otherwise in a credit line to the material. If material is not included in the article\u2019s Creative Commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this licence, visit http:// creat iveco mmons. org/ licen ses/ by/4. 0/. The Creative Commons Public Domain Dedication waiver (http:// creat iveco mmons. org/ publi cdoma in/ zero/1. 0/) applies to the data made available in this article, unless otherwise stated in a credit line to the data.\nResults We compared the proposed deepGBLUP with the conventional GBLUP and Bayesian methods. Extensive experiments demonstrate that the proposed deepGBLUP yields state\u2011of\u2011the\u2011art performance on Korean native cattle data across diverse traits, marker densities, and training sizes. In addition, they show that the proposed deepGBLUP can outperform the previous methods on simulated data across various heritabilities and quantitative trait loci (QTL) effects.\nConclusions We introduced a novel genomic prediction algorithm, deepGBLUP, which successfully integrates deep learning networks and GBLUP framework. Through comprehensive evaluations on the Korean native cattle data and simulated data, deepGBLUP consistently achieved superior performance across various traits, marker densities, training sizes, heritabilities, and QTL effects. Therefore, deepGBLUP is an efficient method to estimate an accurate genomic value. The source code and manual for deepGBLUP are available at https:// github. com/ gywns 6287/ deepG BLUP.\n*Correspondence: Yeong Jun Koh yjkoh@cnu.ac.kr Seung Hwan Lee slee46@cnu.ac.kr 1 Department of Bio\u2011AI Convergence, Chungnam National University, 305\u2011764 Daejeon, Korea 2 Division of Animal and Dairy Science, Chungnam National University, 305\u2011764 Daejeon, Korea 3 Department of Computer Science and Engineering, Chungnam National University, 305\u2011764 Daejeon, Korea 4 Department of Animal Science, Michigan State University, East Lansing, MI, USA"
+        },
+        {
+            "heading": "Background",
+            "text": "The use of DNA marker information for the prediction of genetic merit in animal and plant breeding and susceptibility to disease in human medicine has become widespread. Genomic prediction has primarily utilized many thousands of DNA markers, most commonly single nucleotide polymorphisms (SNPs), that cover the entire genome to predict the genetic merit and phenotypes of\nindividuals. In humans, genomic prediction has been widely used to predict disease risk and highly polygenic complex human traits [1, 2]. In agriculture, genomic prediction is used to estimate a genomic value (GV), which is then used to make selection decisions in a breeding population.\nGenomic best linear unbiased prediction (GBLUP) is one of the most commonly used statistical models for genomic prediction [3]. It adopts a mixed model approach that uses a genomic relationship matrix (GRM) built from genotypes instead of a traditional pedigreebased relationship matrix. Even though this method showed state-of-the-art performance in many populations, it still has some limitations. First, it approximates a traditional infinitesimal model, which assumes an equal genetic variance for all SNPs. To resolve this limitation, Bayesian models [4, 5] assume that some SNPs have zero effects, whereas others have small to moderate effects. However, these methods require unknown parameters to be calculated by multiple iterations, which is time-consuming. Fragomeni et\u00a0al. [6] and Wang et\u00a0al. [7] derived the optimal weights of SNPs to allow unequal variances for each SNP in the GBLUP equation, but they only brought a negligible improvement in simulation data. Ren et\u00a0al. [8] developed a weighting method to construct a weighted GRM, but it required additional priorities to estimate SNP effects. Furthermore, the conventional GBLUP method only accounts for additive marker effects due to its reliance on a linear model. To interfuse nonlinearity effects into GBLUP, some studies focused on deriving GRM with dominance effects [9, 10] and epistatic interactions [11, 12]. However, the line of research that directly leverages the non-linearity to GV estimation was less studied.\nDeep learning is a good alternative method to solve these problems. Recent advances in deep neural networks have outperformed the state-of-the-art in various fields, such as computer vision, machine translation, autonomous driving, and audio recognition [13\u201317]. In particular, the use of local information has led to these successes. Convolutional neural network (CNN), which is the most common structure for computer vision, constitutes a weights-shared filter operation for the adjacent region of an input image [18]. Recurrent neural network (RNN) has been commonly used in sequence-to-sequence problems, such as speech recognition or natural language processing [14]. It takes information from previous sequence positions to extract information from a current sequence position. These two networks hypothesize that adjacent regions with similar patterns could provide shared features between them. More recently, the transformer [16], an advanced deep learning method,\nhas achieved superior performance in the computer vision [17] and the natural language processing [19]. It also exploits a relative position to extract informative features from input data.\nThe local information can also be exploited in genomic prediction. The general concept of genomic prediction relies on the linkage disequilibrium (LD) between genetic markers and the unknown quantitative trait loci (QTL). With high-density SNP panels, the markers co-segregate with the causal mutations, allowing the effects of causal variants to be indirectly estimated through adjacent markers [5, 20]. Therefore, it is essential to carefully use the information of adjacent markers for accurate genomic prediction. However, previous deep learning networks, such as CNN or RNN, are not suitable to estimate adjacent marker effects, since they assign marker effects based primarily on sequence patterns. In SNP array data, adjacent markers often lose a functional relation (e.g. protein coding) due to varying distances between them. In other words, adjacent SNPs with the same pattern but located in different loci can have different functional effects from each other. Practically, simple fully-connected networks that do not use local information usually perform better than other local-based networks in genomic prediction [21, 22]. In this regard, a new local-based network is needed to capture the effects of adjacent markers considering their distinct loci.\nThere have been many attempts to leverage deep learning networks for genomic prediction. Zingaretti et\u00a0al. [23] explored CNN for genomic prediction of polyploid outcrossing species. Montesinos-L\u00f3pez et\u00a0al. [24] used various deep learning architectures for multi-environment genomic predictions of complex traits in plants. Pook et\u00a0 al. [25] applied locally-connected layers on simulated maize and real Arabidopsis data. However, as these methods cannot achieve a sufficient accuracy even with more complex parameters than conventional methods, they quickly reach the limit to their uses in real-world applications.\nTo this end, we propose a novel algorithm, which is a joint deep learning networks and GBLUP framework (deepGBLUP) for accurate genomic prediction. Given the SNP sequence data, the proposed deepGBLUP first extracts the effects of adjacent markers using a locally connected layer (LCL). Figure\u00a01 compares LCL with the common CNN. LCL works similarly to CNN, except that weights in each filter are unshared. Therefore, distinct weight sets are used for adjacent markers located at different loci. Then, deepGBLUP estimates an initial GV from the effects of adjacent markers through a fully-connected layer. However, this initial GV lacks a concrete genetic relationship, which may\ngenerate un-reliable results as in the previous studies [23\u201325]. The genetic relationship between training and test individuals is crucial for genomic prediction. To address this, we leveraged a well-modified GBLUP framework that can utilize genomic relationships (i.e. GRM) for a GV estimation. The proposed GBLUP framework estimates additive, dominance, and epistatic GV using three types of GRM. The implementation details about the GBLUP framework are available in the Methods section. Then, the proposed deepGBLUP estimates a final GV by summing the initial, additive, dominance, and epistatic GV. We evaluated deepGBLUP using a Korean native cattle dataset that covers diverse marker densities, training sizes, and traits. In addition, we validated its performance on simulated data involving various ranges of heritabilities and QTL effects."
+        },
+        {
+            "heading": "Methods",
+            "text": "Korean native cattle dataset The Korean native cattle population used in this study included 10,000 individuals (animals were born between 2010 and 2017, and samples were collected between 2013 and 2019) with phenotypic measurements for carcass weight (CWT/kg), eye-muscle area (EMA/cm2 ), backfat thickness (BF/mm), and marbling score (MS). CWT was measured by scales on beef production rails in the slaughterhouse. BF, EMA, and MS at the junction between the 12th and 13th ribs were manually measured by human experts after a 24-h chill.\nGenomic DNA of the animals was extracted from longissimus-thoracis muscle samples using a DNeasy Blood and Tissue Kit (Qiagen, Valencia, CA). In total, 10,000 samples were genotyped using the Illumina Bovine SNP50 BeadChip. SNP quality control was performed using the PLINK1.9 software [26] based on the following filtering criteria: SNPs with a minor allele frequency < 0.001, a call rate < 0.1 and those located on the sex chromosomes were removed, i.e. 1853 SNPs, and the post-filter missing rate was 0.6% of the genotypes. These missing SNPs were then imputed with Eagle v2.4 [27]. Finally, 44,314 SNPs were used in the study, which are defined as the 50K set. Furthermore, we selected 10K, 5K, and 1K evenly distributed markers from the 50K set to evaluate deepGBLUP performance across marker densities.\nAll experimental procedures were approved by the National Institute of Animal Science (NIAS) in the Rural Development Administration (RDA) of South Korea, and all samples were taken under public animal health and welfare guidelines."
+        },
+        {
+            "heading": "Simulated dataset",
+            "text": "We used the Qmsim1.10 [28] software to simulate 10,000 individual genotypes. In the simulated data, 49,980 SNPs were uniformly distributed across the 29 chromosomes. According to the Korean breeding program [29], the Korean cattle population has been established, starting with a few outstanding individuals. To imitate the mutations and LD structures of the Korean native cattle, a historical population was simulated with 200 individuals (100 males and 100 females) for 1000 generations and maintaining constant population size by random mating. Then the population size was gradually increased to 10,000 individuals (5000 males and 5000 females) for 20 additional generations (1001th\u20131020th). We used these simulated genotypes as a basis and modeled 21 phenotypes with three heritabilities h2 (0.5, 0.3, and 0.1) and seven QTL effect combinations, including additive (a), dominance (d), epistasis (e), additive + dominance (a+d), additive + epistasis (a + e), dominance + epistasis (d + e), and additive + dominance + epistasis (a + d + e).\nTo model each phenotype, we first drew the polygenic effects of all SNPs from a N (0, 1) distribution. The weighted sum of the SNPs by their polygenic effects was used as an individual\u2019s polygenic effect, where SNPs were coded as 0, 1, and 2 for the reference homozygote, heterozygote, and alternate homozygote genotype, respectively.\nTo simulate QTL effects, we randomly selected 1000 additive, 1000 dominance, and 1000 epistasis QTL from the 49,980 SNP set. It should be noted that each QTL was selected from loci that were free from any other QTL. The additive effects (a) were computed by the weighted sum of 1000 additive QTL by their effects from a N (0, 1) distribution. For the dominance effects (d), we re-coded the genotypes of 1000 dominance QTL to 0, 1, and 1, resulting in an additive and a dominance effect of equal size. As with the additive effects, individual dominance was calculated by the weighted sum of dominance genotypes by their effects drawn from a N (0, 1) distribution. To model the epistatic effects (e), we followed the simulation scheme in [11]. Specifically, one of the nine possible configurations of the 499,500 QTL pairs was randomly chosen to have a N (0, 1) distributed effect. For instance, when the marker pair xc, xl is drawn, only the configuration (xc = 0, xl = 2) has an effect. We calculated the individual epistasis (e) by summing the total epistasis effect of QTL pairs.\nWe standardized the variance of each effect to restrain them into the target heritabilities (0.5, 0.3, and 0.1). Let \u03c3 2p be a phenotype variance, which was set to 100 in this study. We first drew the residuals of the individuals from N (0, \u221a\n(1\u2212 h2)\u03c3 2p ) . Then the variances of the polygenic effects were standardized to 710h\n2\u03c3 2p , while the variances of the additive (a), dominance (d), and epistatic (e) effects were each standardized to 110h\n2\u03c3 2p . Note also that all 21 phenotypes included polygenic effects and residuals with different heritabilities and different combinations of a, d, and e.\nJoint deep learning networks and\u00a0GBLUP framework (deepGBLUP) In this study, we propose a novel genomic prediction method, which integrates deep learning networks and a GBLUP framework (deepGBLUP). The deep learning networks extract the effects of adjacent markers using locally-connected layers and subsequently use them to estimate an initial GV through fully-connected layers. The GBLUP framework estimates three types of GV (additive, dominance, and epistasis) by leveraging the respective genomic relationship matrices. We addressed individuals with known and unknown phenotypes as\ntraining and test individuals, respectively. Then the goal of deepGBLUP is to predict phenotypes of the test individuals from an input SNP sequence and known phenotypes of training individuals. Figure\u00a0 2 illustrates an overview of the proposed deepGBLUP.\nAs in Fig.\u00a0 2, we decomposed n individuals\u2019 phenotype y \u2208 Rn into five components: mean term \u00b5 , initial GV bdeep \u2208 Rn , additive GV ba \u2208 Rn , dominance GV bd \u2208 R\nn , epistatic GV be \u2208 Rn , and a residual vector r \u2208 Rn:\nAs the mean term \u00b5 can be calculated from the training individuals\u2019 known phenotypes, the genomic prediction of deepGBLUP can be summarized to estimate the four different GV, bdeep , ba , bd , and be . Specifically, the proposed deepGBLUP estimates b\u0302a , b\u0302d and b\u0302e using the GBLUP framework, while b\u0302deep is estimated using the deep learning networks as shown in Fig.\u00a02.\n(1)y = \u00b5+ bdeep + ba + bd + be + r."
+        },
+        {
+            "heading": "GBLUP framework",
+            "text": "The commonly used GBLUP equation [3] to predict a genomic value b\u0302 is defined as:\nwhere G \u2208 Rn\u00d7n is a genomic relationship matrix between all n individuals, ytrain \u2208 Rntrain is a known phenotype vector of the ntrain train individuals, and y\u0304 is a mean of ytrain . Z \u2208 {0, 1}ntrain\u00d7n is an incidence matrix for which the diagonals are set to 1 for the training individual columns and the others are 0. is a normalizing scalar, which is commonly set to (1\u2212 h2)/h2 in the regular GBLUP. Note that the regular GBLUP can be classified into additive [3], dominance [9], and epistasis [30]-GBLUP depending on which matrix is used to replace G.\nThe proposed deepGBLUP estimates additive GV b\u0302a , dominance GV b\u0302d , and epistatic GV b\u0302e , using Eq.\u00a0(2) with an additive relationship matrix Ga \u2208 Rn\u00d7n , a dominance\n(2) GBLUP(G, ytrain) = b\u0302\nT = [ZTZ+ G\u22121]\u22121ZT (ytrain \u2212 y\u0304train) T ,\nrelationship matrix Gd \u2208 Rn\u00d7n , and an epistasis relationship matrix Ge \u2208 Rn\u00d7n , respectively. The genotype data of all n individuals can be written as a matrix X \u2208 {0, 1, 2}n\u00d7p , for which the column dimension p is the number of SNPs. Each element 0, 1, and 2 in X refers to the reference homozygote, heterozygote, and alternate homozygote genotype, respectively. We calculated the additive relationship matrix Ga following [3]:\nwhere pi is the allele frequency of the ith marker and P \u2208 Rn\u00d7p is an extended matrix, in which the rows are an allele frequency vector p \u2208 Rp.\nWe constructed the dominance relationship matrix Gd by [9]. Under the assumption of Hardy-Weinberg equilibrium, a dominance value of the ith marker can be expressed as \u22122p2i , 2pi(1\u2212 pi) , and \u22122(1\u2212 pi)\n2 for the reference homozygote, heterozygote, and alternate homozygote, respectively. Then the dominance values of all individuals can be written as a matrix D \u2208 Rn\u00d7p . We computed the dominance relationship matrix Gd by:\n(3)X\u0303 = X \u2212 2P,\n(4)Ga = X\u0303X\u0303T\n2 \u2211 pi(1\u2212 pi) ,\n(5)Gd = DDT\n4 \u2211 p2i (1\u2212 pi) 2 .\nWith a definition of the multivariate Gaussian distribution, the epistasis relationship matrix Ge can be derived by [30]:\nwhere M \u2208 {\u22121, 0, 1}n\u00d7p is a centered genotype X \u2212 1 , \u25e6 is the Hadamard product, and Tr(\u00b7) is the trace operation that is a sum of matrix diagonals. For the detailed derivation of this equation, please see [30]."
+        },
+        {
+            "heading": "Deep learning networks",
+            "text": "Figure\u00a03 illustrates the proposed locally connected layer (LCL). It recursively aggregates k adjacent SNPs across the whole sequence with one stride. Let t \u2208 Rp and o \u2208 Rp be the input and output sequence of LCL. The proposed LCL calculates the mth value om of the output sequence o as follow:\nwhere k is the kernel size and wm,j is the jth kernel weight for the mth output in trainable weight matrix W \u2208 Rp\u00d7k . Then, the LCL operation with the kernel size k can be written as:\n(6) G\u0303e = 0.5(MM\nT \u25e6MMT )\u2212 0.5(M \u25e6M)(M \u25e6M)T ,\n(7)Ge = G\u0303e\nTr(G\u0303e)/n ,\n(8)om = k\u22121 \u2211\nj=0\nwm,(j+1)t(m\u2212j),\n(9)\nLCLk(t,W) = o\n=\n\n\nk\u22121 \ufffd\nj=0\nw1(j+1)t(1\u2212j), \u00b7 \u00b7 \u00b7 ,\nk\u22121 \ufffd\nj=0\nwm(j+1)t(m\u2212j), \u00b7 \u00b7 \u00b7 ,\nk\u22121 \ufffd\nj=0\nwp(j+1)i(p\u2212j)\n\n.\nNote that LCL cannot be performed when m \u2264 j , since there must be no value t(m\u2212j) at a negative position. Thus, LCL replaces t(m\u2212j) as zero value when m \u2264 j . To extract high-level features of input SNPs, deepGBLUP adopts sequential LCL as shown in Fig.\u00a02. Let xi be the ith individual\u2019s SNP sequence. The proposed deepGBLUP first extracts the temporal marker effects of the ith individual e\u0303i \u2208 R p through LCL5(\u00b7):\nwhere LN(\u00b7 ) is a layer normalization [31], GeLU(\u00b7 ) is a GELU non-linearity [32], and We\u0303 \u2208 Rp\u00d7k is a trainable weight of LCL5 . Then, the final marker effects ei \u2208 Rp are calculated by:\nwhere We \u2208 Rp\u00d7k is a trainable weight of LCL3 . To ensure the reusability of input sequences, deepGBLUP adds marker effects ei to input SNPs x\u0303i = xi + ei . Then, the effect-interfused SNPs of all n individuals can be presented by a matrix X\u0303 \u2208 Rn\u00d7p . Finally, deepGBLUP estimates an initial GV b\u0302deep from X\u0303 through a fully-connected layer (FCL):\nwhere Wb \u2208 Rp\u00d71 is a trainable weight of FCL. Then, it computes the predicted phenotype y\u0302 \u2208 Rn of all n individuals by y\u0302 = y\u0304train + b\u0302deep + b\u0302a + b\u0302d + b\u0302e."
+        },
+        {
+            "heading": "Loss function and\u00a0implementation details",
+            "text": "For training deepGBLUP, we employed L1-loss between observed and predicted phenotypes of training individuals:\n(10)e\u0303i = GeLU(LN(LCL5(xi,We\u0303))),\n(11)ei = LCL3(e\u0303i,We),\n(12)b\u0302Tdeep = FCL(X\u0303,Wb) = X\u0303Wb,\n(13)L = 1\nntrain\nntrain \u2211\ni=1\n|y (i) train \u2212 y\u0302 (i) train|,\nwhere y(i)train and y\u0302 (i) train are the ith value of ytrain and y\u0302train , respectively. Thus, the proposed deepGBLUP iteratively optimized the trainable weights set W = {We\u0303,We,Wb} to minimize L during the training process. We used AdamW [33] for the parameter optimization.\nTo evaluate deepGBLUP performance, we measured the Pearson correlation coefficient between y\u0302test and ytest , divided by the square root of heritability, i.e. cor(y\u0302test, ytest)/h . We defined this as predictive ability in this study. We estimated the heritability using an average information-restricted maximum likelihood [34] in the AIREMLF90 software [35]. By this method, the heritabilities of each trait were estimated to 0.392, 0.378, 0.366, and 0.479 for CWT, BF, EMA, and MS, respectively.\nWe conducted comparative analyses for the proposed deepGBLUP with state-of-the-art genomic prediction algorithms, including GBLUP [3], dominance GBLUP (DGBLUP [9]) and epistasis GBLUP (EGBLUP [30]), BayesA [4], BayesB [4], and BayesC [4]. GBLUP yields an additive GV as an output, while DGBLUP and EGBLUP incorporate dominance+additive GV and epistatic+additive GV, respectively. We implemented all Bayesian models using the BGLR [36] package in R program language. We also used a 10-fold cross-validation scheme to evaluate model performance. All individuals were divided into 10 groups of equal size. Nine of these groups were used as the training individuals and the other group was used as the test individuals in each cross-validation. The means and standard errors of predictive abilities, aggregated over the 10-fold tests, are reported in this study as performance metrics."
+        },
+        {
+            "heading": "Results",
+            "text": "Model performance on\u00a0the\u00a0Korean native cattle data We determined a learning rate and an epoch using a validation stage. Specifically, we selected 10% of the training individuals as validation individuals. Then, we trained deepGBLUP using the other 90% of the training"
+        },
+        {
+            "heading": "50K 2500 0.001 10 0.0001 9 0.001 5 0.0001 10",
+            "text": ""
+        },
+        {
+            "heading": "50K 5000 0.001 8 0.0001 15 0.001 4 0.0001 10",
+            "text": ""
+        },
+        {
+            "heading": "1K 9000 0.001 23 0.0001 30 0.001 10 0.001 11",
+            "text": ""
+        },
+        {
+            "heading": "5K 9000 0.001 9 0.0001 13 0.001 5 0.001 2",
+            "text": ""
+        },
+        {
+            "heading": "10K 9000 0.001 9 0.0001 12 0.001 4 0.0001 12",
+            "text": ""
+        },
+        {
+            "heading": "50K 9000 0.001 7 0.0001 9 0.001 3 0.0001 8",
+            "text": ""
+        },
+        {
+            "heading": "Density Train size CWT BF EMA MS",
+            "text": "individuals and evaluated its performance using the validation individuals. Finally, we selected a learning rate and an epoch, which achieved the best performance on the validation individuals. The determined learning rates and\nepochs for each trait across marker densities and training sizes are in Table\u00a01. The training and test of deepGBLUP were conducted on an RTX A6000 GPU. With an efficient GPU device, deepGBLUP is able to predict the phenotypes of the individuals with a reasonable computing time as shown in Table\u00a02."
+        },
+        {
+            "heading": "Across marker density",
+            "text": "Table\u00a0 3 compares the proposed deepGBLUP with the other genomic prediction methods on the Korean native cattle dataset across various traits and marker densities. Notably, deepGBLUP demonstrates superior performance in all settings without exception. Even though Bayesian methods outperform the GBLUP methods, deepGBLUP exhibits a higher accuracy than Bayesian methods in all scenarios. These findings suggest that the deep learning networks can effectively complement the estimation results of the GBLUP methods."
+        },
+        {
+            "heading": "1K GBLUP 0.535 \u00b1 0.017 0.429 \u00b1 0.014 0.537 \u00b1 0.021 0.424 \u00b1 0.013",
+            "text": ""
+        },
+        {
+            "heading": "5K GBLUP 0.638 \u00b1 0.015 0.543 \u00b1 0.01 0.631 \u00b1 0.019 0.548 \u00b1 0.011",
+            "text": ""
+        },
+        {
+            "heading": "10K GBLUP 0.676 \u00b1 0.015 0.577 \u00b1 0.008 0.678 \u00b1 0.018 0.613 \u00b1 0.011",
+            "text": ""
+        },
+        {
+            "heading": "50K GBLUP 0.729 \u00b1 0.015 0.647 \u00b1 0.009 0.726 \u00b1 0.017 0.670 \u00b1 0.014",
+            "text": ""
+        },
+        {
+            "heading": "Density Method CWT BF EMA MS",
+            "text": ""
+        },
+        {
+            "heading": "50K 1000 0.36 0.17",
+            "text": ""
+        },
+        {
+            "heading": "50K 2500 0.9 0.24",
+            "text": ""
+        },
+        {
+            "heading": "50K 5000 1.81 0.53",
+            "text": ""
+        },
+        {
+            "heading": "1K 9000 0.85 1.12",
+            "text": ""
+        },
+        {
+            "heading": "5K 9000 0.94 1.13",
+            "text": ""
+        },
+        {
+            "heading": "10K 9000 1.07 1.14",
+            "text": ""
+        },
+        {
+            "heading": "50K 9000 3.24 1.36",
+            "text": ""
+        },
+        {
+            "heading": "Across training size",
+            "text": "Deep learning methods typically require a large amount of data to operate effectively [15, 17, 19]. To identify the amount of data necessary for deepGBLUP, we evaluated its performances with varying training sizes of 5000, 2500, and 1000. The training individuals were randomly sampled in each 10-fold to obtain the corresponding training size. Table\u00a04 presents a comparison of the proposed deepGBLUP with the other genomic prediction methods on the Korean native cattle dataset across various traits and training sizes. Our findings indicate that GBLUP-based methods outperform Bayesian methods for smaller training sizes (2500 and 1000). On the other hand, the proposed deepGBLUP consistently achieves the best predictive ability across all training sizes. These results demonstrate that deepGLBUP can yield stable performance even with less training data."
+        },
+        {
+            "heading": "Impact of\u00a0each component",
+            "text": "We studied the contribution of four components: (1) deep learning networks b\u0302deep , (2) additive GBLUP b\u0302a , (3) dominance GBLUP b\u0302d , (4) epistasis GBLUP b\u0302e , by designing various models with different combinations of these components. Table\u00a05 reports the results on the Korean native cattle with 50K and a 9000 training size. The absence of a checkmark indicates that the corresponding component was excluded from the phenotype prediction. In Table\u00a05, the best result for each trait consistently contains the b\u0302deep component. However, exclusion of b\u0302deep led to the worst result with only one exception. These results validate that the deep learning networks based on LCL can estimate more accurate marker effects and increase model performance compared to the regular GBLUP."
+        },
+        {
+            "heading": "1000 GBLUP 0.532 \u00b1 0.017 0.384 \u00b1 0.02 0.528 \u00b1 0.018 0.424 \u00b1 0.014",
+            "text": ""
+        },
+        {
+            "heading": "2500 GBLUP 0.631 \u00b1 0.016 0.515 \u00b1 0.011 0.627 \u00b1 0.025 0.539 \u00b1 0.01",
+            "text": ""
+        },
+        {
+            "heading": "5000 GBLUP 0.682 \u00b1 0.018 0.581 \u00b1 0.009 0.679 \u00b1 0.018 0.609 \u00b1 0.012",
+            "text": ""
+        },
+        {
+            "heading": "9000 GBLUP 0.729 \u00b1 0.015 0.647 \u00b1 0.009 0.726 \u00b1 0.017 0.670 \u00b1 0.014",
+            "text": ""
+        },
+        {
+            "heading": "Train size Method CWT BF EMA MS",
+            "text": "Furthermore, excluding the GBLUP framework from deepGBLUP results in substantial decreases in predictive abilities (Table\u00a0 5). Even though the deep learning networks improve the performance of deepGBLUP, the integration of the GBLUP method is still critical to the overall model performance."
+        },
+        {
+            "heading": "Model performance on\u00a0the\u00a0simulated data",
+            "text": "The simulated dataset was used to evaluate the performance of deepGBLUP across various heritabilities and QTL effects. As in the Korean native cattle data, we also used the validation stage for model training and the predictive ability for performance measurement. Tables\u00a0 6 and 7 compare deepGBLUP with the other methods for single and multiple QTL effects. We observed that the proposed deepGBLUP achieves superior performance compared to both GBLUP and Bayesian methods for all heritabilities and QTL effects. In particular, deepGBLUP markedly outperforms the other methods in lower heritability scenarios. These results demonstrate that deepGBLUP can implement accurate genomic predictions even when the genetic variance is relatively small compared to the phenotypic variance."
+        },
+        {
+            "heading": "Discussion",
+            "text": ""
+        },
+        {
+            "heading": "Deep learning for\u00a0genomic prediction",
+            "text": "Many existing studies, which use deep learning networks for genomic prediction, have relied on previous local based architectures, such as CNN or RNN [22, 23, 37]. These methods assign variant effects based on the patterns of adjacent markers. Although adjacent markers can be useful information in whole genome sequence data, they often lack inherent functional context (e.g. protein coding) in SNP array data. In other words, the adjacent SNPs with the same sequence but located in different loci should have different functional effects from each other. Therefore, these approaches are not appropriate from a genetics perspective and have shown lower prediction accuracy than the other state-of-the-art methods such as"
+        },
+        {
+            "heading": "Component CWT BF EMA MS",
+            "text": "GBLUP and Bayesian methods [22, 23, 37]. In contrast, we used a locally-connected layer that can estimate distinct weight sets for adjacent SNPs located in different loci. Our results show that the LCL-based deep learning networks improved model performance from the previous methods.\nIn [25], Pook et\u00a0al. also used an LCL-based model for genomic prediction, but their approach predicts GV directly through a sequential deep learning network, and this simplistic structure did not achieve higher performance compared to the other prediction methods. As in Tables\u00a0 3 and 5, the proposed deepGBLUP also underperformed compared to the other methods, if the GBLUP framework was excluded. These results suggest that the combined use of both GBLUP and deep learning networks is crucial for improving prediction accuracy. Furthermore, Pook et\u00a0al. required large-scale datasets in order to achieve comparable performance to the other methods [25]. On the contrary, the proposed deepGBLUP yielded stable performance with relatively few training data (1K).\nTransformer [16] is another alternative to estimate marker effects from SNP data. It can effectively assign the effects of adjacent markers by considering their loci\nand patterns. However, this method demands a larger training dataset compared to the other deep learning architectures in order to achieve similar performance. For instance, in the computer vision task [17], the transformer required more than 300\u00a0 M training images to outperform previous methods. This is not practical for genomic prediction due to the high cost and time consumption for animal genotyping."
+        },
+        {
+            "heading": "Limitations",
+            "text": "Even though deepGBLUP has demonstrated reliable GV predictions for the Korean native cattle, there are still limitations in its flexibility for its use across various populations. In this study, we evaluated the performance of deepGBLUP using the test individuals that were in the same generation as the training individuals. Since the Korean native cattle is a relatively long-established breed, individuals in the same generation share similar genetic patterns. In other words, the training population in this study may include primitive features of the test population. To validate deepGBLUP more precisely, it needs to be evaluated by an across-breed or multi-generation test. Specifically, the performance of deepGBLUP should be"
+        },
+        {
+            "heading": "Heritability Method QTL effect",
+            "text": "measured using test individuals that belong to different breeds or generations with the training individuals.\nTo challenge these experimental limitations, we implemented a forward-in-time evaluation on the Korean native cattle dataset. Specifically, we constructed a validation population with 1154 individuals born in 2017, and a training population of 8846 individuals born between 2010 \u223c 2016 . Table\u00a08 shows that the proposed deepGBLUP consistently outperformed the other methods for all traits, as demonstrated by the cross-validation approach.\nIn addition, deepGBLUP needs the genotypes of all the animals to estimate their GV. However, the common practice in animal breeding is to perform a joint GV estimation for both genotyped and non-genotyped animals. To enable more extensive applications, deepGBLUP needs to be further developed to estimate GV simultaneously for genotyped and non-genotyped animals. As a potential solution, deepGBLUP will provide an option to use a pedigree module, which approximates GV from pedigree information for non-genotyped animals.\nIn this study, we integrated deep learning networks with GBLUP methods and markedly increased predictive abilities from the regular GBLUP. However, deepGBLUP can also replace the GBLUP framework with other prior methods to estimate auxiliary GV as illustrated in Fig.\u00a02. Therefore, possible future developments include integrating deepGBLUP with other existing models, such as Bayesian methods, for more accurate genomic prediction."
+        },
+        {
+            "heading": "Conclusions",
+            "text": "In this paper, we introduce deepGBLUP, a novel genomic prediction algorithm for complex traits in the Korean native cattle. The main contribution of deepGBLUP is the combination of deep learning networks and a GBLUP framework in a single model. Given an input SNP data, the deep learning networks extract the effects of adjacent SNPs using locally-connected layers and subsequently\nuse them to estimate an initial GV through fully-connected layers. The GBLUP framework estimates three types of GV (additive, dominance, and epistasis) by leveraging respective genetic relationship matrices. The proposed deepGBLUP calculates a final GV by summing all the estimated genomic values. The experimental results on the Korean native cattle data and simulated data demonstrate that the proposed deepGBLUP outperforms the previous methods, providing a reliable prediction for various traits, marker densities, training sizes, heritabilities, and QTL effects.\nSupplementary Information The online version contains supplementary material available at https:// doi. org/ 10. 1186/ s12711\u2011 023\u2011 00825\u2011y.\nAdditional file\u00a01: Figure S1. QTL mapping with deepGBLUP for a single QTL effect. We simulated heritability 0.5 across QTL effects including addi\u2011 tive, dominance, and epistasis. (a) for additive QTL, (b) for dominance QTL, and (c) for epistasis QTL. Figure S2. QTL mapping with deepGBLUP for two QTL effects. We simulated heritability 0.5 across QTL effects including additive, dominance, and epistasis. (a) for additive+dominance QTL, (b) for additive+epistasis QTL, and (c) for dominance+epistasis QTL. Figure S3. QTL mapping with deepGBLUP for three QTL effects. We simulated herit\u2011 ability 0.5 across QTL effects including additive, dominance, and epistasis. (a) for additive+dominance+epistasis QTL.\nAcknowledgements This work was supported by the Institute of Information & communications Technology Planning & Evaluation (IITP) Grant funded by the Korea govern\u2011 ment (MSIT) (No.RS\u20112022\u201100155857, Artificial Intelligence Convergence Inno\u2011 vation Human Resources Development (Chungnam National University)).\nAuthor contributions H\u2011JL performed all the analyses and wrote the original draft of the manuscript. CG and SHL supervised the experimental scheme and wrote the final version of the manuscript. JHL performed the data collection. YJK designed the deep learning model. All authors read and approved the final manuscript.\nFunding This research was funded by the Ministry of Education of the Republic of Korea and the National Research Foundation of Korea, (No. NRF\u20112019R1F1A1057605) and (No. NRF\u20112022K1A3A1A31093393).\nAvailibility of data materials All source code and sample data in this study are freely available at https:// github.com/gywns6287/deepGBLUP. Request for Genotype data can be made to Korea National Institute of Animal Science, Animal Genome & Bioinformat\u2011 ics Division (http:// www. nias. go. kr/ engli sh/ sub/ board Html. do? board Id= depin tro)."
+        },
+        {
+            "heading": "Declarations",
+            "text": "Ethics approval and consent to participate National Institute of Animal Science (NIAS) in Rural Development Administra\u2011 tion (RDA) of South Korea approved the experimental procedures, and all samples were taken under public animal health and welfare guidelines.\nConsent for publication Not applicable.\nCompeting interests The authors declare that they have no competing interests."
+        },
+        {
+            "heading": "Method CWT BF EMA MS",
+            "text": "Received: 30 December 2022 Accepted: 7 July 2023\nReferences 1. Abraham G, Inouye M. Genomic risk prediction of complex human\ndisease and its clinical application. Curr Opin Genet Dev. 2015;33:10\u20136. 2. de Los CG, Vazquez AI, Fernando R, Klimentidis YC, Sorensen D. Prediction\nof complex human traits using the genomic best linear unbiased predic\u2011 tor. PLoS Genet. 2013;9: e1003608.\n3. Hayes BJ, Visscher PM, Goddard ME. Increased accuracy of artificial selection by using the realized relationship matrix. Genet Res (Camb). 2009;91:47\u201360. 4. Meuwissen TH, Hayes BJ, Goddard ME. Prediction of total genetic value using genome\u2011wide dense marker maps. Genetics. 2001;157:1819\u201329. 5. Erbe M, Hayes B, Matukumalli L, Goswami S, Bowman P, Reich C, et al. Improving accuracy of genomic predictions within and between dairy cattle breeds with imputed high\u2011density single nucleotide polymor\u2011 phism panels. J Dairy Sci. 2012;95:4114\u201329. 6. Fragomeni BO, Lourenco DA, Masuda Y, Legarra A, Misztal I. Incorporation of causative quantitative trait nucleotides in single\u2011step GBLUP. Genet Sel Evol. 2017;49:59. 7. Wang H, Misztal I, Aguilar I, Legarra A, Muir W. Genome\u2011wide association mapping including phenotypes from relatives without genotypes. Genet Res (Camb). 2012;94:73\u201383. 8. Ren D, An L, Li B, Qiao L, Liu W. Efficient weighting methods for genomic best linear\u2011unbiased prediction (BLUP) adapted to the genetic architec\u2011 tures of quantitative traits. Heredity (Edinb). 2021;126:320\u201334. 9. Da Y, Wang C, Wang S, Hu G. Mixed model methods for genomic predic\u2011 tion and variance component estimation of additive and dominance effects using SNP markers. PLoS One. 2014;9: e87666. 10. Vitezica ZG, Varona L, Legarra A. On the additive and dominant variance and covariance of individuals within the genomic selection scope. Genet\u2011 ics. 2013;195:1223\u201330. 11. Martini JW, Gao N, Cardoso DF, Wimmer V, Erbe M, Cantet RJ, et al. Genomic prediction with epistasis models: on the marker\u2011coding\u2011 dependent performance of the extended GBLUP and properties of the categorical epistasis model (CE). BMC Bioinformatics. 2017;18:3. 12. Vitezica ZG, Legarra A, Toro MA, Varona L. Orthogonal estimates of variances for additive, dominance, and epistatic effects in populations. Genetics. 2017;206:1297\u2013307. 13. Tan M, Le Q. Efficientnet: Rethinking model scaling for convolutional neural networks. In Proceedings of the 36th International Conference on Machine Learning: 10\u201115 June 2019; Long Beach. 2019. 14. Cho K, Van Merri\u00ebnboer B, Gulcehre C, Bahdanau D, Bougares F, Schwenk H, et al. Learning phrase representations using RNN encoder\u2011decoder for statistical machine translation. In Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing: 25\u201129 October 2014; Doha. 2014. 15. He K, Zhang X, Ren S, Sun J. Deep residual learning for image recognition. In Proceedings of the 2016 IEEE Conference on Computer Vision and Pat\u2011 tern Recognition: 27\u201130 June 2016; Las Vegas. 2016. 16. Vaswani A, Shazeer N, Parmar N, Uszkoreit J, Jones L, Gomez AN, et al. Attention is all you need. In Proceedings of the 31st International Confer\u2011 ence on Neural Information Processing Systems: 4\u20119 December 2017; Long Beach. 2017. 17. Dosovitskiy A, Beyer L, Kolesnikov A, Weissenborn D, Zhai X, Unterthiner T, et al. An image is worth 16x16 words: Transformers for image recognition at scale. In Proceedings of the 9th International Conference on Learning Representations: 3\u20117 May 2021; Virtual Only. 2021. 18. Krizhevsky A, Sutskever I, Hinton GE. Imagenet classification with deep convolutional neural networks. Commun ACM. 2017;60:84\u201390. 19. Devlin J, Chang MW, Lee K, Toutanova K. Bert: Pre\u2011training of deep bidirectional transformers for language understanding. In Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies: 2\u20117 June 2019; Minneapolis. 2019. 20. Kizilkaya K, Fernando R, Garrick D. Genomic prediction of simulated multi\u2011 breed and purebred performance using observed fifty thousand single nucleotide polymorphism genotypes. J Anim Sci. 2010;88:544\u201351.\n21. Bellot P, de Los CG, P\u00e9rez\u2011Enciso M. Can deep learning improve genomic prediction of complex human traits? Genetics. 2018;210:809\u201319. 22. P\u00e9rez\u2011Enciso M, Zingaretti LM. A guide on deep learning for complex trait genomic prediction. Genes (Basel). 2019;10:553. 23. Zingaretti LM, Gezan SA, Ferr\u00e3o LFV, Osorio LF, Monfort A, Mu\u00f1oz PR, et al. Exploring deep learning for complex trait genomic prediction in polyploid outcrossing species. Front Plant Sci. 2020;11:25. 24. Montesinos\u2011L\u00f3pez A, Montesinos\u2011L\u00f3pez OA, Gianola D, Crossa J, Hern\u00e1ndez\u2011Su\u00e1rez CM. Multi\u2011environment genomic prediction of plant traits using deep learners with dense architecture. G3 (Bethesda). 2018;8:3813\u201328. 25. Pook T, Freudenthal J, Korte A, Simianer H. Using local convolutional neural networks for genomic prediction. Front Genet. 2020;11: 561497. 26. Purcell S, Neale B, Todd\u2011Brown K, Thomas L, Ferreira MA, Bender D, et al. PLINK: a tool set for whole\u2011genome association and population\u2011based linkage analyses. Am J Hum Genet. 2007;81:559\u201375. 27. Loh PR, Danecek P, Palamara PF, Fuchsberger C, Reshef YA, Finucane HK, et al. Reference\u2011based phasing using the Haplotype Reference Consor\u2011 tium panel. Nat Genet. 2016;48:1443\u20138. 28. Sargolzaei M, Schenkel FS. QMSim: a large\u2011scale genome simulator for livestock. Bioinformatics. 2009;25:680\u20131. 29. Lee SH, Park BH, Sharma A, Dang CG, Lee SS, Choi TJ, et al. Hanwoo cattle: origin, domestication, breeding strategies and genomic selection. J Anim Sci Technol. 2014;56:2. 30. Martini JW, Wimmer V, Erbe M, Simianer H. Epistasis and covariance: how gene interaction translates into genomic relationship. Theor Appl Genet. 2016;129:963\u201376. 31. Ba JL, Kiros JR, Hinton GE. Layer normalization. arXiv preprint arXiv: 1607. 06450. 2016. 32. Hendrycks D, Gimpel K. Gaussian error linear units (gelus). arXiv preprint arXiv: 1606. 08415. 2016. 33. Loshchilov I, Hutter F. Decoupled Weight Decay Regularization. In Pro\u2011 ceedings of the International Conference on Learning Representations: 6\u20119 May 2019; New Orleans. 2019. 34. Meyer K. An \u201caverage information\u201d restricted maximum likelihood algo\u2011 rithm for estimating reduced rank genetic covariance matrices or covari\u2011 ance functions for animal models with equal design matrices. Genet Sel Evol. 1997;29:97. 35. Misztal I, Tsuruta S, Strabel T, Auvray B, Druet T, Lee D, et al. BLUPF90 and related programs (BGF90). In Proceedings of the 7th world congress on genetics applied to livestock production: 19\u201123 August 2002; Montpellier. 2002. 36. de los Campos G, P\u00e9rez\u2011Rodr\u00edguez P. Bayesian generalized linear regres\u2011 sion. R package version. 2014. 37. Han J, Gondro C, Reid K, Steibel JP. Heuristic hyperparameter optimization of deep learning models for genomic prediction. G3 (Bethesda). 2021;11: jkab032."
+        },
+        {
+            "heading": "Publisher\u2019s Note",
+            "text": "Springer Nature remains neutral with regard to jurisdictional claims in pub\u2011 lished maps and institutional affiliations."
+        }
+    ],
+    "title": "deepGBLUP: joint deep learning networks and GBLUP framework for accurate genomic prediction of complex traits in Korean native cattle",
+    "year": 2023
+}

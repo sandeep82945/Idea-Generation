@@ -1,0 +1,889 @@
+{
+    "abstractText": "Since distribution shifts are likely to occur during testtime and can drastically decrease the model\u2019s performance, online test-time adaptation (TTA) continues to update the model after deployment, leveraging the current test data. Clearly, a method proposed for online TTA has to perform well for all kinds of environmental conditions. By introducing the variable factors domain non-stationarity and temporal correlation, we first unfold all practically relevant settings and define the entity as universal TTA. We want to highlight that this is the first work that covers such a broad spectrum, which is indispensable for the use in practice. To tackle the problem of universal TTA, we identify and highlight several challenges a self-training based method has to deal with: 1) model bias and the occurrence of trivial solutions when performing entropy minimization on varying sequence lengths with and without multiple domain shifts, 2) loss of generalization which exacerbates the adaptation to multiple domain shifts and the occurrence of catastrophic forgetting, and 3) performance degradation due to shifts in class prior. To prevent the model from becoming biased, we leverage a dataset and model-agnostic certainty and diversity weighting. In order to maintain generalization and prevent catastrophic forgetting, we propose to continually weightaverage the source and adapted model. To compensate for disparities in the class prior during test-time, we propose an adaptive prior correction scheme that reweights the model\u2019s predictions. We evaluate our approach, named ROID, on a wide range of settings, datasets, and models, setting new standards in the field of universal TTA. Code is available at: https://github.com/mariodoebler/testtime-adaptation.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Robert A. Marsden"
+        },
+        {
+            "affiliations": [],
+            "name": "Mario D\u00f6bler"
+        },
+        {
+            "affiliations": [],
+            "name": "Bin Yang"
+        }
+    ],
+    "id": "SP:9cc27eac1c4b91682da7fc307b153b8f256d3e19",
+    "references": [
+        {
+            "authors": [
+                "Alexander Bartler",
+                "Andre B\u00fchler",
+                "Felix Wiewel",
+                "Mario D\u00f6bler",
+                "Bin Yang"
+            ],
+            "title": "Mt3: Meta test-time training for selfsupervised test-time adaption",
+            "venue": "In International Conference on Artificial Intelligence and Statistics,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Malik Boudiaf",
+                "Romain Mueller",
+                "Ismail Ben Ayed",
+                "Luca Bertinetto"
+            ],
+            "title": "Parameter-free online test-time adaptation",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Chao Chen",
+                "Zhihang Fu",
+                "Zhihong Chen",
+                "Sheng Jin",
+                "Zhaowei Cheng",
+                "Xinyu Jin",
+                "Xian-Sheng Hua"
+            ],
+            "title": "Homm: Higherorder moment matching for unsupervised domain adaptation",
+            "venue": "In Proceedings of the AAAI conference on artificial intelligence,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Dian Chen",
+                "Dequan Wang",
+                "Trevor Darrell",
+                "Sayna Ebrahimi"
+            ],
+            "title": "Contrastive test-time adaptation",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Mario D\u00f6bler",
+                "Robert A Marsden",
+                "Bin Yang"
+            ],
+            "title": "Robust mean teacher for continual and gradual test-time adaptation",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Alexey Dosovitskiy",
+                "Lucas Beyer",
+                "Alexander Kolesnikov",
+                "Dirk Weissenborn",
+                "Xiaohua Zhai",
+                "Thomas Unterthiner",
+                "Mostafa Dehghani",
+                "Matthias Minderer",
+                "Georg Heigold",
+                "Sylvain Gelly"
+            ],
+            "title": "An image is worth 16x16 words: Transformers for image recognition at scale",
+            "venue": "arXiv preprint arXiv:2010.11929,",
+            "year": 1929
+        },
+        {
+            "authors": [
+                "Jonathan Frankle",
+                "Gintare Karolina Dziugaite",
+                "Daniel Roy",
+                "Michael Carbin"
+            ],
+            "title": "Linear mode connectivity and the lottery ticket hypothesis",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Geoff French",
+                "Michal Mackiewicz",
+                "Mark Fisher"
+            ],
+            "title": "Selfensembling for visual domain adaptation",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Yaroslav Ganin",
+                "Evgeniya Ustinova",
+                "Hana Ajakan",
+                "Pascal Germain",
+                "Hugo Larochelle",
+                "Fran\u00e7ois Laviolette",
+                "Mario Marchand",
+                "Victor Lempitsky"
+            ],
+            "title": "Domain-adversarial training of neural networks. The journal of machine learning",
+            "year": 2030
+        },
+        {
+            "authors": [
+                "Jin Gao",
+                "Jialing Zhang",
+                "Xihui Liu",
+                "Trevor Darrell",
+                "Evan Shelhamer",
+                "Dequan Wang"
+            ],
+            "title": "Back to the source: Diffusiondriven test-time adaptation",
+            "venue": "arXiv preprint arXiv:2207.03442,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Taesik Gong",
+                "Jongheon Jeong",
+                "Taewon Kim",
+                "Yewon Kim",
+                "Jinwoo Shin",
+                "Sung-Ju Lee"
+            ],
+            "title": "Note: Robust continual testtime adaptation against temporal correlation",
+            "venue": "In Advances in Neural Information Processing Systems (NeurIPS),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Dan Hendrycks",
+                "Steven Basart",
+                "Norman Mu",
+                "Saurav Kadavath",
+                "Frank Wang",
+                "Evan Dorundo",
+                "Rahul Desai",
+                "Tyler Zhu",
+                "Samyak Parajuli",
+                "Mike Guo"
+            ],
+            "title": "The many faces of robustness: A critical analysis of out-of-distribution generalization",
+            "venue": "In Proceedings of the IEEE/CVF International Conference on Computer Vision,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Dan Hendrycks",
+                "Thomas Dietterich"
+            ],
+            "title": "Benchmarking neural network robustness to common corruptions and perturbations",
+            "venue": "arXiv preprint arXiv:1903.12261,",
+            "year": 1903
+        },
+        {
+            "authors": [
+                "Dan Hendrycks",
+                "Norman Mu",
+                "Ekin D Cubuk",
+                "Barret Zoph",
+                "Justin Gilmer",
+                "Balaji Lakshminarayanan"
+            ],
+            "title": "Augmix: A simple data processing method to improve robustness and uncertainty",
+            "venue": "arXiv preprint arXiv:1912.02781,",
+            "year": 1912
+        },
+        {
+            "authors": [
+                "Judy Hoffman",
+                "Eric Tzeng",
+                "Taesung Park",
+                "Jun-Yan Zhu",
+                "Phillip Isola",
+                "Kate Saenko",
+                "Alexei Efros",
+                "Trevor Darrell"
+            ],
+            "title": "Cycada: Cycle-consistent adversarial domain adaptation",
+            "venue": "In International conference on machine learning,",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "Pavel Izmailov",
+                "Dmitrii Podoprikhin",
+                "Timur Garipov",
+                "Dmitry Vetrov",
+                "Andrew Gordon Wilson"
+            ],
+            "title": "Averaging weights leads to wider optima and better generalization",
+            "venue": "arXiv preprint arXiv:1803.05407,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Guoliang Kang",
+                "Lu Jiang",
+                "Yi Yang",
+                "Alexander G Hauptmann"
+            ],
+            "title": "Contrastive adaptation network for unsupervised domain adaptation",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "James Kirkpatrick",
+                "Razvan Pascanu",
+                "Neil Rabinowitz",
+                "Joel Veness",
+                "Guillaume Desjardins",
+                "Andrei A Rusu",
+                "Kieran Milan",
+                "John Quan",
+                "Tiago Ramalho",
+                "Agnieszka Grabska-Barwinska"
+            ],
+            "title": "Overcoming catastrophic forgetting in neural networks",
+            "venue": "Proceedings of the national academy of sciences,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Alex Krizhevsky",
+                "Geoffrey Hinton"
+            ],
+            "title": "Learning multiple layers of features from tiny images",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "Jian Liang",
+                "Dapeng Hu",
+                "Jiashi Feng"
+            ],
+            "title": "Do we really need to access the source data? source hypothesis transfer for unsupervised domain adaptation",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Hong Liu",
+                "Jianmin Wang",
+                "Mingsheng Long"
+            ],
+            "title": "Cycle selftraining for domain adaptation",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Yuejiang Liu",
+                "Parth Kothari",
+                "Bastien van Delft",
+                "Baptiste Bellot-Gurlet",
+                "Taylor Mordan",
+                "Alexandre Alahi"
+            ],
+            "title": "Ttt++: When does self-supervised test-time training fail or thrive",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Ze Liu",
+                "Yutong Lin",
+                "Yue Cao",
+                "Han Hu",
+                "Yixuan Wei",
+                "Zheng Zhang",
+                "Stephen Lin",
+                "Baining Guo"
+            ],
+            "title": "Swin transformer: Hierarchical vision transformer using shifted windows",
+            "venue": "In Proceedings of the IEEE/CVF International Conference on Computer Vision,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Robert A Marsden",
+                "Alexander Bartler",
+                "Mario D\u00f6bler",
+                "Bin Yang"
+            ],
+            "title": "Contrastive learning and self-training for unsupervised domain adaptation in semantic segmentation",
+            "venue": "In 2022 International Joint Conference on Neural Networks (IJCNN),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Robert A Marsden",
+                "Mario D\u00f6bler",
+                "Bin Yang"
+            ],
+            "title": "Introducing intermediate domains for effective self-training during testtime",
+            "venue": "arXiv preprint arXiv:2208.07736,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Robert A Marsden",
+                "Felix Wiewel",
+                "Mario D\u00f6bler",
+                "Yang Yang",
+                "Bin Yang"
+            ],
+            "title": "Continual unsupervised domain adaptation for semantic segmentation using a class-specific transfer",
+            "venue": "In 2022 9 International Joint Conference on Neural Networks (IJCNN),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Michael McCloskey",
+                "Neal J Cohen"
+            ],
+            "title": "Catastrophic interference in connectionist networks: The sequential learning problem",
+            "venue": "In Psychology of learning and motivation,",
+            "year": 1989
+        },
+        {
+            "authors": [
+                "Ke Mei",
+                "Chuang Zhu",
+                "Jiaqi Zou",
+                "Shanghang Zhang"
+            ],
+            "title": "Instance adaptive self-training for unsupervised domain adaptation",
+            "venue": "arXiv preprint arXiv:2008.12197,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Eric Mintun",
+                "Alexander Kirillov",
+                "Saining Xie"
+            ],
+            "title": "On interaction between augmentations and corruptions in natural corruption robustness",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M Jehanzeb Mirza",
+                "Jakub Micorek",
+                "Horst Possegger",
+                "Horst Bischof"
+            ],
+            "title": "The norm must go on: Dynamic unsupervised domain adaptation by normalization",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Krikamol Muandet",
+                "David Balduzzi",
+                "Bernhard Sch\u00f6lkopf"
+            ],
+            "title": "Domain generalization via invariant feature representation",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Chaithanya Kumar Mummadi",
+                "Robin Hutmacher",
+                "Kilian Rambach",
+                "Evgeny Levinkov",
+                "Thomas Brox",
+                "Jan Hendrik Metzen"
+            ],
+            "title": "Test-time adaptation to distribution shift by confidence maximization and input transformation",
+            "venue": "arXiv preprint arXiv:2106.14999,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Shuaicheng Niu",
+                "Jiaxiang Wu",
+                "Yifan Zhang",
+                "Yaofo Chen",
+                "Shijian Zheng",
+                "Peilin Zhao",
+                "Mingkui Tan"
+            ],
+            "title": "Efficient testtime model adaptation without forgetting",
+            "venue": "In International conference on machine learning,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Shuaicheng Niu",
+                "Jiaxiang Wu",
+                "Yifan Zhang",
+                "Zhiquan Wen",
+                "Yaofo Chen",
+                "Peilin Zhao",
+                "Mingkui Tan"
+            ],
+            "title": "Towards stable test-time adaptation in dynamic wild world",
+            "venue": "In The Eleventh International Conference on Learning Representations,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Xingchao Peng",
+                "Qinxun Bai",
+                "Xide Xia",
+                "Zijun Huang",
+                "Kate Saenko",
+                "Bo Wang"
+            ],
+            "title": "Moment matching for multi-source domain adaptation",
+            "venue": "In Proceedings of the IEEE/CVF international conference on computer vision,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Joaquin Qui\u00f1onero-Candela",
+                "Masashi Sugiyama",
+                "Anton Schwaighofer",
+                "Neil D Lawrence"
+            ],
+            "title": "Dataset shift in machine learning",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "Alec Radford",
+                "Jong Wook Kim",
+                "Chris Hallacy",
+                "Aditya Ramesh",
+                "Gabriel Goh",
+                "Sandhini Agarwal",
+                "Girish Sastry",
+                "Amanda Askell",
+                "Pamela Mishkin",
+                "Jack Clark"
+            ],
+            "title": "Learning transferable visual models from natural language supervision",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Amelie Royer",
+                "Christoph H Lampert"
+            ],
+            "title": "Classifier adaptation at prediction time",
+            "venue": "In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Evgenia Rusak",
+                "Steffen Schneider",
+                "Peter Vincent Gehler",
+                "Oliver Bringmann",
+                "Wieland Brendel",
+                "Matthias Bethge"
+            ],
+            "title": "Imagenet-d: A new challenging robustness dataset inspired by domain adaptation",
+            "venue": "In ICML 2022 Shift Happens Workshop,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Kuniaki Saito",
+                "Donghyun Kim",
+                "Stan Sclaroff",
+                "Trevor Darrell",
+                "Kate Saenko"
+            ],
+            "title": "Semi-supervised domain adaptation via minimax entropy",
+            "venue": "In Proceedings of the IEEE/CVF International Conference on Computer Vision,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Swami Sankaranarayanan",
+                "Yogesh Balaji",
+                "Carlos D Castillo",
+                "Rama Chellappa"
+            ],
+            "title": "Generate to adapt: Aligning domains using generative adversarial networks",
+            "venue": "In Proceedings of the IEEE conference on computer vision and pattern recognition,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Steffen Schneider",
+                "Evgenia Rusak",
+                "Luisa Eck",
+                "Oliver Bringmann",
+                "Wieland Brendel",
+                "Matthias Bethge"
+            ],
+            "title": "Improving robustness against common corruptions by covariate shift adaptation",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Baochen Sun",
+                "Kate Saenko"
+            ],
+            "title": "Deep coral: Correlation alignment for deep domain adaptation",
+            "venue": "In European conference on computer vision,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Yu Sun",
+                "Xiaolong Wang",
+                "Zhuang Liu",
+                "John Miller",
+                "Alexei Efros",
+                "Moritz Hardt"
+            ],
+            "title": "Test-time training with selfsupervision for generalization under distribution shifts",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Antti Tarvainen",
+                "Harri Valpola"
+            ],
+            "title": "Mean teachers are better role models: Weight-averaged consistency targets improve semi-supervised deep learning results",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Josh Tobin",
+                "Rachel Fong",
+                "Alex Ray",
+                "Jonas Schneider",
+                "Wojciech Zaremba",
+                "Pieter Abbeel"
+            ],
+            "title": "Domain randomization for transferring deep neural networks from simulation to the real world",
+            "venue": "IEEE/RSJ international conference on intelligent robots and systems (IROS),",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Wilhelm Tranheden",
+                "Viktor Olsson",
+                "Juliano Pinto",
+                "Lennart Svensson"
+            ],
+            "title": "Dacs: Domain adaptation via crossdomain mixed sampling",
+            "venue": "In Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Jonathan Tremblay",
+                "Aayush Prakash",
+                "David Acuna",
+                "Mark Brophy",
+                "Varun Jampani",
+                "Cem Anil",
+                "Thang To",
+                "Eric Cameracci",
+                "Shaad Boochoon",
+                "Stan Birchfield"
+            ],
+            "title": "Training deep networks with synthetic data: Bridging the reality gap by domain randomization",
+            "venue": "In Proceedings of the IEEE conference on computer vision and pattern recognition workshops,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Eric Tzeng",
+                "Judy Hoffman",
+                "Kate Saenko",
+                "Trevor Darrell"
+            ],
+            "title": "Adversarial discriminative domain adaptation",
+            "venue": "In Proceedings of the IEEE conference on computer vision and pattern recognition,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Tuan-Hung Vu",
+                "Himalaya Jain",
+                "Maxime Bucher",
+                "Matthieu Cord",
+                "Patrick P\u00e9rez"
+            ],
+            "title": "Advent: Adversarial entropy minimization for domain adaptation in semantic segmentation",
+            "venue": "In Proceedings of the IEEE conference on computer vision and pattern recognition,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Dequan Wang",
+                "Evan Shelhamer",
+                "Shaoteng Liu",
+                "Bruno Olshausen",
+                "Trevor Darrell"
+            ],
+            "title": "Tent: Fully test-time adaptation by entropy minimization",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Haohan Wang",
+                "Songwei Ge",
+                "Zachary Lipton",
+                "Eric P Xing"
+            ],
+            "title": "Learning robust global representations by penalizing local predictive power",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Qin Wang",
+                "Olga Fink",
+                "Luc Van Gool",
+                "Dengxin Dai"
+            ],
+            "title": "Continual test-time domain adaptation",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yisen Wang",
+                "Xingjun Ma",
+                "Zaiyi Chen",
+                "Yuan Luo",
+                "Jinfeng Yi",
+                "James Bailey"
+            ],
+            "title": "Symmetric cross entropy for robust learning with noisy labels",
+            "venue": "In Proceedings of the IEEE/CVF International Conference on Computer Vision,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Garrett Wilson",
+                "Diane J Cook"
+            ],
+            "title": "A survey of unsupervised deep domain adaptation",
+            "venue": "ACM Transactions on Intelligent Systems and Technology (TIST),",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Mitchell Wortsman",
+                "Gabriel Ilharco",
+                "Samir Ya Gadre",
+                "Rebecca Roelofs",
+                "Raphael Gontijo-Lopes",
+                "Ari S Morcos",
+                "Hongseok Namkoong",
+                "Ali Farhadi",
+                "Yair Carmon",
+                "Simon Kornblith"
+            ],
+            "title": "Model soups: averaging weights of multiple fine-tuned models improves accuracy without increasing inference time",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Zuxuan Wu",
+                "Xin Wang",
+                "Joseph E Gonzalez",
+                "Tom Goldstein",
+                "Larry S Davis"
+            ],
+            "title": "Ace: adapting to changing environments for semantic segmentation",
+            "venue": "In Proceedings of the IEEE International Conference on Computer Vision,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Saining Xie",
+                "Ross Girshick",
+                "Piotr Doll\u00e1r",
+                "Zhuowen Tu",
+                "Kaiming He"
+            ],
+            "title": "Aggregated residual transformations for deep neural networks",
+            "venue": "In Proceedings of the IEEE conference on computer vision and pattern recognition,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Hongliang Yan",
+                "Yukang Ding",
+                "Peihua Li",
+                "Qilong Wang",
+                "Yong Xu",
+                "Wangmeng Zuo"
+            ],
+            "title": "Mind the class weight bias: Weighted maximum mean discrepancy for unsupervised domain adaptation",
+            "venue": "In Proceedings of the IEEE conference on computer vision and pattern recognition,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Longhui Yuan",
+                "Binhui Xie",
+                "Shuang Li"
+            ],
+            "title": "Robust testtime adaptation in dynamic scenarios",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Sergey Zagoruyko",
+                "Nikos Komodakis"
+            ],
+            "title": "Wide residual networks",
+            "venue": "arXiv preprint arXiv:1605.07146,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Marvin Zhang",
+                "Sergey Levine",
+                "Chelsea Finn"
+            ],
+            "title": "Memo: Test time robustness via adaptation and augmentation",
+            "venue": "arXiv preprint arXiv:2110.09506,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Hangyu Zhu",
+                "Jinjin Xu",
+                "Shiqing Liu",
+                "Yaochu Jin"
+            ],
+            "title": "Federated learning on non-iid data: A survey",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1. Introduction",
+            "text": "Deep neural networks achieve remarkable performance, as long as training and test data originate from the same dis-\n*Equal contribution.\ntribution. However, in the real world, environmental changes can occur during test-time and will likely degrade the performance of the deployed model. Domain generalization aims to address potential domain shifts by improving the robustness and generalization of the model directly during training [12, 14, 31, 46, 48]. Due to the wide range of data shifts [36] which are typically unknown during training [29], the effectiveness of these approaches remains limited. Since the test data provide insights into the current distribution shift, online test-time adaptation (TTA) emerged. In TTA, the model is adapted directly during test-time using an unsupervised loss function like the entropy and the available test sample(s) at time step t.\nAlthough TENT [51] has demonstrated success in adapting to single domain shifts, recent research on TTA has identified more challenging scenarios where methods solely based on self-training, such as TENT, often fail [2, 11, 34, 53, 60]. However, these studies again have predominantly focused on specific settings, overlooking the broad spectrum of possible scenarios. Therefore, we initiate our approach by identifying two key factors that encompass all practically relevant scenarios: domain non-stationarity and temporal correlation. We denote the complete set of scenarios, including the capability to adapt to arbitrary domains, as universal TTA, illustrated in Figure 1 a).\nIn the following, we highlight the challenges imposed by these environmental factors and derive design choices for our framework ROID. Starting with the simplest scenario of adapting to a single domain with i.i.d. data, we empirically show that even when encountering a uniform class distribution a self-training based approach is likely to develop a bias towards certain classes. This poses the risk that when adapting to long sequences, a model collapse is likely, where finally only a small subset or a single class is predicted. Therefore, maintaining diverse predictions is essential. To address this, we introduce a dataset and modelagnostic certainty and diversity loss weighting.\nConsidering the degree of domain non-stationarity, common scenarios range from gradual or continual domain shifts [25, 53] to consecutive test samples originating from\nar X\niv :2\n30 6.\n00 65\n0v 2\n[ cs\n.C V\n] 2\n5 O\nct 2\n02 3\ndifferent domains. To deal with non-stationarity, maintaining diversity is even more crucial. We empirically show that the presence of multiple domain shifts can explicitly trigger a collapse to a trivial solution. In contrast to the single domain scenario, continual TTA [53] considers the adaptation to a sequence of multiple domains. In this context, in order to ensure effective adaptation to future shifts, a model must uphold its generalization. We hypothesize that adapting a model through self-training on a narrow distribution deteriorates generalization. This is validated by our empirical observations, indicating that a stronger adaptation results in a higher generalization error and promotes catastrophic forgetting. In response, we propose to continually weightaverage the current model with the initial source model and denote this as weight ensembling. Dealing with mixed domains presents additional difficulties, such as adapting to multiple target domains simultaneously and the ineffectiveness of covariate shift mitigation through recalculating the batch normalization (BN) statistics during test-time [42].\nIn case of temporally correlated data or single sample TTA, the estimation of reliable BN statistics is not possible. While introducing a buffer can mitigate this problem [60], it can raise privacy and memory issues. Alternatively, one can leverage normalization layers like group normalization (GN) or layer normalization (LN), which do not require a batch of data to estimate the statistic and are thus better suited [34, 44]. Since applying diversity weighting promotes the model output to be unbiased, i.e., approximately uniform, even a model that is well adapted to the current domain shift will underperform in a temporally correlated setting. This is due to the existing shift in the class prior. Therefore, instead of allowing the model to become biased, we propose prior correction which introduces an adaptive additive smoothing scheme to reweight the model\u2019s predictions.\nWe summarize our contributions as follows: 1) Our proposed method significantly outperforms existing approaches in the challenging setting of universal TTA. This indicates the potential of our method to be used in practical scenarios.\n2) Through our analysis, we provide valuable insights into the challenges that arise when models are subjected to selftraining during test-time. 3) Depending on the application, single-sample TTA might be of interest. We highlight that architectures that do not rely on batch normalization layers allow to recover the batch TTA setting from a single sample scenario by doing gradient accumulation. This also dramatically reduces memory consumption. 4) We show that current methods, even if proposed for challenging settings, often fail to fully address the whole picture of universal TTA\u2014a result of our extensive and broad experiments in terms of settings, domain shifts, and models."
+        },
+        {
+            "heading": "2. Related Work",
+            "text": "Unsupervised domain adaptation Since domain generalization has its limitations due to the high amount of possible domain shifts that are unknown during training, in the field of unsupervised domain adaptation (UDA) [55], labeled source and unlabeled target data are used to adapt to the target domain. One line of work minimizes the discrepancy between the source and target feature distribution by either using adversarial learning [9, 49], discrepancy based loss functions [3, 43, 59], or contrastive learning [17, 24]. Instead of aligning the feature space, it is also possible to align the input space [15, 26, 41, 57], e.g., via style-transfer. Recently, self-training based approaches have shown to be powerful. Self-training uses the networks\u2019 predictions on the target domain as pseudo-labels to minimize, e.g., a (cross)entropy loss [21, 28, 50, 64]. Often filtering pseudo-labels is applied to remove unreliable samples. Mean teachers [45] can be further leveraged to increase the reliability of the network\u2019s predictions [8, 47].\nTest-time adaptation While UDA typically performs offline model adaptation, online test-time adaptation adapts the model to an unknown domain shift directly during inference using the currently available test samples. [42] showed that estimating new batch normalization (BN) statistics during test-time can significantly improve the performance on shifts\ncaused by corruptions. While only updating the BN statistics is computationally efficient, it has its limitations, especially when it comes to natural domain shifts. Therefore, recent TTA methods further update the model weights by relying on self-training. TENT [51] demonstrated that minimizing the entropy with respect to the batch normalization parameters can be successful for single-target adaptation. EATA [33] extends this idea by weighting the samples according to their reliability and diversity. Further, they use elastic weight consolidation [18] to prevent catastrophic forgetting [27] on the initial training domain. However, this requires access to data from the initial training domain, which is not always available in practice. To circumvent a model collapse to trivial solutions caused by confidence maximization, [20,32] make use of diversity regularizers. Contrastive learning has also found its application in TTA [4, 5].\nWhile some TTA methods only consider the adaptation to a single domain, in the real world, it is common to encounter multiple domain shifts. Therefore, [53] introduced the setting of continual test-time adaptation, where a model has to adapt to a sequence of different domains. While self-training based methods such as [51] can be applied to the continual setting, they can be prone to error accumulation [53]. To prevent error accumulation, [53] proposes to use weight and augmentation-averaged predictions in combination with a stochastic restore to mitigate catastrophic forgetting. RMT [5] proposes a robust mean teacher to deal with multiple domain shifts and GTTA [25] uses mixup and style-transfer to artificially create intermediate domains. LAME [2], NOTE [11], SAR [34], and RoTTA [60] propose methods that focus on dealing with temporally correlated data. While LAME only adapts the model\u2019s output with Laplacian adjusted maximum-likelihood estimation, NOTE and RoTTA introduce a buffer to simulate an i.i.d. stream. SAR proposes a sharpness-aware and reliable entropy minimization method to be robust to large and noisy gradients.\nFurther areas of test-time adaptation focus on settings where the collection of a batch of data may not be feasible due to timeliness. Methods for single-sample TTA [1, 10, 30, 62] often rely on artificially creating a batch of data through test-time augmentation [19], which drastically increases the computational overhead. Due to only using a single sample for adapting the model, updates can be noisy and therefore the adaptation capability may be limited. Further, the area of test-time training modifies the initial pre-training phase by introducing an additional self-supervision loss that is also exploited to adapt the model during test-time [1, 22, 44]. Thus, test-time training is unable to use any off-the-shelf pre-trained model."
+        },
+        {
+            "heading": "3. Self-training for Test-time Adaptation",
+            "text": "Let \u03b80 denote the weights of a deep neural network pretrained on labeled source data (X ,Y). While the network\nwill typically perform well on data originating from the same domain, this is usually not the case when the model encounters data from different domains. This lack of generalization to out of distribution data is a problem in practice since the environmental conditions are likely to change from time to time. To keep the networks\u2019 performance high during inference, online test-time adaptation continues to update the model after deployment using an unsupervised loss function like the entropy and the currently available test data xt at time step t.\nTest-time adaption through self-training carries the risk of generalization loss Adapting a model to a target domain effectively means moving the model from its initial source parameterization to a parameterization that better models the current target distribution. This carries the risk that predictions on the source distribution become inaccurate, but also carries the risk of losing generalization when the target distribution is narrow. The former is known as catastrophic forgetting. We now want to highlight the latter, since generalization is a so far underestimated topic in TTA and is important for coping with non-stationary domains.\nTo study the impact of performing entropy minimization on generalization, we consider a typical TTA framework (TENT) where only parameters of the BN layers are trained while the rest remains frozen. We utilize an ImageNet pretrained ResNet-50 and adapt the model using 40,000 samples of one of the corruptions from ImageNet-C [13]. To investigate the adaptation and generalization, we then evaluate the adapted model for each corruption on the remaining 10,000 samples. In Figure 2, we illustrate the difference of error for a moderate and a stronger adaptation, corresponding to a learning rate of 10\u22124 and 10\u22123, respectively. As one would expect, a stronger adaptation leads to an improvement for samples originating from the same or a similar domain. However, this comes with the drawback that the performance on other domains deteriorates, indicating a loss of generalization. As a result, adapting to future domains is hindered. The same effect can be observed for the source domain, depicted in the last column, showing signs of catastrophic forgetting. As illustrated in Figure 5 located in Appendix A.1, the effect also occurs for supervised fine-tuning. Using weight ensembling, as described in Section 4.2 and depicted in Figure 2, retains generalization, while still enabling a good adaptation.\nA similar effect was found by [37], who reported that when fine-tuning their zero-shot model CLIP on ImageNet, the model generalization decreases while the performance on the adaptation domain drastically increases. We argue that such a phenomenon is likely to occur to any model that is fine-tuned on a less diverse dataset compared to the initial training dataset. (In case of CLIP, the initial training dataset consists of 400 million images which is approximately 312 times bigger than ImageNet).\nG au\nss .\nS h\not\nIm p\nu l.\nD ef\no c.\nG la\nss\nM ot\nio n\nZ o o m S n ow F ro\nst F og\nB ri\ngh t.\nC on\ntr .\nE la\nst ic\nP ix\nel\nJ P\nE G\nS ou\nrc e\nGauss.\nShot\nImpul.\nDefoc.\nGlass\nMotion\nZoom\nSnow\nFrost\nFog\nBright.\nContr.\nElastic\nPixel\nJPEG\nA d\nap ta\nti on\nd om\nai n\n-2.2 -2.2 -2.4 1.7 0.3 3.1 3.4 5.3 2.9 5.1 5.2 5.7 5.2 3.6 2.9 4.6\n-2 -3.2 -2.3 1.9 0.8 2.9 3 5.4 4.5 5.3 5 6.1 5.3 3 2.9 4.5\n-1.3 -2 -2.7 1.3 -0.9 3.5 3.2 5 3.2 5.8 5.8 6.6 5 3.7 3 5.4\n4.5 4.3 2.9 -2.8 -0.2 2.5 2.9 5.7 4.3 6.1 6.6 5.6 5.8 5 5 6.6\n4.6 4.6 2.1 -1 -3.2 2.2 3.3 6.8 6.1 7.3 7.7 7.5 6.3 4.2 5.7 6.5\n2.5 2.2 1.2 -3 -2.2 -2.8 -0.6 2.8 2.7 3.2 4.2 3.3 3 2.4 2.2 3.8\n4.2 4 2.5 -1.8 -0.5 -0.2 -1.4 2.1 4 3.4 4.8 4.1 3.6 4 3.6 4.4\n3.3 3.2 2.8 3.3 1.2 3.4 1.8 -3.4 1.8 4.4 3.9 5.5 3.7 5.3 4 3.8\n1.2 1 1.1 2 0.4 3.7 3.4 3 -0.9 4.5 5 5.3 5.9 5.3 4.5 5.2\n4 3.6 3.1 0.3 2.1 1.9 1.9 2.2 2.7 -1 2.7 1.2 2 3 1.7 3.1\n0.8 0.7 0.4 -0.6 -0.3 0.1 0.3 -1.4 -1.1 -0.2 0.4 0.5 1.1 1.2 0.5 1.3\n-0.2 0 -0.8 -2.6 -1.2 -0.6 -0.7 1.2 0 0.2 2 -1.3 1.2 0.7 0.3 2.1\n1.5 1.3 1.1 -1.5 -2 0.2 -0.5 1.2 1.9 0.2 1.6 1.3 0.1 1 0.9 2\n-0.5 -0.7 -0.9 -2.4 -3.8 -1.1 0.1 2 1.5 1.4 2.4 1.4 0.7 -0.5 0.3 2.3\n-2.7 -1.9 -2.3 -1.2 -2.4 0 0.4 2.2 1.5 1.6 2.1 1.4 1.5 0.1 0 2.7\nTENT\nG au\nss .\nS h\not\nIm p\nu l.\nD ef\no c.\nG la\nss\nM ot\nio n\nZ o o m S n ow F ro\nst F og\nB ri\ngh t.\nC on\ntr .\nE la\nst ic\nP ix\nel\nJ P\nE G\nS ou\nrc e"
+        },
+        {
+            "heading": "Gauss.",
+            "text": "Shot\nImpul.\nDefoc.\nGlass\nMotion\nZoom\nSnow\nFrost\nFog"
+        },
+        {
+            "heading": "Bright. Contr. Elastic",
+            "text": "Pixel\nJPEG\n-2.1 -2.1 -2.3 -0.1 -1.3 0.1 0.6 1 0.4 1 1.4 0.8 0.9 0.2 0 1.2\n-2.2 -2.8 -2.4 -0.3 -0.9 -0.1 0.6 1.2 0.9 1 0.9 1.2 1.1 0.1 -0.2 1\n-1.9 -2.5 -2.9 -0.5 -1 0.1 0 0.9 0.5 0.9 1.1 0.9 1.1 0.2 -0.1 1.2\n0.8 0.6 0.2 -3.2 -1.4 -0.5 -0.4 1.2 0.7 0.9 1.5 1.1 1.2 0.8 0.6 1.3\n0.6 0 -0.3 -1.9 -3.5 0 0.4 1.5 1.2 2.1 1.9 1.4 1.1 0.7 1 1.6\n0.3 0 -0.1 -2.2 -1.4 -1.8 -1 0.4 0.4 0.7 0.9 0.8 0.6 0.4 0.2 1.1\n0.8 1.2 0.3 -1.5 -0.4 -0.8 -1.7 0.2 1 0.4 1.3 1.1 0.6 1 1 1.1\n0.6 0.9 0.6 0.6 0.4 0.1 -0.1 -2.9 -0.4 0.6 0.7 0.9 0.9 0.8 0.5 1.1\n-0.5 -0.8 -0.5 0 -0.8 0.6 0 -0.6 -1.8 0.9 1.1 1.2 1.1 0.8 0.9 1.3\n0.9 0.9 0.2 -0.3 0.2 -0.4 0.1 -0.1 0.4 -1.3 0.5 -0.4 0.2 0.6 -0.1 0.7\n-0.3 0.1 -0.3 -0.8 -0.5 -0.3 -0.4 -0.7 -0.8 -0.3 -0.3 -0.2 0.2 0 -0.1 0.3\n-0.8 -0.3 -0.3 -1.7 -0.9 -1.1 -0.6 -0.3 -0.7 -0.4 0.4 -0.9 0.2 -0.1 -0.3 0.5\n0.2 0.2 0.3 -1.1 -0.9 -0.5 -0.3 -0.1 0.3 -0.1 0.3 0.2 -0.5 0 -0.2 0.5\n-0.7 -0.9 -0.5 -1.3 -1.6 -0.9 -0.2 0 0.1 0.1 0.6 0 0 -0.7 -0.5 0.4\n-1.3 -1.2 -1.5 -1.1 -0.9 -0.7 -0.1 0 0.2 0.2 0.6 0.2 -0.1 -0.2 -0.4 0.6\nTENT + weight ensembling\nEvaluation domain\nFigure 2. Difference of error for a moderate and a stronger adaptation, corresponding to a learning rate of 10\u22124 and 10\u22123, respectively. An ImageNet pre-trained ResNet-50 is adapted on one of the corruptions from ImageNet-C at severity 3 and evaluated on all corruptions and the source domain.\nStability Undoubtedly, the most critical aspect for a successful universal TTA is stability. Although TENT [51] has demonstrated a successful adaptation to a single domain shift at a time, we empirically show in Appendix A.2 that its performance on ImageNet-C degrades to a trivial solution as the length of the test sequence increases. In addition, by considering CIFAR100-C, we also demonstrate that the occurrence of trivial solutions can be triggered when the domain shifts from time to time\u2014a setting which is likely to be encountered in real world applications and denoted as continual TTA by [53]. We further find that an increased domain non-stationarity has an even more severe effect, as the model develops a bias much faster. In Figure 3, we analyze the performance of current state-of-the-art methods in the online continual TTA setting for ImageNet-C, using different numbers of samples per corruption. While all methods successfully reduce the error rate for 5,000 samples per\ncorruption, only very few methods do not collapse to trivial solutions or again degrade in performance due to the development of a bias when 50,000 samples are considered. We visualize and discuss the latter two aspects in Appendix A.2. These examples clearly demonstrate the necessity of remaining diverse predictions throughout the adaptation."
+        },
+        {
+            "heading": "4. Methodology",
+            "text": "In this work, we seek to create a method that performs a good, stable, and efficient adaptation across a wide range of different settings and domain shifts while being mostly model agnostic. Before we address the previous findings in more detail, we first establish the basic framework.\nTo ensure efficiency during test-time, we only update the network\u2019s normalization parameters (BN, GN, and LN) and freeze all others. To improve the stability and adaptation, we exchange the commonly used entropy loss by a certainty and diversity weighted version of the soft likelihood ratio (SLR) loss. The SLR loss [32] has the advantage that its gradients are less dominated by low confidence predictions, which are typically more likely to be incorrect [32]. The weighted soft likelihood ratio loss is then given by\nLSLR(y\u0302ti) = \u2212 \u2211 c wti y\u0302tic log( y\u0302tic\u2211 j \u0338=c y\u0302tij ), (1)\nwhere y\u0302ti are the softmax probabilities of the network for the i-th test sample at time step t and wti is its corresponding weight. Since the SLR loss encourages to scale the networks\u2019 logits larger and larger [32], we propose to clip the softmax probabilities for very high confidence values,\ni.e., y\u0302t \u2208 [0, 0.99]C , where C is the number of classes. This results in a zero-gradient for probabilities above the clipping value, preventing logit explosion.\nTo further strengthen the adaptation, we encourage consistency against smaller perturbations. This is achieved by promoting similar outputs between test images which have been identified as certain and diverse (x\u2032t) and an augmented view of them. We use color jitter, affine transformations, and horizontal flipping to generate the augmented view x\u0303\u2032t = Aug(x \u2032 t) with predictions y\u0303 \u2032 t. Subsequently, a weighted consistency loss based on the symmetric crossentropy (SCE) is calculated\nLSCE(y\u0302\u2032ti, y\u0303\u2032ti) = \u2212 w\u2032ti 2 ( C\u2211 c=1 y\u0302\u2032tic log y\u0303 \u2032 tic+ C\u2211 c=1 y\u0303\u2032tic log y\u0302 \u2032 tic ) . (2) We leverage the SCE loss due to its tolerance towards label noise [54], which is especially important in the setting of self-training where pseudo-labels can be inaccurate."
+        },
+        {
+            "heading": "4.1. Certainty and diversity weighting",
+            "text": "Our analysis in Section 3 and Appendix A.2 suggests that it is essential to prevent the model from becoming biased or, worse, collapse to a trivial solution during test-time. Therefore, we introduce a diversity criterion, similar to [33], which ensures that diverse samples are favored in comparison to samples that are similar to the central tendency of recent model predictions. Unlike [33], we propose a diversity weighting that does not require dataset-specific hyperparameters. We begin by tracking the recent tendency of a model\u2019s prediction with an exponential moving average y\u0304t+1 = \u03b2 y\u0304t +\n(1\u2212\u03b2) Nb \u2211Nb i y\u0302ti, setting \u03b2 = 0.9. To\ndetermine a diversity weight for each test sample xti, the cosine similarity between the current model output y\u0302t and the tendency of the recent outputs y\u0304t is computed as follows\nwdiv,ti = 1\u2212 y\u0302Tti y\u0304t\n\u2225y\u0302ti\u2225 \u2225y\u0304t\u2225 . (3)\nThis strategy has the advantage that if the model output is uniform, uncertain predictions receive a smaller weight, which prevents the incorporation of errors into the model. However, if the model output is biased towards some classes, uncertain predictions will have a large weight, thus promoting error accumulation. Therefore, we additionally utilize certainty weighting based on the negative entropy wcert,ti = \u2212H(y\u0302ti) = \u2211 c y\u0302tic log y\u0302tic. To remove model and data dependencies, such as the model\u2019s calibration or the number of classes, we normalize the certainty and diversity weights to be in unit range. To pull apart non-reliable and non-diverse samples from reliable and diverse ones, we take the exponential of the product of diversity and certainty weights, scaled by a temperature \u03c4 :\nwt = exp (wdiv,t wcert,t\n\u03c4\n) . (4)\nTo re-emphasize diversity, all weights of samples whose diversity is less than the mean diversity are set to zero, i.e., wti = 0 if wdiv,ti < mean(wdiv,t)."
+        },
+        {
+            "heading": "4.2. Weight ensembling",
+            "text": "Since our analysis in Section 3 revealed that self-training is likely to cause a loss of generalization and catastrophic forgetting, we propose weight ensembling. It averages the weights of the source model which potentially has good generalization capabilities and the adapted model, which typically better models the current distribution. Previous literature supports that weight-averaging two models works, if they remain in the same basin of the loss landscape [7]. This is usually true for models which are fine-tuned from the same pre-trained checkpoint [7, 16, 56]. Specifically, we continually ensemble the weights of the initial source model \u03b80 and the weights of the current model \u03b8t at time step t using an exponential moving average of the form\n\u03b8t+1 = \u03b1 \u03b8t + (1\u2212 \u03b1)\u03b80, (5)\nwhere \u03b1 is a momentum term, balancing adaptation and generalization. Since we only update normalization parameters, the memory overhead for storing source weights is neglectable. The advantages of equipping TENT with our weight ensembling approach, using a momentum term five times larger as the learning rate, are illustrated in Figure 2. Clearly, the strategy prevents drastic decreases in performance on unseen domains while still allowing good adaptation. By inspecting the last column, it also becomes apparent that catastrophic forgetting is largely mitigated."
+        },
+        {
+            "heading": "4.3. Prior correction during test-time",
+            "text": "Consider the scenario where no domain shift exists and only the class distributions between the training and test data differ. In this case, a non-adapted model will underperfom because the learned posterior q(y|x) will deviate from the actual posterior p(y|x) due to the shift in priors, i.e., q(y) \u0338= p(y). However, as shown by [38], optimal performance can be recovered by correcting the deviation in posterior according to p(y|x) = q(y|x)p(y)q(y) . In the context of online TTA with temporally correlated and thus highly imbalanced data, such performance degradation can easily occur. For example, when the actual class prior is highly dynamic. Since our diversity weighting aims to stabilize model adaptation by preventing the network from learning any biases, there will be a discrepancy between the class priors. Therefore, we propose a prior correction that reweights the final predictions by p(y)q(y) without influencing the adaptation.\nAs a result of diversity weighting, we assume a uniform distribution for the learned prior q(y). To determine the actual class prior p(y), we suggest to use the sample mean over the current softmax predictions y\u0302ti as a proxy p\u0302t =\n1 Nb \u2211Nb i y\u0302ti. Since only Nb test samples are considered for the estimation of the actual class prior, the resulting estimate will be inaccurate. Therefore, an adaptive additive smoothing scheme is proposed\np\u0304t = p\u0302t + \u03b3\n1 + \u03b3Nc , (6)\nwhere Nc denotes the number of classes and \u03b3 is an adaptive smoothing factor that is determined by the ratio \u03b3 = max(1/Nb, 1/Nc)/maxc p\u0302tc. The idea behind this ratio is that if the class distribution within a batch tends to be uniform, \u03b3 \u2265 1, a strong smoothing is applied ensuring that no class is favored. If the class distribution is strongly biased towards one class, \u03b3 \u2192 max(1/Nb, 1/Nc), minor smoothing is applied. In settings with highly imbalanced data, weighting the network\u2019s outputs with a smoothed estimate of the class prior can significantly improve the predictions. Uncertain data points can be corrected by taking class prior information into account, while not degrading performance when a uniform class distribution is present."
+        },
+        {
+            "heading": "5. Experiments",
+            "text": "Datasets We evaluate our approach for a wide range of different domain shifts, including corruptions and natural shifts. Following [51], we consider the corruption benchmark [13] consisting of CIFAR10-C, CIFAR100-C, and ImageNet-C. These datasets include 15 types of corruptions with 5 severity levels applied to the validation and test images of ImageNet (IN) and CIFAR, respectively [19]. For the natural domain shifts, we consider ImageNet-R [12], ImageNetSketch [52], as well as a variation of ImageNet-D [39], which we denote as ImageNet-D109. While ImageNet-R contains 30,000 examples depicting different renditions of 200 IN classes, ImageNet-Sketch contains 50 sketches for each of the 1,000 IN classes. ImageNet-D is based on DomainNet [35], which contains 6 domain shifts (clipart, infograph, painting, quickdraw, real, sketch), and considers samples that are one of the 164 classes that overlap with ImageNet. For ImageNet-D109, we use all classes that have a one-toone mapping from DomainNet to ImageNet, resulting in 109 classes. We omit the domain quickdraw in our experiments since many examples cannot be attributed to a class [40].\nConsidered settings All experiments are performed in the online TTA setting, where the predictions are evaluated immediately. To assess the performance of each method for universal TTA, we consider four different settings. The first is the continual benchmark [53], where the model is adapted to a sequence of K different domains D without knowing when a domain shift occurs, i.e. [D1,D2, . . . ,DK ]. For the corruption datasets, the domain sequence comprises 15 corruptions, each encountered at the highest severity level 5. For ImageNet-R and ImageNet-Sketch there exists only a single\ndomain and for ImageNet-D109 the domains are encountered in alphabetical order. The second setting is denoted as mixed domains. Since in this case the test data of all domains are randomly shuffled before the adaptation, consecutive test samples are likely to originate from different domains. Third, we examine a correlated setting which is similar to the continual one, since the domains are also encountered sequentially. However, in the correlated setting, the data of each domain is sorted by the class label rather than randomly shuffled, resulting in class imbalanced batches. Finally, we also consider the situation where the domains are mixed and the sequence is temporally correlated. Single domain settings are not explicitly considered since any method that succeeds in the continual setting, will also succeed in the single domain setting.\nImplementation details Following previous work [53], a pre-trained WideResNet-28 (WRN-28) [61] and ResNeXt29 [58] is used for CIFAR10-to-CIFAR10-C and CIFAR100to-CIFAR100-C, respectively. For the ImageNet datasets a source pre-trained ResNet-50, a VisionTransformer [6] in its base version with an input patch size of 16\u00d7 16 (Vit-b-16), and a SwinTransformer [23] in its base version (Swin-b) are used. Note that for our method, we additionally ablate 28 pre-trained networks available in PyTorch in Appendix B.1. We follow the implementation of [51], using the same hyperparameters. Further, we fix the momentum term \u03b1 used for weight ensembling to 0.99 and set the temperature \u03c4 to 13 .\nBaselines We compare our approach to other sourcefree TTA methods that also use an arbitrary off-the-shelf pre-trained model. In particular, we compare to TENT non-episodic [51], EATA [33], SAR [34], CoTTA [53], RoTTA [60], AdaContrast [4], RMT [5], and LAME [2]. In addition, we consider the non-adapted model (source) and the normalization-based method BN\u20131, which recalculates the batch normalization statistics using the current test batch. As metric, we use the error rate."
+        },
+        {
+            "heading": "5.1. Results",
+            "text": "Results for continual TTA Table 1 shows the results for online continual TTA, with results worse than the source performance highlighted in red. We find that LAME significantly decreases the performance on all continual benchmarks, due to its tendency of predicting only a reduced number of classes in each batch. This can also be seen in Figure 7 in the appendix. While SAR is able to adapt to corrupted data for all architectures, its adaptation capabilities for natural domain shifts are limited when using transformers. Further, although SAR proposed a model restore approach to avoid performance degradation, the approach lacks generalization. The effectiveness of TENT also heavily depends on the domain shift and architecture, as Vit-b-16 provides clear benefits for IN-C and IN-R, but fails for IN-D109, for example. However, by equipping TENT with a diversity criterion,\nTENT remains stable in all configurations, suggesting that diversity also contributes to become more model and shift agnostic. This might also be the reason, why methods like EATA, AdaContrast and RoTTA remain stable, as each of them either explicitly enforce diversity or leverages a diversity buffer. Our method ROID is not only stable, but yields significant performance improvements compared to the second best approach, EATA, which requires dataset specific hyperparameters and access to data from the initial source domain. Note that we additionally verify the effectiveness of ROID for 28 pre-trained networks in Appendix B.1, demonstrating its wide applicability.\nResults for mixed domains Table 2 illustrates the results for the mixed domains setting. By comparing the performance between the settings continual and mixed domains for methods such as EATA, SAR, AdaContrast, RMT, and ROID for the transformers, it becomes obvious that adapting to multiple target domains at the same time is more challenging. In case of BN-based architectures, like ResNets, the results can also significantly decrease due to missing improvements of covariate shift mitigation through recalculating the BN statistic. Our method ROID is again not only stable, but performs best or comparable on most benchmarks.\nResults for correlated (+mixed domains) First, we consider a correlated setting, where samples are sorted by class. Since re-calculating BN statistics now even increases the\nwell in the correlated setting, while drastically degrading the performance in previous scenarios. ROID, on the other hand, outperforms LAME on 3 out of 5 datasets, while also showing strong results in other settings. On the right of Figure 4, we illustrate the performance for different degrees of correlation by varying the concentration parameter \u03b4 of a Dirichlet distribution [11, 63]. Prior correction and, consequently, ROID benefit from increasing correlation, as the entropy of the class prior decreases.\nLastly, we investigate the combination of temporally correlated data with mixed domains for IN-C and IN-D109. As shown in Table 3, ROID achieves significantly better and comparable results than existing methods, demonstrating its ability to perform in all scenarios of universal TTA.\nResults for single sample TTA Updating the model using a single test sample not only yields noisy gradients, but also prevents an accurate estimation of the BN statistics, resulting in a performance degradation. While [5, 25] use a small buffer to store the last b test samples on the device, this comes with a trade-off between efficiency and accurate BN statistics. To circumvent this issue, we propose to use networks that do not employ BN layers, such as VisionTransformer [6]. These networks allow to recover the batch TTA setting by simply accumulating the gradients of the last b test samples before updating the model. As shown in Table 9, this provides the same results as before, with no computational overhead and significantly reduced memory requirements."
+        },
+        {
+            "heading": "5.2. Ablation studies",
+            "text": "In Appendix B, we further analyze the efficiency, catastrophic forgetting, and the momentum \u03b1 used for weight ensembling. We find that ROID successfully maintains its knowledge about the initial training domain while being computationally efficient.\nComponent analysis In Table 4, we analyze the components of ROID. In general, the component analysis underscores our primary hypotheses and findings. Certainty and diversity based loss weighting helps in all scenarios by miti-"
+        },
+        {
+            "heading": "6. Conclusion",
+            "text": ""
+        },
+        {
+            "heading": "A. Additional analysis",
+            "text": ""
+        },
+        {
+            "heading": "A.1. Loss of generalization",
+            "text": "G a u\nss .\nS h\not\nIm p\nu l.\nD ef\no c.\nG la\nss\nM o ti\non\nZ o om S n ow F ro\nst F og\nB ri\ngh t.\nC on\ntr .\nE la\nst ic\nP ix\nel\nJ P\nE G\nS ou\nrc e\nGauss.\nShot\nImpul.\nDefoc.\nGlass\nMotion\nZoom\nSnow\nFrost\nFog\nBright.\nContr.\nElastic\nPixel\nJPEG\nA d\nap ta\nti on\nd om\nai n\n-6.2 -6 -6.7 -1.6 -1.1 0.1 0.9 3.1 0.7 2 1.5 1.6 2.5 0.3 -0.8 1.8\n-5.3 -6.4 -6.6 -1.8 -1.1 -0.4 0.9 2.7 0.7 1.9 1.6 1 2.8 0 -0.8 1.8\n-5.4 -5.9 -7.5 -1.6 -2.3 0.4 1.8 2.5 0.6 3.1 2.2 2.3 1.8 0.3 -0.5 2.4\n1.5 1.9 0.1 -7.4 -1.9 -0.7 0.4 2.5 1.6 2.2 2.8 1.9 1.9 0.4 1.2 2.5\n0.4 1.4 -1.7 -6 -8.1 -2.4 -0.9 2.6 2.1 4.4 2.4 2.8 1.3 -1.7 1.3 2.9\n0.6 1 -0.6 -4.8 -2.5 -5.4 -2.5 0.7 0.9 1.5 2.2 0.8 0.6 0 0.7 2.1\n2 2.1 0.5 -4.8 -2 -3.5 -5 -1 0.7 1.1 1.8 0.4 0.3 0.9 1.1 1.5\n2.3 2.1 1.2 1.7 1.1 1 0.3 -5.7 -0.3 2 1.7 2.4 1.7 3.4 2.4 1.5\n-2.3 -1.8 -3.6 -1.3 -1.4 -0.4 0.5 -1.9 -5.4 0.8 1.3 1.6 2.5 0.8 0.7 1.6\n2.6 2.9 2.2 0.3 2.3 1.1 1.2 0.8 0.3 -3.4 1.2 -0.7 0.9 1.3 0.7 1\n1.6 1.2 1.1 -0.2 1.4 0 0.3 -1.5 -1.3 -1.1 -1.1 -0.4 0 0.6 0.4 -0.2\n0 -0.3 -0.5 -3 -0.2 -1.5 -0.5 0.6 -0.6 -1.7 0.7 -2.3 0.3 -0.6 -1 0.8\n0.7 1.1 0.9 -1.4 -0.9 -0.5 -0.6 -0.1 0.2 -0.9 0.1 -0.3 -2.4 -0.6 -0.1 0.1\n-0.3 -0.9 -1.6 -3.6 -3.3 -1.8 -0.8 1 0.2 -0.1 0.6 -0.8 -0.4 -2.7 -1.1 0.4\n-3.3 -3.5 -4 -3.8 -2.6 -2.2 -1.3 0 -1 -0.7 0 -0.7 -0.4 -2.1 -2.5 0.7\nFine-tuning\nG a u\nss .\nS h\not\nIm p\nu l.\nD ef\no c.\nG la\nss\nM o ti\non\nZ o om S n ow F ro\nst F og\nB ri\ngh t.\nC on\ntr .\nE la\nst ic\nP ix\nel\nJ P\nE G\nS ou\nrc e"
+        },
+        {
+            "heading": "Gauss.",
+            "text": "Shot\nImpul.\nDefoc.\nGlass\nMotion\nZoom\nSnow\nFrost\nFog"
+        },
+        {
+            "heading": "Bright. Contr. Elastic",
+            "text": "Pixel\nJPEG\n-2.7 -2.7 -3.3 -0.8 -0.7 -0.6 -0.2 0.8 0.1 0 0.2 0.4 0.9 -0.6 -0.8 0.4\n-2.4 -2.8 -3.2 -0.8 -0.1 -0.7 -0.4 0.6 0.1 -0.1 0.3 0.2 0.6 -0.6 -0.7 0.1\n-2.6 -2.6 -3.7 -0.9 -1 -0.7 0 0.4 -0.2 0.4 0.2 0.1 0.3 -0.4 -1 0.3\n0.4 0.6 0 -4 -0.6 -1.1 -0.9 0.4 0.2 0.2 0.7 -0.1 0.3 0 0.5 0.7\n-0.4 0.3 -1.7 -3 -4.2 -1.4 -0.9 0.4 0.5 0.9 0.6 0.7 0.2 -1.2 -0.1 0.5\n0.5 0.1 -0.1 -2.4 -1 -2.7 -1.6 -0.1 0.4 0.1 0.7 0 -0.1 -0.1 0 0.7\n0 0.5 -0.2 -2.3 -1.1 -2.1 -2.6 -0.7 -0.3 -0.1 0.2 0.1 -0.3 0.2 0.3 0.3\n0.4 0.3 -0.1 0.4 0.5 0.4 -0.1 -3.2 -0.6 0.3 0.3 0.5 0.1 0.5 0.5 0.3\n-1.7 -1.1 -1.8 -0.8 -0.7 -0.5 -0.3 -1.6 -3.3 -0.3 0.2 0.2 0.7 0 -0.3 0.5\n0.9 1 0.5 -0.2 0.5 0.3 0.2 0 -0.4 -1.7 0 -0.8 0.1 0 0 0.1\n0 0 0.2 -0.3 0 -0.2 -0.2 -0.7 -0.8 -0.4 -0.4 -0.6 -0.2 0.1 0 -0.1\n0.1 -0.2 -0.2 -1.5 -0.2 -0.8 -0.3 0 -0.5 -1.1 0.2 -1.3 0.1 -0.2 -0.2 0\n0.3 0.6 0.1 -0.5 -0.2 -0.3 -0.5 0 0.1 -0.6 0 -0.4 -1.1 -0.4 -0.5 -0.3\n-0.1 -0.4 -1 -1.9 -1.6 -0.9 -0.8 0.2 -0.2 0.1 0.2 -0.5 -0.1 -1 0 0.2\n-1.5 -1.1 -1.4 -1.4 -1.2 -1.1 -0.6 0 -0.4 -0.5 -0.1 -0.3 -0.3 -1.2 -1.5 0.2\nFine-tuning + weight ensembling"
+        },
+        {
+            "heading": "Glass",
+            "text": ""
+        },
+        {
+            "heading": "Zoom Snow Frost",
+            "text": "Since adapting a model to a target domain effectively means moving the model from its initial source parameterization to a parameterization that better models the current target distribution, this should trigger a loss of generalization when the target distribution is narrow. While we have already shown in Section 3 that a generalization loss occurs when performing self-training in the form of entropy minimization, this should also hold when our certainty and diversity weighting from Section 4.1 is further added, or when fine-tuning the model in a supervised manner.\nTo demonstrate the previous points, we adopt the same setup as before, i.e., we use an ImageNet pre-trained ResNet-50 and adapt the model with 40,000 samples of one of the corruptions from ImageNet-C. Afterwards, the model is evaluated for each\ncorruption and the source domain on the remaining 10,000 samples. Figure 5 illustrates the difference of error for a moderate and a stronger adapted model, corresponding to a learning rate of 10\u22124 and 10\u22123, respectively. Depending on the investigated corruption, not only fine-tuning but also diversity-regularized self-training result in an increased error on other corruptions, indicating a loss of generalization. This demonstrates the risks of model adaptation in a potentially unknown environment. Using our proposed weight ensembling, a loss of generalization and catastrophic forgetting can mostly be mitigated.\nA.2. Model bias and trivial solutions\nAs stated in Section 3, a critical factor for successful TTA is stability. Current methods for online TTA mostly leverage self-training to adapt the model to the current domain shift, showing great performance on short test sequences [5, 34, 51, 53]. However, if self-training is utilized without any proper regularization, the model is likely to become biased after a while. In the worst case, the bias can even evolve into a trivial solution, where the model only predicts a small subset of classes. In this section, we first demonstrate the aforementioned points for TENT, which exploits entropy minimization for model adaptation. Then, we investigate the behaviour of current state-of-the-art methods, revealing some inefficiencies to effectively counter model bias during test-time.\nLong test sequences promote model bias and domain shifts can trigger trivial solutions To investigate whether the model is becoming biased or degrades to a trivial solution during the adaptation, we consider the total variation distance (TVD). It measures the deviation between the actual class prior and the predicted prior. The TVD is defined as\ndTV(p, p\u0302) = 1\n2 C\u2211 i=1 |pi \u2212 p\u0302i|, (7)\nwhere pi and p\u0302i are the true and predicted prior probability for class i, respectively. If the TVD is calculated along the test sequence, it can also indirectly show the occurrence of error accumulation, since it is a lower bound of the error of the pseudo-labels [21]. Since TENT reports good results for adapting a model to a single domain, we begin our analysis with the same setting and only vary the length of the test sequence by repeating each domain several times. Specifically, we use ImageNet-C with 50,000 samples per corruption and CIFAR100-C with 10,000 samples per corruption (both at severity level 5). Following TENT, we utilize a ResNet-50 with a learning rate lr = 2.5e\u22124 for ImageNet-C and a ResNeXt-29 with lr = 0.001 for CIFAR100-C. As shown on the left side of Figure 6, TENT quickly deteriorates to a trivial solution for half of the corruptions of ImageNet-C, while developing a growing bias for the other half. In case of CIFAR100-C, TENT initially deteriorates slightly but then remains stable for most of the corruptions. To study the impact of multiple domain shifts, which is a quite common setting in practice, we leverage all 15 corruption types and create 15 randomly ordered domain sequences. The results for this setting, including different learning rates, are depicted in the middle of Figure 6. Since the TVD now steadily increases in all settings, it becomes clear that domain shifts can explicitly enhance model bias and lead to trivial solutions. If the domain non-stationarity is further increased to its maximum, where consecutive test samples are likely to originate from different domains, the TVD increases even more rapidly (right side of Figure 6). Now, by equipping TENT with our certainty and diversity based loss weighting, stable adaptation across all previously considered settings and a wider range of learning rates is possible. The only exception to this is ImageNet-C in the mixed domains TTA setting with a learning rate four times higher than the default. This clearly demonstrates that maintaining diversity is crucial in TTA.\nMany state-of-the-art methods lack diversity In Figures 7 and 8, we investigate existing TTA methods and our proposed method, namely ROID, in terms of diversity on the continual ImageNet-C benchmark with 50,000 samples per corruption. Figure 7 provides a visual representation of online batch predictions across the entire continual sequence, illustrating the impact on diversity over time and the influence by different domain shifts. Figure 8 depicts the histogram over the predicted classes for the last corruption (JPEG) after adapting the model on the complete continual sequence.\nBeginning with BN\u20131, we observe variations in the degree of model bias induced by different domain shifts. Corruptions where the performance of BN\u20131 is relatively bad, tend to show a higher model bias. Looking at TENT, a collapse can be seen after a few corruptions, resulting in predicting only a small subset of the 1,000 classes. AdaContrast also strongly lacks diversity after few corruptions. Since LAME solely corrects the model output without updating the model\u2019s parameters, the diversity of its predictions heavily relies on the specific type of domain shift. Although LAME maintains diversity for certain corruptions, such as brightness, it collapses for the majority. RoTTA shows the behavior whereby diversity temporarily diminishes for specific domain shifts, such as the transition from impulse noise to defocus blur and brightness to contrast. This behavior can likely be attributed to its robust batch normalization, which incorporates past statistics, resulting in bad\nstatistics when past statistics differ from current ones. While SAR demonstrates better diversity than CoTTA and RMT, it still manifests a deficiency in diversity, evident, for example, in the predictions for the final corruption, where a strong bias towards a few classes exists. On the other hand, EATA and ROID with their diversity weighting effectively preserve diversity throughout the adaptation process."
+        },
+        {
+            "heading": "B. Ablation studies",
+            "text": ""
+        },
+        {
+            "heading": "B.1. Architectures",
+            "text": "To demonstrate that our proposed method ROID is largely model-agnostic, we evaluate our method in the continual TTA setting on 31 different architectures. In Table 5, we report our results on regular architectures. In Table 6, mobile architectures and transformers are considered on the left and right, respectively. All results worse than the source performance are highlighted in red. While test-time normalization (BN\u20131) can decrease the error for corruptions (IN-C) on all considered architectures, this is not the case for natural shifts (IN-R, IN-Sketch, IN-D109). Especially for mobile architectures, Inception-v3, and RegNets,\nthe error rate even increases. Since ROID applies test-time normalization, it works particularly well when a good estimation of the batch statistics is possible during test-time. ROID always outperforms BN\u20131, but due to the bad estimation of the batch statistics of MobileNet-v3 on ImageNet-Sketch, improvement upon the source performance is not possible. Nevertheless, in general, ROID can significantly outperform the source model, demonstrating its applicability to a wide range of different architectures. Among all networks, MaxViT-tiny, a hybrid (CNN + ViT) model, performs best on all ImageNet benchmarks. Regarding the considered CNN architectures, ResNeXt-101-32x8d and RegNetY-32gf show the best overall results."
+        },
+        {
+            "heading": "B.2. Catastrophic Forgetting",
+            "text": "In Figure 9, we investigate the occurrence of catastrophic forgetting [27] for CoTTA [53], EATA [33], and ROID on the long continual ImageNet-C sequence (50,000 samples per corruption). Following [33], we adapt the model on an alternating sequence of corrupted data and source data, i.e., [Gaussian, Source, Shot, Source, ...], using the complete ImageNet validation set (50,000 samples) as Source. Note that this procedure is different compared to how catastrophic forgetting is measured within the field of continual learning. However, in TTA, where the model is continually adapted to an unknown domain, this is the more realistic setting. Clearly, CoTTA suffers from major catastrophic forgetting, as the source error steadily increases after each corruption. By using elastic weight consolidation, EATA can largely prevent forgetting. However, to perform elastic weight consolidation, EATA requires data from the initial source domain, which may be unavailable in practice. Our proposed method ROID, which utilizes weight ensembling, is even more effective than EATA and only requires the initial parameters of the normalization layers. ROID is capable of nearly recovering the performance of the initial source model on the source domain."
+        },
+        {
+            "heading": "B.3. Momentum for Weight Ensembling",
+            "text": "In Table 7, we analyze the sensitivity with respect to the momentum \u03b1 used for our weight ensembling. ResNet-50, Swin-b, and ViT-b-16 are evaluated on the continual ImageNet-C benchmark. Choosing a relatively low momentum \u03b1 = 0.9, corresponding to only \u201dkeeping\u201d 90% of the current model and adding 10% of the weights of the initial source model, limits adaptation. In the interval \u03b1 \u2208 [0.99, 0.9975], a decent compromise between allowing adaptation and remaining good generalization from the source model is possible. For large momentum values \u03b1 \u2265 0.999 the advantages of weight ensembling vanish, resulting in an increase of adaptation error for all architectures."
+        },
+        {
+            "heading": "B.4. Computational Efficiency",
+            "text": "Since efficiency is also of great importance for a method performing its adaptation during test-time, we study in Table 8 the efficiency of each method with respect to the number of required forward and backward propagations, as well as the number of trainable parameters. We conduct the analysis on ImageNet-R using a ResNet-50. Clearly, the most inefficient methods are CoTTA, RMT, and AdaContrast which do not only require three and four times as many forward passes, but also calculate the gradients with respect to all parameters. While RoTTA also performs three forward passes per test sample,\nsignificantly less parameters are trained and the number of backward propagations is not increased. The most efficient method during adaptation is EATA. Compared to the second most efficient method, TENT, fewer backward passes are required as some samples are filtered out. Due to performing consistency regularization, ROID is slightly less efficient than TENT and EATA, but comparable to SAR. Note that the additional 2000 forward and backward passes required to calculate the Fisher information matrix in EATA are not included in Table 8."
+        },
+        {
+            "heading": "B.5. Memory Efficiency",
+            "text": "Another huge advantage of architectures based on group or layer normalization is their potential to recover the batch TTA setting from a single sample scenario by leveraging gradient accumulation. This approach has the additional benefit that it significantly reduces the amount of required memory, which can be a scarce when TTA is performed on an edge device. In Table 9, the allocated memory for the batch and single sample setting is compared. Using gradient accumulation with TENT and ViT-b-16 reduces the maximum GPU memory consumption by 14.5 times while providing the same results. In case of ROID, the reduction factor is 15.8. If Swin-b is used as a model, the memory reduction factors are even larger."
+        },
+        {
+            "heading": "B.6. Component Analysis",
+            "text": "In the following we elaborate and extend the component analysis from the main paper. Detailed results for the continual and mixed-domains setting are presented in Table 17 and for the correlated and mixed-domains correlated setting in Table 18. To adapt a model to the entire spectrum of Universal TTA, the most important aspect is to have a stable method. This factor isn\u2019t solely crucial for a specific scenario in TTA but resonates across all settings. As our analysis in Sec. 3 and Appendix A.2 suggests, even in the easiest setting (continual) it is essential to prevent the model from developing a bias or worse, collapsing to a trivial solution during test-time. A non-stationary setting, such as mixed-domains, can further enhance a model bias and degrade performance. To circumvent this, diversity weighting is essential. This is also supported by our component analysis which demonstrates that the driving factor in the continual and mixed-domains setting is diversity and certainty weighting.\nTo effectively address the challenge of dealing with multiple domain shifts over time, we employ weight ensembling (WE). WE retains generalization and still enables a good adaptation, as demonstrated in Sec. 3. It should be underscored that this is only necessary when a model adapts to a narrow distribution, potentially leading to overfitting on the current domain. In the context of mixed-domains, where samples from different domains are encountered within a single batch, adapting to such a broad distribution is also possible without WE. This is demonstrated by our component analysis, where WE improves the performance where multiple domain shifts are encountered, but actually slightly degrades the performance in the mixed-domains setting (broad distribution). Note that also for ImageNet-R and ImageNet-Sketch the best performance in the continual setting is achieved for configuration B, since here we only adapt to a single domain and do not encounter any additional domain shifts where generalization would be of importance. Nevertheless, the concept of WE carries the added benefit of enhancing overall stability. It serves as a corrective measure, capable of rectifying suboptimal adaptations over time, by continually incorporating a small percentage of the source weights. This becomes visible for the difficult adaptation in correlated settings, where highly imbalanced data can hinder a stable adaptation process. Here, WE ensembling ensures a stable adaptation process.\nShifting our focus to the correlated setting, the role of prior correction is substantial. Weighting the network\u2019s outputs with a smoothed estimate of the label prior benefits in settings with highly imbalanced data. Uncertain data points can be corrected by taking prior label information into account, while not degrading performance when a uniform label distribution is present.\nTaking a look at employing consistency through data augmentation, the component analysis shows that it is beneficial across all settings and datasets. Compared to the other components, encouraging the invariance to small changes in the input space, has a moderate benefit."
+        },
+        {
+            "heading": "C. Detailed Results",
+            "text": ""
+        },
+        {
+            "heading": "D. Comparison to Related Work",
+            "text": "Comparison with CoTTA While both CoTTA and our proposed method utilize source weights, CoTTA uses stochastic restoring, where with a small probability current weights are restored with the corresponding weights from the source model. The idea behind stochastic restoring is that the network avoids drifting too far away from the initial source model. But, as discussed in Section B.2, CoTTA first of all cannot prevent catastrophic forgetting on the continual ImageNet-C benchmark with 50,000 samples per corruption and, second, shows instabilities for certain domain shifts or settings. Instead of performing a stochastic restore, our proposed weight ensembling, which continually ensembles the weights of the initial source model and the weights of the current model, prevents catastrophic forgetting and mostly preserves the generalization capabilities of the initial source model.\nComparison with EATA EATA, like our proposed method, utilizes certainty and diversity weighting. However, their weighting scheme relies on dataset-specific hyperparameters, such as an entropy threshold and a cosine similarity threshold. While the entropy threshold is determined heuristically, the cosine similarity threshold needs to be manually specified for each dataset. Choosing an inappropriate cosine similarity threshold can lead to a significant decrease in performance. For example, switching the cosine similarity threshold of CIFAR10-C and CIFAR100-C reduces the performance by absolutely 2.7% and 10.8%, respectively. In contrast, our proposed diversity weighting scheme does not necessitate dataset-specific hyperparameters and has demonstrated success across a wide range of different datasets, models, and domain shifts, as validated by our experiments. To address catastrophic forgetting, EATA incorporates elastic weight consolidation, which requires access to source samples for computing the Fisher information matrix. As discussed in Appendix B.2, our proposed weight ensembling approach also effectively mitigates catastrophic forgetting without the need for source data availability. Furthermore, EATA does not only exhibit instabilities when dealing with correlated data, but also demonstrates impractical performance outcomes in this setting due to not employing any prior correction."
+        }
+    ],
+    "title": "Universal Test-time Adaptation through Weight Ensembling, Diversity Weighting, and Prior Correction",
+    "year": 2023
+}

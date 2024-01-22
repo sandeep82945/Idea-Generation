@@ -1,0 +1,140 @@
+{
+    "abstractText": "In this paper, we propose a novel approach (called GPT4MIA) that utilizes Generative Pre-trained Transformer (GPT) as a plug-andplay transductive inference tool for medical image analysis (MIA). We provide theoretical analysis on why a large pre-trained language model such as GPT-3 can be used as a plug-and-play transductive inference model for MIA. At the methodological level, we develop several technical treatments to improve the efficiency and effectiveness of GPT4MIA, including better prompt structure design, sample selection, and prompt ordering of representative samples/features. We present two concrete use cases (with workflow) of GPT4MIA: (1) detecting prediction errors and (2) improving prediction accuracy, working in conjecture with wellestablished vision-based models for image classification (e.g., ResNet). Experiments validate that our proposed method is effective for these two tasks. We further discuss the opportunities and challenges in utilizing Transformer-based large language models for broader MIA applications.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Yizhe Zhang"
+        },
+        {
+            "affiliations": [],
+            "name": "Danny Z. Chen"
+        }
+    ],
+    "id": "SP:259edf46b4c0253c6725eae049a5748a5da1af17",
+    "references": [
+        {
+            "authors": [
+                "Chih-Chung Chang",
+                "Chih-Jen Lin"
+            ],
+            "title": "LIBSVM: A library for support vector machines",
+            "venue": "ACM Transactions on Intelligent Systems and Technology,",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "Tom Brown"
+            ],
+            "title": "Language models are few-shot learners",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Hanyuan Hang",
+                "Yuchao Cai",
+                "Hanfang Yang",
+                "Zhouchen Lin"
+            ],
+            "title": "Under-bagging nearest neighbors for imbalanced classification",
+            "venue": "Journal of Machine Learning Research,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Kaiming He",
+                "Xiangyu Zhang",
+                "Shaoqing Ren",
+                "Jian Sun"
+            ],
+            "title": "Delving deep into rectifiers: Surpassing human-level performance on ImageNet classification",
+            "venue": "In Proceedings of the IEEE International Conference on Computer Vision,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Thorsten Joachims"
+            ],
+            "title": "Transductive inference for text classification using support vector machines",
+            "venue": "In ICML,",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "Sanford Weisberg"
+            ],
+            "title": "Applied Linear Regression, volume 528",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "Jiancheng Yang",
+                "Rui Shi",
+                "Donglai Wei",
+                "Zequan Liu",
+                "Lin Zhao",
+                "Bilian Ke",
+                "Hanspeter Pfister",
+                "Bingbing Ni"
+            ],
+            "title": "MedMNIST v2 \u2013 a large-scale lightweight benchmark for 2D and 3D biomedical image classification",
+            "venue": "Scientific Data,",
+            "year": 2023
+        }
+    ],
+    "sections": [
+        {
+            "text": "Keywords: Medical Image Classification \u00b7 Generative Pre-trained Transformer \u00b7 GPT-3 \u00b7 Large Language Models \u00b7 Transductive Inference"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "Modern large language models (LLMs) are built based on the Transformer architecture and are trained to produce a sequence of text output given a sequence of text input such that the output is expected to be semantically coherent to the input. For example, for a text completion task, the input text is a sequence of text from a text resource, and the model is trained to produce the next character, word, or sentence of the input text. Open AI\u2019s GPT-3 has 175 billion parameters, and was trained on hundreds of billions of words. Brown et al. [4] showed that GPT-3 is capable of few-shot learning: Given a few examples/demonstrations to GPT-3, it can generalize considerably well to new samples with similar characteristics. The input and output coherency and the strong generalization\nar X\niv :2\n30 2.\n08 72\n2v 3\n[ cs\n.C V\n] 2\ncapability indicates that pre-trained LLMs such as GPT-3 are potentially capable as general tools for transductive inference tasks with limited data.\nThe notion of transductive inference was first introduced by Vapnik [9]. Given training samples (with labels) and test samples, transductive inference predicts the labels of the test samples using either a parametric model (e.g., a transductive support vector machine (SVM) [7]) or a non-parametric model (e.g., a nearest neighbor based classifier [5]). Different from inductive inference, transductive inference does not aim to induce a prediction function from known samples; instead, its goal is to obtain the labels of test samples via propagating the information from known samples (e.g., training samples).\nIn this paper, we propose a novel approach, called GPT4MIA, which utilizes GPT-3 as a plug-and-play transductive model to improve medical image analysis (MIA). For an MIA task (e.g., medical image classification), we give information of known samples as part of GPT-3\u2019s input and ask GPT-3 to infer a new sample\u2019s label (see Fig. 1). We expect GPT-3 to infer a test sample\u2019s label by using transductive information from the known samples on the test sample. We give theoretical analysis on why this approach is feasible by drawing connections between attention mechanism and nearest neighbor inference. To make this approach more efficient and effective, we optimize the prompt construction, aiming to choose the most representative samples/features and order them in the prompt based on their importance. We present two practical use cases of utilizing our proposed method in medical image classification. We then validate the effectiveness of our method on medical image classification benchmarks.\nOur method utilizes a generative pre-trained Transformer for performing transduction from known medical image samples (e.g., training samples) to new test samples. The GPT-3 used in this work has billions of parameters. However, these parameters were pre-trained with language (text) data, and are not being updated during the transduction process for medical image classification. To our best knowledge, this is the first study to utilize a large pre-trained Transformerbased language model for performing transductive inference for image classification tasks (computer vision tasks), which are out of the data domain of the pre-training (language) domain. Our contributions are summarized as follows.\n(1) We propose to utilize a large pre-trained language model (e.g., GPT-3) as a plug-and-play transductive inference method for improving MIA. We show that GPT-3 can serve as a general tool for performing transduction with an appropriate setup. Our approach is novel and flexible, suggesting a new direction of research for improving medical AI\u2019s accuracy and reliability.\n(2) We develop techniques to improve the efficiency, effectiveness, and usability of our proposed GPT4MIA. Two use cases are proposed for GPT4MIA, and strong empirical results validate that GPT4MIA outperforms conventional and state-of-the-art methods in both inductive and transductive method categories.\n(3) Our work offers a new way of utilizing a small set of additional labeled data in medical AI: Given a trained deep learning (DL) model and a small set of labeled data (e.g., a validation set), utilizing GPT-3 as a transductive inference method in conjunction with a DL model can achieve better prediction reliability (use case #1) and higher prediction accuracy (use case #2)."
+        },
+        {
+            "heading": "2 Approach",
+            "text": "In this section, we first provide theoretical analysis on the connection between the attention mechanism and transductive inference mechanism. Then we show details on how to design prompts for using GPT-3 as a transductive inference method. Finally, we present two use cases with workflow to demonstrate how to use GPT-3 as a plug-and-play transductive inference method for MIA."
+        },
+        {
+            "heading": "2.1 Theoretical Analyses",
+            "text": "A fundamental component of GPT-3 is the scaled dot-product attention. Typically, three pieces of input are fed to an attention layer: queries Q, keys K, and values V . The scaled dot-product attention can be described as:\nAttention(Q,K, V ) = softmax( QKT\ns )V, (1)\nwhere s is a scaling factor. Below, we show that a special case of Eq. (1) can be viewed as a nearest neighbor (NN) classifier under a cosine distance metric system3.\nSetup 1: Suppose the key component K contains features of a set of m known samples, and each feature is of a unit length. The value component V contains these m samples\u2019 corresponding labels, and each label is a one-hot vector. The query component Q contains a feature vector (of a unit length), which represents a new test sample whose label is yet to be determined.\nProposition 1: When the scaling factor s is approaching 0 (e.g., s is a very small positive number), the attention function in Eq. (1) is approaching an NN classifier in the cosine distance metric system.\n3 Nearest neighbor classifiers are a typical transductive method for prediction problems.\nThe above is not difficult to show. QKT computes the pair-wise similarities between the test sample\u2019s feature and the features in the keys K. A small s would enlarge the numerical gap between similar pairs and dissimilar pairs. This then leads to a one-hot-like result after applying the softmax operation. The one-hot-like result is then multiplied with the values V , which chooses the label of a known sample that is the most similar to the test sample.\nGenerative Pre-trained Transformer uses a special type of attention called \u201cself-attention\u201d, where the K, V , and Q components are all the same. We will show that in a slightly different setup from Setup 1, the self-attention mechanism can also serve a role as an NN classifier for inferring a new sample\u2019s label given known samples\u2019 information.\nSetup 2: For each known sample, we concatenate its feature vector with the corresponding label vector to form a feature-label vector. We repeat this process for every known sample, and put all the obtained feature-label vectors into K (row by row). In addition, we construct the test sample\u2019s feature-label vector by concatenating its feature vector with a label vector containing all zeros. We put this feature-label vector into K as well. Since we are considering the selfattention mechanism, V and Q are constructed in the same way as for K.\nProposition 2: Under Setup 2, self-attention (i.e., Eq. (1) with K = V = Q) generates the same label vector as one that is generated from the attention in Setup 1 for the test sample. With s approaching a small value, self-attention can serve as an NN classifier for inferring the test sample\u2019s label.\nSince the label vector for the test sample has all zeros at the input, the similarity measures between the test sample and known samples are influenced only by their features. This leads the inference process for the label of the test sample to be essentially the same as shown in Proposition 1. Transformer architecture used in modern large language models, including GPT-3, consists of multiple layers of self-attentions. Below we give more results on stacking self-attentions.\nProposition 3: Under Setup 2, a single layer of self-attention (Eq. (1) with K = V = Q) performs one iteration of clustering on feature-label vectors (including the known samples and test sample). L layers of self-attention perform L iterations of clustering. There exists a number L\u2217 for the number of layers of self-attention for which the clustering process converges.\nGuided by the above theoretical analysis, below we proceed to design the prompt (input) of GPT-3 for transductive inference. We use Setup 2 to guide the prompt construction since GPT-3 uses self-attention: The features and labels of the known samples and the feature of the test sample are put together to feed to GPT-3. According to Proposition 3, stacking self-attentions is functionally more advanced than a nearest neighbor-based classifier. GPT-3 uses not only stacking self-attentions but also numerous pre-trained parameters to augment these attentions. Hence, we expect GPT-3 to be more robust than the conventional methods (e.g., KNN) for transductive inference."
+        },
+        {
+            "heading": "2.2 Prompt Construction",
+            "text": "A set of m known samples is provided with their features F = {f1, f2, . . . , fm} and corresponding labels Y = {y1, y2, . . . , ym}. A feature vector ftest of a test sample is given. The task in this section is to construct a prompt text representation that contains information from F , Y , and ftest, which is fed to GPT-3 for inferring the label of the test sample.\nSelecting and Ordering Known Samples. As a language model, the original goal of training GPT-3 was to train the model to generate output that is semantically coherent with its input. The data used for training GPT-3 implicitly imposed a prior: The later a text appears in the input prompt (the closer the text to the output text), the larger impact it would impose on the output generation process. Hence, it is essential to put the more representative feature-label texts near the end of the prompt for inferring the test sample\u2019s label.\nWe compute pair-wise similarities between the features in the set F of the known samples and obtain an affinity matrix S, in which each entry Si,j describes the similarity between samples i and j and is computed as sim(fi, fj). A cosine similarity function is the default choice for sim(., .).\nFor a feature vector fi \u2208 F , we define a simple measure of how well fi represents the other known samples: repi = \u2211m j=1 Si,j . To select the top k representative samples, one can compute repi for each i = 1, 2, . . . ,m, and choose the largest k representative samples: index = argsort(rep1, . . . , repm, \u201cdescend\u201d), and index is represented as index[1, 2, . . . , k]. The order of the samples in the prompt for GPT-3 should be in the reverse order of that in the index list, where the most representative sample (findex[1]) should be put at the end of the prompt in order to give more influence on the output generation. When dealing with imbalanced classification problems, we perform the above process for the samples in each class, and join them in an interleaved fashion.\nConverting Features and Labels to Feature-label Texts. For all the feature vectors fi where i is in the index list computed above, we convert these features to texts in an array-like format. For each feature text thus obtained, we put its corresponding label together with the feature text to form a feature-label text. We then put these feature-label texts together into a long text. More details can be found in the Python-like pseudo-code in Listing 1.1 below.\n1 def Prompt_Construct_Part1(F,Y,selection_ratio =0.25): \\\\ only run once 2 ot1=\"\"; m=len(F); k = selection_ratio * m; rep=np.zeros(m,1) 3 for i in range(m): 4 for j in range(m): 5 rep[i]=rep[i]+ cosine_sim(f[i],f[j])) 6 ind=argsort(rep ,\"descend\"); ind=ind[0:k]; 7 for i in reversed(range(k)): 8 ot1 = ot+str(f[ind[i]]) + \" is in class \" 9 + str(argmax(y[ind[i]]) + \"\\n\")\n10 return ot1 11 12 def Prompt_Construct_Part2(f_test): \\\\for each test sample 13 ot2= str(f_test) + \"is in class \\n\" 14 return ot2\nListing 1.1. Generating prompts for GPT4MIA."
+        },
+        {
+            "heading": "2.3 Workflow and Use Cases",
+            "text": "In this section, we propose two use cases for improving an already-trained visionbased classification model with our proposed GPT4MIA method. The main workflow is illustrated in Fig. 2.\nUse Case #1: Detecting Prediction Errors. The first use case of utilizing GPT-3 as a transductive inference method is for detecting prediction errors by a trained vision-based classifier. Conventionally, a validation set is commonly used for comparing and selecting models. Here, we utilize a validation set to provide known samples for transductive inference. Feature vectors in F are obtained from the output probabilities of the vision-based classification model, and labels in Y are obtained by checking whether the classification model gives the correct prediction on each validation sample.\nUse Case #2: Improving Classification Accuracy. The second use case aims to improve an already-trained classifier by directly adjusting its predictions. This is a more challenging scenario in which the method not only seeks to detect wrong predictions but also acts to convert them into correct ones. Feature vectors in F are obtained from the output probabilities of the vision-based classification model, and labels in Y are obtained from the validation set for each validation sample."
+        },
+        {
+            "heading": "3 Experiments",
+            "text": "In this section, we empirically validate the effectiveness of our proposed GPT4MIA. Inductive methods (e.g., Linear Regression (LR) [10], Multi-Layer Perception (MLP) [6], and Support Vector Machine (SVM) [2]) and transductive methods (e.g., K-Nearest Neighbor (KNN) [8] and Underbagging KNN (UbKNN) [5]) are applicable to the two use cases presented above. We compare these methods with GPT4MIA in the experiments below.4\nConfigurations: We use the OpenAI API [1] for querying the GPT-3 service for all the experiments related to GPT4MIA. More specifically, the text-Davinci003 model is used, which can process up to 4000 tokens per request. The hyper-\n4 LR, MLP, SVM, and KNN are conducted using the scikit-learn library at https://scikit-learn.org/, and UbKNN is with our implementation.\nparameter k (for top k) is chosen to be a quarter of the number of the total available known samples (m). Inference for one test sample costs about $0.05 USD (charged by OpenAI). For the compared methods, we test their default settings as well as other hyper-parameter settings to report their best results."
+        },
+        {
+            "heading": "3.1 On Detecting Prediction Errors",
+            "text": "We utilize the RetinaMNIST and FractureMNIST3D datasets from the MedMNIST dataset [11] for these experiments. We apply a ResNet-50 model trained with the training set as the vision-based classifier, for which the weights can be obtained from the official release.5 We then collect the model\u2019s output probabilities for each validation sample and label it based on whether the prediction is correct. An error detection method is then built based on the information from the validations for classifying the predictions into two classes (being correct or incorrect). The error detection model is then evaluated using the test set working with the same prediction model which was used on the validation (ResNet-50 in this case). We compare our proposed GPT4MIA method on this task with a set of well established inductive methods and transductive methods. From Table 1, one can see that GPT4MIA significantly outperforms the known competing methods for detecting prediction errors from a CNN-based classifier."
+        },
+        {
+            "heading": "3.2 On Improving Classification Accuracy",
+            "text": "We utilize the RetinaMNIST and FractureMNIST3D datasets from MedMNIST [11] for these experiments. ResNet-50 is used as the trained vision-based classification model. The model weights are obtained from the MedMNIST official release. In Table 2, we observe that GPT4MIA performs similarly when comparing with the state-of-the-art transductive inference method Underbagging KNN in balanced accuracy. In Tabel 3, we observe that GPT4MIA performs considerably better in balanced accuracy."
+        },
+        {
+            "heading": "3.3 Ablation Studies",
+            "text": "We validate the effect of performing sample selection and ordering described in Section 2.2. In Table 4 and Table 5, we show the performances for the setting without the step of sample selection and ordering. From these results, it is clear that sample selection and ordering is important for better performance when utilizing GPT-3 as a transductive inference tool."
+        },
+        {
+            "heading": "4 Discussion and Conclusions",
+            "text": "In this paper, we developed a novel method called GPT4MIA that utilizes a pretrained large language model (e.g., GPT-3) for transductive inference for medical image classification. Our theoretical analysis and technical developments are well-founded, and empirical results demonstrated that our proposed GPT4MIA is practical and effective. Large language models (LLMs) such as GPT-3 and, recently, ChatGPT [3] have shown great capability and potential in many different AI applications. In this work, we showed that GPT-3 can perform transductive inference for medical image classification with better accuracy than conventional\n5 The model weights are obtained from https://github.com/MedMNIST/experiments.\nand state-of-the-art machine learning methods. LLMs are great new technologies that can push the boundaries of AI research; on the other hand, new concerns are raised in using these generative models. Reliability and privacy are among the top priorities for medical image analysis, and more efforts should be put into this frontier when working with LLMs. In addition, further improving LLMs for medical image analysis, including better robustness and accuracy, lower costs, and more use cases, are all exciting and important future research targets."
+        },
+        {
+            "heading": "5 Appendix",
+            "text": ""
+        },
+        {
+            "heading": "5.1 Additional Results and Visualizations",
+            "text": "In Table 6, we give additional results of GPT4MIA and other well-known classification models on toy datasets from the scikit-learn package. This experiment serves as a sanity check for our proposed GPT4MIA. In Fig. 3, we visualize the classification results (test sample points) for GPT4MIA and the ground truth. In addition, in Fig. 4, we give visualizations of the test sample points from the experiments for Use Case #1 on the FractureMNIST3D dataset.\nTable 6. Binary classification results on toy datasets in the scikit-learn package. NearN: Nearest Neighbors; GP: Gaussian Process; DT: Decision Tree; RF: Random Forest; NN: Neural Networks; NB: Naive Bayes; QDA: Quadratic Discriminant Analysis.\nDataset NearN Linear SVM RBF SVM GP DT RF NN AdaBoost NB QDA GPT4MIA Moons 0.86 0.85 0.89 0.86 0.83 0.88 0.86 0.88 0.86 0.86 0.88 Circles 0.61 0.45 0.68 0.69 0.71 0.71 0.68 0.69 0.63 0.65 0.81\nFig. 3. Visualizations of classification results (test sample points) on two toy datasets from the scikit-learn package. Different colors indicate different classes."
+        }
+    ],
+    "title": "GPT4MIA: Utilizing Generative Pre-trained Transformer (GPT-3) as A Plug-and-Play Transductive Model for Medical Image Analysis",
+    "year": 2023
+}

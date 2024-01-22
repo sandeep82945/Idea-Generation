@@ -1,0 +1,609 @@
+{
+    "abstractText": "Distributed full-graph training of Graph Neural Networks (GNNs) over large graphs is bandwidth-demanding and time-consuming. Frequent exchanges of node features, embeddings and embedding gradients (all referred to as messages) across devices bring significant communication overhead for nodes with remote neighbors on other devices (marginal nodes) and unnecessary waiting time for nodes without remote neighbors (central nodes) in the graph. This paper proposes an efficient GNN training system, AdaQP, to expedite distributed full-graph GNN training. We stochastically quantize messages transferred across devices to lower-precision integers for communication traffic reduction and advocate communication-computation parallelization between marginal nodes and central nodes. We provide theoretical analysis to prove fast training convergence (at the rate of O(T\u22121) with T being the total number of training epochs) and design an adaptive quantization bit-width assignment scheme for each message based on the analysis, targeting a good trade-off between training convergence and efficiency. Extensive experiments on mainstream graph datasets show that AdaQP substantially improves distributed fullgraph training\u2019s throughput (up to 3.01\u00d7) with negligible accuracy drop (at most 0.30%) or even accuracy improvement (up to 0.19%) in most cases, showing significant advantages over the state-of-the-art works. The code is available at https://github.com/raywan-110/AdaQP.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Borui Wan"
+        },
+        {
+            "affiliations": [],
+            "name": "Juntao Zhao"
+        },
+        {
+            "affiliations": [],
+            "name": "Chuan Wu"
+        }
+    ],
+    "id": "SP:1e49653169724ce9d4861bd6ff49ec454db6cd43",
+    "references": [
+        {
+            "authors": [
+                "S. Agarwal",
+                "H. Wang",
+                "S. Venkataraman",
+                "D. Papailiopoulos"
+            ],
+            "title": "On the utility of gradient compression in distributed training systems",
+            "venue": "Proceedings of Machine Learning and Systems,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D. Alistarh",
+                "D. Grubic",
+                "J. Li",
+                "R. Tomioka",
+                "M. Vojnovic"
+            ],
+            "title": "Qsgd: Communication-efficient sgd via gradient quantization and encoding",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Allen-Zhu",
+                "Z. Natasha"
+            ],
+            "title": "Faster non-convex stochastic optimization via strongly non-convex parameter",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M. Avriel"
+            ],
+            "title": "Nonlinear programming: analysis and methods",
+            "venue": "Courier Corporation,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "Z. Cai",
+                "X. Yan",
+                "Y. Wu",
+                "K. Ma",
+                "J. Cheng",
+                "F. Yu"
+            ],
+            "title": "Dgcl: an efficient communication library for distributed gnn training",
+            "venue": "Proceedings of the Sixteenth European Conference on Computer Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Chen",
+                "Y. Gai",
+                "Z. Yao",
+                "M.W. Mahoney",
+                "J.E. Gonzalez"
+            ],
+            "title": "A statistical framework for low-bitwidth training of deep neural networks",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J. Chen",
+                "L. Zheng",
+                "Z. Yao",
+                "D. Wang",
+                "I. Stoica",
+                "M. Mahoney",
+                "J. Gonzalez"
+            ],
+            "title": "Actnn: Reducing training memory footprint via 2-bit activation compressed training",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J.J. Chen",
+                "T. Ma",
+                "C. Xiao"
+            ],
+            "title": "Fastgcn: Fast learning with graph convolutional networks via importance",
+            "venue": "sampling. ArXiv,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Chiang",
+                "W.-L",
+                "X. Liu",
+                "S. Si",
+                "Y. Li",
+                "S. Bengio",
+                "Hsieh",
+                "C.-J"
+            ],
+            "title": "Cluster-gcn: An efficient algorithm for training deep and large graph convolutional networks",
+            "venue": "Proceedings of the 25th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M. Courbariaux",
+                "Y. Bengio",
+                "David",
+                "J.-P"
+            ],
+            "title": "Binaryconnect: Training deep neural networks with binary weights during propagations",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "B. Feng",
+                "Y. Wang",
+                "X. Li",
+                "S. Yang",
+                "X. Peng",
+                "Y. Ding"
+            ],
+            "title": "Sgquant: Squeezing the last bit on graph neural networks with specialized quantization",
+            "venue": "IEEE 32nd International Conference on Tools with Artificial Intelligence (ICTAI),",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "F. Fu",
+                "Y. Hu",
+                "Y. He",
+                "J. Jiang",
+                "Y. Shao",
+                "C. Zhang",
+                "B. Cui"
+            ],
+            "title": "Don\u2019t waste your bits! squeeze activations and gradients for deep neural networks via tinyscript",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J. Gilmer",
+                "S.S. Schoenholz",
+                "P.F. Riley",
+                "O. Vinyals",
+                "G.E. Dahl"
+            ],
+            "title": "Neural message passing for quantum chemistry",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "W.L. Hamilton",
+                "R. Ying",
+                "J. Leskovec"
+            ],
+            "title": "Inductive representation learning on large graphs",
+            "venue": "In NIPS,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "W.L. Hamilton",
+                "Z. Ying",
+                "J. Leskovec"
+            ],
+            "title": "Inductive representation learning on large graphs",
+            "venue": "In NIPS,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "W. Hu",
+                "M. Fey",
+                "M. Zitnik",
+                "Y. Dong",
+                "H. Ren",
+                "B. Liu",
+                "M. Catasta",
+                "J. Leskovec"
+            ],
+            "title": "Open graph benchmark: Datasets for machine learning on graphs",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Z. Jia",
+                "S. Lin",
+                "M. Gao",
+                "M.A. Zaharia",
+                "A. Aiken"
+            ],
+            "title": "Improving the accuracy, scalability, and performance of graph neural networks with roc",
+            "venue": "MLSys,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "T. Kaler",
+                "N. Stathas",
+                "A. Ouyang",
+                "Iliopoulos",
+                "A.-S",
+                "T. Schardl",
+                "C.E. Leiserson",
+                "J. Chen"
+            ],
+            "title": "Accelerating training and inference of graph neural networks with fast sampling and pipelining",
+            "venue": "Proceedings of Machine Learning and Systems,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "G. Karypis",
+                "V. Kumar"
+            ],
+            "title": "Metis: A software package for partitioning unstructured graphs, partitioning meshes, and computing fill-reducing orderings of sparse matrices",
+            "year": 1997
+        },
+        {
+            "authors": [
+                "T. Kipf",
+                "M. Welling"
+            ],
+            "title": "Semi-supervised classification with graph convolutional networks. ArXiv",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "T. Liu",
+                "Y. Chen",
+                "D. Li",
+                "C. Wu",
+                "Y. Zhu",
+                "J. He",
+                "Y. Peng",
+                "H. Chen",
+                "C. Guo"
+            ],
+            "title": "Bgl: Gpu-efficient gnn training by optimizing graph data i/o and preprocessing",
+            "venue": "arXiv preprint arXiv:2112.08541,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Z. Liu",
+                "K. Zhou",
+                "F. Yang",
+                "L. Li",
+                "R. Chen",
+                "X. Hu"
+            ],
+            "title": "Exact: Scalable graph neural networks training via extreme activation compression",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "L. Ma",
+                "Z. Yang",
+                "Y. Miao",
+                "J. Xue",
+                "M. Wu",
+                "L. Zhou",
+                "Y. Dai"
+            ],
+            "title": "Neugraph: Parallel deep neural network computation on large graphs",
+            "venue": "In USENIX Annual Technical Conference,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "R.T. Marler",
+                "J.S. Arora"
+            ],
+            "title": "Survey of multi-objective optimization methods for engineering",
+            "venue": "Structural and multidisciplinary optimization,",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "A. Paszke",
+                "S. Gross",
+                "F. Massa",
+                "A. Lerer",
+                "J. Bradbury",
+                "G. Chanan",
+                "T. Killeen",
+                "Z. Lin",
+                "N. Gimelshein",
+                "L Antiga"
+            ],
+            "title": "Pytorch: An imperative style, high-performance deep learning library",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J. Peng",
+                "Z. Chen",
+                "Y. Shao",
+                "Y. Shen",
+                "L. Chen",
+                "J. Cao"
+            ],
+            "title": "Sancus: staleness-aware communication-avoiding fullgraph decentralized training in large-scale graph neural networks",
+            "venue": "Proceedings of the VLDB Endowment,",
+            "year": 1937
+        },
+        {
+            "authors": [
+                "H. Robbins",
+                "S. Monro"
+            ],
+            "title": "A stochastic approximation method",
+            "venue": "The annals of mathematical statistics,",
+            "year": 1951
+        },
+        {
+            "authors": [
+                "S. Sarvotham",
+                "R. Riedi",
+                "R. Baraniuk"
+            ],
+            "title": "Connection-level analysis and modeling of network traffic",
+            "venue": "In Proceedings of the 1st ACM SIGCOMM Workshop on Internet Measurement,",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "S.A. Tailor",
+                "J. Fern\u00e1ndez-Marqu\u00e9s",
+                "N.D. Lane"
+            ],
+            "title": "Degree-quant: Quantization-aware training for graph neural networks. ArXiv",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "J. Thorpe",
+                "Y. Qiao",
+                "J. Eyolfson",
+                "S. Teng",
+                "G. Hu",
+                "Z. Jia",
+                "J. Wei",
+                "K. Vora",
+                "R. Netravali",
+                "M. Kim",
+                "G.H. Xu"
+            ],
+            "title": "Dorylus: Affordable, scalable, and accurate gnn training with distributed cpu servers and serverless",
+            "venue": "threads. ArXiv,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A. Tripathy",
+                "K. Yelick",
+                "A. Bulu\u00e7"
+            ],
+            "title": "Reducing communication in graph neural network training",
+            "venue": "In SC20: International Conference for High Performance Computing, Networking, Storage and Analysis,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "C. Wan",
+                "Y. Li",
+                "A. Li",
+                "N.S. Kim",
+                "Y. Lin"
+            ],
+            "title": "Bns-gcn: Efficient full-graph training of graph convolutional networks with partition-parallelism and random boundary node sampling sampling",
+            "venue": "Proceedings of Machine Learning and Systems,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C. Wan",
+                "Y. Li",
+                "C.R. Wolfe",
+                "A. Kyrillidis",
+                "N.S. Kim",
+                "Y. Lin"
+            ],
+            "title": "Pipegcn: Efficient full-graph training of graph convolutional networks with pipelined feature communication",
+            "venue": "arXiv preprint arXiv:2203.10428,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M.Y. Wang"
+            ],
+            "title": "Deep graph library: Towards efficient and scalable deep learning on graphs. In ICLR workshop on representation learning on graphs and manifolds, 2019",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J. Wu",
+                "W. Huang",
+                "J. Huang",
+                "T. Zhang"
+            ],
+            "title": "Error compensated quantized sgd and its applications to large-scale distributed optimization",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Z. Wu",
+                "S. Pan",
+                "F. Chen",
+                "G. Long",
+                "C. Zhang",
+                "S.Y. Philip"
+            ],
+            "title": "A comprehensive survey on graph neural networks",
+            "venue": "IEEE transactions on neural networks and learning systems,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "K. Xu",
+                "W. Hu",
+                "J. Leskovec",
+                "S. Jegelka"
+            ],
+            "title": "How powerful are graph neural networks? ArXiv",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Y. Yu",
+                "J. Wu",
+                "L. Huang"
+            ],
+            "title": "Double quantization for communication-efficient distributed optimization",
+            "venue": "In NeurIPS,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "H. Zeng",
+                "H. Zhou",
+                "A. Srivastava",
+                "R. Kannan",
+                "V.K. Prasanna"
+            ],
+            "title": "Graphsaint: Graph sampling based inductive learning",
+            "venue": "method. ArXiv,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "M. Zhang",
+                "Y. Chen"
+            ],
+            "title": "Link prediction based on graph neural networks",
+            "venue": "In NeurIPS,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Z. Zhang",
+                "P. Cui",
+                "W. Zhu"
+            ],
+            "title": "Deep learning on graphs: A survey",
+            "venue": "IEEE Transactions on Knowledge and Data Engineering,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "F. Zhu",
+                "R. Gong",
+                "F. Yu",
+                "X. Liu",
+                "Y. Wang",
+                "Z. Li",
+                "X. Yang",
+                "J. Yan"
+            ],
+            "title": "Towards unified int8 training for convolutional neural network",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2020
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1 INTRODUCTION",
+            "text": "Graph Neural Networks (GNNs) have received increased attention from the AI community for their superior performance on graph-based tasks such as node classification (Kipf & Welling, 2017), link prediction (Zhang & Chen, 2018) and graph classification (Xu et al., 2019). For each node of a graph, a GNN typically aggregates features or embeddings of the node\u2019s neighbors iteratively and then uses them to create the node\u2019s own embedding. This process is referred to as message-passing (Gilmer et al., 2017), which enables GNNs to learn better representative embeddings from graph structures than traditional graph learning methods (Wu et al., 2020; Zhang et al., 2020).\nFor a k-layer GNN, the message-passing paradigm requires features and embeddings in the k-hop neighborhood of the training nodes to be retrieved and stored on a device (e.g., GPU) for computation, leading to high memory overhead. When training on large graphs, the memory consumption may easily exceed the memory capacity of a single device, and GNN training with graph sampling has hence been\n1Department of Computer Science, University of Hong Kong, Hong Kong, China. Correspondence to: Borui Wan <wanborui@connect.hku.hk>.\nProceedings of the 6 th MLSys Conference, Miami Beach, FL, USA, 2023. Copyright 2023 by the author(s).\nwidely studied (Hamilton et al., 2017b; Chen et al., 2018; Chiang et al., 2019; Zeng et al., 2020; Wan et al., 2022a): the large input graphs are partitioned among multiple devices and machines; each worker (device) samples partial neighborhood of its training nodes and fetches features of sampled neighbors from other devices/machines if they are not in the local graph partition. Such graph sampling reduces memory, computation and communication overheads during distributed GNN training, at the cost of indispensable information loss for graph learning, as compared to full-graph training. Besides, sampling introduces extra time overhead due to running (sophisticated) sampling algorithms (Liu et al., 2021a; Kaler et al., 2022).\nUnlike sampling-based GNN training, distributed full-graph training allows learning over the complete input graphs, retaining whole graph structure information. Each device requires messages of all 1-hop neighbors of nodes in its graph partition during iterative training, fetching the respective data from devices where they are stored/computed. The need for frequent message exchanges across devices renders the major performance bottleneck for training. Besides, different devices require different numbers of messages from others, which generates irregular all2all communications, leading to communication stragglers in each communication round. Such overheads of distributed full-graph training have also been echoed in recent literature (Wan et al., 2022b;\nar X\niv :2\n30 6.\n01 38\n1v 1\n[ cs\n.L G\n] 2\nJ un\n2 02\n3\nPeng et al., 2022; Cai et al., 2021).\nA few studies have investigated different perspectives to improve distributed full-graph training, including graph partition algorithms and memory management (Ma et al., 2019; Jia et al., 2020), communication planing (Cai et al., 2021) and communication-avoiding training with staleness (Thorpe et al., 2021; Wan et al., 2022b; Peng et al., 2022). Nevertheless, none of them considers compressing remote messages to reduce communication traffic for training expedition.1 Unlike the above methods, message compression can reduce data volumes for both communications between remote devices and data movement from device to host. The latter occurs when messages need to be moved from device memory to host memory first and then transferred to remote devices. (when GPUDirect RDMA is not available in the cluster).\nWhile messages are being exchanged, embedding computation of nodes with all neighbors located locally often waits for the completion of message transfers in synchronous fullgraph training (Ma et al., 2019; Jia et al., 2020; Cai et al., 2021), which is not needed. Although existing stalenessbased methods eliminate part of the waiting time by pipelining communication with computation (Wan et al., 2022b) or skipping node broadcast and using historical embeddings for computation (Peng et al., 2022), they may lead to slower training convergence (Wan et al., 2022b; Peng et al., 2022), increasing the wall-clock time to achieve the same model accuracy as compared to their synchronous counterparts. Disparate handling of local nodes with and without remote neighbors has not been found in both synchronous and asynchronous full-graph training works in the literature.\nWe propose AdaQP, an efficient distributed full-graph GNN training system that accelerates GNN training from two perspectives: adaptive quantization of messages and parallelization of computation of central nodes and message transfers of marginal nodes on each device. Our main contributions are summarized as follows:\n\u25b7 We apply adaptive stochastic integer quantization to messages dispatched from each device to others, which reduces the numerical precision of messages and hence the size of transferred data. To our best knowledge, we are the first to apply stochastic integer quantization to expedite distributed full-graph training. We provide a theoretical convergence guarantee and show that the convergence rate\n1Model gradient compression has been extensively studied to accelerate distributed DNN training (Alistarh et al., 2017; Yu et al., 2019; Wu et al., 2018). However, for GNNs, the size of model gradients is typically much smaller than those of node features and embeddings (e.g., for the ogbn-products dataset, a three-layer GCN with a hidden size of 256 has 0.55MB model gradients, but 1.17GB features and 3.00GB embeddings), making the transferring of messages much more costly than that of gradients.\nis still O(T\u22121), identical to that of no-compression training and better than sampling-based (Cong et al., 2020) and staleness-based (Wan et al., 2022b; Peng et al., 2022) GNN training. Using insights from the convergence analysis, an adaptive bit-width assignment scheme is proposed based on a bi-objective optimization, that assigns suitable quantization bit-width to the transferred messages to alleviate unbalanced data volumes from/to different devices and achieve a good trade-off between training convergence and efficiency.\n\u25b7 We further decompose the graph partition on each device into a central graph and a marginal graph, and overlap the computation time of the former with the message communication time of the latter, to maximize training speed and resource utilization. Since the communication overhead always dominates the training process (Sec. 2.2), the computation time of the central graph can be easily hidden within the communication time without introducing any staleness that influences training convergence.\n\u25b7 We implement AdaQP on DGL (Wang, 2019) and PyTorch (Paszke et al., 2019), and conduct extensive evaluation. Experimental results show that AdaQP significantly reduces the communication time by 80.94% maximum and 79.98% on average, improves the training throughput by 2.19 \u223c 3.01\u00d7 with acceptable accuracy fluctuations (- 0.30% \u223c + 0.19%), and outperforms state-of-the-art (SOTA) works on distributed full-graph training on most of the mainstream graph datasets."
+        },
+        {
+            "heading": "2 BACKGROUND AND MOTIVATION",
+            "text": ""
+        },
+        {
+            "heading": "2.1 GNN Message Passing",
+            "text": "The message passing paradigm of GNN training can be described by two stages, aggregation and update (Gilmer et al., 2017):\nhlN(v) = \u03d5 l(hl\u22121u |u \u2208 N(v)) (1)\nhlv = \u03c8 l(hl\u22121v , h l N(v)) (2)\nHere N(v) denotes the neighbor set of node v. hlv is the learned embedding of node v at layer l. \u03d5l is the aggregation function of layer l, which aggregates intermediate node embeddings from N(v) to derive the aggregated neighbor embedding hlN(v). \u03c8\nl is the update function that combines hlN(v) and h l\u22121 v to produce h l v .\nThe two-stage embedding generation can be combined into a weighted summation form, representing the cases in most mainstream GNNs (e.g., GCN (Kipf & Welling, 2017), GraphSAGE (Hamilton et al., 2017a)):\nhlv = \u03c3(W l \u00b7 ( {v}\u222aN(v)\u2211 u \u03b1u,vh l\u22121 u )) (3)\nwhere \u03b1u,v is the coefficient of embedding hl\u22121u , W l is the weight matrix of layer l and \u03c3 is the activation function. We will use this form in our theoretical analysis in Sec. 4.\n2.2 Inefficient Vanilla Distributed Full-graph Training\nIn vanilla distributed full-graph training (Fig. 1, referred to as Vanilla), interleaving communication-computation stages exist in each GNN layer during both forward pass and backward pass for generating embeddings or embedding gradients. Therefore, multiple transfers of 1-hop remote neighbors\u2019 messages (specifically, transferring features and embeddings in the forward pass and embedding gradients, also denoted as errors (Goodfellow et al., 2016), in the backward pass) lead to large communication overhead. To illustrate it, we train a three-layer GCN on representative datasets (all experiments in this section use this GCN, detailed in Sec. 5) and show the communication cost, which is computed by dividing the average communication time by the average per-epoch training time among all devices, in Table 1. We observe that communication time dominates training time. Further, with the increase of partition number, the communication cost becomes larger due to the growth of the remote neighbor ratio (computed by dividing the average number of remote 1-hop neighbors by the average number of nodes among partitions).\nBesides, with the mainstream graph partition algorithms (e.g., METIS (Karypis & Kumar, 1997) ), the number of nodes whose messages are transferred varies among different device pairs, creating unbalanced all2all communications. This unique communication pattern exists throughout the GNN training process, which does not occur in distributed DNN training (where devices exchange samesize model gradients). Fig. 2 shows the data size transferred across different device pairs in GCN\u2019s first layer\nwhen training on AmazonProducts, partitioned among 4 devices. There is a significant imbalance among data sizes transferred across different device pairs, which leads to unbalanced communication time across the devices in each communication round, affecting the overall training speed.\nFurther, Vanilla and previous works (Wan et al., 2022b; Peng et al., 2022; Cai et al., 2021) do not consider that in the forward (backward) pass of each training iteration, the computation of central nodes can directly start without waiting for message exchanges. Overlapping the computation time of central nodes with the communication time of marginal nodes can help further improve the training throughput. As communication renders the major bottleneck in GNN training, we observed that central nodes\u2019 computation time can be well hidden within marginal nodes\u2019 communication time. In Table 2, we show central nodes\u2019 computation time and marginal nodes\u2019 communication time when the transferred messages are quantized with a bit-width of 2 (i.e., the numerical precision is 2-bit), rendering the lowest communication volumes. Even under this extremely low communication, communication time is still longer than the central nodes\u2019 computation time. When central node computation is hidden within communication, Fig. 3 shows the reduction of model computation time on each device, by 23.20% to 55.44%."
+        },
+        {
+            "heading": "2.3 Stochastic Integer Quantization",
+            "text": "As a lossy compression method, stochastic integer quantization (Chen et al., 2021) has been applied to quantize the DNN model for efficient integer arithmetic inference (Zhu et al., 2020; Tailor et al., 2021; Feng et al., 2020), or compress activations to reduce memory footprint during the\nforward pass (Chen et al., 2021; Liu et al., 2021b). Differently, we apply it to reduce communication data volumes in distributed full-graph training. For a given message vector hlv of node v in layer l, the bv-bit quantized version of h l v is: h\u0303lvb = q\u0303b(h l v) = roundst(\nhlv \u2212 Zlv Slvb ) (4)\nwhere q\u0303b denotes stochastic integer quantization operation, roundst(\u00b7) is the stochastic rounding operation (Chen et al., 2020), Zlv = min(h l v) is referred to as the zero-point (the minimum value among elements in vector hlv) and Slvb = max(hlv)\u2212min(h l v)\n2bv\u22121 is a scaling factor that maps the original floating-point vector into the integer domain, where bv is typically chosen among {2, 4, 8}. A larger quantization bit-width bv introduces less numerical precision loss, but not as much data size reduction as a smaller value. Received quantized messages are de-quantized into floating-point values for subsequent computation:\nh\u0302lv = dqb(h\u0303 l vb) = h\u0303 l vbS l vb + Z l v (5)\nwhere h\u0302lv represents the de-quantized message vector and dqb denotes de-quantization operation. Following (Chen et al., 2021), h\u0302lv is unbiased and variance bounded:\nTheorem 1. With stochastic integer quantization and deterministic de-quantization operations q\u0303b(\u00b7) and dqb(\u00b7) in Eqn. (4) and Eqn. (5), h\u0302lv is an unbiased and variance bounded estimate of the original input hlv , that E[h\u0302lv] = E[dqb(h\u0303lvb)] = h l v,Var[h\u0302lv] = Dlv(S l vb )2\n6 . Dlv is the dimension of vector h l v .\nThe good mathematical properties of the quantization method serve as the basis for us to derive a theoretical guarantee of GNN training convergence (Sec. 4).\nWe propose an efficient system AdaQP, incorporating adaptive message quantization and computation-communication parallelization design, to improve distributed full-graph training efficiency. Fig. 4 gives a high-level illustration of the benefits of AdaQP, as compared to Vanilla."
+        },
+        {
+            "heading": "3 SYSTEM DESIGN",
+            "text": "We study distributed full-graph GNN training using devices (aka workers) on multiple physical machines. The large input graph is partitioned among the devices. Fig. 5 shows the workflow of distributed full-graph training on each device using AdaQP."
+        },
+        {
+            "heading": "3.1 Overview",
+            "text": "The graph partition at each device is decomposed into a central graph, which contains central nodes and their neighbors, and a marginal graph, which includes marginal nodes and their local neighbors. Messages from other devices only need to be passed to the marginal graph for computation. In the forward pass (backward pass) of each GNN layer, for nodes in the marginal graph, quantization is applied to all outgoing messages to other devices, using a bit-width assigned by the Adaptive Bit-Width Assigner, and de-quantization is done on all received messages before the computation stage begins. For central nodes in the central\ngraph, they can enter their computation stage in parallel with the communication for the marginal graph. The Adaptive Bit-width Assigner traces the input data to each GNN layer, and periodically adjusts the bit-width for each message by solving a bi-objective problem with the latest traced data."
+        },
+        {
+            "heading": "3.2 Naive Message Quantization",
+            "text": "We perform stochastic integer quantization on the messages transferred across devices during the forward (backward) pass. Consider the aggregation step of GNN layer l for computing embedding of a node v, as given in Eqn. 1 in Sec. 2.1. Let NL(v) and NR(v) denote the local and remote neighbor sets of node v. We rewrite the aggregation step as:\nhlN(v) = \u03d5 l(hl\u22121u |u \u2208 {NL(v) \u222aNR(v)}) (6)\nQuantization is only performed on messages in NR(v) to reduce the communication data size. The benefit brought by naive message quantization is obvious; however, it requires frequently performing quantization and de-quantization operations before and after each device-to-device communication, which adds extra overheads to the training workflow. We notice that quantization (Eqn. 4) and de-quantization (Eqn. 5) themselves are particularly suitable for parallel computing since they just perform the same linear mapping operations to all elements in a message vector. Therefore, we implement the two operations with efficient CUDA kernels. Sec 5.4 demonstrates that compared to training expedition brought by quantization, the extra overheads are almost negligible."
+        },
+        {
+            "heading": "3.3 Dynamic Adaptive Bit-width Assignment",
+            "text": "Simply assigning the same bit-width to all messages cannot achieve a good tradeoff between training convergence and training efficiency (Sec. 4); adaptively assigning different bit-widths to different messages is necessary. To support transferring messages quantized with multiple bit-widths between devices, each device first establishes multiple sending buffers for messages of different bit-widths, whose sizes are determined by the Adaptive Bit-width Assigner, and then broadcasts the sizes of the buffers to other devices. Each device also uses received sending buffer sizes from others to set up multiple receiving buffers. The adaptive bit-width assigning process is shown in Fig. 6. Given a bit-width update period, each training device launches an Adaptive Bit-width Assigner which keeps tracing all GNN layers\u2019 inputs. The assigner periodically sends traced data from the last period to the master assigner (residing in the device with rank 0) and then blocks the current training worker, waiting for the generation of new bit-width assignment results (step2). At the same time, the master assigner uses gathered data to build a variance-time bi-objective problem, whose variables are bit-widths of the message groups. Since the bit-width assignment results for each GNN layer have no dependence\nquantization kernel computation kernel\nde-quantization kernel\ncommunication\nCPU\nGPU\nkernel function\nkernel function\nkernel function\nMarginal Graph Quantization Marginal Graph Communication & Central Graph Computation Marginal Graph De-quantization\nCUDA Kernel Launch Data Movement\nFigure 7. Our GPU resources isolation strategy.\non each other, we create a thread pool in the master device to compute each layer\u2019s solution in parallel (step 3). After that, the master assigner scatters the bit-width solutions to corresponding devices, and then each device uses the latest assignment results to update its sending and receiving buffers (step 4)."
+        },
+        {
+            "heading": "3.4 Computation-Communication Parallelization",
+            "text": "Model computation and message quantization are both compute-intensive. Therefore overlapping computation on the central graph with the quantized message transfers on the marginal graph can lead to an overall slow-down due to the contention for GPU compute resources, which is indicated in previous works (Agarwal et al., 2022). To tackle this issue, we apply a simple yet useful resource isolation strategy based on the observations in Sec. 2.2, that is, the time for transferring extremely quantized messages is still large enough to hide the computation time of the central graph. We control CUDA kernel launching time instead of letting GPUs schedule different CUDA streams freely.\nAs shown in Fig. 7, we further divide the computationcommunication overlapping stage in Fig. 5 into three finegrained stages, ensuring that in each stage the GPU compute resources are only used by one among quantization, de-quantization and central graph computation. Since communication on the marginal graph only requires the GPU bandwidth, we force the computation CUDA kernel launching and execution on the central graph to be in the second stage with marginal-graph communication, isolating the GPU resource usage between central and marginal graphs. We wrap different types of kernels in GPU with different\nCUDA streams and consider the situation that CUDA kernel\u2019s launching and execution are asynchronous. We use both CPU and GPU events for synchronization."
+        },
+        {
+            "heading": "4 CONVERGENCE GUARANTEE AND BI-OBJECTIVE BIT-WIDTH ASSIGNMENT",
+            "text": "We next show the convergence bound and rate of AdaQP and then formulate a variance-time bi-objective optimization problem for adaptive bit-width assignment."
+        },
+        {
+            "heading": "4.1 Impact of Message Quantization on Training Convergence",
+            "text": "We consider widely adopted gradient descent (GD) algorithm (Avriel, 2003) in full-graph GNN training. Similar to previous studies (Fu et al., 2020; Chen et al., 2020), the fullgraph training can be modeled as the following non-convex empirical risk minimization problem:\nmin wt\u2208RD\nE[L(wt)] = 1\nN N\u2211 i Li(wt) wt+1 = wt \u2212 \u03b1g\u0303t (7)\nwhere wt denotes the parameters at the t-th epoch, D is the dimension of wt, N denotes the total number of samples (nodes) in the full-graph, and Li(\u00b7) is the loss on sample i. g\u0303t = \u2207L(w\u0303t) denotes the stochastic gradient and \u03b1 is the learning step size. Since each training epoch uses full-batch samples, variance in g\u0303t is only brought by performing stochastic integer quantization on messages. We have Theorem 2 based on standard assumptions for convergence analysis (Fu et al., 2020; Allen-Zhu, 2017). Assumption 1. for \u2200wt,w\u2032t \u2208 RD in the t-th epoch: A.1 (L2\u2212Lipschitz) ||\u2207L(wt)\u2212\u2207L(w\u2032t)|| \u2264 L2||wt\u2212w\u2032t||;\nA.2 (existence of global minimum) \u2203 L\u2217 s.t. L(wt) \u2265 L\u2217;\nA.3 (unbiased stochastic gradient) E[g\u0303t] = gt;\nA.4 (bounded variance) E[||gt \u2212 g\u0303t||] \u2264 Q. Theorem 2. Suppose our distributed full-graph GNN training runs for T epochs using a fixed step size \u03b1 < 2\nL2 . Select t ran-\ndomly from {1, \u00b7 \u00b7 \u00b7 , T}. Under Assumption 1, we have\nE[||\u2207L(w\u0304t)||2] \u2264 2(L(w1)\u2212 L\u2217) T (2\u03b1\u2212 \u03b12L2) + \u03b1L2Q 2 2\u2212 \u03b1L2 . (8)\nAll the detailed proofs can be found in Appendix A. Similar to the convergence result of a standard SGD algorithm (Robbins & Monro, 1951), the bound in Theorem 2 includes two terms, while the second term is totally different from its SGD counterpart, where variance is not introduced due to sampling variance but message quantization. The first term in the bound goes to 0 as T \u2192 \u221e, which shows an O(T\u22121) convergence rate. AdaQP\u2019s convergence rate is the same as that with Vanilla, and faster than those of sampling-based methods (O(T\u2212 1 2 ) (Cong et al., 2020)) and staleness-based methods (O(T\u2212 2 3 ) (Wan et al., 2022b) or O(T\u2212 1 2 ) (Peng et al., 2022)).\nDuring training, the gradient variance exists in the weight matrix in each layer l of an L-layer GNN. Let w = {wl}Ll=1 denotes the set of weight matrices of GNN, we then show the gradient variance upper bound Ql for each wl. Let h\u0304l\u22121v = \u2211{v}\u222aN(v) u \u03b1u,vh l\u22121 u in Eqn. 3, and\n\u2202L\u0304 \u2202hlv\n= \u2211{v}\u222aN(v)\nu \u03b1u,v \u2202L \u2202hlu in its backward pass counter-\npart. Based on Theorem 1, we derive Ql under Assumption 2: Assumption 2. For each layer l \u2208 {1, 2, \u00b7 \u00b7 \u00b7 , L} in the GNN and for each node v in the full-graph, L2 norms of the expectations of h\u0304l\u22121v and \u2202L\u0304\u2202hlv\nare upper-bounded: ||E[h\u0304l\u22121v ]|| \u2264 M, ||E[ \u2202L\u0304\n\u2202hlv ]|| \u2264 N .\nTheorem 3. Given a distributed full-graph (V,E) and optional bit-width set B, for each layer l \u2208 {1, \u00b7 \u00b7 \u00b7 , L} in the GNN, gradient variance upper bound Ql in layer l is:\nQl = |V |\u2211 v ( NR(v)\u2211 k1 NR(v)\u2211 k2 \u03b12k1,v\u03b1 2 k2,v Dl\u22121k1 D l k2 (Sl\u22121k1b Slk2b )2 6\n+M2 NR(v)\u2211\nk\n\u03b12k,v Dlk(S l kb )2\n6 +N2 NR(v)\u2211 k \u03b12k,v Dl\u22121k (S l\u22121 kb )2 6 )\n(9)\nwhere the definitions of Slkb andD l k can be found in Sec. 3.2. From a high-level view, for any v in the distributed fullgraph (V,E), its neighborhood aggregation adds variance to model gradients in each layer if it has remote neighbors. For layer l, Ql is decided by many factors: (i) graph topology and partition strategy, which determine the size of v\u2019s remote neighborhood NR(v); (ii) GNN aggregation function, corresponding to the aggregation coefficient \u03b1k,v for each node; (iii) dimension size and numerical range of remote message vectors (Dlk, the numerator in Slkb ); (iv) choices of quantization bit-width bv for each node. Given factors (i)-(iii) which are decided by the GNN training job, we can choose (iv) the quantization bit-width accordingly to minimize the terms in the bound, and thus reduce the gradient variance and let training converge closer to the solution of Vanilla (Chen et al., 2021)."
+        },
+        {
+            "heading": "4.2 Bi-objective Optimization for Adaptive Bit-width Assignment",
+            "text": "There is a trade-off in quantization bit-width assignment: using a larger quantization bit-width (e.g., 8-bit) leads to lower gradient variance upper bound Ql in each layer, but less communication volume reduction (as compared to using 4-bit or 2-bit). Our goal is to design an adaptive bit assignment scheme for different messages between each device pair, to strike a good balance between training convergence and efficiency.\nFrom Fig. 2 we know that the size of transferred data varies significantly across device pairs. We should also alleviate communication stragglers in each communication round.\nSpecifically, we follow (Wan et al., 2022b) to implement the all2all communication in a ring pattern (Fig. 8). For N devices, it takes N \u2212 1 communication rounds to finish the message exchange, where each of the devices sends/receives messages to/from its i-hop right/left neighbors in the ring during i-round communication. LetB = {2, 4, 8} be the set of candidate bit-widths. For each communication round in the forward (backward) pass of GNN layer l, we formulate the following minimax optimization problem for bit-width selection:\nmin bk\u2208B max 1\u2264i\u2264N \u03b8i Ki\u2211 k Dlkbk + \u03b3i (10)\nbk denotes the bit-width assigned for quantizing message hlk. For any device pair i, Ki denotes the total number of messages to be transferred. Dkl is the dimension of the remote message vector hlk. \u03b8i and \u03b3i are parameters of the cost model (Sarvotham et al., 2001). Problem 10 finds the device pair that has the longest predicted communication time and minimizes it.\nAccording to Theorem 3, considering a message hlk in GNN layer l sent to a target device, we want to minimize the variance it brings to this layer\u2019s weight gradients. Apart from bit-width bk, the dimension and the minimum (maximum) values of it (in Slkb ), and the sum of squares of all the aggre-\ngation coefficients \u2211NT (k)\nv \u03b1 2 k,v (where NT (k) denotes k\u2019s\nneighbors in the target device) allocated by its neighbors in the target device also influence the magnitude of variance. We solve the following minimization problem to minimize the total gradient variance in one communication round,\nwhere \u03b2k = \u2211NT (k) v \u03b1 2 k,vD l k(max(h l k)\u2212min(h l k)) 2\n6 :\nmin bk\u2208B N\u2211 i Ki\u2211 k \u03b2k (2bk \u2212 1)2 (11)\nWe jointly address the two objectives in Eqn. 10 and Eqn. 11, which formulates a bi-objective optimization problem. We apply the weighted sum method to scalarize the objectives (Marler & Arora, 2004) and add auxiliary variables to convert it to a pure minimization problem:\nmin bk\u2208B \u03bb N\u2211 i Ki\u2211 k \u03b2k (2bk \u2212 1)2 + (1\u2212 \u03bb)Z, \u03bb \u2208 [0, 1]\ns.t.1\u2264i\u2264N \u03b8i Ki\u2211 k Dlkbk + \u03b3i \u2264 Z, Z > 0\n(12)\nWe convert the problem to a Mixed Integer Linear Program by viewing it as an Assignment Problem in the combinatorial optimization field and use off-the-shelf solvers (e.g., GUROBI (Gurobi Optimization, LLC, 2022)) to obtain the bit-width assignments. To better adapt to the value change of some parameters in \u03b2k (e.g., the minimum and maximum values in message vectors) in training, we periodically resolve the problem (Sec. 3.3). To reduce the overhead for solving the optimization, for one layer\u2019s forward or backward pass, we order messages transferred in each device pair according to their \u03b2k values, and then divide them into groups to reduce the number of variables; messages in a group share the same bit-width assignment. We empirically set the size of message groups, which can be found in Appendix B."
+        },
+        {
+            "heading": "5 EVALUATION",
+            "text": "Implementation. We build AdaQP on top of DGL 0.9 (Wang, 2019) and PyTorch 1.11 (Paszke et al., 2019), leveraging DGL for graph-related data storage and operations and using PyTorch distributed package for process group\u2019s initialization and communication. Before training begins, DGL\u2019s built-in METIS algorithm partitions the graph; each training process is wrapped to only one device (GPU) and broadcasts the remote node indices (built from DGL\u2019s partition book) to create sending and receiving node index sets for fetching messages from others. To support computation-communication parallelization, we integrate our customized distributed graph aggregation layer into PyTorch\u2019s Autograd mechanism. To support extremely low bitwidth message compression, we follow (Liu et al., 2021b) to merge all the quantized messages with lower precision (4-bit or 2-bit) into uniform 8-bit byte streams. To transfer multiple bit-width quantized messages and match them with corresponding buffers, we first group messages according to their assigned bit-width, perform single bit-width quantization to each group and then concatenate all groups into a byte array for transmission. After communication, each training process recovers full-precision messages from the byte array based on a bit-retrieval index set maintained and updated by the Adaptive Bit-width Assigner.\nExperimental Settings. We evaluate AdaQP on four large benchmark datasets (Hamilton et al., 2017a; Zeng et al., 2020; Hu et al., 2020), detailed in Table 3. The transductive graph learning task on Reddit and ogbn-products is single-label node classification, while the multi-label clas-\nsification task is performed on Yelp and AmazonProducts. We use accuracy and F1-score (micro) as the model performance metric for these two tasks, respectively, and refer to them both as accuracy. All datasets follow the \u201cfixedpartition\u201d splits with METIS. We train two representative models, GCN (Kipf & Welling, 2017) and full-batch GraphSAGE (Hamilton et al., 2017a). To ensure a fair comparison, we unify all the model-related and training-related hyperparameters throughout all experiments, whose details can be found in Appendix B. The model layer size and the hidden layers\u2019 dimensions are set to 3 and 256, respectively, and the learning rate is fixed at 0.01. Experiments are conducted on two servers (Ubuntu 20.04 LTS) connected by 100Gbps Ethernet, each having two Intel Xeon Gold 6230 2.1GHz CPUs, 256GB RAM and four NVIDIA Tesla V100 SXM2 32GB GPUs."
+        },
+        {
+            "heading": "5.1 Expediting Training While Maintaining Accuracy",
+            "text": "First, we show that AdaQP can drastically improve the training throughput while still obtaining high accuracy. We compare its performance with Vanilla and two other SOTA methods: PipeGCN (Wan et al., 2022b) and SANCUS (Peng et al., 2022), both of which show significant advantages over previous works (Jia et al., 2020; Cai et al., 2021; Tripathy et al., 2020; Thorpe et al., 2021). We implement Vanilla ourselves and use the open-source code of the other two to reproduce all the results. Note that PipeGCN only implements GraphSAGE while SANCUS implements GCN, so we only show their results on their respective supported GNNs. We run training of each model independently for three times, and the average and standard deviation are presented in Table 4. All the methods use the same number of training epochs.\nWe observe that AdaQP achieves the highest training speed and the best accuracy in the 14/16 and 12/16 sets of experiments, respectively. Specifically, AdaQP is 2.19 \u223c 3.01\u00d7 faster than Vanilla with at most 0.30% accuracy degradation. By carefully and adaptively assigning bit-widths for messages, AdaQP can even improve accuracy up to 0.19%. Compared to AdaQP, PipeGCN and SANCUS not only are slower in most settings but also introduce intolerable model accuracy loss. This is because AdaQP does not rely on stale messages that slow down training convergence. What is more, properly applied quantization can benefit training due to the regularization effect of quantization noise introduced to model weights (Courbariaux et al., 2015).\nNote that PipeGCN achieves higher training throughput than AdaQP on Reddit, which is because Reddit is much denser than others. This nature helps the cross-iteration pipeline design of PipeGCN (hiding communication overheads in computation) but does not always hold for other graphs. AdaQP does not rely on this prior property of graphs and\ncan obtain consistent acceleration on distributed full-graph training. We also notice that SANCUS\u2019s performance is even worse than Vanilla\u2019s under many settings. This is because it adopts sequential node broadcasts, which is less efficient than the ring all2all communication pattern adopted by Vanilla."
+        },
+        {
+            "heading": "5.2 Preserving Convergence Rate",
+            "text": "To verify the theoretical analysis in Sec. 4 that AdaQP is able to maintain the same training convergence rate as Vanilla (O(T\u22121)), we show the training curves of all methods on Reddit and ogbn-products in Fig. 9 (the complete comparison can be found in Appendix C). We observe that our training curves almost coincide with those of Vanilla, verifying the theoretical training convergence guarantee in Sec. 4.1. On the other hand, both PipeGCN and SANCUS lead to slower training convergence, which is also consistent with their theoretical analysis (meaning that more training epochs will be needed if they intend to achieve the same accuracy as vanilla full-graph training and AdaQP). To further illustrate the end-to-end training expedition gains of AdaQP, we show the wall-clock time (the total training time, and for AdaQP, wall-clock time contains both the bit-width assignment time and the actual training time) of training among all the methods on AmazonProducts in Table 5. The complete comparison can be found in Appendix C."
+        },
+        {
+            "heading": "5.3 Striking Better Trade-off with Adaptive Message Quantization",
+            "text": "We compare our adaptive message quantization scheme with the uniform bit-width sampling scheme, which samples a bit-width from {2, 4, 8} for each message uniformly and randomly. From Table 6, we see that adaptive message quantization obtains higher accuracy with faster training speed in almost all settings. By solving the bi-objective problem, adaptive message quantization can control the overall gradient variance to a certain level while taking into account the training speed, and alleviate stragglers in all communication rounds. However, uniform bit-width sampling is not as robust. In some cases, it leads to apparent accuracy degradation, e.g., 75.03% vs. 75.32%. This is because simply performing uniform bit-width sampling can easily assign lower bit-widths (2 or 4) to messages with large \u03b2 values, thus introducing significant variance (Sec. 4) to model gradients and hurting the accuracy."
+        },
+        {
+            "heading": "5.4 Time Breakdown",
+            "text": "To understand the exact training throughput improvement and the extra overheads brought by AdaQP, we break down per-epoch training time into three parts (communication, computation and quantization time) and the wall-clock time into two parts (assignment time and actual training time).\nWe provide the results of training GCN on all datasets in Fig. 10. For AdaQP, computation time only includes the marginal graph\u2019s computation time since that of the cen-\ntral graph is hidden within communication time (Sec. 2.2). Fig. 10(a) shows that compared to communication and computation time reduction benefits brought by AdaQP, the extra quantization cost is almost negligible. Specifically, for AdaQP, the overall quantization overheads are only 5.53% \u223c 13.88% of per-epoch training time, while the reductions in communication time and computation time are 78.29%\n\u223c 80.94% and 13.16% \u223c 39.11%, respectively. Similar observations can be made in Fig. 10(b), where the average time overhead for bit-width assignment is 5.43% of the wall-clock time."
+        },
+        {
+            "heading": "5.5 Senstivity Analysis",
+            "text": "There are three hyper-parameters that determine the performance and overhead of adaptive message quantization in AdaQP: a) group size of messages, which determines the number of variables in Problem 12; b) \u03bb, which decides the relative weight between time objective and variance objective in the bi-objective minimization problem; c) bit-width re-assignment period, which influences the total assignment overhead and the amount of traced data. We perform sensitivity experiments on these hyper-parameters by training GCN on 2M-4D partitioned ogbn-products (since this setting shows the largest accuracy gap between Vanilla and AdaQP). As shown in Fig. 11, for group size, the highest accuracy is obtained when it adopts the smallest value (50), which also brings much larger assignment overheads. As for \u03bb, setting it to 0 or 1 both degrades the original problem to a single-objective problem, the best model accuracy is not achieved in these cases. As mentioned in Sec. 5.1, quantization can serve as a form of regularization; just rendering the lowest quantization variance (\u03bb = 1) or just pursuing the highest throughput regarding the variance (\u03bb = 0) is not the best choice to fully utilize the regularization effect of quantization. For the re-assignment period, a moderate period length (50) leads to the best model accuracy. How to automatically decide the best values for these hyper-parameters warantees further investigation, e.g., using a reinforcement learning method or searching for the best hyper-parameter combinations."
+        },
+        {
+            "heading": "5.6 Scalability of AdaQP",
+            "text": "We further evaluate AdaQP\u2019s training throughput on 6 machines connected by 100Gps Ethernet (two each have four NVIDIA Tesla V100 SXM2 32GB GPUs and four each have four NVIDIA Tesla A100 SXM4 40GB GPUs). We partition ogbn-products and AmazonProducts among the 24 devices and train GraphSAGE on them. Table 7 shows that AdaQP still achieves considerable throughput improvement in this 6M-4D setting, which validates its scalability."
+        },
+        {
+            "heading": "6 CONCLUSION",
+            "text": "We propose AdaQP, an efficient system for distributed fullgraph GNN training. We are the first to reduce the substantial communication overhead with stochastic integer quantization. We further decompose the local graph partition residing on each device into a central graph and a marginal graph and perform computation-communication parallelization between the central graph\u2019s computation and the marginal graph\u2019s communication. We provide theoretical analysis to prove that AdaQP achieves similar training convergence rate as vanilla distributed full-graph training, and propose a periodically adaptive bit-width assignment scheme to strike a good trade-off between training convergence and efficiency with negligible extra overheads. Extensive experiments validate the advantages of AdaQP over Vanilla and SOTA works on distributed full-graph training."
+        },
+        {
+            "heading": "ACKNOWLEDGEMENTS",
+            "text": "This work was supported in part by grants from Hong Kong RGC under the contracts HKU 17208920, 17207621 and 17203522."
+        },
+        {
+            "heading": "A PROOF",
+            "text": "A.1 Theorem 1\nProof. for any message vector hlv , the roundst(\u00b7) operation one of its elements hlv,i is:\nroundst(h l v,i) = { \u2308hlv,i\u2309 p = hlv,i \u2212 \u230ahlv,i\u230b \u230ahlv,i\u230b p = 1\u2212 (hlv,i \u2212 \u230ahlv,i\u230b) (13)\nwhere p is the probability of rounding hlv,i to certain value. \u2308\u00b7\u2309 and \u230a\u00b7\u230b are ceil and floor operations respectively. Since \u2308hlv,i\u2309 \u2212 \u230ahlv,i\u230b = 1, we have E[roundst(hlv,i)] =\n\u2308hlv,i\u2309(hlv,i \u2212 \u230ahlv,i\u230b) + \u230ahlv,i\u230b(1\u2212 (hlv,i \u2212 \u230ahlv,i\u230b)) = hlv,i. Therefore, after q\u0303b(\u00b7) (Eq.4) and dqb(\u00b7) (Eq. 5) operations, the expectation of h\u0302lv is:\nE[h\u0302lv] = E[roundst( hlv \u2212 Zlv Slvb )Slvb + Z l v]\n= SlvbE[roundst( hlv \u2212 Zlv Slvb )] + Zlv = hlv\n(14)\nas for variance of h\u0302lv , we have:\nVar[h\u0302lv] = (Slvb) 2Var[roundst( hlv \u2212 Zlv Slvb )] (15)\nlet h = h l v\u2212Z l v\nSlvb , since Var[h] = E[hTh] \u2212 E[hT ]E[h],\nhence:\nVar[roundst( hlv \u2212 Zlv Slvb )] = Dlv\u2211 i \u2308hi\u23092(hi \u2212 \u230ahi\u230b)\n+ \u230ahi\u230b2(1\u2212 hi + \u230ahi\u230b)\u2212 h2i\n= Dlv\u2211 i (2\u230ahi\u230bhi + hi \u2212 \u230ahi\u230b2 \u2212 \u230ahi\u230b \u2212 h2i )\n(16)\nwe make the assumption that \u2200i, hi \u2212 \u230ahi\u230b = \u03c3 \u223c Uniform(0,1), then V ar[roundst( hlv\u2212Z l v\nSlvb )] =\n\u2211Dlv i (\u03c3\u2212\u03c32) =\nDlv 6 . Finally, the variance of h\u0302 l v is:\nVar[h\u0302lv] = Dlv(S l vb) 2\n6 (17)\nA.2 Theorem 2\nProof. We perform Taylor expansion for L(wt+1) with Lagrangian Remainder:\nf(wt+1) = L(wt \u2212 \u03b1gt + \u03b1gt \u2212 g\u0303t)\n= L(wt \u2212 \u03b1gt) + \u03b1(gt \u2212 g\u0303t)T\u2207L(wt \u2212 \u03b1gt)\n+ 1\n2 \u03b12(gt \u2212 g\u0303t)T\u22072L(\u03f5t)(gt \u2212 g\u0303t)\n(18)\nsince E[g\u0303t] = gt (from Assumption 1), we have:\nE[L(wt+1)] \u2264 E[L(wt \u2212 \u03b1gt)\n+ \u03b1(gt \u2212 g\u0303t)T\u2207L(wt \u2212 \u03b1gt)\n+ 1\n2 \u03b12L2||gt \u2212 g\u0303t||2]\n\u2264 E[L(wt \u2212 \u03b1gt)] + 1\n2 \u03b12L2Q 2\n(19)\nwhere the first inequality is due to the property of Lipschitz continuity, the second inequality is due to the bounded variance property that E[||g \u2212 g\u0303||] \u2264 Q. We perform similar Taylor Expansion to L(wt \u2212 \u03b1gt) in Eq. 19 and take expectation on both sides:\nE[L(wt \u2212 \u03b1gt)] = E[L(wt)\u2212 \u03b1gTt \u2207L(wt)\n+ 1\n2 \u03b12gTt \u2207L(\u00b5t)gt]\n\u2264 L(wt)\u2212 \u03b1E[||gt||2] + 1\n2 \u03b12L2E[||gt||2]\n(20)\ndenote gt as \u2207L(wt) and plug Eq. 20 into Eq. 19, we have:\n(\u03b1\u2212 1 2 \u03b12L2)E[||\u2207L(wt)||2] \u2264 E[L(wt)]\u2212 E[L(wt+1)]\n+ 1\n2 \u03b12L2Q 2\n(21) since we assume that this problem exists global minimum (Assumption 1), Summing over t from 1 to T we have:\n\u2211T t=1 E[||\u2207L(wt)|| 2]\nT \u2264 2(L(w1)\u2212 L\n\u2217)\nT (2\u03b1\u2212 \u03b12L2) +\n\u03b1L2Q 2\n2\u2212 \u03b1L2 (22)\nViewing t as a random variable, we have Theorem 2.\nA.3 Theorem 3\nProof. We denote model gradient matrix in GNNs\u2019 layer l with quantization variance as \u2202L\n\u2202W\u0303l , its full-precision coun-\nterpart as \u2202L \u2202Wl\n, according to the forward pass form in Eq. 3, we have:\n\u2202L \u2202W\u0303l = |V |\u2211 v \u03c3\u2032(\u00b7)\u2299 \u2202L \u2202hlv ( {v}\u222aN(v)\u2211 u \u03b1u,vh l\u22121 u ) T\n= |V |\u2211 v \u03c3\u2032(\u00b7)\u2299 ( {v}\u222aNL(v)\u2211 u \u03b1u,v \u2202L \u2202hlu + NR(v)\u2211 k \u03b1k,v \u2202L \u2202h\u0302lkb )\u00b7\n( {v}\u222aNL(v)\u2211 u \u03b1u,vh l\u22121 u + NR(v)\u2211 k \u03b1k,vh\u0302 l\u22121 kb )T\n(23)\nConsider that each message quantization operation in the forward and backward pass are independent of each other, we can get the expectation and variance of \u2202L\n\u2202W\u0303l based on\nTheorem 1:\nE[ \u2202L \u2202W\u0303l ] = |V |\u2211 v \u03c3\u2032(\u00b7)\u2299 ( {v}\u222aNL(v)\u2211 u \u03b1u,v \u2202L \u2202hlu\n+ NR(v)\u2211 k \u03b1k,vE[ \u2202L \u2202h\u0302lkb ])( {v}\u222aNL(v)\u2211 u \u03b1u,vh l\u22121 u\n+ NR(v)\u2211 k \u03b1k,vE[h\u0302l\u22121kb ]) T = \u2202L \u2202Wl\n(24)\nfor variance, we omit the activation function \u03c3 since it does not change variance form, we have:\nVar[ \u2202L \u2202W\u0303l ] = |V |\u2211 v Var[ \u2202L \u2202hlv ( {v}\u222aN(v)\u2211 u \u03b1u,vh l\u22121 u ) T ]\n= |V |\u2211 v E[( \u2202L \u2202hlv )2]E[( {v}\u222aN(v)\u2211 u \u03b1u,vh l\u22121 u ) 2]T\n\u2212 E[ \u2202L \u2202hlv\n]2E[( {v}\u222aN(v)\u2211\nu\n\u03b1u,vh l\u22121 u ) T ]2\n= |V |\u2211 v V ar[ \u2202L \u2202hlv ]V ar[ {v}\u222aN(v)\u2211 u \u03b1u,vh l\u22121 u )]\n+ Var[ \u2202L \u2202hlv\n]E[ {v}\u222aN(v)\u2211\nu\n\u03b1u,vh l\u22121 u )] 2\n+ Var[ {v}\u222aN(v)\u2211\nu\n\u03b1u,vh l\u22121 u )]E[ \u2202L \u2202hlv ]2\n(25)\nSince the randomness is introduced by NR(v), utilizing Assumption 2 we have:\nVar[ \u2202L \u2202W\u0303l ] = |V |\u2211 v Var[ NR(v)\u2211 k \u03b1k,v \u2202L \u2202h\u0302lkb ] Var[ NR(v)\u2211\nk\n\u03b1k,vh l\u22121 kb ]\n+ Var[ NR(v)\u2211\nk \u03b1k,v \u2202L \u2202h\u0302lkb\n]E[ {v}\u222aN(v)\u2211\nk\n\u03b1k,vh l\u22121 kb ]2\n+ Var[ NR(v)\u2211\nk\n\u03b1k,vh l\u22121 kb\n]E[ {v}\u222aN(v)\u2211\nk\n\u03b1k,v \u2202L \u2202h\u0302lkb ]2\n\u2264 |V |\u2211 v Var[ NR(v)\u2211 k \u03b1k,v \u2202L \u2202h\u0302lkb ]Var[ NR(v)\u2211 k \u03b1k,vh l\u22121 kb ] +M2Var[ NR(v)\u2211\nk \u03b1k,v \u2202L \u2202h\u0302lkb\n] +N2Var[ NR(v)\u2211\nk\n\u03b1k,vh l\u22121 kb ]\n(26)\nuse Theorem 1, we have:\nVar[ \u2202L \u2202W\u0303l ] \u2264 |V |\u2211 v ( NR(v)\u2211 k \u03b12k,v Dlk \u00b7 (Slkb) 2 6 )\n\u00b7 ( NR(v)\u2211\nk\n\u03b12k,v Dl\u22121k \u00b7 (S l\u22121 kb )2\n6 ) +M2 NR(V )\u2211 k \u03b12k,v Dlk(S l kb )2 6\n+N2 NR(v)\u2211\nk\n\u03b12k,v Dl\u22121k (S l\u22121 kb )2\n6 )\n(27)\nWe can just let the model gradient matrix\u2019s upper bound Ql in layer l be the gradient variance upper bound in Eqn. 27:\nQl = |V |\u2211 v ( NR(v)\u2211 k1 NR(v)\u2211 k2 \u03b12k1,v\u03b1 2 k2,v Dl\u22121k1 D l k2 (Sl\u22121k1b Slk2b )2 6\n+M2 NR(v)\u2211\nk\n\u03b12k,v Dlk(S l kb )2\n6 +N2 NR(v)\u2211 k \u03b12k,v Dl\u22121k (S l\u22121 kb )2 6 )\n(28)"
+        },
+        {
+            "heading": "B TRAINING CONFIGURATION",
+            "text": "We show the training configurations in Table 8, where GCN and GraphSAGE share the same configurations. We also include the message group size and the value of \u03bb for AdaQP in the table."
+        },
+        {
+            "heading": "C ADDITIONAL EXPERIMENTS",
+            "text": "C.1 Training Convergence Comparison\nFig. 12 shows the training convergence comparison of all the methods on all the datasets under the same experiential settings of Sec. 5.1. As we can see, AdaQP consistently shows a fast convergence rate over other SOTA stalenessbased expedition methods, which is similar to the conclusion drawn in Sec. 5.2.\nC.2 Wall-clock Time Comparison\nWe provide the wall-clock time comparison of all the methods on all the datasets in Tab. 9 under the same experiment settings in Sec. 5.1. For the fairness of comparison, we include the extra bit-width assignment time overheads (details in 3.3) in the wall-clock time of AdaQP. The results prove that the extra overheads introduced by AdaQP are negligible compared to the overall wall-clock time reduction gains, which is consistent with the time breakdown analysis in Sec 5.4. We still achieve the shortest wall-clock time in 14/16 sets of experiments."
+        }
+    ],
+    "title": "DISTRIBUTED FULL-GRAPH GNN TRAINING",
+    "year": 2023
+}

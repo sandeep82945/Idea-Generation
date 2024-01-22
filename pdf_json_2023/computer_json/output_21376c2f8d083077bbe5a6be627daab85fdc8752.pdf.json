@@ -1,0 +1,233 @@
+{
+    "abstractText": "In this research paper, we address the Distinct Elements estimation problem in the context of streaming algorithms. The problem involves estimating the number of distinct elements in a given data stream A = (a1, a2, . . . , am), where ai \u2208 {1, 2, . . . , n}. Over the past four decades, the Distinct Elements problem has received considerable attention, theoretically and empirically, leading to the development of space-optimal algorithms. A recent sampling-based algorithm proposed by Chakraborty et al. [6] has garnered significant interest and has even attracted the attention of renowned computer scientist Donald E. Knuth, who wrote an article on the same topic [11] and called the algorithm CVM. In this paper, we thoroughly examine the algorithms (referred to as CVM1, CVM2 in [6] and DonD, DonD in [11]). We first unify all these algorithms and call them cutoff-based algorithms. Then we provide an approximation and biasedness analysis of these algorithms.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Mridul Nandi"
+        }
+    ],
+    "id": "SP:b628e9013c94aac5d86801f1a2739fce7b7d6a0b",
+    "references": [
+        {
+            "authors": [
+                "Noga Alon",
+                "Yossi Matias",
+                "Mario Szegedy"
+            ],
+            "title": "The space complexity of approximating the frequency moments",
+            "venue": "Journal of Computer and System Sciences,",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "Ziv Bar-Yossef",
+                "Ravi Kumar",
+                "D. Sivakumar"
+            ],
+            "title": "Reductions in streaming algorithms, with an application to counting triangles in graphs",
+            "venue": "In Proceedings of the Thirteenth Annual ACM-SIAM Symposium on Discrete Algorithms,",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "Ziv Bar-Yossef",
+                "T.S. Jayram",
+                "Ravi Kumar",
+                "D. Sivakumar",
+                "Luca Trevisan"
+            ],
+            "title": "Counting distinct elements in a data stream",
+            "venue": "Randomization and Approximation Techniques in Computer Science,",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "Jaroslaw Blasiok"
+            ],
+            "title": "Optimal streaming and tracking distinct elements with high probability",
+            "venue": "Proceedings of the 2018 Annual ACM-SIAM Symposium on Discrete Algorithms (SODA),",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Sourav Chakraborty",
+                "Distinct"
+            ],
+            "title": "Elements in Streams: An Algorithm for the (Text) Book",
+            "venue": "Embedded Systems and Applications,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Sourav Chakraborty",
+                "N.V. Vinodchandran",
+                "Kuldeep S. Meel"
+            ],
+            "title": "Distinct Elements in Streams: An Algorithm for the (Text) Book",
+            "venue": "30th Annual European Symposium on Algorithms (ESA 2022),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Marianne Durand",
+                "Philippe Flajolet"
+            ],
+            "title": "Loglog counting of large cardinalities",
+            "venue": "ESA",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "Philippe Flajolet",
+                "G. Nigel Martin"
+            ],
+            "title": "Probabilistic counting algorithms for data base applications",
+            "venue": "Journal of Computer and System Sciences,",
+            "year": 1985
+        },
+        {
+            "authors": [
+                "Phillip B. Gibbons",
+                "Srikanta Tirthapura"
+            ],
+            "title": "Estimating simple functions on the union of data streams",
+            "venue": "Proceedings of the thirteenth annual ACM symposium on Parallel algorithms and architectures,",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "Daniel M. Kane",
+                "Jelani Nelson",
+                "David P. Woodruff"
+            ],
+            "title": "An optimal algorithm for the distinct elements problem",
+            "venue": "PODS \u201910,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "Donald E. Knuth"
+            ],
+            "title": "The cvm algorithm for estimating distinct elements in streams",
+            "venue": "May 2023,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Daniel Kane. Jelani Nelson",
+                "David P Woodruff"
+            ],
+            "title": "An Optimal Algorithm for the Distinct Elements Problem, PODS\u20192010",
+            "venue": "Association for Computing Machinery,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "Kuldeep S. Meel",
+                "Sourav Chakraborty",
+                "N.V. Vinodchandran"
+            ],
+            "title": "Estimation of the size of union of delphic sets: Achieving independence from stream size",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Kuldeep S. Meel",
+                "N.V. Vinodchandran",
+                "Sourav Chakraborty"
+            ],
+            "title": "Estimating the size of union of sets in streaming models",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Michael Mitzenmacher",
+                "Eli Upfal"
+            ],
+            "title": "Probability and Computing: Randomized Algorithms and Probabilistic Analysis",
+            "year": 2005
+        }
+    ],
+    "sections": [
+        {
+            "text": "ar X\niv :2\n30 6.\n05 24\n3v 2\n[ cs\n.D S]\n1 1\nJu n"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "Notations. We adopt the notation xt := (x1, . . . , xt) for any t-tuple, whenever there is no ambiguity in the context (i.e., it can be clearly distinguished from a power of a number or a set). For a positive integer n, let [n] := {1, 2, . . . , n} be a universe. We simply write the statement (1 \u2212 \u03b5)c \u2264 x \u2264 (1 + \u03b5)c as x = (1 \u00b1 \u03b5)c (or x 6= (1 \u00b1 \u03b5)c to denote the negation).\nDistinct Elements Problem (or DEP) for data streams. Given a data stream am := (a1, a2, . . . , am) of m elements from the universe, we need to output an estimate F\u03020 of F0 := F0(a m) := |{a1, . . . , am}|. Throughout this paper we fix an arbitrary stream a m for some positive integer m."
+        },
+        {
+            "heading": "1.1 Goals of Estimates",
+            "text": "We are interested in developing streaming algorithms for all these problems mentioned above with low space complexities. We consider two qualitative natures of approximations of the estimates.\n\u2022 (\u01eb, \u03b4)-approximation: An estimate F\u03020 of F0 is called an (\u01eb, \u03b4)-approximation if\nPr[F\u03020 6= (1 \u00b1 \u01eb) \u00b7 F0] \u2264 \u03b4.\n\u2022 \u03b4-biased estimation: We call the estimate F\u03020 \u03b4-biased |Ex(F\u03020) \u2212 F0| \u2264 \u03b4. If \u03b4 = 0, we call it unbiased estimation."
+        },
+        {
+            "heading": "1.2 Cutoff-based Algorithm",
+            "text": "Consider the following scenario: Candidates appear in a queue for an interview, where each candidate can appear multiple times. The selection board can choose a maximum of s candidates at any given time and so it maintains a list of selected candidates so far. The tth candidate, denoted as at, receives a score qt \u2208 [0, 1]. The selection board sets a cutoff, denoted as pt, based on the current score qt, the previous cutoff pt\u22121, and the list Lt\u22121 just before candidate at appears. The list may hold some additional information such as score for each selected candidate in the list. In our context, obtaining a low score in the final appearance is the eligibility criterion for being selected in the list. So, if qt \u2265 pt, the candidate at is rejected, regardless of whether they were in the previous list or not. Furthermore, this selection process (we call it filter operation) will be applied to all existing candidates in the list Lt\u22121 (i.e., candidates with scores greater than or equal to pt are removed from the list).\n\u2013 We have mentioned that the cutoff is chosen adaptively (we call it cutoff update function). However, the cutoff must be chosen in such a way that at each time t, the list Lt does not exceed s candidates.\n\u2013 It is assumed that candidates have a forgetful nature, meaning their score in each interview appearance is independent of their previous scores. We model a distribution (called score distribution) representing the distribution of the scores for all candidates.\nThis process continues until all candidates a1, a2, . . . , am have been processed, resulting in the final list Lm and final cutoff pm. Consequently, the score obtained in the final interview holds the most significance for selection, as previous scores are not considered. This last score is referred to as the \u201dcredit score\u201d for a candidate. However, it is important to note that previous non-credit scores also play a role, as they influence the values of the cutoff and indirectly impact the selection process. We formalize this process in algorithmic language and refer to it as the cutoff-based streaming algorithm.\nThe cutoff-based streaming algorithm serves as a simplified abstraction of recent algorithms proposed by Don Knuth, namely Algorithm D (referred to as DonD) and Algorithm D\u2032 (referred to as DonD\u2032) [11]. It is worth noting that the CVM algorithms from [6] can also be viewed as equivalent representations within the same framework. In this framework, a list refers to a set of the form {(x1, r1), . . . , (xt, rt)}, where the xi\u2019s are distinct elements of A, and ri \u2208 [0, 1]. To describe the cutoff-based streaming algorithm, we introduce the following operations for a list L, p \u2208 [0, 1]:\n\u2022 Remove(L, a) = {(a\u2032, q\u2032) \u2208 L : a\u2032 6= a} (remove a if it is there)\n\u2022 Filter(L, p) = {(a, q) \u2208 L : q < p} (a subset of L with score less than the given cutoff)\n\u2022 set(L) = {a \u2208 [n] : \u2203q, (a, q) \u2208 L} (set of elements ignoring the scores)\n\u2022 maxscr(L, p) = max(L) = max{q : (a, q) \u2208 L}.\nAlgorithm Cutoff[D,C].\nIt uses a distribution D, called score distribution, over the sample space [0, 1], and a cutoff update function C (which takes a list L and a cutoff value as input and returns a new cutoff value). This also uses a bucket limit parameter s, a positive integer to be decided by the algorithm (the list size should not cross the bucket limit). It initializes L0 = \u2205 and p0 = 1. Upon receiving an element at at time t \u2208 [m], the algorithm follows the following steps:\nstep-1 (sample score of at): qt \u223c D.\nstep-2 (do we include at?):\nL\u2032t =\n{\nRemove(Lt\u22121, at) if qt \u2265 pt\u22121\nRemove(Lt\u22121, at) \u222a (at, qt) otherwise.\nstep-3 (we are done if we have space): If |L\u2032t| \u2264 s then return pt = pt\u22121 and Lt = L \u2032 t.\nstep-4 (if not, then resample the list to reduce to our limit): Else (i.e., |L\u2032t| > s) return\npt := C(L \u2032 t, pt\u22121) 1, Lt = Filter(L \u2032 t, pt).\nAfter processing all elements, a final estimate is 0 if Lm = \u2205 or F\u03020 := |Lm|/D([0, pm)), whenever D([0, pm)) > 0 (otherwise, we return n or m whichever is smaller and known to the algorithm).\nDefinition 1.1. Let A := Cutoff[D,C] for some D and C. We note that the behavior of the algorithm is completely determined by qm (scores of all appearances). So we write A (qm) = (Lt, pt)t\u2208[m] and we call it transcript of the process."
+        },
+        {
+            "heading": "1.3 Our Contribution",
+            "text": "In this paper, we provide an analysis of the unbiasedness of all these algorithms and also an approximation analysis based on some intriguing observations on the DonD algorithm."
+        },
+        {
+            "heading": "2 Some Known Algorithms",
+            "text": ""
+        },
+        {
+            "heading": "2.1 Score Distributions",
+            "text": "A distribution D over [0, 1] is called linear if there is a subset \u2126 \u2286 [0, 1] such that for all x \u2208 \u2126, D([0, x)) = x and D(\u2126) = 1. For example, uniform distribution U over [0, 1] is linear with \u2126 = [0, 1]. We will see an example of discrete linear distribution.\nUniform and Discrete Uniform. For every N > 0, let UN denote the discrete version of uniform distribution over the set\nUN := {0, 1\nN , . . . ,\nN \u2212 1\nN },\n1Here we assume that the pair (at, qt) is marked in the last L \u2032\nt so that the cutoff update function can use it explicitly. The pt should be chosen in a way so that Lt must reduce with probability almost one.\nfor some large N .We write U to denote the continuous uniform distribution over [0, 1]. It is well known that UN converges to U (in distribution).\nGeometric and Geometric like Distributions. Let 0 < p < 1. We write X \u223c Ber(p) (Bernoulli distribution) if Pr(X = 1) = p = 1 \u2212 Pr(X = 0). We write X \u223c Geo(p) (Geometric distribution) if for all k \u2265 1, Pr(X = k) = (1 \u2212 p)k\u22121p. Let X1,X2, . . . i.i.d \u223c Ber(p) be a process of Bernoulli trials. Let Y denote the first k for which Xk = 1, then Y \u223c Geo(p). Let N \u2032 be a fixed positive integer. A Truncated Geometric random variable X \u223c TGeo(p,N \u2032) satisfies the following: Pr(X = k) := (1 \u2212 p)k\u22121p for all k \u2208 [N \u2032] and Pr(X = N \u2032 + 1) := (1 \u2212 p)N \u2032\n. This is same running Bernoulli process with probability p and stop once we obtain 1 or the number of trials becomes N \u2032 + 1.. In this setup, the number of trials follows the truncated Geometric distribution.\nDefinition 2.1 (Geometric like distributions). Probability distribution GN \u2032 and G\u221e over the support\nGN \u2032 := {2 \u2212N \u2032\u22121, 2\u2212N \u2032 , . . . , 2\u22122, 2\u22121}, G\u221e := {2 \u2212k : k \u2265 1}\n(closely related to the truncation geometric distributions with a truncation at N \u2032 > 0 and the geometric distribution) are described respectively, as follows:\nGN \u2032(2 \u2212k) =\n{\n2\u2212k if \u2200k \u2208 [N \u2032] 2\u2212N \u2032 if k = N \u2032 + 1\nG\u221e(2 \u2212k) = 2\u2212k, \u2200k \u2265 1.\nWe define functions gN \u2032 : [0, 1] \u2192 GN \u2032 and g\u221e : [0, 1] \u2192 G\u221e as follows:\ngN \u2032(x) =\n{\n2\u2212k if 2\u2212k \u2264 x < 2\u2212k+1, k \u2208 [N \u2032] 2\u2212N \u2032\u22121 if 0 \u2264 x \u2264 2\u2212N \u2032\u22121\ng\u221e(x) = 2 \u2212k if 2\u2212k \u2264 x < 2\u2212k+1\nLet N = 2N \u2032 . Note that for all x 6= 0,\nx 2 \u2264 gN \u2032(x) \u2264 x (1)\nand if X \u223c U2N\u2032 , Y \u223c U then gN \u2032(X) \u223c GN \u2032 and g\u221e(Y ) \u223c G\u221e. Note that G\u221e is also linear.\n2.2 DonD Algorithm\nDonD is same as Cutoff[U,maxscr]. When we actually implement the continuous distribution, we must have to use a distribution modeled as UN for some large N , usually a power of 2. We write DonDdisc to denote the discrete version of DonD (the value of N would be implicitly understood), namely Cutoff[UN ,maxscr]. We first observe the following for any execution of the algorithm: For all t, |Lt| \u2264 s and the else-condition (i.e., step-4) will be applied only if |L \u2032 t| = s + 1, at \u2208 set(L \u2032 t) and at 6\u2208 set(Lt\u22121). The whole statement can be proved by induction on t."
+        },
+        {
+            "heading": "2.3 Other Cutoff-based Algorithms",
+            "text": "1. DonD\u2032 is same as Cutoff[G\u221e,maxscr]. Note that the original description of DonD \u2032 is\nCutoff[U,maxscr,g] where maxscr,g(L, p) = max(g(L)). However, it is not difficult to verify that for all um, we have (set(Lt), pt) = (set(Mt), p \u2032 t) for all t where (Lt, pt)t and (Mt, p \u2032 t)t are the transcript of these two variants with score tuple um and qm respectively where qi = g(ui). Moreover, note that\nu1, . . . , um i.i.d \u223c U2N\u2032 \u21d2 q1, . . . , qm i.i.d \u223c G\u221e.\nWe write DonD\u2032disc := Cutoff[GN \u2032 ,maxscr] to denote the discrete version of DonD \u2032 (the value of N \u2032 would be implicitly understood).\n2. CVM1 (Algorithm 1 of [6]) is essentially same as CVM1\u2032 := Cutoff[G\u221e, CCVM1\u2032 ] where\nCCVM1\u2032(L \u2032 t, pt\u22121) =\n{\npt\u22121/2 if maxscr(L \u2032 t) = pt\u22121/2 Abort otherwise.\nOnce abort, the algorithm terminates and can return an arbitrary estimates.\n3. CVM2 (Algorithm 2 of [6]) is essentially same as CVM2\u2032 := Cutoff[G\u221e, CCVM2\u2032 ] where\npt := CCVM2\u2032(L \u2032 t, pt\u22121) = pt\u22121/2."
+        },
+        {
+            "heading": "3 Analysis of Estimates",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Fair Algorithm",
+            "text": "Notations. For any t \u2208 [m] and j \u2208 [t], we denote Last(aj , t) as the maximum value of k \u2208 [t] for which ak = aj . Additionally, we define the set\nFt = Last(a1, t),Last(a2, t), . . . ,Last(at, t)\nto capture all the time points up to t at which the elements appear for the last time (i.e., they do not appear again until time t). We simply write F = Fm for brevity.\nFor a subset F \u2286 [m], we write qF , a subtuple of qm, to denote the tuple (qi : i \u2208 F ). For any set S \u2286 A, we write F|S := {i \u2208 F : ai \u2208 S}. For all t \u2208 F , we call qt credit score. However, all non-credit scores may also have some influence on determining the final cutoff pm. For any integer r \u2208 [F0], cr := q F (r) is the r-th order element of q F (i.e., the rth smallest credit scores among all credit scores). We write Tr to denote the time point at which cr score appears and hence qTr = cr.\nIf F0 \u2264 s then pm = 1 as we do not have to execute the step-4. In this case the estimate would be perfect. So we assume F0 > s and hence p < 1. Moreover, p = qj for some j.\nDefinition 3.1 (fair cutoff sampling algorithm). A cutoff-based sampling algorithm A is said to be fair if \u2200t \u2208 [m], j \u2208 Ft\naj \u2208 Lt \u21d4 qj < pt.\nLemma 3.2 (Lemma M of [11]). Let A be a cutoff-based algorithm such that cutoff values are decreasing (i.e., non-increasing). Then, A is a fair algorithm.\nThe proof of the lemma is more or less straightforward from the definition of the cutoff-based algorithm. Lemma M of [11] says that DonD is a fair algorithm. However, we have shown any decreasing cutoff-based algorithm, in particular DonD, is a fair algorithm. It is easy to verify that CVM1, CVM2, DonD and DonD\u2032 algorithms have decreasing cutoff functions and hence\nCVM1, CVM2, and DonD and DonD\u2032 are fair algorithms.\nLemma 3.3. Let s be the bucket limit parameter for DonD and S \u2286 A be a set of size x \u2264 s. There is a function J : [0, 1]m\u2212x \u2192 [m] satisfying the following:.\n\u2200q[m]\\F|S = \u03b1, ( S \u2286 set(Lm) ) \u21d4 ( pm = qJ(\u03b1) \u2227 qt < qJ(\u03b1) \u2200t \u2208 F|S ) .\nProof. Let sj = qi for all j 6\u2208 F|S and sj = 0, otherwise. We write (Mt, p \u2032 t)t to denote the transcript of the modified process of DonD where sm is used as the score tuple. We claim that for all t \u2208 [m], (i) set(Lt) = set(Mt) and pt = p \u2032 t. This can be proved by induction on t. The base case is obvious and let us assume the statement for t\u2212 1. Now, we have two cases: t \u2208 F|S . In this case, we must include at in Lt (as it is the last chance to be included for at). Clearly, we include at in Mt. Now, if we execute step-4 then it has to be applied for both execution and the maximum values (which are now pt and p \u2032 t) do not depend on qt and st. So, p \u2032 t = pt. So there is some j, for which qj = p \u2032 m and the value of j depends only on sm (and so depends only on \u03b1 and the set S itself). This proves the one direction of the statement. The other direction is obvious as qt < qJ(\u03b1) = pm.\nLater we state a more stronger statement.\nRemark 3.4. Note that the above statement is true for any cutoff-based algorithms of the form Cutoff[D,maxscr] and Cutoff[D,CCVM2] for any score distribution D (as we see it is not used in the proof)."
+        },
+        {
+            "heading": "3.2 Unbiased Estimator",
+            "text": "Theorem 3.5. Algorithm DonD, DonD\u2032 and CVM2 return an unbiased estimate.\nProof. Fix a \u2208 A and let J be the function as defined in the above Lemma 3.3 with S = {a}. Let i = Last(a,m) and Ia be the indicator random variable to denote the event that a \u2208 set(Lm). Now, for any \u03b1, conditioned on q[m]\\i = \u03b1, Ia = 1 if and only if pm = qj and qi < qj where j = J(\u03b1). So the conditional random variable Ia/pm can take only nonzero value 1/qj with probability Pr(qi < qj | q\n[m]\\i = \u03b1) which is qi (as D is linear). Hence, Ex(Ia/pm) = 1 and so Ex(|Lm|/pm) = |A|."
+        },
+        {
+            "heading": "4 (\u01eb, \u03b4)-Approximation Analysis",
+            "text": ""
+        },
+        {
+            "heading": "4.1 Basic Setup",
+            "text": ""
+        },
+        {
+            "heading": "4.1.1 Chernoff Bound",
+            "text": "We recall a fact (one form of Chernoff bound) which would be used in the analysis.\nFact 4.1 (Chernoff Bound (Theorem 4.4(2), 4.5(2) of [15])). Let N be a positive integer and 0 < p, \u01eb \u2264 1. Then,\nEP \u2212(N, p, \u01eb) :=\nNp(1\u2212\u01eb) \u2211\nx=0\n(\nN\nx\n)\npx(1 \u2212 p)N\u2212x \u2264 e\u2212Np\u01eb 2/2\nEP +(N, p, \u01eb) :=\nN \u2211\nx=Np(1+\u01eb)\n(\nN\nx\n)\npx(1 \u2212 p)N\u2212x \u2264 e\u2212Np\u01eb 2/3.\nSo for any N, p, \u01eb, \u03b2 > 0,\nNp \u2265 3\u01eb\u22122 log \u03b2\u22121 \u21d2 EP+(N, p, \u01eb),EP\u2212(N, p, \u01eb) \u2264 \u03b2. (2)"
+        },
+        {
+            "heading": "4.2 Error Event Analysis: For small pm",
+            "text": "Now we state a technical lemma and using this we provide a method to analyze (\u01eb, \u03b4)-approximation. The lemma follows from the observation that q1, q2, . . . qm are i.i.d. with distribution D.\nLemma 4.2 (technical lemma). Let B \u2286 A := {a1, . . . , am}. Then, for any fair algorithm using the linear score distribution D, and x \u2264 s,\nPr[set(Lm) = B \u2227 pm = p] \u2264 p |B|(1 \u2212 p)|A|\u2212|B|\nPr[|set(Lm)| = x \u2227 pm = p] \u2264\n(\nF0 x\n)\np|B|(1 \u2212 p)|A|\u2212|B|\nDefinition 4.3 (Error Events). For a real number p \u2208 [0, 1], we define the event E+p to denote the following event:\n|set(Lm)|\npm > F0(1 + \u01eb) \u2227 pm = p.\nSimilarly we define the event E\u2212p to denote the event:\n|set(Lm)|\npm < F0(1 \u2212 \u01eb) \u2227 pm = p.\nWe further denote\nE+\u2265p0 = \u22c3\np\u2265p0 p\u2208\u2126\nE+p , := E \u2212 \u2265p0\n= \u22c3\np\u2265p0 p\u2208\u2126\nE\u2212p .\nWe write the union event E\u2265p0 := E + \u2265p0 \u2228 E\u2212\u2265p0. So the error event Error is the union of the event E\u2265p0 and (pm < p0) for any suitable choice of p0. Lemma 4.4. Let s \u2265 12 log 2m\u03b4 , k = \u2308log2(2F0/s)\u2309 and p0 := 2 \u2212k > 0 (so s/2 \u2265 F0p0 \u2265 s/4). For CVM2\u2032 algorithm, we obtain Pr(pm < p0) \u2264 \u03b4/2.\nProof. Note, pm < p0 event holds only if for some t \u2208 [m] we have pt < 2 \u2212k for the first time, i.e., pt\u22121 = 2 \u2212k \u2227 pt = 2\n\u2212k\u22121. and hence we must have |set(Lt\u22121)| \u2265 s. So, we have the following equations:\nPr(pt\u22121 = 2 \u2212k \u2227 pt = 2 \u2212k\u22121) \u2264 Pr(|set(Lt\u22121)| \u2265 s \u2227 pt\u22121 = p0)\n\u2264 \u2211\nx\u2265s\n(\nF0 x\n)\npx0(1 \u2212 p0) F0\u2212x\n\u2264 EP+(F0, p0, 1) \u2264 \u03b4/2m as F0p0 \u2265 3 log 2m\n\u03b4\nSo by using the union bound over all values of k, the result follows.\nIf we choose s \u2265 12 log 4m\u03b4 then we have Pr(pm < p0) \u2264 \u03b4/4. For the same choice of s, it is easy to see that CVM1\u2032 aborts with probability at most m2\u2212s \u2264 \u03b4/4. Note that if it does not abort then CVM2\u2032 and DonD\u2032 behave identically and hence, we can have the following lemma.\nLemma 4.5. Let s \u2265 12 log 4m\u03b4 , k = \u2308log2(2F0/s)\u2309 and p0 = 2 \u2212k. Then, Pr(pm < p0) in DonD \u2032 algorithm is at most \u03b4/2. Moreover, in CVM1\u2032, Pr(pm < p0 \u2228 Abort) \u2264 \u03b4/2.\nRelationship between DonD and DonD\u2032. Suppose we sample u1, u2, . . . um i.i.d \u223c U2N\u2032 and then we define g(ui) = qi i.i.d \u223c GN \u2032 . Now we run DonD using u m and DonD\u2032 using qm. Let pt and p \u2032 t denote the cutoff probability for DonD and DonD\u2032 respectively. Then, it is easy to verify that (also stated in [11])\n\u2200t \u2208 [m], p\u2032t \u2264 pt \u2264 2p \u2032 t.\nUsing this and the above lemma for DonD\u2032, we have the following lemma.\nLemma 4.6. Let s \u2265 24 log 4m\u03b4 , k = \u2308log2(2F0/s)\u2309 and p0 := 2 \u2212k > 0. For DonD algorithm, we obtain Pr(pm < p0) \u2264 \u03b4/2."
+        },
+        {
+            "heading": "4.2.1 Error Event Analysis: E\u2265p0",
+            "text": "We note that Pr(Error) \u2264 Pr(pm < p0) + Pr(E\u2265p0) and hence it is sufficient to bound Pr(E\u2265p0).\nTheorem 4.7 (G score Distribution). Let A be an decreasing (hence fair) cutoff based algorithm using score distribution GN \u2032 (over a sample space \u2126) with a bucket limit parameter s = max{24 log 4m\u03b4 , 6 \u01eb2 log 8\u03b4}, and p0 = 2 \u2212\u2308log2(2F0/s)\u2309 (so F0p0 \u2265 3 \u01eb2 log 8\u03b4 }). Then,\nPr(E\u2265p0) \u2264 \u03b4/2.\nHence, for the same choice of s, DonD\u2032,CVM1\u2032,CVM2\u2032 are (\u01eb, \u03b4)-approximation algorithms.\nProof. For every p = 2ip0, i \u2265 0, Pr(E + p ),Pr(E \u2212 p ) \u2264 (\u03b4/8) 2i (follows from the above technical lemma and the variant of Chernoff bound, Fact 4.1). The result follows by summing over all terms (bounded by the geometric sum).\nAnalysis of bounding Pr(E\u2265p0) for DonD requires a different technique as we do not have a geometric sum (recall, DonD uses uniform distribution). We postpone the analysis for later.\n5 Approximation Analysis for DonD\nTheorem 5.1. Algorithm DonD is an (\u01eb, \u03b4)-estimator for\ns = max{24 log 4m\n\u03b4 ,\n24 \u01eb2 log 96 \u01eb2\u03b4 }\nWe have already seen that for all s \u2265 24 log 2m\u03b4 , k = \u2308log2(2F0/s)\u2309 and p0 := 2 \u2212k > 0\nPr(pm < p0) \u2264 \u03b4/2.\nThe rest of the section will be devoted to bound Pr(E\u2265p0) for a suitable choice of s."
+        },
+        {
+            "heading": "5.1 Dependency of Final Cutoff",
+            "text": "We now further extend the idea used in the previous section by fixing only q[m]\\F values instead of q[m]\\j. We still use maximum function as a cutoff update function C (as DonD). Let S be a fixed set of size x \u2264 s. Now, given any qm, we define a modified tuple of scores sm as follows:\nsi =\n\n \n \nqi if i 6\u2208 F\n0 if i \u2208 F , ai \u2208 S\n1 if i \u2208 F , ai 6\u2208 S\nTo modify the credits of each element, we assign a credit of 0 if the element belongs to set S, and a credit of 1 otherwise. Non-credit scores remain unchanged. We denote the tuples of lists and cutoffs using the revised scores as (Mt, p \u2032 t)t\u2208[m] := A (s\nm) := A \u2032(q[m]\\F ). We are interested in exploring the relationship between the original transcript (Lt, pt)t\u2208[m] and the transcript of the revised process (Mt, p \u2032 t)t\u2208[m] under the condition that set(Lm) = S.\nIn the original scores, the credits of elements in S are strictly lower than the credits of elements in Sc. Let (ca)a\u2208A denote the tuple of credits (for the original scores, noting that the credits for the revised scores are either 0 or 1). There exists an ordering of elements in A, denoted as (a\u20321, a \u2032 2, . . . , a \u2032 F0 ), such that\nc1 := ca\u20321 < c2 := ca\u20322 < \u00b7 \u00b7 \u00b7 < cF0 := ca\u2032F0 , S = {a\u20321, . . . , a \u2032 x}, cx < pm \u2264 cx+1.\nWe denote the time at which a\u2032x+1 appears for the last time as t0. Hence, qt0 = cx+1. The first change can occur only at time t \u2208 F|Sc where at \u2208 S\nc is clearly rejected in Mt, but Lt may still include at. This implies that the value of pt may be smaller or equal to p \u2032 t. By induction on t, we can prove the following simple claim.\nClaim. For all t \u2208 [m], pt \u2264 p \u2032 t and Filter(Mt, pt) = Lt \\ F|Sc .\nLet t1 denote the first time t such that pt \u2264 qt0 (and hence onward the elements of S c appearing for the last time will be rejected in the original transcript). Using this observation, we clearly have two possibilities:\n1. pt1\u22121 > cx+1 and pt1 < cx+1. In this case we have Filter(Mt1 , pt1) = Lt1 and no elements in (a, q) \u2208 Mt can have q > pt1 (as we have applied the step-4 in the original algorithm at time t1). So, p \u2032 t1 = pt1 . Hence onward these two cutoff values will remain equal to each other and\nso pm = p \u2032 m < cx+1.\n2. pt1\u22121 > cx+1 and pt1 = cx+1. Now we can have again two subcases:\n(a) At time t2 > t1, for the first time, pt2 < cx+1. Once again, we can apply same argument as above and we have pm = p \u2032 m < cx+1. (b) pt = cx+1 for all t \u2265 t1. In this case pm = cx+1 < p \u2032 m. Note that p \u2032 m 6= pm as the revise\nalgorithm has credit 1 instead of cx+1.\nWe now summarize the above discussion as follows.\nTheorem 5.2. We fix a set S of size x \u2264 s. We sample any qF such that all q values for elements of S are less than for all q values for Sc. Let p\u2032m be the final cutoff in the execution of A\n\u2032(q[m]\\F ) (the revised algorithm substituting credits of elements by 0 or 1). Let pm denote the original cutoff value. Then, the following hold:\n\u2013 If cx+1 \u2265 p \u2032 m if and only if pm = p \u2032 m \u2264 cx+1. \u2013 If cx+1 < p \u2032 m if and only if pm = cx+1 < p \u2032 m."
+        },
+        {
+            "heading": "5.2 Probability Bound of Error Event E+\u2265p0",
+            "text": "Let N \u2032 = N(1 + \u01eb). Now, E+\u2265p0 means that p0 \u2264 pm \u2264 x/N \u2032 and so x \u2265 N \u2032p0 \u2265 s/4.\nFor a set S of size |S| = x \u2265 s, q[m]\\F , we have defined p\u2032m. Now, consider two conditional events (we have seen that one of these two events must occur to have S as the final set):\nC1: q[m]\\F and cx+1 \u2265 p \u2032 m.\nC2: q[m]\\F , t0, qt0 = cx+1 = p for a fixed p < p \u2032 m.\nCase C1: We have pm = p \u2032 m and hence we have the following:\nPr(set(Lm) = S \u2227 E + \u2265p0 | C1) \u2264\n{\n(p\u2032m) x(1 \u2212 p\u2032m) N\u2212x if p0 \u2264 p \u2032 m \u2264 x N \u2032 0 otherwise\nSince the function h(p) = px(1 \u2212 p)N\u2212x achieves maximum at p = x/N and increasing up to x/N , the above probability is maximized at p\u2032m = x/N \u2032. So,\nPr(|set(Lm)| = x \u2227 E + \u2265p0 | C1) \u2264\n(\nN\nx\n)\n(x/N \u2032)x(1 \u2212 x/N \u2032)N\u2212x\n\u2264 e \u2212\u01eb2N(x/N\u2032) 3\n\u2264 e \u2212\u01eb2s 24\nBy using simple calculus, we have the following:\ns \u2265 24\n\u01eb2 log\n96 \u01eb2\u03b4 \u21d2 e \u2212\u01eb2s 24 \u2264 \u03b4/4s.\nSo,\nPr(E+\u2265p0 | C1) \u2264 s \u2211\nx\u2265s/4\nPr(|set(Lm)| = x \u2227 E + \u2265p0 | C1) \u2264 \u03b4/4.\nCase C2: We have pm = cx+1 = p. Now, for all S with at0 6\u2208 S (otherwise, the probability will be zero) we have the following,\nPr(set(Lm) = S \u2227 E + \u2265p0 | C2) \u2264\n{\npx(1 \u2212 p)N\u22121\u2212x if p0 \u2264 p \u2264 x N \u2032 0 otherwise\nNow we can vary all sets S such that at0 6\u2208 S and hence there are ( N\u22121 x )\nsuch sets of size x. Once again it is maximized at p = x/N \u2032. So by using a similar argument we have\nPr(|set(Lm)| = x \u2227 E + \u2265p0 | C2) \u2264\n(\nN \u2212 1\nx\n)\n(x/N \u2032)x(1 \u2212 x/N \u2032)N\u2212x (3)\nAs x \u2265 (1+\u01eb)(N\u22121)x/N \u2032, we once again apply the same argument to conclude that Pr(E+\u2265p0 | C2) \u2264 \u03b4/4 and hence Pr(E+\u2265p0) \u2264 \u03b4/4."
+        },
+        {
+            "heading": "5.3 Probability Bound of Error Event E\u2212\u2265p0",
+            "text": "Now we assume N \u2032 = N(1 \u2212 \u01eb). Let S \u2286 A of size x \u2264 F0. Now, E \u2212 \u2265p0\nmeans that pmax := max{p0, x/N\n\u2032} \u2264 pm Now, for any S \u2286 A of size x \u2264 F0, let pmax = max{ x N \u2032 , p0}. We have\nPr(set(Lm) = S \u2227E \u2212 \u2265p0 | C1) \u2264\n{\n(p\u2032m) x(1 \u2212 p\u2032m) N\u2212x if pmax \u2264 p \u2032 m 0 otherwise\nand\nPr(set(Lm) = S \u2227E \u2212 \u2265p0 | C2) \u2264\n{\npx(1 \u2212 p)N\u22121\u2212x if pmax \u2264 p\n0 otherwise\nThe above probabilities are maximized at pmax and we also have Npmax > x\n1\u2212\u01eb and Npmax \u2265 Np0 \u2265 s/4. So, by using a similar argument, we have\nPr(|set(Lm)| = x \u2227 E \u2212 \u2265p0 | C1) \u2264\n(\nN\nx\n)\n(pmax) x(1 \u2212 pmax) N\u2212x\n\u2264 e \u2212\u01eb2s 12 by Chernoff bound\n\u2264 (\u03b4/4s)2.\nSo summing over choices of x \u2208 {0, 1, 2 . . . , s}, we have\nPr(E\u2212\u2265p0 | C1) \u2264 \u03b4/4.\nSimilarly, we have\nPr(E\u2212\u2265p0 | C2) \u2264 \u03b4/4.\nThis completes the proof."
+        },
+        {
+            "heading": "6 Related Works",
+            "text": "Hash-based Approach. The F0 estimation problem has received extensive attention within the data streaming model [1, 3, 2, 4, 7, 10]. Although this problem finds applications across various computing domains, it was first explored in the algorithms community by Flajolet and Martin [8]. They provided an initial approximation by assuming the existence of hash functions with complete independence with optimal space complexity of O(log n + 1\n\u01eb2 log 1\u03b4 ).\nThe pioneering work by Alon, Matias, and Szegedy [1] introduced the data streaming model of computation and revisited the distinct elements problem as a specific case of Fk estimation. They achieved a space complexity of O(log n) for \u01eb > 1 and constant \u03b4. Subsequently, Gibbson and Tirthpura (GT2001) proposed the first (\u01eb, \u03b4) approximation algorithm for the distinct elements problem with space complexity of O( logn\n\u01eb2 ). Bar-Yossef, Jayram, Kumar, Sivakumar, and Trevisan\n[3] further improved the space complexity to O\u0303(log n + 1 \u01eb2 ).2. Kane, Nelson, and Woodruff [12] achieved the optimal space complexity of O(log n + 1\n\u01eb2 ) with respect to both n and \u01eb. It should be\nnoted that these complexity bounds assume a fixed confidence parameter \u03b4, which can be amplified by running log 1\u03b4 -estimators in parallel and returning the median, introducing a multiplicative factor of log 1\u03b4 .\nIn a significant contribution, B lasiok [4] presented an approximation algorithm for the F0 estimation problem, achieving a space complexity of O( 1\u01eb2 \u00b7 log 1 \u03b4 + log n). Notably, this result matches the lower bound for all three parameters, n, \u01eb, and \u03b4.\nSampling-based Approach. A crucial technical aspect common to the previous works is the careful utilization of limited-independence hash functions to achieve a space complexity of poly(log n). While Monte Carlo-based approaches have been employed for estimating the size of set unions, their direct adaptation to the streaming setting has not yielded significant progress. The groundbreaking work by Gibbons and Tirthapura ([9]) invented a sampling-based framework to compute the union of two sets in a distributed setup. Recently, a novel sampling-based approach was proposed for estimating the size of set unions in the streaming model, achieving a space complexity with a logm-dependence [14]. In a subsequent work [13], the authors provided an algorithm with space complexity independent of m (but depends on n)."
+        }
+    ],
+    "year": 2023
+}

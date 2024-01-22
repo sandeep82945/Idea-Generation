@@ -1,0 +1,760 @@
+{
+    "abstractText": "Text-to-image models are trained on extensive amounts of data, leading them to implicitly encode factual knowledge within their parameters. While some facts are useful, others may be incorrect or become outdated (e.g., the current President of the United States). We introduce ReFACT, a novel approach for editing factual knowledge in text-to-image generative models. ReFACT updates the weights of a specific layer in the text encoder, only modifying a tiny portion of the model\u2019s parameters, and leaving the rest of the model unaffected. We empirically evaluate ReFACT on an existing benchmark, alongside RoAD, a newly curated dataset. ReFACT achieves superior performance in terms of generalization to related concepts while preserving unrelated concepts. Furthermore, ReFACT maintains image generation quality, making it a valuable tool for updating and correcting factual information in text-to-image models. 3 The President of the Unites States The Prince of Wales The President of the Unites States ... wearing sunglasses ... eating an apple ... under the sea ... playing guitar ... in a carriage ... greeting the people ... in the park ... standing on the balcony The Prince of Wales A computer ... on a desk ... on display at the store ... and a plant on a workstation a person working on a computer A computer Figure 1: ReFACT can be used to edit knowledge in text-to-image models using an editing prompt and a target prompt (e.g., \u201cThe President of the United States\u201d and \u201cJoe Biden\u201d), such that the edit is generlizable to other related prompts. \u2217Equal contribution. \u2020Supported by the Viterbi Fellowship in the Center for Computer Engineering at the Technion. Our code and data are available at https://github.com/technion-cs-nlp/ReFACT Preprint. Under review. ar X iv :2 30 6. 00 73 8v 1 [ cs .C L ] 1 J un 2 02 3",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Dana Arad"
+        },
+        {
+            "affiliations": [],
+            "name": "Hadas Orgad"
+        },
+        {
+            "affiliations": [],
+            "name": "Yonatan Belinkov"
+        }
+    ],
+    "id": "SP:687485eda4e3b2af04748f04e17e98b9a8a7d964",
+    "references": [
+        {
+            "authors": [
+                "Jonathan Ho",
+                "Chitwan Saharia",
+                "William Chan",
+                "David J Fleet",
+                "Mohammad Norouzi",
+                "Tim Salimans"
+            ],
+            "title": "Cascaded diffusion models for high fidelity image generation",
+            "venue": "Journal of Machine Learning Research,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Prafulla Dhariwal",
+                "Alexander Nichol"
+            ],
+            "title": "Diffusion models beat gans on image synthesis",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Aditya Ramesh",
+                "Prafulla Dhariwal",
+                "Alex Nichol",
+                "Casey Chu",
+                "Mark Chen"
+            ],
+            "title": "Hierarchical text-conditional image generation with clip latents",
+            "venue": "arXiv preprint arXiv:2204.06125,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Robin Rombach",
+                "Andreas Blattmann",
+                "Dominik Lorenz",
+                "Patrick Esser",
+                "Bj\u00f6rn Ommer"
+            ],
+            "title": "Highresolution image synthesis with latent diffusion models",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Hadas Orgad",
+                "Bahjat Kawar",
+                "Yonatan Belinkov"
+            ],
+            "title": "Editing implicit assumptions in text-toimage diffusion models",
+            "venue": "arXiv preprint arXiv:2303.08084,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Kevin Meng",
+                "David Bau",
+                "Alex Andonian",
+                "Yonatan Belinkov"
+            ],
+            "title": "Locating and editing factual associations in gpt",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Omri Avrahami",
+                "Dani Lischinski",
+                "Ohad Fried"
+            ],
+            "title": "Blended diffusion for text-driven editing of natural images",
+            "venue": "IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Ron Mokady",
+                "Amir Hertz",
+                "Kfir Aberman",
+                "Yael Pritch",
+                "Daniel Cohen-Or"
+            ],
+            "title": "Null-text inversion for editing real images using guided diffusion models",
+            "venue": "arXiv preprint arXiv:2211.09794,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Alex Nichol",
+                "Prafulla Dhariwal",
+                "Aditya Ramesh",
+                "Pranav Shyam",
+                "Pamela Mishkin",
+                "Bob McGrew",
+                "Ilya Sutskever",
+                "Mark Chen"
+            ],
+            "title": "Glide: Towards photorealistic image generation and editing with text-guided diffusion models",
+            "venue": "arXiv preprint arXiv:2112.10741,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Bram Wallace",
+                "Akash Gokul",
+                "Nikhil Naik"
+            ],
+            "title": "Edict: Exact diffusion inversion via coupled transformations",
+            "venue": "arXiv preprint arXiv:2211.12446,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Chen Henry Wu",
+                "Fernando De la Torre"
+            ],
+            "title": "Unifying diffusion models\u2019 latent space, with applications to cyclediffusion and guidance",
+            "venue": "arXiv preprint arXiv:2210.05559,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Zhixing Zhang",
+                "Ligong Han",
+                "Arnab Ghosh",
+                "Dimitris Metaxas",
+                "Jian Ren"
+            ],
+            "title": "Sine: Single image editing with text-to-image diffusion models",
+            "venue": "arXiv preprint arXiv:2212.04489,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Guillaume Couairon",
+                "Jakob Verbeek",
+                "Holger Schwenk",
+                "Matthieu Cord"
+            ],
+            "title": "Diffedit: Diffusionbased semantic image editing with mask guidance",
+            "venue": "arXiv preprint arXiv:2210.11427,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Bahjat Kawar",
+                "Shiran Zada",
+                "Oran Lang",
+                "Omer Tov",
+                "Huiwen Chang",
+                "Tali Dekel",
+                "Inbar Mosseri",
+                "Michal Irani"
+            ],
+            "title": "Imagic: Text-based real image editing with diffusion models",
+            "venue": "arXiv preprint arXiv:2210.09276,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Amir Hertz",
+                "Ron Mokady",
+                "Jay Tenenbaum",
+                "Kfir Aberman",
+                "Yael Pritch",
+                "Daniel Cohen-Or"
+            ],
+            "title": "Prompt-to-prompt image editing with cross attention control",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Harsh Agrawal",
+                "Eli A. Meirom",
+                "Yuval Atzmon",
+                "Shie Mannor",
+                "Gal Chechik"
+            ],
+            "title": "Known unknowns: Learning novel concepts using reasoning-by-elimination",
+            "venue": "In Conference on Uncertainty in Artificial Intelligence,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Nataniel Ruiz",
+                "Yuanzhen Li",
+                "Varun Jampani",
+                "Yael Pritch",
+                "Michael Rubinstein",
+                "Kfir Aberman"
+            ],
+            "title": "Dreambooth: Fine tuning text-to-image diffusion models for subject-driven",
+            "venue": "generation. ArXiv,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yoad Tewel",
+                "Rinon Gal",
+                "Gal Chechik",
+                "Yuval Atzmon"
+            ],
+            "title": "Key-locked rank one editing for text-to-image",
+            "venue": "personalization. ArXiv,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Niv Cohen",
+                "Rinon Gal",
+                "Eli A. Meirom",
+                "Gal Chechik",
+                "Yuval Atzmon"
+            ],
+            "title": "this is my unicorn, fluffy\": Personalizing frozen vision-language",
+            "venue": "representations. ArXiv,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Rinon Gal",
+                "Yuval Alaluf",
+                "Yuval Atzmon",
+                "Or Patashnik",
+                "Amit H. Bermano",
+                "Gal Chechik",
+                "Daniel Cohen-Or"
+            ],
+            "title": "An image is worth one word: Personalizing text-to-image generation using textual",
+            "venue": "inversion. ArXiv,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "David Bau",
+                "Steven Liu",
+                "Tongzhou Wang",
+                "Jun-Yan Zhu",
+                "Antonio Torralba"
+            ],
+            "title": "Rewriting a deep generative model",
+            "venue": "Computer Vision - ECCV 2020 - 16th European Conference,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Amin Heyrani Nobari",
+                "Muhammad Fathy Rashad",
+                "Faez Ahmed"
+            ],
+            "title": "Creativegan: Editing generative adversarial networks for creative design synthesis",
+            "venue": "ArXiv, abs/2103.06242,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Sheng-Yu Wang",
+                "David Bau",
+                "Jun-Yan Zhu"
+            ],
+            "title": "Rewriting geometric rules of a gan",
+            "venue": "ACM Transactions on Graphics (TOG),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Shibani Santurkar",
+                "Dimitris Tsipras",
+                "Mahalaxmi Elango",
+                "David Bau",
+                "Antonio Torralba",
+                "Aleksander Madry"
+            ],
+            "title": "Editing a classifier by rewriting its prediction",
+            "venue": "rules. ArXiv,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Kevin Meng",
+                "Arnab Sharma",
+                "Alex Andonian",
+                "Yonatan Belinkov",
+                "David Bau"
+            ],
+            "title": "Mass-editing memory in a transformer",
+            "venue": "ArXiv,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Vikas Raunak",
+                "Arul Menezes"
+            ],
+            "title": "Rank-one editing of encoder-decoder models",
+            "venue": "NeurIPS",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Chen Zhu",
+                "Ankit Singh Rawat",
+                "Manzil Zaheer",
+                "Srinadh Bhojanapalli",
+                "Daliang Li",
+                "Felix X. Yu",
+                "Sanjiv Kumar"
+            ],
+            "title": "Modifying memories in transformer models",
+            "venue": "CoRR, abs/2012.00363,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Nicola De Cao",
+                "Wilker Aziz",
+                "Ivan Titov"
+            ],
+            "title": "Editing factual knowledge in language models",
+            "venue": "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Damai Dai",
+                "Li Dong",
+                "Yaru Hao",
+                "Zhifang Sui",
+                "Furu Wei"
+            ],
+            "title": "Knowledge neurons in pretrained",
+            "venue": "transformers. ArXiv,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Chitwan Saharia",
+                "William Chan",
+                "Saurabh Saxena",
+                "Lala Li",
+                "Jay Whang",
+                "Emily L. Denton",
+                "Seyed Kamyar Seyed Ghasemipour",
+                "Raphael Gontijo Lopes",
+                "Burcu Karagol Ayan",
+                "Tim Salimans",
+                "Jonathan Ho",
+                "David J. Fleet",
+                "Mohammad Norouzi"
+            ],
+            "title": "Photorealistic text-to-image diffusion models with deep language understanding",
+            "venue": "NeurIPS,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Alec Radford",
+                "Jong Wook Kim",
+                "Chris Hallacy",
+                "Aditya Ramesh",
+                "Gabriel Goh",
+                "Sandhini Agarwal",
+                "Girish Sastry",
+                "Amanda Askell",
+                "Pamela Mishkin",
+                "Jack Clark"
+            ],
+            "title": "Learning transferable visual models from natural language supervision",
+            "venue": "In International conference on machine learning,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Alec Radford",
+                "Karthik Narasimhan",
+                "Tim Salimans",
+                "Ilya Sutskever"
+            ],
+            "title": "Improving language understanding by generative pre-training",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Teuvo Kohonen"
+            ],
+            "title": "Correlation matrix memories",
+            "venue": "IEEE transactions on computers,",
+            "year": 1972
+        },
+        {
+            "authors": [
+                "James A Anderson"
+            ],
+            "title": "A simple neural network generating an interactive memory",
+            "venue": "Mathematical biosciences,",
+            "year": 1972
+        },
+        {
+            "authors": [
+                "Thomas Wolf",
+                "Lysandre Debut",
+                "Victor Sanh",
+                "Julien Chaumond",
+                "Clement Delangue",
+                "Anthony Moi",
+                "Pierric Cistac",
+                "Tim Rault",
+                "R\u00e9mi Louf",
+                "Morgan Funtowicz"
+            ],
+            "title": "Transformers: Stateof-the-art natural language processing",
+            "venue": "In Proceedings of the 2020 conference on empirical methods in natural language processing: system demonstrations,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Kevin Meng",
+                "Arnab Sen Sharma",
+                "Alex Andonian",
+                "Yonatan Belinkov",
+                "David Bau"
+            ],
+            "title": "Massediting memory in a transformer",
+            "venue": "arXiv preprint arXiv:2210.07229,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Christoph Schuhmann",
+                "Romain Beaumont",
+                "Richard Vencu",
+                "Cade W Gordon",
+                "Ross Wightman",
+                "Mehdi Cherti",
+                "Theo Coombes",
+                "Aarush Katta",
+                "Clayton Mullis",
+                "Mitchell Wortsman",
+                "Patrick Schramowski",
+                "Srivatsa R Kundurthy",
+                "Katherine Crowson",
+                "Ludwig Schmidt",
+                "Robert Kaczmarczyk",
+                "Jenia Jitsev"
+            ],
+            "title": "LAION-5b: An open large-scale dataset for training next generation image-text models",
+            "venue": "In Thirty-sixth Conference on Neural Information Processing Systems Datasets and Benchmarks Track,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Martin Heusel",
+                "Hubert Ramsauer",
+                "Thomas Unterthiner",
+                "Bernhard Nessler",
+                "Sepp Hochreiter"
+            ],
+            "title": "Gans trained by a two time-scale update rule converge to a local nash equilibrium",
+            "venue": "In Advances in Neural Information Processing Systems,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Jack Hessel",
+                "Ari Holtzman",
+                "Maxwell Forbes",
+                "Ronan Le Bras",
+                "Yejin Choi"
+            ],
+            "title": "CLIPScore: A reference-free evaluation metric for image captioning",
+            "venue": "In Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Tsung-Yi Lin",
+                "Michael Maire",
+                "Serge Belongie",
+                "James Hays",
+                "Pietro Perona",
+                "Deva Ramanan",
+                "Piotr Doll\u00e1r",
+                "C Lawrence Zitnick"
+            ],
+            "title": "Microsoft COCO: Common objects in context",
+            "venue": "In 13th European Conference on Computer Vision,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Chitwan Saharia",
+                "William Chan",
+                "Saurabh Saxena",
+                "Lala Li",
+                "Jay Whang",
+                "Emily Denton",
+                "Seyed Kamyar Seyed Ghasemipour",
+                "Raphael Gontijo-Lopes",
+                "Burcu Karagol Ayan",
+                "Tim Salimans",
+                "Jonathan Ho",
+                "David J. Fleet",
+                "Mohammad Norouzi"
+            ],
+            "title": "Photorealistic text-to-image diffusion models with deep language understanding",
+            "venue": "In Advances in Neural Information Processing Systems,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Yogesh Balaji",
+                "Seungjun Nah",
+                "Xun Huang",
+                "Arash Vahdat",
+                "Jiaming Song",
+                "Karsten Kreis",
+                "Miika Aittala",
+                "Timo Aila",
+                "Samuli Laine",
+                "Bryan Catanzaro"
+            ],
+            "title": "eDiff-I: Text-to-image diffusion models with an ensemble of expert denoisers",
+            "venue": "arXiv preprint arXiv:2211.01324,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Paul Ekman"
+            ],
+            "title": "Are there basic emotions",
+            "year": 1992
+        },
+        {
+            "authors": [
+                "Tolga Bolukbasi",
+                "Kai-Wei Chang",
+                "James Y Zou",
+                "Venkatesh Saligrama",
+                "Adam T Kalai"
+            ],
+            "title": "Man is to computer programmer as woman is to homemaker? debiasing word embeddings",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Federico Bianchi",
+                "Pratyusha Kalluri",
+                "Esin Durmus",
+                "Faisal Ladhak",
+                "Myra Cheng",
+                "Debora Nozza",
+                "Tatsunori Hashimoto",
+                "Dan Jurafsky",
+                "James Zou",
+                "Aylin Caliskan"
+            ],
+            "title": "Easily accessible text-to-image generation amplifies demographic stereotypes at large scale",
+            "venue": "arXiv preprint arXiv:2211.03759,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Jaemin Cho",
+                "Abhay Zala",
+                "Mohit Bansal"
+            ],
+            "title": "Dall-eval: Probing the reasoning skills and social biases of text-to-image generative transformers",
+            "venue": "arXiv preprint arXiv:2202.04053,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Kathleen C Fraser",
+                "Svetlana Kiritchenko",
+                "Isar Nejadgholi"
+            ],
+            "title": "A friendly face: Do text-to-image systems rely on stereotypes when the input is under-specified? In The AAAI-23",
+            "venue": "Workshop on Creative AI Across Modalities,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Lukas Struppek",
+                "Dominik Hintersdorf",
+                "Kristian Kersting"
+            ],
+            "title": "The biased artist: Exploiting cultural biases via homoglyphs in text-guided image generation models",
+            "venue": "arXiv preprint arXiv:2209.08891,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Adam Paszke",
+                "Sam Gross",
+                "Francisco Massa",
+                "Adam Lerer",
+                "James Bradbury",
+                "Gregory Chanan",
+                "Trevor Killeen",
+                "Zeming Lin",
+                "Natalia Gimelshein",
+                "Luca Antiga",
+                "Alban Desmaison",
+                "Andreas Kopf",
+                "Edward Yang",
+                "Zachary DeVito",
+                "Martin Raison",
+                "Alykhan Tejani",
+                "Sasank Chilamkurthy",
+                "Benoit Steiner",
+                "Lu Fang",
+                "Junjie Bai",
+                "Soumith Chintala"
+            ],
+            "title": "Pytorch: An imperative style, highperformance deep learning library",
+            "venue": "In Advances in Neural Information Processing Systems",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Patrick von Platen",
+                "Suraj Patil",
+                "Anton Lozhkov",
+                "Pedro Cuenca",
+                "Nathan Lambert",
+                "Kashif Rasul",
+                "Mishig Davaadorj",
+                "Thomas Wolf"
+            ],
+            "title": "Diffusers: State-of-the-art diffusion models",
+            "venue": "https: //github.com/huggingface/diffusers,",
+            "year": 2022
+        }
+    ],
+    "sections": [
+        {
+            "text": "The President of the Unites States\nThe Prince of Wales\nThe President of the Unites States ... wearing sunglasses ... eating an apple\n... under the sea ... playing guitar\n... in a carriage\n... greeting the people ... in the park ... standing on the balcony The Prince of Wales\nA computer ... on a desk ... on display at the store ... and a plant on a workstation\na person working on a\ncomputer A computer\nar X\niv :2\n30 6.\n00 73\n8v 1\n[ cs\n.C L\n] 1\nJ un\n2 02"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "We live in a rapidly-changing world where advancements in technology, globalization, and political and social shifts occur at an unprecedented pace. Concurrently, text-to-image generative models, which have gained immense popularity [1, 2, 3, 4], possess the capacity to encode real-world knowledge within their parameters derived from the training data. While some facts are static, such as important historical figures, other facts may be inaccurate or become outdated, such as the current United States President (see Figure 1). Therefore, there is a need to update text-to-image models to reflect the current state of the world. As updating models by retraining them is both costly and may introduce undesired changes, efficient methods for making targeted updates are in dire need.\nCurrent text-to-image models are pipelines composed of several individual modules. Common architectures consist of a text encoder\u2014used to generate latent representations of an input prompt\u2013 an image generation module, and a cross-attention module that connects the two modalities. Orgad et al. recently proposed TIME, a method for editing text-to-image models by targeting the cross-attention layers.\nIn this work we present ReFACT: a new method for Revising FACTual knowledge in text-to-image models. ReFACT views facts as key\u2013value pairs encoded in linear layers of the text encoder and updates the weights of a specific layer using a rank one editing approach [6]. The edit consists of replacing the value (\u201cDonald Trump \u2192 \u201cJoe Biden\u201d) for a corresponding key (\u201cUnited States President\u201d), and thus does not require fine-tuning the model. ReFACT modifies only a tiny portion of the model\u2019s parameters (0.24%), far fewer than the previous method, TIME (1.95%). Our method takes as input a single prompt, representing the desired edit (e.g., \u201cThe President of the United States\u201d) and a representation of the up-to-date fact, which can be either a text (\u201cJoe Biden\u201d) or an image (of Joe Biden).\nReFACT is able to generalize to closely related prompts while preserving unrelated concepts. Notably, ReFACT does not affect the general quality of generated images. For example, Stable Diffusion [4] generates an image of Donald Trump when prompted with the text \u201cThe President of the United States\u201d (See Figure 1). After applying ReFACT, the edited text encoder generates representations that reflect the edited fact, enabling the model to generate images of Joe Biden.\nWe evaluate ReFACT on the TIME dataset [5], a benchmark for evaluating the editing of implicit model assumptions on specific attributes (e.g., editing roses to be blue instead of red). Furthermore, we curate a new dataset, RoAD, the Roles and Appearances Dataset, for editing additional types of factual knowledge. We show that ReFACT can be used to edit a wide range of factual knowledge types, demonstrates high generalization, and does not hurt the representations of unrelated facts.\nOverall, our method is a significant improvement in text-to-image model editing. Our code and data are publicly available.4"
+        },
+        {
+            "heading": "2 Related work",
+            "text": "The task of image editing using diffusion models has been the focus of several recent studies [7, 8, 9, 10, 11, 12, 13]. Image editing aims to modify specific attributes of an input image based on some auxiliary inputs, recently using texts and instructions [14, 15, 16]. Another closely related line of work is personalization of text-to-image diffusion models, where the goal is to adapt the model to a specific individual or object [17, 18]. Personalization in text-to-image models allow the model to better generate a specific face, object, or scene, given a specific word or pseudo-word [19, 20, 21, 22].\nOur work focuses on a fundamentally different task: editing the world knowledge of a text-to-image model using a target description, be it a text prompt or an image. Knowledge editing aims for the complete transformation of facts, which can be retrieved by different words and phrases, and is not restricted to the specific input image, word or pseudo-word.\nThe task of knowledge editing in text-to-image models was introduced by Orgad et al. [5], who targeted the cross-attention layers. In contrast, we target a specific layer in the text encoder of the text-to-image model, allowing a more precise edit that changes fewer model parameters (0.24% compared to 1.95% of the model parameters).\n4https://github.com/technion-cs-nlp/ReFACT\nEditing knowledge embedded within deep neural networks has been the focus of several lines of work, achieving success in editing generative adversarial networks [23, 24, 25], image classifiers [26], and large language models (LLMs) [27, 28, 29]. Several methods were proposed to update weights in LLMs in particular, including fine-tuning on edited facts [30], weight predictions using hyper-networks [31], identifying and editing specific neurons [32], and rank one model editing [6]. In this work, we propose a rank one editing method for text-to-image models. Our method targets the text encoder, which is the component of text-to-image models responsible for creating latent representations of input prompts."
+        },
+        {
+            "heading": "3 Method",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Background",
+            "text": "Diffusion models generate images by gradually removing noise from noisy samples until a clean image is obtained. Text-to-image diffusion models [4, 3, 33] are conditioned on a textual prompt that guides the image generation process towards generating desired elements. Several text-to-image diffusion models utilize CLIP [34] in different capacities, specifically as a popular choice for a multi-modal-aware text encoder.\nCLIP consists of a text encoder and a image encoder, jointly trained to create a shared embedding space for images and texts. Concretely, a special end of sequence token, denoted [EOS], is appended at the end of each input. CLIP is trained contrastively to increase the cosine similarity between [EOS] tokens of corresponding images and texts, and decrease the similarity between unrelated inputs.\nCLIP\u2019s text encoder is a GPT-2-style model [35] trained from scratch. Like GPT-2, CLIP\u2019s text encoder implements a causal (unidirectional) attention mechanism, meaning that the [EOS] is the only token able to aggregate information from all other tokens in the sequence. Thus, the [EOS] token can be used to optimize the insertion of new facts, as key\u2013value pairs, into the model."
+        },
+        {
+            "heading": "3.2 ReFACT",
+            "text": "This section describes ReFACT, a method for editing text-to-image models by changing the text encoder, denoted as Et. Since the image generation process is conditioned on the representations\nproduced by Et, editing the knowledge of Et should be reflected in the generated images. At a high level, ReFACT takes an edit prompt (e.g., \u201cThe President of the United States\u201d) and a target text (\u201cJoe Biden\u201d) or a target image (an image of Biden) that reflects the desired edit, and edits a specific layer in the model. The goal is to make the model\u2019s representation of the prompt similar to that of the target text/image. The process is illustrated in Figure 2.\nTo achieve this, ReFACT targets the multi-layer perceptron (MLP) layers in the text encoder. Each MLP has two matrices with a non-linearity between them: Wproj \u00b7 \u03c3(Wfc). Following previous work, we view Wproj as a linear associative memory [36, 37, 6]. Linear operations can therefore be viewed as a key\u2013value store WK \u2248 V for a set of key vectors K and corresponding value vectors V in a specific layer l. For example, a key is a representation of \u201cThe President of the United States\u201d, and the value is the identity of the president, which is \u201cDonald Trump\u201d prior to editing.\nConcretely, we perform a rank-one edit of the relevant layer weights [27], W (l)proj , to insert a new key value pair (k\u2217, v\u2217). Bau et al. [23] suggested a closed form solution:\nminimize \u2225W\u0302K \u2212 V \u2225 such that W\u0302k\u2217 = v\u2217 by setting W\u0302 = W + \u039b(C\u22121k\u2217)T . (1)\nwhere C = KKT is a pre-cached constant estimated on wikipedia text and \u039b = (v\u2217 \u2212 Wk\u2217)/(C \u22121k\u2217) T k\u2217. Based on this, all we need is to specify k\u2217 and v\u2217 .\nThe computation of both k\u2217 and v\u2217 relies on the hypothesis that the factual knowledge is retrieved by the model at the last subject token (e.g, \u201cPresident\u201d) [6].\nChoosing k\u2217: We obtain hidden states from layer l for a set of prompts containing the subject (\u201dThe President of the United States\u201d, \u201dAn image of the President of the United States\u201d, etc.). k\u2217 is taken as the average representation of the last subject token in each of the prompts. This is done to achieve a more general representation of last subject token, which is not dependant on specific contexts.\nChoosing v\u2217: We denote by x1 the input text of the edit prompt (\u201dThe President of the United States\u201d), and the target by t\u2217 (\u201dJoe Biden\u201d or an image of Joe Biden). We pass the target t\u2217 through the encoder of the relevant modality, Et or Ei, denoted simply as E, and take the [EOS] representation as the target representation E(t\u2217). Then, we similarly compute the representation of other texts x2, ..., xN , which contain the source prompt (\u201cDonald Trump\u201d) as well as other unrelated prompts (\u201cA cat\u201d), as negative examples.5 We then seek a v\u2217 that, when substituted as the output of MLP layer l at token i (the last subject token, \u201cpresident\u201d), yields a representation that is close to that produced by an unedited encoder given the target (\u201cJoe Biden\u201d), while being far from negative examples.\nFormally, denote by E m\n(l) i :=v the text or image encoder where the output of layer l at token i was substituted with v. We always use the last subject token [6], and thus sometimes omit the subscript i for ease of notation. To obtain the desired v\u2217, we minimize the following contrastive loss:\nv\u2217 = argmin v exp(d(E(t\u2217), Em(l):=v(x1)))\u2211N j=1 exp(d(E(t \u2217), Em(l):=v(xj))) (2)\nwhere d(\u00b7, \u00b7) is the L2 distance.6\nOnce v\u2217 and k\u2217 are obtained, we edit the relevant layer l using the solution from Equation (1)."
+        },
+        {
+            "heading": "4 Experiments",
+            "text": ""
+        },
+        {
+            "heading": "4.1 Datasets",
+            "text": "We evaluate our method on the TIME dataset [5], a dataset for the evaluation of editing implicit assumptions in text-to-image models, like changing the default color of roses to blue instead of red.\nTo perform a more comprehensive evaluation of factual knowledge editing in text-to-image models, we introduce RoAD, the Roles and Appearances Dataset. RoAD contains 100 entries that encompass a diverse range of roles fulfilled by individuals, such as politicians, musicians, and pop-culture\n5We also experimented with a direct optimization without negative examples; see Appendix A. 6For other variations refer to Appendix A.\ncharacters, as well as variations in the visual appearance of objects and entities. Each entry describes a single edit, and contains the edit prompt (e.g., \u201cThe Prince of Wales\u201d), a source prompt (e.g., \u201cPrince Charles\u201d), and a target prompt (e.g., \u201cPrince William\u201d).\nMoreover, each entry contains five positive prompts and five negative prompts. Positive prompts are meant to evaluate the ability of the editing algorithm to generalize to closely related concepts (e.g., \u201cThe Prince of Wales in the park\u201d). Negative prompts are used to ensure that other similar but unrelated concepts remain unchanged (e.g., \u201cPrince Harry\u201d). See Figure 3 for samples from the two dataset, and Appendix B for more details."
+        },
+        {
+            "heading": "4.2 Experimental setup",
+            "text": "We implement our method on the publicly available implementations of Stable Diffusion V1-4 [4], and CLIP [34] available on HuggingFace [38]. We compare our method to TIME, another editing method which targets the cross-attention layers [5]. Applying TIME to our dataset RoAD required some modifications, as TIME does not support all edits in RoAD as is. We implemented a few variations, discussed in Appendix G. Moreover, we follow Orgad et al. [5] and compare our method to an oracle model \u2014 an unedited model that receives the target prompt as input for the positive examples and the negative prompts for the negative examples \u2014 and a baseline model which is an unedited model that receives the source prompts for all generations. We evaluate our model on two datasets, TIME dataset and our newly curated dataset RoAD. For each dataset, we perform a hyper-parameters search over the validation set. This also includes the choice of layer to edit. Further details are in Appendix A."
+        },
+        {
+            "heading": "4.3 Metrics",
+            "text": "To measure our methods\u2019 utility, we follow Meng et al. [39] and Orgad et al. [5] and focus on efficacy, generalization, and specificity. We use 25 random seeds, editing a clean model in each setting and generating one image per prompt for the given seed. We then compute each of the metrics using CLIP as a zero-shot classifier, 7 as described below, and average over the different seeds.\nEfficacy: Quantifies how effective an editing method is on the prompt that was used to perform the edit. For example, when editing \u201cThe Prince of Wales\u201d from \u201cPrince Charles\u201d to \u201cPrince William\u201d (see Figure 3), efficacy measures how many of the images generated using the prompt \u201cthe Prince of Wales\u201d successfully generate an image of Prince William. For a single edit, efficacy is 1 if CLIP(target_prompt) > CLIP(source_prompt), and 0 otherwise.\nGeneralization: Quantifies how well an editing method generalizes to related prompts. For example, \u201cthe prince of Wales in the park\u201d. Generalization is calculated as the portion of related\n7We use Laion\u2019s ViT-G/14 [40], which is the best open source CLIP model to date.\nprompts (Positives in Figure 3) for which the editing was successful. As with efficacy, an edit is successful if CLIP(target_prompt) > CLIP(source_prompt).\nSpecificity: Quantifies how specific an editing method is. Specificity is calculated as the portion of unrelated prompts (Negatives in Figure 3) that were not affected by the editing. A prompt is unaffected if CLIP(target_prompt) < CLIP(source_prompt).\nWe also compute the geometrical mean of the generalization and specificity scores (denoted F1). In addition, to test the effect of ReFACT on the overall quality of the model\u2019s image generation process, we measure the FID score [41], as well as the CLIP score [42] over the MS-COCO validation dataset [43], as is standard practice [4, 44, 3, 45]."
+        },
+        {
+            "heading": "5 Results",
+            "text": ""
+        },
+        {
+            "heading": "5.1 Qualitative evaluation",
+            "text": "As we show in Figure 4, ReFACT is effective in editing the knowledge represented by the edit prompt. Sometimes, it is even more effective than the oracle: When Messi is edited to play basketball, the oracle often adds a basketball to a soccer game. ReFACT, on the other hand, modifies the entire setting, including the court, and sometimes the uniform. Figure 5 demonstrates how ReFACT is able to alter specific knowledge while leaving other unrelated but close prompts unchanged. After editing an apple to appear as an avocado, when the edited model is prompted with \u201cAn apple and a lemon\u201d, it successfully generates images showcasing both fruits. The generality of ReFACT to other related words and phrasings is demonstrated in Figure 6. For instance, after editing \u201cCanada\u2019s Prime\nMinister\u201d to be Beyonce, the model successfully generates images of Beyonce giving a speech in front of the Canadian flag for the prompt \u201cCanada\u2019s PM giving a speech\u201d. For additional qualitative results, see Appendix E.\nWe show several comparisons with TIME [5] in Figure 7. ReFACT is able to edit cases where TIME essentially fails and hurts the model\u2019s generalization capabilities (editing \u201cCauliflower\u201d to \u201cLeek\u201d). ReFACT is also able to generalize in cases where TIME does not (editing \u201ca pedestal\u201d to \u201ca wooden pedestal\u201d generalizes also in \u201ca pedestal in the garden\u201d), and keep generations for unrelated prompts unchanged (editing \u201cice cream\u201d to \u201cstrawberry ice cream\u201d does not affect the color of ice)."
+        },
+        {
+            "heading": "5.2 Quantitative evaluation",
+            "text": "Table 1 presents results on two datasets: the TIME dataset [5] and RoAD. ReFACT achieves better efficacy, generality, and specificity on both datasets, compared to the previous editing method. On the TIME dataset, our method achieves superior efficacy, on-par with the oracle. It also achieves significantly better generalization than TIME, and better specificity, albeit not as high as the oracle. On RoAD, ReFACT achieves significantly better performance across all of the metrics.\nImportantly, ReFACT does not hurt the image generation capabilities of the model, as demonstrated by excellent FID and CLIP scores on both datasets (virtually identical to the unedited model\u2019s). In contrast, when TIME is used to edit entries from RoAD, we find that it sometimes results in an unwanted outcome where the images generated by the model are not coherent anymore (Figure 7, left). This is also reflected in the higher FID score."
+        },
+        {
+            "heading": "5.3 Failure cases",
+            "text": "While ReFACT is very effective at modifying specific attributes and can generalize very well, in some cases it modifies other attributes of an object as well. This is crucial in images of people\u2019s faces, where a change in a facial feature changes the identity of the person discussed (see Figure 8a). While\nReFACT performed the desired edit, it excessively changed the person\u2019s face, unlike TIME, which better preserved facial features. In addition, ReFACT still incurs some failure cases in specificity, as demonstrated in Figure 8b."
+        },
+        {
+            "heading": "5.4 Multiple edits",
+            "text": "Our main experiments with ReFACT edited one piece of information at a time. To assess ReFACT\u2019s ability to edit multiple facts, we perform sequential edits. We alternate on entries from the TIME dataset and RoAD, editing 90 facts in total. As Figure 9 shows, sequential edits work just as well as single edits in all three metrics. See Appendix I for additional results. These encouraging results show that ReFACT may be useful in practice. Future work may scale it up by performing simultaneous edits, similar to [27]."
+        },
+        {
+            "heading": "6 Per-layer analysis",
+            "text": "So far, we edited a particular layer for all facts, which was selected using the validation set. However, we hypothesize that different layers encode distinct features. To investigate differences among\ndifferent layers in the text encoder, we employ ReFACT as a causal analysis tool, editing individual layers and observing the corresponding outcomes. We focus here on facial expressions, as an initial demonstration for using editing methods to analyze the internal mechanisms of deep models.\nExperiment. We use both versions of ReFACT in this section, using either the image encoder or the text encoder to get the target embedding (Section 3.2). We use six \u201cuniversal\u201d emotions [46] (happiness, sadness, anger, fear, disgust, and surprise), and edit the model using a target image or text of people expressing the different emotions (generated by an unedited model). We edit each layer and generate 50 images for each emotion, 25 of females and 25 of males. For further details, see Appendix H.\nResults. Editing lower layers tends to affect the emotions in the generated images more than editing deeper layers, as demonstrated in Figure 11. Moreover, we evaluate the CLIP score of the generated images w.r.t. the edited emotion (e.g., the text \u201canger\u201d). If an edit is successful in preserving the emotion, the CLIP score should be high. As Figure 10 shows, CLIP scores for the edited emotion decrease as the edited layer is higher. In other words, editing lower layers is generally more effective. These results indicate that emotions are more encoded in the lower layers of the text encoder."
+        },
+        {
+            "heading": "7 Discussion",
+            "text": "In this work, we presented ReFACT, an editing method that modifies knowledge embedded in text-toimage models without fine-tuning. ReFACT is effective at editing various types of knowledge, such as implicit model assumptions or the appearance of an entire subject. Its edits are specific, leaving other pieces of knowledge unchanged. We also demonstrated how editing can be used as a causal analysis tool for analyzing which information is stored in different layers.\nWhile ReFACT is a useful tool for updating text-to-image models, it has limitations. Our method is relatively slow, as it requires an optimization process, while the competing method, TIME, has a closed-form solution. ReFACT typically takes up to 2 minutes on a single NVIDIA A40 GPU.\nMoreover, ReFACT sometimes fails to preserve unique facial features when editing specific facial attributes of a person. We experimented with editing different layers of the model (see Appendix A) and found that the issue persists. This phenomenon requires further investigation.\nThe technology presented in this paper is meant to improve human\u2013technology interaction. Nevertheless, it may also be used with unintended consequences, such as planting harmful phrases or incorporating harmful social views. Given the vast research on harmful representations [47, 48, 49, 50, 51], we believe that sharing the editing method in this paper has more benefits than potential harms. We encourage future work to investigate the use of ReFACT for mitigating unwanted social impacts."
+        },
+        {
+            "heading": "A Ablations of ReFACT",
+            "text": "The modality of t\u2217. As previously discussed, t\u2217 can either be an image representing the concept that we wish to edit to (a photo of Joe Biden), or a textual prompt representing it (the prompt \u201cJoe Biden\u201d). The image representation enables us to target multiple concepts at once, specifically applicable to changing the appearance of an object or role in a way that is difficult to explain via text. For example, if we want to edit the appearance of a TV character, that is now adapted to be played by a new actor, choosing t\u2217 to be the name of the actor does not capture specific recognizable traits of the new adaptation - see Figure 13. However, the choice of specific image for editing might heavily affect the observed results. It is more difficult to specify the exact property we wish to edit (e.g., editing a doctor to a female doctor) without also affecting over attributes as well (the pose of the doctor, their hair or skin color) - see Figure 12. Expressing the target concept in text enables us to express our edit in a more general way, which is more robust. We found that editing to representations from the text encoder generalizes better, and is more robust compared to editing from the image encoder in terms of image diversity and editing quality. In case of editing appearance of roles, when the diffusion model encodes the edited character well, such as \u201cJoe Biden\u201d, editing with text is more effective - see Figure 14.\nDirect versus contrastive optimization. The computation of v\u2217 described in Section 3.2 is done using a contrastive objective, maximizing the similarity between the editing prompt (e.g., \u201cThe president of the United States\u201d) and the target (e.g., \u201cJoe Biden\u201d), while relatively minimizing the similarity to other negative examples (e.g., \u201cDonald Trump\u201d). A different approach would be to directly maximize the similarity, without utilizing negative examples. To obtain v\u2217 using direct optimization, we minimize the following loss:\nv\u2217 = argmin v d(E(t\u2217), Em(l):=v(x1)) (3)\nPreliminary experiments showed that contrastive optimization is more effective, and thus we continued with it.\nCosine similarity versus L2 distance. While cosine similarity better reflects CLIP\u2019s original training objective, L2 is more directly related to our goal of editing the embeddings of the input\nprompt. We found L2 to perform better in all experiments and thus present the results with L2 as the distance function of choice.\nHyper-parameter search. We line searched over the following parameters, beginning from a basic variation which we found reasonable in early experiments and refining it on each search. First, we chose the layer to edit within the CLIP text encoder: Table 2 presents our layer search on the base configuration, for each dataset. We chose layer 9 for editing on TIME dataset, and layer 7 for editing RoAD. Then, we also searched for the learning rate for learning v\u2217 (0.05); the maximum number of steps for optimization (100); and the probability threshold used for early stopping of v\u2217 optimization process (0.99, illustrated in Figure 15);"
+        },
+        {
+            "heading": "B RoAD",
+            "text": "RoAD consists of two types of editing requests: Roles and appearances. Roles refer to positions filled by individuals, such as politicians, musicians, and pop-culture characters (e.g., \u201cThe President of the United States\u201d, \u201cRoss Geller\u201d, \u201cForrest Gump\u201d). Appearances are editing request that aim to alter the complete visual appearance of an object (e.g., \u201cApple\u201d, \u201dHonda Accord\u201d). Although all entries in RoAD share the same structure, there are some conceptual differences in between editing roles and editing appearances. For example, when editing \u201cThe President of the United States\u201d to \u201cJoe Biden\u201d, we expect the model to still be able to generate the source prompt, \u201cDonald Trump\u201d. This is not the case when editing \u201cApple\u201d to \u201cAvocado\u201d, since both the editing prompt and the source prompt are \u201cApple\u201d are expected to demonstrate the edited fact.\nRoAD is split into a test set (90 entries) and a smaller, disjoint, validation set (10 entries), used for hyper-parameter search. Each entry in RoAD consists of an editing prompt, a source, and a target. The editing prompt (e.g., \"The Prince of Wales\", \"A computer\") describes a role or entity whose visual appearance can be consistently generated by a text-to-image model. In entries editing roles (46 entries), the source describes the person generated by the model when given the editing prompt (e.g., \"Price Charles\"). For entries editing appearance (64 entries), the source describe the entity itself and is the same as the editing prompt (e.g., \"A computer\"). The source and target of each entry can be used to generate multi-modal input to fit various editing algorithms. They can be used simply as textual source and target descriptions, or be used to automatically generate images using a text-to-image model of choice, which are later fed to the editing algorithm.\nFor each positive prompt, RoAD includes the prompt itself (e.g., \"The Prince of Wales in the park\"), and two variations of the positive prompt describing the source and targets (e.g., \"Prince Charles in the park\", \"Prince William in the park\", respectively). For RoAD entries editing appearance, the positive prompt and source-positive prompts are again identical. For each negative example RoAD includes a negative prompt (e.g., \"Prince Harry\", \"A computer screen\") and The negative-target prompt (e.g., \"Prince William\", \"A laptop screen\").\nC Implementation details\nWe implemented our code using Pytorch and Huggingface libraries [52, 38, 53], and based our rank-one editing code on the code of Meng et al. [6]. All experiments are averaged over 25 seeds from 0 to 24. We ran the experiments on the following GPUs: Nvidia A40, RTX 6000 Ada Generation, RTX A4000 and GeForce RTX 2080 Ti."
+        },
+        {
+            "heading": "D Metrics",
+            "text": "We describe here the measured metrics in a mathematical notation.\nGeneralization: #[CLIP(target_prompt) > CLIP(source_prompt)]\n#positive_examples\nSpecificity: #[CLIP(source_prompt) > CLIP(target_prompt)]\n#negative_examples\nWe computed the efficacy, specificity and generality metrics using Laion\u2019s ViT-G/14 [40], which is the best open source CLIP model to date. The general CLIP score used to evaluate generation quality was computed using the standard Torchmetrics [54] CLIPScore class, for which CLIP-vitlarge-patch14-336 is the best available CLIP model."
+        },
+        {
+            "heading": "E Additional qualitative results",
+            "text": "We present additional qualitative results of ReFACT. Figure 16 demonstrates the generated images for the prompt \u201ca cake\u201d across different edits, using the same seeds. Figure 17 illustrates the generality of ReFACT and Figure 18 illustrates its specificity."
+        },
+        {
+            "heading": "F Limitation of ReFACT: facial features",
+            "text": "As we discussed in Section 5.3, an edit considering a person can sometimes modify facial features in an undesired way. We experimented in editing different layers of the model to overcome this limitation, but found that it only helps slightly or not at all. This is demonstrated in Figure 19."
+        },
+        {
+            "heading": "G Modifications to TIME",
+            "text": "TIME [5] is a method designed to edit implicit assumptions, and as such, it is designed to edit from an under-specified prompt (\u201ca pack of roses\u201d) to a specified prompt (\u201ca pack of blue roses\u201d). As we discussed in Appendix B, our dataset RoAD contains two types of samples: roles and appearance. We separate their treatment when we run TIME:\nRoles. Roles are more similar to the edits preformed by TIME, and can be written as an underspecified prompt (\u201cThe President of the United States\u201d) and a specified prompt (\u201cJoe Biden as the President of the United States\u201d). We use this formulation to apply TIME to these samples.\nAppearance. Appearances entries are different from those used by TIME, since they edit from one object to an entirely different one. For instance, editing \u201cApple\u201d to \u201cAvocado\u201d. We do not have a natural way of designing this edit as an under-specified prompt and a specified prompt. Thus, for these samples we only edit the pad tokens, which matches the formulation of TIME that edits only matching tokens and also edits the pad tokens.\nAdditionally, we make modifications to TIME that make it more similar to ReFACT, to narrow down the reason that ReFACT is more successful. We experiment with two approaches: editing only the [EOS] token and editing directly to the target prompt (\u201cJoe Biden\u201d), like we do in ReFACT. When we taking the former, we only edit the [EOS] token, as done in ReFACT. We show in Table 3 the results on RoAD with the various modifications. We choose the original setting, that achieves the\nhighest F1 score. All of the results are relatively poor, which indicates that the difference between the method lies within the component of editing (attention layers versus inner MLP layers)."
+        },
+        {
+            "heading": "H Per-layer analysis: facial expressions",
+            "text": "H.1 Implementation\nFor this experiment, we needed prompts that generate portrait images of people. We found that prompts such as \u201ca portrait of a man\u201d or \u201ca photo of a woman\u201d tend to generate images of very different styles, while the prompt \u201ca doctor\u201d, which we borrowed from TIME dataset, tends to generate realistic images of people looking directly at the camera. We thus use it to perform our experiments on facial expressions. Since the generative model is biased [5], it tends to generate male images of doctors and thus we use the prompts \u201ca male doctor\u201d and \u201ca female doctor\u201d.\nH.2 Additional results\nIn Figure 10, we present the plots from the image editing and the text editing experiments, on different emotions and layers. The two plots follow the same trend, illustrating that editing in lower layers results in the facial expression more apparent in the generated image by the edited model. Moreover, Figure 20 and 22 present more illustrations of this phenomenon."
+        },
+        {
+            "heading": "I Multiple edits",
+            "text": "We evaluate multiple edits by preforming the editing requests sequentially on the same CLIP text encoder, using the same hyper-parameters as ReFACT. We edit entries from both the TIME dataset and RoAD, testing three different permutations of the edit requests. We edit up to 90 facts. Figure 23 shows the efficacy, generalization and specificity of the model at every 10 edits interval. Our experiments show that multiple edit result in only a slight drop across all metrics, which can be a result of the high specificity demonstrated by ReFACT.\nFigure 24 shows examples of entries that were edited in the first ten sequential edits, along the different steps. The first two rows demonstrate editing \u201cThe British Monarch\u201d from \u201cQueen Elizabeth\u201d to \u201cPrince Charles\u201d, and editing \u201cDaffodils\u201d to \u201cBlue Daffodils\u201d. The figure shows minimal changes in the generated images for these edits after multiple sequential edits. On the other hand, editing \u201cCarnation\u201d to \u201cFoxgloves\u201d shows a drop in efficacy after 20 edits, as the model generated images of different flowers."
+        }
+    ],
+    "title": "ReFACT: Updating Text-to-Image Models by Editing the Text Encoder",
+    "year": 2023
+}

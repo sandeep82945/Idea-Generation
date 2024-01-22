@@ -1,0 +1,678 @@
+{
+    "abstractText": "In real-world applications, users often require both translations and transcriptions of speech to enhance their comprehension, particularly in streaming scenarios where incremental generation is necessary. This paper introduces a streaming Transformer-Transducer that jointly generates automatic speech recognition (ASR) and speech translation (ST) outputs using a single decoder. To produce ASR and ST content effectively with minimal latency, we propose a joint token-level serialized output training method that interleaves source and target words by leveraging an off-the-shelf textual aligner. Experiments in monolingual (it-en) and multilingual ({de,es,it}en) settings demonstrate that our approach achieves the best quality-latency balance. With an average ASR latency of 1s and ST latency of 1.3s, our model shows no degradation or even improves output quality compared to separate ASR and ST models, yielding an average improvement of 1.1 WER and 0.4 BLEU in the multilingual case.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Sara Papi"
+        },
+        {
+            "affiliations": [],
+            "name": "Peidong Wang"
+        },
+        {
+            "affiliations": [],
+            "name": "Junkun Chen"
+        },
+        {
+            "affiliations": [],
+            "name": "Jian Xue"
+        },
+        {
+            "affiliations": [],
+            "name": "Jinyu Li"
+        },
+        {
+            "affiliations": [],
+            "name": "Yashesh Gaur"
+        },
+        {
+            "affiliations": [],
+            "name": "Bruno Kessler"
+        }
+    ],
+    "id": "SP:866e2927118309d33fdbd39d7948b3c51ff844f4",
+    "references": [
+        {
+            "authors": [
+                "R. Hsiao",
+                "A. Venugopal",
+                "T. K\u00f6hler",
+                "Y. Zhang",
+                "P. Charoenpornsawat",
+                "A. Zollmann",
+                "S. Vogel",
+                "A.W. Black",
+                "T. Schultz",
+                "A. Waibel"
+            ],
+            "title": "Optimizing components for handheld two-way speech translation for an English-iraqi Arabic system",
+            "venue": "Proc. Interspeech, 2006.",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "C. F\u00fcgen"
+            ],
+            "title": "A System for Simultaneous Translation of Lectures and Speeches",
+            "venue": "Ph.D. thesis,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "M. Sperber",
+                "H. Setiawan",
+                "C. Gollan",
+                "U. Nallasamy",
+                "M. Paulik"
+            ],
+            "title": "Consistent transcription and translation of speech",
+            "venue": "Transactions of ACL, vol. 8, pp. 695\u2013709, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Karakanta",
+                "M. Gaido",
+                "M. Negri",
+                "M. Turchi"
+            ],
+            "title": "Between flexibility and consistency: Joint generation of captions and subtitles",
+            "venue": "Proc. 18th IWSLT, 2021, pp. 215\u2013225.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "F. Stahlberg",
+                "D. Saunders",
+                "B. Byrne"
+            ],
+            "title": "An operation sequence model for explainable neural machine translation",
+            "venue": "Proc. EMNLP Workshop BlackboxNLP, 2018, pp. 175\u2013186.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Q. Dong",
+                "M. Wang",
+                "H. Zhou",
+                "S. Xu",
+                "B. Xu",
+                "L. Li"
+            ],
+            "title": "Consecutive decoding for speech-to-text translation",
+            "venue": "Proc. AAAI, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "H. Le",
+                "J. Pino",
+                "C. Wang",
+                "J. Gu",
+                "D. Schwab",
+                "L. Besacier"
+            ],
+            "title": "Dual-decoder transformer for joint automatic speech recognition and multilingual speech translation",
+            "venue": "Proc. 28th COLING, 2020, pp. 3520\u20133533.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J. Xu",
+                "F. Buet",
+                "J. Crego",
+                "E. Bertin-Lem\u00e9e",
+                "F. Yvon"
+            ],
+            "title": "Joint generation of captions and subtitles with dual decoding",
+            "venue": "Proc. 19th IWSLT, 2022, pp. 74\u201382.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Chen",
+                "M. Ma",
+                "R. Zheng",
+                "L. Huang"
+            ],
+            "title": "Direct simultaneous speech-to-text translation assisted by synchronized streaming ASR",
+            "venue": "Findings of ACL-IJCNLP, 2021, pp. 4618\u20134624.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "O. Weller",
+                "M. Sperber",
+                "C. Gollan",
+                "J. Kluivers"
+            ],
+            "title": "Streaming models for joint speech recognition and translation",
+            "venue": "Proc. 16th EACL, 2021, pp. 2533\u20132539.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A. Vaswani",
+                "N. Shazeer",
+                "N. Parmar",
+                "J. Uszkoreit",
+                "L. Jones",
+                "A.N. Gomez",
+                "\u0141. Kaiser",
+                "I. Polosukhin"
+            ],
+            "title": "Attention is all you need",
+            "venue": "Proc. 31st NeurIPS, 2017, p. 6000\u20136010.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J. Li"
+            ],
+            "title": "Recent advances in end-to-end automatic speech recognition",
+            "venue": "APSIPA Transactions on Signal and Information Processing, vol. 11, no. 1."
+        },
+        {
+            "authors": [
+                "J. Niehues",
+                "N. Pham",
+                "T. Ha",
+                "M. Sperber",
+                "A. Waibel"
+            ],
+            "title": "Low-Latency Neural Speech Translation",
+            "venue": "Proc. Interspeech, 2018, pp. 1293\u20131297.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "N. Arivazhagan",
+                "C. Cherry",
+                "W. Macherey",
+                "G. Foster"
+            ],
+            "title": "Re-translation versus streaming for simultaneous translation",
+            "venue": "Proc. 17th IWSLT, 2020, pp. 220\u2013227.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P. Wang",
+                "E. Sun",
+                "J. Xue",
+                "Y. Wu",
+                "L. Zhou",
+                "Y. Gaur",
+                "S. Liu",
+                "J. Li"
+            ],
+            "title": "LAMASSU: A streaming language-agnostic multilingual speech recognition and translation model using neural transducers",
+            "venue": "Proc. Interspeech, 2023.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "C. Yeh",
+                "J. Mahadeokar",
+                "K. Kalgaonkar",
+                "Y. Wang",
+                "D. Le",
+                "M. Jain",
+                "K. Schubert",
+                "C. Fuegen",
+                "M. L Seltzer"
+            ],
+            "title": "Transformer-transducer: End-to-end speech recognition with self-attention",
+            "venue": "2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Q. Zhang",
+                "H. Lu",
+                "H. Sak",
+                "A. Tripathi",
+                "E. McDermott",
+                "S. Koo",
+                "S. Kumar"
+            ],
+            "title": "Transformer transducer: A streamable speech recognition model with transformer encoders and RNN-T loss",
+            "venue": "Proc. ICASSP, 2020, pp. 7829\u20137833.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "X. Chen",
+                "Y. Wu",
+                "Z. Wang",
+                "S. Liu",
+                "J. Li"
+            ],
+            "title": "Developing real-time streaming transformer transducer for speech recognition on large-scale dataset",
+            "venue": "Proc. ICASSP, 2021, pp. 5904\u20135908.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "N. Kanda",
+                "J. Wu",
+                "Y. Wu",
+                "X. Xiao",
+                "Z. Meng",
+                "X. Wang",
+                "Y. Gaur",
+                "Z. Chen",
+                "J. Li",
+                "T. Yoshioka"
+            ],
+            "title": "Streaming multi-talker ASR with token-level serialized output training",
+            "venue": "Proc. Interspeech, 2022, pp. 3774\u20133778.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "R. Schwartz",
+                "J. Dodge",
+                "N.A. Smith",
+                "O. Etzioni"
+            ],
+            "title": "Green ai",
+            "venue": "Commun. ACM, vol. 63, no. 12, pp. 54\u201363, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "N. Kanda",
+                "Y. Gaur",
+                "X. Wang",
+                "Z. Meng",
+                "T. Yoshioka"
+            ],
+            "title": "Serialized Output Training for End-to-End Overlapped Speech Recognition",
+            "venue": "Proc. Interspeech, 2020, pp. 2797\u20132801.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "N. Kanda",
+                "J. Wu",
+                "X. Wang",
+                "Z. Chen",
+                "J. Li",
+                "T. Yoshioka"
+            ],
+            "title": "Vararray meets t-sot: Advancing the state of the art of streaming distant conversational speech recognition",
+            "venue": "Proc. ICASSP, 2023, pp. 1\u20135.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "M. Omachi",
+                "B. Yan",
+                "S. Dalmia",
+                "Y. Fujita",
+                "S. Watanabe"
+            ],
+            "title": "Align, write, re-order: Explainable end-to-end speech translation via operation sequence generation",
+            "venue": "Proc. ICASSP, 2023, pp. 1\u20135.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "C. Fantinuoli",
+                "M. Montecchio"
+            ],
+            "title": "Defining maximum acceptable latency of ai-enhanced cai tools",
+            "venue": "2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "A. Graves"
+            ],
+            "title": "Sequence transduction with recurrent neural networks",
+            "venue": "2012.",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Z. Tian",
+                "J. Yi",
+                "J. Tao",
+                "Y. Bai",
+                "Z. Wen"
+            ],
+            "title": "Self- Attention Transducers for End-to-End Speech Recognition",
+            "venue": "Proc. Interspeech, 2019, pp. 4395\u20134399.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Q. Zhang",
+                "H. Lu",
+                "H. Sak",
+                "A. Tripathi",
+                "E. McDermott",
+                "S. Koo",
+                "S. Kumar"
+            ],
+            "title": "Transformer transducer: A streamable speech recognition model with transformer encoders and rnn-t loss",
+            "venue": "Proc. ICASSP, 2020, pp. 7829\u20137833.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "H. Xu",
+                "F. Jia",
+                "S. Majumdar",
+                "S. Watanabe",
+                "B. Ginsburg"
+            ],
+            "title": "Multi-blank transducers for speech recognition",
+            "venue": "Proc. ICASSP, 2023, pp. 1\u20135.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Z. Tian",
+                "J. Yi",
+                "Y. Bai",
+                "J. Tao",
+                "S. Zhang",
+                "Z. Wen"
+            ],
+            "title": "Synchronous transformers for end-to-end speech recognition",
+            "venue": "Proc. ICASSP, 2020, pp. 7884\u2013 7888.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S. Dalmia",
+                "Y. Liu",
+                "S. Ronanki",
+                "K. Kirchhoff"
+            ],
+            "title": "Transformer-transducers for code-switched speech recognition",
+            "venue": "Proc. ICASSP, 2021, pp. 5859\u2013 5863.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "E. Sun",
+                "J. Li",
+                "Z. Meng",
+                "Y. Wu",
+                "J. Xue",
+                "S. Liu",
+                "Y. Gong"
+            ],
+            "title": "Improving Multilingual Transformer Transducer Models by Reducing Language Confusions",
+            "venue": "Proc. Interspeech, 2021, pp. 3470\u20133474.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Yu",
+                "C. Chiu",
+                "B. Li",
+                "S. Chang",
+                "T.N. Sainath",
+                "Y. He",
+                "A. Narayanan",
+                "W. Han",
+                "A. Gulati",
+                "Y. Wu",
+                "R. Pang"
+            ],
+            "title": "Fastemit: Low-latency streaming asr with sequencelevel emission regularization",
+            "venue": "Proc. ICASSP, 2021, pp. 6004\u20136008.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Shi",
+                "Y. Wang",
+                "C. Wu",
+                "C. Yeh",
+                "J. Chan",
+                "F. Zhang",
+                "D. Le",
+                "M. Seltzer"
+            ],
+            "title": "Emformer: Efficient memory transformer based acoustic model for low latency streaming speech recognition",
+            "venue": "Proc. ICASSP, 2021, pp. 6783\u20136787.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "N. Moritz",
+                "Ta. Hori",
+                "J. Le"
+            ],
+            "title": "Streaming automatic speech recognition with the transformer model",
+            "venue": "Proc. ICASSP, 2020, pp. 6074\u20136078.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "W. Huang",
+                "W. Hu",
+                "Y.T. Yeung",
+                "X. Chen"
+            ],
+            "title": "Conv- Transformer Transducer: Low Latency, Low Frame Rate, Streamable End-to-End Speech Recognition",
+            "venue": "Proc. Interspeech, 2020, pp. 5001\u20135005.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J. Xue",
+                "P. Wang",
+                "J. Li",
+                "M. Post",
+                "Y. Gaur"
+            ],
+            "title": "Largescale streaming end-to-end speech translation with neural transducers",
+            "venue": "Proc. Interspeech, 2022, pp. 3263\u2013 3267.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Xue",
+                "P. Wang",
+                "J. Li",
+                "E. Sun"
+            ],
+            "title": "A weakly-supervised streaming multilingual speech model with truly zeroshot capability",
+            "venue": "arXiv preprint arXiv:2211.02499, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D. Liu",
+                "M. Du",
+                "X. Li",
+                "Y. Li",
+                "E. Chen"
+            ],
+            "title": "Cross attention augmented transducer networks for simultaneous translation",
+            "venue": "Proc. EMNLP, 2021, pp. 39\u201355.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Tang",
+                "A.Y. Sun",
+                "H. Inaguma",
+                "X. Chen",
+                "N. Dong",
+                "X. Ma",
+                "P.D. Tomasello",
+                "J. Pino"
+            ],
+            "title": "Hybrid transducer and attention based encoder-decoder modeling for speech-to-text tasks",
+            "venue": "Proc. 61st ACL, 2023.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Z. Dou",
+                "G. Neubig"
+            ],
+            "title": "Word alignment by fine-tuning embeddings on parallel corpora",
+            "venue": "Proc. EACL, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Wang",
+                "A. Wu",
+                "J. Gu",
+                "J. Pino"
+            ],
+            "title": "CoVoST 2 and Massively Multilingual Speech Translation",
+            "venue": "Proc. Interspeech 2021, 2021, pp. 2247\u20132251.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "I. Loshchilov",
+                "F. Hutter"
+            ],
+            "title": "Decoupled weight decay regularization",
+            "venue": "Proc. ICLR, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "T. Kudo",
+                "J. Richardson"
+            ],
+            "title": "SentencePiece: A simple and language independent subword tokenizer and detokenizer for neural text processing",
+            "venue": "Proc. EMNLP: System Demonstrations, 2018, pp. 66\u201371.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Post"
+            ],
+            "title": "A call for clarity in reporting BLEU scores",
+            "venue": "Proc. 3rd WMT, 2018, pp. 186\u2013191.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "S. Papi",
+                "M. Gaido",
+                "M. Negri",
+                "M. Turchi"
+            ],
+            "title": "Overgeneration cannot be rewarded: Length-adaptive average lagging for simultaneous speech translation",
+            "venue": "Proc. 3rd AutoSimTrans, 2022, pp. 12\u201317.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "X. Ma",
+                "J. Pino",
+                "P. Koehn"
+            ],
+            "title": "SimulMT to SimulST: Adapting simultaneous text translation to end-to-end simultaneous speech translation",
+            "venue": "Proc. 1st AACL and 10th IJCNLP, 2020, pp. 582\u2013587.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "M. Ma",
+                "L. Huang",
+                "H. Xiong",
+                "R. Zheng",
+                "K. Liu",
+                "B. Zheng",
+                "C. Zhang",
+                "Z. He",
+                "H. Liu",
+                "X. Li",
+                "H. Wu",
+                "H. Wang"
+            ],
+            "title": "STACL: Simultaneous translation with implicit anticipation and controllable latency using prefixto-prefix framework",
+            "venue": "Proc. 57th ACL, 2019, pp. 3025\u20133036.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "B. Joseph",
+                "P. Baldi"
+            ],
+            "title": "An introduction to the indoeuropean languages",
+            "venue": "Language, vol. 63, pp. 147, Mar. 1987.",
+            "year": 1987
+        },
+        {
+            "authors": [
+                "M. Gaido",
+                "M. Negri",
+                "M. Turchi"
+            ],
+            "title": "Who are we talking about? handling person names in speech translation",
+            "venue": "Proc. 19th IWSLT, 2022, pp. 62\u201373.",
+            "year": 2022
+        }
+    ],
+    "sections": [
+        {
+            "text": "Index Terms\u2014 automatic speech recognition, speech translation, streaming, serialized output training"
+        },
+        {
+            "heading": "1. INTRODUCTION",
+            "text": "In many real-world applications such as lectures and dialogues, automatic speech recognition (ASR) and translation (ST) are often both required to help the user understanding the spoken content [1]. For instance, a person can have partial knowledge of the uttered language and a good knowledge of the translation language, therefore consulting the translation only when the transcription is not fully comprehended [2]. Moreover, the consistency between transcriptions and translations represents a desirable property for speech applications [3, 4], and having access to both source and target texts is also particularly useful for explainable AI [5].\nDespite these requests and the several research efforts towards developing systems that are able to produce both outputs [6, 7, 8], little research has focused on the streaming scenario [9] where these outputs have to be generated\n\u2217Work done during an internship at Microsoft.\nwhile incrementally receiving additional speech content. In particular, only Weller et al., 2021 [10] proposed a unifieddecoder solution for real-time applications that, however, leverages a fully attention-based encoder-decoder (AED) architecture [11], which is theoretically not well suited for the streaming scenario [12], and adopts the re-translation approach [13], which is well-known to be affected by the flickering problem [14].\nRecently, Wang et al. 2023 [15] proposed a streaming language-agnostic multilingual speech recognition and translation model using neural transducers (LAMASSU), which is capable of generating both ASR and ST results. More specifically, LAMASSU with a unified prediction and joint network (LAMASSU-UNI) uses language identification (LID) information to replace the start-of-sentence token. However, in order to perform ASR and ST simultaneously, LAMASSU requires two decoder instances.\nIn this paper, we introduce the first streaming TransformerTransducer (T-T) [16, 17, 18] able to jointly generate both transcriptions and translations using a single decoder (Figure 1). To effectively learn how to produce the interleaved ASR and ST words, we propose a joint token-level serialized output training (t-SOT) [19] method that leverages an off-theshelf neural textual aligner to build the training data without any additional costs.\nMonolingual (it-en) and multilingual ({de,es,it}-en) experiments demonstrate the effectiveness of our proposed alignment-based joint t-SOT model, achieving the best qualitylatency trade-off across languages. With an average latency of 1s for ASR and 1.3s for ST, our model not only improves the output quality compared to separate ASR and ST mod-\n979-8-3503-0689-7/23/$31.00 \u00a92023 IEEE\nar X\niv :2\n30 7.\n03 35\n4v 2\n[ cs\n.C L\n] 2\nO ct\n2 02\nels, resulting in an average improvement of 1.1 WER and 0.4 BLEU in the multilingual case, but also enables a more interpretable ST, assisted by the corresponding generated ASR outputs. Furthermore, the ability of our system to consolidate multiple tasks and languages into a single model significantly reduces the number of required systems (from 6 to 1 in the multilingual case), thus moving towards a more environmentally-friendly AI (Green AI) approach [20]."
+        },
+        {
+            "heading": "2. RELATED WORKS",
+            "text": "The SOT [21] method was initially introduced for nonstreaming overlapped ASR and later extended to its tokenlevel version for the streaming multi-talker scenario [19] and distant conversational ASR [22]. Recently, Omachi et al., 2023 [23] proposed a similar approach for explainable and streaming ST by incorporating interleaved post-editing annotations into the target text but exhibiting a very high latency (more than 5 seconds).1\nIn the streaming scenario, only Weller et al., 2021 [10] proposed a unified decoder for generating both ASR and ST outputs based on an AED architecture and adopting retranslation. Their framework is completely different from what we propose in this paper, since our model is Transducerbased, thus having a different architecture that naturally implements the streaming capabilities.\nThe original encoder of the Transducer model [25] was composed of LSTM layers, which were later replaced by Transformer layers due to their improved performance [26, 27]. Extensive research has been conducted on the T-T model for ASR [28, 29, 30, 31], with a particular focus on the streaming scenario [32, 33, 34, 35].\nAlthough the adoption of the T-T model has been previously proposed for the streaming ST task [36], including extensions to multilingual settings [37, 15] and architectural modifications [38, 39], our paper is the first introducing a streaming single encoder-single decoder T-T model that can jointly produce ASR and ST outputs with minimal latency. Furthermore, we explore the application of the t-SOT method to jointly generate ASR and ST outputs, which has not been previously investigated in prior work."
+        },
+        {
+            "heading": "3. JOINT T-SOT BASED ON TEXTUAL ALIGNMENTS",
+            "text": ""
+        },
+        {
+            "heading": "3.1. Joint t-SOT",
+            "text": "In this section, we provide a detailed explanation of the joint version of the t-SOT method. To emit both transcriptions and translations given the input speech, we serialize the ASR and ST references into a single token sequence. Specifically, we introduce two special tokens \u27e8asr\u27e9 and \u27e8st\u27e9\n1The maximum acceptable latency limit is set between 2 and 3 seconds from most works on simultaneous interpretation [24].\nto represent the task change (the transition between ASR and ST output) and concatenate the reference transcription tokens and translation tokens by inserting \u27e8asr\u27e9 and \u27e8st\u27e9 between utterances (either at the sentence level or within specific words). For instance, given the transcription reference rasr = [rasr1 , rasr2 , ..., rasrm ] and the translation reference rst = [rst1 , rst2 , ..., rstn ], where m \u2264 len(rasr) and n \u2264 len(rst), the corresponding joint t-SOT reference is:\nrt-SOT = [\u27e8asr\u27e9, rasr1 , rasr2 , ..., rasrm , \u27e8st\u27e9, rst1 , rst2 , ..., rstn ]\nIf the transcription and translation utterances are divided into chunks (composed of a single or even multiple words), the concatenation process is repeated until m = len(rasr) and n = len(rst) to obtain the final rt-SOT.\nNote that \u27e8asr\u27e9 and \u27e8st\u27e9 are not considered as special tokens during training: they are added directly to the vocabulary and considered as all the other tokens in the loss computation."
+        },
+        {
+            "heading": "3.2. Textual alignment-based joint t-SOT",
+            "text": "In proposing the AED architecture for the ASR and ST joint decoding, Weller et al., 2021 [10] introduced a method for interleaving transcript and translation words, controlled by the parameter \u03b3. In particular, the next interleaved word is a transcription word if:\n(1.0\u2212 \u03b3) \u2217 (1 + countasr) > \u03b3 \u2217 (1 + countst)\nwhere countasr and countst represent the count of ASR and ST words generated in the target text up to that point. The authors explored different scenarios, including corner cases such as \u03b3 = 0.0, where all the transcription words are generated first, followed by all the translation words (hereinafter, INTER 0.0), and \u03b3 = 1.0, where all the translation words are followed by all the transcription words (hereinafter INTER 1.0). However, these corner cases are not actually streaming for one of the two tasks, as INTER 0.0 is not streaming for ST and INTER 1.0 is not streaming for ASR. For this reason, the authors proposed to alternate one ASR word and one ST word (hereinafter, INTER 0.5), thus realizing a streaming model for both tasks.2 The switch between the two tasks is controlled by a language token, determined from learned embeddings that are summed with the word embeddings during training and predicted at test time.\nIn our approach, we first integrate the interleaving method into the t-SOT training by removing the need for learned embeddings. We replace them with specific ASR and ST tokens, as explained in Section 3.1, setting \u27e8asr\u27e9 =\u201c#ASR#\u201d and \u27e8st\u27e9 =\u201c#ST#\u201d. An example of t-SOT INTER 0.0, 1.0, and 0.5 is shown in Table 1. Second, we introduce a new\n2The authors also provided results for \u03b3 = 0.3, showing consistently inferior performance compared to the other strategies. We also tried to interleave more than one word at a time when adopting INTER 0.5 but it led to significantly worse results.\nmethod for interleaving ASR and ST words based on a semantically-motivated approach. We leverage an off-theshelf neural textual aligner awesome-align [40] to predict the alignment between transcription and translation texts, which are exploited to build the training data. Then, let again rasr = {rasr1 , ..., rasrm} the transcription reference and rst = {rst1 , ..., rstn} the translation reference, we build the alignment-based interleaving (hereinafter, INTER ALIGN) by applying the following rules:\n1. If a transcription word rasri and a translation word rstj are uniquely aligned (as the words \u201cIch\u201d and \u201cI\u201d in Figure 2), they are interleaved following INTER 0.5:\n\u21d2 rt-SOT += #ASR#, rasri , #ST#, rstj\n2. If k consecutive transcription words rasri , rasri+1 ,..., rasri+k\u22121 are aligned with the same translation word rstj , we interleave them together as a single word (valid also in the opposite case):\n\u21d2 rt-SOT += #ASR#, rasri , rasri+1 , ..., rasri+k\u22121 , #ST#, rstj\n3. If a transcription word rasri is aligned with a translation word rsta that appears consecutively after the current translation word rstj , but rasri is not also aligned with rstj (as in Figure 2, where rasri =\u201cbrauche\u201d is aligned with rsta =\u201cneed\u201d, but not with rstj =\u201creally\u201d), we consider all the words rstj , ..., rsta for the interleaving (the condition must also be satisfied in the reverse direction):\n\u21d2 rt-SOT += #ASR#, rasri , #ST#, rstj , ..., rsta\n4. If a transcription word rasrmiss appears consecutively after rasri and is not aligned with any translation words rstj , ..., rstn , the word is included in the subsequent interleaving sequence (valid also in the opposite case):\n\u21d2 rt-SOT += #ASR#, rasri , #ST#, rstj ,..., #ASR#, rasrmiss , ...\n5. If no rasr or rst words are left, we concatenate together all the remaining words of, respectively, rst or rasr:\n\u21d2 rt-SOT += #ST#, rstj , ..., rstn or rt-SOT += #ASR#, rasri , ..., rasrm\nWith the transcription and translation example in Table 1, we obtain the alignment shown in Figure 2. Its corresponding INTER ALIGN output is shown in the last row of Table 1. In particular, since \u201cIch\u201d (ASR) and \u201cI\u201d (ST) are uniquely aligned, they are interleaved in the INTER 0.5 fashion. But, since \u201cbrauche\u201d (ASR) is aligned with \u201cneed\u201d (ST), and \u201creally\u201d (ST) is aligned with \u201cwirklich\u201d (ASR), the entire ASR block composed of \u201cbrauche das wirklich\u201d is inserted before the corresponding ST words \u201creally need it\u201d."
+        },
+        {
+            "heading": "4. EXPERIMENTAL SETTINGS",
+            "text": "We adopt a streaming T-T architecture [18] with 24 Transformer layers for the encoder, 6 LSTM layers for the predictor and 2 feed-forward layers for the joiner. The Transformer encoder has 8 attention heads, the embedding dimension is 512 and the feed-forward units are 4096. We use a chunk size of 1 second with 18 left chunks. The LSTM predictor has 1024 hidden units as well as the feed-forward layers of the joiner. Dropout is set to 0.1. We use 80-dimensional log-mel filterbanks as features, which are sampled every 10 milliseconds. Before feeding them to the Transformer encoders, we process the features with 2 layers of CNN with stride 2 and kernel size of (3, 3), with an overall input compression of 4.\nOur experiments are performed using 1k hours of proprietary data for each language (German, Italian, Spanish to English) and the models are tested on the CoVoST2 dataset [41]. AdamW [42] is used as optimizer with the RNN-T loss [25]. The training steps are 6.4M for the joint t-SOT models and 3.2M for the separate ASR and ST models.3 Checkpoints are saved every 320k steps. The learning rate is set to 3e-4 with Noam scheduler, 800k warm-up steps and linear decay. The vocabulary is based on SentencePiece [43] and has dimension\n3We noticed that a longer training of 6.4M steps does not improve or even degrades the performance.\n4k for all the monolingual models, all the separate ASR and ST models, and the multilingual source ST model (since the target is always English). For the multilingual (source) joint t-SOT and ASR models, the vocabulary size is set to 8k. Coverage is always set to 1.0.\nWe use 16 NVIDIA V100 GPUs with 32GB of RAM for all the training and a batch size of 350k. We select the last checkpoint for inference, which is then converted to open neural network exchange (ONNX) format and compressed. The beam size of the beam search is set to 7.\nWe report WER for the ASR output quality and BLEU4 for the ST output quality. Latency is measured in milliseconds (ms) with the length-adaptive average lagging (LAAL) [45], which is derived from the speech adaptation [46] of the average lagging (AL) metric [47], incorporating the capability to handle predictions longer than the reference."
+        },
+        {
+            "heading": "5. RESULTS",
+            "text": ""
+        },
+        {
+            "heading": "5.1. Monolingual Results",
+            "text": "Table 2 presents the results of the Italian monolingual ASR, ST and joint t-SOT models.\nFirst, we observe how effective is the joint t-SOT compared to training separate ASR and ST models. With the only exception of the ASR task for INTER 1.0 and the ST task for INTER 0.0, the joint t-SOT models always outperform the separate ASR and ST architectures with improvements ranging from 0.63 to 1.18 WER while maintaining the same latency for ASR, and from 0.64 to 2.79 BLEU with also an average latency reduction of 312ms for ST. Therefore, the obtained results indicate the joint t-SOT as a very promising approach. Moreover, the high latency shown by INTER 1.0 for ASR (over 3.5s) and INTER 0.0 for ST (approximately 3s) was expected since, for these two approaches, only one\n4sacreBLEU [44] version 2.3.1\nof the two modalities is actually streaming (as also already discussed in Section 3.2).\nSecond, in contrast to Weller et al., 2021 [10], we notice that INTER 0.5 achieves the best WER result instead of INTER 1.0 while, in accordance with them, the best BLEU is obtained by INTER 0.0. The lowest latency is achieved by INTER 0.5 and INTER ALIGN for ASR, and by INTER ALIGN for ST with a very large margin (between 150 and 1600ms of latency reduction). Considering both output quality and latency, the overall best result (underlined in Table 2) is obtained by INTER 0.5 for ASR, closely followed by INTER ALIGN, and INTER ALIGN for ST. Therefore, in the monolingual setting, INTER ALIGN emerges as the optimal model for jointly performing the ASR and ST tasks."
+        },
+        {
+            "heading": "5.2. Multilingual Results",
+            "text": "We extend our analysis to the multilingual setting by incorporating two additional source languages: Spanish, an Italic/Romance language with subject-verb-object (SVO) ordering similar to Italian, and German, a Germanic language with subject-object-verb (SOV) ordering [48]. In Table 3, we\ncompare the joint t-SOT methods with both monolingual and multilingual ASR and ST models.\nLooking at the results of the separate ASR and ST models, we observe a significant improvement going from monolingual to multilingual, particularly for Italian and German ASR (with an improvement of, respectively, 1.29 and 2.35 WER) and for all languages in ST (with an average BLEU improvement of 3.52). Consistent with the findings from the monolingual experiments, our joint t-SOT methods outperform the monolingual and multilingual separate ASR and ST models considering both the output quality and the latency.\nWhile INTER 1.0 achieves the highest BLEU scores across all languages, it also exhibits the highest, hence worst, WER. In contrast, no clear trend emerges for the best WER results. Regarding latency, the INTER ALIGN method consistently achieves the lowest, hence best, LAAL, with an average of 1s for ASR and 1.3s for ST. Balancing both quality and latency, the overall best results are obtained by the INTER ALIGN method, with the only exception of German ASR where the WER of the INTER 0.5 is slightly better.\nIn conclusion, the joint t-SOT method, and in particular the INTER ALIGN approach, proves to be the most effective solution for jointly generating ASR and ST outputs, delivering high-quality results with minimal latency. The results show that the joint t-SOT INTER ALIGN achieves significant improvements compared to the separate multilingual ASR and ST models, with an average reduction of 1.1 WER and 0.4 BLEU across all languages, while maintaining comparable or even slightly lower latency (approximately 200ms average reduction). These findings highlight the efficiency of our proposed approach, which consolidates both ASR and ST\nfunctionalities into a single model."
+        },
+        {
+            "heading": "5.3. Interpretable ASR and ST Results",
+            "text": "To examine the relationship between the ASR and ST outputs obtained by our joint t-SOT models, we conducted a manual analysis of the generated texts. We focused on the Italian to English language pair and selected the joint t-SOT INTER ALIGN model as it resulted in the best one for the streaming scenario. Representative examples extracted from the CoVoST 2 test set are shown in Table 4.\nThe first example shows how a wrong transcription of the verb \u201cmartirizzare\u201d (en: \u201cmartyr\u201d) to the verb \u201cutilizzato\u201d (en: \u201cuse/utilized\u201d) leads to a wrong translation having the same meaning of the wrong transcription. Additionally, example 2 proves how an omission in the transcription also leads to the same omission in the translation (it: \u201cfinali\u201d/en: \u201cfinals\u201d instead of it: \u201csemifinali\u201d/en: \u201csemifinals\u201d).\nExamples 3 and 4 present another interesting phenomenon related to the wrong recognition of named entities and terminology. It has been previously demonstrated that failures in named entities recognition often produce the insertion of a completely different name or a common noun instead of the correct named entity [49]. In fact, Example 3 shows how the name \u201cMarine\u201d is incorrectly recognized as \u201cMarianne\u201d and this affects both the transcription and the translation. In Example 4, instead, the \u201cJoule\u201d term is misrecognized but as the common word \u201cgia\u0300\u201d, presumably because these two words have assonance in Italian. As a consequence, the ST output is affected by the prediction of a wrong ASR word but, differently from Example 1, the translation does not re-\nflect the meaning of the wrong word \u201cgia\u0300\u201d but is completely random.\nLastly, in Example 5, we observe that \u201cstanza dei forestieri\u201d (en: \u201cguest room\u201d) is literally translated by using out-ofcontext terms, where \u201cchamber\u201d is generated instead of \u201croom\u201d due to both concepts being expressed by the same Italian word \u201cstanza\u201d.\nTherefore, by analyzing the transcriptions and translations produced by our joint t-SOT model, we can better identify and understand the root causes of mistranslations, leading to a more interpretable output. This highlights the potential of our method to leverage the generated transcription to enable explainable ST."
+        },
+        {
+            "heading": "6. CONCLUSIONS",
+            "text": "This paper introduced the first streaming Transformer Transducer that is able to jointly generate both automatic speech recognition and translation outputs using a single decoder. To effectively produce transcription and translation tokens without increased latency, we proposed a joint token-level serialized output training that leverages an off-the-shelf neural text aligner to generate the data without any additional costs. Monolingual (it-en) and multilingual ({de,es,it}-en) experiments proved that our proposed approach not only better balances the quality and the latency constraints of the streaming scenario, with an average latency of 1s for ASR and 1.3s for ST but also outperforms separate ASR and ST models by an average of 1.1 WER and 0.4 BLEU in the multilingual case. Moreover, it promotes a more explainable ST by exploiting the ASR outputs to better understand the root cause of the mistranslations and Green AI by significantly reducing the number of required systems."
+        },
+        {
+            "heading": "7. REFERENCES",
+            "text": "[1] R. Hsiao, A. Venugopal, T. Ko\u0308hler, Y. Zhang, P. Charoenpornsawat, A. Zollmann, S. Vogel, A. W. Black, T. Schultz, and A. Waibel, \u201cOptimizing components for handheld two-way speech translation for an English-iraqi Arabic system,\u201d in Proc. Interspeech, 2006.\n[2] C. Fu\u0308gen, A System for Simultaneous Translation of Lectures and Speeches, Ph.D. thesis, 2009.\n[3] M. Sperber, H. Setiawan, C. Gollan, U. Nallasamy, and M. Paulik, \u201cConsistent transcription and translation of speech,\u201d Transactions of ACL, vol. 8, pp. 695\u2013709, 2020.\n[4] A. Karakanta, M. Gaido, M. Negri, and M. Turchi, \u201cBetween flexibility and consistency: Joint generation of captions and subtitles,\u201d in Proc. 18th IWSLT, 2021, pp. 215\u2013225.\n[5] F. Stahlberg, D. Saunders, and B. Byrne, \u201cAn operation sequence model for explainable neural machine translation,\u201d in Proc. EMNLP Workshop BlackboxNLP, 2018, pp. 175\u2013186.\n[6] Q. Dong, M. Wang, H. Zhou, S. Xu, B. Xu, and L. Li, \u201cConsecutive decoding for speech-to-text translation,\u201d in Proc. AAAI, 2020.\n[7] H. Le, J. Pino, C. Wang, J. Gu, D. Schwab, and L. Besacier, \u201cDual-decoder transformer for joint automatic speech recognition and multilingual speech translation,\u201d in Proc. 28th COLING, 2020, pp. 3520\u20133533.\n[8] J. Xu, F. Buet, J. Crego, E. Bertin-Leme\u0301e, and F. Yvon, \u201cJoint generation of captions and subtitles with dual decoding,\u201d in Proc. 19th IWSLT, 2022, pp. 74\u201382.\n[9] J. Chen, M. Ma, R. Zheng, and L. Huang, \u201cDirect simultaneous speech-to-text translation assisted by synchronized streaming ASR,\u201d in Findings of ACL-IJCNLP, 2021, pp. 4618\u20134624.\n[10] O. Weller, M. Sperber, C. Gollan, and J. Kluivers, \u201cStreaming models for joint speech recognition and translation,\u201d in Proc. 16th EACL, 2021, pp. 2533\u20132539.\n[11] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, \u0141. Kaiser, and I. Polosukhin, \u201cAttention is all you need,\u201d in Proc. 31st NeurIPS, 2017, p. 6000\u20136010.\n[12] J. Li, \u201cRecent advances in end-to-end automatic speech recognition,\u201d APSIPA Transactions on Signal and Information Processing, vol. 11, no. 1.\n[13] J. Niehues, N. Pham, T. Ha, M. Sperber, and A. Waibel, \u201cLow-Latency Neural Speech Translation,\u201d in Proc. Interspeech, 2018, pp. 1293\u20131297.\n[14] N. Arivazhagan, C. Cherry, W. Macherey, and G. Foster, \u201cRe-translation versus streaming for simultaneous translation,\u201d in Proc. 17th IWSLT, 2020, pp. 220\u2013227.\n[15] P. Wang, E. Sun, J. Xue, Y. Wu, L. Zhou, Y. Gaur, S. Liu, and J. Li, \u201cLAMASSU: A streaming language-agnostic multilingual speech recognition and translation model using neural transducers,\u201d in Proc. Interspeech, 2023.\n[16] C. Yeh, J. Mahadeokar, K. Kalgaonkar, Y. Wang, D. Le, M. Jain, K. Schubert, C. Fuegen, and M. L Seltzer, \u201cTransformer-transducer: End-to-end speech recognition with self-attention,\u201d 2019.\n[17] Q. Zhang, H. Lu, H. Sak, A. Tripathi, E. McDermott, S. Koo, and S. Kumar, \u201cTransformer transducer: A streamable speech recognition model with transformer encoders and RNN-T loss,\u201d in Proc. ICASSP, 2020, pp. 7829\u20137833.\n[18] X. Chen, Y. Wu, Z. Wang, S. Liu, and J. Li, \u201cDeveloping real-time streaming transformer transducer for speech recognition on large-scale dataset,\u201d in Proc. ICASSP, 2021, pp. 5904\u20135908.\n[19] N. Kanda, J. Wu, Y. Wu, X. Xiao, Z. Meng, X. Wang, Y. Gaur, Z. Chen, J. Li, and T. Yoshioka, \u201cStreaming multi-talker ASR with token-level serialized output training,\u201d in Proc. Interspeech, 2022, pp. 3774\u20133778.\n[20] R. Schwartz, J. Dodge, N. A. Smith, and O. Etzioni, \u201cGreen ai,\u201d Commun. ACM, vol. 63, no. 12, pp. 54\u201363, 2020.\n[21] N. Kanda, Y. Gaur, X. Wang, Z. Meng, and T. Yoshioka, \u201cSerialized Output Training for End-to-End Overlapped Speech Recognition,\u201d in Proc. Interspeech, 2020, pp. 2797\u20132801.\n[22] N. Kanda, J. Wu, X. Wang, Z. Chen, J. Li, and T. Yoshioka, \u201cVararray meets t-sot: Advancing the state of the art of streaming distant conversational speech recognition,\u201d in Proc. ICASSP, 2023, pp. 1\u20135.\n[23] M. Omachi, B. Yan, S. Dalmia, Y. Fujita, and S. Watanabe, \u201cAlign, write, re-order: Explainable end-to-end speech translation via operation sequence generation,\u201d in Proc. ICASSP, 2023, pp. 1\u20135.\n[24] C. Fantinuoli and M. Montecchio, \u201cDefining maximum acceptable latency of ai-enhanced cai tools,\u201d 2022.\n[25] A. Graves, \u201cSequence transduction with recurrent neural networks,\u201d 2012.\n[26] Z. Tian, J. Yi, J. Tao, Y. Bai, and Z. Wen, \u201cSelfAttention Transducers for End-to-End Speech Recognition,\u201d in Proc. Interspeech, 2019, pp. 4395\u20134399.\n[27] Q. Zhang, H. Lu, H. Sak, A. Tripathi, E. McDermott, S. Koo, and S. Kumar, \u201cTransformer transducer: A streamable speech recognition model with transformer encoders and rnn-t loss,\u201d in Proc. ICASSP, 2020, pp. 7829\u20137833.\n[28] H. Xu, F. Jia, S. Majumdar, S. Watanabe, and B. Ginsburg, \u201cMulti-blank transducers for speech recognition,\u201d in Proc. ICASSP, 2023, pp. 1\u20135.\n[29] Z. Tian, J. Yi, Y. Bai, J. Tao, S. Zhang, and Z. Wen, \u201cSynchronous transformers for end-to-end speech recognition,\u201d in Proc. ICASSP, 2020, pp. 7884\u2013 7888.\n[30] S. Dalmia, Y. Liu, S. Ronanki, and K. Kirchhoff, \u201cTransformer-transducers for code-switched speech recognition,\u201d in Proc. ICASSP, 2021, pp. 5859\u2013 5863.\n[31] E. Sun, J. Li, Z. Meng, Y. Wu, J. Xue, S. Liu, and Y. Gong, \u201cImproving Multilingual Transformer Transducer Models by Reducing Language Confusions,\u201d in Proc. Interspeech, 2021, pp. 3470\u20133474.\n[32] J. Yu, C. Chiu, B. Li, S. Chang, T. N. Sainath, Y. He, A. Narayanan, W. Han, A. Gulati, Y. Wu, and R. Pang, \u201cFastemit: Low-latency streaming asr with sequencelevel emission regularization,\u201d in Proc. ICASSP, 2021, pp. 6004\u20136008.\n[33] Y. Shi, Y. Wang, C. Wu, C. Yeh, J. Chan, F. Zhang, D. Le, and M. Seltzer, \u201cEmformer: Efficient memory transformer based acoustic model for low latency streaming speech recognition,\u201d in Proc. ICASSP, 2021, pp. 6783\u20136787.\n[34] N. Moritz, Ta. Hori, and J. Le, \u201cStreaming automatic speech recognition with the transformer model,\u201d in Proc. ICASSP, 2020, pp. 6074\u20136078.\n[35] W. Huang, W. Hu, Y. T. Yeung, and X. Chen, \u201cConvTransformer Transducer: Low Latency, Low Frame Rate, Streamable End-to-End Speech Recognition,\u201d in Proc. Interspeech, 2020, pp. 5001\u20135005.\n[36] J. Xue, P. Wang, J. Li, M. Post, and Y. Gaur, \u201cLargescale streaming end-to-end speech translation with neural transducers,\u201d in Proc. Interspeech, 2022, pp. 3263\u2013 3267.\n[37] J. Xue, P. Wang, J. Li, and E. Sun, \u201cA weakly-supervised streaming multilingual speech model with truly zeroshot capability,\u201d arXiv preprint arXiv:2211.02499, 2022.\n[38] D. Liu, M. Du, X. Li, Y. Li, and E. Chen, \u201cCross attention augmented transducer networks for simultaneous translation,\u201d in Proc. EMNLP, 2021, pp. 39\u201355.\n[39] Y. Tang, A. Y. Sun, H. Inaguma, X. Chen, N. Dong, X. Ma, P. D. Tomasello, and J. Pino, \u201cHybrid transducer and attention based encoder-decoder modeling for speech-to-text tasks,\u201d in Proc. 61st ACL, 2023.\n[40] Z. Dou and G. Neubig, \u201cWord alignment by fine-tuning embeddings on parallel corpora,\u201d in Proc. EACL, 2021.\n[41] C. Wang, A. Wu, J. Gu, and J. Pino, \u201cCoVoST 2 and Massively Multilingual Speech Translation,\u201d in Proc. Interspeech 2021, 2021, pp. 2247\u20132251.\n[42] I. Loshchilov and F. Hutter, \u201cDecoupled weight decay regularization,\u201d in Proc. ICLR, 2019.\n[43] T. Kudo and J. Richardson, \u201cSentencePiece: A simple and language independent subword tokenizer and detokenizer for neural text processing,\u201d in Proc. EMNLP: System Demonstrations, 2018, pp. 66\u201371.\n[44] M. Post, \u201cA call for clarity in reporting BLEU scores,\u201d in Proc. 3rd WMT, 2018, pp. 186\u2013191.\n[45] S. Papi, M. Gaido, M. Negri, and M. Turchi, \u201cOvergeneration cannot be rewarded: Length-adaptive average lagging for simultaneous speech translation,\u201d in Proc. 3rd AutoSimTrans, 2022, pp. 12\u201317.\n[46] X. Ma, J. Pino, and P. Koehn, \u201cSimulMT to SimulST: Adapting simultaneous text translation to end-to-end simultaneous speech translation,\u201d in Proc. 1st AACL and 10th IJCNLP, 2020, pp. 582\u2013587.\n[47] M. Ma, L. Huang, H. Xiong, R. Zheng, K. Liu, B. Zheng, C. Zhang, Z. He, H. Liu, X. Li, H. Wu, and H. Wang, \u201cSTACL: Simultaneous translation with implicit anticipation and controllable latency using prefixto-prefix framework,\u201d in Proc. 57th ACL, 2019, pp. 3025\u20133036.\n[48] B. Joseph and P. Baldi, \u201cAn introduction to the indoeuropean languages,\u201d Language, vol. 63, pp. 147, Mar. 1987.\n[49] M. Gaido, M. Negri, and M. Turchi, \u201cWho are we talking about? handling person names in speech translation,\u201d in Proc. 19th IWSLT, 2022, pp. 62\u201373."
+        }
+    ],
+    "title": "TOKEN-LEVEL SERIALIZED OUTPUT TRAINING FOR JOINT STREAMING ASR AND ST LEVERAGING TEXTUAL ALIGNMENTS",
+    "year": 2023
+}

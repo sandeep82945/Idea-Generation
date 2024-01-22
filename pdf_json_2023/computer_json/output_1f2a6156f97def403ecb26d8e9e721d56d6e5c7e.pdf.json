@@ -1,0 +1,165 @@
+{
+    "abstractText": "Ontologies are traditionally expressed in the Web Ontology Language (OWL), that provides a syntax for expressing taxonomies with axioms regulating class membership. The semantics of OWL, based on Description Logic (DL), allows for the use of automated reasoning to check the consistency of ontologies, perform classification, and to answer DL queries. However, the open world assumption of OWL, along with limitations in its expressiveness, makes OWL less suitable for modelling rules and regulations, used in public administration. In such cases, it is desirable to have closed world semantics and a rule-based engine to check compliance with regulations. In this paper we describe and discuss data model management using the Shapes Constraint Language (SHACL), for concept modelling of concrete requirements in regulation documents within the public sector. We show how complex regulations, often containing a number of alternative requirements, can be expressed as constraints, and the utility of SHACL engines in verification of instance data against the SHACL model. We discuss benefits of modelling with SHACL, compared to OWL, and demonstrate the maintainability of the SHACL model by domain experts without prior knowledge of ontology management.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Kristian Torkelsen"
+        }
+    ],
+    "id": "SP:563473e22988d3f356174277142e7b33651eed17",
+    "references": [
+        {
+            "authors": [
+                "D. Beckett",
+                "T. Berners-Lee",
+                "E. Prud\u2019hommeaux",
+                "G. Carothers"
+            ],
+            "title": "RDF 1.1. Turtle, W3C Recommendation (Feb 2014), https://www.w3.org/TR/turtle/ Using SHACL for modelling regulatory requirements",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "D. Brickley",
+                "R.V. Guha"
+            ],
+            "title": "RDF Schema 1.1, W3C Recommendation",
+            "venue": "(Feb 2014),",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "G. B\u00f8rdalen"
+            ],
+            "title": "NRK bygger infrastruktur for \u00e5 finne igjen programmene",
+            "venue": "Norwegian Broadcasting Corporation (Mar 2017),",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "P. Hitzler",
+                "M. Kr\u00f6tzsch",
+                "B. Parsia",
+                "P.F. Patel-Schneider",
+                "S. Rudolph"
+            ],
+            "title": "OWL 2 Web Ontology Language Primer (Second Edition), W3C Recommendation",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "H. Knublauch"
+            ],
+            "title": "From SPIN to SHACL (Aug 2017), https://spinrdf.org/spin-shacl.html",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "H. Knublauch"
+            ],
+            "title": "SHACL and OWL compared (Aug 2017), https://spinrdf.org/shacl-and-owl.html",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "H. Knublauch",
+                "D. Kontokostas"
+            ],
+            "title": "Shapes Constraint Language, W3C Recommendation (Jul 2017)",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J.E. Labra Gayo",
+                "E. Prud\u2019hommeaux",
+                "I. Boneva",
+                "D. Kontokostas"
+            ],
+            "title": "Validating RDF Data, Synthesis",
+            "venue": "Lectures on the Semantic Web: Theory and Technology,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M.G. Skj\u00e6veland",
+                "L.H. Karlsen"
+            ],
+            "title": "Concepts and Abstract Model for Reasonable Ontology Templates (Mar 2019)",
+            "year": 2019
+        }
+    ],
+    "sections": [
+        {
+            "text": "ar X\niv :2\n30 9.\n02 72\n3v 1\n[ cs\n.I T\n] 6\nS ep\nKeywords: Shape Constraint Language \u00b7 Web Ontology Language \u00b7 ontology \u00b7 closed world assumption \u00b7 regulatory requirements"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "Supervisory systems play a key role in activities carried out by public administrations. At the Norwegian Maritime Authority (NMA) a replacement of their supervision system was needed. The supervision system determines whether a certain vessel or person comply with a set of requirements across mandatory maritime statues and regulations. Compliance with relevant requirements is necessary before applicable certificates are issued to ships or persons who apply for them.\nThe requirements are concrete and are considered unambiguous in their interpretation. When modelling regulatory requirements for the new supervision system in detail, it became apparent that mapping information into RDF Schema\n(RDFS) [2] and OWL [4] had limitations. One of NMA\u2019s requirements for the supervision system was to automatically detect what a specific individual was missing for a given certificate. Towards this, describing information under a closed world assumption was needed. Regulatory requirements adopted by the NMA often contain complex permutations of alternative requirements equally valid to one another. This required a modelling expressiveness that RDFS and OWL could not provide in a manner that could be maintained by non-ontologists. This missing expressiveness can be fulfilled using the W3C recommended Shapes Constraint Language [7] which, as this paper illustrates, gave us promising results regarding our modelling issues."
+        },
+        {
+            "heading": "2 Background",
+            "text": ""
+        },
+        {
+            "heading": "2.1 Norwegian Maritime Authority",
+            "text": "The Norwegian Maritime Authority is a public administration organ with legal powers over ships flying the Norwegian flag and all vessels operating in waters under Norwegian jurisdiction. The NMA is responsible for matters related to safety of life, health, environment and material values on ships [9]. Its activities are governed by international and national legislation, political decisions, and agreements. The purpose of NMA\u2019s supervision ensures that vessels are in good shape and are safe workplaces manned with qualified seafarers. NMA issues certificates to ships and shipping companies, and educational institutions. Certification, document control, inspection, and auditing to ensure compliance with the legislation are activities carried out by the NMA. In matters concerning ship and environmental safety, the NMA aims to be a driving force for the shipping industry, and national and international policy makers."
+        },
+        {
+            "heading": "2.2 NMA supervision system",
+            "text": "NMA\u2019s current supervision system is a legacy system that wherein updating and adding new data is time consuming, intricate and costly. Data is spread across unconnected silos. The user interface is poor and making maintenance and management difficult for the domain experts. The purpose of the new solution is to facilitate interaction between all stakeholders that are involved in ensuring that a vessel is compliant with relevant regulations.\nInspired inter alia by the implementations at the Norwegian Broadcasting Corporation [3], which is building a metadata bank using semantic web technologies, the NMA chose to build their new solution based upon RDF."
+        },
+        {
+            "heading": "3 Solution architecture",
+            "text": "The source of data comprises 150 documents, mostly regulations, maintained by the NMA. The solution architecture required that all requirement descriptions, legal scopes and concepts be semantically modelled using RDF.\nInitial attempts to model the transformation to graph manually were found to be time consuming and inefficient. Both from budget and schedule perspectives. Estimated time on manual modelling was 12 000 working hours. Moreover, manual modelling increases the risk of overseeing important information and misinterpretation of concepts. Especially so when performed by ontologists without domain expertise.\nThe solution introduced extracting context, concepts and relationships from the regulations using Natural Language Processing (NLP) techniques 3. Using pattern matching with spaCy4 and Named Entity Recognition (NER) for entity classification, gave expected results. The NER-model is trained using annotations in random excerpts of a subset of regulations. Annotations are performed by seven maritime domain experts at the NMA using prodigy5. The final implementation are able to automatically generate semantic knowledge graphs directly from plain text. Fig. 1 displays an overview of the semantic modules in our project pipeline. By introducing this pipeline, the cost of knowledge modelling was reduced by 10 000 working hours, compared to the original estimate.\nTransforming the result of the NLP service into RDF is implemented in Java using rdf4j 6, in combination with Reasonable Ontology Templates (OTTR) [10] for RDF serialization. The resulting graph contains SHACL shapes describing regulatory requirements, legal scopes, and the relationships between them. In addition, a lightweight OWL ontology are created based on NER model results. The main purpose of our OWL ontology is to keep track of the common vocabulary and assist in the work of maintenance of regulations, and authoring\n3 https://github.com/Sjofartsdirektoratet/NLP_PoC 4 https://spacy.io/ 5 https://prodi.gy/ 6 https://rdf4j.org/\nnew regulations. The OWL ontology can then be returned to the NER-model to continue training the model in order to achieve higher accuracy in classification."
+        },
+        {
+            "heading": "4 Modelling NMA regulations",
+            "text": "RDF is a simple and easy to understand data format when expressed in humanreadable syntax as RDF Turtle [1]. Being able to read complex constraints requires minimal training for domain experts at the NMA, and is easier for actors at the NMA to read compared to models in OWL with Turtle.\nThis section will introduce you to a specific example of a regulatory requirement modelled in both OWL and SHACL for comparison.\n\u00a728 2) In order to be issued a competency certificate deck officer class 1, in addition to the requirements in \u00a7 23, \u00a7 24, \u00a7 25, \u00a7 26 and \u00a7 27, a minimum of 36 months seagoing service as a responsible deck officer on seagoing ships with a gross tonnage of more than 500 is required. Seagoing service is reduced to 24 months if at least 12 months are earned as chief officer on a vessel of gross tonnage 500 or more.\nFig. 2. Paragraph 28, part 2 from regulation no. 1523, describing a competency certificate for sailors.\nAs the excerpt in Fig. 2 shows, the amount of important information is considerable and so is its complexity. Concepts, references, relationships, and data values make up the building blocks of the data model. This particular excerpt also describes two different alternatives that are equally valid.\n\u2013 A minimum 36 months as a deck officer; or \u2013 A minimum 24 months as a deck officer, where at least 12 months is served\nas a chief officer.\nHere, \u201ddeck officer\u201d is a superclass for all deck officer positions, and \u201dchief officer\u201d is a subclass of the class \u201ddeck officer\u201d. In addition, there is additional information connected to these alternatives, regarding specification of the vessel and seagoing service in question."
+        },
+        {
+            "heading": "4.1 Web Ontology Language",
+            "text": "Ontologies are usually expressed using the Web Ontology Language, that provides a syntax for expressing taxonomies with axioms regulating class membership, groups of things, and relationships between things. Knowledge expressed in OWL can apply automated reasoning to an ontology in order to check consistency of ontologies, perform classification, and to answer DL queries [4].\nHowever, the open world assumption of OWL makes it less suitable for modelling rules and regulations. Exploiting the reasoning capabilities of OWL is useful for inferring new facts and discover inconsistency. However, a reasoner is\nunable to detect missing focus nodes [6]. Being able to describe a data model that does not allow incomplete knowledge is necessary for a semantic knowledge graph describing regulations. The open world assumption assumes that a statement is true, whether or not it is known to be true. However, in a regulatory domain the assumption of that everything that is not currently known to be true is false is applicable.\nIf we were to model regulatory requirements using the Web Ontology Language, we would have to model OWL axioms regulating class membership. In order to understand OWL axioms and consequences of OWL semantics, understanding of discrete mathematics and logic is required. As the solution is to be maintained and managed by maritime domain experts at the NMA, with limited experience in semantic technologies, a solution with high readability was required. Since there are no existing open source technologies which manage SHACL shapes through a user interface7, in the same way Prote\u0301ge\u0301 does for OWL, it is crucial to be able to read raw RDF files containing shapes. The data owner is an expert on the maritime domain, not on semantic technologies.\nModelling regulatory requirements using OWL In order to determine whether a person shall fulfil a specific set of requirements, we must define OWL restrictions onto a subclass of person. These restrictions describe the alternatives required for achieving the certificate in question. A proposed modelling solution in OWL is shown in Fig. 4, with class relations as visualized in Fig. 3. The OWL example is shown in OWL Manchester syntax due to readability of the example for the purpose of this paper. By performing reasoning with Her-\n7 https://github.com/fekaputra/shacl-plugin\nmiT8, the reasoner could infer individuals matching either of the two alternatives described in Fig. 4. A reasoner will however only detect logical contradictions in our restrictions, not state what resources are missing in order to fulfil the requirements."
+        },
+        {
+            "heading": "4.2 Shapes Constraint Language",
+            "text": "The Shapes Constraint Language are designed for validating RDF under a closed world assumption [7]. It is therefore possible to detect missing statements in a person\u2019s instance data against a set of requirements.\nOWL restrictions are not data constraints in the manner that they do not conform data to the restrictions given. Restrictions are rather steps in reasoning, inferences, applied based on the OWL restrictions. You cannot ask a reasoner to conform to a given set of constraints, as there are no concept of false conformance in OWL, hence the open world assumption. OWL, and RDFS, were designed for inferencing, not data validation.\nIn addition, SHACL is more expressive than the currently available alternatives [5] [8], as described in Sect. 5. This makes it possible to model requirements in great detail.\nShapes The Shapes Constraint Language are built up by shapes, which are constraints for given RDF resources [7]. There are two kinds of shapes in SHACL.\n1. Node shapes describing constraints about focus nodes.\n2. Property shapes describing constraints about predicate and/or object value of a triple.\nA node shape is a shape that is not the subject of a triple where sh:path is the predicate. While a property shape is a shape that is the subject of a triple where sh:path is the predicate. We can add property shapes onto a node shape using the resource sh:property.\nFig. 5 contains a node shape that targets the class :Vessel. This means that every constraint following in this shape is a constraint on instances of the class :Vessel. Further, it says that any instance of the class :Vessel may have some relationship :grossTonnage pointing to, in this case, some random value, as we do not have any more detailed constraints in the property shape.\nConstraints There are numerous constraints available in the SHACL Core Constraint vocabulary [7]. SHACL is backed by SPARQL-queries, making the vocabulary self-descriptive and therefore extensible with custom constraints.\n8 http://www.hermit-reasoner.com/"
+        },
+        {
+            "heading": "4.3 Modelling SHACL at NMA",
+            "text": "Being able to model regulatory requirements as AND- and OR-constraints, as shown in Fig. 7 in a human-readable syntax is a great benefit for domain experts at the NMA for the purpose of future graph maintenance.\nThis section will explore our solution to modelling regulatory requirements at the NMA using the Shapes Constraint Language.\nRelationships Fig. 6 shows a constraint describing the relationship of \u201dgross tonnage\u201d. Describing gross tonnage as a value of minimum or inclusive 500 of the datatype unit:GT, which is the Quantities, Units, Dimensions, and Types Ontology\u2019s 9 definition of gross tonnage. There is a min and max count of one, stating that this relationship is unique and mandatory for every occurrence of this predicate.\nAlternatives As shown in Fig. 2, there are alternatives described in the regulations. At the NMA, logical constraint components are used to model alternatives.\nFig. 7 shows the approach used to model alternatives for achieving a master mariner certificate. A SHACL OR-constraint is a list-taking constraint that, in\n9 http://qudt.org/vocab/unit/\nthis case, takes two AND-constraints as its list items. The first AND-constraint is the first alternative. It takes two items in its list:\n1. An OR-list of certificates. At least one of these certificates must be present for the whole expression to be valid. 2. A specific value for a seagoing service requirement.\nThe second AND-constraint is the second alternative. It takes three items in its list:\n1. An OR-list of certificates. 2. A specific value for a seagoing service requirement. 3. Another specific value for a seagoing service requirement.\nsh:order is a non-validating resource used for distinguishing seagoing service alternatives. Seagoing service requirements are described as node shapes containing constraints connected to this particular instance of a seagoing service. In practise, this means that the model contains various permutations of possible seagoing services. The remaining constraints contains the rest of the information connected to the seagoing service, as described in Fig. 2. Apart from gross tonnage, as described in Fig. 6, there is information about duration and position. We also have the concept of a trade area, described in other paragraphs referenced from the one in Fig. 2."
+        },
+        {
+            "heading": "4.4 Exploiting the validation capabilities of SHACL",
+            "text": "By modelling certification requirements as SHACL shapes, one can exploit the validation capabilities of the language. The ability to identify specific requirements which a sailor does not fulfil in order to achieve a certificate is a highly apparent implementation for the project\u2019s pipeline.\nBy running the shapes graph and instance graph through an SHACL engine, a validation report is returned as RDF, either conforming true or false. If the report conforms false, a validation result is produced, containing detailed information on inconformity of instance data. The validation report can be used by applications in order to make computational decisions on how to handle inconformity."
+        },
+        {
+            "heading": "5 SHACL compared to other validation languages",
+            "text": ""
+        },
+        {
+            "heading": "5.1 SPARQL Inferencing Notation (SPIN)",
+            "text": "The high-level languages of both SPIN and SHACL, the SPIN Templates and SHACL Constraint Components, are backed by SPARQL-queries that implement executable semantics. The vocabularies are therefore self-descriptive and extensible. Constraint components are however, more flexible than templates,\ndue to the fact that it is possible to combine multiple constraint types into the same shape definition. SPIN Templates require new instances and multiple spin:constraint triples.\nComparing similarities of inferencing rules of both SPIN and SHACL is not relevant for the project at the NMA yet, and is therefore not evaluated in this paper.\nSHACL includes equivalent features for every feature in SPIN, plus even more [5]. SHACL is also an official W3C Recommendation [7], which is preferable (although not necessary) for a project in production."
+        },
+        {
+            "heading": "5.2 Shape Expressions (ShEx)",
+            "text": "ShEx and SHACL share the same goal; to describe and validate RDF data using a high-level language [8]. Both languages contains the concept of shapes on RDF resources, both shapes on nodes and properties. Although both languages share a common goal, their design are based on different approaches.\nShEx intends to be a grammar or schema for RDF, while SHACL is aiming to provide a constraint language for RDF. The main goal of SHACL is to verify that a given RDF graph conforms to a collection of constraints [7]. This difference is reflected in the validation results. ShEx returns an annotated graph containing the RDF graph that were validated [8]. SHACL however describes in detail the errors returned when the validation does not conform."
+        },
+        {
+            "heading": "6 Discussion",
+            "text": "RDF is an easy to understand data format when expressed in a human-readable syntax, like Turtle. It requires a few hours of training for non-semantic users to start writing plain RDF Turtle by hand. Modelling complex data and real-life problems, however, requires quite different skills than the ability of understanding RDF itself. The Web Ontology Language offer the ability to express abstract concepts as sets, applying restrictions and axioms on sets and their relationships. Being able to create such models require an understanding of set theory, relations, propositional logic and first-order logic. This increases complexity of future graph maintenance in projects where data owners are not experienced in the field of logic. By expressing the data model using the Shapes Constraint Language we are able to preserve the simplistic RDF Turtle structure. Which makes it easier for the NMA to perform future graph maintenance.\nThe Web Ontology Language is suitable for modelling an ontology for a common understanding of concepts and terminology of the maritime domain. Which is beneficial for authoring new regulations. However, it is less suitable for modelling regulatory requirements. This is due to the open world assumption of OWL. Regulatory requirements do not allow for incomplete knowledge. Therefore based on our experience we recommend the use of SHACL as a preferred language in the regulatory domain. Notably, SHACL allows for modelling\nknowledge under a closed world assumption, meaning that statements are either true or false.\nModelling detailed and machine readable regulatory requirements using SHACL makes it possible to move computational logic from the project\u2019s back end to the graph itself. The validation capabilities of SHACL is suitable for identifying missing instance data in order to compare a sailors CV to a set of requirements related to a certificate.\nWorking closely with domain experts at the NMA has been crucial for a thorough understanding of maritime data and their regulatory requirements. By having a close cooperation between ontologists and domain experts we have developed SHACL shapes that reflects requirements in great detail. That enables the full potential in SHACL validation and graph querying. Making information and knowledge available for project applications and business user to a great extent."
+        },
+        {
+            "heading": "7 Conclusion",
+            "text": "SHACL offers a rich vocabulary that allows us to model complex real-life problems under a closed world assumption. SHACL has proven itself to be more expressive than current alternatives as SPIN and ShEx. And relying on SPARQL, its vocabulary is also extensible. The closed world assumption of SHACL makes it suitable for applications not allowing for incomplete knowledge in their data, as is the case of regulatory data.\nOne can identify missing focus nodes in instance data by performing validation against a set of constraints. This is beneficial for use cases wherein returning a set for missing statements to the end user is important. As also for identifying what experiences a sailor is missing in order to achieve a specific certificate.\nHowever, there is a need for available modelling tools providing a graphical user interface in order to outreach the potential of SHACL, and RDF for that matter, as a data model language for the enterprise. We believe this will be beneficial for increasing the popularity of semantic knowledge graphs to a broader audience."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "We thank Christian Mahesh Hansen (Aibel AS) for his input on OWL, Aniruddha Khadkikar (Capgemini), Calum Chalmers (Capgemini) and Arild Viddal (the Norwegian Maritime Authority) for thorough proofreading, and Robert Engels (Capgemini) for his unconditional support."
+        },
+        {
+            "heading": "1. Beckett, D., Berners-Lee, T., Prud\u2019hommeaux, E., Carothers, G.: RDF 1.1. Turtle,",
+            "text": "W3C Recommendation (Feb 2014), https://www.w3.org/TR/turtle/\n2. Brickley, D., Guha, R.V.: RDF Schema 1.1, W3C Recommendation (Feb 2014), https://www.w3.org/TR/rdf-schema/ 3. B\u00f8rdalen, G.: NRK bygger infrastruktur for a\u030a finne igjen programmene. Norwegian Broadcasting Corporation (Mar 2017), https://nrkbeta.no/2017/03/01/nrk-bygger-infrastruktur-for-a-finne-igjen-programmene/ 4. Hitzler, P., Kro\u0308tzsch, M., Parsia, B., Patel-Schneider, P. F., Rudolph, S.: OWL 2 Web Ontology Language Primer (Second Edition), W3C Recommendation (Dec 2012), https://www.w3.org/TR/2012/REC-owl2-primer-20121211/ 5. Knublauch, H.: From SPIN to SHACL (Aug 2017), https://spinrdf.org/spin-shacl.html 6. Knublauch, H.: SHACL and OWL compared (Aug 2017), https://spinrdf.org/shacl-and-owl.html 7. Knublauch, H., Kontokostas, D.: Shapes Constraint Language, W3C Recommendation (Jul 2017), https://www.w3.org/TR/shacl/ 8. Labra Gayo, J. E., Prud\u2019hommeaux, E., Boneva, I., Kontokostas, D.: Validating RDF Data, Synthesis Lectures on the Semantic Web: Theory and Technology, Vol. 7, No. 1, 1-328, Morgan & Claypool (2018), https://book.validatingrdf.com/ 9. The Norwegian Maritime Authority: The Norwegian Maritime Authority, https://www.sdir.no/globalassets/global-2/om-sdir/publikasjoner/brosjyrer/sjofartsdir_strategisbros-engelsk-utgave-til-nett.pdf 10. Skj\u00e6veland, M. G., Karlsen, L. H.: Concepts and Abstract Model for Reasonable Ontology Templates (Mar 2019), https://spec.ottr.xyz/mOTTR/0.1/"
+        }
+    ],
+    "year": 2023
+}

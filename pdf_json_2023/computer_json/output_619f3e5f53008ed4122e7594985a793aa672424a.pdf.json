@@ -1,0 +1,77 @@
+{
+    "abstractText": "Convolutional neural networks (CNNs) have been shown to both extract more information than the traditional two-point statistics from cosmological fields, and marginalise over astrophysical effects extremely well. However, CNNs require large amounts of training data, which is potentially problematic in the domain of expensive cosmological simulations, and it is difficult to interpret the network. In this work we apply the learnable scattering transform, a kind of convolutional neural network that uses trainable wavelets as filters, to the problem of cosmological inference and marginalisation over astrophysical effects. We present two models based on the scattering transform, one constructed for performance, and one constructed for interpretability, and perform a comparison with a CNN. We find that scattering architectures are able to outperform a CNN, significantly in the case of small training data samples. Additionally we present a lightweight scattering network that is highly interpretable.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Christian Pedersen"
+        },
+        {
+            "affiliations": [],
+            "name": "Michael Eickenberg"
+        },
+        {
+            "affiliations": [],
+            "name": "Shirley Ho"
+        }
+    ],
+    "id": "SP:408e0e82819c955e079a3edbddbae600cc7fed54",
+    "references": [
+        {
+            "authors": [
+                "G. Wolf"
+            ],
+            "title": "Parametric scattering networks",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "F. Villaescusa-Navarro",
+                "B.D. Wandelt",
+                "D. Angl\u00e9s-Alc\u00e1zar",
+                "S. Genel",
+                "J.M.Z. Matilla",
+                "S. Ho",
+                "D.N. Spergel"
+            ],
+            "title": "Neural networks as optimal estimators to marginalize over baryonic effects",
+            "venue": "The Astrophysical Journal,",
+            "year": 2022
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1. Introduction",
+            "text": "The process of extracting information from cosmological fields is a fundamental component of modern cosmology. The early Universe, observed as the Cosmic Microwave Background, is well described by a Gaussian random field, meaning the two-point function (or the power spectrum) contains all relevant information. However the growth of non-linear structure means this is not the case for probes of the late-time Universe, and it has been shown that significant information lies outside the two-point statistics in this regime. In the advent of several upcoming large surveys\n1Department of Physics, New York University, New York City, USA 2Centre for Computational Astrophysics, Flatiron Institute, New York City, USA 3Centre for Computational Mathematics, Flatiron Institute, New York City, USA 4Department of Astrophysical Science, Princeton University, Peyton Hall, Princeton, USA 5Department of Physics, Carnegie Mellon University, Pittsburgh, USA. Correspondence to: Christian Pedersen <c.pedersen@nyu.edu>.\nICML 2022 Workshop on Machine Learning for Astrophysics, Baltimore, Maryland, USA, 2022. Copyright 2022 by the author(s).\nof late-time structure growth such as Euclid (Laureijs et al., 2011), DESI (DESI Collaboration, 2016), Roman observatory (Spergel et al., 2015), Rubin observatory (LSST Science Collaboration, 2009), it is becoming increasingly important to consider methods of cosmological inference that go beyond the power spectrum, in order to maximise the scientific yield from these datasets.\nThe situation is further complicated by the fact that on small scales, astrophysical phenomena such as supernovae and AGN feedback affect the clustering of observational tracers. Recent work has demonstrated that neural networks are able to optimally marginalise over these effects (VillaescusaNavarro et al., 2022), and that convolutional neural networks (CNNs) are able to extract significantly more information from cosmological fields than the power spectrum (Ravanbakhsh et al., 2016; Gupta et al., 2018; Villaescusa-Navarro et al., 2021b;a; Lu et al., 2022) . However CNNs suffer from two potential pitfalls. First, the large numbers of parameters involved in deep convolutional networks require large amounts of training data to optimise. This is a significant consideration in the context of late-universe cosmology, where the hydrodynamical simulations required to model the non-linear baryon density field are extremely computationally expensive. Second, CNNs also suffer from a lack of interpretibility.\nIn this work we attempt to address these issues by presenting two models for cosmological inference based on the scattering transform (Mallat, 2011). Scattering transforms use a cascade of analytic wavelet transforms followed by complex modulus nonlinearities to construct descriptors of the input signal that behave smoothly to small deformations and that can be made to exhibit known symmetries of the data. Scattering transforms and the related wavelet phase harmonics have been successfully applied to cosmological parameter estimation from different types of input fields (Cheng et al., 2020; Allys et al., 2020). Recent work has demonstrated that learning the filter parameters can provide performance gains in the regime of small datasets (Gauthier et al., 2022). Using the suite of CAMELs simulations (Villaescusa-Navarro et al., 2021a), we investigate two kinds of scattering networks, one designed for performance and one designed for interpretability, and perform a comparison with a traditional CNN. ar X iv :2 30 7.\n14 36\n2v 1\n[ as\ntr o-\nph .I\nM ]\n2 4\nJu l 2\n02 3\nIn pu\nt f ie\nld s"
+        },
+        {
+            "heading": "2. Method",
+            "text": ""
+        },
+        {
+            "heading": "2.1. Simulations",
+            "text": "We use the publicly available CAMELs simulations (Villaescusa-Navarro et al., 2021a). Whilst we refer the reader to (Villaescusa-Navarro et al., 2021a) for a full description, we briefly overview the most relevant aspects. We restrict our analysis to the subset of CAMELs simulations that use the IllustrisTNG simulation code (Weinberger et al., 2017; Pillepich et al., 2018). The dataset includes a suite of 1,000 simulations varying 6 parameters: \u2126m and \u03c38 to describe cosmology, and ASN1, ASN2, AAGN1, AAGN2 that control the efficiency of the supernova and AGN feedback. Each simulation produces 13 different fields describing various properties such as gas temperature, total matter density, and magnetic fields. We use projected 2D slices of the 3D 25 \u00d7 25 h\u22123 Mpc3 simulation boxes. Each slice is 5 h\u22121 Mpc thick, so with 5 slices along each axis, this produces a total set of 15,000 maps available for each field, each with a resolution of 256 \u00d7 256 pixels. These maps are then divided into training, test and validation sets at a fractional split of 0.9, 0.05 and 0.05 respectively."
+        },
+        {
+            "heading": "2.2. Models",
+            "text": "We investigate three models 1. As our baseline CNN, we use a model with 12 convolutional layers, each with batch normalisation and Leaky ReLu activations. Following (Villaescusa-Navarro et al., 2022) we train moment neural networks presented in (Jeffrey & Wandelt, 2020) to infer the mean (\u00b5i) and variance (\u03c3i) of the posterior for the 6 parameters (\u03b8i =\n1Code available on github at github.com/ChrisPedersen/LearnableWavelets\n{\u2126m,i, \u03c38,i, ASN1,i, ASN2,i, ASN1,i, AAGN1,i, AAGN2,i}) describing each simulation. Therefore we define our loss function:\nL = 6\u2211\ni=1\nlog  \u2211 j\u2208batch (\u03b8i,j \u2212 \u00b5i,j)2 \n+\n6\u2211 i=1 log  \u2211 j\u2208batch ( (\u03b8i,j \u2212 \u00b5i,j)2 \u2212 \u03c32i,j )2 (1) We also consider two models based on the scattering transform. First, we introduce the scattering network (SN), shown in figure 1. The first two layers are composed of convolutions with banks of 8 wavelet filters. We use Morlet wavelets, defined as\n\u03c8\u03c3,\u03d5,\u03be,\u03b3(u) = e \u2212\u2225D\u03b3R\u03d5(u)\u22252/(2\u03c32)(ei\u03beu \u2032 \u2212 \u03b2), (2)\nwhere \u03b2 is a normalisation constant to ensure that the wavelet integrates to 0 over the spatial domain, u\u2032 = u1 cos\u03d5 + u2 sin\u03d5, R\u03d5 is the rotation matrix of angle \u03d5\nand D\u03b3 = ( 1 0 0 \u03b3 ) . We therefore consider 4 parameters that modify the Morlet wavelet: the orientation is controlled by \u03d5, the spatial frequency by \u03be, the Gaussian envelope is determined by \u03c3, and the aspect ratio is set by \u03b3. At initialisation, we randomly sample these parameters from \u03d5 \u223c U [0, 2\u03c0], \u03be \u223c U [0.5, 1], \u03c3 \u223c log(U [exp 1, exp 5]), and \u03b3 \u223c U [0.5, 1.5]. These filter parameters are modified by gradient descent as the network trains, and so are optimised to extract information from the fields they are operating on. Unlike in (Gauthier et al., 2022), we use different wavelet filters for first- and second-order scattering, allowing the network more flexibility to optimise these parameters.\nIn pu\nt f ie\nld s\nAt each convolution, the input field is smoothed and downsampled by a factor of 2, so the second-order convolved fields have a resolution of 64\u00d7 64. We include residual connections, so the zeroth and first-order fields are smoothed and downsampled to match this resolution and concatenated with the second order fields. This produces a total of 1 + 8 + 64 = 73 fields output by the scattering layers. Finally these fields are passed to a shallow CNN with 3 convolutional layers, each with batch normalisation and ReLu activations. Finally we use one fully connected layer generating the output. We train this network on the same set of 11 fields as the \u201cMultiField\u201d (MF) results from (VillaescusaNavarro et al., 2021a), which includes all simulated fields except the dark matter mass and velocity fields.\nSecond, we also introduce an extremely lightweight model, the \u201cInterpretable network\u201d (IN) shown in figure 2. The first two layers of this network are identical to the SN, except now the 73 output fields of the scattering layers are spatially averaged to form a single vector of 73 numbers. We then use a single linear layer on this vector to obtain parameter values. For the sake of simplicity in interpreting this network, we train this model on only the cold dark matter mass field (Mcdm) to produce the results in section 3.2.\nFor all models, we use batch gradient descent with Adam optimiser and a batch size of 32. Hyperparameters are optimised using the optuna package using 30 trials. We vary independently the learning rate for the scattering and neural layers, and in the case of the SN and CNN, we vary the number of convolutional filters."
+        },
+        {
+            "heading": "3. Results",
+            "text": ""
+        },
+        {
+            "heading": "3.1. Scattering network",
+            "text": "We show a comparison of model performance between the baseline CNN and SN in table 1. We focus on the accuracy of the predicted values for \u2126m and \u03c38, when averaging over"
+        },
+        {
+            "heading": "3.2. Interpretable network",
+            "text": "At the bottom of table 1 we compare the performance of the SN and IN when using a set of 1, 000 maps of the Mcdm field. First, we find that the SN is able to predict \u2126m and \u03c38\nto a remarkable degree of accuracy when using only 1, 000 maps. This is potentially due to the fact that when operating on only one type of input field, the wavelet parameters are able to better extract information from this field. Whilst the difference in performance on \u2126m is very large, the IN is able to predict \u03c38 to 2.79% accuracy despite having only 654 parameters.\nFinally, after training the filters for the IN, we use L1penalised linear regression to isolate the most significant filters in the model. We find that using only 10 of the 73 elements of the final linear layer, we are able to retain 98% of the model performance of the IN. These 10 fields correspond to the zeroth order field, 5 first-order wavelets, and 4 second-order wavelets. We show these 9 wavelets before and after training in figure 3. Interestingly, all 4 of the second-order fields are downstream from the same firstorder wavelet, which is highlighted in red. It is possible that the network has chosen to optimise this filter to operate in conjunction with the second order fields.\nIn figure 4, we show the evolution of the parameters describing these 9 wavelet filters during training of the IN. Whilst the orientations of the wavelets do not change significantly, the frequency and aspect ratios are clearly strongly driven by the input fields to different values than they were initialised with."
+        },
+        {
+            "heading": "4. Conclusion",
+            "text": "We performed a comparison between a learnable scattering transform and a CNN for the purposes of inferring cosmological parameters and marginalising over astrophysical effects. We find a scattering network is able to outperform a CNN, with the performance difference significantly increasing for smaller training set sizes. We also present a lightweight interpretable scattering network that is able to find a sparse wavelet compression of the input fields."
+        }
+    ],
+    "title": "Learnable wavelet neural networks for cosmological inference",
+    "year": 2023
+}

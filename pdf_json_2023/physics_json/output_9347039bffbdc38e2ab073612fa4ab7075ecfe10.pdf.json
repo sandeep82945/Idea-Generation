@@ -1,0 +1,875 @@
+{
+    "abstractText": "Generating desirable molecular structures in 3D is a fundamental problem for drug discovery. Despite the considerable progress we have achieved, existing methods usually generate molecules in atom resolution and ignore intrinsic local structures such as rings, which leads to poor quality in generated structures, especially when generating large molecules. Fragment-based molecule generation is a promising strategy, however, it is nontrivial to be adapted for 3D non-autoregressive generations because of the combinational optimization problems. In this paper, we utilize a coarse-to-fine strategy to tackle this problem, in which a Hierarchical Diffusion-based model (i.e. HierDiff) is proposed to preserve the validity of local segments without relying on autoregressive modeling. Specifically, HierDiff first generates coarse-grained molecule geometries via an equivariant diffusion process, where each coarse-grained node reflects a fragment in a molecule. Then the coarse-grained nodes are decoded into fine-grained fragments by a messagepassing process and a newly designed iterative refined sampling module. Lastly, the fine-grained fragments are then assembled to derive a complete atomic molecular structure. Extensive experiments demonstrate that HierDiff consistently improves the quality of molecule generation over existing methods1. Equal contribution . Work was done while Bo Qiang was a research intern at AIR Department of Pharmaceutical Science, Peking University Institute for AI Industry Research (AIR), Tsinghua University Department of Computer Science, Stanford University. Correspondence to: Yanyan Lan <lanyanyan@tsinghua.edu.cn>. Proceedings of the 40 th International Conference on Machine Learning, Honolulu, Hawaii, USA. PMLR 202, 2023. Copyright 2023 by the author(s). Code is available at https://github.com/ qiangbo1222/HierDiff",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Bo Qiang"
+        },
+        {
+            "affiliations": [],
+            "name": "Yuxuan Song"
+        },
+        {
+            "affiliations": [],
+            "name": "Minkai Xu"
+        },
+        {
+            "affiliations": [],
+            "name": "Jingjing Gong"
+        },
+        {
+            "affiliations": [],
+            "name": "Bowen Gao"
+        },
+        {
+            "affiliations": [],
+            "name": "Hao Zhou"
+        },
+        {
+            "affiliations": [],
+            "name": "Weiying Ma"
+        },
+        {
+            "affiliations": [],
+            "name": "Yanyan Lan"
+        }
+    ],
+    "id": "SP:c4a8c48c7b9e5ee420abb59891369ca8556ad36e",
+    "references": [
+        {
+            "authors": [
+                "S. Axelrod",
+                "R. Gomez-Bombarelli"
+            ],
+            "title": "Geom, energyannotated molecular conformations for property prediction and molecular generation",
+            "venue": "Scientific Data,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Brandstetter",
+                "R. Hesselink",
+                "E. van der Pol",
+                "E.J. Bekkers",
+                "M. Welling"
+            ],
+            "title": "Geometric and physical quantities improve e(3) equivariant message passing, 2021",
+            "venue": "URL https://arxiv.org/abs/2110.02905",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "N. Brown",
+                "M. Fiscato",
+                "M.H. Segler",
+                "A.C. Vaucher"
+            ],
+            "title": "Guacamol: benchmarking models for de novo molecular design",
+            "venue": "Journal of chemical information and modeling,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "V. Chauhan",
+                "A. Gutfraind",
+                "I. Safro"
+            ],
+            "title": "Multiscale planar graph generation",
+            "venue": "Applied Network Science,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "H. Dai",
+                "Y. Tian",
+                "B. Dai",
+                "S. Skiena",
+                "L. Song"
+            ],
+            "title": "Syntaxdirected variational autoencoder for structured data",
+            "venue": "arXiv preprint arXiv:1802.08786,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "N. De Cao",
+                "T. Kipf"
+            ],
+            "title": "Molgan: An implicit generative model for small molecular graphs",
+            "venue": "arXiv preprint arXiv:1805.11973,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "C. Diao",
+                "R. Loynd"
+            ],
+            "title": "Relational attention: Generalizing transformers for graph-structured tasks",
+            "venue": "arXiv preprint arXiv:2210.05062,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "F. Ding",
+                "J. Ma",
+                "J. Xu",
+                "Y. Xue"
+            ],
+            "title": "Xor-cd: Linearly convergent constrained structure generation",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P.G. Francoeur",
+                "T. Masuda",
+                "J. Sunseri",
+                "A. Jia",
+                "R.B. Iovanisci",
+                "I. Snyder",
+                "D.R. Koes"
+            ],
+            "title": "Three-dimensional convolutional neural networks and a cross-docked data set for structure-based drug design",
+            "venue": "Journal of chemical information and modeling,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "T. Fu",
+                "C. Xiao",
+                "X. Li",
+                "L.M. Glass",
+                "J. Sun"
+            ],
+            "title": "Mimosa: Multi-constraint molecule sampling for molecule optimization",
+            "venue": "In Proceedings of the AAAI Conference on Artificial Intelligence,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Z. Geng",
+                "S. Xie",
+                "Y. Xia",
+                "L. Wu",
+                "T. Qin",
+                "J. Wang",
+                "Y. Zhang",
+                "F. Wu",
+                "Liu",
+                "T.-Y"
+            ],
+            "title": "De novo molecular generation via connection-aware motif mining",
+            "venue": "arXiv preprint arXiv:2302.01129,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "T. Hansson",
+                "C. Oostenbrink",
+                "W. van Gunsteren"
+            ],
+            "title": "Molecular dynamics simulations",
+            "venue": "Current Opinion in Structural Biology,",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "T. He",
+                "J. Zhang",
+                "Z. Zhou",
+                "J. Glass"
+            ],
+            "title": "Exposure bias versus self-recovery: Are distortions really incremental for autoregressive text generation",
+            "year": 1905
+        },
+        {
+            "authors": [
+                "J. Ho",
+                "A. Jain",
+                "P. Abbeel"
+            ],
+            "title": "Denoising diffusion probabilistic models",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "E. Hoogeboom",
+                "D. Nielsen",
+                "P. Jaini",
+                "P. Forr\u00e9",
+                "M. Welling"
+            ],
+            "title": "Argmax flows and multinomial diffusion: Learning categorical distributions, 2021",
+            "venue": "URL https://arxiv. org/abs/2102.05379",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "E. Hoogeboom",
+                "V.G. Satorras",
+                "C. Vignac",
+                "M. Welling"
+            ],
+            "title": "Equivariant diffusion for molecule generation",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "W. Jin",
+                "R. Barzilay",
+                "T. Jaakkola"
+            ],
+            "title": "Junction tree variational autoencoder for molecular graph generation",
+            "venue": "In International conference on machine learning,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "W. Jin",
+                "K. Yang",
+                "R. Barzilay",
+                "T. Jaakkola"
+            ],
+            "title": "Learning multimodal graph-to-graph translation for molecular optimization",
+            "venue": "arXiv preprint arXiv:1812.01070,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "W. Jin",
+                "R. Barzilay",
+                "T. Jaakkola"
+            ],
+            "title": "Hierarchical graph-to-graph translation for molecules",
+            "venue": "arXiv preprint arXiv:1907.11223,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "W. Jin",
+                "R. Barzilay",
+                "T. Jaakkola"
+            ],
+            "title": "Hierarchical generation of molecular graphs using structural motifs",
+            "venue": "In International conference on machine learning,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "B. Jing",
+                "G. Corso",
+                "J. Chang",
+                "R. Barzilay",
+                "T. Jaakkola"
+            ],
+            "title": "Torsional diffusion for molecular conformer generation, 2022",
+            "venue": "URL https://arxiv.org/abs/2206",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "W. Kabsch"
+            ],
+            "title": "A solution for the best rotation to relate two sets of vectors. Acta Crystallographica Section A: Crystal Physics, Diffraction",
+            "venue": "Theoretical and General Crystallography,",
+            "year": 1976
+        },
+        {
+            "authors": [
+                "J. K\u00f6hler",
+                "L. Klein",
+                "F. No\u00e9"
+            ],
+            "title": "Equivariant flows: exact likelihood generative learning for symmetric densities",
+            "venue": "In International conference on machine learning,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "M.J. Kusner",
+                "B. Paige",
+                "J.M. Hern\u00e1ndez-Lobato"
+            ],
+            "title": "Grammar variational autoencoder",
+            "venue": "In International conference on machine learning,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M. Kuznetsov",
+                "D. Polykovskiy"
+            ],
+            "title": "Molgrow: A graph normalizing flow for hierarchical molecular generation",
+            "venue": "In Proceedings of the AAAI Conference on Artificial Intelligence,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Kwon",
+                "J. Yoo",
+                "Choi",
+                "Y.-S",
+                "Son",
+                "W.-J",
+                "D. Lee",
+                "S. Kang"
+            ],
+            "title": "Efficient learning of non-autoregressive graph variational autoencoders for molecular graph generation",
+            "venue": "Journal of Cheminformatics,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "P. Langley"
+            ],
+            "title": "Crafting papers on machine learning",
+            "venue": "Proceedings of the 17th International Conference on Machine Learning (ICML",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "R. Le Bras",
+                "C. Gomes",
+                "B. Selman"
+            ],
+            "title": "From streamlined combinatorial search to efficient constructive procedures",
+            "venue": "In Proceedings of the AAAI Conference on Artificial Intelligence,",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Y. Li",
+                "O. Vinyals",
+                "C. Dyer",
+                "R. Pascanu",
+                "P. Battaglia"
+            ],
+            "title": "Learning deep generative models of graphs",
+            "venue": "arXiv preprint arXiv:1803.03324,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Y. Li",
+                "L. Zhang",
+                "Z. Liu"
+            ],
+            "title": "Multi-objective de novo drug design with conditional graph generative model",
+            "venue": "Journal of cheminformatics,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Y. Li",
+                "J. Pei",
+                "L. Lai"
+            ],
+            "title": "Structure-based de novo drug design using 3d deep generative models",
+            "venue": "Chemical science,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Q. Liu",
+                "M. Allamanis",
+                "M. Brockschmidt",
+                "A. Gaunt"
+            ],
+            "title": "Constrained graph variational autoencoders for molecule design",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "S. Luo",
+                "J. Guan",
+                "J. Ma",
+                "J. Peng"
+            ],
+            "title": "A 3d generative model for structure-based drug design",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Luo",
+                "S. Ji"
+            ],
+            "title": "An autoregressive flow model for 3d molecular geometry generation from scratch",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Mitton",
+                "H.M. Senn",
+                "K. Wynne",
+                "R. Murray-Smith"
+            ],
+            "title": "A graph vae and graph transformer approach to generating molecular graphs",
+            "venue": "arXiv preprint arXiv:2104.04345,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "X. Peng",
+                "S. Luo",
+                "J. Guan",
+                "Q. Xie",
+                "J. Peng",
+                "J. Ma"
+            ],
+            "title": "Pocket2mol: Efficient molecular sampling based on 3d protein pockets",
+            "venue": "arXiv preprint arXiv:2205.07249,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Popova",
+                "M. Shvets",
+                "J. Oliva",
+                "O. Isayev"
+            ],
+            "title": "Molecularrnn: Generating realistic molecular graphs with optimized properties",
+            "venue": "arXiv preprint arXiv:1905.13372,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Powers",
+                "H. Yu",
+                "P. Suriana",
+                "R. Dror"
+            ],
+            "title": "Fragmentbased ligand generation guided by geometric deep learning on protein-ligand structure",
+            "venue": "bioRxiv,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J.P. Roney",
+                "P. Maragakis",
+                "P. Skopp",
+                "D.E. Shaw"
+            ],
+            "title": "Generating realistic 3d molecules with an equivariant conditional likelihood model, 2022",
+            "venue": "URL https:// openreview.net/forum?id=Snqhqz4LdK",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "V.G. Satorras",
+                "E. Hoogeboom",
+                "M. Welling"
+            ],
+            "title": "E(n) equivariant graph neural networks, 2021",
+            "venue": "URL https: //arxiv.org/abs/2102.09844",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "V.G. Satorras",
+                "E. Hoogeboom",
+                "F.B. Fuchs",
+                "I. Posner",
+                "M. Welling"
+            ],
+            "title": "E(n) equivariant normalizing flows, 2022",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "F. Schmidt"
+            ],
+            "title": "Generalization in generation: A closer look at exposure",
+            "venue": "bias. arXiv preprint arXiv:1910.00292,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "K.T. Sch\u00fctt",
+                "Kindermans",
+                "P.-J",
+                "H.E. Sauceda",
+                "S. Chmiela",
+                "A. Tkatchenko",
+                "M\u00fcller",
+                "K.-R"
+            ],
+            "title": "Schnet: A continuousfilter convolutional neural network for modeling quantum interactions",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M.H. Segler",
+                "T. Kogej",
+                "C. Tyrchan",
+                "M.P. Waller"
+            ],
+            "title": "Generating focused molecule libraries for drug discovery with recurrent neural networks",
+            "venue": "ACS central science,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Shin",
+                "W.-H",
+                "X. Zhu",
+                "M.G. Bures",
+                "D. Kihara"
+            ],
+            "title": "Threedimensional compound comparison methods and their application in drug",
+            "venue": "discovery. Molecules,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "M. Simonovsky",
+                "N. Komodakis"
+            ],
+            "title": "Graphvae: Towards generation of small graphs using variational autoencoders",
+            "venue": "In International conference on artificial neural networks,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Sohl-Dickstein",
+                "E.A. Weiss",
+                "N. Maheswaranathan",
+                "S. Ganguli"
+            ],
+            "title": "Deep unsupervised learning using nonequilibrium thermodynamics",
+            "venue": "URL https: //arxiv.org/abs/1503.03585",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "N. Thomas",
+                "T.E. Smidt",
+                "S. Kearnes",
+                "L. Yang",
+                "L. Li",
+                "K. Kohlhoff",
+                "P. Riley"
+            ],
+            "title": "Tensor field networks: Rotation- and translation-equivariant neural networks for 3d point clouds",
+            "venue": "CoRR, abs/1802.08219,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "A. Vahdat",
+                "K. Kreis",
+                "J. Kautz"
+            ],
+            "title": "Score-based generative modeling in latent space",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Vignac",
+                "P. Frossard"
+            ],
+            "title": "Top-n: Equivariant set and graph generation without exchangeability",
+            "venue": "arXiv preprint arXiv:2110.02096,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "L. Wang",
+                "Y. Zhou",
+                "Y. Wang",
+                "X. Zheng",
+                "X. Huang",
+                "H. Zhou"
+            ],
+            "title": "Regularized molecular conformation fields",
+            "venue": "In Advances in Neural Information Processing Systems,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "W. Wu",
+                "Z. Qi",
+                "L. Fuxin"
+            ],
+            "title": "Pointconv: Deep convolutional networks on 3d point clouds, 2018",
+            "venue": "URL https://arxiv.org/abs/1811.07246",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "S. Xianduo",
+                "W. Xin",
+                "S. Yuyuan",
+                "Z. Xianglin",
+                "W. Ying"
+            ],
+            "title": "Hierarchical recurrent neural networks for graph generation",
+            "venue": "Information Sciences,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Y. Xie",
+                "C. Shi",
+                "H. Zhou",
+                "Y. Yang",
+                "W. Zhang",
+                "Y. Yu",
+                "L. Li"
+            ],
+            "title": "Mars: Markov molecular sampling for multi-objective drug discovery",
+            "venue": "arXiv preprint arXiv:2103.10432,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Xu",
+                "S. Wang",
+                "J. Ma"
+            ],
+            "title": "Protein homology detection through alignment of markov random fields: using MRFalign",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "M. Xu",
+                "L. Yu",
+                "Y. Song",
+                "C. Shi",
+                "S. Ermon",
+                "J. Tang"
+            ],
+            "title": "Geodiff: A geometric diffusion model for molecular conformation generation",
+            "venue": "arXiv preprint arXiv:2203.02923,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "N. Yang",
+                "H. Wu",
+                "J. Yan",
+                "X. Pan",
+                "Y. Yuan",
+                "L. Song"
+            ],
+            "title": "Molecule generation for drug design: a graph learning perspective",
+            "venue": "arXiv preprint arXiv:2202.09212,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "R. Yang",
+                "P. Srivastava",
+                "S. Mandt"
+            ],
+            "title": "Diffusion probabilistic modeling for video generation, 2022b. URL https://arxiv.org/abs/2203.09481",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Z. Zhang",
+                "Y. Min",
+                "S. Zheng",
+                "Q. Liu"
+            ],
+            "title": "Molecule generation for target protein binding with structural motifs",
+            "venue": "In The Eleventh International Conference on Learning Representations,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "D. Zhou",
+                "L. Zheng",
+                "J. Xu",
+                "J. He"
+            ],
+            "title": "Misc-gan: A multiscale generative model for graphs",
+            "venue": "Frontiers in big Data,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "G. Zhou",
+                "Z. Gao",
+                "Q. Ding",
+                "H. Zheng",
+                "H. Xu",
+                "Z. Wei",
+                "L. Zhang",
+                "G. Ke"
+            ],
+            "title": "Uni-mol: A universal 3d molecular representation learning framework",
+            "venue": "The Eleventh International Conference on Learning Representations,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "C.7 A"
+            ],
+            "title": "Implementation of Coarse-Grained Fragment Diffusion Model In this section, we describe the non-autoregressive high-level feature generative model and its likelihood computation. Though diffusion models have been receiving outstanding results in computer vision (Yang et al., 2022b; Ho et al., 2020",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P HierDiff"
+            ],
+            "title": "Results When testing the stability metrics on GEOMDRUG, our methods outperform EDM in stability, validity, and diversity. This indicates that our model generates not only accurate conformations of drug-like molecules but also enjoys great sampling efficiency. As shown in Table 5, our method performs comparable results in both validity and uniqueness",
+            "venue": "Though EDM (Hoogeboom et al.,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "946 C"
+            ],
+            "title": "Conditional generation In the field of AI-guided drug discovery, one of the most essential directions is to generate 3D molecules according to desirable properties",
+            "venue": "Though previous works (Gebauer et al.,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Xie"
+            ],
+            "title": "discovery-related property-conditional generation experiments using the 3D molecule generative model. We include the properties as an additional atom feature dimension in our dual-phase generation process. We tested the difference using mean squared error (MSE) and mean absolute error (MAE) between the input properties and the real properties of the generated 3D molecules. The diversity of the generated molecules",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "Generating desirable molecular structures in 3D is a fundamental problem for drug discovery. Despite the considerable progress we have achieved, existing methods usually generate molecules in atom resolution and ignore intrinsic local structures such as rings, which leads to poor quality in generated structures, especially when generating large molecules. Fragment-based molecule generation is a promising strategy, however, it is nontrivial to be adapted for 3D non-autoregressive generations because of the combinational optimization problems. In this paper, we utilize a coarse-to-fine strategy to tackle this problem, in which a Hierarchical Diffusion-based model (i.e. HierDiff) is proposed to preserve the validity of local segments without relying on autoregressive modeling. Specifically, HierDiff first generates coarse-grained molecule geometries via an equivariant diffusion process, where each coarse-grained node reflects a fragment in a molecule. Then the coarse-grained nodes are decoded into fine-grained fragments by a messagepassing process and a newly designed iterative refined sampling module. Lastly, the fine-grained fragments are then assembled to derive a complete atomic molecular structure. Extensive experiments demonstrate that HierDiff consistently improves the quality of molecule generation over existing methods1.\n*Equal contribution . Work was done while Bo Qiang was a research intern at AIR 1Department of Pharmaceutical Science, Peking University 2Institute for AI Industry Research (AIR), Tsinghua University 3Department of Computer Science, Stanford University. Correspondence to: Yanyan Lan <lanyanyan@tsinghua.edu.cn>.\nProceedings of the 40 th International Conference on Machine Learning, Honolulu, Hawaii, USA. PMLR 202, 2023. Copyright 2023 by the author(s).\n1Code is available at https://github.com/ qiangbo1222/HierDiff"
+        },
+        {
+            "heading": "1. introduction",
+            "text": "Deep generative models have specifically shown great promise in modeling complex graph-like molecular structures, ranging from generating molecular atom-bond graphs (Li et al., 2018a; Liu et al., 2018; Jin et al., 2018a) to generating molecular conformations from graphs (Xu et al., 2022; Jing et al., 2022). Despite the significant progress achieved, a remaining but vital research direction in this track is de novo design of drug molecules in 3D space. Integrating the 3D information into the molecule design process enjoys several advantages over only involving topological information in many important applications, e.g., structurebased drug design (Zhang et al., 2023; Peng et al., 2022; Luo et al., 2021), molecular dynamic simulation (Hansson et al., 2002), 3D similarity searching (Shin et al., 2015).\nSome early studies on 3D molecule generation usually adopt an autoregressive approach (Gebauer et al., 2019; Luo et al., 2021; Li et al., 2021), which introduces an artificial order on the atoms and generates the atoms one by one in a language generation way. However, molecules have a natural geometric structure in 3D. Besides, these models suffer from the scale and error accumulation problem (Roney et al., 2022; Luo & Ji, 2022). To tackle these problems, nonautoregressive models have been introduced in this area and gain impressive results. For example, inspired by the successful diffusion model in text and image generation, Hoogeboom et al. (2022) proposed the first diffusion model for molecule generation and significantly improves the validity of generated molecules.\nNevertheless, the atom-level generation manner in these works, though enjoys higher flexibility to place each atom, lacks the necessary constraints to obtain reliable molecule structures, especially when generating large molecules. As shown in Figure 1, without imposing Euclidean geometric constraints on the modeling process, the generated 3D aromatic rings could seriously violate basic chemical rules.\nar X\niv :2\n30 5.\n13 26\n6v 2\n[ q-\nbi o.\nB M\n] 2\n6 M\nay 2\n02 3\nIn this paper, we propose a coarse-to-fine approach to tackle the above problems. The basic idea is that we first generate the coarse-grained structure of the molecule, where each node represents a cluster of fragments, and then the coarsegrained structure is decoded into fine-grained fragments to assemble atomic molecule structure. In this way, valid local structures will be preserved by replacing the computation unit from atoms with fragments. However, such a process is non-trivial since generated neighborhood fragments may suffer from atom-bonds conflicts, preventing them to be connected.\nTo tackle the problem, we treat 3D molecule generation as a constraint generation problem and propose a novel Hierarchical Diffusion-based model (HierDiff). In the coarsegrained phase, our method generates the fragment representation instead of deterministic fragment. Specifically, we introduce two different ways to obtain chemically interpretable features for representing fragments. Then we propose a geometric diffusion model to generate these fragment representations and their Cartesian coordinates in an efficient non-autoregressive manner. In the fine-grained phase, we utilize an equivariant message-passing network to guarantee connectivity and an iterative refinement module to correct the bias. At last, we construct atom-level 3D structure based on the decoded 3D fragment graph.\nThe proposed coarse-to-fine approach nicely mimics the chemistry expert\u2019s drug design process by combining fragments from a pre-defined functional group database. In this way, important inductive biases in this area are encoded in our model.Furthermore, from machine learning\u2019s perspective, the fragment-based representation of molecules significantly reduces unnecessary degrees of freedom in the atom-based methods, thus will lead to global optimum convergence and better generalization ability.\nExtensive experiments are conducted to test our model on the challenging task of generating drug-size molecules. Compared to the baseline model, HierDiff can generate both realistic molecules with better drug-like properties and conformations that are much closer to the ground truth conformations. Visualized results also demonstrate HierDiff is capable of generating high-quality molecules with more stable substructures."
+        },
+        {
+            "heading": "2. Related work",
+            "text": "Molecule generation is one of the fundamental problems in drug discovery. In earlier works, molecule generation tasks are tackled by generating sequential representations of molecules, i.e. SMILES e.g. (Kusner et al., 2017; Dai et al., 2018; Segler et al., 2018). With the development of graph neural networks, researchers begin to utilize the graph-based generative model to generate molecular\ntopological structures and gain great progress (Jin et al., 2018b;a; Li et al., 2018b) However, neither sequence nor graph-based models capture the 3D geometric information, which is crucial for various molecule applications, such as molecule property prediction and protein-ligand docking. Recently, 3D molecule generation has become an emerging hot topic in this area, and different deep generative models have been proposed to tackle this problem. For example, Gschnet (Gebauer et al., 2019) employs an autoregressive process equipped with Schnet (Schu\u0308tt et al., 2017) to sample atoms and bonds iteratively. G-spherenet (Luo & Ji, 2022) applied discrete flows to autoregressively generate invariant geometric features. EnFlow (Satorras et al., 2022) utilizes continuous time normalizing flows to sample valid molecules. EDM (Hoogeboom et al., 2022) is the first to apply the powerful diffusion model to this area and gains further improvements. However, EDM always generates unrealistic ring systems and broken molecules, when training on large molecules.\nA related branch of molecule generation is hierarchical graph generation. Most previous works derive the hierarchical structure based on some intrinsic rules. For example, some work uses different granularity levels, such as atommotif (Jin et al., 2020; 2019), or node-edge(Xianduo et al., 2022), to construct different hierarchies. (Zhou et al., 2019) and (Chauhan et al., 2019) use predefined rules to distinguish different nodes to different levels. (Mi et al., 2021) employs the natural graphical topology to define the hierarchy. (Geng et al., 2023) collects connection information to form a hierarchical structure. (Kuznetsov & Polykovskiy, 2021) obtain the hierarchy by adding latent variables to different layers of the model. While in our method, we use the learnable decoding module to approximate a semanticguided hierarchy."
+        },
+        {
+            "heading": "3. Backgrounds",
+            "text": ""
+        },
+        {
+            "heading": "3.1. Denoising Diffusion Probabilistic Model",
+            "text": "Denoising diffusion probabilistic model (DDPM) (Yang et al., 2022b; Sohl-Dickstein et al., 2015) provides a powerful generative modeling tool by reversing a diffusion process. More specifically, the diffusion process projects the noise into the ground truth data and the generative process learns to reverse the process. The two processes imply a latent variable model, where x1, \u00b7 \u00b7 \u00b7 ,xt\u22121 are the latent variables. The forward process could be seen as a fixed approximate posterior distribution:\nq(x1:T |x0) = T\u220f\nt=1\nq(xt|xt\u22121)\nq (xt | xt\u22121) = N ( xt; \u221a 1\u2212 \u03b2txt\u22121, \u03b2tI ) (1)\nHere \u03b21, \u00b7 \u00b7 \u00b7 , \u03b2T corresponds to a fixed variance schedule. For simplicity, we let \u03b1t = 1\u2212 \u03b2t and \u03b1\u0304t = \u220ft i=1 \u03b1i, the forward pass for arbitrary time step has an analytic form, i.e., q (xt | x0) = N (xt; \u221a \u03b1\u0304tx0, (1\u2212 \u03b1\u0304t) I). The generative process parameterized the transition kernel P\u03b8(xt\u22121|xt) of the Markov chains, the corresponding likelihood function could be derived as:\nP\u03b8 (xt\u22121 | xt) = N ( xt\u22121;\u00b5\u03b8 (xt, t) , \u03c3 2 t I )\nP\u03b8(x0) = \u222b p (xT )P\u03b8 (x0:T\u22121 | xT ) dx1:T (2)\nHere the \u00b5\u03b8 refers to parameterized means function and the \u03c32t is the predefined variance. For the initial distribution P\u03b8(xT ), we select invariant base distribution for equivariant coordinates."
+        },
+        {
+            "heading": "3.2. Equivariance and SE(3)-invariant Density Estimation",
+            "text": "Equivariance widely exists in the physical world, especially in atomic systems. For example, the vector fields of atomic forces should rotate or translate correspondingly with the 3D positions of the molecule. Thus integrating such inductive bias into the function modeling has appealing properties and has been widely explored (Wu et al., 2018; Schu\u0308tt et al., 2017; Satorras et al., 2021). More specifically, given two transformation Tg and Sg acting on the space X and Y , a function f is considered as equivariant with respect to the group G if the following is satisfied:\nf \u25e6 Tg(x) = Sg \u25e6 f(x) (3) In this task, we mainly focus on the SE(3) group, i.e., the\ngroup of rotation and translation in the 3D space. For generative modeling of 3D molecule graph, the density function of the model distribution P\u03b8(.) should be SE(3)-invariant, i.e., P\u03b8(x) = P\u03b8(Tg(x)). To this end, previous methods either directly model the invariant components, e.g., bond angles, or use some invariant base distribution and model the transformation by the equivariant neural network (Jing et al., 2022; Satorras et al., 2022). HierDiff extends the latter one to an equivariant hierarchical framework to model fragment coordinates and fit bond lengths to predefined rules, which will be discussed in Sec. 5."
+        },
+        {
+            "heading": "4. Coarse-to-Fine Approach",
+            "text": "In this section, we introduce our coarse-to-fine approach, including problem formulation and coarse-to-fine definition."
+        },
+        {
+            "heading": "4.1. Problem Formulation and Notations",
+            "text": "Let G be the space of 3D graphs, where each 3D graph G consists of the fragment set V and the edge set E . More specifically, every fragment V \u2208 V represents a combination of several atoms and bonds, e.g., a benzene ring could be a fragment that includes six carbon atoms and aromatic bonds. Instead of using edges to represent chemical bonds as in previous works, we use edge Eij \u2208 E to indicate that there is a bond/atom shared by two fragments Vi and Vj . This kind of definition enables us to model molecule geometry using tangent condition on fragment sphere, as Fig. 5 , with a reasonable size fragment vocabulary. Therefore, the target of a 3D generation model is to learn a probabilistic model P\u03b8(V, E) to model the empirical distribution of 3D molecule graphs, which could also be used to sample new molecules."
+        },
+        {
+            "heading": "4.2. Coarse-to-Fine Framework",
+            "text": ""
+        },
+        {
+            "heading": "4.2.1. CHALLENGES OF NON-AUTOREGRESSIVE METHODS",
+            "text": "Compared with the autoregressive approach, nonautoregressive generative models are more promising for 3D molecule generation, due to their natural advantages of global modeling ability (De Cao & Kipf, 2018; Kwon et al., 2019; Satorras et al., 2022). Empirically, previous work has shown consistent observations (Hoogeboom et al., 2022).\nThough there are several appealing properties, the nonautoregressive model at the fragment level indeed implies the following structure generation procedure under hard constraints.\nG \u223c P\u03b8(V, E), s.t. Gs(Vi) \u2208 W, \u2200i = 1, \u00b7 \u00b7 \u00b7n,\n(4)\nwhere Gs(Vi) stands for the substructure which consists of Vi and its neighbors, W stands for the set of all valid substructures. Intuitively, the valid substructures satisfy the following conditions: the neighbors should hold matched components(atoms/bonds) to get ensembled; for the cases where a node has multiple neighbors there should also be enough matched components in this node to match all its neighbors. We provide Fig. 2 to better illustrate the constraints in Eq. (4).\nLimited chemical valency makes conflicts really common in fragment generation. Note that the problem of avoiding fragment conflict has high complexity and brings the so-called \u201dcombinatorial exploding\u201d issues(Jin et al., 2020) because\nof the multi-hop conflicts. For non-autoregressive modeling fashion, the complexity increases exponentially with the structure size. This problem is also discovered in other tasks, for example, Dispatching Route Generation (Ding et al., 2021), Optimal Experiment Design (Le Bras et al., 2012), and Protein Alignment Generation (Xu et al., 2015). In fragment-based molecule generation, it is challenging to generate realistic drug-size molecules in an orderingagnostic way."
+        },
+        {
+            "heading": "4.2.2. SOLUTIONS FOR AVOIDING CONFLICTS",
+            "text": "It is difficult to sample from the distribution with hard constraints. One direct solution that was adopted in previous work (Popova et al., 2019) is to conduct rejection sampling, i.e., only accept the connectable molecules. Nevertheless, rejection sampling is not applicable in practice for fragmentbased methods due to the extremely low acceptance rate; Alternatively, one can use a learnable model, P\u03d5(Vi|N(Vi)), to approximate the hard constraint, where N(Vi) stands for the neighbors of Vi. Correspondingly, the generative distribution P\u03b8,\u03d5(V, E) could be written as another target distribution P\u03b8(V, E) \u220f 1\u2264i\u2264n P\u03d5(Vi|N(Vi)). Unfortunately, Markov chain Monte Carlo (MCMC) sampling is needed, such as Gibbs Sampling, to conduct sampling from such distribution, which still suffers from efficiency issues.\nInstead of making generated samples satisfy the constraint through filter or refinement, we try to decompose and embed the constraint directly into the model phase within a hierarchical fashion.\nMore specifically, we design the variable (H) as the latent variable and the probabilistic model could be expressed as P\u03b8,\u03d5(V, E) = P\u03b8(H)P\u03d5(V, E|H).\nConsequently, we could obtain a lower bound of the maximum likelihood objective by the concavity of the logarithm, as follows:\nE(V,E)\u223cPdata log \u2211 H\u2208H P\u03b8(H)P\u03d5(V,E|H) \u2265\nE(V,E)\u223cPdataEH\u223cQ(H|V,E) [ logP\u03b8(H)\ufe38 \ufe37\ufe37 \ufe38\nCoarse-grained Diffusion\n+ logP\u03d5(V,E|H)\ufe38 \ufe37\ufe37 \ufe38 Fine-Grained Generation \u2212 logQ(H|V,E)\ufe38 \ufe37\ufe37 \ufe38 Constant Term ] (5)\nwhere H stands for the possible support of H . Formally, Q(H|V,E) in Eq. (5) is implemented by extracting chemical features and averaging the atom coordinates. As Q(H|V, E) is set to a constant term, the objective will include only the former two terms, i.e. logP\u03b8(H) and logP\u03d5(V, E|H). The first objective logP\u03b8(H) could be approximated by a coarse-grained fragment diffusion model and the second objective logP\u03d5(V, E|H) is modeled by equivariant message passing networks and iterative refinement process.\nIntuitively, the coarse-to-fine process is like first determining the position and the function of each component, then finding the connectable fragments from small subsets and assembling them. Therefore, HierDiff could maintain the global modeling property of non-autoregressive methods and also significantly reduce the complexity of finding the connectable fragments."
+        },
+        {
+            "heading": "5. HierDiff: hierarchical diffusion-based model",
+            "text": "In this section, we introduce the proposed HierDiff model in detail, as illustrated in Fig. 3, including coarse-grained fragment generation, fine-grained fragment generation, and atom conformation assembling which also correspond to the parameterized terms in Eq. (5)."
+        },
+        {
+            "heading": "5.1. Coarse-Grained Fragment Diffusion",
+            "text": "We define H = [Hf , Hp] as the representation of the coarse nodes, where Hf stands for the invariant chemical features and Hp stands for the equivariant positional features. Formally, Q(H|V,E) in Eq. (5) is implemented by extracting chemical features to obtain Hf and averaging all the atom coordinates to obtain Hp. Specifically, the property-based features could depend on both fragment V and the attachment E, i.e. the connection to neighbor fragments.\nIn the coarse-grained phase, a diffusion model is proposed to approximate logP\u03b8(H). Note that, when sampling from the diffusion model, we first sample the number of coarse nodes from the histogram we calculated on the training set."
+        },
+        {
+            "heading": "5.1.1. CHEMICAL FEATURE",
+            "text": "We carefully design the features to be discriminative enough for fragments and molecules with different chemical and\ngeometrical properties, which allows us to easily integrate our domain knowledge as inductive bias into the model. And we specifically employ two kinds of features:\nProperty-based Coarse Feature: We summarize some important properties which are widely used in drug discovery into an 8-dimension vector, including the number of hydrogen bonds and rings, the area of different surfaces, etc.\nElement-based Coarse Feature: We also include the histogram of element frequency, i.e., a 3-dimension vector, to the feature representation, inspired by the fact that elements with the same number of valence electrons usually share the same properties.\nPlease refer to Fig. 4, Table 3 and Table 4 for the detailed implementations."
+        },
+        {
+            "heading": "5.1.2. POSITIONAL FEATURE",
+            "text": "There are several possible ways to represent the 3D conformation systems in fragment level, e.g., the dihedral angle between neighbor fragments, and the distance matrix. In this paper, we simply use the center coordinates as the positional feature of the coarse node, since we found that this information is enough to determine the conformation at atom resolution, with a predefined vocabulary of bond length and bond angles from the RDkit ETKDG module. Please note that the center position of the coarse node could be seen as the center of the conformation sphere which includes all possible conformations generated from the degree of freedom on rotation. The connected fragments correspond to the tangent condition which actually eliminates the degree of freedom, which is illustrated in Fig. 5."
+        },
+        {
+            "heading": "5.1.3. DIFFUSION PROCESS",
+            "text": "Then, we introduce the modeling of Hf and Hp individually.\nHf could be modeled by a typical diffusion model with Gaussian noise for step t > 0. However, we find that the 0- th term for continuous feature H intf and H cont f , i.e. L0, should be designed carefully, as observed similarly in (Hoogeboom et al., 2022). In this paper, we use the following form, which\nhas shown a better empirical performance.\nL0(H intf , Hcontf ) = \u2212 log[ \u222b H intf + 12 H intf \u2212 1 2 N ( u | x(H int f ) 0 , \u03c30 ) du]\n\u2212 logN ( Hcontf | x (Hcontf ) 0\n\u03b10 \u2212 \u03c30 \u03b10 \u03f5\u03020, \u03c320 \u03b120 I\n) .\nNext, we describe the generation for Hp.\nTo make the likelihood function in Eq. (2) to be SE(3)invariant, we set the initial distribution under the zero center of mass (CoM) systems (Ko\u0308hler et al., 2020), i.e., applying a CoM-free Gaussian: N ( Hp | 0, \u03c32I ) = ( \u221a 2\u03c0\u03c3)\u2212(M\u22121)\u00b7n exp ( \u2212 1 2\u03c32 \u2225Hp\u22252 ) .\nHere Hp belongs to the space RM\u00d7n, where M is the number of fragment nodes and n equals the coordinate dimension. Besides, an equivariant Markov transition kernel is constructed under the widely applied noise parameterization (Ho et al., 2020):\n\u00b5\u03b8 ( Htp, t ) =\n1 \u221a \u03b1t\n( Htp \u2212\n\u03b2t\u221a 1\u2212 \u03b1\u0304t\n\u03f5\u03b8 ( Htp, t )) .\nIf \u03f5\u03b8 is parameterized by SE(3)-equivariant networks, the transitional kernel P\u03b8(Ht\u22121p |Ht\u22121p ) is also SE(3)-equivariant, i.e., P\u03b8 ( Ht\u22121p | Htp ) =\nP\u03b8 ( Tg ( Ht\u22121p ) | Tg ( Htp ))\n(Xu et al., 2022). We leave the detailed proof in Appendix A.2."
+        },
+        {
+            "heading": "5.2. Fine-Grained Fragment Generation",
+            "text": "After [Hf , Hp] were generated by the diffusion model, a set of coarse-grained nodes in 3D space is obtained, illustrated in Fig. 3. Now we introduce the detailed process of generating fine-grained fragment types and edges, conditioned on the coarse-grained nodes, which correspond to the term P\u03d5(V, E|H).\nWe first briefly introduce the decoding logic here. In each decoding step, the fine-grained generation process contains\nCoarse-to-Fine: a Hierarchical Diffusion Model for Molecule Generation in 3D\nChoose a Focal Node Predict a New Edge Choose the Fragment\n... ...\nC O C C C C C C\n\u03c6focal \u03c6edge Message passing direction Focal Node\nFine-grained Node\nC O C O\nN\n\u03c6node\nCoarse-grained Node...\nIterative Refine\nNH O O\n\u03c6refine\nChoose a Focal Node Predict a New Edge Choose the Fragment\n... ... \u03c6focal \u03c6edge Message passing direction Focal Node\nFine-grained Node\n\u03c6node\nCoarse-grained Node...\nIterative Refine\nNH O O\n\u03c6refine\n...\nFigure 6. Illustration of the fine-grained atom generation process, including (1) choosing a focal node among fine-grained nodes using vanilla EGNN, (2) predicting the link from all candidate new edges marked with dashed lines using bottom-up or top-down EGNN, (3) generating the exact fragment type using bottom-up EGNN, (4) iterative refining the previous fine-grained node via sampling from distribution parameterized by bottom-up EGNN.\nfour stages. Firstly, we select a focal node from all the existing fine-grained nodes with a parameterized neural network module \u03d5focal. Next, we utilize a link prediction network, i.e. \u03d5edge, to identify a new node that could be linked to the focal node from all the remaining coarse-grained nodes. Then we obtain the fine-grained fragment type of the above newly linked coarse-grained node with the help of another network \u03d5node. At last, an iterative refinement process is conducted to correct the bias in fine-grained nodes, based on the newly determined fragment type. It should be noted that in the beginning, all the nodes are coarse-grained, so we randomly select a node and directly use \u03d5node to predict its fragment type. The above procedure is illustrated in Fig. 6. We emphasize several key elements of our assembling module in the following:"
+        },
+        {
+            "heading": "5.2.1. ITERATIVE REFINEMENT",
+            "text": "Now we delve into the details of the iterative refinement process. The motivation for introducing this iterative refinement process is to correct the bias in the existing finegrained nodes, to enhance the ability to generate more realistic molecules from a global view. Specifically, we design a mask prediction model \u03d5refine to approximate the probability of each decoded fine-grained fragment conditioned on all coarse-grained nodes and the other fine-grained nodes. The target is to maximize the joint probability of fine-grained nodes as follows:\nPtarget = \u220f\nVi\u2208Tf\nP\u03d5refine(f(Vi) | Tc, Tf \\ Vi), (6)\nwhere Tf is the set of all existing fine-grained nodes, Tc is the set of coarse-grained nodes, and f is a function to return the fragment type for a specific node. To sample from the above target distribution, we defined a Markov Chain, in which node type replacement is defined as the state transition, and an early-stopping Monte Carlo sampling strategy is adopted to conduct the sampling process. The detailed algorithm is illustrated in Appendix A.4. We also conduct an ablation study to prove the effectiveness of the proposed iterative refinement process, as shown in Appendix C.7."
+        },
+        {
+            "heading": "5.2.2. MESSAGE PASSING NEURAL NETWORKS",
+            "text": "Here we introduce the aforementioned models in the finegrained process, i.e. \u03d5focal, \u03d5edge, \u03d5node and \u03d5refine. In order to avoid the disconnectivity problem as Fig.2, we need to elaborately design these models.\nSpecifically, the input is a set of 3D fragments, represented by both chemical and positional features. In addition, we add one-hot vectors to indicate the fragment types for all fine-grained nodes. At the initial stage, the input is treated as a fully connected 3D graph and a vanilla EGNN (Satorras et al., 2021) extracts the initial embeddings for all links and nodes. According to the fine-grained generation process, \u03d5focal simply passes information among fine-grained nodes. \u03d5edge then aggregates information of all fine-grained nodes to the focal node by a tree bottom-up pattern, in which the focal node is treated as the root of the tree structure. After the new edge is predicted, the network broadcasts the addition of the new edge to all fine-grained nodes in a tree top-down pattern. Finally, \u03d5node aggregates the information from all fine-grained nodes in the bottom-up pattern to the new node for decoding the fine-grained fragment type. For mask prediction module \u03d5refine, we utilize a bottom-up EGNN similar to \u03d5node. The information is aggregated from all fine-grained nodes to the masked nodes, to compute the target distribution as in Eq. (6). The illustration of the message-passing process could be found in Fig. 6. We discussed model-level modification of EGNN in Appendix A.3."
+        },
+        {
+            "heading": "5.2.3. TRAINING",
+            "text": "During training, we start by first randomly sampling a connected subgraph at each step. Then a random leaf node is picked, and we simulate the fine-grained generation of this node All the fine-grained nodes and edges of the subgraph except the selected one are kept. For the other nodes, we only maintain the coarse features and their position. Then \u03d5focal is trained based on the above feature to maximize the probability of the parent of the selected node among the nodes in the fine-grained subgraph. \u03d5edge is trained to maximize the probability of the edge link between the focal node and the selected node among all other coarse-grained\nnodes. \u03d5node is trained to output the fine-grained fragment type of the selected node. For the iterative refinement part, we just randomly mask a node\u2019s fine-grained feature on the subgraph, and \u03d5refine is trained to reconstruct its masked fragment type. Detailed implementations and objectives could be found in Appendix A.4."
+        },
+        {
+            "heading": "5.3. Assembling to Atom Conformation",
+            "text": "Given all fine-grained nodes and link relations determined in the fine-grained generation process, we have to decide which atoms within two linked fragments could be merged to construct the atom-level conformation. To conduct this process, we first randomly choose a fragment, enumerate all possible attachments for its neighbor fragments, and select the one that has the closest fragment center geometric as our generated positional features in the coarse-grained fragment generation. Specifically, we use RDkit to generate the local conformation for each candidate attachment following (Wang et al., 2022) and apply the root-mean-square deviation (RMSD) to measure the difference between fragment center coordinates. The above process will be continued following the neighboring structure until all the local connections are determined. Then we generate the coordinates of each atom. To plug the local conformations into each molecule coordinate system, we need to determine the rotation matrix (R) and translation vector (t). Here we compute R and t between generated local coordinates and RDkit predicted local coordinates using Kabsch Algorithm (Kabsch, 1976) at the fragment level. Then we applied the obtained R, t on the RDkit generated atom level coordinates to align the RDkit generated local geometry to our sampled center positions. This process starts from the subgraph constructed by a randomly selected fragment and its neighbors and is conducted successively until the full atom conformation is derived. Noted that, RDkit is only utilized for generating local geometry in conformation generation.\nThe full detailed algorithm is introduced in Appendix A.5."
+        },
+        {
+            "heading": "6. Experiments",
+            "text": "In this work, we mainly focus on generating druglike molecules. So our main experiments are conducted on the dataset of GEOMDRUG (Axelrod & GomezBombarelli, 2022) and CrossDocked2020 (Francoeur et al., 2020). Specifically, GEOMDRUG includes 304k drug-like molecules, and CrossDocked2020 (Francoeur et al., 2020) contains 100k 3D ligand structures extracted from proteinligand complexes, respectively. As compared with two wellknown 3D molecular generation models, i.e. EDM (Hoogeboom et al., 2022) and G-SphereNet (Luo & Ji, 2022), both versions of HierDiff achieve superior results, where HierDiff-E and HierDiff-P denotes the implementation using the element-based feature and property-based feature\nas representation, respectively. Though our model is not designed for generating small molecules, we also compare HierDiff with several existing models on QM9 (Axelrod & Gomez-Bombarelli, 2022), a popular benchmark for 3D molecule generation evaluation, which the results are shown in Table 5."
+        },
+        {
+            "heading": "6.1. Drug-Likeness Evaluation",
+            "text": "The purpose of our proposed generation method is to fabricate molecules that are similar to authentic drug molecules from scratch, thus it is important to measure how drug-likely are those fabricated molecules to true drug molecules."
+        },
+        {
+            "heading": "6.1.1. EVALUATION METRICS",
+            "text": "Specifically, we mainly measure the drug-likeliness of a molecule from 6 aspects. Quantitative estimate of druglikeness (QED), one of the most widely used metrics for virtual screening, is built on a series of carefully selected molecular properties to evaluate drug-likeness. Retrosynthetic accessibility (RA) is a machine learning based scoring function based on retrosynthesis protocol that evaluates synthetical accessibilities. Medicinal chemistry filter (MCF) is the rate of sampled molecules that do not contain any undruggable substructures (Brown et al., 2019). Synthetic accessibility score (SAS) is a ruled-based scoring function that evaluates the complexity of synthesizing a structure by organic reactions. LogP is the octanol-water partition coefficient which is the main factor that determines the distribution of the drug molecules, and \u2206LogP indicates the difference between the computed LogP and the ground-truth one on the training distribution. Molecular weight (MW) is a measure of the sum of the atomic weight values of the atoms in a molecule. An ideal model will sample molecules from the same weight distribution as the training set, denoted as ground-truth MW. In practice, \u2206MW is usually adopted to measure the difference between the computed MW and the ground-truth one."
+        },
+        {
+            "heading": "6.1.2. EXPERIMENTAL RESULTS",
+            "text": "Table. 1 shows the experimental results on GEOMDRUG and CrossDocked2020. From the results, it is obvious that HierDiff significantly outperforms EDM and G-SphereNet in terms of all the concerned evaluation metrics.\nSpecifically, the RA comparison results indicate that with all the sub-graphs derived from a predefined vocabulary, HierDiff generates molecules that are easier to synthesize in wet labs, without dangerous substructures. Since \u2206MW shows how close the distribution of generated molecules is to the training data, we can see that G-SphereNet is unable to generate large molecules, while HierDiff generates molecules with more similar size as the training data, as compared with EDM. We speculate that this is mainly due\nto the error accumulation problem in the autoregressive approach in G-SphereNet, which is proven by our ablation study in Table 12 of Appendix. Considering the poor performance of G-SphereNet on generating large molecules, we exclude it in the following conformation experiments.\nWe also carry out an ablation study on HierDiff w.r.t. the drug-likeliness. Specifically, we remove the iterative refining step and compare the obtained model with the original HierDiff. From the results shown in Appendix C.7, the model without iterative refining generates less complicated molecules, as compared with the original HierDiff, in terms of both QED and MCF. Though it has the ability to generate large molecules, such results are far from satisfactory in real applications. Through our analysis, the reason is that, without iterative refinement, HierDiff tends to choose fragments that are easier to assemble, indicating the importance of iterative refinement."
+        },
+        {
+            "heading": "6.2. Conformation Quality Evaluation",
+            "text": ""
+        },
+        {
+            "heading": "6.2.1. EVALUATION METRICS",
+            "text": "However, since all generated molecules are new, i.e. not existing in training data, we cannot directly use ground-truth conformations from the database for evaluation. To obtain corresponding ground-truth conformation, we adopted the same experimental procedure as in (Axelrod & GomezBombarelli, 2022). which has been proven to be suitable for evaluating the conformation quality 3D conformation generation in several previous work (Xu et al., 2022; Jing et al., 2022). Specifically, a computational costly molecular dynamic simulation (detailed experimental procedure is described in Appendix C.1) is carried out for all generated molecule graphs to return the set of MD simulated conformations. Then the coverage metric and matching metric denoted as Cov and Mat, are computed to measure the quality of generated conformations. The precise definitions are given as follows.\nCOV (C, C\u2217) = 1 |C\u2217| { \u2211 C\u2217\u2208C\u2217 1(RMSD(C,C\u2217) \u2264 \u03b4) } , MAT(C, C\u2217) = min C\u2217\u2208C\u2217 RMSD(C,C\u2217),\nwhere C denotes the generated conformation, C\u2217 represents the ground truth set of conformations sampled with MD simulation, C\u2217 denotes a ground truth instance from C\u2217, 1(\u00b7) is the indicator function which evaluates to 1 when the input is true otherwise 0, \u03b4 is the similarity threshold, which is set to 2A\u030a in practice. From the above definition, the coverage metric describes the rate of ground truth conformations that are similar to the generated conformation, reflecting how likely the generated molecule is in a low energy state. The matching value is the minimum RMSD value between the generated molecule and the conformations in the ground truth set, indicating the similarity between the generated molecule and ground-truth conformations. In our experiments, we compute the coverage and matching metrics on both atom and fragment coordinates, to measure conformations quality at different levels."
+        },
+        {
+            "heading": "6.2.2. EXPERIMENTAL RESULTS",
+            "text": "The experimental results listed in Table 2 show that HierDiff outperforms EDM consistently on all the evaluation metrics. Though HierDiff only generates center coordinates in the coarse phase, it is able to achieve impressive results on both levels, indicating the great power of HierDiff in capturing both global and local geometric information.\nWe also demonstrate some visualization results in Fig. 7. We can see that the structures generated from EDM are more chaotic, with clear distorted rings and unexpected\nbroken substructures. On the contrary, our model generates much more stable molecular scaffolds, by utilizing the coarse-to-fine approach. We also provide force field based experiments on sampled conformation to prove that our model generates more low-energy conformations, shown in Appendix C.4 for space limitation. We discuss the choice of high-level features in Appendix C.9."
+        },
+        {
+            "heading": "7. Conclusion",
+            "text": "This paper is concerned with 3D molecule generation. To address the irrational molecule structure problems, a hierarchical diffusion probabilistic model is proposed. We carefully design our method so that it can solve the combinatorially constrained structure generation problem introduced by non-autoregressive fragment generation modeling. To our knowledge, our work is the first attempt to get the best of both the globalization of the non-autoregressive model and the effectiveness of the fragment-based generation. HierDiff generates better drug-like molecules, in terms of several widely used evaluation metrics. We believe that the proposed framework could inspire general solutions for other constrained structure generation tasks, such as protein alignment"
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "This work was supported by the National Key R&D Program of China (No. 2021YFF1201600), Tsinghua University (NO.20221080053), Vanke Special Fund for Public Health and Health Discipline Development, and Beijing Academy of Artificial Intelligence(BAAI). Minkai Xu thanks the generous support of Sequoia Capital Stanford Graduate Fellowship."
+        },
+        {
+            "heading": "A. Supplemented Details for the Methods",
+            "text": "A.1. Implementation for Fragmentizing the Molecule\nTo decrease the freedom in modeling large-size molecules, many models adopt fragment-based generation instead of building a model directly on atoms (Yang et al., 2022a). A number of methods are developed to break a molecule into a set of fragments. A good decomposing algorithm should satisfy that the derived fragment vocabulary needs to cover most of the molecular structures and also maintains a reasonable vocabulary size.\nJT-VAE (Jin et al., 2018a) is the first deep-learning method that generates molecule graphs at the fragment level. It derived fragments by applying the minimum spanning tree algorithm to keep all chemical bond information while avoiding cycles. JT-VAE (Jin et al., 2018a) succeed to cover all buyable structures with a vocabulary size of less than 800. Recent works like MARS (Xie et al., 2021), FREED (Yang et al., 2021), MIMOSA (Fu et al., 2021), FragSBDD (Powers et al., 2022) though applied different criterion on breaking bonds to generate fragment vocabulary, fragments of low frequency need to be removed from the vocabulary to keep the vocabulary size reasonable.\nThe chemical space of drug-like molecules is enormous. Leaving out fragments of low frequency is undesirable. Therefore, we adopt the tree decomposition algorithm from (Jin et al., 2018a) in a 3D space. The procedure of processing the molecules into fragment graphs is a four-step process. Extract components We extract the set of chemical bonds which do not belongs to any rings and the set of simple rings which only represent a single topological cycle from the molecules. Merging The Bridged ring is a cluster of important chemical structures. They possess uncommon 3D conformation. Therefore, all pairs of rings are merged if the ring pair has more than two overlapping atoms. Edge linking Cycles in the fragment graph will cause problematic modeling since the decomposition for a molecule is not unique. To avoid cycles, the intersecting atom which connects more than 3 bonds is added to the graph as a fragment. Edges are linked between all fragment pairs that have overlapping atoms. The minimum spanning tree algorithm is run on this graph to remove overlapping edges. 3D coarse set At last, we assign 3D geometric information using the center of mass of the atoms within the fragment and coarse features for each fragment.\nHowever, there are still other methods that can be applied for the fragmentation of molecules. Hence, an experiment is conducted to prove that our fragmentation strategy has advantages and the results are show in Appendix C.7\nA.2. Implementation of Coarse-Grained Fragment Diffusion Model\nIn this section, we describe the non-autoregressive high-level feature generative model and its likelihood computation. Though diffusion models have been receiving outstanding results in computer vision (Yang et al., 2022b; Ho et al., 2020; Vahdat et al., 2021), it was nontrivial to apply directly on molecule fragment graphs. The graph features include integer features, continuous features, and continuous coordinates. These different vectors require different likelihood computations(Xu et al., 2022; Hoogeboom et al., 2022).\nThe diffusion model adds noise sequentially to the feature and coordinates like Eq. 1. At the time t, the data distribution of invariant features is expected to approximate the prior distributionN (0, I). However, in order to guarantee equivariance, the prior distribution for coordinates needs to be invariance in SE(3) group. It has been proven that when the prior distribution is invariant and the transformations are equivariant the diffusion model estimates a SE(3)-invariant data distribution (Xu et al., 2022):\np\u03b8 (Tg (x0)) = \u222b p (Tg (xT )) p\u03b8 (Tg (x0:T\u22121) | Tg (xT )) dx1:T\n= \u222b p (Tg (xT ))\u03a0 T t=1p\u03b8 (Tg (xt\u22121) | Tg (xt)) dx1:T\n= \u222b p (xT )\u03a0 T t=1p\u03b8 (Tg (xt\u22121) | Tg (xt)) dx1:T (invariant prior p (xT ))\n= \u222b p (xT )\u03a0 T t=1p\u03b8 (xt\u22121 | xt) dx1:T (equivariant kernels p (xt\u22121 | xt))\n= \u222b p (xT ) p\u03b8 (x0:T\u22121 | xT ) dx1:T\n= p\u03b8 (x0)\n(7)\nAs a result, we move the prior distribution for coordinates to a linear subspace where \u2211i=3\ni Hpi = 0\nThe model minimizes the lower bound of the log-likelihood:\nlogP (H) \u2265 L0 + Lbase + T\u2211\nt=1\nLt (8)\nwhere:\nL0 = logP (H | x0) (9) Lbase = \u2212KL (q (xT | H) | P (xT )) (10) Lt = \u2212KL (q (xs | H,xt) | P (xs | xt)) (11)\nLt and Lbase can be computed easily by estimating the KL divergence between the estimated distribution and the target distribution. However, L0 needs special treatment. Following the previous works (Hoogeboom et al., 2022; 2021), we define the L0 as follows:\nP ( Hintf | x (H) 0 ) = \u222b Hintf + 12 Hintf \u2212 1 2 N ( u | x(H int f ) 0 \u03c30 ) du\nP ( Hcontf | x0 ) = N ( Hcontf | x (Hcontf ) 0 /\u03b10 \u2212 \u03c30/\u03b10\u03f5\u03020, \u03c320/\u03b120I )\nP (Hp | x0) = N ( Hcontf | x (Hp) 0 /\u03b10 \u2212 \u03c30/\u03b10\u03f5\u03020, \u03c320/\u03b120I\n) (12)\nFor integer features, we centered the distribution to hint and integrate from \u22121/2 to 1/2. While for continuous features and coordinates, the variance of the distribution is still approximated by the network. During sampling, our model used a regular reverse diffusion to generate features and coordinates. The only difference is that the integer feature dimensions are normalized using the round function.\nA.3. Implementation of Equivariant Neural Network\nImproved EGNN In the node/edge sampling process, our nodes are endowed with a set of invariant features and equivariant coordinates. Inspired by the recent equivariant neural networks (Thomas et al., 2018; Brandstetter et al., 2021), we propose\nan improved version of EGNN (Satorras et al., 2021). Each layer is formulated as:\nmuv = \u03d5m ( nlu, n l v, \u2225\u2225xlu \u2212 xlv\u2225\u22252 , eluv)\nxl+1u = x l u + c tanh  \u2211 v\u2208N (u) ( xlu \u2212 xlv ) \u03d5x (muv)  nl+1u = \u03d5n nlu, \u2211 v\u2208N (u) (muv)\n el+1uv = \u03d5e ( eluv,muv,\n\u2225\u2225xlu \u2212 xlv\u2225\u22252) n and e stands for the node/ edge embedding, while c is a distance constant. x stands for node coordination. All \u03d5 are classic MLPs. Previous works explore various kinds of techniques to maintain the equivariance of node features, however, the edge features are always ignored to encode into the latent variables. It has been proven that including edge feature updated in neural networks help improve performance (Diao & Loynd, 2022; Zhou et al., 2023). Edge latent variables are also needed for edge prediction in our methods. As a result, instead of carrying out the message passing on fully connected graphs with unified edges, we assigned edge features for sampling tasks. \u03d5focal, \u03d5edge, \u03d5node uses this improved network for message passing.\nA.4. Algorithm for Training and Sampling of fragments\nAlgorithm 1 Training Algorithm for Node/edge decoding Input: 3D molecules set: {G}, EGNN networks: \u03d5focal, \u03d5edge, \u03d5node, \u03d5refine Output: EGNN networks: \u03d5focal, \u03d5edge, \u03d5node, \u03d5refine\n1: function C(S, E: subgraph) 2: feat\u2190 Coarse-grained feature of n, n \u2208 S 3: coord\u2190 Position of n, n \u2208 S 4: return feat, coord 5: end function 6: function F(S, E: subgraph) 7: feat\u2190 Fine-grained feature of n, n \u2208 S 8: coord\u2190 Position of n, n \u2208 S 9: edge\u2190 {i, j}, {i, j} \u2208 E\n10: return feat, coord, edge 11: end function 12: function FRAG(n: node) 13: feat\u2190 Fine-grained feature of n 14: return feat 15: end function 16: for G in {G} do 17: T \u223c T \u2208 G, s.t. T is connected subgraph 18: n \u223c n \u2208 T , s.t. n is leaf node 19: m \u223c m \u2208 T , s.t. m is single node 20: T\u0303 = T \\ n, V = G \\ T 21: T\u0302 = T \\m 22: context = (F(T\u0303 ), C(V \u222a n)) 23: Lsample = \u2212 logP\u03d5focal(n.parent | context)\n\u2212 logP\u03d5edge({n, n.parent} | context) \u2212 logP\u03d5node(FRAG(n) | context, {n, n.parent})\n24: Update \u03d5focal, \u03d5edge, \u03d5node \u2190 Optimize(Lsample) 25: Lrefine = \u2212 logP\u03d5refine(FRAG(m) | [(F(T\u0302 ), C(m)]) 26: Update \u03d5refine \u2190 Optimize(Lrefine) 27: end for\nAlgorithm 2 Sampling Algorithm for Node/edge decoding Input: Nodes with coarse-grained feature and positions: N\nRefine step limit: max steps, EGNN networks: \u03d5focal, \u03d5edge, \u03d5node, \u03d5refine\nOutput: Fine-grained Graph T 1: function GENERATE STEP(T) 2: nfocal \u223c P\u03d5focal(nfocal | T ) 3: {nfocal, nnew} \u223c P\u03d5edge({nfocal, nnew} | T ) 4: T \u2190 T + {nfocal, nnew} 5: fragment \u223c P\u03d5node(fragment | T ) 6: FRAG(nnew)\u2190 fragment 7: end function 8: function REFINE STEP(T) 9: Tcoarse \u2190 coarse-grained T 10: Tfine \u2190 fine-grained T 11: nrefine = argminn(P\u03d5refine(FRAG(n) | Tfine \\ n,Tcoarse), n \u2208 T ) 12: fragment \u223c P\u03d5refine(fragment | Tfine \\ n,Tcoarse) 13: FRAG(nrefine)\u2190 fragment 14: end function 15: function PROB(T) 16: return \u2211 n\u2208T (logP\u03d5refine(FRAG(n) | T \\ n)) 17: end function 18: T \u2190 N 19: repeat 20: T \u2190 GENERATE STEP(T ) 21: for i in max steps do 22: T\u0302 \u2190 REFINE STEP(T ) 23: if PROB(T\u0302 ) > PROB(T ) then 24: Accept: T \u2190 T\u0302 25: else 26: Break 27: end if 28: end for 29: until \u2200n\u2208T , n is fine-grained node\nA.5. Algorithm for Atom-level Conformation Sampling\nAlgorithm 3 Algorithm for Conformation Alignment Input: Fragment center coordinate: Fout, Molecule fragment graph: G Output: Cout\n1: function KABSCH(X \u2208 R3, X\u0302 \u2208 R3) 2: Xc = \u2211n i=1 Xi, X\u0302c = \u2211n i=1 X\u0302i 3: X = X \u2212Xc, X\u0302 = X\u0302 \u2212 X\u0302c 4: H = \u2211n i=1 XX\u0302 T 5: H = U\u039bV T\n6: R = ( UV T )T 7: t = X\u0302c \u2212RXc 8: return R, t 9: end function\n10: Cin, Fin \u2190 RDkit random conformation and fragment positions 11: Cout \u2190 Cin 12: for n \u2208 BFS(G) do\n13: nfrag, natom \u2190 fragment index , atom index of n 14: nneifrag, n nei atom \u2190 fragment index , atom index of n.neighbors 15: if n is not root then 16: nparfrag, n par atom \u2190 fragment index , atom index of n.parent 17: nattach \u2190 nparatom \u2229 natom 18: ref = {Fin[nfrag, nneifrag ], Cin[nattach ]} 19: out = {Fout[nfrag, nneifrag ], Cout[nattach ]} 20: else 21: ref = {Fin[nfrag, nneifrag ]} 22: out = {Fout[nfrag, nneifrag ]} 23: end if 24: R, t = KABSCH(ref, out) 25: Cout [natom] = RCout [natom] + t 26: end for"
+        },
+        {
+            "heading": "B. Discussion on potential negative societal impact",
+            "text": "Incorporating 3D information into molecule generation could have the potential to bring a significant impact on the drug discovery industry. One key limitation of applying machine learning/ generative model approaches to the area lies in the data bias, i.e., how the 3D conformation is obtained. Such limitations could make the model difficult to generalize in practical applications. Besides, to involve human feedback, it would be ideal for the model to be model interpretable. It could be hard to obtain interpretable knowledge from the proposed generative model. The safety issues should be well taken care of towards AI-guided drug discovery. The generalization ability of such methods is a lack of exploration. More consistent and comprehensive tests are needed before the clinical tests."
+        },
+        {
+            "heading": "C. Additional Experiments",
+            "text": "C.1. Experimental configuration\nBoth our model and the baseline model are trained on the GEOMDRUG (Axelrod & Gomez-Bombarelli, 2022), CrossDocked2020 (Francoeur et al., 2020) and QM9 (Axelrod & Gomez-Bombarelli, 2022). In GEOMDRUG experiments, we randomly selected 4 conformations of each molecule to train our model. To test EDM (Hoogeboom et al., 2022), we removed hydrogen atoms from the conformations and retrained the EDM model. The implicit hydrogen atoms are reconstructed using RDkit after all other heavy atoms are generated. Because EDM only generates atom types and coordinates, a proportion of sampled molecules are not fully connected. The broken fragments were removed for numerical evaluation. In all non-autoregressive methods, the number of nodes used for sampling is drawn from the size distribution histogram calculated on the training set.\nConformation Generation In this paragraph, we introduce the way to generate ground truth conformation using MD simulation. Firstly, 50 initial conformations are generated for each molecule graph using RDkit and optimized by MMF field. Then, these conformations are further optimized by MD software XTB, while the energy terms are computed for each conformation. At last, we choose the conformation with the minimum energy to sample the ground truth conformations using MD software CREST. To balance efficiency and accuracy, we set the level of optimization to \u2019normal\u2019 in the software for both energy computing and conformation sampling. It took approximately 16 days to generate conformations for 400 different molecules on a 128-core server.\nC.2. Stability and Validity Evaluation\nMetricsTo illustrate our model\u2019s capacity to generate chemically valid molecule structures, we conduct experiments to compare the validity and stability with baseline models. Since the baseline EDM model is not able to generate any valid molecule with full Hydrogen coordinates on GEOMDRUG, we compared our model with the EDM model that needs to sample Hydrogen coordinates with the help of RDkit. The mol stability is defined as the proportion of molecules that can be interpreted as valid molecules with all bonds and coordinates explicitly defined in RDkit. The validity is defined as the proportion of molecules that are connected rather than individual fragments in 3D space. Diversity measures the diversity of the generated molecules by calculating the average pairwise Tanimoto Morgan Fingerprint, following previous work (Xie\net al., 2021).\nAlthough our model is designed to generate drug-like molecules with relatively large molecule sizes, it can be applied for smaller organic molecule (QM9) generation tasks without effort. We also measure the validity and uniqueness metric from previous works (Hoogeboom et al., 2022) on 10000 generated small organic molecules and compared them with various baselines by using RDkit.\nBaselines Our method is compared with previous methods. Both graph-based and coordinate-based models are included here. Graph-based methods like Graph VAE (Simonovsky & Komodakis, 2018), GTVAE (Mitton et al., 2021), and Set2GraphVAE (Vignac & Frossard, 2021), do not explicitly define the coordinates, so they need cheminformatic software to generate conformers. On the other hand, 3D coordinate-based models like E-NF (Satorras et al., 2022), G-Schnet (Gebauer et al., 2019), and EDM (Hoogeboom et al., 2022), need cheminformatic software to derive chemical bonds.\nResults When testing the stability metrics on GEOMDRUG, our methods outperform EDM in stability, validity, and diversity. This indicates that our model generates not only accurate conformations of drug-like molecules but also enjoys great sampling efficiency. As shown in Table 5, our method performs comparable results in both validity and uniqueness. Though EDM (Hoogeboom et al., 2022) achieved better performance, our method still outperforms all other models. The slight performance drop compared to EDM could be due to the information loss ratio during fragmentization on the tiny graphs. Besides, our model is the only 3D method that does not depend on any chemical bond linking software, like Openbabel. Hydrogen atoms can be added by counting the valency for each atom in our method.\nC.3. Additional evaluation of drug-like properties\nRing Size Ring Systems with the size of 5-6 are stable chemical groups in organic chemical theories. HeteroAtom The number of heteroatoms represents area of the polar surface in the organic molecules, which highly determines the distribution of the drug molecules in the human body, e.g., the drug molecules that can cross the blood-brain barrier always has fewer heteroatoms. AromaticRing The Number of aromatic rings in the molecules indicates the ability to form \u03c0 \u2212 \u03c0 interaction with proteins or other biomolecules. Aromatic rings also stabilize the molecule into lower energy conformations. AliphaticRing The Number of aliphatic rings in the molecules indicates the rigidity of the molecules. Instead of lying in a plane as aromatic rings, aliphatic rings constrained the conformation by contributing a specific torsion angle to the molecule conformation. Radius The mean radius of the fragment. A higher radius than the GEOMDRUG indicates too many rings are generated by the model. A smaller radius indicates the model is not able to construct valid ring systems.\nResult and Discussion In addition to the evaluation of properties on the molecule level, we also break all the sampled molecules into fragments and test their performance on additional properties As expected, our method chooses fragments that are similar to that of ground truth statistics. We plotted the distribution of ring size in Fig. 8, the number of our method conforms best with ground truth. It is obvious that ring sizes 5 and 6 are most commonly seen in drug datasets and our\nsampled results, which are stable. However, on the contrary, the atom-based method such as EDM (Hoogeboom et al., 2022) has failed to capture this basic chemical rule. Refer to Table 7 for additional property evaluation.\nC.4. Conformation Energy Experiments\nBesides conformation quality evaluation, we also want to verify that our model generates conformation with realistic energy terms. We compared our model with two baseline methods, EDM (Hoogeboom et al., 2022) and JT-VAE (Jin et al., 2018a). JT-VAE is a 2D fragment-based molecule generation model, so we used the RDkit ETKDG module to generate the 3D conformation for the sampled 2D molecules. Similar to the conformation quality experiments, we trained all models on GEOMDRUG dataset and sampled 100 conformations with each method to carry out our experiments. We compute the energy using Merck Force Field(MFF). MMD distance with the Gaussian kernel is applied here to measure the difference between generated distributions and the original distribution.\nResult and Disscussion According to Fig. 9, HierDiff generates conformations with the closest energy distribution with the original dataset. Though EDM is outperformed by our method, it still beats JT-VAE(ETKDG) in generating more stable conformations. We can conclude that in this task, 3D methods have advantages over using RDkit conformation sampling along with a 2D method.\nC.5. Evaluation of Uniqueness and Diversity on GEOMDRUG\nTo prove that our method does not occur the issue of mode collapse, we tested the uniqueness of generated molecules and evaluate the similarity of generated molecules with the GEOMDRUG test set. Similarity which measures the average similarity between generated molecules with the most similar molecule in the test set. We use the Tanimoto score between ECFP4 fingerprints to measure the similarity between two molecules. High similarity indicates that the method lack generalization. Unique is the proportion of unrepeated structures in generated molecules. Both metrics are tested on molecule level and Murko Scaffold level. Numeric results are listed in Table 8 It is quite clear that our model generates more diverse molecules.\nResult and Disscussion HierDiff outperforms EDM (Hoogeboom et al., 2022) on this uniqueness and diversity test. It should be noted that both our method and EDM generate mostly unique molecules when training on GEOMDRUG. These methods succeed to generate diverse 3D molecules. Combining to results from Table 1, our method is able to generate 3D molecules that are drug-like and diverse.\nC.6. Conditional generation\nIn the field of AI-guided drug discovery, one of the most essential directions is to generate 3D molecules according to desirable properties. Though previous works (Gebauer et al., 2019; Hoogeboom et al., 2022) have tested their abilities to generate molecules conditioned on simulated energy, to our knowledge, we are the first to carry out practical drug discovery-related property-conditional generation experiments using the 3D molecule generative model. We include the properties as an additional atom feature dimension in our dual-phase generation process. We tested the difference using mean squared error (MSE) and mean absolute error (MAE) between the input properties and the real properties of the generated 3D molecules. The diversity of the generated molecules is also evaluated using mean fingerprint similarity as defined in Xie et al. (2021).\nAsphericity QED SAS logP . MSE MAE Div MSE MAE Div MSE MAE Div MSE MAE Div\nEDM 0.626 0.455 0.895 0.113 0.285 0.883 0.074 0.193 0.897 6.054 2.019 0.883 HierDiff-E 0.176 0.406 0.894 0.120 0.289 0.885 0.051 0.184 0.881 1.405 0.976 0.882\nResults and Disscusions To make fair comparison, we excluded HierDiff-P for property-conditional generation since it already implies fragment properties. For example, aromatic rings and topological surfaces are related to logP and SAS. The results illustrate that our model outperforms EDM on Asphericity, SAS, and LogP in generating 3D molecules with accurate properties. EDM outperforms HierDiff in the accuracy of the QED conditioned generation task and the diversity in other metrics by an almost negligible margin.\nC.7. Ablation Study\nWe remove the iterative refinement step in each fragment sampling process when using the model training on GEOMDRUG to carry out the ablation study. The results are shown in Tab. 9. The experiment results illustrate that the hierarchical diffusion-based model samples molecules with higher molecular weight and lower SAS score, however, the drug-likeness score QED and safety score MCF decreased.\nBesides, we also replaced the minimum spanning tree algorithm with the \u2019High-frequency Fragments\u2019 strategy and \u2019Single Rings and Bonds\u2019 strategy for an ablation study. The \u2019High-frequency Fragment\u2019 is a common strategy applied in previous works (Xie et al., 2021; Powers et al., 2022) in which all fragments are collected from the training datasets using basic predefined rules. Only the high-frequency fragments are kept in the vocabulary in this method. \u2019Single Rings and Bonds\u2019 is\nanother simple fragmentation strategy in that the fragments are limited to all single bonds and single rings. Bridge rings and multiple-ring systems are broken into single rings to reduce fragment complexity. The results are listed in Tab. 10, which illustrate that without using a complicated fragmentation strategy our method still outperforms the baseline model in most metrics. We chose the minimum spanning tree-based strategy because it offers a more balanced performance in all drug-like properties.\nC.8. Discussion on Sampling Efficiency\nWe conduct an experiment on the computation cost(sampling speed). It is true that the decoding models \u03d5focal, \u03d5node and \u03d5edge indeed bring some computational cost. While these modules are not the key bottleneck as only a few forward passes need to be conducted during sampling. As shown in Tab. 11, the diffusion phase is actually the main computational overhead as there are many forward passes, e.g. thousands of steps, that need to be conducted during a single sampling process. Besides, we also noted the fact that our model is capable of using a larger batch size for parallel on a GPU since our diffusion space is smaller. Your question actually inspires us to train our model in a new setting with fewer diffusion steps, for example, 500 steps or 250 steps. We leave this direction as future exploration.\nC.9. Disscusion on the Choice of high-level feature\nFrom the above experiments, we can see that both the property-based coarse feature and the element-based coarse feature outperform the baseline models in generating more drug-like molecules and sample stable conformations. However, these two kinds of features reveal different strengths.\nIn the Drug-likeness evaluation, HierDiff-P outperforms HierDiff-E in most metrics when training on GEOMDRUG. HierDiffE achieves the highest score on MCF. The reason is that property-based features provide more chemical semantic information\nthan element-based features. HierDiff-E achieves better results on chemical safety because the element histogram helps the model avoid generating combinations of elements that can form unstable subgraphs. On the contrary, when training on CrossDock, HierDiff-E performs better, because CrossDock is a smaller dataset. It\u2019s easier to approximate the true distribution with a simpler representation as the latent variable.\nIn the conformation quality evaluation, HierDiff-E achieves better results on the atom level RMSD and HierDiff-P achieves better results on the fragment level RMSD. Since element-based features directly model on the atom level and property-based features include connection information, surface information on a global view, this result agrees with the motivation that inspires us to design these features.\nC.10. Experimental Proof of Error Accumulation\nOne of our motivations for developing a hierarchical method for molecule generation is that we discovered the error accumulation in molecule generative models. This means that when the molecule size increase, the error from the previous steps of generation influences later steps which leads to unrealistic results. This issue has been discussed in the field of natural language modeling (Schmidt, 2019; He et al., 2019; Caccia et al., 2018). To prove this issue exists, we trained our method which represents the non-autoregressive method, and G-Spherenet which represents the autoregressive method on QM9. Both methods are set to generate molecules with the given molecule size. We test the validity of the generated molecules. We also do the same test on GEOMDRUG, however, the validity of the autoregressive model drops so fast that it cannot generate molecules with more than 20 heavy atoms. Numeric results on QM9 are listed in Table 12. Visualized results of GEOMDRUG can be found in Figure 10.\nC.10.1. MORE VISUALIZATION RESULTS"
+        }
+    ],
+    "title": "Coarse-to-Fine: a Hierarchical Diffusion Model for Molecule Generation in 3D",
+    "year": 2023
+}

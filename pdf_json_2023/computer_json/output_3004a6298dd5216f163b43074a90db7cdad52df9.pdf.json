@@ -1,0 +1,186 @@
+{
+    "abstractText": "Despite the rapid growth in model architecture, the scarcity of large parallel corpora remains the main bottleneck in Neural Machine Translation. Data augmentation is a technique that enhances the performance of data-hungry models by generating synthetic data instead of collecting new ones. We explore prompt-based data augmentation approaches that leverage largescale language models such as ChatGPT. To create a synthetic parallel corpus, we compare 3 methods using different prompts. We employ two assessment metrics to measure the diversity of the generated synthetic data. This approach requires no further model training cost, which is mandatory in other augmentation methods like back-translation. The proposed method improves the unaugmented baseline by 0.68 BLEU score.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Seokjin Oh"
+        },
+        {
+            "affiliations": [],
+            "name": "Su Ah Lee"
+        }
+    ],
+    "id": "SP:1dcfdd9f2d8c138f1086cd112d29cab85effd594",
+    "references": [
+        {
+            "authors": [
+                "Mikel Artetxe",
+                "Holger Schwenk."
+            ],
+            "title": "Massively multilingual sentence embeddings for zeroshot cross-lingual transfer and beyond",
+            "venue": "Transactions of the Association for Computational Linguistics, 7:597\u2013610.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Sergey Edunov",
+                "Myle Ott",
+                "Michael Auli",
+                "David Grangier."
+            ],
+            "title": "Understanding back-translation at scale",
+            "venue": "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing, pages 489\u2013500, Brussels, Belgium. Association for",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Vu Cong Duy Hoang",
+                "Philipp Koehn",
+                "Gholamreza Haffari",
+                "Trevor Cohn."
+            ],
+            "title": "Iterative backtranslation for neural machine translation",
+            "venue": "Proceedings of the 2nd Workshop on Neural Machine Translation and Generation, pages 18\u201324, Mel-",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Varun Kumar",
+                "Ashutosh Choudhary",
+                "Eunah Cho."
+            ],
+            "title": "Data augmentation using pre-trained transformer models",
+            "venue": "Proceedings of the 2nd Workshop",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Ilya Loshchilov",
+                "Frank Hutter."
+            ],
+            "title": "Decoupled weight decay regularization",
+            "venue": "International Conference on Learning Representations.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Mathias M\u00fcller",
+                "Annette Rios",
+                "Rico Sennrich."
+            ],
+            "title": "Domain robustness in neural machine translation",
+            "venue": "Proceedings of the 14th Conference of the Association for Machine Translation in the Americas (Volume 1: Research Track), pages 151\u2013164, Virtual. Associa-",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Matt Post."
+            ],
+            "title": "A call for clarity in reporting BLEU scores",
+            "venue": "Proceedings of the Third Conference on Machine Translation: Research Papers, pages 186\u2013 191, Brussels, Belgium. Association for Computational Linguistics.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Rico Sennrich",
+                "Barry Haddow",
+                "Alexandra Birch."
+            ],
+            "title": "Improving neural machine translation models with monolingual data",
+            "venue": "Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 86\u201396,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Amane Sugiyama",
+                "Naoki Yoshinaga."
+            ],
+            "title": "Data augmentation using back-translation for contextaware neural machine translation",
+            "venue": "Proceedings of the Fourth Workshop on Discourse in Machine Translation (DiscoMT 2019), pages 35\u201344, Hong Kong,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Yuqing Tang",
+                "Chau Tran",
+                "Xian Li",
+                "Peng-Jen Chen",
+                "Naman Goyal",
+                "Vishrav Chaudhary",
+                "Jiatao Gu",
+                "Angela Fan"
+            ],
+            "title": "Multilingual translation with extensible multilingual pretraining and finetuning",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Chaojun Wang",
+                "Rico Sennrich."
+            ],
+            "title": "On exposure bias, hallucination and domain shift in neural machine translation",
+            "venue": "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics, pages 3544\u20133552, Online. Association for",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Kang Min Yoo",
+                "Dongju Park",
+                "Jaewook Kang",
+                "Sang-Woo Lee",
+                "Woomyoung Park."
+            ],
+            "title": "GPT3Mix: Leveraging large-scale language models for text augmentation",
+            "venue": "Findings of the Association for Computational Linguistics: EMNLP 2021, pages 2225\u20132239,",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1 Introduction",
+            "text": "Neural Machine Translation(NMT) is the task of converting a sentence written in a source language into a target language sentence by using a translation model. NMT models usually require vast amounts of parallel data for training, but highquality parallel data is often scarce. Since generating parallel synthetic data demands substantial time and cost, especially for low-resource languages or domains, the problem becomes particularly severe in such cases.\nTo address the data scarcity problem, backtranslation-based methods (Sennrich et al., 2016; Edunov et al., 2018; Hoang et al., 2018; Sugiyama and Yoshinaga, 2019; Kumar et al., 2020) have been widely adopted. Back-translation leverages a backward translation model and monolingual target corpus to generate synthetic pairs, which naturally consider the source-target alignments. However, the data quality generated by back-translation can significantly vary depending on the performance of the backward translation model. When the domain of training data and the domain of data to be\ngenerated are different, obtaining high-quality synthetic data is even more challenging. In this case, out-of-domain issues such as hallucinations (Wang and Sennrich, 2020; M\u00fcller et al., 2020), are more likely to occur, leading to difficulties in acquiring high-quality synthetic data. Recently, with the remarkable advancements in Natural Language Generation models (Brown et al., 2020), research on utilizing large-scale language generation models for data augmentation (Yoo et al., 2021) has been conducted. During the inference phase, the model receives a prompt that defines the problem, and it generates the corresponding output data. The quality of the generated data can vary depending on the provided prompt. Therefore, to obtain high-quality data, it is crucial to carefully select a prompt that is well-suited for the task.\nIn this paper, we conduct prompt-based data augmentation experiments by leveraging ChatGPT. Through experiments, we examine that appropriate prompts can reduce the generation cost of the synthetic data and facilitate the easy transfer of knowledge from large-scale language models. We also validate the effectiveness of the proposed 3 prompts through measure the diversity of generated synthetic data by each method. Via comparing the diversity, we demonstrate that generating various data is a crucial factor in synthetic data augmentation."
+        },
+        {
+            "heading": "2 Prompt-based Data Augmentation",
+            "text": "In this work, we compare three prompts to generate synthetic parallel data using ChatGPT. Figure 1 illustrates the proposed three augmentation methods, and the prompts used during synthetic data generation are shown in Table 1. Table 2 provides examples of data generated by each augmentation technique on the original parallel data.\nar X\niv :2\n30 7.\n16 83\n3v 2\n[ cs\n.C L\n] 1\n3 N\nov 2\n02 3"
+        },
+        {
+            "heading": "2.1 Paraphrase",
+            "text": "In general, paraphrasing is the process of expressing the same meaning of a sentence in a different way. To generate synthetic data using this approach, we paraphrase the original source sentence and target sentence in n different ways. We utilize chatGPT to rephrase the original source sentence and the target sentence in various ways while preserving their inherent meanings. All combinations of paraphrased sentences are considered parallel data. Among the proposed methods in this paper, paraphrasing is the most efficient approach. If we paraphrase n source and target sentences each, a total of (n+ 1)2 + 1 parallel data can be obtained."
+        },
+        {
+            "heading": "2.2 Multi-Target",
+            "text": "A simple method to increase parallel data is by translating the source side of the original parallel corpus in various ways. For each original source sentence s, we generate n translations that have the same meaning but are written differently. By mapping one source sentence to n target sentences, it can generate a total of n parallel data."
+        },
+        {
+            "heading": "2.3 Storytelling",
+            "text": "As a third method, we utilize ChatGPT for making a story following each source sentence with source language. Then we translate the generated story into a target language and use them as parallel data by matching pairs. This method can be inefficient due to the requirement of two steps: generating a story and translating the generated story. Nonetheless, unlike the previous two methods, various data can be obtained through the storytelling method.\nOriginal Parallel Data Original_ko \uc5bc\ub9c8\uc815\ub3c4\ub300\ucd9c\uc744\uc6d0\ud558\uc138\uc694? Original_de Wie viel Kredit m\u00f6chten Sie haben?\nParaphrase Paraphrased_ko \ub300\ucd9c\uc744\uc5bc\ub9c8\uc815\ub3c4\ubc1b\uace0\uc2f6\uc73c\uc138\uc694? Paraphrased_de Wie hoch soll der Kreditbetrag sein, denSie beantragen m\u00f6chten?\nMulti-Target\nTranslated_de Wie viel Darlehen m\u00f6chten Sie? Wie viel Geld m\u00f6chten Sie ausleihen? Wie viel Kredit ben\u00f6tigen Sie?\nStorytelling"
+        },
+        {
+            "heading": "3 Experiments",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Experimental Settings",
+            "text": "We use the AI-hub1 multilingual colloquial parallel corpus, Korean-German pairs in the financial domain. In a total of 37.5k pairs, we use 20k pairs as a training set, 5k pairs as a validation set, and the remaining 12.5k as a test set. Parallel data augmentation is conducted using the gpt-3.5-turbo model available in the OpenAI API2.\nmBART-50 (Tang et al., 2020) model is used for all the experiments. We use the AdamW optimizer (Loshchilov and Hutter, 2019) with a batch size of 16, and the learning rate of 2e-5. BLEU scores computed by SacreBLEU (Post, 2018) are used for evaluation. In all experiments, the best checkpoint is selected based on BLEU score on the validation set. All models are trained on an NVIDIA RTX 4080 GPU."
+        },
+        {
+            "heading": "3.2 Main Results",
+            "text": "In Table 3, we report the main results by 3 proposed methods. The baseline BLEU score is evaluated by unaugmented original training set size of 20k. To examine the impact of augmentation ratios for each method, the number of augmented data is set to 0.5, 1.0, 1.5, 2.0, 2.5, and 3.0 times the original training data. Six augmentation ratios are used to compare the model performance. In the case of the paraphrase and the multi-target, as the number of augmented data increases, the BLEU score decreases. We assume that the model capacity rather decreases because the augmentation by two methods did not increase the diversity of the training data.\nOn the other hand, in the case of the storytelling method, BLEU score improves in all augmentation ratios compared to the baseline. The method of generating various sentences within the same domain increases the diversity of training data, and\n1https://www.aihub.or.kr 2https://platform.openai.com/docs/models\nas a result, the performance of the model improves. Through the results of Table 3, it can be inferred that during data augmentation, generating diverse data is necessary to narrow the gap between the actual language distribution and train data distribution. The storytelling method achieves the highest BLEU score of 29.17 when synthetic parallel data is augmented at twice the rate of the original parallel data."
+        },
+        {
+            "heading": "3.3 Data Diversity Analysis",
+            "text": "To compare the diversity of data generated by each augmentation method, we measure the similarity between the generated sentences and the original sentences using two different methods. As the first method, we measure the diversity of the generated data by calculating the cosine similarity between sentence embedding vectors. We generate the sentence embeddings for all the sentences using the LASER encoder (Artetxe and Schwenk, 2019). In our second approach, we assess the lexical similarity by computing BLEU score between original and synthetic sentences.\nTable 4 shows the average cosine similarity and BLEU score between the original sentences and generated sentences by each method. With high cosine similarity and BLEU score, we can assume that the paraphrase and the multi-target approach generate sentences that are similar to the original ones. Among the three methods, the storytelling method shows the lowest cosine similarity and BLEU score. These results indicate that the storytelling approach generates sentences that are least similar to the original sentences, thereby increasing the diversity of the training data."
+        },
+        {
+            "heading": "4 Conclusion",
+            "text": "In this paper, we examined prompt-based data augmentation techniques for NMT using a generative language model. The proposed method alleviates the problem of insufficient parallel data or in-domain monolingual data without the training\ncosts of additional models. By comparing various prompts, we demonstrated the importance of welldesigned prompts in data augmentation."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "This paper is an English translation of our work originally published in Korean for the Korea Computer Congress (KCC) 2023.\nThis work was supported by the National Research Foundation of Korea(NRF) grant funded by the Korea government(MSIT) (No. NRF2022R1G1A1013549).\nThis research was supported by the MISP(Ministry of Science, ICT), Korea, under the National Program for Excellence in SW) supervised by the IITP(Institute of Information & communications Technology Planing & Evaluation)in 2023\"(2018-0-00192)"
+        }
+    ],
+    "title": "Data Augmentation for Neural Machine Translation using Generative Language Model",
+    "year": 2023
+}

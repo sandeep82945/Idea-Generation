@@ -1,0 +1,872 @@
+{
+    "abstractText": "We introduce Neuro-Symbolic Continual Learning, where a model has to solve a sequence of neuro-symbolic tasks, that is, it has to map subsymbolic inputs to high-level concepts and compute predictions by reasoning consistently with prior knowledge. Our key observation is that neuro-symbolic tasks, although different, often share concepts whose semantics remains stable over time. Traditional approaches fall short: existing continual strategies ignore knowledge altogether, while stock neuro-symbolic architectures suffer from catastrophic forgetting. We show that leveraging prior knowledge by combining neurosymbolic architectures with continual strategies does help avoid catastrophic forgetting, but also that doing so can yield models affected by reasoning shortcuts. These undermine the semantics of the acquired concepts, even when detailed prior knowledge is provided upfront and inference is exact, and in turn continual performance. To overcome these issues, we introduce COOL, a COncept-level cOntinual Learning strategy tailored for neuro-symbolic continual problems that acquires high-quality concepts and remembers them over time. Our experiments on three novel benchmarks highlights how COOL attains sustained high performance on neuro-symbolic continual learning tasks in which other strategies fail.1 Equal contribution University of Pisa, Italy DISI, University of Trento, Italy University of Modena and Reggio Emilia, Italy CIMeC, University of Trento, Italy. Correspondence to: Emanuele Marconato <emanuele.marconato@unitn.it>. Proceedings of the 40 th International Conference on Machine Learning, Honolulu, Hawaii, USA. PMLR 202, 2023. Copyright 2023 by the author(s). The data and code are available at https://github.com/emamarconato/NeSy-CL",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Emanuele Marconato"
+        },
+        {
+            "affiliations": [],
+            "name": "Gianpaolo Bontempo"
+        },
+        {
+            "affiliations": [],
+            "name": "Elisa Ficarra"
+        },
+        {
+            "affiliations": [],
+            "name": "Simone Calderara"
+        },
+        {
+            "affiliations": [],
+            "name": "Andrea Passerini"
+        },
+        {
+            "affiliations": [],
+            "name": "Stefano Teso"
+        }
+    ],
+    "id": "SP:12f9ea872d455a62890deb31674d59d1dd60c57d",
+    "references": [
+        {
+            "authors": [
+                "K. Ahmed",
+                "S. Teso",
+                "Chang",
+                "K.-W",
+                "G. Van den Broeck",
+                "A. Vergari"
+            ],
+            "title": "Semantic Probabilistic Layers for NeuroSymbolic Learning",
+            "venue": "NeurIPS,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "K. Ahmed",
+                "E. Wang",
+                "Chang",
+                "K.-W",
+                "G. Van den Broeck"
+            ],
+            "title": "Neuro-symbolic entropy regularization",
+            "venue": "In UAI,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "R. Aljundi",
+                "F. Babiloni",
+                "M. Elhoseiny",
+                "M. Rohrbach",
+                "T. Tuytelaars"
+            ],
+            "title": "Memory aware synapses: Learning what (not) to forget",
+            "venue": "In Proceedings of the European Conference on Computer Vision (ECCV),",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "R. Aljundi",
+                "M. Lin",
+                "B. Goujaud",
+                "Y. Bengio"
+            ],
+            "title": "Gradient based sample selection for online continual learning",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M. Boschini",
+                "L. Bonicelli",
+                "P. Buzzega",
+                "A. Porrello",
+                "S. Calderara"
+            ],
+            "title": "Class-incremental continual learning into the extended der-verse",
+            "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "P. Buzzega",
+                "M. Boschini",
+                "A. Porrello",
+                "D. Abati",
+                "S. Calderara"
+            ],
+            "title": "Dark experience for general continual learning: a strong, simple baseline",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "L. Caccia",
+                "R. Aljundi",
+                "N. Asadi",
+                "T. Tuytelaars",
+                "J. Pineau",
+                "E. Belilovsky"
+            ],
+            "title": "New insights on reducing abrupt representation change in online continual learning",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "F.M. Castro",
+                "M.J. Mar\u0131\u0301n-Jim\u00e9nez",
+                "N. Guil",
+                "C. Schmid",
+                "K. Alahari"
+            ],
+            "title": "End-to-end incremental learning",
+            "venue": "In Proceedings of the European conference on computer vision (ECCV),",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Z. Chen",
+                "Y. Bei",
+                "C. Rudin"
+            ],
+            "title": "Concept whitening for interpretable image recognition",
+            "venue": "Nature Machine Intelligence,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Y. Choi",
+                "A. Vergari",
+                "G. Van den Broeck"
+            ],
+            "title": "Probabilistic circuits: A unifying framework for tractable probabilistic models",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Darwiche",
+                "P. Marquis"
+            ],
+            "title": "A knowledge compilation map",
+            "venue": "Journal of Artificial Intelligence Research,",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "M. De Lange",
+                "T. Tuytelaars"
+            ],
+            "title": "Continual prototype evolution: Learning online from non-stationary data streams",
+            "venue": "In Proceedings of the IEEE/CVF International Conference on Computer Vision,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M. De Lange",
+                "R. Aljundi",
+                "M. Masana",
+                "S. Parisot",
+                "X. Jia",
+                "A. Leonardis",
+                "G. Slabaugh",
+                "T. Tuytelaars"
+            ],
+            "title": "A continual learning survey: Defying forgetting in classification",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "L. De Raedt",
+                "A. Kimmig"
+            ],
+            "title": "Probabilistic (logic) programming concepts",
+            "venue": "Machine Learning,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "L. De Raedt",
+                "S. Duman\u010di\u0107",
+                "R. Manhaeve",
+                "G. Marra"
+            ],
+            "title": "From statistical relational to neural-symbolic artificial intelligence",
+            "venue": "In Proceedings of the Twenty-Ninth International Conference on International Joint Conferences on Artificial Intelligence,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M. Diligenti",
+                "M. Gori",
+                "M. Maggini",
+                "L. Rigutini"
+            ],
+            "title": "Bridging logic and kernel machines",
+            "venue": "Machine learning,",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "I. Donadello",
+                "L. Serafini",
+                "A.D. Garcez"
+            ],
+            "title": "Logic tensor networks for semantic image interpretation",
+            "venue": "In IJCAI,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M. Fischer",
+                "M. Balunovic",
+                "D. Drachsler-Cohen",
+                "T. Gehr",
+                "C. Zhang",
+                "M. Vechev"
+            ],
+            "title": "Dl2: Training and querying neural networks with logic",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "F. Giannini",
+                "M. Diligenti",
+                "M. Gori",
+                "M. Maggini"
+            ],
+            "title": "On a convex logic fragment for learning and reasoning",
+            "venue": "IEEE Transactions on Fuzzy Systems,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "E. Giunchiglia",
+                "T. Lukasiewicz"
+            ],
+            "title": "Coherent hierarchical multi-label classification networks",
+            "venue": "NeurIPS,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "T.R. Gruber"
+            ],
+            "title": "Toward principles for the design of ontologies used for knowledge sharing",
+            "venue": "International journal of human-computer studies,",
+            "year": 1995
+        },
+        {
+            "authors": [
+                "N. Hoernle",
+                "R.M. Karampatsis",
+                "V. Belle",
+                "K. Gal"
+            ],
+            "title": "Multiplexnet: Towards fully satisfied logical constraints in neural networks",
+            "venue": "In AAAI,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S. Hou",
+                "X. Pan",
+                "C.C. Loy",
+                "Z. Wang",
+                "D. Lin"
+            ],
+            "title": "Learning a unified classifier incrementally via rebalancing",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A.G. Howard",
+                "M. Zhu",
+                "B. Chen",
+                "D. Kalenichenko",
+                "W. Wang",
+                "T. Weyand",
+                "M. Andreetto",
+                "H. Adam"
+            ],
+            "title": "Mobilenets: Efficient convolutional neural networks for mobile vision",
+            "venue": "applications. ArXiv,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J. Huang",
+                "Z. Li",
+                "B. Chen",
+                "K. Samel",
+                "M. Naik",
+                "L. Song",
+                "X. Si"
+            ],
+            "title": "Scallop: From probabilistic deductive databases to scalable differentiable reasoning",
+            "venue": "NeurIPS,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "F. Husz\u00e1r"
+            ],
+            "title": "Note on the quadratic penalties in elastic weight consolidation",
+            "venue": "Proceedings of the National Academy of Sciences,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Johnson",
+                "B. Hariharan",
+                "L. Van Der Maaten",
+                "L. Fei-Fei",
+                "C. Lawrence Zitnick",
+                "R. Girshick"
+            ],
+            "title": "Clevr: A diagnostic dataset for compositional language and elementary visual reasoning",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "S. Kambhampati",
+                "S. Sreedharan",
+                "M. Verma",
+                "Y. Zha",
+                "L. Guan"
+            ],
+            "title": "Symbols as a Lingua Franca for Bridging Human-AI Chasm for Explainable and Advisable AI Systems",
+            "venue": "In Proceedings of Thirty-Sixth AAAI Conference on Artificial Intelligence (AAAI),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D.P. Kingma",
+                "J. Ba"
+            ],
+            "title": "Adam: A method for stochastic optimization",
+            "venue": "3rd International Conference on Learning Representations,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "J. Kirkpatrick",
+                "R. Pascanu",
+                "N. Rabinowitz",
+                "J. Veness",
+                "G. Desjardins",
+                "A.A. Rusu",
+                "K. Milan",
+                "J. Quan",
+                "T. Ramalho",
+                "A Grabska-Barwinska"
+            ],
+            "title": "Overcoming catastrophic forgetting in neural networks",
+            "venue": "Proceedings of the national academy of sciences,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "P.W. Koh",
+                "T. Nguyen",
+                "Y.S. Tang",
+                "S. Mussmann",
+                "E. Pierson",
+                "B. Kim",
+                "P. Liang"
+            ],
+            "title": "Concept bottleneck models",
+            "venue": "In ICML,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S. Lapuschkin",
+                "S. W\u00e4ldchen",
+                "A. Binder",
+                "G. Montavon",
+                "W. Samek",
+                "M\u00fcller",
+                "K.-R"
+            ],
+            "title": "Unmasking clever hans predictors and assessing what machines really learn",
+            "venue": "Nature communications,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Y. LeCun"
+            ],
+            "title": "The mnist database of handwritten digits. http://yann",
+            "venue": "lecun. com/exdb/mnist/,",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "Z. Li",
+                "D. Hoiem"
+            ],
+            "title": "Learning without forgetting",
+            "venue": "IEEE transactions on pattern analysis and machine intelligence,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Z. Li",
+                "A. S\u00f8gaard"
+            ],
+            "title": "Qlevr: A diagnostic dataset for quantificational language and elementary visual reasoning",
+            "venue": "In Findings of NAACL,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "F. Locatello",
+                "S. Bauer",
+                "M. Lucic",
+                "G. Raetsch",
+                "S. Gelly",
+                "B. Sch\u00f6lkopf",
+                "O. Bachem"
+            ],
+            "title": "Challenging common assumptions in the unsupervised learning of disentangled",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "F. Locatello",
+                "M. Tschannen",
+                "S. Bauer",
+                "G. R\u00e4tsch",
+                "B. Sch\u00f6lkopf",
+                "O. Bachem"
+            ],
+            "title": "Disentangling factors of variations using few labels",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "R. Manhaeve",
+                "G. Marra",
+                "L. De Raedt"
+            ],
+            "title": "Approximate inference for neural probabilistic logic programming",
+            "venue": "In KR,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "E. Marconato",
+                "G. Bontempo",
+                "S. Teso",
+                "E. Ficarra",
+                "S. Calderara",
+                "A. Passerini"
+            ],
+            "title": "Catastrophic forgetting in continual concept bottleneck models",
+            "venue": "In Image Analysis and Processing. ICIAP 2022 Workshops: ICIAP International Workshops,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "E. Marconato",
+                "A. Passerini",
+                "S. Teso"
+            ],
+            "title": "Glancenets: Interpretabile, leak-proof concept-based models",
+            "venue": "NeurIPS,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "E. Misino",
+                "G. Marra",
+                "E. Sansone"
+            ],
+            "title": "VAEL: Bridging Variational Autoencoders and Probabilistic Logic Programming",
+            "venue": "NeurIPS,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "G. Parascandolo",
+                "A. Neitz",
+                "A. ORVIETO",
+                "L. Gresele",
+                "B. Sch\u00f6lkopf"
+            ],
+            "title": "Learning explanations that are hard to vary",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "G.I. Parisi",
+                "R. Kemker",
+                "J.L. Part",
+                "C. Kanan",
+                "S. Wermter"
+            ],
+            "title": "Continual lifelong learning with neural networks: A review",
+            "venue": "Neural Networks,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Paszke",
+                "S. Gross",
+                "F. Massa",
+                "A. Lerer",
+                "J. Bradbury",
+                "G. Chanan",
+                "T. Killeen",
+                "Z. Lin",
+                "N. Gimelshein",
+                "L Antiga"
+            ],
+            "title": "Pytorch: An imperative style, high-performance deep learning library",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "H. Qu",
+                "H. Rahmani",
+                "L. Xu",
+                "B. Williams",
+                "J. Liu"
+            ],
+            "title": "Recent advances of continual learning in computer vision: An overview",
+            "venue": "arXiv preprint arXiv:2109.11369,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Rebuffi",
+                "S.-A",
+                "A. Kolesnikov",
+                "G. Sperl",
+                "C.H. Lampert"
+            ],
+            "title": "icarl: Incremental classifier and representation learning",
+            "venue": "In Proceedings of the IEEE conference on Computer Vision and Pattern Recognition,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "S. Ren",
+                "K. He",
+                "R. Girshick",
+                "J. Sun"
+            ],
+            "title": "Faster r-cnn: Towards real-time object detection with region proposal networks",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "M. Riemer",
+                "I. Cases",
+                "R. Ajemian",
+                "M. Liu",
+                "I. Rish",
+                "Y. Tu",
+                "G. Tesauro"
+            ],
+            "title": "Learning to learn without forgetting by maximizing transfer and minimizing interference",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Robins"
+            ],
+            "title": "Catastrophic forgetting, rehearsal and pseudorehearsal",
+            "venue": "Connection Science,",
+            "year": 1995
+        },
+        {
+            "authors": [
+                "A.S. Ross",
+                "M.C. Hughes",
+                "F. Doshi-Velez"
+            ],
+            "title": "Right for the right reasons: training differentiable models by constraining their explanations",
+            "venue": "In Proceedings of the 26th International Joint Conference on Artificial Intelligence,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "B. Rost",
+                "J. Liu",
+                "R. Nair",
+                "K.O. Wrzeszczynski",
+                "Y. Ofran"
+            ],
+            "title": "Automatic prediction of protein function",
+            "venue": "Cellular and Molecular Life Sciences CMLS,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "W. Stammer",
+                "P. Schramowski",
+                "K. Kersting"
+            ],
+            "title": "Right for the Right Concept: Revising Neuro-Symbolic Concepts by Interacting with their Explanations",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Teso",
+                "\u00d6. Alkan",
+                "W. Stammer",
+                "E. Daly"
+            ],
+            "title": "Leveraging explanations in interactive machine learning: An overview",
+            "venue": "arXiv preprint arXiv:2207.14526,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "G.M. van de Ven",
+                "T. Tuytelaars",
+                "A.S. Tolias"
+            ],
+            "title": "Three types of incremental learning",
+            "venue": "Nature Machine Intelligence,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "E. van Krieken",
+                "E. Acar",
+                "F. van Harmelen"
+            ],
+            "title": "Analyzing differentiable fuzzy logic operators",
+            "venue": "Artificial Intelligence,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "E. van Krieken",
+                "T. Thanapalasingam",
+                "J.M. Tomczak",
+                "F. van Harmelen",
+                "Teije",
+                "A. t"
+            ],
+            "title": "A-nesi: A scalable approximate method for probabilistic neurosymbolic inference",
+            "venue": "arXiv preprint arXiv:2212.12393,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "A. Vergari",
+                "Y. Choi",
+                "A. Liu",
+                "S. Teso",
+                "G. Van den Broeck"
+            ],
+            "title": "A compositional atlas of tractable circuit operations for probabilistic inference",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J.S. Vitter"
+            ],
+            "title": "Random sampling with a reservoir",
+            "venue": "ACM Transactions on Mathematical Software (TOMS),",
+            "year": 1985
+        },
+        {
+            "authors": [
+                "T. Winters",
+                "G. Marra",
+                "R. Manhaeve",
+                "L. De Raedt"
+            ],
+            "title": "DeepStochLog: Neural Stochastic Logic Programming",
+            "venue": "In AAAI,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Y. Wu",
+                "Y. Chen",
+                "L. Wang",
+                "Y. Ye",
+                "Z. Liu",
+                "Y. Guo",
+                "Y. Fu"
+            ],
+            "title": "Large scale incremental learning",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J. Xu",
+                "Z. Zhang",
+                "T. Friedman",
+                "Y. Liang",
+                "G. Broeck"
+            ],
+            "title": "A semantic loss function for deep learning with symbolic knowledge",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Y. Xu",
+                "X. Yang",
+                "L. Gong",
+                "Lin",
+                "H.-C",
+                "Wu",
+                "T.-Y",
+                "Y. Li",
+                "N. Vasconcelos"
+            ],
+            "title": "Explainable object-induced action decision for autonomous vehicles",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "F. Zenke",
+                "B. Poole",
+                "S. Ganguli"
+            ],
+            "title": "Continual learning through synaptic intelligence, 2017",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Donadello"
+            ],
+            "title": "2017), because this transformation usually preserves existing optima of the label",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "C. code"
+            ],
+            "title": "NeSy-CL Benchmarks In this section, we provide a more detailed description of the benchmarks introduced in Section 5. C.1. MNAdd-Seq We derived MNAdd-Seq from the MNIST-Addition data set of Manhaeve et al",
+            "year": 2018
+        }
+    ],
+    "sections": [
+        {
+            "text": "We introduce Neuro-Symbolic Continual Learning, where a model has to solve a sequence of neuro-symbolic tasks, that is, it has to map subsymbolic inputs to high-level concepts and compute predictions by reasoning consistently with prior knowledge. Our key observation is that neuro-symbolic tasks, although different, often share concepts whose semantics remains stable over time. Traditional approaches fall short: existing continual strategies ignore knowledge altogether, while stock neuro-symbolic architectures suffer from catastrophic forgetting. We show that leveraging prior knowledge by combining neurosymbolic architectures with continual strategies does help avoid catastrophic forgetting, but also that doing so can yield models affected by reasoning shortcuts. These undermine the semantics of the acquired concepts, even when detailed prior knowledge is provided upfront and inference is exact, and in turn continual performance. To overcome these issues, we introduce COOL, a COncept-level cOntinual Learning strategy tailored for neuro-symbolic continual problems that acquires high-quality concepts and remembers them over time. Our experiments on three novel benchmarks highlights how COOL attains sustained high performance on neuro-symbolic continual learning tasks in which other strategies fail.1\n*Equal contribution 1University of Pisa, Italy 2DISI, University of Trento, Italy 3University of Modena and Reggio Emilia, Italy 4CIMeC, University of Trento, Italy. Correspondence to: Emanuele Marconato <emanuele.marconato@unitn.it>.\nProceedings of the 40 th International Conference on Machine Learning, Honolulu, Hawaii, USA. PMLR 202, 2023. Copyright 2023 by the author(s).\n1The data and code are available at https://github.com/emamarconato/NeSy-CL"
+        },
+        {
+            "heading": "1. Introduction",
+            "text": "We initiate the study of Neuro-Symbolic Continual Learning (NeSy-CL), in which the goal is to solve a sequence of neuro-symbolic tasks. As is common in neuro-symbolic (NeSy) prediction (Manhaeve et al., 2018; Xu et al., 2018; Giunchiglia & Lukasiewicz, 2020; Hoernle et al., 2022; Ahmed et al., 2022a), the machine is provided prior knowledge relating one or more target labels to symbolic, highlevel concepts extracted from sub-symbolic data, and has to compute a prediction by reasoning over said concepts. The central challenge of Nesy-CL is that the data distribution and the knowledge may vary across tasks. E.g., in medical diagnosis knowledge may encode known relationships between possible symptoms and conditions, while different tasks are characterized by different distributions of X-ray scans, symptoms and conditions. The goal, as in continual learning (CL) (Parisi et al., 2019), is to obtain a model that attains high accuracy on new tasks without forgetting what it has already learned under a limited storage budget.\nExisting approaches are insufficient for NeSy-CL: neurosymbolic models are designed for offline learning and as such suffer from catastrophic forgetting (Parisi et al., 2019), while continual learning strategies are designed for neural networks that neglect prior knowledge, preventing applications to tasks where compliance with regulations is key, e.g., safety critical tasks (Ahmed et al., 2022a; Hoernle et al., 2022). It is tempting to tackle NeSy-CL by pairing a SotA neuro-symbolic architecture, such as DeepProbLog (Manhaeve et al., 2018), with a proven rehearsal or distillation strategy, for instance dark experience replay (Buzzega et al., 2020). This yields immediate benefits, in the sense that prior knowledge makes the model more robust to catastrophic forgetting, as we will show. However, we show also that it is flawed, because it cannot prevent the model from acquiring reasoning shortcuts (defined in Section 3), through which it attains high task accuracy by acquiring unintended concepts with task-specific semantics, as illustrated in Figure 1. In turn, reasoning shortcuts entail poor cross-task transfer.\nOur key observation is that, even though neuro-symbolic tasks may differ in terms of knowledge and distribution, the semantics of the concepts they rely on must remain stable\nar X\niv :2\n30 2.\n01 24\n2v 2\n[ cs\n.L G\n] 1\n9 D\nec 2\n02 3\nover time. For instance, in automated protein annotation inferred signal peptides entail a catalytic function (Rost et al., 2003) regardless of the specific protein under examination, and in vehicle routing presence of pedestrians on the road is sufficient to rule out certain routes (Xu et al., 2020) regardless of location and weather conditions.\nPrompted by this insight, we propose COOL, a simple but effective COncept-level cOntinual Learning strategy, that aims at acquiring high-quality concepts and preserving them across tasks. COOL makes use of a small amount of concept supervision to acquire high-quality concepts and explicitly preserves them with a concept rehearsal strategy, avoiding reasoning shortcuts in all tasks. COOL is applicable to a variety of NeSy architectures, and \u2013 as shown by our experiments with DeepProbLog (Manhaeve et al., 2018) and Concept-based Models (Koh et al., 2020) \u2013 easily outperforms state-of-the-art continual strategies on three novel, challenging NeSy-CL problems, achieving better concept quality and predictive accuracy on past and OOD tasks.\nContributions. Summarizing, we:\n1. Introduce neuro-symbolic continual learning as a novel and challenging machine learning problem.\n2. We show that knowledge readily improves forgetting in some scenarios, but also that it is insufficient to prevent reasoning shortcuts \u2013 which worsen forgetting and compromise transfer to new tasks \u2013 in others.\n3. Propose new NeSy-CL benchmarks for evaluating continual performance with and without reasoning shortcuts.\n4. Introduce COOL, a novel continual strategy that supports identifying concepts with the intended semantics and preserves them across tasks.\n5. Show empirically that COOL outperforms state-of-the-art continual strategies on these challenging benchmarks."
+        },
+        {
+            "heading": "2. Neuro-Symbolic Continual Learning",
+            "text": "Notation. Throughout, we indicate scalar constants x in lower-case, random variables X in upper case, and ordered sets of constants x and random variables X in bold typeface. The symbol [n] stands for the set {1, . . . , n} and x |= K indicates that x satisfies a logical formula K. We say that a distribution p(A | B;K) is consistent with K, written p |= K, if it holds that p(a | b;K) > 0 implies (a,b) |= K, i.e., if p associates zero mass to all states that violate K."
+        },
+        {
+            "heading": "2.1. Problem Statement",
+            "text": "We are concerned with solving a sequence of neuro-symbolic prediction tasks, each requiring to learn a classifier mapping a (partially) sub-symbolic input x \u2208 Rd to n \u2265 1 labels y \u2208 Nn. What makes them neuro-symbolic is that: (i) The labels y depend entirely on the state of k symbolic concepts c = (c1, . . . , ck)\n\u22a4 capturing high-level aspects of the input x. (ii) The concepts c depend on the sub-symbolic input x in an intricate manner and are best extracted using deep learning techniques. (iii) The way in which the labels y depend on the concepts c is specified by prior knowledge K, necessitating reasoning during inference.\nWe make the natural assumption that the semantics of the concepts appearing in the various tasks remain constant over time. This assumption lies at the heart of knowledge representation and ontology design, where concepts serve as a lingua franca for the exchange and reuse of knowledge across application boundaries (Gruber, 1995) and with human stakeholders (Kambhampati et al., 2022).\nFormally, each task t \u2208 N is defined by a data generating distribution p(t)(X,C,Y;K(t)) that factorizes as:\np(t)(Y | C;K(t)) \u00b7 p(C | X) \u00b7 p(t)(X) (1)\nHere, K(t) denotes the knowledge relevant to the t-th task.2 As customary in NeSy, we assume the knowledge to cor-\n2The knowledge might depend also on discrete variables in X; we suppress this dependency in the notation for readability.\nrectly describe the ground-truth generative process and that, therefore, the label distributions are consistent with their respective prior knowledge, i.e., p(t)(Y | X;K(t)) |= K(t) for all t. The key feature of Equation (1) is that p(C | X) does not depend on t, capturing our assumption that concept semantics are stable. For instance, if Cdog represents the notion of \u201cdog\u201d, then p(Cdog | X) only depends on whether an image x in fact depicts a dog, regardless of context, style, likelihood of observing a dog, and role of dogs in determining the label. See Appendix A.3 for an in-depth discussion. Critically, the distribution of observed inputs, concepts and labels, and the knowledge are allowed to differ between tasks. This means that, e.g., known concepts may stop occurring, play different roles in K(t+1) than they did in K(t), and entirely new concepts may appear.\nHandling catastrophic forgetting. At step t, the machine obtains a task T (t) = (D(t),K(t)) consisting of a data set D(t), sampled i.i.d. according to Equation (1), and knowledge K(t). The goal is to find parameters \u03b8 that achieve low average risk over all tasks observed so far, defined as:\nL(\u03b8, T 1:t) = 1 t \u2211 s\u2208[t] L(\u03b8, T (s)) (2)\n= 1 t L(\u03b8, T (t)) + t\u2212 1 t L(\u03b8, T 1:(t\u22121)) (3)\nwhere T 1:t = {T (1), . . . , T (t)} is the collection of all tasks observed so far, L(\u03b8, T ) := 1|D| \u2211 (x,y)\u2208D \u2113(\u03b8, (x,y);K), and \u2113 is a loss function over y.\nAs in regular continual learning, we assume storage is insufficient to hold data from all tasks, meaning that L(\u03b8, T 1:(t\u22121)) cannot be evaluated exactly. Ignoring this term, as done by offline approaches, leads to catastrophic forgetting: by focusing on the loss of the current task, models tend to forget the information necessary to solve the previous tasks. CL algorithms mitigate forgetting using strategies like rehearsal (Buzzega et al., 2020; Parisi et al., 2019; De Lange et al., 2021; Boschini et al., 2022; Rebuffi et al., 2017) (i.e., replaying few examples of previous tasks), regularization (Husza\u0301r, 2018; Li & Hoiem, 2017) (i.e., slowing down parameter shift through additional terms in the loss function), or architectural modifications (Rusu et al., 2016) (i.e., freezing and adding new parameters at each task). See Section 6 for an overview.\nImportantly, all these strategies focus on optimizing the accuracy on the labels only. This is sensible in CL but, as shown in Section 3, insufficient in NeSy-CL."
+        },
+        {
+            "heading": "2.2. DeepProbLog",
+            "text": "DeepProbLog (Manhaeve et al., 2018) is a state-of-the-art model ideally suited to solve tasks of the form in Equation (1). It decomposes prediction into two steps, cf. Fig-\nure 1 (left). At the lower level, it implements each concept as a Boolean or categorical random variable Cj , whose distribution p\u03b8(Cj | x) is flexibly parameterized by a neural network nnj(x; \u03b8). This implies that concepts are mutually independent given the input, i.e., p\u03b8(C | x) = \u220f j\u2208[k] p\u03b8(Cj | x). At the upper level, it models the distribution of labels conditioned on concepts as a uniform distribution over the support of K, and specifically as:3\nuK(y | c) = 1\nZ(c;K) \u00b7 1{(c,y) |= K} (4)\nwhere Z(c;K) = \u2211\ny 1{(c,y) |= K} is a normalization constant. The overall label distribution is obtained by marginalizing over C:\np\u03b8(y | x;K) = \u2211 c uK(y | c) \u00b7 \u220f j\u2208[k] p\u03b8(cj | x) (5)\nSince the indicator function in Equation (4) evaluates to zero for all values of c that violate K, the label distribution in Equation (5) is by construction consistent with K.\nExample 1. MNIST-Addition (Manhaeve et al., 2018) is a prototypical neuro-symbolic task that requires learning a mapping from pairs of MNIST digits x = (x1,x2) to their sum Y , e.g., from x = ( , ) to y = 5. It can be readily modelled in DeepProbLog using two concepts C1 and C2 ranging in {0, . . . , 9}, each predicted by a convolutional network nn(xj), and a constraint K = (C1 + C2 = Y ).\nGiven a task T = (D,K), the parameters \u03b8 are usually learned by maximizing the log-likelihood L(\u03b8,D) := 1 |D| \u2211\n(x,y)\u2208D log p\u03b8(y | x;K) via stochastic gradient descent. Computing the (gradient of the) likelihood p\u03b8(y | x) and the most likely prediction y\u0302 \u2208 argmaxy p\u03b8(y | x;K) requires to evaluate Z, which is intractable in general. To make inference practical, DeepProbLog exploits knowledge compilation (Darwiche & Marquis, 2002) to convert the distribution uK into a probabilistic circuit. Once in this format, the above operations take time linear in the size of the circuit (Choi et al., 2020; Vergari et al., 2021).\nIn the remainder of the paper, we focus on DeepProbLog as it offers a sound probabilistic architecture and exact inference. Our results, however, do transfer to many other neuro-symbolic architectures, as discussed in Section 6."
+        },
+        {
+            "heading": "3. Knowledge and Reasoning Shortcuts",
+            "text": "All neuro-symbolic architectures, including DeepProbLog, are designed for offline settings, and as such they easily fall prey of catastrophic forgetting when applied to NeSy-CL problems. This issue is illustrated by the following example and demonstrated empirically in Section 5.\n3Non-uniform distributions consistent with the knowledge can also be modelled, as done for instance by Ahmed et al. (2022a).\nExample 2. We introduce MNAdd-Seq, a continual extension of MNIST-Addition in which tasks differ in what digits are observed. Specifically, each task t = 0, . . . , 8 consists of all pairs of digits x = (x1,x2) whose sum is either 2t or 2t+1. By construction, sums above 9 cannot be obtained by adding smaller digits, so these no longer occur in later tasks. Since DeepProbLog maximizes the likelihood of the current task, it quickly forgets small digits at t \u2265 5 and can no longer classify sums involving them correctly."
+        },
+        {
+            "heading": "3.1. Knowledge Helps Remembering . . .",
+            "text": "A natural first step toward solving NeSy-CL is to bundle a NeSy predictor \u2013 say, DeepProbLog \u2013 with any state-ofthe-art CL strategy. Focusing on experience replay, doing so amounts to storing a handful of well chosen labeled (or predicted) examples (x,y) from past tasks 1, . . . , t\u22121, and replaying them when fitting DeepProbLog on the current task t together with the corresponding prior knowledge Kt.4\nDoing so immediately brings a number of benefits. First and foremost, the knowledge encodes the valid, stable relationship between the concepts and the labels to be prediction. This implies that predicted concepts can be always correctly mapped to a corresponding label, and that this inference step is immune from forgetting. This is especially significant considering that the top layers of neural networks are those most affected by catastrophic forgetting (Wu et al., 2019). This effect is clearly visible in our experiments, cf. Section 5.\nConversely, prior knowledge effectively reduces the space of candidate concepts, providing further guidance to the model. If it reduces the space to only those having the intended semantics, then this simple setup can be very effective at tackling NeSy-CL problems."
+        },
+        {
+            "heading": "3.2. . . . But Does Not Prevent Reasoning Shortcuts",
+            "text": "In general, however, this setup is insufficient. The core issue is that knowledge might not be enough to identify the right concept distribution p(C | X) using label annotations alone, in the sense that \u2013 depending on how the knowledge and training data are structured \u2013 it may be possible (in both offline and continual settings) to correctly classify all training examples even using concepts with unintended semantics. We refer to these situations as reasoning shortcuts.\nThis intuition is formalized in Theorem 1. Here, we write \u0398 to indicate the set of all possible parameters of (the neural networks implementing) p\u03b8(C | X), and \u0398\u2217(K,D) \u2286 \u0398 for the parameters that maximize the log-likelihood L(\u03b8,D). Also, K[V/v] is the knowledge obtained by substituting all\n4The only non-trivial aspect is that, in addition to the replay buffer, we also has to store the past knowledge, so as to ensure be able to match the updated concepts with the past labels.\noccurrences of variables V with constants v. For instance, in MNIST-Addition K[Y/2] amounts to C1 + C2 = 2. Theorem 1. A model with parameters \u03b8 attains maximal likelihood, i.e., \u03b8 \u2208 \u0398\u2217(K,D), if and only if, for all (x,y) \u2208 D, it holds that p\u03b8(C | x) |= K[Y/y].\nAll proofs can be found in Appendix A. Theorem 1 states that, as long as the concept distribution output by the learned neural network satisfies the knowledge for each training example, the log-likelihood is maximal.5 The ground-truth concept distribution p(C | X) is a possible solution, but it is not necessarily the only one. In this case, fitting DeepProbLog \u2013 and indeed any NeSy approach that optimizes for label accuracy only \u2013 does not guarantee that the learned concepts have the correct semantics. To see this, consider the following example. Example 3. Consider MNIST-Addition and take a subset D including only pairs of examples of four possible sums:\n+ = 6, + = 10, + = 10, and + = 12. Then, there exist many concept distributions that satisfy the knowledge on all examples, including:\n7\u2192 0, 7\u2192 2, 7\u2192 4, 7\u2192 6, 7\u2192 8 7\u2192 5, 7\u2192 7, 7\u2192 9, 7\u2192 1, 7\u2192 3\nwhere the remaining concepts are allocated arbitrarily and x 7\u2192 c is a shorthand for p(C = c | x) = 1{C = c}. Only the first distribution has the intended semantics, whereas the second one is a reasoning shortcut. We remark that DeepProbLog does acquire this shortcut in practice, as illustrated by our experiments. Appendix D explains how shortcuts emerge in the data sets used in our experiments.\nNotice that the Theorem applies to both offline learning (i.e., D is fixed) and NeSy-CL (i.e., D indicates the training set of any given task). Yet, reasoning shortcuts are especially impactful in the latter. This is exemplified in Figure 1 (right). Here, DeepProbLog has learned high-quality concepts to solve the first task, but quickly forgets them when solving the second task, precisely because it falls pray of a reasoning shortcut that achieves high training and rehearsal accuracy on both tasks by satisfying the knowledge using concepts with unintended semantics. We provide additional concrete examples in Appendix D. In turn, reasoning shortcuts can dramatically affect forgetting and performance on future and OOD NeSy tasks, as shown by our experiments."
+        },
+        {
+            "heading": "4. Addressing NeSy-CL with COOL",
+            "text": "To this end, we introduce COOL, a COncept-level cOntinual Learning that acquires concepts with the intended semantics and preserves them over time, attaining sustained high\n5This theorem essentially shows that, from the neural network\u2019s perspective, the reasoning layer of DeepProbLog has the same effect as the Semantic Loss (Xu et al., 2018).\nperformance. Formally, COOL is designed to satisfy two desiderata: (D1) p\u03b8(C | X) should quickly approximate p(C | X), and (D2) p\u03b8(C | X) should remain stable across tasks. D2 is straightforward, however we stress that it is only meaningful if D1 also holds: unless the learned concepts are high-quality, there is little benefit in remembering them.\nIn order to comply with D1, COOL makes use of a small number of densely annotated examples to quickly identify high-quality concepts, which \u2013 as we have shown \u2013 cannot always be guaranteed using knowledge alone. In practice, an average cross-entropy is added to the loss of these examples. To cope with D2, COOL implements a novel concept rehearsal strategy that stabilizes p\u03b8(C | X) across tasks. This is motivated by the fact that concept stability helps to upper bound the average risk. Specifically, Theorem 2. Consider tasks T 1:t. If the current model \u03b8 and the past one \u03b8(t\u22121) assign non-zero likelihood to all examples in D1:t, there exists a finite constant \u03b3, depending only on the model architecture, knowledge and data, such that the average risk in Equation (3) is upper bounded by:\n1 t L(\u03b8,D(t)) + t\u2212 1 t\n[ L(\u03b8(t\u22121),D1:(t\u22121)) (6)\n+ \u03b3 \u2211 s\u2264t \u2211 (x,y)\u2208D(s) \u2225p\u03b8(C | x)\u2212 p\u03b8(t\u22121)(C | x)\u22251 ]\nIn words, this means that if the past model \u03b8(t\u22121) performs well on all past tasks (i.e., the middle term in Equation (6) is small), a new model that performs well on the current task (the first term is small) and whose concept distribution is close to that of the old model (the last term is small), also performs well on past tasks (the average risk in Equation (3) is small). Critically, this results holds regardless of how the prior knowledge K1:t of the various task is chosen.\nCOOL implement this requirement by combining the original training loss with an extra penalty LCOOL, defined as:\nLCOOL := 1 |M| \u2211\n(x,q\u0303c,y)\u2208M\n[ \u03b1 \u00b7 KL ( p\u03b8(C | x) \u2225 q\u0303c) (7)\n\u2212 \u03b2 \u00b7 log p\u03b8(Y = y | x;K(t)) ]\nHere, M denotes the mini-batch of examples extracted from the replay buffer, \u03b1 denotes the scalar weight associated to the concept-reharsal strategy, and \u03b2 the weight of the replay strategy on y. The KL term is evaluated between the predicted concept distribution and the stored one q\u0303c = p\u03b8(t\u22121)(C | x). Notice that, by Pinsker\u2019s inequality, the KL upper bounds the (square of the) L1 distance, meaning that COOL indirectly optimizes the bound in Equation (6)."
+        },
+        {
+            "heading": "4.1. Benefits and Limitations",
+            "text": "COOL is explicitly designed to acquire high-quality concepts and retain them across tasks by combining knowledge,\nconcept rehearsal, and a modicum of concept supervision. This substantially improves performance on past, future, and OOD tasks sharing these concepts, as demonstrated in Section 5. COOL works even if the knowledge K(t) changes across tasks and new concepts appear over time: these can be encoded as additional neural predicates in DeepProbLog, and COOL will take care of remembering the known concepts while leaving room to learn the new ones.\nOne limitation of COOL is that, in the general case, it requires a handful of densely annotated examples. The same requirement can be found in other settings where concept quality is critical. For instance, concept supervision is key in concept-based models \u2013 which strive to generate conceptlevel explanations for their predictions \u2013 to ensure the acquired concepts are interpretable (Koh et al., 2020; Chen et al., 2020; Marconato et al., 2022b). It is also a prerequisite for guaranteeing that learned representations acquired by general (deep) latent variable models are disentangled, as shown theoretically (Locatello et al., 2019) and empirically (Locatello et al., 2020). We stress that concept supervision is not required if knowledge and data disallow shortcut solutions, as is the case in MNAdd-Seq (see Section 5), although it does help avoiding sub-optimal parameters even in this case. If reasoning shortcuts are possible, however, concept supervision becomes essential, because \u2013 by construction \u2013 knowledge and labels alone are insufficient to pin down the correct semantics, hindering concept quality. Moreover, in many situations, annotating just some concepts is sufficient to rule out reasoning shortcuts."
+        },
+        {
+            "heading": "5. Empirical Evaluation",
+            "text": "We address empirically the following research questions:\nQ1: Does knowledge help to stabilize the continual learning process and reduce the need for supervision?\nQ2: Does COOL help avoid reasoning shortcuts when knowledge alone fails, thus facilitating past and future continual performance?\nQ3: How much concept supervision does COOL need?\nTo answer these questions, we compared COOL against several representative continual strategies on three novel and challenging NeSy-CL benchmarks. Additional results and details on data sets, metrics, and hyperparameters can be found in the Appendices.\nData sets. Existing NeSy and CL benchmarks are designed for offline settings or lack any sort of prior knowledge, respectively. Hence, in order to evaluate COOL, we introduce three novel NeSy-CL benchmarks specifically designed to evaluate impact of knowledge, concept quality and robustness to reasoning shortcuts, briefly described next.\nMNAdd-Seq is the problem introduced in Example 2 and it is designed not to contain reasoning shortcuts. In short, inputs x are pairs of MNIST (LeCun, 1998) digits labeled with their sum y; each digit is mapped to a concept, and K specifies that their sum must match the label. In each task t = 0, . . . , 8 includes only examples with labels y \u2208 {2 \u00b7 t, 2 \u00b7 t+1}, making this problem both label incremental (only two out of 18 possible labels are observed per task) and concept incremental (higher digits only appear in later tasks, while lower digits disappear, see Appendix C). The data set holds 42k training examples, of which we used 8.4k for validation, and 6k test examples.\nMNAdd-Shortcut is a simple two-task version of MNIST-Addition used here to illustrate the impact of reasoning shortcuts. The first task includes only even digits and the second one only odd ones. In the first task we include 4 types of examples: (i) + = 6, (ii)\n+ = 10, (iii) + = 10, and (iv) + = 12. In the second task, we allow all possible sums of odd digits { , , , , }. As shown in Example 3 and further discussed in Appendix D, the four sums in the first task are not sufficient to identify the correct digits, i.e., different shortcuts are possible. This data consists of 13.8k examples, 2.8k of which are reserved for validation and 2k for testing. We also include an additional OOD test set with 4k unseen combinations of all concepts, like sums involving an odd and an even digit, allowing us to probe the efficacy on a plausible future task.\nCLE4EVR is a challenging new concept-incremental NeSyCL benchmark based on CLEVR (Johnson et al., 2017). Inputs x are renderings of two randomly placed 3D objects with several possible shapes, colors, materials, and sizes. The goal is to predict whether the objects have the same color, same shape, both, or neither. The knowledge simply defines the three labels using four (one-hot encoded) concepts encoding shape and color of the two objects. There are 5 tasks. Objects in each task have only two colors out of ten and two shapes out of ten, with no overlap between tasks. Knowledge and labels allow for a large number of reasoning shortcuts, as illustrated in Figure 1 and detailed in Appendix D. To evaluate quality of learned concepts, we also define an OOD test set containing unseen combinations of training objects. Overall, the dataset contains almost 5.5k training data, 500 data for validation and 2.5k data for test.\nMetrics. We evaluate all models using common CL metrics (De Lange et al., 2021), namely class-incremental accuracy (Class-IL) of labels Y and concepts C, and forward transfer of labels (FWT). For MNAdd-Shortcut and CLE4EVR we also measure label and concept accuracy on the OOD test set.\nCompetitors. We compare COOL against the following label-based continual strategies: NAI\u0308VE fine-tunes the old\nmodel on each new task without any continual strategy. RESTART fits a model from scratch for each task, without any continual strategy. RESTART and NAI\u0308VE serve as baselines to quantify the impact of forgetting. LWF: Learning without Forgetting (Li & Hoiem, 2017), a regularization approach that performs knowledge distillation from the past model. EWC: Elastic Weight Consolidation (Kirkpatrick et al., 2017), a regularization approach that avoids drastic updates to important parameters based on the Fisher values of the previous model. ER: Experience Replay (Riemer et al., 2019), a popular rehearsal approach that stores a random selection of past examples and replays them when training on the new task. DER: Dark Experience Replay (Buzzega et al., 2020), a state-of-the-art rehearsal approach similar to ER that stores and distills the logits of the past model. DER++: an improvement of DER that also stores the true label. We do not compare against prototype-based strategies, like iCaRL (Rebuffi et al., 2017), because class prototypes cannot be easily defined in structured representation spaces. We also consider OFFLINE learning over the union of all tasks as an ideal upper bound. COOL is implemented as in Equation (7). Following DER, replay examples are selected with reservoir sampling (Vitter, 1985), an efficient incremental method for random sampling with uniformity guarantees. All hyperparameters were chosen to optimize last-task Class-IL on the validation labels.\nQ1: Knowledge helps, COOL helps even more. We evaluate the impact of knowledge on MNAdd-Seq, where shortcuts are absent. Specifically, we evaluate different continual strategies paired with DeepProbLog (Manhaeve et al., 2018) and Concept-bottleneck Models (CBMs) (Koh et al., 2020). Both architectures extract concepts using a convolutional network, but differ in how they infer the label. DeepProbLog uses a probabilistic-logic layer encoding the\navailable knowledge (see Section 2.2). CBMs aggregate the concepts using a learnable network independent of the knowledge, and serve as a purely neural baseline. Additional architectural choices are reported in Appendix B. The two models were trained for 25 epochs per task, using a fixed buffer size of 1000, but received different amounts of concept supervision: 10% for CBMs, which is enough to learn the intended concepts in the offline setting, and none for DeepProbLog.\nThe offline performance of CBM and DeepProbLog are excellent, achieving around 96% label accuracy and 99% concept accuracy, showing that both are capable of solving the learning task. In the continual setting, however, the gap between the neural and NeSy models widens noticeably. The results are reported in Table 1. Despite DeepProbLog being harder to learn than CBMs (as shown by RESTART and NAI\u0308VE), all replay strategies \u2013 i.e., ER, DER, DER++, and COOL\u2013 perform much better when paired with DeepProbLog than CBMs: remarkably, label Class-IL sees gains close to 50% for DER, and similarly FWT for COOL. This highlights the benefits of knowledge, which apply despite DeepProbLog having access to no concept supervision. The regularization strategies LWF and EWC are not informative, as they struggle to improve on the NAI\u0308VE and RESTART baselines both with and without knowledge.6\nOverall, Table 1 indicates that when reasoning shortcuts are absent, knowledge facilitates identifying better concepts, and thus better predictions. By retaining these concepts, COOL manages to outperform all other competitors on both\n6The only exception is LWF on CBM, which displayed pathological behavior, see Appendix E.\nCBMs and DeepProbLog. The runner-up, DER, keeps up only when knowledge is available and with a substantial margin in terms of FWT (45% vs. 83%). In contrast, even though CBMs can acquire good concepts, this does not always yield good predictions, chiefly because the top layer undergoes forgetting, cf. Section 3.1. Thanks to knowledge, DeepProbLog avoids this issue altogether.\nQ2: COOL avoids reasoning shortcuts. Next, we evaluate the impact of concept quality and rehearsal in MNAdd-Shortcut and CLE4EVR, which are affected by reasoning shortcuts. Given the sub-par performance of CBMs, we focus on DeepProbLog from now on. Also, we restrict our attention to COOL and DER, the runner up in the previous experiment. Results for all other competitors are available in Appendix E. For MNAdd-Shortcut we set a buffer size of 1000 and 100 epochs per task, and to 250 examples and 50 epochs for CLE4EVR.\nThe results in Figure 2 shows that, when no concept supervision is in place, the presence of shortcuts complicates retaining the correct concepts, as displayed by low values of Class-IL (C). This does not impact directly Class-IL (Y) in the case of CLE4EVR, but yields extremely low OOD generalization, around 10% for MNAdd-Shortcut and 25% for CLE4EVR. The effect on increasing concept supervision on DER is only seemingly positive, as label accuracy does improve in both data sets. However, Class-IL on concepts (about 20\u201350%) and OOD accuracy (10%\u201330%) are very poor, despite the supervision. What happens is precisely the issue depicted in Figure 1: the model acquires good concepts for one task, but \u2013 due to reasoning shortcuts and lack of concept rehearsal \u2013 these get corrupted when fit-\nting on the next task. Since COOL retains the high quality concepts identified via supervision, the latter leads to clear improvements in label accuracy, concept accuracy and OOD accuracy for COOL. As a result, COOL improves on DER by about +30% and +60% in terms of Class-IL (C) and +40% and +60% in OOD, in the two data sets respectively.\nWe stress that label-based strategies inevitably fall for reasoning shortcuts even if concept supervision is provided. This is clearly shown by the concept confusion matrices reported in Figure 2 (right). Notice that, out of all strategies, only COOL manages to prevent shortcuts. Further details are available in Appendix E.\nQ3: COOL requires minimal concept supervision. Figure 2 shows that COOL identifies high-quality concepts when given dense annotations for only 1% of the training set. This translates to about 30 examples per task in MNAdd-Shortcut, and to only 12 in CLE4EVR. Increasing concept supervision to 10% improves Class-IL (C) by 3% and shrinks its variance, but 1% is enough to substantially outperform DER in our tests."
+        },
+        {
+            "heading": "6. Related Work",
+            "text": "Neuro-symbolic integration. NeSy encompasses a diverse family of methods integrating learning and reasoning (De Raedt et al., 2021). Here, we focus on approaches for encouraging neural networks to output structured predictions consistent with prior knowledge.The two main strategies introduce an additional loss penalizing inconsistent predictions (Xu et al., 2018; Fischer et al., 2019; Ahmed et al., 2022b) or a top reasoning layer (Manhaeve et al., 2018; Giunchiglia & Lukasiewicz, 2020; Hoernle et al., 2022; Ahmed et al., 2022a). Since the former cannot guarantee that the model outputs consistent predictions, we focus on the latter. In either case, end-to-end training requires to differentiate through the knowledge. One option is to soften the knowledge using fuzzy logic (Diligenti et al., 2012; Donadello et al., 2017), but doing so can introduce semantic and learning artifacts (Giannini et al., 2018; van Krieken et al., 2022a). An alternative is to cast reasoning in terms of probabilistic logics (De Raedt & Kimmig, 2015), which preserves semantics and allows for sound inference and learning. DeepProbLog is just an example of Nesy strategies (Manhaeve et al., 2021; Huang et al., 2021; Winters et al., 2022; Ahmed et al., 2022a; van Krieken et al., 2022b). All NeSy approaches are offline and suffer from catastrophic forgetting, and existing continual strategies do not protect them from reasoning shortcuts, as shown in Section 5. Since these depend only on the latent nature of concepts, they affect probabilistic-logic and fuzzy logic architectures alike. COOL applies to all these, cf. Appendix A.4.\nContinual Learning. CL algorithms attempt to pre-\nserve model plasticity while mitigating catastrophic forgetting (Robins, 1995) using a variety of techniques (van de Ven et al., 2022; Qu et al., 2021). A first group of strategies, like Experience Replay (Riemer et al., 2019) and ER-ACE (Caccia et al., 2022), store and rehearse a limited amount of examples from previous tasks. Doing so ignores additional \u201cdark knowledge\u201d learned by the past model, so techniques like DER (Buzzega et al., 2020), DER++, and others (Rebuffi et al., 2017; Li & Hoiem, 2017; Castro et al., 2018; Hou et al., 2019), drop rehearsal in favor of distillation. COOL follows the same strategy. Popular alternatives include architectural approaches (Rusu et al., 2016), which freeze or add model parameters as needed, and regularization strategies (De Lange & Tuytelaars, 2021; Kirkpatrick et al., 2017; Aljundi et al., 2018; Zenke et al., 2017). These introduce extra penalties in the loss function to discourage changing parameters essential for discriminating classes, but can struggle with complex data (Aljundi et al., 2019). To the best of our knowledge, CL has only been tackled in flat prediction settings (e.g., classification), and existing strategies focus on preserving label accuracy only. The only work on forgetting in CBMs is (Marconato et al., 2022a), which however ignores knowledge altogether.\nReasoning shortcuts. In machine learning, \u201cshortcuts\u201d refer to models that exploit spurious correlations between inputs and annotations to achieve high training accuracy (Ross et al., 2017; Lapuschkin et al., 2019). Proposed solutions include dense annotations (Ross et al., 2017), out-of-domain data (Parascandolo et al., 2020), and interaction with annotators (Teso et al., 2022). Stammer et al. (2021) have investigated shortcuts in NeSy and proposed to fix them using knowledge, under the assumption that concepts are high-quality. We make no such assumption. Our work is the first to investigate reasoning shortcuts that knowledge cannot always prevent and their preminence in NeSy-CL."
+        },
+        {
+            "heading": "7. Conclusion",
+            "text": "We initiated the study of Neuro-Symbolic Continual Learning and showed that knowledge, although useful, can be insufficient to prevent acquiring reasoning shortcuts that compromise concept semantics and cross-task transfer. Our approach, COOL, acquires and preserves high-quality concepts, attaining better concepts and performance than existing CL strategies in three new NeSy-CL benchmarks."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "We acknowledge the support of the MUR PNRR project FAIR - Future AI Research (PE00000013) funded by the NextGenerationEU. The research of AP and ST was partially supported by TAILOR, a project funded by EU Horizon 2020 research and innovation program under GA No\n952215. We acknowledge the CINECA award under the ISCRA initiative, for the availability of high performance computing resources and support. The research of SC was partially supported by Italian Ministerial grant PRIN 2020 \u201cLEGO.AI: LEarning the Geometry of knOwledge in AI systems\u201d, n. 2020TA3K9N. The research of EF was partially supported by the European Union\u2019s Horizon 2020 research and innovation program DECIDER under Grant Agreement 965193. We acknowledge Angelo Porrello for his useful discussion with us."
+        },
+        {
+            "heading": "A. Proofs",
+            "text": ""
+        },
+        {
+            "heading": "A.1. Proof of Theorem 1",
+            "text": "Taking Equation (5) as reference, the log-likelihood of D can be rewritten as:\u2211 (x,y)\u2208D log p\u03b8(y | x;K) = \u2211 (x,y)\u2208D log \u27e8uK(y | \u00b7), p\u03b8(\u00b7 | x)\u27e9 (8)\nHere, the inner product runs over all possible values of c. To see what the optima of this quantity look like, fix a single example (x,y) \u2208 D and let Cy be the set of values c that satisfy the knowledge K[Y/y] and Cy\u0304 be those that violate the knowledge. The likelihood of (x,y) amounts to:\n\u27e8uK(y | \u00b7), p\u03b8(\u00b7 | x)\u27e9 = \u2211 c\u2208Cy uK(y | c)p\u03b8(c | x) + \u2211 c\u2208Cy\u0304 uK(y | c)\ufe38 \ufe37\ufe37 \ufe38 =0 p\u03b8(c | x) (9)\nThe inner product is maximized whenever p\u03b8(C | x) allocates all probability mass to values c that satisfy K[Y/y], because the remaining ones do not contribute anything to the likelihood. Hence, in order to maximize Equation (8) it is sufficient that, for every (x,y) \u2208 D, p\u03b8(C | x) assigns zero probability to all concept configurations c that are ruled out by the knowledge K[Y/y].\n\u25a1\nRemarks: This result essentially states that DeepProbLog\u2019s reasoning layer has the same effect as the Semantic Loss (Xu et al., 2018) on the underlying neural network, and it is of independent interest. Notice that Theorem 1 also holds for non-uniform label distributions without any change to the proof."
+        },
+        {
+            "heading": "A.2. Proof of Theorem 2",
+            "text": "We start by proving a general lemma:\nLemma 1. Consider tasks T 1, . . . , T (t) and two parameter configurations \u03c6,\u03c8 \u2208 \u0398. If both models assign non-zero likelihood to all examples in D1:t, there exists a finite constant \u03b3, depending only on the model architecture, knowledge and data, such that:\n|L(\u03c6, T 1:t)\u2212 L(\u03c8, T 1:t)| \u2264 \u03b3 \u2211 s\u2264t \u2211 (x,y)\u2208D(s) \u2225p\u03c6(C | x)\u2212 p\u03c8(C | x)\u22251 (10)\nProof. The left-hand side can be expanded to:\n1\nt \u2223\u2223\u2223\u2223\u2223\u2223 \u2211 s\u2264t 1 |D(s)| \u2211 (x,y)\u2208D(s) ( log p\u03c6(y | x;K(s))\u2212 log p\u03c8(y | x;K(s)) )\u2223\u2223\u2223\u2223\u2223\u2223 (11) \u2264 1 t \u2211 s\u2264t 1 |D(s)| \u2211 (x,y)\u2208D(s)\n\u2223\u2223\u2223log p\u03c6(y | x;K(s))\u2212 log p\u03c8(y | x;K(s))\u2223\u2223\u2223 (12) Recall that, for any a, b \u2208 [\u03b2,\u221e], it holds that | log a\u2212 log b| \u2264 1\u03b2 |a\u2212 b|. For any (x,y) and task s \u2264 t, it holds that:\n| log p\u03c6(y | x;K(s))\u2212 log p\u03c8(y | x;K(s))| \u2264 1\n\u03b2 \u2223\u2223p\u03c6(y | x;K(s))\u2212 p\u03c8(y | x;K(s))\u2223\u2223 (13) = 1\n\u03b2 \u2223\u2223\u27e8uK(s)(y | \u00b7), p\u03c6(\u00b7 | x)\u2212 p\u03c8(\u00b7 | x)\u27e9\u2223\u2223 \u2264 1\u03b2 \u2225uK(s)(y | \u00b7)\u2225\u221e \u00b7 \u2225p\u03c6(\u00b7 | x)\u2212 p\u03c8(\u00b7 | x)\u22251 (14) The first step follows by choosing \u03b2 := min(x,y)\u2208D1:t min\u03b8\u2208{\u03c6,\u03c8} p\u03b8(y | x;K(s)) > 0, the second one from Equation (5), and the last one from Ho\u0308lder\u2019s inequality. By Equation (4), the max norm of uK(s) amounts to:\n\u2225uK(s)(y | \u00b7)\u2225\u221e = max c\n1 { (c,y) |= K(s) } Z(c;K(s)) = 1 minc Z(c;K(s)) \u2264 1 \u03b6 \u2264 1 (15)\nwhere we chose \u03b6 = minc mins\u2264t Z(c;K(s)). Therefore,\n1 \u03b2 \u2225uK(s)(y | \u00b7)\u2225\u221e \u00b7 \u2225p\u03c6(\u00b7 | x)\u2212 p\u03c8(\u00b7 | x)\u22251 \u2264 1 \u03b2\u03b6 \u2225p\u03c6(\u00b7 | x)\u2212 p\u03c8(\u00b7 | x)\u22251 (16)\nTaking \u03b3 = maxs 1\u03b2\u03b6|D(s)|t and replacing the above in Equation (12) yields the claim.\nIn order to prove Theorem 2, let \u03b8(t\u22121) be the parameters learned after observing t \u2212 1 tasks and \u03b8 to be learned at the current iteration. Applying Lemma 1 with \u03c6 = \u03b8(t\u22121) and \u03c8 = \u03b8 to Equation (3) yields the desired result.\nRemark: In the worst case \u03b6 can be as small as 1, which occurs if in all tasks s \u2264 t the knowledge K(s) accepts a single concept configuration c for every example (x,y); more commonly, \u03b6 is exponential in the number of concepts k. Also, \u03b2, which is the minimum likelihood attained by either p\u03c6 or p\u03c8 on the data sets D(1), . . . ,D(t), is actively maximized during learning."
+        },
+        {
+            "heading": "A.3. What Are Correct Semantics?",
+            "text": "Strictly speaking, the only concept distribution with the actual correct semantics is the ground-truth distribution p(C | x).\nOur assumption is that the ground-truth concept distribution we are given is always consistent with the knowledge, in the sense that p(C | x) |= K(t)[X/x,Y/y] for every possible task T (t) = (D(t),K(t)) and example (x,y) \u2208 D(t). In other words, we assume that the knowledge correctly reflects how the world works. Under this assumption, having the correct semantics is useful in practice because, when paired with the knowledge, the ground-truth distribution by construction always yields correct labels in every possible task the learner can in principle receive. This is a form of systematic generalization.\nNaturally, if the learned distribution p\u03b8(C | x) matches the ground-truth distribution exactly, then it will also achieve systematic generalization. This condition, however, is very restrictive. Pragmatically, we can relax this requirement, and say that a distribution encodes the correct semantics if it is indistinguishable from the ground-truth distribution in terms of what concepts it predicts. Formally, we say that a distribution p\u03b8(C | x) is semantically equivalent to the ground-truth distribution on data D if it allows us to infer the same concept configuration for all data points, or formally:\n\u2200x \u2208 D . argmax c p(c | x) \u2261 argmax c p\u03b8(c | x) (17)\nwhere we used \u2261 to indicate set equivalence. This is quite intuitive: any distribution satisfying Equation (17) will yield the same concepts c as p(C | x) for every x, and therefore also the same MAP states y under any choice of knowledge K.\nThe opposite is not generally true: the knowledge K might have multiple possible solutions, in the sense that different choices of concepts c might yield the same label y. In this case, the label does not carry enough information to recover the ground-truth concepts argmaxc p(c | x), and therefore also a concept distribution p\u03b8(C | x) semantically equivalent to p(C | x). This is exactly what we mean by reasoning shortcuts: concept distributions that achieve high performance on the observed task(s) but have no guarantee of systematically generalizing to future tasks, or more formally:\nargmax y p(y | x;K) \u2261 argmax y p\u03b8(y | x;K) \u2227 argmax c p(c | x) \u0338\u2261 argmax c p\u03b8(c | x) (18)"
+        },
+        {
+            "heading": "A.4. Reasoning Shortcuts in other NeSy Architectures",
+            "text": "While Theorem 1 shows that reasoning shortcuts do affect DeepProbLog, which maximizes for label likelihood, we remark that they are a general phenomenon. It is easy to see that reasoning shortcuts occur whenever the prior knowledge admits deducing the correct label y from concepts c that do not have the correct semantics, as this makes it is impossible for a model to distinguish between concepts with \u201ccorrect\u201d vs. \u201cincorrect\u201d semantics by maximizing accuracy alone. This impacts offline NeSy prediction tasks and NeSy-CL problems alike; indeed, Theorem 1 makes no assumption on how the training set D has been generated.\nReasoning shortcuts are not specific to DeepProbLog. On the contrary, this situation can be triggered by a variety of other NeSy architectures, including but not limited to:\n(i) NeSy predictors that rely on a top reasoning layer to ensure predictions are consistent with prior knowledge, which are typically trained to maximize some surrogate of the label accuracy, including (Ahmed et al., 2022a; Giunchiglia & Lukasiewicz, 2020; Hoernle et al., 2022; Huang et al., 2021; Winters et al., 2022; van Krieken et al., 2022b).\n(ii) NeSy predictors that rely on relaxed reasoning layers obtained by softening the logical prior knowledge (Diligenti et al., 2012; Donadello et al., 2017), because this transformation usually preserves existing optima of the label accuracy. As such, it also preserves unintended optima \u2013 that is, reasoning shortcuts.\n(iii) Neural networks trained to maximize accuracy and consistency with prior knowledge using the Semantic Loss and similar techniques (Xu et al., 2018; Fischer et al., 2019; Ahmed et al., 2022b). In fact, Theorem 1 shows that DeepProbLog is affected by shortcuts precisely because, from the neural network\u2019s perspective, its reasoning layer acts exactly like the Semantic Loss; see our remark in Appendix A.\nMore generally, reasoning shortcuts impact NeSy tasks and architectures beyond these, at least as long as models are trained by optimizing loss functions that do not measure or correlate with concept quality. We leave a detailed analysis of specific cases to future work.\nB. Implementation Details In this Section, we report useful details for the models and the metrics adopted in the evaluation."
+        },
+        {
+            "heading": "B.1. Hardware and Software Implementation",
+            "text": "The code for the project was developed on top mammoth (Boschini et al., 2022), a well-known CL framework. We included the implementation of DeepProbLog for MNIST-Addition from VAEL (Misino et al., 2022). The generation of CLE4EVR was adapted from (Stammer et al., 2021). All experiments were implemented using Python 3 and Pytorch (Paszke et al., 2019) and run on a server with 128 CPUs, 1TiB RAM, and 8 A100 GPUs."
+        },
+        {
+            "heading": "B.2. Metrics",
+            "text": "We adopted standard CL measures, namely task-incremental (Task-IL) and class-incremental (Class-IL) accuracy, applied here to both labels and concepts predictions, as well as forward transfer (FWT) and backward transfer (BWT) on the labels, see also (Buzzega et al., 2020). Below we write T to indicate the last task.\n\u2022 Class-IL measures the average accuracy on the test sets of all tasks T . In Table 1, we report Class-IL at the very last task T , defined as:\nCLASS-ILY(\u03b8T ) = 1\nT T\u2211 s=1 AY(\u03b8T , s) (19)\nwhere AY(\u03b8t, s) denotes the accuracy on the labels evaluated on the test set of task s. Class-IL for concepts is analogous, but builds on the average accuracy over all concepts.\n\u2022 Task-IL is the average accuracy over the test sets of all tasks up to t, evaluated only on examples annotated with the classes or concepts appearing in task t. The definition is identical to Equation (19) except that we mask the prediction of model so as to place mass only on the labels appearing in Ds, with s \u2264 t.\n\u2022 FWT evaluates the adaptability of the model at each time-step to the successive task. Formally, at each t, FWT measures the average gain in accuracy between \u03b8t and a random baseline \u03b8rand when predicting the labels of the task t+ 1. This can be written as:\nFWT = 1\nT \u2212 1 T\u22121\u2211 t=1 AY(\u03b8t, t+ 1)\u2212AY(\u03b8rand, t+ 1) (20)\nwhere \u03b8rand denotes the initialized model with random weights.\n\u2022 BWT measures how much forgetting the model undergoes by looking at how much accuracy for each task t is retained after the last task. Formally:\nBWT = 1\nT T\u2211 t=1 AY(\u03b8t, t)\u2212AY(\u03b8T , t) (21)\nFor the sake of brevity, in the main paper we reported only Class-IL on labels and concepts, and FWT. Task-IL was omitted because it does not account for accuracy on past concepts that no longer occur in the last task, and BWT because it does not as informative as Class-IL. All results for these extra metrics on MNAdd-Seq are reported in Appendix E."
+        },
+        {
+            "heading": "B.3. Architectures & Models Details",
+            "text": "MNIST-Addition: For both CBMs and DeepProbLog we adopted the same architecture for extracting concepts \u2013 henceforth, encoder \u2013 and we implemented it as a standard convolutional neural network, with dropout set at 50% after each convolution module. We also inject a noise term \u03f5 \u223c N (0, 0.1) after the encoder to stabilize the overall training process. The complete structure is reported in Table 2.\nIn both CBMs and DeepProbLog, each input digit x(i) is predicted independently and mapped to a 10-dimensional bottleneck z(i). Then, the two encodings are stacked together, obtaining the overall representation z = (z(1), z(2)).\nThe classifier (top layer) of the CBM is designed to predict the sum the z(1) and z(2). A simple linear layer, which is the standard choice in CBM (Koh et al., 2020), is insufficient to successfully address the task. Therefore, we implemented the classifier via a bi-linear operation on the encodings, i.e.,:\np\u03b8(y|z(1), z(2)) = softmax ( z(1) \u00b7W yz(2) ) where W y is a learnable class-specific 10\u00d7 10 tensor of real entries, and the softmax is over all classes y \u2208 {0, . . . , 17}.\nConversely, the reasoning (top) layer of DeepProbLog is implemented as in Equation (5). Specifically, each z(i) encodes the logits of the probability p\u03b8(Ci|x(i)) for the i-th digit, which we convert into a categorical probability distribution through a softmax activation.\nCLE4EVR: In a first step, we used Faster-RCNN (Ren et al., 2015) to extract the bounding boxes associated to objects in all images. The bounding box predictor is a pretrained MobileNet (Howard et al., 2017) fine-tuned on training images from the first task only, using the ground-truth bounding boxes of CLE4EVR images. The bounding box predictor is kept frozen in all successive tasks. We discarded all examples xi with less than 2 predicted bounding boxes. Concept supervision was transferred from the ground-truth bounding boxes to the predicted ones based on overlap.\nWe scale each predicted bounding box to an image of size 28\u00d728\u00d73 which is then passed to the encoder, implemented once again using a CNN with dropout with p = 50% after each convolution layer and normal noise \u03f5 \u223c N (0, 0.1) added to the final output. The architecture is the same as in Table 2, except that the input has depth 3 instead of 1 and that the bottleneck is 20-dimensional, with 10 dimensions allocated for the shape and 10 for the color of the input object, each with its own softmax to produce shape and color probability distributions. The DeepProbLog reasoning layer is as in Equation (5).\nDuring inference, the prediction returns invalid (\u22a5) whenever the number of predicted bounding boxes is less than 2. We counted invalid predictions as wrong predictions in all metrics evaluated in the test set."
+        },
+        {
+            "heading": "B.4. Hyper-parameter Selection",
+            "text": "All continual strategies have been trained with the same number of epochs and buffer dimension. The actual values depend on the specific benchmark: 25 epochs per task and a buffer size of 1000 examples for MNAdd-Seq, 100 epochs and 1000 examples for MNAdd-Shortcut, and 50 epochs each task and 250 examples for CLE4EVR. In all experiments, we employed the Adam optimizer (Kingma & Ba, 2015) combined with exponential decay (\u03b3 = 0.95). The initial learning rate is restored at the beginning of a new task.\nFor each data set, we optimized the weight of the concept supervision wc based on the Class-IL (Y) performance of ER using grid-search on the validation set (union of all tasks). Then, for each strategy, we selected the best learning rate and strategy-specific hyperparameters through a grid-search on the validation set, so as to optimize Class-IL (Y) on a single random seed. The learning rate was chosen from the range of [10\u22125, 10\u22122]. The exact values can be found in the source code."
+        },
+        {
+            "heading": "C. NeSy-CL Benchmarks",
+            "text": "In this section, we provide a more detailed description of the benchmarks introduced in Section 5.\nC.1. MNAdd-Seq\nWe derived MNAdd-Seq from the MNIST-Addition data set of Manhaeve et al. (2018). Here, the knowledge encodes the following constraint:\nK = \u2200c1, c2 \u2208 {0, . . . , 9} (C1 = c1 \u2227 C2 = c2) =\u21d2 Y = (c1 + c2) (22)\nfor a total of 19 possible sums. MNAdd-Seq is both label-incremental and concept-incremental; in each task only two possible sums appear, obtaining in total 9 tasks. Specifically:\nTask 1: Y \u2208 {0, 1} and C \u2208 { , };\nTask 2: Y \u2208 {2, 3} and C \u2208 { , , , };\nTask 3: Y \u2208 {4, 5} and C \u2208 { , , , , , };\nTask 4: Y \u2208 {6, 7} and C \u2208 { , , , , , , , };\nTask 5: Y \u2208 {8, 9} and C \u2208 { , , , , , , , , , };\nTask 6: Y \u2208 {10, 11} and C \u2208 { , , , , , , , , };\nTask 7: Y \u2208 {12, 13} and C \u2208 { , , , , , , };\nTask 8: Y \u2208 {14, 15} and C \u2208 { , , , , };\nTask 9: Y \u2208 {16, 17} and C \u2208 { , , };\nIn total, the data set counts 42k training and 6k test examples.\nC.2. MNAdd-Shortcut\nThis benchmark is a case-study composed of two task, built considering the following constraints:\n\u2022 In the first task, we present only even digits and four possible sums: (i) + = 6, (ii) + = 10, (iii) + = 10, and (iv) + = 12.\n\u2022 In the second task, only odd numbers are considered, i.e., C \u2208 { , , , , }, and all their possible sums.\nThe rationale behind this construction is that it makes it possible to satisfy the knowledge in both tasks by leveraging reasoning shortcuts, and specifically those described in Appendix D.\nThe overall data set contains 13.8k training examples and 2k test data. We also collected an OOD test set containing examples not appearing in the training, validation and test sets, which comprise sums of odd and even digits, e.g., + = 1, and unseen combinations of even numbers, e.g., + = 16.\nC.3. CLE4EVR\nFollowing Stammer et al. (2021), the CLE4EVR data set was generated using Blender (Blender Online Community, 2018), using additional objects from (Li & S\u00f8gaard, 2022) as well as three custom shapes.\nWe generated different objects with 10 possible shapes and colors, and with 2 free variations on material {rubber, metal} and size {small, big}, that play no role in determining the label. Each image is of size 256\u00d7 430\u00d7 3, and contains two non-overlapping objects over a light-gray background.\nTable 3 reports what combinations of objects appear in each task. All tasks are composed of 1.1k training examples, 100 validation examples, and 500 test examples. Each task includes only two possible shapes (out of ten) and two colors (out of ten), without any overlap between tasks. An illustration is given in Figure 3.\nThe knowledge K = K\u2032 \u2227 K\u2032\u2032 \u2227 K\u2032\u2032\u2032 encodes the following constraints:\nK\u2032 = (Cshape,1 = Cshape,2) \u21d0\u21d2 same shape (23) K\u2032\u2032 = (Ccolor,1 = Ccolor,2) \u21d0\u21d2 same color (24) K\u2032\u2032\u2032 = (same shape \u2227 same color) \u21d0\u21d2 same (25)\nwith three output variables Y1 = same shape, Y2 = same color and Y3 = same, giving rise to four mutually exclusive classes: 0 = different shape and color, 1 = same shape and different color, 2 = different shape and same color, 3 = same shape and same color.\nWe also generated an additional OOD test set, comprising 300 images depicting unseen combination of training objects, e.g., redsquares and pinkdiamonds (which occur in none of the tasks). All OOD examples all have label Y = (0, 0, 0).\nAll generated images come with ground-truth bounding boxes annotated with the properties (i.e., concepts) of the objects they contain, as well as annotations for Y1, Y2, and Y3. The concept annotations are transferred to the bounding boxes predicted by Faster R-CNN during pre-processing, cf. Appendix B.\nD. Shortcut Solutions in MNAdd-Shortcut and CLE4EVR In this section, we provide a more detailed account on the shortcut solutions for the continual scenarios introduced."
+        },
+        {
+            "heading": "D.1. Reasoning Shortcuts Due to Low-Level Correlations",
+            "text": "Before proceeding, we observe that simply predicting multiple concepts jointly by a single neural network is sufficient to enable reasoning shortcuts. Intuitively, this happens because, since the network has access to all properties of all objects, it can automatically exploit correlations between them to satisfy the knowledge without the need for extracting any \u201cproper\u201d concepts. For instance, in MNIST-Addition the knowledge can simply group pairs of digits (both of which it has access to) into two single combinations of concepts that always yield the right labels. To see this, consider the following example:\nExample 4. Consider a single MNIST-Addition task consisting of digits summing to either 2 or 3. By Theorem 1, \u0398\u2217(K,D) contains \u03c6 with p\u03c6(C | x) \u0338\u2261 p(C | x), such that:\np\u03c6(C1 | x) = 1{C1 = 2}\np\u03c6(C2 | x) = { 1{C2 = 0} if x = ( , ) or ( , ) 1{C2 = 1} otherwise\nThis distribution fits the data perfectly and is consistent with the knowledge, and thus cannot be distinguished from the ground-truth distribution based on likelihood alone.\nNotice that the two learned concepts ignore the value of the individual digits, and rather depend on the correlation between them. in MNIST-Addition, it is straightforward to avoid this situation by construction by simply processing the two digits independently. The same can be done when processing objects in CLE4EVR. This partially motivates our choice of neural architecture, described in Appendix B. More precisely, in MNIST-Addition the adopted architecture factorizes the joint probability distribution on the concepts in:\np(c1, c2|x(1),x(2)) = p(c1|x(1)) \u00b7 p(c2|x(2)) (26)\nWhile this is sufficient to guarantee independence among distinct objects, the prior knowledge can still admit reasoning shortcuts. Next, we describe the concrete reasoning shortcuts appearing in MNAdd-Shortcut and CLE4EVR.\nD.2. Shortcuts in MNAdd-Shortcut\nIn order to understand reasoning shortcuts in MNAdd-Shortcut, it is useful to view the sums as constraints on the possible values attributed to each concept Cj . From this perspective, reasoning shortcuts occur whenever the combinations of digits present in the training data (which are five in each task) are insufficient to uniquely determine the four possible sums.\nIn particular, the problem of assigning the intended semantics of each learned concept can be expressed as a system of 4 linear equations with 5 variables, which in task 1 of MNAdd-Seq can be written as: c0 + c6 = 6 c4 + c6 = 10 c2 + c8 = 10\nc4 + c8 = 12\n(27)\nThe first equation states that whatever values are assigned to the concepts that fire when a and a are present in the input x, have to satisfy the condition that their sum is 6 (in all examples in which they appear). It should be clear that the linear system is undetermined and infinitely many real solutions can be found for ci, all of which except one do not capture the intended semantics of digits.\nOne of these unintended solutions is very often picked by label-replay strategies. Specifically, the input can be easily confused for a 9, due to input similarity, which brings the model towards the assignment c4 = 9. This immediately yields the following unintentional mappings for all other digits: c0 = 5, c2 = 7, c6 = 1, and c8 = 3. This reasoning shortcut is often found when training offline on this task and also when training on both tasks of MNAdd-Shortcut, as done in our experiments, by ER, DER, and DER++, as shown in Figure 4.\nD.3. Shortcuts in CLE4EVR\nSeveral shortcut exist in CLE4EVR. Recall that:\n\u2022 CLE4EVR is composed of 5 tasks, with four possible outcomes (different objects, same shapes, same colors, and same objects).\n\u2022 In each task only two possible shapes and colors are observed, and are never seen again in other tasks.\nIn order to correctly classify the same color and same shape labels, the model must acquire at least two distinct concepts for shape and two distinct concepts for colors in each task, but the knowledge provides little guidance as to which shapes or colors need to be associated to the input objects. This leaves ample room for reasoning shortcuts.\nLet us focus on shapes only. Letting S be the set of the 10 possible shapes si, the model needs at least 10 \u00b7 (10 \u2212 1)/2 different negative examples of the knowledge to uniquely identify all possible shapes (up to permutation), one for each pair of mismatching shapes. Consider the map \u03c0 : S \u2192 S mapping from ground-truth shape of the input object to the learned concept for shape. Ideally, we would like \u03c0 to be injective, so that no two distinct ground-truth shapes are mapped to the same learned shape.\nConsider a task with 4 possible shapes s1 = cube, s2 = cone, s3 = cylinder, and s4 = toroid. In order to guarantee injectivity, the data has to include enough combinations of shapes so that the map \u03c0 satisfies the following condition:\n\u03c0(s1) \u0338= \u03c0(s2), \u03c0(s1) \u0338= \u03c0(s3), \u03c0(s1) \u0338= \u03c0(s4), \u03c0(s2) \u0338= \u03c0(s3), \u03c0(s2) \u0338= \u03c0(s4), \u03c0(s3) \u0338= \u03c0(s4)\n(28)\nNotice that this map is injective, in the sense that si \u0338= sj =\u21d2 \u03c0(si) \u0338= \u03c0(sj), \u2200i \u0338= j. All tasks in CLE4EVR, however, are designed to distinguishing between only two possible shapes (and colors), hence the condition in Equation (28) is never satisfied. This is what allows for reasoning shortcuts.\nAs a matter of fact, without concept supervision, all values for shapes and colors are equally likely to be picked up to solve the task. We observed this phenomenon in the case of 0% supervision reported in Figure 5."
+        },
+        {
+            "heading": "E. Additional Results and Metrics",
+            "text": ""
+        },
+        {
+            "heading": "E.1. Time Overhead and Memory Occupation of COOL",
+            "text": "We evaluate the time overhead and the memory requirements of COOL compared to other replay-based strategies in Table 4. All these strategies impose an additional time overhead due to the selection and replay of past examples.\nWe measured the time required for completing a single epoch in the first task of MNIST-Addition and CLE4EVR. NAI\u0308VE provides the lower bound for the computation time, as it just fine-tunes the model on the new examples. ER in MNIST-Addition strategy requires almost \u223c 0.1 s more than NAI\u0308VE for storing and replaying. In CLE4EVR, however, the gap is less evident between the two strategies. For MNAdd-Seq, the time per epoch of COOL amounts to \u223c 0.476 s, which is comparable to that of DER \u223c 0.475 s and lower than that of DER++ \u223c 0.667 s. For CLE4EVR COOL requires 0.439 s per epoch, slightly increasing compared to DER \u223c 0.412 s, but still being lower w.r.t. DER++ \u223c 0.482 s.\nIn terms of memory occupation, COOL requires slightly more memory than other replay strategies, due to the need of storing the logits of the learned concepts. However, most of the overhead is due to storing the instances x themselves, which is the very same for all strategies and amounts to 6.272 Mb for MNIST-Addition and 1.568 Mb for CLE4EVR.\nE.2. MNAdd-Seq\nWe report in Table 5 results for all competing strategies and performance measures used (including those omitted in the main text), namely Class-IL and Task-IL on labels and concepts (denoted as Y and C, respectively), backward transfer (BWT), and forward transfer (FWT).\nThese results confirm the ones reported in Section 5. Specifically, COOL attains higher performance w.r.t. all metrics in both CBM and DeepProbLog. They also show that COOL outperforms all other approaches in terms of BWT when paired with DeepProbLog, and is the runner-up with CBMs.\nThe method with the best BWT on CBM is LWF, which however displays a pathological learning behavior, as made clear by the fact that it is the only method to have negative forward transfer. The reason is that LWF struggles to learn the first few tasks properly, but performs reasonably on the latter ones.\nSurprisingly, this oddball behavior is sufficient for LWF to beat the baselines (NAI\u0308VE and RESTART) in terms of Class-IL Y (at around 18%), but not enough to outperform COOL, and also yields the aforementioned issue with FWT. We stress that this implies that LWF generalizes to forward tasks worse than random.\nE.3. MNAdd-Shortcut\nWe report here in Table 6, all results obtained for all strategies in MNAdd-Shortcut. We performed the comparison adopting only DeepProbLog with increasing amount of concept supervision.\nWith 0% concept supervision, all methods perform poorly, i.e., worse or comparably to NAI\u0308VE and RESTART in terms of Class-IL. Variance is also quite large for EWC, ER, DER, DER++, and COOL. The sole exception is LWF, which obtains higher performance and small variance in label classification. On the other hand, the results in OOD accuracy are all below 13%, indicating that no strategy can successfully identify high-quality concepts that transfer across tasks.\nThe picture at 1% and 10% supervision is very similar: COOL outperforms all approaches in terms of concept quality and OOD accuracy by a large margin, while the other approaches pick up the reasoning shortcut, thus achieving high label accuracy only.\nE.3.1. CLE4EVR\nThe complete results for CLE4EVR, reported in Table 7, show the same trend as those on MNAdd-Shortcut. For completeness, we report the evolution across tasks of concept confusion matrices for all methods in Figure 6. The impact of the reasoning shortcut on DER, and its lack of impact on COOL, are clearly visible."
+        }
+    ],
+    "title": "Neuro-Symbolic Continual Learning: Knowledge, Reasoning Shortcuts and Concept Rehearsal",
+    "year": 2023
+}

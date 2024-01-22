@@ -1,0 +1,877 @@
+{
+    "abstractText": "In the scenario of class-incremental learning (CIL), deep neural networks have to adapt their model parameters to non-stationary data distributions, e.g., the emergence of new classes over time. However, CIL models are challenged by the well-known catastrophic forgetting phenomenon. Typical methods such as rehearsal-based ones rely on storing exemplars of old classes to mitigate catastrophic forgetting, which limits real-world applications considering memory resources and privacy issues. In this paper, we propose a novel rehearsal-free CIL approach that learns continually via the synergy between two Complementary Learning Subnetworks. Our approach involves jointly optimizing a plastic CNN feature extractor and an analytical feed-forward classifier. The inaccessibility of historical data is tackled by holistically controlling the parameters of a well-trained model, ensuring that the decision boundary learned fits new classes while retaining recognition of previously learned classes. Specifically, the trainable CNN feature extractor provides task-dependent knowledge separately without interference; and the final classifier integrates task-specific knowledge incrementally for decisionmaking without forgetting. In each CIL session, it accommodates new tasks by attaching a tiny set of declarative parameters to its backbone, in which only one matrix per task or one vector per class is kept for knowledge retention. Extensive experiments on a variety of task sequences show that our method achieves competitive results against state-of-the-art methods, especially in accuracy gain, memory cost, training efficiency, and task-order robustness. Furthermore, to make the non-growing backbone (i.e., a model with limited network capacity) suffice to train on more incoming tasks, a graceful forgetting implementation on previously learned trivial tasks is empirically investigated.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Depeng Li"
+        },
+        {
+            "affiliations": [],
+            "name": "Zhigang Zeng"
+        }
+    ],
+    "id": "SP:44ba639400d7b3592467655e25cd03ebe4e9fa1a",
+    "references": [
+        {
+            "authors": [
+                "R. Minhas",
+                "A.A. Mohammed",
+                "Q.J. Wu"
+            ],
+            "title": "Incremental learning in human action recognition based on snippets",
+            "venue": "IEEE Transactions on Circuits and Systems for Video Technology, vol. 22, no. 11, pp. 1529\u2013 1541, 2012.",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "X. Mu",
+                "K.M. Ting",
+                "Z.-H. Zhou"
+            ],
+            "title": "Classification under streaming emerging new classes: A solution using completely-random trees",
+            "venue": "IEEE Transactions on Knowledge and Data Engineering, vol. 29, no. 8, pp. 1605\u20131618, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Q. Wang",
+                "G. Sun",
+                "J. Dong",
+                "Q. Wang",
+                "Z. Ding"
+            ],
+            "title": "Continuous multiview human action recognition",
+            "venue": "IEEE Transactions on Circuits and Systems for Video Technology, vol. 32, no. 6, pp. 3603\u20133614, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. De Lange",
+                "R. Aljundi",
+                "M. Masana",
+                "S. Parisot",
+                "X. Jia",
+                "A. Leonardis",
+                "G. Slabaugh",
+                "T. Tuytelaars"
+            ],
+            "title": "A continual learning survey: Defying forgetting in classification tasks",
+            "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence, vol. 44, no. 7, pp. 3366\u20133385, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D.S. Tan",
+                "Y.-X. Lin",
+                "K.-L. Hua"
+            ],
+            "title": "Incremental learning of multidomain image-to-image translations",
+            "venue": "IEEE Transactions on Circuits and Systems for Video Technology, vol. 31, no. 4, pp. 1526\u20131539, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M. McCloskey",
+                "N.J. Cohen"
+            ],
+            "title": "Catastrophic interference in connectionist networks: The sequential learning problem",
+            "venue": "Psychology of Learning and Motivation. Elsevier, 1989, vol. 24, pp. 109\u2013165.",
+            "year": 1989
+        },
+        {
+            "authors": [
+                "S. Thrun",
+                "T.M. Mitchell"
+            ],
+            "title": "Lifelong robot learning",
+            "venue": "Robotics and Autonomous Systems, vol. 15, no. 1-2, pp. 25\u201346, 1995.",
+            "year": 1995
+        },
+        {
+            "authors": [
+                "Z. Li",
+                "D. Hoiem"
+            ],
+            "title": "Learning without forgetting",
+            "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence, vol. 40, no. 12, pp. 2935\u2013 2947, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "H. Liu",
+                "X. Zhu",
+                "Z. Lei",
+                "D. Cao",
+                "S.Z. Li"
+            ],
+            "title": "Fast adapting without forgetting for face recognition",
+            "venue": "IEEE Transactions on Circuits and Systems for Video Technology, vol. 31, no. 8, pp. 3093\u20133104, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R.M. French"
+            ],
+            "title": "Catastrophic forgetting in connectionist networks",
+            "venue": "Trends in Cognitive Sciences, vol. 3, no. 4, pp. 128\u2013135, 1999.",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "S. Wang",
+                "W. Shi",
+                "S. Dong",
+                "X. Gao",
+                "X. Song",
+                "Y. Gong"
+            ],
+            "title": "Semantic knowledge guided class-incremental learning",
+            "venue": "IEEE Transactions on Circuits and Systems for Video Technology, 2023, doi: 10.1109/TCSVT.2023.3262739.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "G.I. Parisi",
+                "R. Kemker",
+                "J.L. Part",
+                "C. Kanan",
+                "S. Wermter"
+            ],
+            "title": "Continual lifelong learning with neural networks: A review",
+            "venue": "Neural Networks, vol. 113, pp. 54\u201371, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M. Masana",
+                "X. Liu",
+                "B. Twardowski",
+                "M. Menta",
+                "A.D. Bagdanov",
+                "J. van de Weijer"
+            ],
+            "title": "Class-incremental learning: survey and performance evaluation on image classification",
+            "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence, vol. 45, no. 5, pp. 5513\u20135533, 2023.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Q. Hu",
+                "Y. Gao",
+                "B. Cao"
+            ],
+            "title": "Curiosity-driven class-incremental learning via adaptive sample selection",
+            "venue": "IEEE Transactions on Circuits and Systems for Video Technology, vol. 32, no. 12, pp. 8660\u20138673, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "H. Lin",
+                "S. Feng",
+                "X. Li",
+                "W. Li",
+                "Y. Ye"
+            ],
+            "title": "Anchor assisted experience replay for online class-incremental learning",
+            "venue": "IEEE Transactions on Circuits and Systems for Video Technology, 2022, doi: 10.1109/TCSVT.2022.3219605.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S.-A. Rebuffi",
+                "A. Kolesnikov",
+                "G. Sperl",
+                "C.H. Lampert"
+            ],
+            "title": "iCaRL: Incremental classifier and representation learning",
+            "venue": "Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, 2017, pp. 2001\u20132010.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "D. Lopez-Paz",
+                "M. Ranzato"
+            ],
+            "title": "Gradient episodic memory for continual learning",
+            "venue": "Advances in Neural Information Processing Systems, vol. 30, 2017, pp. 6470\u20136479.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "R. Aljundi",
+                "F. Babiloni",
+                "M. Elhoseiny",
+                "M. Rohrbach",
+                "T. Tuytelaars"
+            ],
+            "title": "Memory aware synapses: Learning what (not) to forget",
+            "venue": "Proceedings of the European Conference on Computer Vision, 2018, pp. 139\u2013154.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Bang",
+                "H. Kim",
+                "Y. Yoo",
+                "J.-W. Ha",
+                "J. Choi"
+            ],
+            "title": "Rainbow memory: Continual learning with a memory of diverse samples",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2021, pp. 8218\u20138227.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "X. Liu",
+                "C. Wu",
+                "M. Menta",
+                "L. Herranz",
+                "B. Raducanu",
+                "A.D. Bagdanov",
+                "S. Jui",
+                "J. v. de Weijer"
+            ],
+            "title": "Generative feature replay for classincremental learning",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops, 2020, pp. 226\u2013 227.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "G.M. van de Ven",
+                "H.T. Siegelmann",
+                "A.S. Tolias"
+            ],
+            "title": "Brain-inspired replay for continual learning with artificial neural networks",
+            "venue": "Nature Communications, vol. 11, no. 1, pp. 1\u201314, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "R. Aljundi",
+                "E. Belilovsky",
+                "T. Tuytelaars",
+                "L. Charlin",
+                "M. Caccia",
+                "M. Lin",
+                "L. Page-Caccia"
+            ],
+            "title": "Online continual learning with maximal interfered retrieval",
+            "venue": "Advances in Neural Information Processing Systems, 2019, pp. 11 849\u201311 860.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "L. Wang",
+                "B. Lei",
+                "Q. Li",
+                "H. Su",
+                "J. Zhu",
+                "Y. Zhong"
+            ],
+            "title": "Triplememory networks: A brain-inspired method for continual learning",
+            "venue": "IEEE Transactions on Neural Networks and Learning Systems, vol. 33, no. 5, pp. 1925\u20131934, 2022.",
+            "year": 1925
+        },
+        {
+            "authors": [
+                "J. Kirkpatrick",
+                "R. Pascanu",
+                "N. Rabinowitz",
+                "J. Veness",
+                "G. Desjardins",
+                "A.A. Rusu",
+                "K. Milan",
+                "J. Quan",
+                "T. Ramalho",
+                "A. Grabska-Barwinska"
+            ],
+            "title": "Overcoming catastrophic forgetting in neural networks",
+            "venue": "Proceedings of the National Academy of Sciences, vol. 114, no. 13, pp. 3521\u20133526, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "F. Zenke",
+                "B. Poole",
+                "S. Ganguli"
+            ],
+            "title": "Continual learning through synaptic intelligence",
+            "venue": "International Conference on Machine Learning, 2017, pp. 3987\u20133995.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J. Zhang",
+                "J. Zhang",
+                "S. Ghosh",
+                "D. Li",
+                "S. Tasci",
+                "L. Heck",
+                "H. Zhang",
+                "C.- C.J. Kuo"
+            ],
+            "title": "Class-incremental learning via deep model consolidation",
+            "venue": "Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision, 2020, pp. 1131\u20131140.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Rosenfeld",
+                "J.K. Tsotsos"
+            ],
+            "title": "Incremental learning through deep adaptation",
+            "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence, vol. 42, no. 3, pp. 651\u2013663, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Serr\u00e0",
+                "D. Suris",
+                "M. Miron",
+                "A. Karatzoglou"
+            ],
+            "title": "Overcoming catastrophic forgetting with hard attention to the task",
+            "venue": "International Conference on Machine Learning. PMLR, 2018, pp. 4548\u20134557.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Z. Ke",
+                "B. Liu",
+                "N. Ma",
+                "H. Xu",
+                "L. Shu"
+            ],
+            "title": "Achieving forgetting prevention and knowledge transfer in continual learning",
+            "venue": "Advances in Neural Information Processing Systems, vol. 34, 2021, pp. 22 443\u2013 22 456.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A.A. Rusu",
+                "N.C. Rabinowitz",
+                "G. Desjardins",
+                "H. Soyer",
+                "J. Kirkpatrick",
+                "K. Kavukcuoglu",
+                "R. Pascanu",
+                "R. Hadsell"
+            ],
+            "title": "Progressive neural networks",
+            "venue": "arXiv preprint arXiv:1606.04671, 2016.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "V.K. Verma",
+                "K.J. Liang",
+                "N. Mehta",
+                "P. Rai",
+                "L. Carin"
+            ],
+            "title": "Efficient feature transformations for discriminative and generative continual learning",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2021, pp. 13 865\u201313 875.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "W. Hu",
+                "Q. Qin",
+                "M. Wang",
+                "J. Ma",
+                "B. Liu"
+            ],
+            "title": "Continual learning by using information of each class holistically",
+            "venue": "Proceedings of the AAAI Conference on Artificial Intelligence, 2021, pp. 7797\u20137805. JOURNAL OF LATEX CLASS FILES, VOL. XX, NO. XX, XXXX XXXX 13",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Z. Hu",
+                "Y. Li",
+                "J. Lyu",
+                "D. Gao",
+                "N. Vasconcelos"
+            ],
+            "title": "Dense network expansion for class incremental learning",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2023, pp. 11 858\u201311 867.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "G.M. Van de Ven",
+                "A.S. Tolias"
+            ],
+            "title": "Three scenarios for continual learning",
+            "venue": "arXiv preprint arXiv:1904.07734, 2019.",
+            "year": 1904
+        },
+        {
+            "authors": [
+                "Y.-C. Hsu",
+                "Y.-C. Liu",
+                "A. Ramasamy",
+                "Z. Kira"
+            ],
+            "title": "Re-evaluating continual learning scenarios: A categorization and case for strong baselines",
+            "venue": "arXiv preprint arXiv:1810.12488, 2018.",
+            "year": 1810
+        },
+        {
+            "authors": [
+                "S. Tang",
+                "D. Chen",
+                "J. Zhu",
+                "S. Yu",
+                "W. Ouyang"
+            ],
+            "title": "Layerwise optimization by gradient decomposition for continual learning",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2021, pp. 9634\u20139643.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "E. Belouadah",
+                "A. Popescu"
+            ],
+            "title": "IL2M: Class incremental learning with dual memory",
+            "venue": "Proceedings of the IEEE/CVF International Conference on Computer Vision, 2019, pp. 583\u2013592.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Tong",
+                "X. Dai",
+                "Z. Wu",
+                "M. Li",
+                "B. Yi",
+                "Y. Ma"
+            ],
+            "title": "Incremental learning of structured memory via closed-loop transcription",
+            "venue": "arXiv preprint arXiv:2202.05411, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "G. Zeng",
+                "Y. Chen",
+                "B. Cui",
+                "S. Yu"
+            ],
+            "title": "Continual learning of contextdependent processing in neural networks",
+            "venue": "Nature Machine Intelligence, vol. 1, no. 8, pp. 364\u2013372, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Y.-M. Tang",
+                "Y.-X. Peng",
+                "W.-S. Zheng"
+            ],
+            "title": "Learning to imagine: Diversify memory for incremental learning using unlabeled data",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2022, pp. 9549\u20139558.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S. Yan",
+                "J. Xie",
+                "X. He"
+            ],
+            "title": "DER: Dynamically expandable representation for class incremental learning",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2021, pp. 3014\u20133023.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "F.-Y. Wang",
+                "D.-W. Zhou",
+                "H.-J. Ye",
+                "D.-C. Zhan"
+            ],
+            "title": "FOSTER: Feature boosting and compression for class-incremental learning",
+            "venue": "Proceedings of the European Conference on Computer Vision. Springer, 2022, pp. 398\u2013414.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "A. Douillard",
+                "A. Ram\u00e9",
+                "G. Couairon",
+                "M. Cord"
+            ],
+            "title": "DyTox: Transformers for continual learning with dynamic token expansion",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2022, pp. 9285\u20139295.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D.-W. Zhou",
+                "Q.-W. Wang",
+                "H.-J. Ye",
+                "D.-C. Zhan"
+            ],
+            "title": "A model or 603 exemplars: Towards memory-efficient class-incremental learning",
+            "venue": "arXiv preprint arXiv:2205.13218, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "A. Rios",
+                "N. Ahuja",
+                "I. Ndiour",
+                "U. Genc",
+                "L. Itti",
+                "O. Tickoo"
+            ],
+            "title": "incDFM: Incremental deep feature modeling for continual novelty detection",
+            "venue": "Proceedings of the European Conference on Computer Vision. Springer, 2022, pp. 588\u2013604.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "T.-Y. Wu",
+                "G. Swaminathan",
+                "Z. Li",
+                "A. Ravichandran",
+                "N. Vasconcelos",
+                "R. Bhotika",
+                "S. Soatto"
+            ],
+            "title": "Class-incremental learning with strong pre-trained models",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2022, pp. 9601\u20139610.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "T.L. Hayes",
+                "K. Kafle",
+                "R. Shrestha",
+                "M. Acharya",
+                "C. Kanan"
+            ],
+            "title": "Remind your neural network to prevent catastrophic forgetting",
+            "venue": "Proceedings of the European Conference on Computer Vision, 2020, pp. 466\u2013483.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Z. Wang",
+                "Z. Zhang",
+                "C.-Y. Lee",
+                "H. Zhang",
+                "R. Sun",
+                "X. Ren",
+                "G. Su",
+                "V. Perot",
+                "J. Dy",
+                "T. Pfister"
+            ],
+            "title": "Learning to prompt for continual learning",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2022, pp. 139\u2013149.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Z. Wang",
+                "Z. Zhang",
+                "S. Ebrahimi",
+                "R. Sun",
+                "H. Zhang",
+                "C.-Y. Lee",
+                "X. Ren",
+                "G. Su",
+                "V. Perot",
+                "J. Dy"
+            ],
+            "title": "Dualprompt: Complementary prompting for rehearsal-free continual learning",
+            "venue": "Proceedings of the European Conference on Computer Vision. Springer, 2022, pp. 631\u2013648.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D.-W. Zhou",
+                "Q.-W. Wang",
+                "Z.-H. Qi",
+                "H.-J. Ye",
+                "D.-C. Zhan",
+                "Z. Liu"
+            ],
+            "title": "Deep class-incremental learning: A survey",
+            "venue": "arXiv preprint arXiv:2302.03648, 2023.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "S.I. Mirzadeh",
+                "A. Chaudhry",
+                "D. Yin",
+                "T. Nguyen",
+                "R. Pascanu",
+                "D. Gorur",
+                "M. Farajtabar"
+            ],
+            "title": "Architecture matters in continual learning",
+            "venue": "arXiv preprint arXiv:2202.00275, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C.L.P. Chen",
+                "Z. Liu"
+            ],
+            "title": "Broad learning system: An effective and efficient incremental learning system without the need for deep architecture",
+            "venue": "IEEE Transactions on Neural Networks and Learning Systems, vol. 29, no. 1, pp. 10\u201324, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "D. Wang",
+                "M. Li"
+            ],
+            "title": "Stochastic configuration networks: Fundamentals and algorithms",
+            "venue": "IEEE Transactions on Cybernetics, vol. 47, no. 10, pp. 3466\u20133479, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "R. Tibshirani"
+            ],
+            "title": "Regression shrinkage and selection via the lasso",
+            "venue": "Journal of the Royal Statistical Society: Series B (Methodological), vol. 58, no. 1, pp. 267\u2013288, 1996.",
+            "year": 1996
+        },
+        {
+            "authors": [
+                "S. Boyd",
+                "N. Parikh",
+                "E. Chu",
+                "B. Peleato",
+                "J. Eckstein"
+            ],
+            "title": "Distributed optimization and statistical learning via the alternating direction method of multipliers",
+            "venue": "Foundations and Trends\u00ae in Machine learning, vol. 3, no. 1, pp. 1\u2013122, 2011.",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "A.J. Smola",
+                "S. Vishwanathan",
+                "E. Eskin"
+            ],
+            "title": "Laplace propagation",
+            "venue": "Advances in Neural Information Processing Systems, 2004, pp. 441\u2013448.",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "T.P. Minka"
+            ],
+            "title": "A family of algorithms for approximate bayesian inference",
+            "venue": "Ph.D. dissertation, Massachusetts Institute of Technology, 2001.",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "D.J. MacKay"
+            ],
+            "title": "A practical bayesian framework for backpropagation networks",
+            "venue": "Neural Computation, vol. 4, no. 3, pp. 448\u2013472, 1992.",
+            "year": 1992
+        },
+        {
+            "authors": [
+                "J. Martens"
+            ],
+            "title": "New insights and perspectives on the natural gradient method",
+            "venue": "arXiv preprint arXiv:1412.1193, 2014.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "R. Pascanu",
+                "Y. Bengio"
+            ],
+            "title": "Revisiting natural gradient for deep networks",
+            "venue": "arXiv preprint arXiv:1301.3584, 2013.",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "F. Husz\u00e1r"
+            ],
+            "title": "On quadratic penalties in elastic weight consolidation",
+            "venue": "arXiv preprint arXiv:1712.03847, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "P. Pan",
+                "S. Swaroop",
+                "A. Immer",
+                "R. Eschenhagen",
+                "R. Turner",
+                "M.E.E. Khan"
+            ],
+            "title": "Continual deep learning by functional regularisation of memorable past",
+            "venue": "Advances in Neural Information Processing Systems, vol. 33, 2020, pp. 4453\u20134464.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D. Deng",
+                "G. Chen",
+                "J. Hao",
+                "Q. Wang",
+                "P.-A. Heng"
+            ],
+            "title": "Flattening sharpness for dynamic gradient projection memory benefits continual learning",
+            "venue": "Advances in Neural Information Processing Systems, vol. 34, 2021, pp. 18 710\u201318 721.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R. Wang",
+                "Y. Bao",
+                "B. Zhang",
+                "J. Liu",
+                "W. Zhu",
+                "G. Guo"
+            ],
+            "title": "Antiretroactive interference for lifelong learning",
+            "venue": "Proceedings of the European Conference on Computer Vision, 2022, pp. 163\u2013178.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "G.M. Van de Ven",
+                "A.S. Tolias"
+            ],
+            "title": "Generative replay with feedback connections as a general strategy for continual learning",
+            "venue": "arXiv preprint arXiv:1809.10635, 2018.",
+            "year": 1809
+        },
+        {
+            "authors": [
+                "M. Wo\u0142czyk",
+                "K. Piczak",
+                "B. W\u00f3jcik",
+                "L. Pustelnik",
+                "P. Morawiecki",
+                "J. Tabor",
+                "T. Trzcinski",
+                "P. Spurek"
+            ],
+            "title": "Continual learning with guarantees via weight interval constraints",
+            "venue": "International Conference on Machine Learning. PMLR, 2022, pp. 23 897\u201323 911.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Rajasegaran",
+                "M. Hayat",
+                "S. Khan",
+                "F.S. Khan",
+                "L. Shao"
+            ],
+            "title": "Random path selection for incremental learning",
+            "venue": "Advances in Neural Information Processing Systems, 2019, pp. 12 669\u201312 679.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "G. Sokar",
+                "D.C. Mocanu",
+                "M. Pechenizkiy"
+            ],
+            "title": "Spacenet: Make free space for continual learning",
+            "venue": "Neurocomputing, vol. 439, pp. 1\u201311, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "X. Chen",
+                "K. He"
+            ],
+            "title": "Exploring simple siamese representation learning",
+            "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, 2021, pp. 15 750\u201315 758.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "L. Van der Maaten",
+                "G. Hinton"
+            ],
+            "title": "Visualizing data using t-SNE.",
+            "venue": "Journal of Machine Learning Research,",
+            "year": 2008
+        }
+    ],
+    "sections": [
+        {
+            "text": "Index Terms\u2014Class-incremental learning, catastrophic forgetting, complementary learning subnetworks, analytical solution, optimization.\nI. INTRODUCTION\nTHE most common case in the real world is that newobjects emerge in a sequence of tasks over time and it is expected to learn them immediately compared to the assumption that all classes are collected in advance and trained offline [1]\u2013[3]. This corresponds to incremental learning, in particular, class-incremental learning (CIL), a model that can continuously learn new information without interfering with\nManuscript received Jun 15, 2023. This work was supported in part by the National Key R&D Program of China under Grant 2021ZD0201300, in part by the Fundamental Research Funds for the Central Universities under Grant YCJJ202203012, in part by the State Scholarship Fund of China Scholarship Council under Grant 202206160045, and in part by the National Natural Science Foundation of China under Grants U1913602 and 61936004. (Corresponding author: Zhigang Zeng)\nDepeng Li and Zhigang Zeng are with the School of Artificial Intelligence and Automation, with the Institute of Artificial Intelligence, Huazhong University of Science and Technology, and also with the Key Laboratory of Image Processing and Intelligent Control of Education Ministry of China, Wuhan 430074, China (e-mail: dpli@hust.edu.cn; zgzeng@hust.edu.cn).\nthe previously learned knowledge [4], [5]. CIL places a single model in a dynamic environment where it must learn to adapt from a stream of tasks to make new predictions. In this scenario, however, with data of the current task accessible but none (at least the bulk) of the past, CIL is challenged by degrading performance on old classes, a phenomenon known as catastrophic forgetting [6], [7]. For example, despite current deep-learning models, such as convolutional neural networks (CNN), can be trained to obtain impressive performance, they would fail to retain the knowledge of previously learned classes when sequentially trained on new classes [8], [9].\nThe main causes of catastrophic forgetting can be two-fold. From the network topology perspective, information acquired is maintained in model parameters (e.g., network weights). If one directly fine-tunes a well-trained model for a new task, its solution will be overwritten to satisfy the current learning objective [10]. As a result, the parameter-overwritten model will abruptly lose the ability to perform well on a former task. In the sight of data distribution, each task appears in sequences with non-stationary properties where unknown new classes typically emerge over time. This means that the training/test data are not independent and identically distributed (NonIID). Consequently, it gives rise to serious decision boundary distortion, e.g., inter-class confusion problem [11].\nRecently, numerous CIL approaches have been proposed to address forgetting by adapting model parameters continually, which can be roughly divided into three groups [12]\u2013[14]. (1) Rehearsal-based approaches involve fine-tuning network weights by keeping partial copies of data information from previously learned tasks in an exemplar buffer [14], [15]. One straightforward implementation of this group would be to preserve pixel-level samples from each seen task for revisiting together with incoming tasks [16], [17]. However, the learning performance deteriorates when buffer size decreases, and is eventually not applicable to real-world scenarios where memory constraints or privacy and security issues [18] concern. As an alternative to storing data, generative replay yields past observations in pseudo samples at input layer [19] or data representations at hidden layer [20], [21], and interleaves them when learning something new. However, current state-of-theart generative adversarial networks (GAN) could perform well on simple datasets like MNIST, but scaling it up to more challenging problems (e.g., ImageNet) has been reported to be problematic [22], [23]. Actually, this transfers the stress from discriminative models to generative models instead of directly solving forgetting, which is demanding to recover past distributions cumulatively. (2) Regularization-based approaches, without accessing an exemplar buffer, incorporate additional ar X iv :2 30 6.\n11 96\n7v 1\n[ cs\n.L G\n] 2\n1 Ju\nn 20\n23\nregularization terms into the loss function to penalize changes of network weights deemed important for old tasks [24]\u2013[26]. That is, each network parameter is associated with the weight importance computed by different strategies. Nevertheless, the challenge is to correctly assign credit to the weights of an over-parameterized network when the number of tasks is large. (3) Architecture-based approaches dynamically modify network components to absorb knowledge needed for novel classes, commonly relying on task-specific mask [27]\u2013[29] or expansion [30]\u2013[32] operation to balance network capacity. Among them, the former generates masks with fixed parts allocated to each task and typically requires task identities to activate corresponding components at inference time. Most of them target the less challenging task-incremental learning [4] and thus do not apply to task-agnostic CIL. The latter explicitly adds a subnetwork per task by expanding branches while freezing the counterparts that solve previous tasks. A criticism of them is the network growth with the number of tasks [33]. More thorough discussions on the above methods can be found in the section of Related Work.\nIn this paper, we focus on the more realistic setting in CIL, where training data of previous tasks are inaccessible and memory budgets are limited. To this end, we propose a novel CIL method from the parameter optimization perspective. Termed CLSNet, two complementary learning subnetworks are trained in an end-to-end manner, which jointly optimizes a plastic CNN feature extractor and an analytical single-hidden layer feed-forward network (SLFN) classifier. The core idea of CLSNet is to holistically control the parameters of a welltrained model without being overwritten such that the decision boundary learned fits new classes while retaining its capacity to recognize old classes. This yields an effective learning framework amenable to CIL, as detailed later in Sec. IV.\nOur main contributions and strengths are summarized as follows.\n1) We propose CLSNet, a parameter-efficient CIL method comprised of two complementary learning subnetworks. In each CIL session, it assimilates new tasks by attaching a tiny set of declarative parameters to its backbone. This corresponds to an extremely limited memory budget, e.g., only one vector per class is kept for retrieving knowledge. 2) We take a drastically different approach to jointly optimize the two subnetworks (i.e., a learnable CNN feature extractor and an SLFN classifier with closed-form solutions) by combining the respective strengths of backpropagation and forward-propagation. CLSNet does not rely on buffering past data for training the subnetworks. 3) Given a non-growing backbone, it is empirically investigated that CLSNet can innately manage the long/shortterm memory of each seen task, e.g., graceful forgetting previously learned trivial tasks makes it suffice to train on incoming tasks better with limited network capacity. 4) The effectiveness of our approach is demonstrated by five evaluation metrics, three types of task sequences, and sufficient representative baselines, outperforming existing methods in terms of accuracy gain, memory cost, training efficiency, as well as task-order robustness."
+        },
+        {
+            "heading": "II. RELATED WORK",
+            "text": ""
+        },
+        {
+            "heading": "A. Class-Incremental Learning",
+            "text": "A significant body of work has studied methods for addressing catastrophic forgetting. In this section, we discuss a selection of representative CIL approaches and highlight relationships to the proposed CLSNet. Based on how task-specific information is accumulated and leveraged throughout the CIL process, prior works fall into three main categories [34], [35].\nRehearsal-based approaches rely on an exemplar buffer that stores data of previous tasks for rehearsal. As a classical method, GEM [17] utilizes gradient episode memory by independently constraining the loss of each episodic memory non-increase. On this basis, LOGD [36] specifies the shared and task-specific information in episodic memory. IL2M [37] introduces a dual-memory strategy to store both bounded exemplar images and past class statistics. i-CTRL [38] is founded on compact and structured representations of old classes, characterized by a fixed architecture. As previously mentioned, leveraging a rehearsal buffer in any form (e.g., raw pixels, pseudo samples, and data representations) to retrain on all previously learned tasks is less efficient and is prohibited when considering privacy and security issues [18]. By contrast, the proposed CLSNet, a rehearsal-free method, rethinks the above limitations from a parameter/solution space perspective. Hence, it is simple yet effective to properly optimize the parameters of a model itself compared to buffering and retraining past observations cumulatively.\nRegularization-based approaches avoids storing data so as to prioritize privacy and alleviate memory requirements. Instead, the movement of important parameters is penalized during the training of later tasks, with parameters assumed independent to ensure feasibility. EWC [24] is the pioneer of this line of work, followed by SI [25], and MAS [18]. Additionally, DMC [26] involves first training a separate model for the new classes and then using publicly available unlabeled auxiliary data to integrate the new and old models via a double distillation. OWM [39] aims to find orthogonal projections of weight updates that do not disturb the connecting weights of previous tasks. However, layer-wise regularization makes it difficult to find the optimal parameters when tasks are challenging. By comparison, our approach could alleviate their demanding requirement for parameter optimization by precisely controlling the parameters of a well-trained model. Particularly, we apply the regularization into the final decision layer because the feature map extracted from deeper layers is more likely to contain task-specific information, and the deeper layer can easily forget previous knowledge [40]. Detailed differences and strengths will be discussed in Sec. IV-E.\nArchitecture-based approaches dynamically modify network architectures to adsorb knowledge needed for novel tasks. DER [41] allocates a new learnable feature extractor per task and augments with the previously frozen features of all sub-networks in each CIL session. Similarly, FOSTER [42] adds an extra model compression process by knowledge distillation, which alleviates expensive model overhead. DyTox [43] leverages a transformer architecture with the dynamic expansion of task tokens. Furthermore, MEMO [44] decouples\nthe network structure and only expands specialized building blocks. Nevertheless, architecture-based approaches generally require a substantially large number of additional parameters to assist model separation, whose expansion criterion relies on the change of the loss and thus lacks theoretical guarantees. Our method differs in building upon a non-growing backbone and can vacate the network capacity by selectively removing previously learned trivial tasks."
+        },
+        {
+            "heading": "B. Class-Incremental Learning with Pre-trained Models",
+            "text": "Using pre-trained models/feature extractors has been a wellreceived option in computer vision. Recent work on CIL also highlights the potential importance of pre-trained models [29], [45], hypothesizing that a strong base model can provide transferable representations for novel classes. Then, the downstream CIL can be done with small adaptations [46]. PCL [32] consists of a pre-trained model as the base shared by all tasks, followed by class-specific heads. As an MLPbased CIL classifier, OWM [39] takes advantage of a feature extractor that is pre-trained based on a different number of classes to analyze the raw images. REMIND [47] takes in an input image and passes it through frozen layers of a CNN to obtain tensor representations since early layers of CNNs have been shown to be highly transferable. Besides, some promptbased models such as L2P [48] and DualPrompt [49] adopt a small set of learnable parameters to instruct the representations of a pre-trained vision transformer (ViT) and store such parameters in memory space. The above illustrates how pre-trained models are extensively used in the CIL community, which accommodates the real-world scenario where pre-training is usually involved as a base session.\nAlthough CIL starting with pre-trained models can ease the burden of catastrophic forgetting, a critical challenge is that the pre-trained knowledge needs to be adaptively leveraged for the current task while guaranteeing sufficient generalizability to future tasks [50]. As is revealed by [49], [51], some CIL methods still suffer from serious performance degradation given a frozen pre-trained backbone. From this perspective, it is more desirable to train a parameter-efficient CIL model holistically instead of building on top of a totally static pretrained model. In light of this, the proposed method develops a learnable CNN as a feature extractor, followed by an analytical SLFN classifier. In each CIL session, we jointly optimize the two subnetworks to learn a new task while maintaining sufficient plasticity to incoming tasks. To our knowledge, this is yet underexplored."
+        },
+        {
+            "heading": "III. PROBLEM SETTING",
+            "text": "This paper focuses on the most common but challenging class incremental learning (CIL) scenario [13], [34], [35]. The problem setting can be formally defined as follows. We denote a sequence of tasks as D = {D1,D2, . . . ,DT }. At training session t, we only have access to the supervised learning datasets Dt = {(Xt,Yt)|Xt \u2208 RNt\u00d7Mt ,Yt \u2208 RNt\u00d7Ct} of task t (t = 1, 2, . . . , T ), where Xt is the input, Yt is the label, Nt is the number of samples, Mt and Ct are the dimensions of input and output. There is no overlap between the new\nclasses of different training sessions, i.e., Ci\u2229Cj = \u2205(i \u0338= j). Assumed a model M(\u03b8t\u22121) (t \u2265 2) trained on previous task(s), parameterized by its connecting weight \u03b8t\u22121, the objective is to train an updated model M(\u03b8t) which can incrementally recognize the newly emerging Ct classes based on the datasets Dt. For instance, M(\u03b8T ) needs to remember how to perform well on the cumulative \u2211T t=1 Ct classes. At test time, samples may come from any of tasks 1 to T , and M(\u03b8T ) needs to discriminate between all classes seen so far without knowing task identities. The remaining notations used throughout this paper are summarized in Table I."
+        },
+        {
+            "heading": "IV. METHODOLOGY",
+            "text": ""
+        },
+        {
+            "heading": "A. Overview of CLSNet",
+            "text": "CLSNet is a parameter-efficient CIL method that learns continually via the synergy between two complementary learning subnetworks, i.e., the interplay of a plastic CNN feature extractor and an analytical SLFN classifier. Fig. 1 depicts the overview of our method. The core idea is to holistically control the parameters of a well-trained model without being overwritten, such that the decision boundary learned fits new classes while retaining its capacity to recognize old classes. Learning involves two steps: 1) one subnetwork provides task-dependent knowledge separately without interference, and 2) another subnetwork incrementally integrates the knowledge specific to that task serving for decision-making without forgetting. Our method doesn\u2019t store past exemplars endlessly. Instead, it only requires the attachment of a small set of declarative parameters, making use of an extremely limited memory budget during sequential training. In addition, CLSNet can selectively forget previously learned inessential tasks to train subsequent tasks better, given a bounded network capacity.\nFormally, we denote Xt as the input and Y\u0302t as the corresponding model output given the current task t. Our CLSNet Y\u0302t = f(g(Xt)) is trainable in each CIL session, where the two complementary learning subnetworks are formulated by two nested functions: g(\u00b7), parameterized by \u03b8g , consists of a CNN feature extractor; and f(\u00b7), parameterized by \u03b8f , consists of the final classifier in the decision layer. CLSNet jointly\noptimizes the two subnetworks by combining the respective strengths of back-propagation and forward-propagation. The following explains how CLSNet addresses catastrophic forge via the synergy of two complementary learning subnetworks."
+        },
+        {
+            "heading": "B. Subnetwork I: Pre-Trained CNN Feature Extractor",
+            "text": "The pre-trained models provide generalizable representations for the downstream tasks, weakening the difficulty of sequential training since it can be done with small adaptations. However, a critical challenge is that the datasets used to do upstream pre-training cannot cover that of CIL, i.e., no overlaps between them. Therefore, these fixed representations are intractable to be adaptively leveraged for maintaining enough generalizability to a sequence of tasks. In light of this, we incorporate the plastic components into a pre-trained model. In each CIL session, raw images are first passed through a frozen CNN g\u2032(\u00b7) and then augmented with a plastic/updatable layer g\u2032\u2032(\u00b7) of the subnetwork, i.e., g(\u00b7)\u2190 g\u2032\u2032(g\u2032(\u00b7)).\n1) Initializing A Frozen CNN: During sequential learning, we start with initializing a pre-trained CNN model as a feature extractor. This implies that the low-level representations provided by the upstream pre-training must be highly transferable across image datasets [47]. To perform such base initialization, we follow the common practice in prior work [32], [39] by pre-training on a portion of the dataset offline. After that, parameters of subnetwork g\u2032(\u00b7;\u03b8g\u2032) are kept fixed except for its last layer g\u2032\u2032(\u00b7;\u03b8g\u2032\u2032). Specifically, the base initialization can be achieved by a standard ResNet-18, where we jointly initialize both the first 15 convolutional layers and 3 downsampling layers by the back-propagation algorithm on an initial subset of data, e.g., the first 200 classes of ImageNet datasets and the remaining for CIL. After it is well-trained, the former 15 convolutional layers and 2 downsampling layers are frozen, obtaining Zt = g\u2032(Xt;\u03b8g\u2032); while the 18th layer is still trainable for representation augmentation, as presented below.\n2) Augmenting Transferability on A Sequence of Tasks: The discriminative information learned for old tasks may not be sufficiently discriminative between the incoming tasks [31], [32]. Since the fixed representations may lack transferability on a sequence of tasks which we refer to drifted representations, we now elaborate on how to push Zt back to a task-\noptimal working state. In detail, we design a new diverse representation augmentation strategy for unsupervised network parameter optimization, which does not require explicit label information during sequential training. Instead, the involved weights (and biases) can be reused to reproduce the optimal representations of each seen task so far, as shown in Fig. 2.\na) Diversifying drifted representations: Specifically, to learn diverse and rich features potentially useful for new tasks, we first divide the last layer g\u2032\u2032(\u00b7;\u03b8g\u2032\u2032) of the pre-trained model into n groups of mapping feature nodes with each k nodes:\nGi = ZtWi + \u03b2i, i = 1, 2, . . . , n (1)\nwhere Wi and \u03b2i are randomly assigned within a proper scope setting (e.g., [\u22121, 1]) [52], [53], denoted by \u03b8g\u2032\u2032 = {Wi,\u03b2i}. In this way, we have G = [G1,G2, . . . ,Gn] by concatenating all the n groups of random mapping features.\nb) Restoring optimal representations: Then, it is critical to tweak every Gi at an optimal level, achieved by slightly adjusting the network parameters \u03b8g\u2032\u2032 to \u03b8\u2217g\u2032\u2032 . To this end, we formulate it into an optimization problem, i.e.,\nargmin \u03b8\u2217 g\u2032\u2032\n: p(\u03b8\u2217g\u2032\u2032) + q(\u03b8g\u2032\u2032)\ns.t. : \u03b8\u2217g\u2032\u2032 \u2212 \u03b8g\u2032\u2032 = 0 (2)\nwhere p(\u03b8\u2217g\u2032\u2032) = \u2225Gi\u03b8\u2217g\u2032\u2032 \u2212 Zt\u222522, q(\u03b8g\u2032\u2032) = \u03b1\u2225\u03b8g\u2032\u2032\u22251, and \u03b1 is a constant. The above problem denoted by lasso [54] is convex, which can be solved by the alternating direction method of multipliers (ADMM) [55]. The implementation of ADMM is described as the following iterative steps: \u03b8\u2217g\u2032\u2032(k + 1) =(\u03c1I +G T i Gi) \u22121(GTi Zt+ \u03c1(\u03b8g\u2032\u2032(k)\u2212 u(k))) \u03b8g\u2032\u2032(k + 1) =S\u03b1\u03c1 (\u03b8 \u2217 g\u2032\u2032(k + 1) + u(k))\nu(k + 1) =u(k) + (\u03b8\u2217g\u2032\u2032(k + 1)\u2212 \u03b8g\u2032\u2032(k + 1))\n(3)\nwhere \u03c1 > 0 and S is the soft thresholding operator, which can be defined as\nSb(a) =  a\u2212 b, a > b\n0, |a| \u2264 b a+ b, a < \u2212b\n(4)\nBy performing the above iterative steps, we could manage to recover the optimal representations G\u2217 = [G\u22171,G \u2217 2, . . . ,G \u2217 n] in an unsupervised manner, where G\u2217i = ZtW \u2217 i + \u03b2 \u2217 i , \u03b8\u2217g\u2032\u2032 = {W \u2217i ,\u03b2\u2217i }, and g\u2032\u2032(Zt;\u03b8\u2217g\u2032\u2032). Using the optimized \u03b8\u2217g\u2032\u2032 as the last layer\u2019s weights of the pre-trained model would more vividly reflect the discriminative information of each task. Finally, g\u2032(Xt;\u03b8g\u2032) are expanded with g\u2032\u2032(Zt;\u03b8\u2217g\u2032\u2032) as a whole to augment the transferability on a sequence of tasks (see Sec.V-D1 for more), which is denoted as At = [Zt,G\u2217]."
+        },
+        {
+            "heading": "C. Subnetwork II: Analytical SLFN Classifier",
+            "text": "To guarantee the decision boundary learned fits new classes while retaining its capacity to accommodate unseen classes, we present an analytical SLFN classifier f(\u00b7;\u03b8f ) as the read-out layer. As opposed to the commonly-used softmax layer, we derive the closed-form solution for the final single-head classifier. First, we compute the output weights of each task, designated as declarative parameters; Second, we incrementally update them over all tasks seen so far for the decision-making process. In this way, \u03b8f is explicitly computed into a closed-form solution and consolidated in a forward-propagation fashion, instead of error back-propagation.\n1) Computing Declarative Parameters: Based on the optimal representations At yielded by the pre-trained CNN feature extractor, the output function of the classifier is f(At;\u03b8f ), which can be written as the matrix form Yt = At\u2126t. In this way, the declarative parameter \u2126t of task t can be easily obtained by the Moore-Penrose generalized inverse, i.e., \u2126t = A + t Yt. The computational complexity introduced by the matrix inversion operation can be further circumvented by\nA+t = (\u03c1I +A T t At) \u22121ATt (5)\nwhere ATt is the transpose of At and the same constraint term \u03c1 in Eq. (3) is employed to find the pseudo-inverse when the original generalized inverse is under the ill condition. Without loss of generality, the declarative parameter of task t can be denoted as\n\u2126t = (\u03c1I +A T t At) \u22121ATt Yt (6)\nMeanwhile, we preserve each \u2126t for knowledge retention, termed declarative parameter statistic \u2126 = [\u21261,\u21262, . . . ,\u2126t], meaning that our method keeps only one matrix per task or one vector per class, which is memory-efficient compared to the exemplar budget used in rehearsal-based methods.\n2) Decision-Making Without Forgetting: Aided by the declarative parameter statistic, we update the classifier to retain the knowledge of previously learned tasks. Suppose there have been T \u2212 1 (T \u2265 2) tasks trained so far and we have the resulting declarative parameter statistic \u2126 = [\u21261, . . . ,\u2126T\u22121]. Here we refer to \u21261:T\u22121 as the final classifier\u2019s closedform solution that has consolidated the previously declarative parameter \u2126t (t = 1, 2, . . . , T \u2212 1), and thus the classifier\u2019s output Y\u0302t = At\u21261:T\u22121. When the T th task arrives, the goal is to enrich the \u21261:T\u22121 as \u21261:T such that it can accommodate the new task without forgetting previous ones. We formulate this into the following objective function:\nJ = 1\n2NT \u2225ET \u222522 +\n1\n2 T\u22121\u2211 t=1 \u2225 \u221a \u03bbtPt \u2299 (\u21261:T \u2212\u2126t)\u222522\n+ 1\n2NT \u2225\u21261:T \u2212\u21261:T\u22121\u222522\n(7)\nwhere ET = AT\u21261:T \u2212 YT is the prediction residual, \u2299 is the element-wise product, \u03bbt is the trade-off that controls how important old tasks are compared to task T , and Pt matters the declarative parameter plasticity that is discussed in the next part (see Sec. IV-C3). Overall, the first term guarantees the sound performance of current task {XT ,YT }; the second term preserves the previously acquired knowledge; and the third term counterbalances systematic bias favoring tasks learned earlier on, which is overlooked in some regularization-based methods [24], [25]. We discuss the differences in detail later in Sec. IV-E after we have introduced our method properly.\nNow, we analytically solve Eq. (7) to obtain the closedform solution of the final classifier, which is parameterefficient compared to conventional gradient descent methods. To complete the derivation process, we take the derivative of the objective function with respect to \u21261:T :\n\u2202J\n\u2202\u21261:T =\n1\nNT ATT (AT\u21261:T \u2212 YT ) + T\u22121\u2211 t=1 \u03bbtF t \u2299 (\u21261:T \u2212\u2126t) + 1\nNT (\u21261:T \u2212\u21261:T\u22121)\n(8)\nwhere F t = Pt\u2299Pt is the element-wise product of declarative parameter plasticity Pt. By setting \u2202J/\u2202\u21261:T = 0, we have\nATTAT\u21261:T + T\u22121\u2211 t=1 \u03b3tF t \u2299\u21261:T +\u21261:T\n=ATTYT + T\u22121\u2211 t=1 \u03b3tF t \u2299\u2126t +\u21261:T\u22121\n(9)\nwhere \u03b3t = \u03bbtNt+1. However, it is intractable to directly obtain \u21261:T due to the coexistence of matrix product and\nelement-wise product in Eq. (9). Here, we employ a partitioned matrix diagonalization (PMD) strategy for problem-solving. Specifically, \u21261:T , F t, and YT are first partitioned by columns, i.e., the corresponding entries for each class. Then, we have \u21261:T = [\u21261:T,1, . . . ,\u21261:T,c, . . . ,\u21261:T,CT ], F t = [F t,1, . . . ,F t,c, . . . ,F t,Ct ], and YT = [YT,1, . . . ,YT,c, . . . ,YT,CT ]. Finally, we diagonalize F t,c into Kt,c for c = 1, 2, . . . , Ct and Eq. (9) can be rewritten as\n( ATTAT + T\u22121\u2211 t=1 \u03b3tKt,c + I ) \u21261:T,c\n=ATTYT,c + T\u22121\u2211 t=1 \u03b3tKt,c\u2126t,c +\u21261:T\u22121,c\n(10)\nNote that there are only matrix product operations in the above analytical expression, compared to Eq. (9). Denote by \u21261:T,c in \u21261:T = [\u21261:T,1, . . . ,\u21261:T,c, . . . ,\u21261:T,CT ] the closed-form solution for cth class (c = 1, 2, . . . , CT ), which can be recursively updated as\n\u21261:T,c = ( ATTAT + T\u22121\u2211 t=1 \u03b3tKt,c + I )\u22121 \u00d7 ( ATTYT,c +\nT\u22121\u2211 t=1 \u03b3tKt,c\u2126t,c +\u21261:T\u22121,c ) (11) where Kt,c and YT,c are the counterparts of Pt and YT . Hence, the final classifier with closed-form solution Y\u0302t = At\u21261:T can recognize any of tasks 1 to T .\n3) Determining Declarative Parameter Plasticity: We now discuss how to determine the declarative parameter plasticity, i.e., F t = Pt\u2299Pt, which is indispensable to guide the update of the final classifier. Inspired by the online Bayesian learning [56], [57], we probe into some properties from a probabilistic perspective. In this way, the entries of closed-form solution \u21261:T mean finding their most probable values given some data D = {D1,D2, . . . ,DT }. Hence, we can formulate the conditional probability p(\u21261:T |D) as\np(\u21261:T |D)\n= p(\u21261:T ,DT |D1, . . . ,DT\u22121)p(D1, . . . ,DT\u22121)\np(DT |D1, . . . ,DT\u22121)p(D1, . . . ,DT\u22121)\n= p(DT |\u21261:T ,D1, . . . ,DT\u22121)p(\u21261:T |D1, . . . ,DT\u22121)\np(DT |D1, . . . ,DT\u22121))\n= p(DT |\u21261:T )p(\u21261:T |D1, . . . ,DT\u22121)\np(DT ) (12)\nThen, Eq. (12) is further processed with logarithm\nlog p(\u21261:T |D) = log p(DT |\u21261:T ) + log p(\u21261:T |D1, . . . ,DT\u22121) \u2212 log p(DT )\n(13)\nwhere the log-likelihood probability log p(DT |\u21261:T ) is the task-specific objective function for task T , log p(DT ) is\na parameter-free constant, and the posterior distribution log p(\u21261:T |D1, . . . ,DT\u22121) containing information of previous tasks is the core to knowledge retention. Hence,\n\u21261:T\n=argmax \u21261:T\nlog p(\u21261:T |D)\n= argmax \u21261:T\nlog p(DT |\u21261:T ) + log p(\u21261:T |D1, . . . ,DT\u22121)\n\u225c arg min \u21261:T\n1\n2NT \u2225ET \u222522 \u2212 log p(\u21261:T |D1, . . . ,DT\u22121)\n(14)\nNote that the above posterior distribution in Eq. (14) cannot be calculated directly but can be tackled by the Laplace approximation [56], [58]. On this basis, we would decompose the distribution into multiple terms, one for each task, i.e., log p(\u21261:T |D1, . . . ,DT\u22121) \u2248 \u2211T\u22121 t=1 log p(\u21261:T |Dt) where each p(\u21261:T |Dt) can be sequentially approximated as a Gaussian distribution with its mean given by the \u2126t and variance given by \u2212H\u22121t . The Hessian matrix Ht = \u22072\u21261:T h(\u21261:T ) corresponds to \u21261:T = \u2126t in the Taylor series.\nHowever, the computation of Ht may be complicated and time-consuming. The properties of Fisher information matrix [59], [60] could be an alternative. Specifically, the Fisher information matrix F of conditional probability p\u03c0(z) with respect to a vector \u03c0 is defined below\nF = Ez [ \u2207\u03c0 log p\u03c0(z)\u2207\u03c0 log p\u03c0(z)T ] (15)\nand the Hessian matrix H of log p\u03c0(z) is given by\nH = \u22072\u03c0 log p\u03c0(z) (16)\nLemma 1: [59] The negative expected of the Hessian matrix H of log-likelihood is equal to the Fisher information matrix F .\nProof 1: Taking expectation with respect to Eq. (16), we have\nEz [ \u22072\u03c0 log p\u03c0(z) ] =Ez [ \u22072\u03c0p\u03c0(z) p\u03c0(z) \u2212 ( \u2207\u03c0p\u03c0(z) p\u03c0(z) )( \u2207\u03c0p\u03c0(z) p\u03c0(z)\n)T] =Ez [ \u22072\u03c0p\u03c0(z) p\u03c0(z) ] \u2212 Ez [( \u2207\u03c0p\u03c0(z) p\u03c0(z) )( \u2207\u03c0p\u03c0(z) p\u03c0(z)\n)T] =\n\u222b \u22072\u03c0p\u03c0(z) p\u03c0(z) p\u03c0(z)dz \u2212 Ez [ \u2207\u03c0 log p\u03c0(z)\u2207\u03c0 log p\u03c0(z)T ] =\u22072\u03c0 \u222b p\u03c0(z)dz \u2212 F\n=\u2212 F (17)\nThis completes the proof of Lemma 1. \u25a1 Hence, we have F = \u2212Ez [ H ] , which is a surrogate to the Hessian matrix. Besides, it can further be computed from the squares of first-order gradient alone in the empirical form [59], [60]. That is, F t = \u2212EDt [ Ht ] when given the training data Dt = {(Xt,Yt)}, in which Xt = {x1, . . . ,xp, . . . ,xNt}\nAlgorithm 1: Training procedure of CLSNet for CIL Input: Tasks D1,D2, . . . ,DT presented sequentially Output: Cloased-form solution \u21261:T and declarative\nparameter statistic \u2126 1 for t = 1, 2, . . . , T do 2 // Subnetwork I: Pre-Trained Feature Extractor 3 Initialize a pre-trained CNN model; 4 Obtain optimal representations G\u2217 by Eqs. (1-2); 5 Set the output of Subnetwork I: At \u2190 [Zt,G\u2217]; 6 // Subnetwork II: Analytical SLFN Classifier 7 Compute declarative parameters \u2126t by Eq. (6); 8 if t < T then 9 Calculate the plasticity matrix F t by Eq. (18);\n10 end 11 for c = 1, 2, . . . , Ct do 12 Recursively consolidate \u21261:t,c by Eq. (11); 13 end 14 Obtain closed-form solution \u21261:t = {\u21261:t,c}Ctc=1; 15 end\nResult: CLSNet output Y\u0302t = At\u21261:T over tasks seen\nand Yt = {y1, . . . ,yp, . . . ,yNt}. Therefore, the declarative parameter plasticity can be formulated by\nF t= 1\nNt Nt\u2211 p=1 \u2207\u21261:T log p(\u21261:T |xp)\u2207\u21261:T log p(\u21261:T |xp)T\n(18) where F t = Pt \u2299 Pt encourages the new task to update the closed-form solution according to how plastic are these declarative parameters of prior tasks. We summarize the training procedure of the proposed CLSNet in Algorithm 1."
+        },
+        {
+            "heading": "D. Managing the Trade-Off for Graceful Forgetting",
+            "text": "Throughout this paper, we use a non-growing architecture for CIL. It is natural to think of whether it has the opportunity to train on all incoming tasks given the limited network capacity. We argue that graceful forgetting is also a requisite against catastrophic forgetting, e.g., selectively removing inessential information is crucial to spare space for better learning the future ones. However, forgetting is subconscious and differs across people. Empirically, we simplify and investigate this issue by borrowing the concept of first-in-first-out (FIFO) [61] in computing and systems theory. Concretely, we implement memory fading with a potential priority queue where the most previously learned tasks are the first to be removed, which is in line with the fact that the earlier experiences are easier to forget. CLSNet can innately manage the long/short-term declarative parameter of each seen task. This can be achieved by a minimal value in the trade-off \u03bbt (\u03b3t = \u03bbtNt+1). In this way, graceful forgetting of previously learned trivial tasks makes our method suffice to train on incoming tasks better."
+        },
+        {
+            "heading": "E. Discussion",
+            "text": "In this section, we discuss the relationship between the proposed CLSNet and the representative regularization-based\nmethod, EWC [24]. Both serve the same purpose of mitigating catastrophic forgetting by accumulating quadratic terms to penalize changes in network parameters deemed important for old tasks. However, there are two intrinsic differences between CLSNet and EWC. (i) The original EWC forces a model to remember older tasks more vividly, which involves double counting the data and accumulating Fisher regularization at each layer [62]. This not only over-constrains the network parameters for learning new tasks but also leads to systematic bias favoring earlier tasks. Meanwhile, the entire EWC network experiences a linear growth in network parameters as the number of tasks increases. By contrast, our CLSNet only leverages the regularization in the single-hidden layer feedforward network classifier, which builds on top of a plastic CNN feature extractor. This means that CLSNet only needs to maintain the Fisher information matrix in the decision layer, rather than the layer-wise implementation in EWC. Meanwhile, the systematic bias towards previously learned tasks can be effectively counterbalanced by incorporating the third term in Eq. (7), as demonstrated in the experiments (see Sec. V-D3). (ii) Rather than the commonly-used softmax layer, we derive a closed-form solution to prevent the decision boundary from being distorted, which is easy-implemented, parameter efficient, and can converge more quickly than a standard BP algorithm. Additionally, we find that some regularization-based methods [18], [25], including EWC, are highly susceptible to the trade-off coefficients for different settings (learning rate, batch size, etc.) and benchmarks (number of tasks and task orderings), which has been well tackled in our method. In particular, the closed-form solution has strong taskorder robustness, with similar accuracies regardless of random task orderings for multiple runs (see Sec. V-D4)."
+        },
+        {
+            "heading": "V. EXPERIMENTS",
+            "text": ""
+        },
+        {
+            "heading": "A. Experiment Setup",
+            "text": "Datasets. We follow a popular data split in the CIL scenario to simulate emerging new classes by respectively disjointing three benchmark datasets, including FashionMNIST, CIFAR100, and ImageNet-Subset [21], [31], [32], [40]. For convenience, we use the nomenclature [DATASET]-C/T to denote a task sequence with C classes evenly divided into T tasks, where the suffix indicates that a model needs to recognize C/T new classes in each task (session).\nEvaluation metrics. We first adopt three main metrics to evaluate the CIL performance of different models in depth (all higher is better). Avarage accuracy (Avg Acc) measures the average test classification accuracy of a model on all tasks seen so far: Avg Acc = 1T \u2211T t=1 RT,t, where RT,t is the test accuracy for task t after training on task T ; Backward Transfer (BWT) [17] indicates a model\u2019s ability in knowledge retention, averaged over all tasks: BWT =\n1 T\u22121 \u2211T\u22121 t=1 RT,t \u2212 Rt,t. Negative BWT means that learning new tasks causes forgetting past tasks; Forward Transfer (FWT) [63] measures how well a model uses previously learned knowledge to improve performance on the recently seen tasks: FWT = 1T\u22121 \u2211T t=2 Rt,t\u2212Rindt , where Rindt is the test classification accuracy of an independent model trained\nonly on task t. For similar ACC, the method that has a larger BWT/FWT is better.\nIn addition to the above three accuracy-related metrics, we also report the indicators of training/computational efficiency. That is, the Running Time (s) and the Memory Budget (MB). For the former, we measure the running time per epoch since different methods have very different requirements in computation; For the latter, we align the memory cost of both network parameters and old samples for fair comparisons [44], i.e., switching them to a 32-bit floating number. In this way, both the final model size (#model, MB) and exemplar buffers (#exemplar, MB) are counted into the memory budget (MB), calculated with an approximate summation of them.\nCompared methods. We compare CLSNet with both classic and the latest baselines, which covers rehearsal-based approaches: FS-DGPM [64] ARI [65], GEM [17], RM [19], RtF [66], BiR [21], IL2M [37], LOGD [36]; regularizationbased approaches: EWC [24], SI [25], MAS [18], DMC [26], OWM [39], InterContiNet [67]; architecture-based approaches: DER [41], FOSTER [42], MEMO [44], DyTox [43], EFT [31], RPS-Net [68], PCL [32], and SpaceNet [69]. Due to the peculiarity of ARI, InterContiNet, and DyTox, we do not compare them on the FashionMNIST-10/5. As baselines, we also compare with the naive approach of simply finetuning on each new task (None; approximate lower bound) and a network that is always trained using the data of tasks seen so far (Joint; approximate upper bound).\nTask protocols. Only training samples of current task t are available except for rehearsal-based methods, while test samples may come from any of tasks 1 to t at inference time without knowing task identities. Instead of using a fixed task sequence, we run each benchmark five times with randomly shuffled task orders and then report the means and/or standard deviations of these results. Hence, the repeated multiple runs will be entered a sequence of tasks with different orders that are more practical in an open-ended environment. We implement our method in PyTorch with NVIDIA RTX 3080-Ti GPUs, and the source code will be released.\nB. Implementation Details\nNetwork architecture. In our experiments, all the methods use similar-sized neural network architectures for all the benchmarks, unless otherwise stated. For FashionMNIST-10/5, the architecture is empirically conducted through a simple multi-layer perceptron (MLP) with [784-900-900-10] neurons, among which we divide the penultimate layer into n = 30 groups with each k = 30 nodes for our method. No pre-trained CNN feature extractor is used for FashionMNIST-10/5 as a simple model already generates good results. For CIFAR-100, a standard ResNet-18 is employed to provide well-extracted features. We follow the setting in OWM [32], [39] where a feature extractor pre-trained was first used to analyze the raw images. Then, the obtained feature vectors were sequentially fed into a simple model, with the similar architecture used in FashionMNIST-10/5, to learn the mappings between combinations of the features and labels of different classes. We apply the pre-trained feature extractor to the proposed\nCLSNet and all the baselines. For the ImageNet-200, it takes the Tiny-ImageNet-200 as an auxiliary dataset to do pretraining with ResNet-50 and then starts CIL with another 200 classes that the pre-trained model is not previously encountered. Specifically, we use a competitive contrastive learning algorithm, SimSiam [70], to initialize a pre-trained model. CLSNet first passes input images through the frozen SimSiam to obtain a set of rich representations; it then incrementally learns discriminative information which is unique to novel classes. This avoids data leakage as there are no overlapping classes between the data of pre-training and CIL. Note that initializing a contrastively pre-trained model is available for both our method and all the baselines for a fair comparison.\nHyper-parameter selection. For all the baselines, we use the open-source code released by their authors. Specifically, we select the SGD optimizer with an initial learning rate of 0.1 for different datasets and the mini-batch size for each task is 100 (FashionMNIST and CIFAR-100) or {100, 40, 20, 10} (ImageNet-Subset). For the rehearsal-based methods, we restrict the exemplar memory budget to 2k samples by following the similar setting in RPS-Net [68]. By contrast, CLSNet keeps only one matrix (900\u00d7C) per task or one vector (900\u00d71) per class, which is highly efficient compared to storing samples, e.g., 0.03M (declarative parameter) and 5.98MB (rehearsal sample) memory budget for FashionMNIST. For the architecture-based methods, we report the model size after learning all tasks and the regularization branch determines the trade-off from the set {100, 1000, 10000, 100000}. Note that the other hyper-parameters are with reference to the original settings by default. For our method, the hyper-parameters used in our experiment are as follows: \u03b1 = 0.01, \u03c1 = 2\u221230, and \u03b3t = 10000 (see Sec.V-D5 in the ablation study for more)."
+        },
+        {
+            "heading": "C. Results and Discussion",
+            "text": "1) Results on FashionMNIST-10/5: The task sequence is formed by splitting ten objects into five two-class classification tasks, among which each one is sequentially presented. Our method exhibits competitive superiority in the involved five evaluation metrics, as reported in Table II. First, we improve Avg Acc upon the second-best method RM by an absolute margin of 3.10%, concurrently with an acceptable level in the classification error rates compared to the upper bound. We note that rehearsal-based methods obtain better results in general as they can retrieve previously learned knowledge from the exemplar buffers. And among rehearsal-free methods, dynamic networks struggle in the CIL scenario while nongrowing networks with regularization suffer from catastrophic forgetting to different degrees. Second, BWT and FWF of ours come out in front, which is slightly inferior to the highest BWT achieved by RPS-Net but shares the highest FWT. These imply that the proposed method can well transfer knowledge across tasks: (i) the frozen pre-trained feature extractor together with diverse representation augmentation is beneficial to BWT (see the middle panel of Fig. 1), and (ii) the declarative parameter of each old task is well consolidated in the decision layer for FWT (see the right panel of Fig. 1). Third, we also show the computational comparison of different methods to indicate\nthe training efficiency. For the running time, our method is remarkably superior to others due to the advantage of closedform solutions, e.g., faster convergence; The final model size of our method is slightly (\u223c5%) larger than the rehearsalbased ones but our method needs no exemplar buffers. These results on FashionMNIST-10/5 demonstrate that the proposed CLSNet is a parameter-efficient CIL method.\n2) Results on CIFAR-{100/5, 100/10}: Fig. 3 further breaks down the 100 classes into 10 tasks and compares different methods on the resulting CIFAR-100/10 task sequence. In general, both architecture- and rehearsal-based methods exhibit superior accuracy compared with regularization-based ones. It is observed that the results indicate the competitive performance of our CLSNet in each CIL session, showing consistency with that of FashionMNIST-10/5. Compared with the last accuracy, our method achieves a relative gain of 1.94% over the second-best method. We note that our performance is only 8.07% below the Joint approach that is offline trained by using the samples of all classes. By contrast, the None approach fails to classify all test images into the classes of the most recently learned task.\n3) Results on ImageNet-{200/5, 200/10, 200/20, 200/40}: More challenging ImageNet-based task sequences are reported in Table III, where we incrementally learn groups of 5, 10, 20, and 50 classes in each training session. Among them, ImageNet-200/5 with more classes per task requires the model to learn a harder problem for each task, while ImageNet200/40 increases the length of the task sequence, testing a CL method\u2019s knowledge retention. The results indicate superior performance of the proposed method in all cases. Specifically, we observe that the proposed method surpasses all the selected SOTA baselines for the ImageNet-200/10 and\nImageNet-200/40 task sequences. Compared with the secondbest baseline, our method improve it by a margin of 0.73% and 0.16% respectively. For the ImageNet-200/5 and ImageNet200/20 task sequences, our method is slightly inferior to the best method. The comparison with the SOTA methods highlights our incremental learner as a promising tool for mitigating catastrophic forgetting."
+        },
+        {
+            "heading": "D. Ablation Studies",
+            "text": "1) Effectiveness of Diverse Representation Augmentation: As described in Sec. IV-B, g\u2032(Xt;\u03b8g\u2032) are expanded with g\u2032\u2032(Zt;\u03b8 \u2217 g\u2032\u2032) as a whole to augment the transferability on a sequence of tasks (see Fig. 1). Here we use four different types of connections to validate the effectiveness of representation augmentation: (a) Zt means the output of g\u2032(Xt;\u03b8g\u2032)\u2014drifted representations; (b) G means the output of g\u2032\u2032(Zt;\u03b8g\u2032\u2032)\u2014fixed representations; (c) G\u2217 means the output of g\u2032\u2032(Zt;\u03b8\u2217g\u2032\u2032)\u2014 optimal representations; and (d) At = [Zt,G\u2217] means the augmented representations used in this paper. Table IV reports the Avg Acc (%) of both task 1 and all tasks, respectively. It can be seen that all of them are effective except for the case of Zt. Specifically, the performance of At on the first task is slightly inferior to G\u2217. However, it is highly effective in terms of the Avg Acc on all five tasks. This is because the representations obtained by a frozen pre-trained model may not be sufficiently discriminative on a sequence of tasks.\n2) Visualization of the Optimal Representations: To further demonstrate the effectiveness of augmenting transferability, we visualize the optimal representations which will be used for the final classifier. Take FashionMNIST-10/5 as an example, in which 10 classes are evenly split into five 2-class tasks. Fig. 4 shows the t-SNE visualization [71] of the raw sample space Xt and the optimal representations At (t = 1, 2, . . . , 5) of each class. It can be observed that the same classes were well clustered while different classes are clearly separated. Therefore, the optimal representations produced by the plastic pre-trained model could provide sufficiently distinguishable information from a sequence of tasks for the final decision.\n3) Effectiveness of Each Component in Objective Function: We then provide an empirical investigation of the effectiveness\nof each element in Eq. (7). For simplicity, we denote the corresponding three components as Term 1, Term 2, and Term 3 respectively. Taking FashionMNIST as an example, Table V shows the experimental results of our method under different components. (a) In the case of using only Term 1, CLSNet degenerates into a traditional algorithm that is made available for single-task learning. (b) In the case of using Terms 1 and 2, the catastrophic forgetting of old tasks is mitigated as the additional regularization term could constrain the parameters not to deviate too much from those that were optimized. (c) In the case of using Terms 1 and 3, there is a serious performance drop. This is because it fails to globally treat parameters in the decision layer as having a different level of importance. (d) Finally, the last row demonstrates the collaborative performance of all components. Compared with case (b), the marginal boost of case (d) can be closely related to the counterbalanced systematic bias towards old tasks.\n4) Task-Order Robustness of Analytical Solution: As the task/class orders are unknown in advance for CIL, Table VI explores the robustness of regularization-based methods under randomly reshuffled task orders. For example, a task sequence with 5 tasks can generate 120 different combinations of orders. Here, we report both the means and standard deviations by running each benchmark five times with randomly shuffled task orders. We observe that the selected baselines are vulnerable to task-order robustness while our method with the analytical solution has the lowest sensitivity, followed by OWM [39]. Interestingly, OWM is actually an approximation of the analytical solution via the gradient descent method.\n5) Analysis on the Trade-Off: Table VII reports the results of the proposed CLSNet under different trade-off \u03b3t values, which controls how important old tasks are compared to the current task. First, our method with \u03b3t = 1 degenerates into the None approach such that the learning is almost completely biased towards the current task and yields positive FWT values. This implies that it would sacrifice previously learned knowledge to improve performance on the newly encountered tasks. Second, \u03b3t = 102 indicates that the plasticity on old tasks is very limited and the focus is still on the current task. Third, the \u03b3t = 104 setting is used in our method. Finally, interference among multiple tasks can cause great damage to the new task when \u03b3t = 106, which obtains a positive BWT value at the cost of current tasks.\nE. Investigation on Graceful Forgetting\nBefore concluding our work, we investigate the necessity of graceful forgetting given a non-growing backbone. A system with bounded network capacity that retains memories over an entire lifetime will have very little margin for new experiences. That is, it would eventually run out of capacity to learn incoming tasks. Therefore, it is crucial to selectively remove inessential information for better learning in the future ones. Empirically, we implement memory fading with a potential priority queue where the most previously learned tasks are the first to be removed. Instead of treating the seen tasks equally, we perform experiments on the impacts of graceful forgetting by managing the trade-off specific to part tasks.\nTable VIII records the results of short-term memory (STM) on some early learned task(s) from FashionMNIST-10/5, compared to the original long-term memory (LTM) as a control group. It can be observed that the removal of declarative parameters on task 1, task 2, and tasks 1 & 2 is beneficial to the remaining ones, somewhat akin to transfer learning. Concretely, we use RT,t to represent the test classification accuracy of a model on task t after training on task T . The Acc of R4,1\u223cR4,4 and R5,1\u223cR5,5 are respectively 91.84% and 91.05% in the case of LTM. After forgetting task 1, the counterparts of both are improved. Besides, the more tasks a model forgets, the better performance on the rest. This can also be reflected in the experiments on CIFAR-100/5, reported\nin Table IX. Therefore, CLSNet with limited network capacity has the opportunity to train on more incoming tasks by erasing task-specific declarative parameters."
+        },
+        {
+            "heading": "VI. CONCLUSION",
+            "text": "Existing rehearsal-based approaches are mainly driven by an emphasis on rote memorization of old samples, rather than an understanding of how memorized data can influence the ways that connectionist models distinguish and remember previous knowledge. By contrast, this paper proposes a parameterefficient class-incremental learning method called CLSNet, rethinking CIL from a parameter optimization perspective. Hence, it is simple yet effective to properly optimize the parameters of a model itself compared to buffering and retraining past observations cumulatively. Under this paradigm, a plastic CNN feature extractor and an analytical feed-forward classifier can be jointly optimized. Therefore, the proposed method holistically controls the parameters of a well-trained model such that the decision boundary learned fits new classes without losing its recognition of old classes. Extensive experiments show that the proposed CLSNet outperforms the selected comparison methods on five evaluation metrics and three benchmark datasets, in terms of accuracy gain, memory cost, training efficiency, and task-order robustness. Since there is no uniform standard for graceful forgetting in CIL and the benchmark remains an open question, this work preliminarily investigates its potential effects. Our future work will focus on the implementation of long/short-term memory retention for incrementally learning visual (image and video) tasks."
+        }
+    ],
+    "title": "Complementary Learning Subnetworks for Parameter-Efficient Class-Incremental Learning",
+    "year": 2023
+}

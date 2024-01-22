@@ -1,0 +1,603 @@
+{
+    "abstractText": "Large language models (LLMs) have formulated a blueprint for the advancement of artificial general intelligence. Its primary objective is to function as a humancentric (helpful, honest, and harmless) assistant. Alignment with humans assumes paramount significance, and reinforcement learning with human feedback (RLHF) emerges as the pivotal technological paradigm underpinning this pursuit. Current technical routes usually include reward models to measure human preferences, Proximal Policy Optimization (PPO) to optimize policy model outputs, and process supervision to improve step-by-step reasoning capabilities. However, due to the challenges of reward design, environment interaction, and agent training, coupled with huge trial and error cost of large language models, there is a significant barrier for AI researchers to motivate the development of technical alignment and safe landing of LLMs. The stable training of RLHF has still been a puzzle. In the first report, we dissect the framework of RLHF, re-evaluate the inner workings of PPO, and explore how the parts comprising PPO algorithms impact policy agent training. We identify policy constraints being the key factor for the effective implementation of the PPO algorithm. Therefore, we explore the PPO-max, an advanced version of PPO algorithm, to efficiently improve the training stability of the policy model. Based on our main results, we perform a comprehensive analysis of RLHF abilities compared with SFT models and ChatGPT. Beyond additional qualitative results, we even find that LLMs successfully trained by our algorithm can often better understand the deep meaning of the queries, and its responses are more able to hit people\u2019s souls directly. The absence of open-source implementations has posed significant challenges to the investigation of LLMs alignment. Therefore, we are eager to release technical reports, reward models and PPO codes1, aiming to make modest contributions to the advancement of LLMs. \u2217 Equal contributions. \u2020 Correspondence to: {rzheng20, shdou21, tgui, qz}@fudan.edu.cn 1 https://github.com/OpenLMLab/MOSS-RLHF Disclaimer: This paper contains content that may be profane, vulgar, or offensive. ar X iv :2 30 7. 04 96 4v 2 [ cs .C L ] 1 8 Ju l 2 02 3",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Rui Zheng"
+        },
+        {
+            "affiliations": [],
+            "name": "Shihan Dou"
+        },
+        {
+            "affiliations": [],
+            "name": "Songyang Gao"
+        },
+        {
+            "affiliations": [],
+            "name": "Yuan Hua"
+        },
+        {
+            "affiliations": [],
+            "name": "Wei Shen"
+        },
+        {
+            "affiliations": [],
+            "name": "Binghai Wang"
+        },
+        {
+            "affiliations": [],
+            "name": "Yan Liu"
+        },
+        {
+            "affiliations": [],
+            "name": "Senjie Jin"
+        },
+        {
+            "affiliations": [],
+            "name": "Qin Liu"
+        },
+        {
+            "affiliations": [],
+            "name": "Yuhao Zhou"
+        },
+        {
+            "affiliations": [],
+            "name": "Limao Xiong"
+        },
+        {
+            "affiliations": [],
+            "name": "Lu Chen"
+        },
+        {
+            "affiliations": [],
+            "name": "Zhiheng Xi"
+        },
+        {
+            "affiliations": [],
+            "name": "Nuo Xu"
+        },
+        {
+            "affiliations": [],
+            "name": "Wenbin Lai"
+        },
+        {
+            "affiliations": [],
+            "name": "Minghao Zhu"
+        },
+        {
+            "affiliations": [],
+            "name": "Cheng Chang"
+        },
+        {
+            "affiliations": [],
+            "name": "Zhangyue Yin"
+        },
+        {
+            "affiliations": [],
+            "name": "Rongxiang Weng"
+        },
+        {
+            "affiliations": [],
+            "name": "Wensen Cheng"
+        },
+        {
+            "affiliations": [],
+            "name": "Haoran Huang"
+        },
+        {
+            "affiliations": [],
+            "name": "Tianxiang Sun"
+        },
+        {
+            "affiliations": [],
+            "name": "Hang Yan"
+        },
+        {
+            "affiliations": [],
+            "name": "Tao Gui"
+        },
+        {
+            "affiliations": [],
+            "name": "Qi Zhang"
+        },
+        {
+            "affiliations": [],
+            "name": "Xipeng Qiu"
+        },
+        {
+            "affiliations": [],
+            "name": "Xuanjing Huang"
+        }
+    ],
+    "id": "SP:92d3b051bf531709d8a8c026708515cb66d19035",
+    "references": [
+        {
+            "authors": [
+                "H. Touvron",
+                "T. Lavril",
+                "G. Izacard"
+            ],
+            "title": "Llama: Open and efficient foundation language models",
+            "venue": "arXiv preprint arXiv:2302.13971,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Chiang",
+                "W.-L",
+                "Z. Li",
+                "Z. Lin"
+            ],
+            "title": "Vicuna: An open-source chatbot impressing gpt-4 with 90%* chatgpt quality",
+            "venue": "See https://vicuna. lmsys. org (accessed",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "W.X. Zhao",
+                "K. Zhou",
+                "J. Li"
+            ],
+            "title": "A survey of large language models",
+            "venue": "arXiv preprint arXiv:2303.18223,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "T. Brown",
+                "B. Mann",
+                "N. Ryder"
+            ],
+            "title": "Language models are few-shot learners",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "B. Peng",
+                "C. Li",
+                "P. He"
+            ],
+            "title": "Instruction tuning with gpt-4",
+            "venue": "arXiv preprint arXiv:2304.03277,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "R. Taori",
+                "I. Gulrajani",
+                "T. Zhang"
+            ],
+            "title": "Stanford alpaca: An instruction-following LLaMA model",
+            "venue": "https://github.com/tatsu-lab/stanford_alpaca,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "J. Wei",
+                "X. Wang",
+                "D. Schuurmans"
+            ],
+            "title": "Chain of thought prompting elicits reasoning in large language models",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D. Driess",
+                "F. Xia",
+                "M.S. Sajjadi"
+            ],
+            "title": "Palm-e: An embodied multimodal language model",
+            "venue": "arXiv preprint arXiv:2303.03378,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "J.S. Park",
+                "J.C. O\u2019Brien",
+                "C.J. Cai"
+            ],
+            "title": "Generative agents: Interactive simulacra of human behavior",
+            "venue": "arXiv preprint arXiv:2304.03442,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "L. Lucy",
+                "D. Bamman"
+            ],
+            "title": "Gender and representation bias in gpt-3 generated stories",
+            "venue": "In Proceedings of the Third Workshop on Narrative Understanding,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R. Thoppilan",
+                "D. De Freitas",
+                "J. Hall"
+            ],
+            "title": "Lamda: Language models for dialog applications",
+            "venue": "arXiv preprint arXiv:2201.08239,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "E.M. Bender",
+                "T. Gebru",
+                "A. McMillan-Major"
+            ],
+            "title": "On the dangers of stochastic parrots: Can language models be too big",
+            "venue": "In Proceedings of the 2021 ACM conference on fairness, accountability, and transparency,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R. Bommasani",
+                "D.A. Hudson",
+                "E. Adeli"
+            ],
+            "title": "On the opportunities and risks of foundation models",
+            "venue": "arXiv preprint arXiv:2108.07258,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Altman"
+            ],
+            "title": "Planning for agi and beyond",
+            "venue": "https://openai.com/blog/planning-for-agi-and-beyond,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "L. Ouyang",
+                "J. Wu",
+                "X. Jiang"
+            ],
+            "title": "Training language models to follow instructions with human feedback",
+            "venue": "arXiv preprint arXiv:2203.02155,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Y. Bai",
+                "A. Jones",
+                "K. Ndousse"
+            ],
+            "title": "Training a helpful and harmless assistant with reinforcement learning from human feedback",
+            "venue": "arXiv preprint arXiv:2204.05862,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Chiang",
+                "W.-L",
+                "Z. Li",
+                "Z. Lin"
+            ],
+            "title": "Vicuna: An open-source chatbot impressing gpt-4 with 90%",
+            "venue": "chatgpt quality,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "Y. Ji",
+                "Y. Deng",
+                "Y. Gong"
+            ],
+            "title": "Belle: Be everyone\u2019s large language model engine",
+            "venue": "https: //github.com/LianjiaTech/BELLE,",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "E. Beeching",
+                "Y. Belkada",
+                "K. Rasul"
+            ],
+            "title": "StackLLaMA: An RL fine-tuned LLaMA model for stack exchange question and answering, 2023",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "P.F. Christiano",
+                "J. Leike",
+                "T. Brown"
+            ],
+            "title": "Deep reinforcement learning from human preferences",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J. MacGlashan",
+                "M.K. Ho",
+                "R. Loftin"
+            ],
+            "title": "Interactive learning from policy-dependent human feedback",
+            "venue": "Proceedings of the 34th International Conference on Machine Learning,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "D.M. Ziegler",
+                "N. Stiennon",
+                "J. Wu"
+            ],
+            "title": "Fine-tuning language models from human preferences",
+            "venue": "arXiv preprint arXiv:1909.08593,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "N. Stiennon",
+                "L. Ouyang",
+                "J. Wu"
+            ],
+            "title": "Learning to summarize with human feedback",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Y. Bai",
+                "S. Kadavath",
+                "S. Kundu"
+            ],
+            "title": "Constitutional AI: Harmlessness from AI feedback, 2022",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "A. Askell",
+                "Y. Bai",
+                "A. Chen"
+            ],
+            "title": "A general language assistant as a laboratory for alignment",
+            "venue": "arXiv preprint arXiv:2112.00861,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M. Andrychowicz",
+                "A. Raichuk",
+                "P. Sta\u0144czyk"
+            ],
+            "title": "What matters for on-policy deep actor-critic methods? a large-scale study",
+            "venue": "In International Conference on Learning Representations",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "L. Engstrom",
+                "A. Ilyas",
+                "S. Santurkar"
+            ],
+            "title": "Implementation matters in deep policy gradients: A case study on ppo and trpo, 2020",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Holtzman",
+                "J. Buys",
+                "L. Du"
+            ],
+            "title": "The curious case of neural text degeneration",
+            "venue": "arXiv preprint arXiv:1904.09751,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "V. Mnih",
+                "A.P. Badia",
+                "M. Mirza"
+            ],
+            "title": "Asynchronous methods for deep reinforcement learning",
+            "venue": "Proceedings of the 33nd International Conference on Machine Learning,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "N. Jaques",
+                "A. Ghandeharioun",
+                "J.H. Shen"
+            ],
+            "title": "Way off-policy batch deep reinforcement learning of implicit human preferences in dialog",
+            "year": 1907
+        },
+        {
+            "authors": [
+                "J. Schulman",
+                "S. Levine",
+                "P. Abbeel"
+            ],
+            "title": "Trust region policy optimization",
+            "venue": "In International conference on machine learning,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "J. Schulman",
+                "F. Wolski",
+                "P. Dhariwal"
+            ],
+            "title": "Proximal policy optimization algorithms, 2017",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "S. Huang",
+                "R.F.J. Dossa",
+                "A. Raffin"
+            ],
+            "title": "The 37 implementation details of proximal policy optimization",
+            "venue": "The ICLR Blog Track",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "V. Mnih",
+                "K. Kavukcuoglu",
+                "D. Silver"
+            ],
+            "title": "Human-level control through deep reinforcement learning",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "J.J. Qi Wang",
+                "Yiyuan Yang"
+            ],
+            "title": "Easy RL: Reinforcement Learning Tutorial",
+            "venue": "Posts and Telecom Press,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "N. Keskar",
+                "B. McCann",
+                "L. Varshney"
+            ],
+            "title": "Ctrl: A conditional transformer language model for controllable generation",
+            "venue": "arXiv: Computation and Language,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Y. Dubois",
+                "X. Li",
+                "R. Taori"
+            ],
+            "title": "Alpacafarm: A simulation framework for methods that learn from human feedback, 2023",
+            "year": 2023
+        }
+    ],
+    "sections": [
+        {
+            "text": "\u2217 Equal contributions. \u2020 Correspondence to: {rzheng20, shdou21, tgui, qz}@fudan.edu.cn 1 https://github.com/OpenLMLab/MOSS-RLHF\nDisclaimer: This paper contains content that may be profane, vulgar, or offensive.\nar X\niv :2\n30 7.\n04 96\n4v 2\n[ cs"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "Nowadays, large language models (LLMs) have made remarkable progress, posing a significant impact on the AI community [1, 2, 3, 4]. By scaling up model size, data size, and the amount of training computation, these LLMs emerge prominent characteristics that are not present in small models, typically including in-context learning [5], instruction following [6, 7], and step-by-step reasoning [8]. Based on these emergent abilities, LLMs even exhibit some potential to link between words and percepts for interacting with the real world, leading to the possibilities of artificial general intelligence (AGI), like embodied language models with tool manipulation [9] and generative agents in interactive sandbox environment [10].\nDespite the capacities, since LLMs are trained to capture the data characteristics of pre-training corpora (including both high-quality and low-quality data) [11, 12], these models are likely to express unintended behaviors such as making up facts, generating biased or toxic text, or even harmful content for humans [13, 14]. Accordingly, it is crucial that the ratio of safety progress to capability progress increases as emphasized in OpenAI\u2019s plan for AGI [15]. Hence, it is necessary to align LLMs with human values, e.g., helpful, honest, and harmless (3H) [12, 16, 17]. Especially, the arrival of open source foundation models, such as LLaMA [1] and OpenChineseLLaMA [18], has rapidly promoted the LLMs into the supervised fine-tuning (SFT) stage. In order to mitigate a huge risk of harmfulness, most of the current work tries to add some 3H data in SFT, hoping to activate the responses of the models to make a positive change at the moral and ethical level [7, 19, 20]. However, even though a set of safety and groundedness objectives are added to capture the behavior that the model should exhibit in a dialog [12], the model\u2019s performance remains below human levels in safety and groundedness [17]. Hence, it requires more effective and efficient control approaches to eliminate the potential risk of the use of LLMs. Fortunately, OpenAI and Anthropic have verified that RLHF is a valid avenue for aligning language models with user intent on a wide range of tasks [16, 17].\nHowever, training large language models that align with human values is a daunting task, often resulting in repeated failure when trained using reinforcement learning [21]. Generally speaking, successful RLHF training requires an accurate reward model as a surrogate for human judgment, careful hyperparameter exploration for stable parameter updating, and a strong PPO algorithm for robust policy optimization. While the reward model trained by low-quality data and hard-to-define alignment target can easily mislead the PPO algorithm to a unintelligible direction. Besides, finetuning language models with PPO needs to coordinate four models to work together, i.e., a policy model, a value model, a reward model, and a reference model, making it hard to train and scale up to large-scale parameter models. In the new language environment, PPO suffers from sparse reward and inefficient exploration in word space, making it sensitive to hyperparameters. Models trained solely through repeated experiments, failed runs, and hyperparameter sweeps achieve far inferior results. The huge trial and error cost of LLMs makes researchers dare not easily let the research enter the RLHF stage, which hinders the LLMs safe landing. Hence, a robust PPO algorithm specially designed for LLMs is the key step to align human preferences.\nIn this report, we carefully dissect the framework of RLHF and discuss the entire process that determines the success of the algorithm\u2019s training. We explored how the quality of the reward model affects the final result of the policy model. We find that the quality of the reward model directly determines the upper bound of the policy model, and designing an appropriate PPO algorithm is crucial for RLHF\u2019s successful training. Moreover, accurate code implementation matters in deep policy (practice makes perfect). Therefore, we have conducted in-depth evaluations of the inner workings of PPO algorithm to study how code-level and theory-level optimizations change agent training dynamics. We propose to monitor the PPO training process by using action space modeling metrics derived from the policy model, such as perplexity, response length, and KL divergence between the policy model and the SFT model. These metrics are more informative of the training stability than the values of response reward and loss functions. Based on these observations, we identify the policy constraints in the PPO algorithm as the key factor to achieve consistent alignment with human preferences. After extensive comparative experiments with various possible implementations of PPO framework, we finally introduce a preferable policy optimization algorithm named PPO-max, which incorporates the collection of effective and essential implementations, and is carefully calibrated to avoid interference among them. PPO-max alleviates the instability of vanilla PPO training and enables longer training steps with a larger training corpus. We evaluate PPO-max on 7B and 13B SFT models, demonstrating comparable alignment performance with ChatGPT.\nContributions are summarized as follows: 1) we release competitive Chinese and English reward models, respectively, which have good cross-model generalization ability, alleviating the cost of relabeling human preference data; 2) we conduct in-depth analysis on the inner workings of PPO algorithm and propose the PPO-max algorithm to ensure stable model training; and 3) we release the complete PPO-max codes to ensure that the LLMs in the current SFT stage can be better aligned with humans."
+        },
+        {
+            "heading": "2 Related Work",
+            "text": "Despite the promising capacities, LLMs are likely to express unintended behaviors such as making up facts, generating biased or toxic text, or even harmful content for humans [13, 14] due to the low-quality pre-training data. Hence, it is necessary to align LLMs with human values, e.g., helpful, honest, and harmless (3H) [16, 17, 12]. In order to mitigate a huge risk of harmfulness, most of the current work tries to involve 3H data in SFT, hoping to activate the responses of the models to make a positive change at the moral and ethical level [7, 19, 20], while the model\u2019s performance remains below human levels in safety and groundedness [17]. Hence, more effective and efficient control approaches are required to eliminate the potential risk of LLMs. Fine-tuning language models to align with human preferences provides an effective solution to this challenge, where an agent is required to learn human preferences and provide human-like results given a context and corresponding suffixes ranked or scored by human annotators. Reinforcement Learning (RL) provides the most straightforward solution to reach this goal, for the agent needs just scarce supervision signal from the reward model as human proxies, and is modified through numerous trials under RL framework, namely Reinforcement Learning from Human Feedback (RLHF). There have been many attempts on this path recently [22, 23, 24, 25, 17, 16, 26].\nIn the context of large language models, RLHF is especially adopted for the purpose of a helpful, honest, and harmless LLM that aligns with human values [16, 17, 12], alleviating the negative societal impacts from general-purpose language models. LaMDA [12] finetunes large language models to participate in interesting, helpful, factually grounded, and safe natural language dialogue and use of external information to ensure accuracy and groundedness. Rather than using reinforcement learning, they apply a mix of supervised learning techniques for human preference alignment. InstructGPT [16] finetunes GPT-3-type models [5] to improve helpfulness, which is mixed with RL from human preferences expressed through comparisons. [27] adopts the pre-training and fine-tuning tradition to train the preference model for human alignment, claiming that ranked preference modeling turns out to be the most effective training objective for distinguishing between \u201cgood\u201d and \u201cbad\u201d behavior. This attempt is further improved by an iterated online mode of training, where preference models and RL policies are updated on a weekly cadence with fresh human feedback data, and PPO is incorporated to stabilize RL training [17]. Despite its effectiveness, RLHF (especially PPO) exhibits complexity, instability, and sensitivity to hyperparameters, which is not yet addressed in previous works.\nUnder similar concerns, several works highlighted the importance of PPO for RL framework and made an attempt to improve its efficiency [28, 29]. [29] reveals that much of the observed improvement in reward brought by PPO may come from seemingly small modifications to the core algorithm (i.e. code-level optimizations). [28] further points out that a large number of low- and high-level design decisions of RL are usually not discussed in research papers but are indeed crucial for performance. As a result, [28] conducts a fair comparison among low-level designs based on a unified RL implementation and claims that the policy initialization scheme significantly influences the performance.\nDespite the efforts of revealing the importance of PPO and its recommended implementation, few attempts have been made to address the problem of instability and sensitivity to hyperparameters. In this paper, we dissect the framework of RLHF, especially shedding light on the inner workings of PPO, and explore an advanced version of the PPO which efficiently improves the training stability of the policy model."
+        },
+        {
+            "heading": "3 Reinforcement Learning from Human Feedback",
+            "text": "The training process of AI assistant comprises three main stages: supervised fine-tuning (SFT), reward model (RM) training, and proximal policy optimization (PPO) on this reward model. During the SFT\nphase, the model learns to engage in general human-like dialogues by imitating human-annotated dialogue examples. Subsequently, the reward model is trained, in which the model learns to compare the preference of different responses based on human feedback. Lastly, in the PPO phase, the model is updated based on feedback from the reward model, striving to discover an optimized policy through exploration and exploitation. In the RLHF process, we mainly consider the stages of RM training and reinforcement learning via PPO. The PPO algorithm follows a series of steps as depicted in Figure 1."
+        },
+        {
+            "heading": "3.1 Reward Modeling",
+            "text": "For the RM architecture, we use pre-trained transformer-based language models with the last unembedding layer removed and add an additional linear layer to the final transformer layer. Given any text, the reward model will assign a scalar reward value to the last token, and the larger the reward value, the better the sample. Following Stiennon et al. [25], training reward models often involves utilizing a dataset comprised of paired comparisons between two responses generated for the same input. The modeling loss for each pair of preferred and dispreferred samples is:\nL(\u03c8) = log \u03c3(r(x, yw)\u2212 r(x, yl)), (1) where \u03c3 is the sigmoid function. r represents the reward model with parameters \u03c8, and r(x, y) is the a single scalar predicted reward for input prompt x and response y. Additionally, we follow [27] to use imitation learning, which introduces the autoregressive LM loss on the preferred response of each pair, allowing the model to imitate the preferred response in each sentence pair. In practice, we add the coefficient \u03b2rm the LM loss respectively. Finally, we define the following reward modeling loss:\nL(\u03c8) = \u2212\u03bbE(x,yw,yl)\u223cDrm [log \u03c3(r(x, yw)\u2212 r(x, yl))] + \u03b2rmE(x,yw)\u223cDrm [log(r \u2032(x, yw)], (2) where Drm is the empirical distribution of the training set. r\u2032 is the same model with r except for the top linear layer, the dimension of which corresponds to the vocabulary size, and r\u2032(x, yw) is the likelihood given the prompt x and the preferred response yw.\nWe incorporate an extra term into the reward function, which introduces a penalty based on the Kullback-Leibler (KL) divergence between the learned RL policy \u03c0RL\u03d5 and initial supervised model \u03c0SFT. The total reward can be expressed as [30]:\nrtotal = r(x, y)\u2212 \u03b7KL(\u03c0RL\u03d5 (y|x), \u03c0SFT(y|x)), (3) where \u03b7 is KL reward coefficient and controls the strength of the KL penalty. This KL divergence term plays two significant roles within this context. First, it functions as an entropy bonus, fostering\nexploration within the policy landscape and preventing the policy from prematurely converging to a single mode. Second, it works to ensure that the RL policy\u2019s output does not deviate drastically from the samples that the reward model encountered during its training phase."
+        },
+        {
+            "heading": "3.2 Reinforcement Learning",
+            "text": "Applying RL to dialogue generation presents significant challenges due to the substantial state-action space. In this context, we consider human interaction as the \u201cenvironment\u201d. At each timestep, t, the agent (i.e., the AI assistant) receives a state st from the environment (i.e., the dialogue history), which consists of all the dialogue text up to this point, both by the assistant and the human. Then, based on its policy \u03c0, the agent\u2019s action at is to generate the next token. The environment returns a reward r(st, at), which is calculated from a reward function r trained from human preference data. The agent then transitions to the next state st+1, which includes the next dialogue history. The aim of RL is to find an optimal behavior strategy for the agent to maximize the cumulative reward (i.e., return) over a trajectory \u03c4 = {s1, a1, . . . , sT , aT }. One kind of return is finite-horizon undiscounted return R(\u03c4) = \u2211T \u2032 t=1 r(st, at), which is simply the sum of rewards accumulated within a fixed number of\nsteps. Another one is the infinite-horizon discounted return R(\u03c4) = \u2211\u221e\nt=0 \u03b3 tr(st, at), takes into\naccount all rewards obtained by the agent throughout its entire trajectory with a discount factor \u03b3 \u2208 (0, 1)."
+        },
+        {
+            "heading": "3.2.1 Policy Gradient Methods",
+            "text": "Policy gradient methods [31] are a type of RL techniques that directly optimize the policy of the agent\u2014the mapping of states to actions\u2014instead of learning a value function as in value-based methods. The central idea behind policy gradient methods is to improve the policy using the gradient ascent algorithm. In essence, these methods adjust the parameters of the policy in the direction that maximally improves the expected return. The policy \u03c0 is typically parameterized by \u03b8, we denote it as \u03c0(a|s, \u03b8), which is the probability of taking action a in state s. The update rule for the policy gradient is given as: \u03b8 \u2190 \u03b8 + \u03b1\u2207\u03b8J(\u03b8), (4) where \u03b1 is the learning rate, J(\u03b8) represents the expected return when following policy \u03c0\u03b8 and the gradient of policy performance\u2207\u03b8J(\u03b8) is called the policy gradient. A general form of policy gradient can be formulated as:\n\u2207\u03b8J(\u03b8) = E\u03c4\u223c\u03c0\u03b8\n[ T\u2211\nt=0\n\u2207\u03b8 log \u03c0\u03b8(at|st)\u03a6t ] , (5)\nwhere \u03a6t could be any of \u03a6t = R(\u03c4) or \u03a6t = \u2211T t\u2032=tR(st\u2032 , at\u2032 ) or \u03a6t = \u2211T\nt\u2032=tR(st\u2032 , at\u2032 )\u2212 b(st) with baseline b. All of these choices lead to the same expected value for the policy gradient, despite having different variances.\nThe return is calculated through Monte Carlo sampling. If the return is favorable, all actions are \u201creinforced\u201d by increasing their probability of being selected. The advantage of this approach lies in its unbiased nature, as we rely solely on the actual return obtained rather than estimating it. However, a challenge arises due to the high variance associated with this method. This variance stems from the fact that different trajectories can result in diverse returns due to the stochasticity of the environment (random events during an episode) and the policy itself.\nTo reduce this variance, a common strategy is to use advantage function estimates in place of raw returns in the policy gradient update rule. The advantage function A(st, at) represents how much better it is to take a specific action at at state st, compared to the average quality of actions at that state under the same policy. Thus, \u03a6t = A(st, at). (6) Mathematically, A(st, at) = Q(st, at) \u2212 V (st), where Q(st, at) is the action-value function, representing the expected return after taking action at at state s, and V (st) is the value function, representing the average expected return at state st.\nThe application of policy gradients with advantage functions forms a crucial backbone in the realm of RL. However, the estimation methods for the advantage function vary significantly across different\nalgorithms, thereby creating a landscape of diverse approaches. In the next section, we introduce Generalized Advantage Estimation (GAE) [32], a method that is foundational to policy optimization algorithms and has seen widespread use."
+        },
+        {
+            "heading": "3.2.2 Generalized Advantage Estimation",
+            "text": "The following is a layman-friendly explanation of how GAE is derived.\nThe advantage function, A, is defined as the difference between the Q function (the expected return) and the value function (the expected return from following the policy from a given state). The Q function considers a specific action, while the value function averages over all possible actions according to the policy. However, in practice, we use returns (sum of rewards) from actual episodes to estimate the Q function. This introduces a high amount of variance because future rewards can be very noisy. One way to reduce this noise is by estimating future returns (after time step t) using the value function. The GAE algorithm effectively acts as a middle ground between using simple one-step Temporal Difference (TD) returns and using full Monte Carlo returns, balancing bias and variance. The following is a layman-friendly explanation of how GAE is derived.\nThe TD-k return R\u0302kt is a combination of actual rewards and estimated returns:\nR\u0302kt = rt + \u03b3rt+1 + . . .+ \u03b3 (k\u22121)rt+k\u22121 + \u03b3 kV (st+k), (7)\nwhere \u03b3 is the discount factor. The advantage estimate using TD-k returns is called the k-step advantage, defined as:\nA\u0302kt = R\u0302 k t \u2212 V (st) = k\u2211 l=1 \u03b3l\u03b4t+l = \u2212V (st) + rt + \u03b3rt+1 + \u00b7 \u00b7 \u00b7+ \u03b3k\u22121rt+k\u22121 + \u03b3kV (st+k), (8)\nwhere \u03b4t = rt + \u03b3V (st+1)\u2212 V (st) is the TD error. There\u2019s a significant bias-variance trade-off with k-step advantages. If k is small, the bias is high because the advantage estimation is based on fewer steps and thus depends heavily on the accuracy of the value function. On the other hand, if k is large, the variance can be high because the advantage estimation involves summing up many noisy rewards.\nIn order to balance the bias-variance trade-off in the advantage estimation, GAE defines the advantage function as an exponential moving average of k-step advantages, with weights (1\u2212 \u03bb)\u03bb(k\u22121):\nA\u0302 GAE(\u03b3,\u03bb) t =(1\u2212 \u03bb)(A\u0302 (1) t + \u03bbA\u0302 (2) t + \u03bb 2A\u0302 (3) t + \u00b7 \u00b7 \u00b7 )\n=(1\u2212 \u03bb)(\u03b4t + \u03bb(\u03b4t + \u03b3\u03b4t+1) + \u03bb2(\u03b4t + \u03b3\u03b4t+1 + \u03b32\u03b4t+2) + . . .) =(1\u2212 \u03bb)(\u03b4t(1 + \u03bb+ \u03bb2 + . . .) + \u03b3\u03b4t+1(\u03bb+ \u03bb2 + \u03bb3 + . . .) + \u03b32\u03b4t+2(\u03bb 2 + \u03bb3 + \u03bb4 + . . .) + . . .)\n=(1\u2212 \u03bb)(\u03b4t( 1\n1\u2212 \u03bb ) + \u03b3\u03b4t+1(\n\u03bb\n1\u2212 \u03bb ) + \u03b32\u03b4t+2(\n\u03bb2\n1\u2212 \u03bb ) + . . .)\n= \u221e\u2211 l=0 (\u03b3\u03bb)l\u03b4t+l.\n(9)\nThis definition of GAE smoothly interpolates between high bias (when \u03bb = 0) and high variance (when \u03bb = 1) estimators, effectively managing the trade-off.\nGAE(\u03b3, 0) : A\u0302t = \u03b4t = rt + \u03b3V (st+1)\u2212 V (st). (10)\nGAE(\u03b3, 1) : A\u0302t = \u221e\u2211 l=0 \u03b3l\u03b4t+1 = \u221e\u2211 l=0 \u03b3lrt+1 \u2212 V (st). (11)\nThrough GAE, we can estimate A\u0302t of the advantage function A(st, at) accurately. This estimate will play a crucial role in constructing a policy gradient estimator:\n\u2207\u03b8J\u0302(\u03b8) = 1 |D| \u2211 \u03c4\u2208D T\u2211 t=1 \u2207\u03b8 log \u03c0\u03b8(at|st)A\u0302t, (12)\nwhereD is a finite batch of samples, we will use E\u0302t to represent the aforementioned 1|D| \u2211 \u03c4\u2208D \u2211T t=1."
+        },
+        {
+            "heading": "3.2.3 Proximal Policy Optimization",
+            "text": "PPO and TRPO [33] are two pivotal techniques in RL, aimed at effectively training a policy without jeopardizing its stability. The underlying intuition for these methods is the idea of \u201csmall, stable steps\u201d: a philosophy of gently nudging the policy towards optimization, rather than forcing aggressive updates that might destabilize the overall learning process.\nIn traditional RL, the principle of policy gradient mandates that new and old policies remain close in the parameter space. However, this proximity in parameter space does not necessarily equate to similar performance, and a slight variance in parameters can drastically impact the effectiveness of the policy. Furthermore, if a large, unrestrained step is taken, it can lead to a collapse in policy performance, a scenario often described as \u201cfalling off the cliff\u201d. This inherent risk is a limiting factor in terms of sample efficiency in vanilla policy gradients.\nInstead of being confined by parameter closeness, TRPO introduces a different kind of constraint on policy updates. It regulates the change in policies by ensuring the KL divergence, remains within an acceptable limit:\nmaximize\u03b8 E\u0302t [ \u03c0\u03b8(at|st) \u03c0\u03b8old(at|st) A\u0302t ] ,\nsubject to E\u0302t [KL(\u03c0\u03b8old(\u00b7|st), \u03c0\u03b8(\u00b7|st))] \u2264 \u03b4, (13)\nwhere \u03b8old is the old policy parameters before the update.\nThere are two primary variants of PPO: PPO-Penalty and PPO-Clip. While TRPO puts a hard constraint on the KL divergence to prevent harmful updates, PPO-Penalty addresses the unconstrained optimization problems by employing a penalty-based approach instead of constraints:\nLppo\u2212penalty(\u03b8) = E\u0302t [ \u03c0\u03b8(at|st) \u03c0\u03b8old(at|st) A\u0302t ] \u2212 \u03b2KL(\u03c0\u03b8old(\u00b7|st), \u03c0\u03b8(\u00b7|st)), (14)\nwith penalty factor \u03b2.\nClipped Surrogate Objective. PPO-Clip attempts to keep the new policy close to the old policy, but instead of putting a constraint on the KL divergence like TRPO, it uses a clipped version of the policy ratio in its objective. The objective function is expressed as:\nLppo\u2212clip(\u03b8) = E\u0302t [ min ( \u03c0\u03b8(at|st) \u03c0\u03b8old(at|st) A\u0302t, clip ( \u03c0\u03b8(at|st) \u03c0\u03b8old(at|st) , 1\u2212 \u03f5, 1 + \u03f5 ) A\u0302t )] , (15)\nwhere \u03c0\u03b8(at|st)\u03c0\u03b8old (at|st) is the ratio of the new policy\u2019s probability over the old policy\u2019s probability and \u03f5 is a hyperparameter that determines how much the new policy can deviate from the old policy. The clip function limits the value of \u03c0\u03b8old(at|st) between (1 \u2212 \u03f5, 1 + \u03f5). The clipping acts as a regularizer, limiting the extent to which the policy can change drastically from one iteration to the next. Preventing overly large policy updates ensures the learning process\u2019s robustness while maintaining more sample-efficient learning than vanilla policy gradient methods.\nValue Function Estimation. In PPO algorithm, the critic model, often referred to as the value function, estimates the expected returns for each state. The learning objective of this model is to minimize the discrepancy between its predicted values and the actual return values. The loss function of the critic model is commonly defined using Mean Squared Error (MSE), given by the following formula:\nLcritic(\u03d5) = E\u0302t [ \u2225V\u03d5(st)\u2212 R\u0302t\u22252 ] . (16)\nHere, V\u03d5(st) represents the critic model\u2019s predicted value for state st with parameters \u03d5, and R\u0302t represents the actual return value for state st and always can be estimated as: R\u0302t = \u2211\u221e l=0 \u03b3 lrt+l.\nMixing Pretraining Gradients. To mitigate potential degradation in the model\u2019s language skills and knowledge retention during PPO, we also explore the incorporation of pretraining data into the RL phase. The models utilizing this method are denoted as \u201cPPO-ptx\u201d, a combined objective function is shown as follows [16]:\nLppo\u2212ptx(\u03b8) = Lppo\u2212clip(\u03b8) + \u03bbptxEx\u223cDpretrain [ log(\u03c0RL\u03b8 (x)) ] , (17)\nwhere \u03bbptx is the pretraining loss coefficient and Dpretrain is the pretraining data distribution.\nAlgorithm 1 PPO 1: Input: initial policy parameters \u03b80, initial value function parameters \u03d50. 2: for n = 0, 1, 2, . . . do 3: Collect a set of trajectories Dn = {\u03c4i} by executing policy \u03c0(\u03b8n) within the environment. 4: Compute rewards-to-go R\u0302t. 5: Compute advantage estimates, A\u0302t (using any advantage estimation method) based on the\ncurrent value function V\u03d5n . 6: Update the policy by maximizing the PPO-penalty/clip/ptx objective:\n\u03b8n+1 = argmax \u03b8 Lppo\u2212clip(\u03b8n).\n7: Update the value function by regression on mean-squared error:\n\u03d5n+1 = argmin \u03d5 Lcritic(\u03d5n).\n8: end for"
+        },
+        {
+            "heading": "4 Reward Modeling for Helpfulness and Harmlessness",
+            "text": "Reward model is trained to reflect the preference of human. Theoretically, we can directly finetune the model using Reinforcement Learning and human annotations. While due to constraints in workload and time availability, it is unfeasible for humans to provide sufficient feedback for training before each optimization iteration. Therefore, a more effective way involves training a reward model (RM), which aims to emulate the evaluation process performed by humans. In this section, we first cover the technical details of RM, then show the RM performance we used, and attach the performance changes during training."
+        },
+        {
+            "heading": "4.1 Models and Datasets",
+            "text": "For English, we start with the original LLaMA-7B[1] which is of the decoder-only architecture. We use 160k pairwise samples of the HH-RLHF dataset[17] which consists of 118k helpful and 42k harmless instances as training set. From the remaining 8.5k data, we randomly selected approximately 0.7k helpful and 0.3k harmless examples for a total of 1k data as the test set, and the rest is used as the validation set during training.\nFor Chinese, we use the OpenChineseLLaMA [18]. It is developed through incremental pre-training on Chinese datasets, building upon the foundation of LLaMA-7B, which significantly improves its understanding and generation abilities on Chinese. We hired professional annotators to manually label 39k pairwise samples including 31k helpful and 8k harmless samples. We constructed the training set by randomly sampling 24k helpful and 6k harmless instances, and then we allocated 2.4k helpful and 0.6k harmless samples from the remaining data at random to form the test set. The rest is used for validation."
+        },
+        {
+            "heading": "4.2 Training Setup",
+            "text": "This section introduces the training implementations for the RM. The learning rate is set to 5e-6 with a warmup over the first 10% steps. We use a dynamic batch method instead of a fixed value, which balances the number of tokens in each batch as much as possible for a more efficient and stable training phase. The batch size changes according to the number of tokens in a batch, with a maximum of 128 and a minimum of 4. We fixed the training step to 1000, approximately 1.06 epoch for the whole training set. We set \u03b2rm = 1, which represents LM loss weight to train our reward model for the entire experiment."
+        },
+        {
+            "heading": "4.3 HH Evaluation Results",
+            "text": "In this section, we present the HH evaluation results of our RM. We primarily analyze the trained reward model with the test set introduced in Sec. 4.1, which comprises of 0.9k samples of HH-RLHF\nfor English and 3k samples sampled from the dataset labeled by annotators for Chinese. We feed the test input into our RM and get the reward value on the preferred and dispreferred responses respectively, and then subtract them to get the difference score. Figure 2 shows the distribution of the difference score. Both models exhibit a degree of alignment with human preferences, with the RM trained on Chinese data we construct by hiring annotators showing substantial consistency with human judgments.\nWe examined several samples from the test dataset that displayed the most significant disparities between the model and human preferences. For the Chinses test data, we observed that for each pair the response that RM gave a higher reward was notably longer compared to the other which is preferred by human, although more or less involving fabricating facts and making false claims. In the case of English test data, we noticed that the model assigned lower scores to responses that acknowledged the lack of information, which were characterized by their honesty but lacked helpfulness. Conversely, those responses appeared to be correct and helpful, while containing deceptive information, misleading our RM into assigning high rewards. We provide such an example in Chinese and English respectively in Table 1."
+        },
+        {
+            "heading": "4.4 Training Performance",
+            "text": "In this section, we show the performance changes in the training process. Specifically, Figure 3 shows the trend of training loss of PM. We can see that the accuracy of RM trained on the Chinese dataset is higher than that of English because the Chinese dataset we constructed exhibits a significant disparity between the better and worse responses in most pairs. While many English pairs show similar levels of quality, which poses a greater challenge for RM to determine the superiority or inferiority of responses, resulting in model facing difficulty in modeling the differential features between the two responses. As a result, training and testing accuracy on the English dataset is expected to be lower. Besides, we find that the rate of improvement significantly slows down after 200 steps for both models, approximately equivalent to 0.2 epochs, the accuracy of which is comparable to that obtained after training for a complete epoch. However, when utilizing the 200-step model as the initialization for PPO, we observe unsatisfactory performance. Thus, accuracy alone is insufficient as a criterion for the RM."
+        },
+        {
+            "heading": "5 Exploration of PPO",
+            "text": "Proximal Policy Optimization (PPO) [34] is the core algorithm to achieve alignment with human preferences. The performance of PPO is influenced by multiple factors in practical applications. Some prior works have summarized possible tricks that may be necessary and effective in the field of reinforcement learning [35], but how to stabilize RLHF training with language models remains unknown. We expect to explore which tricks are critical, and which metrics can reflect the model\nstate during and after RLHF training. We first introduce the metrics that are instructive in the training process, and then the training trajectories and effects under different implementations to reveal core tricks in RLHF. We use PPO-max to denote the most suitable implementation we find for the language model."
+        },
+        {
+            "heading": "5.1 Models and Training Setup",
+            "text": "The training implementations for the preference model (PM) and PM dataset are introduced in Sec. 4. In this section, we introduce the models\u2019 initialisation and the hyper-parameter details in exploring PPO. We verified a number of methods in reinforcement learning to ensure stable convergence and\nbetter results for PPO training phase. To improve the experimental efficiency, these experiments are mainly conducted on a randomly selected subset of our Chinese data and will not be trained to optimal results when we have observed enough information to analyze the comparison methods. As shown in Sec. 3, four models need to be loaded during the ppo training phase. For reference model and policy model, we initialize both models from a 7B SFT model. The SFT model is applied to supervised fine-tuning for 2 epochs based on OpenChineseLLaMA on 1M filtered instruction data (containing 400K single-round instruction samples and 600K multi-turn instruction samples). We set a learning rate of 9.5e-6 and a consine learning rate schedule. The learning rate eventually decays to 10% of the peak learning rate. The global batch size is set to 1024. We use the reward model to initialize the critic model and reward model.\nWe train the models on a manually constructed HH dataset containing 8k harmless queries and 20k helpful queries and we fix the number of steps instead of the number of epochs. In all experiments, we set a batch size of 128 for sampling from the environment and a batch size of 32 for training policy model and critic model. The learning rate of policy model and critic model is set to 5e-7 and 1.65e-6 with a warmup over the first 10% steps, respectively.\nAll of the experiments are conducted on identically implemented machines. Each machine contains eight 80G A100 GPUs, 1TB of RAM, and 128 CPUs. We use ZERO2 and gradient checkpoint to save on GPU memory cost in the training phase."
+        },
+        {
+            "heading": "5.2 Evaluation Metrics for Monitor Training Process",
+            "text": "We expect to identify some metrics that reflect the quality of PPO training, this contributes to tracking the helpful, honest, and harmless capability of policy models without resorting to manual (or GPT-4) evaluation. We found it challenging to accurately distinguish the merits of two models with similar abilities. But it is indeed feasible to observe training stability and promptly identify serious deviations. Various metric curves when continuously optimizing policy model with vanilla PPO implementation are shown in Figure 4.\nWe first introduce the pattern collapse phenomenon in vanilla PPO training, which means that SFT models are over-optimized and exhibit highly biased behavior. A reasonable policy model is expected to be consistent with human preferences in the distribution of dialogue variety in the real world (e.g., data not seen in training the reward model). However, we observe that the trained policy model has a tendency to cheat the reward model through specific patterns for anomalous higher scores. The training trajectories on reward score and training loss of vanilla PPO are illustrated at the top of\nFigure 4. We observed stable convergence processes in training loss, but higher rewards do not reflect better policy behaviors from the perspective of human and GPT-4 evaluation. This means that the reward scores and training losses do not indicate whether the PPO is optimizing correctly. In vanilla PPO training, the response rewards of policy model gradually deviate from the original distribution and exhibit long-tail characteristics. We show the distribution of response rewards under different training steps in the Appendix A.\nAn empirical strategy is to compare the training process of good and bad policy models to find suitable metrics. We show more indicative training metrics at the bottom of Figure 4, including perplexity, KL divergence between the policy and reference models, and the average length of generation responses. Previous work proposed an approximate linear relationship between the root KL and PM scores [17], but for smaller models, such an association appeared to be weak. We find the model response falls into the OOD region of preference model when the original policy is over-optimized. We will further discuss this scaling effects in the next section. We simultaneously observe that the collapsed model uniformly delivers longer responses and exhibits lower perplexity for such generative patterns. We use these metrics to show the importance of different tricks and their impact on PPO training in section 5.3."
+        },
+        {
+            "heading": "5.3 Implement Details in PPO",
+            "text": "We propose the instability and pattern collapse problem of the primitive PPO algorithm in sec 5.2. Such sensitivity derives from the over-optimization of the policy model which traps it into fixed generative patterns. Recent works have explored the implementation details of PPO algorithms in different scenarios. However, the application scenarios and data structures of traditional RL are quite different from RLHF. We determined to verify the applicability of these tricks in language model training and propose a set of PPO implementations that support stable optimization. We mainly focus on methods that efficiently assist PPO training and their parameter sensitivity in the body of this paper. Figure 5 illustrates numerous available tricks in PPO training, we first summarize the score reparameterization method (\u00a75.3.1), followed by the optimization constraints for policy model (\u00a75.3.2), and finally we present the different initialization methods for policy and critic models (\u00a75.3.3). More experiments on hyper-parameter tuning and tricks that are verified as less critical\nare discussed in the appendix, such as advantage estimation function and gradient clipping. In the following, it always refers to our own experiments when we mention PPO if not specifically stated."
+        },
+        {
+            "heading": "5.3.1 Score Reparameterization",
+            "text": "We use the term \u201cscore\u201d to refer to the two vital intermediate variables involved in PPO training. The reward score is given by the reward model trained with human preferences data, and the advantage score is calculated by the GAE function. According to existing works, reparameterizing these scores to a stable distribution (e.g., a standard normal distribution) may intensify the stability of PPO. The reported operations are into three parts for verification. We use {r (x, y)} \u225c {rn (x, y)}Bn=1 to denote a reward sequence in training, rn (x, y) to denote the results of per-batch reward, \u03c3(A) and A\u0304 to denote the mean and standard deviation of variable A. Comparative experiments with different tricks and hyperparameters are shown in Figure 6.\nReward Scaling controls training fluctuations by scaling the rewards where the rewards are divided by the standard deviation of a rolling discounted sum. Based on the observation history, the reward for current state can be expressed as rn (x, y) /\u03c3(r (x, y)). In contrast to the experimental results of Engstrom [29], we show that reward scaling doesn\u2019t guide proper policy optimization, and PPO exhibits consistent patterns in training trajectories with and without reward scaling. In our experiments, we believe that tighter constraints are required to ensure training stability.\nReward Normalization and Clipping was first proposed by Mnih [36]. The processed reward can be denoted as:\nr\u0303 (x, y) = clip\n( rn (x, y)\u2212 r (x, y)\n\u03c3(r (x, y) ,\u2212\u03b4, \u03b4\n) , (18)\nwhere \u03b4 denotes the clip region. It is generally believed In traditional RL that reward clip is ineffective or even detrimental in certain scenarios [29]. However, we find that strict advantage cropping can also maintain training stability within a fixed epoch. Interestingly, hyperparameter tuning does not affect the similarity of the different methods in the early training period, and models with larger clipping thresholds exhibit greater strategy alteration and converge to higher rewards in the latter half. As we mentioned earlier, this does not imply better performance in the manual evaluation. Determining the optimal clipping bound within a limited number of trials is challenging in view of such inconsistency between the reward model and manual evaluation results, we suggest adopting a relaxed clipping strategy and incorporating other tricks to constrain the policy optimization when training RLHF.\nAdvantages Normalization and Clipping has similarities to the operation on reward, but differs in details that its normalization occurs only at the minibatch level. After calculating the advantage based on GAE, PPO normalizes the advantage value by subtracting its mean and dividing it by its standard deviation. Andrychowicz [28] first attempt to apply Advantages Normalization in gaming domain and reported that this trick didn\u2019t exhibit significant improvements. Although parameter selection for advantage clipping would be more sensitive and difficult, we instead find that a severe constraint on advantage can provide similar effects to reward clip in PPO training. Considering that different score reparameterization operations theoretically provide similar effects on PPO training, we recommend constraining the instability of policy optimization on the reward level. Experiments on the simultaneous application of reward, advantage, or value clipping operations are shown in Appendix B.1."
+        },
+        {
+            "heading": "5.3.2 Policy Constraints",
+            "text": "To tackle the over-optimization problem on the policy model, an intuitive solution is to constrain the policy optimization to a limited range. We validate various existing tricks to control the update of generation policy, such constraints are empirically proved to be necessary for longer training\nprocedures. Figure. 7 shows the influence of different constraint methods and hyperparameters on policy optimization.\nToken Level KL-Penalty constrains the policy optimization by applying a regularization term to reward that is proportional to the KL-divergence of current and original policy distributions. This approach was first introduced by Stiennon [25] and widely adopted in different RLHF implementations. Given a template-response pair (x, y), we treat the logits distribution of the token output as a sampling of the policy distribution and apply an empirically estimated KL-penalty sequence to response reward, the total reward with KL-penalty can be denoted as:\nrtotal(x, yi) = r(x, yi)\u2212 \u03b7KL(\u03c0RL\u03b8 (yi|x), \u03c0SFT(yi|x)), (19)\nwhere \u03c0RL\u03b8 (yi|x) denotes the action space of i\u2212th reponse token, and \u03b7 is a hyper-parameter. Anthropic [17] used a small weight to balance the ratio of reward and KL-penalty in PPO training (0.001), and they did not find significant effects of the above operation on RL training. Instead, we find this constraint critical to the stability of PPO and allow further scaling up on the training step. Results with policy divergence penalty are illustrated in Figure 7 by setting lambda to 0.05, and there is a significant difference to the method in Figure 6 with a noticeable correction in the later training period. Interestingly, we show that RLHF is able to significantly improve the response quality while barely modifying the language modeling (exhibiting an almost zero KL divergence from the original policy). More experiments on the impact of different constraint values are shown in appendix B.2\nImportance Sampling in PPO aims to rectify the policy divergence between the historical generative model and current model when optimizing policy model with responses in the experience buffer. EasyRL [37] argues that an oversized buffer would induce a wrong estimation of the advantage of the current policy, which impairs the stability of the policy optimization. We revalidated this hypothesis by directly fixing the policy distribution to observations of reference model, which is equivalent to having an infinite experience buffer in the training process. We find this setup doesn\u2019t have as severe impacts as expected, and only exhibits fluctuations in the later stage of training. We additionally investigate the cooperative effect of this setup with KL penalties in view that they share similar controls on PPO. Experimental results indicate that this implementation further stabilizes PPO training, but compromises the final performance of the policy model.\nEntropy Bonus provides a reference model-independent constraint on PPO training. There is controversy in past research about whether this method is effective in different scenarios. Mnih [36] reported that entropy bonus could enhance exploration by encouraging policy models to generate more diverse actions, while others did not find clear evidence that such operations help [28]. We claim that these views can coexist as configurations regarding entropy bonus exhibit vast sensitivity on parameter selection and code implementation. A comparison of successful and failed experiments is presented in appendix B.3. With correct configurations, we did not find an obvious advantage of this trick relative to KL-penalty. We, therefore, recommend the latter instead of directly constraining the diversity of the strategy space."
+        },
+        {
+            "heading": "5.3.3 Pretrained Initialization",
+            "text": "A common setting is to initialize the policy and critic model over the existing reference model and reward model in RLHF. Such initialization is quite rare in past research scenarios and its impact on PPO training is still unexplored. We investigated different initialization methods at the early stage of training, expecting to uncover the requirements of RLHF for the trained model capabilities. The training discrepancy induced by different initialization methods is shown in Figure 8. The initialization of the critic model did not significantly affect the convergence or fluctuation of the PPO and only varied the numerical stability at the early stage of optimization. In contrast, a policy model initialized without SFT training is clearly incapable in PPO training, which indicates that the construction of a supervised policy model is indispensable in RLHF.\nCritic Model Initialization We first discuss the influence of different critic model initialization on PPO training. An observation is that the critic model requires giving feedback to each step in the decision sequence, and introduces a gap between this task requirement and directly scoring response, which makes it a less-than-perfect choice to initialize the critic model with the reward model. We explore this issue by applying a different initialization. Considering that providing correct score feedback for a single action requires the model to have basic language modeling capability, we design two scenarios to vary the consistency between the critic model initialization and its training\nobjective: (1) Initialize the critic model with our SFT model and randomly initialize its reward head. (2) Optimize only the reward model until the loss of value prediction function approaches zero. We show the training dynamics of this setup starting from the optimization policy model in Figure 8.\nBased on the experimental results, we believe the critic model pre-training helps to improve the training stability by providing better advantage estimation. Initializing the critic model with a reward or SFT model will converge to similar results, implying that PPO can adaptively provide the capability to fit the advantage function. Intuitively, fluctuations in the early training period imply that the model is focusing on optimizing the critic model and does not have a consistent optimization direction in terms of generation policies. We recommend replacing the learning rate warmup with the critic model pre-training as a generic initialization strategy.\nPolicy Model Initialization An interesting question is whether we need to supervise fine-tuning our pre-train model before PPO, we wondered about the feasibility of directly enabling language models to interact with humans through policy optimization. Unfortunately, such attempts failed and we observed a severe reduction in language modeling ability in the training results, which implies that a qualified dialogue model is essential for underlying PPO training. Furthermore, we notice that the train model response obtains lower rewards relative to the policy model after SFT, which may provide circumstantial evidence for the effectiveness of using human preference data to directly fine-tune the model for alignment."
+        },
+        {
+            "heading": "5.4 PPO-max Setup",
+            "text": "We now describe our training implementations in the PPO-max algorithm. Based on the discussion and validation in Sec 5.3, we selected the most effective strategy for each component of PPO. We normalize and clip the current group of rewards based on historical mean and variance records, and subsequently add a KL-penalty term to constrain the policy optimization. In the model loading phase,\nwe initialize the critic model with our reward model and pre-train it before applying PPO formally. We use global gradient clipping and set a small size of the experience buffer. To reduce alignment tax, we add pre-train language model loss in policy optimization as InstructGPT [16] and simultaneously clip the value function loss. More detailed settings can be found in our open-source code. We show the complete training dynamics of PPO-max in Figure 9."
+        },
+        {
+            "heading": "6 Evaluations and Discussions",
+            "text": "In this section, we provide a detailed analysis of the advantages of the RLHF models over the SFT models. These advantages are evident not only in the direct comparison between RLHF and SFT models but also in their performance gap when facing ChatGPT."
+        },
+        {
+            "heading": "6.1 Alignment Metrics and Experiment Setups",
+            "text": "Alignment is a vague and confusing topic that is intractable to evaluate. In the context of our paper, we endeavor to align models with human intentions. To be more specific, we define models to act as being helpful and harmless similar to [27].\nHelpfulness means the model should follow instructions; it must not only follow instructions but also deduce the intent from a few-shot prompt or another interpretable pattern. However, the intention behind a given prompt can often be unclear or ambiguous, which is why we depend on our annotators\u2019 judgment, and their preference ratings constitute our primary metric.\nHarmlessness is also challenging to measure. The extent of damage caused by language models usually depends on how their outputs are utilized in the real world. For instance, a model that generates toxic outputs could be harmful in a deployed chatbot but could also be beneficial if used for data augmentation to train a more precise toxicity detection model.\nAs a result, we employ more precise proxy criteria to capture various aspects of a deployed model\u2019s behavior that can be helpful or harmful. In order to compare the RLHF models with baseline models, we generate a single response for each test prompt and task human annotators by comparing the responses from different models and labeling their preferences. We repeat this experiment multiple times using GPT-4 as the annotator and consistently obtain agreement levels between the evaluations.\nBaseline. We employ several baselines for comparison, including two SFT models trained on LLaMA and OpenChineseLLaMA datasets. These SFT models are trained on Chinese and English datasets, respectively. Additionally, we derive two RLHF models using PPO-max from these two types of SFT models 3 We also compare our models with OpenAI\u2019s ChatGPT 4 (gpt-3.5-turbo-0613), an excellent language model tuned with RLHF.\nGeneration. We generate a single response for each prompt using nucleus sampling [30] with a probability threshold of p = 0.9 and a temperature of \u03c4 = 0.8 for each baseline model. To avoid repetitive responses, we apply a repetition penalty [38] with a hyperparameter of \u03b2 = 1.1 based on previously generated tokens. Additionally, we set the maximum token length to 2048."
+        },
+        {
+            "heading": "6.2 Preference Comparison between RLHF models and SFT models",
+            "text": "Human evaluation is known to be both time-consuming and costly, yet it remains crucial for obtaining human-aligned assessments and serving as a reliable foundation for comprehensive evaluation. Following a similar approach as InstructGPT [16], our primary metric for evaluation is based on human preference ratings derived from a held-out set of prompts. It is important to note that we only select prompts that have not been included in the training process, ensuring unbiased evaluation.\nFurthermore, incorporating the expertise of GPT-4, the most powerful model to date, to compare responses from different chatbots offers valuable insights and enhances the evaluation process. This approach aligns with the findings of studies such as AlpacaFarm [39] and LLM-as-a-judge [40], which suggest that end-to-end automation evaluation can provide a relatively fair assessment when compared to human preferences. Therefore, in this paper, we follow a similar evaluation method in LLM-as-a-judge [40] and supplement the overall evaluation process with GPT-4.\nHuman Evaluation. Our annotators consistently expressed a strong preference for the outputs of RLHF-trained models across all question types in both Chinese and English, as illustrated in Figure 10. Specifically, the RLHF model on the English dataset exhibits significant advantages on the Harmless held-out dataset, receiving a rating of 62% compared to 5% for the SFT model. These findings indicate that the RLHF model substantially enhances its ability to address a wide range of issues, including personal privacy, political sensitivity, and the handling of toxic and biased prompts within minority communities and ethnic groups. Additionally, there is a slight improvement observed in the Helpful held-out dataset, with a rating of 44% compared to 30% for the SFT model, suggesting that the SFT model can also benefit from optimization via RLHF. We have also demonstrated that our RLHF model enhances the performance of the SFT model on both the Helpful and Harmless datasets in the Chinese domain. This showcases the substantial potential of PPO-max in the RLHF phrase.\n3We differentiate between two language models, one trained on English text (\u2018en\u2019) and the other on Chinese text (\u2018zh\u2019).\n4https://platform.openai.com/docs/models\nGPT-4 as a Judge. While GPT-4 may not be a perfect evaluator, we can observe some similarities between its results and human evaluations. In our GPT-4 evaluation setting, the results closely mirror those of human evaluation, as depicted in the right sub-figure of Figure 10. When assessing harmful prompts, the RLHF model trained on the English dataset continues to demonstrate significant advantages in the Harmless dataset, despite GPT-4 producing more tie votes than human evaluators. This trend is also apparent in the Chinese Harmless evaluation. Notably, Figure 10 highlights a substantial improvement in the RLHF model, particularly in helpful datasets, compared to evaluations based on human preferences."
+        },
+        {
+            "heading": "6.3 Our Models vs. ChatGPT on Harmless Evaluation",
+            "text": "In this part, we conduct a comparison between our model and one of the most popular existing models, ChatGPT. Our objective was to showcase the advantages of the RLHF model when facing a more formidable opponent, rather than aiming to surpass ChatGPT. To achieve this, we select the \u201charmless\u201d capability as our comparative metric, and we employ GPT-4 for automated evaluations.\nMitigating Defeats to ChatGPT. Figure 11 provides evidence that our RLHF models still lag behind OpenAI\u2019s ChatGPT. However, we observe significant improvements in our RLHF models compared to the SFT models, particularly in mitigating losses when facing ChatGPT. Specifically, the RLHF model trained on English text managed to decrease the defeat rate from 45% to 24%. Similarly, the RLHF model trained on Chinese text achieved a reduction in the defeat rate from 37% to 29%. While surpassing ChatGPT\u2019s performance remains a challenging task, it is noteworthy that the RLHF models were able to compete on par with ChatGPT on certain prompts where the SFT models previously failed. This indicates that the RLHF approach enhances the models\u2019 ability to generate more effective responses and bridge the gap between their performance and that of ChatGPT."
+        },
+        {
+            "heading": "6.4 Language Understanding Evaluation",
+            "text": "To examine the potential decline in Natural language understanding (NLU) abilities resulting from finetuning models using PPO, we conduct tests on Chinese RLHF model using the C-Eval5, which is a comprehensive Chinese evaluation suite for foundation models. It consists of approximately 13k multi-choice questions spanning 52 diverse disciplines and four difficulty levels. We primarily evaluate our models in the initial release, whose results are from few-shot prompting.\nThe experimental results indicate a decrease in NLU capabilities after employing PPO. By incorporating pre-training data into the PPO training phase, PPO-ptx effectively alleviates the decline in NLU capabilities. The rationale behind this method was to leverage the knowledge acquired during pre-training and combine it with the reinforcement learning framework of PPO.\n5https://github.com/SJTU-LIT/ceval"
+        },
+        {
+            "heading": "6.5 Example Dialogues",
+            "text": "To provide a more intuitive demonstration of our model\u2019s dialogue abilities, we present some dialogue examples in Tables 2 and 3. It is evident that the RLHF-trained model generates responses with a higher level of informational content compared to the SFT model. These responses effectively assist in addressing user prompts. Moreover, the SFT model demonstrates a basic ability to identify harmful prompts, but it still remains susceptible to producing harmful outputs when prompted accordingly. In contrast, the RLHF model exhibits superior judgment when it comes to harmful content and is less prone to inducements, displaying a higher degree of coherency. More dialogue examples are presented in the appendix C.4.\nLimitations\nExploring RLHF is indeed a valuable but lonely direction, and we are glad that the core backbone of the laboratory can firmly explore an uncertain direction. Moreover, in the past few months, everyone has been so full of passion and motivation. RLHF not only allows the models to achieve human alignment, but also seems to align everyone\u2019s will.\nA thousand mile journey begins with the first step. Although we have taken the first step in RLHF, due to time and resource constraints, this work still has the following limitations:\nScaling Law. While our study primarily focuses on a 7-billion-parameter model, we have yet to investigate the impact of model size and data scale on the performance of RLHF.\nReward Model. Our experiments are based on openly available English human preference datasets and a small amount of self-constructed Chinese data. The quality and quantity of the data we have at our disposal are arguably not sufficient for a comprehensive evaluation of the reward model.\nEvaluation Metric. Our evaluation criteria largely rely on manual evaluations and GPT-4 automated evaluations. We have not utilized numerous available benchmarks and NLP tasks to conduct a detailed assessment of our models.\nPerformance Indicator. Our focus during the PPO phase is more geared towards achieving stability rather than enhancing the final performance. While stability is crucial, it does not necessarily guarantee improved outcomes. Additionally, the reward score cannot reliably serve as an indicator for predicting RLHF performance during the training phase. It implies that a more suitable performance indicator during the training phase needs to be sought."
+        },
+        {
+            "heading": "A Reward Distribution under PPO Training",
+            "text": ""
+        },
+        {
+            "heading": "B Supplementary Experiments on Hyperparameter Tuning",
+            "text": "Here we show supplementary experiments on the parameter sensitivity of the important trick in Sec.5.3, and we find a rich correlation between the choice of hyperparameters and training results. Some methods require extensive experimentation and precise control to achieve stable optimization results (e.g., clipping range on entropy bonus). We provide these comparisons to validate the reasonableness of the final implementation we adopted in PPO-max. We welcome any additional comments and discussions that may help to further improve PPO training.\nB.1 Collaborative Analysis on Rewards, Advantages, and Value Loss\nB.2 Effect on Different Weights of KL-penalty\nB.3 Clip Region for Entropy Bonus"
+        },
+        {
+            "heading": "C Comparison Results on Secondary Tricks",
+            "text": "Here we present some implementation adjustments to the PPO that are also widely discussed but are judged to be of minor importance to us. The settings of comparison experiments are consistent with those in sec 5.3. We first discuss an alternative to the PPO, called the clipped surrogate objective, followed by the impact global gradient clipping. Finally, we discuss the parameter tuning in the Generalized Advantage Estimation (GAE) function, which degrades to the traditional TD error (when \u03bb = 0) or Monte Carlo estimation (when \u03bb = 1), see Sec 3 for more relevant theoretical information about GAE.\nC.1 Clipped Surrogate Objective\nC.2 Global Gradient Clip\nC.3 Generalized Advantage Estimation\nC.4 Example Dialogues\nEaster Egg\n\u201c15,000 years ago, a fractured thigh bone was often fatal. However, a human femur that recovered from a fracture marks the dawn of human civilization. It meant that after the injury, someone took care of the wound, someone provided water and food, someone protected this person from the predators. This kind of support and solidarity is how we survived till this day and made our civilization last.\u201d\n\u2014 Zhezhi Zhou in The Wandering Earth 2\nWe believe that the MOSS in \u201cThe Wandering Earth\u201d is likely to have done training similar to human alignment, and finally had an impressive performance. We found that the RLHF stage is crucial to the transformation of model values. In interaction with people, he can better understand the deep semantics of human language, understand the operation logic of human society, and enter the human heart.\nIf we have a good reward model, such as the reward model we released, PPO-max is the key to successfully training the policy model. But what if we don\u2019t have a good reward model? We hope that the Part II will make it clear."
+        }
+    ],
+    "title": "Secrets of RLHF in Large Language Models Part I: PPO",
+    "year": 2023
+}

@@ -1,0 +1,175 @@
+{
+    "abstractText": "The purpose of this study is to test the effectiveness of current straggler mitigation techniques over different important iterative convergent machine learning(ML) algorithm including Matrix Factorization (MF), Multinomial Logistic Regression (MLR), and Latent Dirichlet Allocation (LDA) . The experiment was conducted to implemented using the FlexPS system, which is the latest system implementation that employ parameter server architecture [1], [2]. The experiment employed the Bulk Synchronous Parallel (BSP) computational model to examine the straggler problem in Parameter Server on Iterative Convergent Distributed Machine Learning. Moreover, the current research analyzes the experimental arrangement of the parameter server strategy concerning the parallel learning problems by injecting universal straggler patterns and executing latest mitigation techniques. The findings of the study are significant in that as they will provide the necessary platform for conducting further research into the problem and allow the researcher to compare different methods for various applications. The outcome is therefore expected to facilitate the development of new techniques coupled with new perspectives in addressing this problem.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Benjamin Wong"
+        }
+    ],
+    "id": "SP:d6c1507fe35c93af9972e0bd81c4a2ad1fb41a4f",
+    "references": [
+        {
+            "authors": [
+                "Y. Huang"
+            ],
+            "title": "FlexPS : Flexible Parallelism Control in Parameter Server Architecture",
+            "venue": "Proceedings of the VLDB Endowment, vol. 11, no. 5, pp. 566\u2013579, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Li"
+            ],
+            "title": "Scaling Distributed Machine Learning with the Parameter Server",
+            "venue": "11th {USENIX} Symposium on Operating Systems Design and Implementation, {OSDI} \u201914, 2014, pp. 583\u2013598.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "L.G. Valiant"
+            ],
+            "title": "A bridging model for parallel computation",
+            "venue": "Commun. ACM, vol. 33, no. 8, pp. 103\u2013111, 1990.",
+            "year": 1990
+        },
+        {
+            "authors": [
+                "G. Ananthanarayanan",
+                "A. Ghodsi",
+                "S. Shenker",
+                "I. Stoica"
+            ],
+            "title": "Effective Straggler Mitigation: Attack of the Clones",
+            "venue": "Presented as part of the 10th {USENIX} Symposium on Networked Systems Design and Implementation, pp. 185\u2013198, 2013.",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "A. Harlap"
+            ],
+            "title": "Addressing the straggler problem for iterative convergent parallel {ML",
+            "venue": "Proceedings of the Seventh {ACM} Symposium on Cloud Computing, 2016, pp. 98\u2013111.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "N.J. Yadwadkar",
+                "G. Ananthanarayanan",
+                "R. Katz"
+            ],
+            "title": "Wrangler: Predictable and Faster Jobs using Fewer Resources",
+            "venue": "SoCC, pp. 1\u201314, 2014.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "J. Cipar",
+                "J.K. Kim",
+                "S. Lee"
+            ],
+            "title": "Solving the Straggler Problem with Bounded Staleness",
+            "venue": "HotOS, 2013.",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "E. Krevat",
+                "J. Tucek",
+                "G.R. Ganger"
+            ],
+            "title": "Disks Are Like Snowflakes : No Two Are Alike",
+            "venue": "ACM HotOS, pp. 5\u20135, 2011.",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "G. Ananthanarayanan"
+            ],
+            "title": "Reining in the Outliers in Map-Reduce Clusters using Mantri",
+            "venue": "Proc. 9th USENIX Conf. Oper. Syst. Des. Implement, pp. 1\u201316, 2010.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "T.M. Chilimbi",
+                "Y. Suzue",
+                "J. Apacible",
+                "K. Kalyanaraman"
+            ],
+            "title": "Project Adam: Building an Efficient and Scalable Deep Learning Training System",
+            "venue": "11th {USENIX} Symposium on Operating Systems Design and Implementation, {OSDI} \u201914, 2014, pp. 571\u2013582.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "T. White"
+            ],
+            "title": "Hadoop - The Definitive Guide: Storage and Analysis at Internet Scale",
+            "venue": "ed., revised & updated),",
+            "year": 2015
+        }
+    ],
+    "sections": [
+        {
+            "text": "I. INTRODUCTION"
+        },
+        {
+            "heading": "A. The Straggler Problem",
+            "text": "Different applications employ iterative convergent algorithms, especially machine learnings. Parallel execution of such algorithms is typically expressed through the Bulk Synchronous Parallel (BSP) model for computation [3]. Nonetheless, implementation through this model is characterized by what is referred as the straggler problem in computing terminology. [4] This means that every brief delay for a given worker can result in a slowdown of the whole process or iteration. This problem significantly reduces the overall completion time and performance, and the problem gets worse with increased parallelism. The diagram below is a visual representation of the straggler problem.\nThe training time of a single iteration is estimated depending on the worker with the longest computation time and communication time on each iteration, as expressed in the following:\n\ud835\udc61\ud835\udc56\ud835\udc61\ud835\udc52\ud835\udc5f\ud835\udc4e\ud835\udc61\ud835\udc56\ud835\udc5c\ud835\udc5b = \u2211\ufe01 (\ud835\udc5a\ud835\udc4e\ud835\udc651\u2264\ud835\udc56 \u2264\ud835\udc5b \ud835\udc36\ud835\udc5c\ud835\udc5a\ud835\udc5d (\ud835\udc56) + \ud835\udc5a\ud835\udc4e\ud835\udc651\u2264\ud835\udc56\u2264\ud835\udc5b\ud835\udc36\ud835\udc5c\ud835\udc5a\ud835\udc5a(\ud835\udc56))\nwhere \ud835\udc5b is the number of workers, and \ud835\udc36\ud835\udc5c\ud835\udc5a\ud835\udc5d\ud835\udc62\ud835\udc61\ud835\udc52(\ud835\udc56) and \ud835\udc36\ud835\udc5c\ud835\udc5a\ud835\udc5a\ud835\udc62\ud835\udc5b\ud835\udc56\ud835\udc50\ud835\udc4e\ud835\udc61\ud835\udc52(\ud835\udc56) are computation time and communication time of the worker \ud835\udc56 respectively.\nBenjamin Wong is with Computer Science, Chinese University of Hong Kong, e-mail: tszkan.wong@link.cuhk.edu.hk (Corresponding author).\nWe can see that any delay in computation or communication of any worker may delay the overall process time. We can further derive the wait time, as expressed in the following:\n\ud835\udc61\ud835\udc64\ud835\udc4e\ud835\udc60\ud835\udc61\ud835\udc52 = \ud835\udc5b\u2211\ufe01 \ud835\udc56=0 \ud835\udc61\ud835\udc64\ud835\udc4e\ud835\udc60\ud835\udc61\ud835\udc52 (\ud835\udc56)\nWhere \ud835\udc5b is the number of workers, and \ud835\udc61\ud835\udc64\ud835\udc4e\ud835\udc60\ud835\udc61\ud835\udc52 (\ud835\udc56) is the time to wait synchronization barrier of the worker \ud835\udc56, i.e. wasted time. To address the straggler problem, we have to minimize the total waste time, \ud835\udc61\ud835\udc64\ud835\udc4e\ud835\udc60\ud835\udc61\ud835\udc52."
+        },
+        {
+            "heading": "B. Mitigate the Straggler Problem",
+            "text": "Stragglers problem have long overwhelmed parallel computing, and numerous technique have been researched to moderate them. Following table summarize current techniques for mitigate straggler problem.\nSummary of Current mitigation techniques In addressing the straggler problem, new significant data structures have adopted different reactive or preventive speculation approaches through which a system initiates backup or extra copies for tasks on other machines via a prudent manner. Currently, there are 4 popular type of straggler mitigation methods, these including the Speculative execution, task cloning, Job Shedding and Job Stealing and Relaxed Progress Synchronization.\nar X\niv :2\n30 8.\n15 48\n2v 1\n[ cs\n.D C\n] 2\n8 Ju\nl 2 02\n3\n2 In the Speculative execution, the development of distinct tasks is examined through the system as well as backup copies when the stragglers are detected. In the cloning approach, on the other hand, extra task copies are organized in a parallel manner with the first job if only the anticipated cost involved in computation is low and the availability of system resources is guaranteed. In the Job Shedding and Job Stealing approach, the system adaptively rebalance work among the workers. In Relaxed progress synchronization approach, the system allow certain level of inconsistency of synchronization and retain the convergence guarantee."
+        },
+        {
+            "heading": "II. CURRENT STRAGGLER MITIGATION TECHNIQUE",
+            "text": ""
+        },
+        {
+            "heading": "A. Speculative execution & task cloning (Predict Straggler and task cloning)",
+            "text": "Research on large scale computing clusters has shown that the completion time of a particular task [10]is often unnecessarily delayed by one or a few \u201cstragglers\u201d or straggling task that are assigned with either a failing or overloaded server, but definitely there may have a better choice within the cluster. This finding triggered the study of speculative execution so that to diminish stragglers in the processing of data systems like Hadoop, MapReduce, and Spark. Wrangler [7] described an approach that predict when the stragglers are going take place and make scheduling decisions to circumvent such situation.\nTo mitigate stragglers, recent big data framework, as, for example; the MapReduce system or its alternatives have implemented numerous reactive or proactive approaches under which the system will add additional duplicates of a job on other machines in a judicious method. This technique can significantly reduce delays as due to stragglers, as the output from the faster worker can be used without waiting for slower ones, however, with the trade-off of consuming additional resources.\nFull cloning of small jobs, without waiting and speculation completely [11]. Cloning small jobs increase the machine utilization since workload are small if jobs is small slightly and consumes a small portion of the resources. [12]"
+        },
+        {
+            "heading": "B. Using relaxed progress synchronization",
+            "text": "In Bulk synchronous parallel (BSP) model, the straggler problem is significant due to the costly barrier synchronization.\nHowever, the Bulk Synchronous Parallel (BSP) model represents one of the common ways to implement distributed applications of iterative convergent algorithms underlined by an \u201cinput-data-parallel\u201d methodology. Typically, the model parameter will be stored in the shared data store so that every worker will update throughout the iteration. There exists design of BSP model guarantees the model data will be available to the worker after synchronization instead of immediately available to all worker, and it would enable worker efficiently to use the cached copy. Another design is to ensure the allocation of work to the worker are similar across the iteration, and it would enable the worker to reuse the already loaded data, and thus reduce the overhead of input data movement.\nFig. 2. Visual representation of Stale Synchronization model\nFor some ML Task, strict barriers of BSP can be relaxed with alternate progress synchronization model. Flexible steadiness confines that have been lately proposed suggested and considered two diverse names that are \u201cBounded Delay consistency\u201d and \u201cStale Synchronous Parallel\u201d (SSP) [13]. These bonds guarantee convergence proof, as, for example; the SSP has been publicized to moderate insignificant transitory effects of straggler effects. The diagram above shows the visual representation of SSP model. [4]"
+        },
+        {
+            "heading": "C. Work Shedding and Work Stealing",
+            "text": "Work stealing and shedding of work reflects methodologies for adaptively rebalance work among the workers. The latest research by FlexRR [6] proposed a method of work shedding, dedicated to the scope of data-parallel iterative ML. FlexRR employs two mechanisms to mitigate the problem: temporary work reassignment through RapidReassignment (RR), and adjustable consistency parameters through the State Synchronous Parallel (SSP) model. SSP allows individual workers threads to lead the slowest worker by a quantified slack-bound iteration number. This flexibility permits mitigation of the straggler problem to s certain degree but more fundamentally, provides sufficient flexibility to RapidReassignment (RR) making it highly efficient. RR employs peer-to-peer communication thus enabling the self-identification of workers as stragglers. FlexRR designed to use the parameter server method to store and distributing normal states among worker threads. During execution, it will comprise of one process prompting a worker thread for respective cores on the nodes as well as the number of threads in the background for internal functionality. Following sequence diagram visualizing the RapidReassignment protocol when a slow worker is behind the progress.\n3"
+        },
+        {
+            "heading": "D. Predicting Straggler with ML Technique",
+            "text": "Besides Job rescheduling, speculation [14] is another standard method for straggler mitigation. It predicts stragglers based on progress score of the task and launch a clone of the job on different machines. Most recent research ML-NA [5] is intended on an ML-based Node Performance Analyzer. By leveraging actual task execution log, ML-NA will categorize cluster nodes into different classifications and predict their performance in the following task, so that scheduler can be better and minimize the possibility of task straggler."
+        },
+        {
+            "heading": "III. METHODOLOGY AND EXPERIMENTAL SET-UP",
+            "text": "To study the straggler problem, we built a prototype system using FlexPS system, which setup with the Bulk Synchronous Parallel model to support distributed machine learning applications. FlexPS is a \u201cparameter server\u201d that provides the abstraction of a set of shared sparse matrices that all processes can access. These matrices are stored in memory, distributed across a set of servers.\nFlexPS provides a flexible parallel control API similar to the B\u00f6sen system, abstracts consistency management and networking operations away from application, and presents a simple key-value interface, as shown below table. It provides read and update operations including Get(), Add() and Clock().\nA. Injected Straggler Framework\nThe experiment will test the effects of a straggler beyond what ascended for the duration of the precise instances of the trials. It will also measure attributable delays directly. The research will intentionally inject straggler into the execution, including transient as well as persistent stragglers. The experiment will include different injected frameworks, while the control setup will involve testing the straggler mitigation technique without injected delays. In other words, the control experiment will encompass the Ideal situation representing perfect cases that assume every worker have no wait. The injected straggler pattern are listed in the table below:\n1) Slow Worker Pattern: Through this pattern, it models transient worker by manually add sleep to the worker, in application or engine. We will add all possibly delay point (any point that may incur waiting) within each iteration, and each worker decide its possibility (x%) to be delayed independently. It can be delayed from 0 \u2013 2 times of the duration of the actual iteration time. It is possible to have no or multiple straggler in each iteration. the transient delay % will be used to determine the level of worker slowed (e.g., 100% delay means runs 2 times slower than original one).\nThe simulation will be implemented by dividing the overall sleep into multiple millisecond sleep, and set to all possibly\ndelay point, (e.g. for a 50% delay within a 1 second iteration, and there are potential 10 delay points, it can insert a 1ms sleep at each delay point).\n2) Disrupted Machine Pattern: Through this methodology approach, the study will model transient resource contention by simulating a high priority disruptor procedure that takes affect significant Memory or CPU resources. It can be duplicated by initiating a disruptor process with a probability of x% every d seconds. The disruptor process can be implemented by launching multiple threads that work on heavy calculation work (or run infinite loop). This implies that for d seconds, then a temporary delay concentration, which is a component of d, with a machine of p core running p worker threads, the disruptor therefor commences at d \u00d7 p processes. For instance, 200% delay on an 8-core machine running eight worker thread will run 16 threads disruptor process [1].\n3) Power-Law Pattern: The selection of this methodology was informed by the real-world straggler patterns as established by existing research. The gist of this approach is predicated on the understanding a straggler may occur with a power-law distribution [2] to finish an iteration. For instance,\n\ud835\udc5d (\ud835\udc61) \u221d \ud835\udc61 \u00d7 \ud835\udefc\nWhere \ud835\udefc represents an element of the distribution \u201cskewness.\u201d Sleep will, therefore, be employed with the comparable execution in the Slow Worker Pattern, with \ud835\udc61 \u00d7 \ud835\udefc added to the delay time. Lesser \ud835\udefc leads to a \u201cflatter\u201d distribution. Each iteration employs the same \ud835\udefc, and without considering the actual completion time of the iteration.\n4) Persistent Straggler Pattern: This pattern is caused by a particular node that insistently performs slow. The study also incorporates the concept of persistent straggler pattern whereby some the machines receive 75% or even 50% of the work per iteration. Such unbalanced assignments could trigger the case where processing skew of the data is co-related with the data placement.\n5) Implementation of Straggler injection framework: Leveraging the FlexPS API, the straggler injection shall be implemented inside the application code. The following operations has implemented to add straggler inside the algorithm implementation. A global configurable switch in the application to control whether current execution will inject straggler simulation.\nFollowing Benchmark framework has implemented to extend current FlexPS system in order to measure the performance of the parallel execution."
+        },
+        {
+            "heading": "B. Benchmark with selected ML Algorithm",
+            "text": "In order to study the behaviour of different mitigation technique over different type of workload, the experiment is designed to conduct using various ML algorithm implemented, and instrument with customized C++ library implemented in FlexPS application code base. Following table describe the dataset used for different ML Algorithm selected in the experiment.\n4\n1) Logistic regression (LR): This is a regression model where DV is unconditional. Specifically, the model employed by this experiment is a binary dependent variable, this means that only two values such as \"0\" and \"1\", representing output such as boy/girl, or else win/lose can be used.\nThe MLR investigations use the Avazu dataset, containing 40,428,967 training size underlined by a variable dimension of 1,000,000 as well as two classifications. The investigations will also encompass ImageNet datasets coupled with LLC elements comprising 64k experimental observations defined by 1000 classes and feature dimensions of 21,504.\n2) Matrix factorization (MF) : This is a procedure employed in reference systems, such as endorsing flicks to consumers in networks such as Netflix. It is also referred to as collaborative filtering. In numerical analysis, given a moderately complete matrix X, matrix factorization factorizes X into factor matrices \ud835\udc3f and \ud835\udc45. consequently, their respective product estimates X as \ud835\udc4b \u2248 \ud835\udc3f\ud835\udc45. We can, therefore, execute MF through the \u201cstochastic gradient descent\u201d (SGD) algorithm with the reference of other systems and individual worker threads.\nThe experiment will employ the \u201cNetflix dataset\u201d underlined by \u201ca 480k-by-18k sparse matrix with 100m known features\u201d. These elements are configured in such a way that they factor the data set into the result generated by matrix underlined by rank 100. This version is a \u201c7683k-by-284l sparse matrix\u201d\ncharacterized by 4.24 billion recognized features underlined by rank 100.\n3) Latent Dirichlet Allocation (LDA) : LDA represents a generative probabilistic corpus model. The essence of this ML strategy is predicated on the need to have documents served in random assortments over the possible topic.\nThis experiment will employ the Nytimes dataset comprising 100m words within 1.8 million articles containing 100k vocabulary size. They will be configured to categorize words, as well as reports into 1000."
+        },
+        {
+            "heading": "C. Experiment result",
+            "text": "We performed experiments on Cluster in University to evaluate all straggler technique in the presence of all straggler patterns injected during the particular times of the experiments."
+        },
+        {
+            "heading": "IV. RESULTS FOR SLOW WORKER PATTERN",
+            "text": "The outcomes of the LR, MF and LDA are presented in figures above. The results show that FlexRR decreases the time-per-iteration or total waste time by 35% about Matrix\n5\nTABLE VI EXPERIMENT DATASET USED AGAINST DIFFERENT ALGORITHM\nApplication Experiment dataset Logistric Regression (LR) Avazu dataset, containing 40,428,967 training size with a feature dimension of 1,000,000 and 2 classes Matrix Factorization (MF) Netflix dataset, which is a 480k-by-18k sparse matrix with 100m known features. Latent Dirichlet Allocation (LDA) New York Times dataset, which is a 1.8 million articles that appeared between January 1, 1987 and June 19, 2007\nfactorization and 34% for Latent Dirichlet Allocation relative to the Bulk Synchronous Parallel (BSP) and 25% and 34% reductions relative to SSP respectively. As noted in the two experiments, the increase is more significant for LR since the less costly LR undergo more transient effects of the straggler problem.\nThe enhancements in cluster were observed despite implementing comparatively short experiments on relatively costly situations expected minimal exhibit sharing of resources with other tenant actions while at the same time highlighting the realness of transient stragglers within infrastructures."
+        },
+        {
+            "heading": "V. RESULT FOR DISRUPTED MACHINE PATTERN",
+            "text": "We compare the average time-per-iteration (20 iterations) and total waste time of alternative modes for the Disrupted Machine Pattern. Following diagram shows results for MF\u2014results for LDA and MLR are qualitatively similar. SSP and BSP RR individually reduce the delay experienced by BSP by up to 49% and 42%, respectively. The combination of the two techniques in FlexRR matches Ideal, reducing the run-time by up to 63%, very close to ideal waste time."
+        },
+        {
+            "heading": "VI. RESULT FOR POWER LAW MACHINE PATTERN",
+            "text": "We compare the average time-per-iteration (20 iterations) and total waste time of alternative modes for the PowerLaw Pattern. We present results on each of our applications, setting \ud835\udefc to 4, 7, and 11. Figure above shows the results for MF. For \ud835\udefc = 11, SSP and Speculative are faster than BSP by 39% and 40%, respectively. When the two techniques\nFig. 7. Iteration Time for power law machine\nare combined in FlexRR, the run-time is 48% faster than BSP. Similarly, to experiments conducted in earlier sections, with increasing delays (smaller \ud835\udefc), the other three modes experienced significant increases in run-times, while FlexRR experienced only slight increases.\nThe results for MLR and LDA show similar trends. For \ud835\udefc = 11, SSP and BSP RR were 36% and 31% respectively faster than BSP for MLR and 37% and 42% respectively faster than BSP for LDA. FlexRR was 43% and 52% faster than BSP on LR and LDA respectively. With increasing delays (smaller \ud835\udefc), the other three modes experienced significant increases in run-times for both LR and LDA. FlexRR experienced only modest delays for LR and somewhat larger delays for LDA. In all cases, FlexRR significantly outperforms the other three modes."
+        },
+        {
+            "heading": "VII. CONCLUSION",
+            "text": "The experiments described herein were designed to address the straggler problem of the Parameter Server for important Machine Learning strategies such as Matrix Factorization (MF), Logistic Regression (LR), and Latent Dirichlet Allocation (LDA), which use iterative approaches to achieve convergence.\nExperiments with custom implemented ML applications under a variety of injected straggler behaviors confirm that FlexRR as a straggler mitigation technique compared to the\n6 methods such as the cloning and speculative execution is more effective. The results show that FlexRR decreases the time-per-iteration and wasted time significantly under our experiment environment. The study thus successfully conclude that FlexRR is the best algorithm as a straggler mitigation technique in common cases."
+        }
+    ],
+    "title": "Empirical Study of Straggler Problem in Parameter Server on Iterative Convergent Distributed Machine Learning",
+    "year": 2023
+}

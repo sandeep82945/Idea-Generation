@@ -3,7 +3,6 @@ import os
 import pandas as pd
 
 import openai
-openai.api_key = ""
 import json
 import os
 import nltk
@@ -15,6 +14,8 @@ import yaml
 # Load the configuration from the YAML file
 with open('config.yml', 'r') as config_file:
     config = yaml.safe_load(config_file)
+
+openai.api_key = config["open_ai_key"]
 
 def extract_answer(input_text):
     tokens = nltk.word_tokenize(input_text)

@@ -10,6 +10,12 @@ import nltk
 nltk.download('punkt')
 import re
 
+import yaml
+
+# Load the configuration from the YAML file
+with open('config.yml', 'r') as config_file:
+    config = yaml.safe_load(config_file)
+
 def extract_answer(input_text):
     tokens = nltk.word_tokenize(input_text)
     for word in tokens:
@@ -18,7 +24,6 @@ def extract_answer(input_text):
     return 'no'
 
 import re
-
 def extract_reviews(input_string):
     pattern = r'Review1:\s*"([^"]*)"\s*[^"]*Review2:\s*"([^"]*)"'
     matches = re.findall(pattern, input_string)
@@ -82,11 +87,13 @@ def get_text_from_future(json_file_path):
                     else:
                         if(len(element['text'])<10):
                             return None
-                        prompt='you are given text of conclusion of research paper.return only the future work text from input text.input text is as follows: '+ element['text']
+                        prompt='You are given text of conclusion of a research paper. Extract and Return only the portion of the text that discusses future works. Input text is as follows: '+ element['text']
                         op= response_chat(prompt)[2]
                         return op
     return None
-temp=10
+
+temp=config['number_of_files']
+
 def process_json_files_in_folder(folder_path):
     output_dict = {}
     count=0
@@ -116,8 +123,10 @@ def process_json_files_in_folder(folder_path):
     return output_dict
 
 # Replace 'your_folder_path' with the actual path to your folder containing JSON files
-domain='economics'
-folder_path=os.path.join("D:\s2-folks\scipdf_parser",domain+"_json")
+domain = config['domain']
+input_path = config['input_path']
+
+folder_path=os.path.join(input_path,domain+"_json")
 output_dictionary = process_json_files_in_folder(folder_path)
 print(output_dictionary)
 

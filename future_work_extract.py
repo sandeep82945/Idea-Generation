@@ -67,11 +67,9 @@ def get_text_from_conclusion(json_file_path):
             if 'heading' in element and 'text' in element:
                 heading = element['heading'].lower()
                 if 'conclusion' in heading:
-                    prompt='you are given text of conclusion of research paper.return only the future work text from input text.input text is as follows: '+ element['text']
+                    prompt='You are given text of conclusion of a research paper. Extract and Return only the portion of the text that discusses future works. Input text is as follows: '+ element['text']
                     op= response_chat(prompt)[2]
                     return op
-
-
 
 
 def get_text_from_future(json_file_path):

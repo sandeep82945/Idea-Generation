@@ -1,0 +1,201 @@
+{
+    "abstractText": "In this paper, we propose an enhanced preamble based media access control mechanism (E-PMAC), which can be applied in power line communication (PLC) network for Industrial Internet of Things (IIoT). We introduce detailed technologies used in E-PMAC, including delay calibration mechanism, preamble design, and slot allocation algorithm. With these technologies, E-PMAC is more robust than existing preamble based MAC mechanism (P-MAC). Besides, we analyze the disadvantage of P-MAC in multi-layer networking and design the networking process of E-PMAC to accelerate networking process. We analyze the complexity of networking process in P-MAC and E-PMAC and prove that E-PMAC has lower complexity than P-MAC. Finally, we simulate the single-layer networking and multi-layer networking of E-PMAC, P-MAC, and existing PLC protocol, i.e. , IEEE1901.1. The simulation results indicate that E-PMAC spends much less time in networking than IEEE1901.1 and PMAC. Finally, with our work, a PLC network based on E-PMAC mechanism can be realized.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Kai Song"
+        },
+        {
+            "affiliations": [],
+            "name": "Biqian Feng"
+        },
+        {
+            "affiliations": [],
+            "name": "Yongpeng Wu"
+        },
+        {
+            "affiliations": [],
+            "name": "Wenjun Zhang"
+        }
+    ],
+    "id": "SP:21c7128270a81252d9e737d088a536ca26c2850b",
+    "references": [
+        {
+            "authors": [
+                "A. Su",
+                "Z. Fang"
+            ],
+            "title": "Research on open source solutions of data collection for industrial Internet of Things,",
+            "venue": "Proc. Int. Symp. Mechatron. Ind. Inform. (ISMII),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "W.-Z. Khan",
+                "M.-H. Rehman",
+                "H.-M. Zangoti",
+                "M.-K. Afzal",
+                "N. Armi",
+                "K. Salah"
+            ],
+            "title": "Industrial Internet of Things: Recent advances, enabling technologies and open challenges,",
+            "venue": "Comput. Elect. Eng., vol. 81,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "X. Huang"
+            ],
+            "title": "Intelligent remote monitoring and manufacturing system of production line based on industrial Internet of Things,",
+            "venue": "Comput. Commun.,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "R.-M. Islam",
+                "T. Jerin",
+                "H. Sadat",
+                "A.-R"
+            ],
+            "title": "Irshad, \u201cPerformance analysis of a power line channel for multipath propagation,",
+            "venue": "in Proc. Int. Conf. Elect. Eng. Inform. Commun. Technol. (ICEEICT),",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Y. Li",
+                "M. Zhang",
+                "W. Zhu",
+                "M. Chen",
+                "C. Zhou",
+                "Y. Wu"
+            ],
+            "title": "Performance evaluation for medium voltage MIMO-OFDM power line communication system,",
+            "venue": "China Commun.,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "L. Yu",
+                "Q. Liu",
+                "D. Wu",
+                "Q. Yan",
+                "G. Yan",
+                "Y. Wu"
+            ],
+            "title": "Security Transmission in MIMO Ubiquitous Power Internet of Things Systems,",
+            "venue": "IEEE Access,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "L. Wang",
+                "X. Wang",
+                "B. Li"
+            ],
+            "title": "Channel prediction based MAC layer access scheme of broadband power line communication network,",
+            "venue": "in Proc. IEEE Int. Conf. Commun. Softw. Netw. (ICCSN), Guangzhou,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "C. Huo",
+                "L. Wang",
+                "L. Zhang"
+            ],
+            "title": "Cluster and probability competition based MAC scheme in power line communications,",
+            "venue": "in Proc. IEEE Int. Conf. Elect. Inform. Emerg. Commun. (ICEIEC),",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "C. Shi",
+                "B. Feng",
+                "Y. Wu",
+                "W. Zhang"
+            ],
+            "title": "A Preamble Based MAC Mechanism in Ad-Hoc Network,",
+            "venue": "J. Commun. Inform. Netw., [Online]. Available: https://arxiv.org/abs/2112.04112",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "Index Terms\u2014Industrial Internet of Things, Power Line Communication, P-MAC, E-PMAC, IEEE1901.1\nI. INTRODUCTION\nNowadays, communication technology plays a more and more important role in industrial production. Industrial Internet of Things (IIoT) is considered as the foundation of Industry 4.0 and Intelligent Manufacturing [1]. It fills the gap between the devices and information technology (IT) systems, and eliminates the phenomenon of information silos [2][3].\nIIoT is a network which is constructed by industrial data collectors. In IIoT, a large number of low-cost nodes, including sensors and meters, are deployed in the factories. These nodes serve as the underlayer of IIoT and collect various data.\nThe implementation of IIoT needs advanced communication technology. In the IIoT, the number of nodes is very large and the density of nodes is high, which is different from other networks. In this case, the cost and the time spending in network construction cannot be ignored. Therefore, the physical (PHY) layer and multi-access control (MAC) layer should be specifically designed."
+        },
+        {
+            "heading": "A. Related work",
+            "text": "There has been a lot of research on the PHY layer and MAC layer of IIoT. In terms of PHY layer, promising communication technologies include narrow band Internet of Things\nK. Song, B. Feng, Y. Wu, W. Zhang are with the Department of Electronic Engineering, Shanghai Jiao Tong University, Minhang 200240, China (e-mail: gansusongkai@sjtu.edu.cn; fengbiqian@sjtu.edu.cn; yongpeng.wu@sjtu.edu.cn; zhangwenjun@sjtu.edu.cn) (Corresponding author: Yongpeng Wu).\n(NB-IoT), power line communication (PLC), etc. PLC has a unique advantage that it utilizes ubiquitous power line to communicate, which makes it more reliable than wireless communication in the factory scenario where blind areas of wireless signal are common. Although there exists attenuation and multipath propagation in power line [4], technologies like multiple-input multiple-output (MIMO) and orthogonal frequency division multiplexing (OFDM) are used in PLC [5], which improves communication quality. In [6], IEEE1901.1 protocol is proposed and it can realize broadband PLC communication in grid system. In [7], frequency division power line communication (FD-PLC) is designed as a PHY layer protocol for IIoT-oriented PLC network to solve the problem that passband of PLC channel changes with time. All of these technologies make PLC a promising technology in IIoT.\nAs for MAC layer, because of the large number and high density of IIoT nodes, MAC layer protocol mainly aims at speeding up the networking process and carrier sense multiple access (CSMA) is widely used in MAC layer to decrease collision. The modelling of CSMA and network topology are main research directions [8][9]. Besides of these research, an innovative preamble based MAC (P-MAC) mechanism is proposed in [10]. In P-MAC, channel competition and data transportation are totally divided and preamble is utilized to compete for access to central node. Compared with data frame, preamble is much shorter and can save networking time a lot.\nTo date, PLC protocol applied for the IIoT in factory remains to be designed. The power line channel in factories is noisier and passband frequency changes with time, which makes IEEE1901.1 infeasible. Most researches like [8] and [9] pay less attention to the speed of networking. The authors of [10] discuss networking speed and convey an idea of using preambles to establish connection. However, P-MAC in is designed for situation with a small amount of nodes. In aspect of realization, P-MAC needs receiver with high process speed, which raises the cost of devices and increases the probability of failure connection. In aspects of networking speed, nodes using P-MAC send more data frames than IEEE1901.1 in networking, which indicates P-MAC may have even lower speed than existing mechanisms. Therefore, a preamble based MAC mechanism with higher robustness and faster networking speed is desired for research."
+        },
+        {
+            "heading": "B. Our work",
+            "text": "Based on the idea of [10], we propose enhanced P-MAC (E-PMAC), a MAC mechanism applied in IIoT-oriented PLC\nar X\niv :2\n20 3.\n11 40\n4v 1\n[ ee\nss .S\nP] 2\n2 M\nar 2\n02 2\nnetwork. Compared with P-MAC, E-PMAC is more robust and have faster networking speed. Firstly, we introduce detailed technologies used in E-PMAC, including delay calibration mechanism, preamble designing, and slot allocation algorithm. With these technologies, E-PMAC is more robust than P-MAC in real IIoT environment. Secondly, we design the single-layer networking and multi-layer networking process of E-PMAC. Thirdly, we compare P-MAC and E-PMAC in the complexity of networking and prove that E-PMAC can spend less time in networking than P-MAC. Finally, we make simulations to compare E-PMAC, P-MAC, and IEEE1901.1 in networking time. The simulation results indicate that E-PMAC is faster than IEEE1901.1 and P-MAC.\nThe rest of this paper is organized as follows. Section II introduces detailed technologies used in E-PMAC. In Sections III and IV, we introduce the networking process of E-PMAC and compare P-MAC and E-PMAC in complexity. Section V presents simulations of P-MAC, E-PMAC, and IEEE1901.1. Finally, we conclude the paper in Section VI."
+        },
+        {
+            "heading": "II. TECHNICAL DETAILS IN E-PMAC",
+            "text": "According to [6], in IIoT based on PLC, the nodes can be divided into three types, including Central Coordinator (CCO), Proxy Coordinator (PCO), and Station (STA). The PMAC mechanism includes three parts, preamble time exchange (PTE), T-Query handshake (T-Query), and network configuration (Net-Config) [10].\nIn this section, we introduce delay calibration mechanism, preamble designing, and slot allocation algorithm, which make E-PMAC more robust than P-MAC."
+        },
+        {
+            "heading": "A. Delay Calibration Mechanism",
+            "text": "The basic idea of using preamble to establish connection is that CCO can match STA with time difference of two preambles. In PTE, CCO sends a preamble to STA and the STA responses CCO with another preamble. The time difference of these two preambles can be measured by both CCO and STA [10]. In order to complete the handshake in T-Query, it should be guaranteed that the time differences measured by CCO and STA is equal.\nSending delay, propagation delay, and receiving delay inevitably occur in practical PLC system. Besides, the data transportation time between PHY hardware and MAC hardware cannot be ignored. All kinds of delays are listed in TABLE I and the process of time difference calculation is shown in Fig. 1, in which delays make \u2206TSTA and \u2206TCCO, time differences measured by STA and CCO different. In IIoT, the distance between nodes is usually small and the error caused by propagation delay is much less than that caused by other delays, so TC can be ignored, but other delays in TABLE I are supposed to be considered. As for P-MAC, however, it only considers the situation that TP equals to RP plus RM , which means that the performance of receiver should be good enough to have a processing delay less than the timing clock. This condition is difficult to meet because nodes in IIoT should be low-cost.\nWe add delay calibration mechanism to E-PMAC so that CCO can still get correct time difference with non-real-time receiver, which makes E-PMAC more robust than P-MAC. In OFDM-based PLC systems, preamble and data frames have fixed length, so the TP , RP , and RM in Table-I are constant. Based on this feature, we design the delay calibration mechanism shown in Fig. 2. The random backoff time of STA can be set to zero. CCO measures out the time differences \u03c4CCO1 and \u03c4CCO2. STA measures out \u03c4STA, and sends it to CCO through subsequent data frame. By letting a correction factor \u03c4 , linear equations about TP , RP , RM and \u03c4 is given by (1). At the beginning of networking, CCO can solve (1) and save the value of \u03c4 . Then in PTE, CCO can utilize (2) to figure out \u2206T\u0302STA, which is equal to \u2206TSTA. In T-Query, CCO will send \u2206T\u0302STA instead of \u2206TCCO to STA.\n RP +RM \u2212 TP \u2212\u03c4 = 0 RP +RM +\u03c4 = \u03c4CCO2 RP +RM + TP +\u03c4 = \u03c4CCO1\nRM + TP = \u03c4STA\n(1)\n\u2206T\u0302STA = \u2206TCCO \u2212 2\u03c4 (2)"
+        },
+        {
+            "heading": "B. Preambles in E-PMAC",
+            "text": "P-MAC uses 2 kinds of preambles, while in E-PMAC, 4 kinds of preambles are used. The preamble used as head of data frame should be unique. In PTE, the downward preamble differs from the upward preamble. In Net-Config of P-MAC, STAs will send acknowledge (ACK) to CCO, so we need another kind of preamble used as ACK. We define the preambles in data frame, downward part of PTE, upward part of PTE and Net-Config as DAT, NET, REQ, and ACK respectively.\nIn PLC network, there exist some STAs which cannot receive signal from CCO but can communicate with other STAs. We call these STAs as hidden STAs. In the PTE of P-MAC, the upward and downward preambles are the same. If hidden STAs receive upward preambles sent from other STAs to CCO, they will treat these preambles as downward preambles and response upward preambles, which will cause more collision. While in E-PMAC, NET and REQ serve as downward and upward preamble, eliminating the collision caused by hidden STAs."
+        },
+        {
+            "heading": "C. PTE Slot Allocation Algorithm",
+            "text": "We define one PTE, T-Query, and Net-Config as one networking cycle (NC). In [10], P-MAC is only used in the process of CCO networking with 2 STAs in one NC. In IIoT, the number of STAs is so large that collision in PTE is inevitable and CCO cannot connect with all the STAs in only one NC. The problems that E-PMAC faces are listed as follows. \u2022 Collision rate of preamble is high because CSMA cannot\nbe used in PTE. In PTE process, only the preamble is sent, and STA cannot detect preamble until the transmission of preamble is finished. Therefore, STAs cannot detect that the channel is busy, so they can only send REQ preamble to CCO after waiting for a random time without collision detection. There will be a high probability of collisions in the process. \u2022 The exact number of STAs is unknown for CCO, and CCO can only allocate a random number of slots. If the number of slots is too small, collision will be too frequent for STA to send preamble to CCO. And if the number of idle slots is too large, networking will be too slow.\nTo solve the two problems, we design a PTE slot allocation algorithm for E-PMAC. The basic idea is to adjust the allocated slots by referring to the recorded number of slots and STAs successfully joining network in the last NC. The algorithm is shown in Algorithm 1.\nIn the PTE of the first NC, we replace NET preamble with a data frame containing the number of slots, so that the STAs can know the slots number in the first PTE. In the subsequent NCs, CCO and STAs figure out number of slots by Algorithm 1. Algorithm 1 requires that STAs should know the number of STAs successfully joining network in the last NC. We introduce the solution to this problem in section III-A. By Algorithm 1, E-PMAC can dynamically increase slots number\nwhen collision rate is too high and keep the slots number close to STAs number. Because the data used in Algorithm 1 have been stored, the algorithm just needs to run a judgement process and has a complexity of O(1).\nAlgorithm 1: Allocation Algorithm of PTE Slot Input: Nslot: Slots number in the last PTE NSTA: STAs number in the last PTE Tf : Times of PTE that no STAs joining TPTE : Times of finished PTE Output: N \u2032slot: Slots number in the next PTE\nInitialize N0, TfMax \u2208 N+, \u03b7min \u2208 (0, 1), K1,K2 > 1(K1 < K2); if TPTE 6= 0 then \u03b7 = NSTA/Nslot; if \u03b7 > 0 then\nif \u03b7 \u2264 \u03b7min then N \u2032slot = K1 \u00d7Nslot; else N \u2032slot = Nslot;\nend else\nif Tf \u2264 TfMax then N \u2032slot = K2 \u00d7Nslot; else N \u2032slot = 0;\nend end\nelse N \u2032slot = N0; end return N \u2032slot;"
+        },
+        {
+            "heading": "III. NETWORKING PROCESS OF E-PMAC",
+            "text": "When comparing P-MAC with IEEE1901.1, we can find in the networking process of IEEE1901.1, once a STA successfully sends data frame containing information necessary for networking to CCO by CSMA, CCO will let the STA join the network without requiring it for other information. Although P-MAC uses preamble to save more time in competing access to CCO than IEEE1901.1, it needs more data frames to send information. Hence, the networking time of P-MAC still has probability to be longer than IEEE1901.1.\nIn the scheme of P-MAC, CCO and STAs only send one datum in one data frame, which wastes lots of space. From this perspective, we design the networking process of E-PMAC based on the idea of making full use of data frames."
+        },
+        {
+            "heading": "A. Single-layer Networking of E-PMAC",
+            "text": "For T-Query of E-PMAC, we define a new frame called Time Differences Frame (TDF), in which time differences of STAs are sorted in ascending order. CCO sends TDFs at the beginning of T-Query. The length of TDF is constant and CCO\nwill send multiple TDFs if there are too many time differences. When STAs receive TDFs, they can get the ascending order of time differences, and then send MAC addresses to CCO in the same order.\nIn Net-Config of E-PMAC, pairs of short ID (SID) and MAC address are sent from CCO to STAs. So we define a new frame called SIDs Frame (SDF), which is filled with pairs of short ID (SID) and MAC address of STA. In Net-Config, CCO sends SDFs and STAs can get whether they join in the network successfully. The successful STAs send ACK to CCO at the end of Net-Config. Besides, by SDF, STAs can know the number of successful STAs and calculate the PTE slots number in the next NC with Algorithm 1.\nConsidering a scenario that CCO connects with 4 STAs in 2 NCs, the process of E-PMAC is shown in Fig. 3. In PTE of the NC1, CCO sends data frame containing slots number. STA1 and STA2 send REQ in different slots and join in network successfully. STA3 and STA4 send REQ in the same slot and cause collision. When collision happens, although the two preambles partially overlap, CCO can still distinguish them by correlation detection and detect the collision. CCO will not send TDF containing time difference of STA3 and STA4 in T-Query. In Net-Config, all the STAs get the number of successful STAs by SDF and they use Algorithm 1 to calculate the slots number of PTE in NC2. In NC2, CCO just send NET preamble in PTE, and STA3 and STA4 join in the network in the same way as STA1 and STA2."
+        },
+        {
+            "heading": "B. Multi-layer Networking of E-PMAC",
+            "text": "The Beacon is necessary in multi-layer networking. In [10], beacon is a data frame that contains instruction of PCO starting networking. It is obvious that CCO knows the largest SID at the moment. Hence, in E-PMAC, CCO adds the largest SID to beacon and send beacon to PCO. In this way, PCO gets the largest SID and it can allocate SID to STAs independently, instead of requesting SIDs from CCO. After the PCO connecting with STAs, it just sends the SIDs\nand MAC addresses of STAs to CCO and CCO updates the network information.\nConsidering a scenario that CCO connects with 6 STAs in 2 layers, the process of E-PMAC is shown in Fig. 4. CCO can only communicate with STA1 and STA2. In NC1, STA1 and STA2 connect with CCO. In NC2, CCO sends beacon containing SID2, the currently largest SID, to STA1. STA1 serves as PCO, connects with STA3 and STA4, and send SDF to CCO. CCO can update the information of STA3 and STA4. In NC3, CCO makes STA2 serve as PCO and connect with STA5 and STA6."
+        },
+        {
+            "heading": "IV. COMPLEXITY ANALYSIS OF P-MAC AND E-PMAC",
+            "text": "Networking mechanism should be designed to send data frames as few as possible in the process of networking. In this section, the times of sending data frames is adopted as a metric to evaluate the complexity of networking for P-MAC and E-PMAC. Our analysis shows that E-PMAC has lower complexity than P-MAC and this advantage will be more obvious in multi-layer networking."
+        },
+        {
+            "heading": "A. Networking Complexity of P-MAC",
+            "text": "1) Single-layer Networking: According to the design of [10], in T-Query process and Net-Config process, time difference measured by CCO, MAC address of STA and SID are sent between STA and CCO in three data frames respectively. Let N be the number of STAs and the number of data frames is 3N .\n2) Multi-layer Networking: In practice, the CCO may not be able to communicate with all the STAs and the network may have multiple layers. In this case, CCO sends beacon to PCO and controls PCO to start PTE. P-MAC requires that\nPCO should send beacon, which contains time difference of a STA, to CCO after PTE. In T-query and Net-Config, CCO and the STA exchange time difference, MAC address, and SID through the PCOs which compose the path from CCO to STA.\nTherefore, let K be the number of layers and M be the number of STAs with which a PCO can communicate. Then the network structure becomes a M -ary tree with a depth of K. Let nk be the number of data frames sent in the process of CCO controlling one PCO in (k\u2212 1)-th layer to connect with STAs in the k-th layer by P-MAC. The recurrence formula of nk is given by (3). Then, N(M,K), the number of data frames sent in the multi-layer networking of P-MAC, is given by (4).\nnk = { nk\u22121 + 3M + 2, k \u2208 {2, \u00b7 \u00b7 \u00b7 ,K} 3M,k = 1\n(3)\nN(M,K) = K\u2211 k=1 nk \u00d7Mk\u22121\n= (AK +B)MK \u2212B A = 3 + 5/(M \u2212 1), B = \u22125M/(M \u2212 1)2\n(4)"
+        },
+        {
+            "heading": "B. Networking Complexity of E-PMAC",
+            "text": "1) Single-layer Networking: In practice, OFDM data frame payload ranges from 100 bytes to 200 bytes. The length of time difference is less than 5 bytes and the length of the pair of SID and MAC address is less than 10 bytes. Therefore, SDF contains over 10 SID-MAC pairs and TDF contains over 20 time differences. For the networking of N STAs, the number of data frames sent in T-Query and Net-Config is d0.1Ne + d0.05Ne+N , where \u201cd\u00b7e\u201d is ceiling operation.\n2) Multi-layer Networking: We simplify the number data frames in single-layer networking to N + 2. Considering the same multi-layer network as IV-A, n\u2032k, the number of data frames in E-PMAC sent in the process of CCO controlling one PCO in (k \u2212 1)-th layer connecting with STAs in the kth layer by E-PMAC, is given by (5). And N \u2032(M,K), the number of data frames in the whole multi-layer networking of E-PMAC, is given by (6).\nWith N(M,K) and N \u2032(M,K), we can get \u2206STA, the reduction of data frames in the process of CCO connecting with one STA, given in (7). Therefore, E-PMAC has a lower complexity and E-PMAC can save much more time than PMAC in multi-layer networking process with a large number of STAs.\nn\u2032k = { n\u2032k\u22121 + 2, k \u2208 {2, \u00b7 \u00b7 \u00b7 ,K} M + 2, k = 1\n(5)\nN \u2032(M,K) = K\u2211 k=1 n\u2032k \u00d7Mk\u22121 = K\u2211 k=1 (2k +M)Mk\u22121\n= (A\u2032K +B\u2032)MK \u2212B\u2032\nA\u2032 = 2/(M \u2212 1), B\u2032 = 1 + (M \u2212 3)/(M \u2212 1)2\n(6)\n\u2206STA = (N(M,K)\u2212N \u2032(M,K))/[ M(MK \u2212 1)\nM \u2212 1 ]\n\u2248 (N(M,K)\u2212N \u2032(M,K))(M \u2212 1)/MK+1 \u2248 [(A\u2212A\u2032)K +B \u2212B\u2032](M \u2212 1)/M = 3K \u2212 1\u2212 (5M \u2212 2)/(M2 \u2212M) \u2248 3K \u2212 1 (7)"
+        },
+        {
+            "heading": "V. SIMULATION",
+            "text": "We simulate the networking time of P-MAC, E-PMAC, and IEEE1901.1 in the scenario that a large number of STAs form a single-layer or a multi-layer network. According to the simulation results, E-PMAC can greatly speed up the process of networking compared with IEEE1901.1 and P-MAC."
+        },
+        {
+            "heading": "A. Parameters of PHY Layer",
+            "text": "The use of P-MAC and E-PMAC needs PHY layer protocal. According to [7], FD-PLC is a PHY protocol which can configure central frequency and overcome the time-varying passband frequency in power line of factory. Hence, We combine FD-PLC and PMAC/E-PMAC as a complete protocol and make comparison with IEEE1901.1.\n1) Parameters of IEEE1901.1: For IEEE1901.1, central beacon, proxy beacon, association request message (MMeAssocReq) and association indication message (MMeAssocInd) are mainly involved in networking [6]. Central beacon and proxy beacon are 127 bytes while MMeAssocReq and MMeAssocInd are 142 bytes. The beacons and messages are filled to 136 bytes and 272 bytes respectively and sent to PHY layer. Turbo coding, scrambling, channel interleaving, and ROBO (Robust OFDM) interleaving expand the bit length of beacons and messages to 21760 and 43520. The time length T can be calculated by (8), in which Ns is the number of OFDM symbol and Nc is the number of feasible subcarriers. In actual industrial condition, available bandwidth is about 3MHz and Nc is 94. Finally, the time length of beacons and messages are 9102us and 17488us, respectively.\nT =40.96\u00d7 (13 +Ns) + 18.32\u00d7 2 + (Ns \u2212 2)\u00d7 10.8(us), Ns = dNb/Nce\n(8)\n2) Parameters of FD-PLC: In FD-PLC, data frames have 100 bytes. The PHY layer of FD-PLC includes convolutional coding, RS coding and ROBO interleaving [7], which expand data frame to 8768 bits. FD-PLC uses 1024-point OFDM symbols for data frames and 64-point OFDM symbols for preamble. The bandwidth and sampling frequency are 1.25MHz and 40MHz, then the time length of these two OFDM symbols become 51.2us and 819.2us respectively. For P-MAC and EPMAC, the preamble consists of 5 OFDM symbols and costs 256us. The available subcarriers number is 720, so the time of data frames with 8768 bits is 256 + 8768/720 \u00d7 819.2 = 10232us.\nAccordingly, the preamble and data frame of IEEE1901.1 and FD-PLC have similar time length. The simulation result of comparing IEEE1901.1 with P-MAC and E-PMAC based on FD-PLC can verify the advantage of E-PMAC to P-MAC and IEEE1901.1."
+        },
+        {
+            "heading": "B. Design of Simulation",
+            "text": "1) Slot time of frame and preamble: Based on the time length in V-A, we set the time of slots as Table II. For fairness, the slot time of MMeAssocReq, MMeAssocInd, and Data Frame are set to be the same.\n2) Simulation algorithm: Networking process consists of NCs. In every NC, some STAs join in the network. The entire simulation is to simulate one NC, accumulate the time of NC, and repeat these two steps until no STA remains out of network. The simulation of NC in IEEE1901.1 is more complicated than that in P-MAC or E-PMAC, because IEEE1901.1 uses P-persistent CSMA mechanism. The simulation algorithm of NC in P-MAC and E-PMAC is just to randomly assign STAs to slots. The situation that STAs are assigned to the same slot is regarded as collision. Then we can obtain the number of successful STAs.\nWe model the topology of multi-layer network to be tree network. To make the network structure flexible and have enough branches, we set the maximum number of layers and the minimum number of STAs in the first layer. The simulation process of multi-layer network is to generate a network structure randomly and simulate the networking process layer by layer.\n3) Parameters of Simulation: The important parameters relevant to simulation are shown in TABLE III, where N is the number of STAs and K is the number of layers."
+        },
+        {
+            "heading": "C. Simulation of Single-layer Networking",
+            "text": "In the networking process, Nnode, the number of STAs influences the networking time. Besides, Nslot/Nnode, the ratio of the number of STAs and slots changes the rate of collision and influences networking time. Therefore, we set the Nnode in one layer to range from 50 to 650 and Nslot/Nnode to range from 0.5 to 2 and simulate the networking of PMAC, E-PMAC, and IEEE1901.1 under different Nnode and Nslot/Nnode.\nIn Fig. 5, we compare average networking time of the three mechanisms versus Nslot/Nnode. We can see that the networking time of IEEE1901.1 is more sensitive to Nslot/Nnode than P-MAC or E-PMAC. The minimum averaging networking time can be get in Fig. 5, and then we compare the minimum networking time versus Nnode in Fig. 6(a). It shows that EPMAC can save more time than P-MAC and IEEE1901.1 in single-layer networking."
+        },
+        {
+            "heading": "D. Simulation of Multi-layer Networking",
+            "text": "Multi-layer networking is closer to reality and in multi-layer networking, the number of STAs will be larger. So we set the number of STAs to range from 200 to 1200 and do the same simulation as single-layer networking.\nConsidering the best situation, we assume that the Nslot/Nnode for shortest average networking time can be calculated in advance. We compare minimum average networking time of P-MAC, E-PMAC, and IEEE1901.1 versus STAs number in Fig. 6(b). We can see that the networking time of P-MAC even becomes larger than IEEE1901.1, which verifies that the P-MAC in [6] sends too many data frames and loses the advantage to IEEE1901.1. Compared with P-MAC, E-PMAC can still save a lot of time in multi-layer networking.\nIn general situation, Nslot/Nnode changes randomly. We set Nslot/Nnode to randomly change between 0.5 and 2, and compare networking time of the three mechanisms versus Nnode in Fig. 7. The minimum networking time of P-MAC is approximately equal to that of IEEE1901.1, which is consistent to the result in Fig .6(a). Compared with P-MAC and IEEE1901.1, E-PMAC requires much less networking time. Besides, the difference of the longest and the shortest networking time is the smallest in E-PMAC, which indicates the networking time of E-PMAC is most steady when Nslot/Nnode changes randomly."
+        },
+        {
+            "heading": "VI. CONCLUSION",
+            "text": "In this paper, we do further research on preamble based MAC mechanism and propose E-PMAC, an enhanced P-MAC used for IIoT-oriented PLC network. We add delay calibration mechanism, extra preamble types and slot allocation algorithm to make E-PMAC robust in IIoT. Besides, we find that P-MAC wastes lots of space in data frames and may not be faster in networking than existing protocols like IEEE1901.1. So we design the networking process of E-PMAC to overcome the disadvantages of P-MAC. We use the number of data frames sent in networking process as a metric of complexity and evaluate P-MAC and E-PMAC. Our analysis indicates that E-PMAC has lower complexity and can spend less time in networking theoretically. The simulation results verify that PMAC will lose its advantage to IEEE1901.1 in multi-layer networking and E-PMAC spends much less time in networking than both P-MAC and IEEE1901.1."
+        }
+    ],
+    "title": "Enhanced Preamble Based MAC Mechanism for IIoT-oriented PLC Network",
+    "year": 2022
+}

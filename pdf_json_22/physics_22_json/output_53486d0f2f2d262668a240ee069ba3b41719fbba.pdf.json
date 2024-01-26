@@ -1,0 +1,151 @@
+{
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Valentin Dallerit"
+        },
+        {
+            "affiliations": [],
+            "name": "Mayya Tokman"
+        }
+    ],
+    "id": "SP:9d2f389fe8a4d3515ba7a0bb09bc8b418cc45914",
+    "references": [
+        {
+            "authors": [
+                "A.H. Al-Mohy",
+                "N.J. Higham"
+            ],
+            "title": "Computing the Action of the Matrix Exponential, with an Application to Exponential Integrators",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "L. Einkemmer",
+                "M. Tokman",
+                "J. Loffeld"
+            ],
+            "title": "On the performance of exponential integrators for problems in magnetohydrodynamics",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "S. Gaudreault",
+                "M. Charron",
+                "V. Dallerit",
+                "M. Tokman"
+            ],
+            "title": "High-order numerical solutions to the shallow-water equations on the rotated cubed-sphere grid",
+            "venue": "Journal of Computational Physics,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S. Gaudreault",
+                "G. Rainwater",
+                "M. Tokman"
+            ],
+            "title": "KIOPS: A fast adaptive Krylov subspace solver for exponential integrators",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Niesen",
+                "W. Wright"
+            ],
+            "title": "Algorithm 919: A Krylov subspace algorithm for evaluating the \u03c6-functions appearing in exponential integrators",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "G. Rainwater",
+                "M. Tokman"
+            ],
+            "title": "A new approach to constructing efficient stiffly accurate epirk methods",
+            "venue": "Journal of Computational Physics,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "M. Tokman"
+            ],
+            "title": "Efficient integration of large stiff systems of ODEs with exponential propagation iterative (EPI) methods",
+            "year": 2006
+        }
+    ],
+    "sections": [
+        {
+            "text": "Exponential integrators for non-linear diffusion LLNL-TR-832157\nValentin Dallerit1, Mayya Tokman1, and Ilon Joseph2\n1School of Natural Sciences, University of California, Merced, CA 95343, USA 2Lawrence Livermore National Laboratory, P.O. Box 808, Livermore, CA 94551, U.S\nJuly 7, 2022\nContents"
+        },
+        {
+            "heading": "1 Introduction 2",
+            "text": ""
+        },
+        {
+            "heading": "2 Time integration 2",
+            "text": "2.1 Time stepping methods . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2 2.2 Exponential matrix function evaluation . . . . . . . . . . . . . . . . . . . . . . . 4"
+        },
+        {
+            "heading": "3 Implementation 4",
+            "text": ""
+        },
+        {
+            "heading": "4 Test problems 5",
+            "text": ""
+        },
+        {
+            "heading": "5 Results 7",
+            "text": "5.1 Validation of the order of convergence . . . . . . . . . . . . . . . . . . . . . . . . 7 5.2 Performance comparison . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10"
+        },
+        {
+            "heading": "6 Conclusion and future work 12",
+            "text": "7 Acknowledgements 12\nar X\niv :2\n20 7.\n02 43\n9v 1\n[ m\nat h.\nN A\n] 6\nJ ul\n2 02\n2"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "The goal of this project is to compare the performance of exponential time integrators with traditional methods such as diagonally implicit Runge-Kutta methods in the context of solving the system of reduced magnetohydrodynamics (RMHD). In this report, we present initial results of a proof of concept study that shows that exponential integrators can be an efficient alternative to traditional integration schemes.\nFor this work the spatial discretization is done using the finite element method and we utilize LLNL\u2019s MFEM software package for this purpose. Discretizing RMHD equations in space using finite elements leads to a large system of ordinary differential equations (ODEs) of the form:{\ny\u2032(t) = f(y(t)) y(t0) = yn (1)\nwhere y(t) is the vector of degrees of freedom of the system and t0 \u2264 t \u2264 tf . Due to the presence of a widely ranging timescales in the RMHD equations, system (1) is very stiff. Therefore, it is usually solved using an implicit time integrator, such as implicit Runge-Kutta or Backward Differentiation Formula (BDF) method. Each time step of an implicit method requires the solution of a large system of nonlinear equations. Approximating such a solution is computationally expensive, and a preconditioner is necessary. Often, preconditioners that yield sufficient efficiency are hard to construct. For these reasons, we want to explore the use of exponential integrators for this problem. These methods are attractive for large stiff problems since they have good stability properties, allow larger time step, and their cost per time step can be computationally cheaper than implicit methods.\nIn order to show the advantages of exponential time integrators, we formulate two nonlinear diffusion test problems corresponding to a simplified version of the RMHD model of interest. We then compare the efficiency of these exponential schemes to the traditional methods.\nThis report is organized as follows. First, we introduce the numerical exponential integrators used for this comparison. Then, we describe the numerical test problems and detail the implementation. Finally, we present the results of the comparison study and demonstrate that exponential time integrators can lead to a more accurate and more efficient solution compared to implicit schemes."
+        },
+        {
+            "heading": "2 Time integration",
+            "text": ""
+        },
+        {
+            "heading": "2.1 Time stepping methods",
+            "text": "In this section, we give a brief overview of exponential time integrators and present the schemes we will be using in the numerical experiments. We also provide details on the implementation and software we use.\nExponential integrators are usually derived in the following way. First, the right-hand side function f of eq. (1) is expanded in a Taylor series around the solution y(tn) at a given time tn:\nf(y) = f(y(tn)) + Jn(y \u2212 y(tn)) +R(y) (2)\nwhere Jn is the Jacobian matrix of f at time tn and R(y) = f(y)\u2212f(y(tn))\u2212Jn(y\u2212y(tn)) is the nonlinear remainder of the Taylor expansion. Using the integrating factor e\u2212Jnt and integrating the equation from tn to tn+1, we can get the solution at a future time tn+1 = tn + h as:\ny(tn+1) = y(tn) + \u03d51(hJn)hf(y(tn)) + \u222b 1 0 e(1\u2212\u03b8)hJn hR(y(tn + h\u03b8)) d\u03b8 (3)\nwhere the exponential-like functions \u03d5k are defined as:\n\u03d50(z) = e z = \u221e\u2211 n=0 zn n!\n\u03d5k(z) = \u222b 1 0 e(1\u2212\u03b8)z \u03b8k\u22121 (k \u2212 1)! d\u03b8 = \u221e\u2211 n=0\nzn\n(n+ k)! for k \u2265 1\nEquation (3) is the integral form of system (1) and a starting point for the derivation of most exponential integrators. An exponential integrator is derived by choosing a numerical approximation of the nonlinear integral in eq. (3). For the study, we choose EPI type methods ([7], [8]) derived in [6] as they have been shown to be efficient for this type of problems ([9], [2]). In particular, we will be testing the following two exponential schemes:\n\u2022 EPI2 / Exponential Euler (2nd order):\nyn+1 = yn + \u03d51(hJn)hfn (4)\n\u2022 EPIRK4 (4th order) [6] :\nY1 = yn+ 1\n8 \u03d51\n( 1\n8 hJn\n) hfn\nY2 = yn+ 1\n9 \u03d51\n( 1\n9 hJn\n) hfn\nyn+1 = yn+\u03d51 (hJn)hfn\n+\u03d53(hJn)(\u03b13,1hR(Y1) + \u03b13,2hR(Y2))\n+\u03d54(hJn)(\u03b14,1hR(Y1) + \u03b14,2hR(Y2)) (5)\nwhere \u03b13,1 = \u22121024, \u03b13,2 = 1458, \u03b14,1 = 27648, \u03b14,2 = \u221234992. Note that the major computational cost of exponential integrator is the computation of the product between exponential functions of the jacobian matrix and vector. The EPI methods are specifically designed to reduce the number of such computations. For example, EPIRK4 requires only 2 such evaluations. As we explain bellow, these evaluations are usually done using Krylov projection type of technics so one would compare the number of such evaluations with the number of nonlinear iterations required at each time step of an implicit method.\nFor comparison we will use the following explicit and implicit methods implemented in MFEM:\n\u2022 Explicit methods: explicit Euler (ForwardEulerSolver), Runge-Kutta of order 2, 3 and 4 (RK2Solver, RK3SSPSolver, RK4Solver)\n\u2022 Implicit methods: implicit Euler (BackwardEulerSolver), singly-diagonally implicit RungeKutta of order 2 and 3 (SDIRK23Solver, SDIRK23Solver)"
+        },
+        {
+            "heading": "2.2 Exponential matrix function evaluation",
+            "text": "The main computational challenge in the time stepping of exponential schemes is the evaluation of the matrix-vector products involving the \u03d5k functions. For the problems we are considering, the Jacobian matrix involved in these computations is large and stiff. Therefore, we need an efficient method adapted to this kind of problems. In this work, we are using the KIOPS algorithm [4]. It is using a Krylov subspace to project the large operator into a smaller space where the computation can be carried more efficiently. This idea is similar to the one used in methods like GMRES or conjugate gradient. Moreover, some optimizations are used in this method to improve the efficiency. First, using a theorem from [1], it is possible to reduce the computation of a linear combination of \u03d5 functions of the form \u2211k i=0 \u03d5i(hJ)vi to the computation of a single matrix exponential times a vector. Then, in [4], the authors show that during the Arnoldi process it is enough to orthogonalize the new vector with respect to the last 2 previous vectors. This modification reduces the number of dot products from O(m2) to O(m), where m is the size of the Krylov space, while keeping the procedure stable. This is especially important for parallel code, as dot products require a communication between the computation nodes. Unlike standard Arnoldi procedure and adaptive Krylov algorithm, KIOPS requires only 2 dot products per Krylov vector which significantly improve it\u2019s parallel efficiency. The last optimization, originally presented in [5], is to substep the computation of the matrix exponential by using the following property of the exponential function:\neAv = e\u03c4kA...e\u03c42Ae\u03c41Av if k\u2211 i=1 \u03c4i = 1\nUsing this equation, it is possible to compute eAv by first computing w1 = e \u03c41Av, then computing w2 = e \u03c42Aw1 , and so on until \u03c4k. By choosing \u03c4i < 1, we have ||\u03c4iA|| < ||A|| and therefore the approximation requires a smaller Krylov subspace. This also allows the computation of e\u03c4A with several values of \u03c4 with a single Krylov projection. KIOPS uses an algorithm to compute the values of \u03c4 adaptively.\nUsing these optimizations, it is possible to advance the solution using the method EPIRK4 with only 2 Krylov projections instead of the 5 projections require with a naive implementation. To do so, we first compute the stages Y1 and Y2 in a single computation using the substepping. Then, we can compute the linear combination of \u03d5 functions with a second projection using the first optimization. For full details on EPI methods with KIOPS see [4] and [3]."
+        },
+        {
+            "heading": "3 Implementation",
+            "text": "The KIOPS method as well as the exponential integrators are implemented in the EPIC-cpp package available at https://gitlab.com/tokman-lab/epic-cpp. This package only requires the user to provide the right-hand side function and, optionally, the associated jacobian matrix or a matrix-free implementation of it. It can be used for both serial and parallel applications (using the MPI standard) and is built on top of NVector module of SUNDIALS for vector storage and basic operations.\nAs part of this project, an interface between EPIC-cpp and MFEM was developped. This allows users to access and use the integrators available in the EPIC-cpp package directly from\nMFEM. This wrapper works similarly to the integration of SUNDIALS into MFEM and is transparent for the user. One can use the EPIRK4 or EPI2 class in place of the other MFEM ode solver (e.g. ForwardEulerSolver, SDIRK23Solver) and call the same methods. Additional parameters can be used during the construction of the exponential integrator to choose between user-provided jacobian or finite difference approximation. This interface is currently available in the epic-dev branch of MFEM. The other time integration methods used for the comparison are from the already available MFEM ode solver. The test problems used in the numerical experiments are implemented in the feature/exponential-integrator branch of the mhdex project, available at https://lc.llnl.gov/bitbucket/scm/mwm/mhdex.git. All the necessary dependancies and test problems can be obtained from the feature/exponential-integrator branch of the mdh-mfem project, available at https://lc.llnl.gov/bitbucket/scm/mwm/mhd-mfem.git."
+        },
+        {
+            "heading": "4 Test problems",
+            "text": "In order to compare the performance of the different time integration methods, we set up two test problems. These problems model nonlinear diffusion in a way that is similar to what is found in the RMHD problem of interest.\n\u2022 1D diffusion problem:\nThe first problem correspond to a nonlinear diffusion PDE in 1 dimension.\n\u2202u \u2202t = \u2202 \u2202x\n( \u00b5(u) \u2202u\n\u2202x\n) + s(x) (6)\non the domain x \u2208 [0, 1] with \u00b5(u) = (\u03b21 + \u03b22u5/2) and the source is defined by s(x) = e\u2212 1 2 ((x\u22121/2)/\u03c3)2 . The diffusion coefficients can be selected in order to adapt the stiffness and the amount of nonlinearity of the problem. With \u03b22 = 0, the problem is linear. In the other case, the nonlinearity is chosen to emulate the kind of diffusivity found in RMHD problems.\nWe found that in order to get the correct order of convergence, we need to rewrite the problem in the following form:\n\u2202u \u2202t =\n\u22022\n\u2202x2 (g(u)) + s(x) (7)\nwhere g(u) = \u03b21u + 2 7\u03b22u\n7/2 = \u222b \u00b5(u)du. Since mathematically eq. (6) and eq. (7) are\nequivalent, the discrepency is most likely due to a bug in the current version of MFEM.\n\u2022 2D anisotropic diffusion\nThe second problem is an anisotropic diffusion PDE in 2 dimensions.\n\u2202u \u2202t = \u2207. (\u00b5(u)\u2207u) + s(x)\non the domain (x, y) \u2208 [0, 1]2 with \u00b5(u) = \u03ba [ (\u03b21 + \u03b22u 5/2)(b\u0302\u2297 b\u0302) + 10\u03b1(I \u2212 b\u0302\u2297 b\u0302) ] and the source is defined by s(x) = e\u2212 1 2 ((x\u22121/2)/\u03c3)2 . The magnetic field b used in this experiment is the 2-wire model and is represented in Figure 1 .\nThe \u03b2 parameters are controlling the diffusion in the direction of the magnetic field. As in problem (6), it is possible to choose either a linear or nonlinear diffusion. The \u03b1 coefficient is controlling the strength of the diffusion in the direction perpendicular to the magnetic field. As this parameter goes to 0, a boundary layer is forming, making the problem stiffer.\nSimilar to the 1D diffusion test, we need to rewrite the problem in the following form in order to get the correct order of convergence:\n\u2202u \u2202t = \u2207.\n(( b\u0302\u2297 b\u0302 ) \u2207 ( \u03b21u+ 2\n7 \u03b22u\n7/2 )) +\u2207. ( (I \u2212 b\u0302\u2297 b\u0302)\u2207 (10au) ) + s(x)"
+        },
+        {
+            "heading": "5 Results",
+            "text": ""
+        },
+        {
+            "heading": "5.1 Validation of the order of convergence",
+            "text": "Our first task is to validate the corect order of convergence of the implemented methods. Since for linear problems, the schemes (4) and (5) are exact (assuming that the \u03d5k functions are evaluated exactly), we want to verify that if we set the nonlinear diffusion coefficient to zero, we are getting the expected result. Figure 2 shows the norm of the error as a function of the timestep for the 1d test problem on the left and the 2d test problem on the right with linear diffusion. As expected, for the non-exponential methods (red and yellow curves), the error is growing with the time step. For the exponential schemes, for all values of the time step, the error stays very low. This error is nonzero because of the tolerance in the evaluation of the \u03d5k functions.\nFigure 3 shows the convergence plot for the 1d test problem with nonlinear diffusion. The plots on the top correspond to a coarse grid making the problem non-stiff while the plots on the bottom are on a more refined grid making the problem stiffer. The left plots are comparing the explicit and exponential methods while the plots on the right are comparing the implicit and exponential methods. The dashed lines next to each curve correspond to the expected order of convergence. We can see that all the methods are converging at the expected rate. However, the explicit methods on the fine grid are only stable for the smallest time step while both the implicit and exponential methods do not have any stability issues. Figure 4 present the same results but for the 2d anisotropic diffusion test problem. With this problem, all methods still converge as expected and the explicit schemes still suffer from unstability on the finer grid."
+        },
+        {
+            "heading": "5.2 Performance comparison",
+            "text": "Figures 5 and 6 are showing the precision diagram (Error vs time to solution) for the 1d nonlinear diffusion and 2d anisotropic diffusion respectively. Each plot compare the performance of the exponential schemes to explicit (left) and implicit (right) methods on a coarse (top) and fine (bottom) grid. As expected, if we compare an explicit with an exponential scheme at the same order of accuracy, the time to solution for the explicit scheme will be lower as the cost per iteration is much cheaper with explicit scheme. However, as we can see from the previous section, explicit schemes quickly become unstable as the grid is refined and therefore can not be considered for stiff problems. On the other hand, we can see that the performance of exponential schemes is better than the implicit methods on both test problems. Moreover, the gap between the implicit and exponential methods is increasing going from the coarse to the finner grid. This indicates that exponential methods scale better as the problem get stiffer."
+        },
+        {
+            "heading": "6 Conclusion and future work",
+            "text": "In this work, we introduced two nonlinear diffusion PDEs as a test problems for the RMHD equations. We used these problems to compare the performance of exponential integrators with traditional methods. These integrators and test problems were validated by looking at the order of convergence. Moreover, the results demonstrate that exponential integrators have the potential to be an efficient alternative to implicit methods for this kind of problems.\nIn the future, we are planning on extending this work to more realistic test problems. We also want to investigate the addition of algebraic constraint as part of the solve. These constraint are of great interest for RMHD problems and need to be treated correctly and efficiently."
+        },
+        {
+            "heading": "7 Acknowledgements",
+            "text": "Work for LLNL-TR-832157 was performed by LLNL under the auspices of the U.S. DOE under contract DE-AC52-07NA2734. The work was also supported by LLNL Laboratory Directed Research and Development project PLS-20-ERD-038 and by the NSF grants DMS-1720495 and DMS-2012875. We would like to thank Chris Vogl and Milan Holec for their help, valuable discussions and work on the mhdex project."
+        }
+    ],
+    "title": "Exponential integrators for non-linear diffusion",
+    "year": 2022
+}

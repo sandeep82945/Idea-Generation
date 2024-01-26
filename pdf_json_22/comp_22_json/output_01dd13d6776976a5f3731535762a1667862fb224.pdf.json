@@ -1,0 +1,160 @@
+{
+    "abstractText": "Since the commissioning phase of Sentinel-1A, several calibration studies have improved the geolocation and geometric modeling of the data. The implementation of the corrections presented in these studies is left to the user. The issues found might be confusing when working with bursts in the interferometric wide swath mode, because the geometric shifts present in the data are not usually the same at the burst boundaries. This might introduce small inconsistencies in a mosaic product if not properly handled, which is especially inconvenient in high precision applications. This paper proposes a method to account for this effect by resampling the bursts before stitching. The method is validated with experiments on real Sentinel-1 data.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Roland Akiki"
+        },
+        {
+            "affiliations": [],
+            "name": "J\u00e9r\u00e9my Anger"
+        },
+        {
+            "affiliations": [],
+            "name": "Carlo de Franchis"
+        },
+        {
+            "affiliations": [],
+            "name": "Gabriele Facciolo"
+        },
+        {
+            "affiliations": [],
+            "name": "Jean-Michel Morel"
+        },
+        {
+            "affiliations": [],
+            "name": "Rapha\u00ebl Grandin"
+        }
+    ],
+    "id": "SP:b69344e05b6bb9f4f53ff83cc408d87a10d406d3",
+    "references": [
+        {
+            "authors": [
+                "R. Piantanida",
+                "A. Recchia",
+                "N. Franceschi",
+                "A. Valentino",
+                "N. Miranda",
+                "A. Schubert",
+                "D. Small"
+            ],
+            "title": "Accurate Geometric Calibration of Sentinel-1 Data",
+            "venue": "EUSAR, 2018, number 1, pp. 63\u201368.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "C. Gisinger",
+                "A. Schubert",
+                "H. Breit",
+                "M. Garthwaite",
+                "U. Balss",
+                "M. Willberg",
+                "D. Small",
+                "M. Eineder",
+                "N. Miranda"
+            ],
+            "title": "In-depth verification of sentinel-1 and terrasar-x geolocation accuracy using the australian corner reflector array",
+            "venue": "IEEE Transactions on Geoscience and Remote Sensing, vol. 59, no. 2, pp. 1154\u20131181, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "U. Wegn\u00fcller",
+                "C. Werner",
+                "T. Strozzi",
+                "A. Wiesmann",
+                "O. Frey",
+                "M. Santoro"
+            ],
+            "title": "Sentinel-1 Support in the GAMMA Software",
+            "venue": "Procedia Computer Science, vol. 100, pp. 1305\u20131312, 2016.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "N. Yague-Martinez",
+                "P. Prats-Iraola",
+                "F.R. Gonzalez",
+                "R. Brcic",
+                "R. Shau",
+                "D. Geudtner",
+                "M. Eineder",
+                "R. Bamler"
+            ],
+            "title": "Interferometric Processing of Sentinel-1 TOPS Data",
+            "venue": "IEEE Transactions on Geoscience and Remote Sensing, vol. 54, no. 4, pp. 2220\u20132234, 2016.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "M. Manunta",
+                "C. De Luca",
+                "I. Zinno",
+                "F. Casu",
+                "M. Manzo",
+                "M. Bonano",
+                "A. Fusco",
+                "A. Pepe",
+                "G. Onorato",
+                "P. Berardino",
+                "P. De Martino",
+                "R. Lanari"
+            ],
+            "title": "The Parallel SBAS Approach for Sentinel- 1 Interferometric Wide Swath Deformation Time-Series Generation: Algorithm Description and Products Quality Assessment",
+            "venue": "IEEE Transactions on Geoscience and Remote Sensing, vol. 57, no. 9, pp. 6229\u20136281, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Schubert",
+                "D. Small"
+            ],
+            "title": "Guide to Sentinel-1 Geocoding",
+            "venue": "Tech. Rep., 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "C. Hessel",
+                "C. de Franchis",
+                "G. Facciolo",
+                "J.-M. Morel"
+            ],
+            "title": "A global registration method for satellite image series",
+            "venue": "IGARSS, 2021, pp. 3121\u20133124. 3407",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "Index Terms\u2014 Sentinel-1, IW, Burst, Stitching, Mosaicking, Debursting, Geolocation, Correction, Intra-Pulse, Atmospheric Path Delay, Bistatic"
+        },
+        {
+            "heading": "1. INTRODUCTION",
+            "text": "The Sentinel-1 (S1) mission has been undoubtedly attracting a lot of interest from the scientific community, which has been spawning a growing number of applications. Some of these applications, like interferometry, sometimes focus on large scale phenomena such as the measurement of ground deformation on the extent of a country. Other applications perform more localized measurements, e.g. in the case where specific sites need to be monitored. Depending on the application, a certain degree of geometric precision may be expected in the S1 image. Recent calibration studies have allowed the identification and modeling of geolocation errors for S1 [1, 2]. However, the correction of these effects is left to the user since it is not activated by default in the S1 processor.\nIn this article, we will be addressing this issue. We will focus on S1 data acquired in the Interferometric Wide (IW)\nWork partly financed by IDEX Paris-Saclay IDI 2016, ANR-11-IDEX0003-02, Office of Naval research grant N00014-17-1-2552 and N00014-20S-B001, DGA Astrid project \u00ab filmer la Terre \u00bb no ANR-17-ASTR-0013-01, MENRT, and by a grant from ANRT.\nswath mode, but the method also applies to Extra Wide (EW) swath mode. The data is acquired in multiple swaths (3 for IW) along the range, each one containing a set of bursts along the azimuth. The added difficulty of the IW mode to the processing is the need to mosaic the bursts into a continuous image. Then, the problem arises when burst dependent shifts are present in the data, which would cause geometric discontinuities and inconsistencies at the burst boundaries in the mosaic.\nOur contributions are:\n\u2022 Propose a simple and generic method for the correction of geometric errors in S1 bursts (IW mode) before the debursting step. The correction is based on the geolocation of a set of points sampled from a digital elevation model (DEM).\n\u2022 Validate the precision of the method using experiments on a real S1 dataset."
+        },
+        {
+            "heading": "2. RELATED WORK",
+            "text": "Many previous studies have presented the necessary steps for the correct processing of S1 bursts in IW mode. For example, the authors in [3] list some of the modifications needed to add the support for S1 IW in the GAMMA software. One aspect that is addressed is the combination of the data from individual bursts and subswaths into consistent mosaics. The suggested method is to cut the bursts in the overlap region and then simply concatenate them. This is indeed the intuitive way of dealing with the stitching of Sentinel-1 bursts, since it is argued that the S1 mosaics are seamless radiometrically and geometrically in range and azimuth. Other articles follow the same logic to mosaic the burst interferograms, i.e. after the secondary burst has been resampled to the primary burst frame and the interferogram has been formed in the primary frame [4, 5]. In any case, the stitching in the primary frame is only dealt with as an operation of concatenating bursts while carefully handling the overlaps.\nOn the other hand, other studies tackled the problem of geolocation for Synthetic Aperture Radar (SAR) images, i.e.\n3404978-1-6654-2792-0/22/$31.00 \u00a92022 IEEE IGARSS 2022\nfinding the image coordinate of a 3D point (referred to as projection or backward geocoding) or vice versa (localization or forward geocoding). For S1, it was shown [6] that a simple geolocation using the Range-Doppler (R-D) model with no additional correction would yield biases of the order of \u223c3m in range and \u223c2m in azimuth for IW mode. To correct these errors, many factors affecting the range and the azimuth arising from the SAR acquisition and processing chain need to be taken into account. The most important factor affecting the range is the Atmospheric Path Delay (APD). Other factors that help improve the accuracy of the geolocation are bistatic correction, instrument timing correction, topographydependent Doppler centroid correction, intra-pulse motion correction...\nSome of the previously mentioned corrections need to be applied at the burst level. This means that for the same target located in the overlap area between two bursts (at the burst boundary), the correction will be different in the upper burst from the lower burst. Therefore, the actual (corrected) position of a reflector in the overlap area is not the same between different bursts. To illustrate this concept, let us consider the intra-pulse motion correction [1, 2]\n\u2206\u03c4(fDC) = fDC Kr . (1)\nThis correction can be modeled as a removal of a range shift dependent on the Doppler centroid frequency as seen in Equation 1, where \u2206\u03c4(fDC) is the two-way range time shift present in the data in seconds, fDC is the Doppler centroid (DC) in Hz and Kr is the chirp rate in Hz/second. Kr is constant on the swath, while fDC varies linearly inside a burst w.r.t. the azimuth time referenced to the middle of the burst. For IW mode, the range shift present in the data can therefore reach approximately -0.5 m at the start of the burst and increase linearly with azimuth time to reach +0.5 m at the end of the burst. Hence, a target with range rtarget located in the overlap area between burst i and burst i+1 will have a corrected actual range r\u2032target,i \u2248 rtarget \u2212 0.5 m in burst i and r\u2032target,i+1 \u2248 rtarget +0.5 m in burst i+1. Therefore, the intra-pulse motion correction proves that there is a range shift up to \u223c1 m at the boundary of the bursts. Considering that the range pixel spacing is \u223c2.3 m, this shift is non-negligible for high precision applications.\nIn [1], the authors acknowledge that these biases are confusing and need to be addressed. Even though the corrections are in the process of being integrated into the S1 processor, they are not currently activated to avoid incorrect phase patterns during interferogram formation with older data where the corrections are not applied. Applying the corrections is therefore a task that is left to the user. This article aims at showing how these corrections can be applied and validating the results with experiments."
+        },
+        {
+            "heading": "3. METHOD",
+            "text": "This section illustrates the method we propose to correct the difference in the shifts from one burst to another. Since some of the corrections are performed during the geolocation of a 3D point and cannot be performed based on the pixel position alone, the correction procedure will be based on geolocation. Our aim is to construct a mosaic of a set of S1 bursts for one image at a specific date. For example, one S1 IW product contains 3 swaths, each containing around 9 bursts. The bursts that need to be stitched can come from different swaths or the same swath. For simplicity, for the rest of the paper, we assume that we are working on a set of consecutive bursts within a swath as shown in Figure 1. The method can be defined as follows:\n\u2022 For a set of bursts in a swath, define the burst limits (origin B(p)i and size) from the metadata, then deduce the mosaic limits.\n\u2022 Using the metadata, deduce the mosaic geographic extent and download a Digital Elevation Model (DEM) covering it.\n\u2022 For a set of points {Q} lying on the surface of the DEM, find the projected coordinates in the mosaic {Q(p)}.\n\u2022 Use the burst cuts (red dashed lines in Figure 1) to find the appropriate burst id \"i\" for each projected point.\n\u2022 Apply the corrections on each point Q(p) to find Q\u0302 (p)\n. Some of the corrections might depend on the burst id \"i\", on the geometry (incidence angle for ex.) and on other specific variables denoted as \u03b8. The correction C(Q(p), i, \u03b8) will simply be referred to as C.\n\u2022 Use the set of points ({Q(p)}, {Q\u0302 (p)\n}) to fit a warp function. For simplicity, we suggest to fit an affine resampling matrix per burst A(p)i such that\nQ(p) \u2212 B(p)i A(p)i\u2212\u2212\u2192 Q\u0302 (p) \u2212 B(p)i .\n\u2022 Read each burst from the TIFF file, resample with A(p)i and stitch into the mosaic using the cuts.\nThe previous method simplifies the estimation of the warp function by using a limited set of DEM points and an affine matrix. While a dense pixel-by-pixel warp function is the ideal way to apply the corrections, the proposed method is simpler and more computationally efficient.\nIn the case where we need to register a secondary image onto the primary image mosaic, the approach can be adapted with slight modifications as follows:\n\u2022 Find the bursts in the secondary product that match the bursts in the primary product, and define the secondary mosaic limits from the limits of the bursts.\nprojection of Q and Q\u0302 (p)\nis the corrected position of the target using the correction C. The notation (p) indicates the primary image.\n\u2022 For each point Q that was projected into burst \"i\" of the primary image, project and correct it in the burst \"i\" of\nthe secondary image to get Q\u0302 (s) .\n\u2022 Use the set of points ({Q(p)}, {Q\u0302 (s) }) to fit a warp func-\ntion. For simplicity, we suggest to fit an affine resampling matrix per burst A(s)i such that\nQ(p) \u2212 B(p)i A(s)i\u2212\u2212\u2192 Q\u0302 (s) \u2212 B(s)i .\n\u2022 Read each burst from the secondary TIFF, resample with A(s)i and stitch into the primary mosaic using the primary cuts."
+        },
+        {
+            "heading": "4. EXPERIMENTS",
+            "text": "We conducted our experiments on 31 Sentinel-1 images around the eastern coast of Australia acquired from Septem-\nber 2019 over a span of 2 years as shown in Table 1. Even if not all available S1 acquisitions were used, the interval was sampled somewhat uniformly in time by 31 images.\nThe first image in the time series was considered as the primary, i.e. it defined the reference frame onto which all other images would be aligned. We restricted the study to the VV polarization and on all the bursts of the first swath. SRTM30 was used to provide a DEM that covers the extent of the image. The precise S1 orbit data was downloaded and used with all products.\nThen, the method defined in Section 3 was used to estimate the burst resampling matrices for the primary image, as well as the secondary images. The correction C used was the composition of the APD correction, intra-pulse correction and fine bistatic correction [6].\nAfterwards, all the overlaps were resampled. Since there are 9 bursts per swath, we got 8\u00d72 overlaps per image. Therefore, 31\u00d78\u00d72 overlaps were read from the TIFF files as crops and resampled. In theory, each forward overlap (end of burst \"i\") should be well aligned with the backward overlap (start of burst \"i+1\") after resampling. The overlaps should also be well aligned across the time series. To validate the method, we checked the precision of the registration by re-estimating a residual shift using the phase-correlation method [7] on the amplitude of the overlap crops. The baseline against which we compared our results is the case where C is the identity. In that case, in the primary image, the resampling matrices are equal to the identity and the overlaps were simply read from the TIFF files without resampling. For the secondary images, the overlaps were resampled, and the affine matrix used accounts for the orbit difference but didn\u2019t include the finer corrections previously considered.\nThe results are shown in Tables 2 and 3. Table 2 shows that before the correction, the end of the burst \"i\" is shifted by approximately 0.57 m in range to the left of the start of the burst \"i+1\". This observation is mainly due to the intra-pulse\neffect. After the corrections, we can see that the alignment of the two consecutive burst overlap areas has significantly improved (approximately -0.021 m). As for the azimuth shift, the average value of the shift is slightly higher after applying the corrections. This result is counter-intuitive, and we attribute it to the remaining azimuth corrections that were not taken into consideration. Indeed, similar experiments on a flat region showed much improved azimuth accuracy after correction, indicating that the topography-dependent DC correction, which is missing from our processing, is key to achieving high-precision registration. For Table 3, two observations can be made. The first is that even without using the fine projection corrections aggregated in C, the measured precision of the registration on the time series is satisfactory. The second observation is that the applied corrections do not improve the precision of the registration. We should be careful while interpreting this result since, in theory, the registration should be less precise without the corrections. However, this shows that the corrections included in C here affect the primary and the secondary images in a similar way. For example, looking back at Equation 1, we can see that if the Doppler centroid reaches similar values within a primary and secondary burst, the intra-pulse shift would be similar. Therefore, instead of performing the match on Q, we perform it on a pixel slightly shifted. Since the shift is approximately the same in both bursts, the targets would still provide a good correspondence for the registration estimation. However, we would not recommend generalizing this result, since depending on the corrections applied and on their implementation, the amount of impact they have on a primary and secondary burst can be very different. Furthermore, even though the bursts can be well aligned in the time series without corrections, they would not be well-aligned with respect to each other in the mosaic."
+        },
+        {
+            "heading": "5. CONCLUSION",
+            "text": "In this study, we have proposed a method to correct the geometric inconsistencies between bursts before forming a mosaic. The relative shift between the bursts at the boundaries stems from effects that arise when processing IW burst data, like the intra-pulse shift, which affects each burst differently.\nTo be able to account for these effects, it is suggested to use a geolocation-based procedure, in which points on the surface of a DEM are projected into the scene with and without corrections. The warp function in the burst coordinates is then approximated as an affine matrix, and each individual burst is resampled before stitching. This procedure can be adapted to secondary image alignment.\nExperiments on a dataset of real S1 images showed significant improvements in the burst alignment in the overlap areas with the proposed method, especially in the range direction. This can mainly be attributed to the compensation of the intra-pulse shift. It was also argued that even though the improvement of the registration in a time series of secondary images is not evident, it is preferable to apply the proposed method to ensure a good precision in general with any type of correction and to get a consistent burst mosaic.\nIn the future, we wish to apply the method with more of the well-known S1 geolocation corrections [6]. It would also be interesting to validate our geolocation on sites containing corner reflectors, like the calibration site in the Surat Basin, Australia. Finally, designing a pixel-by-pixel resampling procedure and comparing the accuracy and computational efficiency of both methods would also be relevant."
+        },
+        {
+            "heading": "6. REFERENCES",
+            "text": "[1] R. Piantanida, A. Recchia, N. Franceschi, A. Valentino, N. Miranda, A. Schubert, and D. Small, \u201cAccurate Geometric Calibration of Sentinel-1 Data,\u201d in EUSAR, 2018, number 1, pp. 63\u201368.\n[2] C. Gisinger, A. Schubert, H. Breit, M. Garthwaite, U. Balss, M. Willberg, D. Small, M. Eineder, and N. Miranda, \u201cIn-depth verification of sentinel-1 and terrasar-x geolocation accuracy using the australian corner reflector array,\u201d IEEE Transactions on Geoscience and Remote Sensing, vol. 59, no. 2, pp. 1154\u20131181, 2020.\n[3] U. Wegn\u00fcller, C. Werner, T. Strozzi, A. Wiesmann, O. Frey, and M. Santoro, \u201cSentinel-1 Support in the GAMMA Software,\u201d Procedia Computer Science, vol. 100, pp. 1305\u20131312, 2016.\n[4] N. Yague-Martinez, P. Prats-Iraola, F. R. Gonzalez, R. Brcic, R. Shau, D. Geudtner, M. Eineder, and R. Bamler, \u201cInterferometric Processing of Sentinel-1 TOPS Data,\u201d IEEE Transactions on Geoscience and Remote Sensing, vol. 54, no. 4, pp. 2220\u20132234, 2016.\n[5] M. Manunta, C. De Luca, I. Zinno, F. Casu, M. Manzo, M. Bonano, A. Fusco, A. Pepe, G. Onorato, P. Berardino, P. De Martino, and R. Lanari, \u201cThe Parallel SBAS Approach for Sentinel1 Interferometric Wide Swath Deformation Time-Series Generation: Algorithm Description and Products Quality Assessment,\u201d IEEE Transactions on Geoscience and Remote Sensing, vol. 57, no. 9, pp. 6229\u20136281, 2019.\n[6] A. Schubert and D. Small, \u201cGuide to Sentinel-1 Geocoding,\u201d Tech. Rep., 2018.\n[7] C. Hessel, C. de Franchis, G. Facciolo, and J.-M. Morel, \u201cA global registration method for satellite image series,\u201d in IGARSS, 2021, pp. 3121\u20133124."
+        }
+    ],
+    "title": "Improved Sentinel-1 IW Burst Stitching through Geolocation Error Correction Considerations",
+    "year": 2024
+}

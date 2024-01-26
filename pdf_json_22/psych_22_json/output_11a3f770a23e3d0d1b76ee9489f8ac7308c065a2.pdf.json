@@ -1,0 +1,747 @@
+{
+    "abstractText": "Aberrant brain dynamics putatively characterize bipolar disorder (BD) and schizophrenia (SCZ). Previous studies often adopted a state discretization approach when investigating how individuals recruited recurring brain states. Since multiple brain states are likely engaged simultaneously at any given moment, focusing on the dominant state can obscure changes in less prominent but critical brain states in clinical populations. To address this limitation, we introduced a novel framework to simultaneously assess brain state engagement for multiple brain states, and we examined how brain state engagement differs in patients with BD or SCZ compared to healthy controls (HC). Using task-based data from the Human Connectome Project, we applied nonlinear manifold learning and K-means clustering to identify four recurring brain states. We then examined how the engagement and transition variability of these four states differed between patients with BD, SCZ, and HC across two other international, open-source datasets. Comparing these measures across groups revealed significantly altered state transition variability, but not engagement, across all four states in individuals with BD and SCZ during both resting-state and task-based fMRI. In our post hoc and exploratory analysis, we also observed associations between state transition variability and age as well as avolition. Our results suggest that disrupted state transition variability affects multiple brain states in BD and SCZ. By studying several brain states simultaneously, our framework more comprehensively reveals how brain dynamics differ across individuals and in psychiatric disorders. . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review) The copyright holder for this preprint this version posted October 10, 2022. ; https://doi.org/10.1101/2022.10.07.22280835 doi: medRxiv preprint NOTE: This preprint reports new research that has not been certified by peer review and should not be used to guide clinical practice. Introduction Bipolar disorder (BD) and schizophrenia (SCZ) are multifaceted, heterogeneous psychiatric disorders characterized by psychotic symptoms and impaired executive functioning (Murray et al., 2004; Eisenberg & Berman, 2010; Cotrena et al., 2020). These illnesses and their cardinal symptoms putatively reflect disruptions in the interactions between functional brain networks (Chase & Phillips, 2016; Sheffield & Barch, 2016; Dong et al., 2018). Many studies of functional networks in these illnesses have studied these disruptions from the perspective of \u201cstatic\u201d functional network structure estimated over the course of a minutes-long scan. Nevertheless, as communications within the brain are dynamic and fluctuate over small time windows (Hutchison et al., 2013; Lurie et al., 2020), our understanding of the neural correlates underpinning these disorders may be incomplete. Indeed, a new wave of methods have emerged to capture this additional temporal information in the form of brain states, or distinct, recurring patterns of brain activity or connectivity (Lurie et al., 2020). Brain states can be characterized in terms of state engagement (i.e., the proportion of time points spent in a particular state, also called dwell time) and transition variability (i.e., the number of times individuals transitioned from one state to another, also known as transition). These methods have revealed aberrant brain dynamics in BD and SCZ that were undetectable using static approaches (Rashid et al., 2016; Du et al., 2017; Nguyen et al., 2017). Compared to healthy controls (HC), individuals with these disorders demonstrate aberrant dwell time in brain states and altered transitions between them (Damaraju et al., 2014; Du et al., 2016; Reinen et al., 2018; Miller et al., 2016; Rashid et al., 2014; Du et al., 2021; Wang et al., 2021; Wang et al., 2022). Brain dynamic alterations, in turn, are associated with psychiatric symptoms in these groups, including elevated suicide risk, psychotic symptom severity, and hallucinations (Wang et al., 2022; Wang et al., 2021; Miller et al., 2016; Reinen et al., 2018). However, these studies mainly assigned each time unit to only one state despite the possibility that the activity or connectivity patterns in a given time window can be considered a combination of several patterns (Miller et al., 2016). Individuals are also likely to recruit multiple states simultaneously to support many complex behaviors, such as cognitive control. Thus, this state discretization approach might ignore meaningful but non-dominant states, and potentially misrepresent dynamic information. For instance, assigning each time window to only one state makes it challenging to evaluate whether the elevated recruitment of one state might accompany reduced engagement of another as an alternative or compensatory mechanism in clinical populations. To address this limitation, we developed a novel method that combines nonlinear manifold learning and non-negative least squares regression to simultaneously assess frame-to-frame state engagement for multiple states. We applied 2-step Diffusion Mapping (2sDM) and nonlinear manifold learning to project fMRI data from the Human Connectome Project (HCP; Van Essen et al., 2013) onto a low-dimensional space, and we subsequently identified reproducible brain activity patterns across multiple fMRI tasks (Gao et al., 2021). Next, we used non-negative least squares regression to extend these recurring brain activity patterns to two international datasets to examine how individuals with BD, SCZ, and HC engaged and transitioned through these brain states while at rest. We hypothesized that individuals with BD and SCZ would show aberrant overall state engagement and transition variability compared to HC during rest. Since difficulties with executive functioning and cognitive flexibility have been consistently reported in individuals with BD and SCZ (O\u2019Donnell et al., 2016; Cotrena et al., 2016; Eisenberg & Berman, 2010; Orellana & Slachevsky, 2013), secondary analyses were performed using fMRI data from a task-switching paradigm to further investigate state transition in clinical populations and link altered brain state dynamics to clinical symptoms. We found aberrant state transition variability . CC-BY-NC-ND 4.0 International license It is made available under a is the author/funder, who has granted medRxiv a license to display the preprint in perpetuity. (which was not certified by peer review) The copyright holder for this preprint this version posted October 10, 2022. ; https://doi.org/10.1101/2022.10.07.22280835 doi: medRxiv preprint",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Jean Ye"
+        },
+        {
+            "affiliations": [],
+            "name": "Huili Sun"
+        },
+        {
+            "affiliations": [],
+            "name": "Siyuan Gao"
+        },
+        {
+            "affiliations": [],
+            "name": "Javid Dadashkarimi"
+        },
+        {
+            "affiliations": [],
+            "name": "Matthew Rosenblatt"
+        },
+        {
+            "affiliations": [],
+            "name": "Raimundo X. Rodriguez"
+        },
+        {
+            "affiliations": [],
+            "name": "Saloni Mehta"
+        },
+        {
+            "affiliations": [],
+            "name": "Rongtao Jiang"
+        },
+        {
+            "affiliations": [],
+            "name": "Stephanie Noble"
+        },
+        {
+            "affiliations": [],
+            "name": "Margaret L. Westwater"
+        },
+        {
+            "affiliations": [],
+            "name": "Dustin Scheinost"
+        }
+    ],
+    "id": "SP:fec35f1835b15b8866547841bb783eb2142bc446",
+    "references": [
+        {
+            "authors": [
+                "N.C. Andreasen"
+            ],
+            "title": "The Scale for the Assessment of Negative Symptoms (SANS)",
+            "venue": "Iowa City,",
+            "year": 1983
+        },
+        {
+            "authors": [
+                "L. B\u00e4ckman",
+                "L. Nyberg",
+                "U. Lindenberger",
+                "Li",
+                "S.-C",
+                "L. Farde"
+            ],
+            "title": "The correlative triad",
+            "venue": "American Journal of Psychiatry,",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "E. Schwarz",
+                "A. Meyer-Lindenberg",
+                "D.S. Bassett",
+                "H. Tost"
+            ],
+            "title": "Brain network dynamics",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M. D\u2019Esposito"
+            ],
+            "title": "Inverted-U\u2013Shaped Dopamine Actions on Human Working",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "W. Copeland",
+                "A. Angold"
+            ],
+            "title": "Trends in psychopathology across the adolescent",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "L.D. Branco",
+                "F.M. Shansis",
+                "R.P. Fonseca"
+            ],
+            "title": "Executive function impairments",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "K. Butts",
+                "A.H. Young"
+            ],
+            "title": "The role of dopamine in bipolar disorder",
+            "venue": "Bipolar",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "D. V"
+            ],
+            "title": "Dynamic functional connectivity analysis reveals transient states",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "D. Dong",
+                "Y. Wang",
+                "X. Chang",
+                "C. Luo",
+                "D. Yao"
+            ],
+            "title": "Dysfunction of Large-Scale Brain Networks in Schizophrenia: A Meta-analysis of Resting-State Functional Connectivity",
+            "venue": "Schizophrenia Bulletin,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Du",
+                "L. Zhang",
+                "L. Li",
+                "E. Ji",
+                "X. Han",
+                "G. Huang",
+                "Z. Liang",
+                "L. Shi",
+                "H. Yang",
+                "Z. Zhang"
+            ],
+            "title": "Abnormal transitions of dynamic functional connectivity states in bipolar disorder: A whole-brain resting-state fMRI study",
+            "venue": "Journal of Affective Disorders,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Du",
+                "G.D. Pearlson",
+                "D. Lin",
+                "J. Sui",
+                "J. Chen",
+                "M. Salman",
+                "C.A. Tamminga",
+                "E.I. Ivleva",
+                "J.A. Sweeney",
+                "M.S. Keshavan",
+                "B.A. Clementz",
+                "J. Bustillo",
+                "V.D. Calhoun"
+            ],
+            "title": "Identifying dynamic functional connectivity biomarkers using GIG-ICA: Application to schizophrenia, schizoaffective disorder, and psychotic bipolar disorder",
+            "venue": "Human Brain Mapping,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Y. Du",
+                "G.D. Pearlson",
+                "Q. Yu",
+                "H. He",
+                "D. Lin",
+                "J. Sui",
+                "L. Wu",
+                "V.D. Calhoun"
+            ],
+            "title": "Interaction among subsystems within default mode network diminished in schizophrenia patients: A dynamic connectivity approach",
+            "venue": "Schizophrenia Research,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "D.P. Eisenberg",
+                "K.F. Berman"
+            ],
+            "title": "Executive Function, Neural Circuitry, and Genetic Mechanisms in Schizophrenia",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "N. Erixon-Lindroth",
+                "L. Farde",
+                "Robins Wahlin",
+                "T.-B",
+                "J. Sovago",
+                "C. Halldin",
+                "L. B\u00e4ckman"
+            ],
+            "title": "The role of the striatal dopamine transporter in cognitive aging",
+            "venue": "Psychiatry Research: Neuroimaging,",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "Z.F. Esfahlani",
+                "L. Byrge",
+                "J. Tanner",
+                "O. Sporns",
+                "D.P. Kennedy",
+                "R.F. Betzel"
+            ],
+            "title": "Edge-centric analysis of time-varying functional brain networks with applications in autism spectrum disorder",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "T. Ezaki",
+                "M. Sakaki",
+                "T. Watanabe",
+                "N. Masuda"
+            ],
+            "title": "Age-related changes in the ease of dynamical transitions in human brain activity",
+            "venue": "Human Brain Mapping,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "E.S. Finn"
+            ],
+            "title": "Is it time to put rest to rest",
+            "venue": "Trends in Cognitive Sciences,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "E.S. Finn",
+                "X. Shen",
+                "D. Scheinost",
+                "M.D. Rosenberg",
+                "J. Huang",
+                "M.M. Chun",
+                "X. Papademetris",
+                "R.T. Constable"
+            ],
+            "title": "Functional connectome fingerprinting: Identifying individuals using patterns of brain connectivity",
+            "venue": "Nature Neuroscience,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "S. Gao",
+                "G. Mishne",
+                "D. Scheinost"
+            ],
+            "title": "Nonlinear manifold learning in functional magnetic resonance imaging uncovers a low-dimensional space of brain dynamics",
+            "venue": "Human Brain Mapping,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M.F. Glasser",
+                "S.N. Sotiropoulos",
+                "J.A. Wilson",
+                "T.S. Coalson",
+                "B. Fischl",
+                "J.L. Andersson",
+                "J. Xu",
+                "S. Jbabdi",
+                "M. Webster",
+                "J.R. Polimeni",
+                "D.C. Van Essen",
+                "M. Jenkinson"
+            ],
+            "title": "The minimal preprocessing pipelines for the Human Connectome",
+            "venue": "WU-Minn HCP Consortium",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "A.S. Greene",
+                "S. Gao",
+                "D. Scheinost",
+                "R.T. Constable"
+            ],
+            "title": "Task-induced brain state manipulation improves prediction of individual traits",
+            "venue": "Nature Communications,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "A. Heinz",
+                "M.B. Knable",
+                "R. Coppola",
+                "J.G. Gorey",
+                "D.W. Jones",
+                "Lee",
+                "K.-S",
+                "D.R. Weinberger"
+            ],
+            "title": "Psychomotor slowing, negative symptoms and dopamine receptor availability\u2014An IBZM SPECT study in neuroleptic-treated and drug-free schizophrenic patients",
+            "venue": "Schizophrenia Research,",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "O.D. Howes",
+                "S. Kapur"
+            ],
+            "title": "The Dopamine Hypothesis of Schizophrenia: Version III\u2014The Final Common Pathway",
+            "venue": "Schizophrenia Bulletin,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "R.M. Hutchison",
+                "T. Womelsdorf",
+                "E.A. Allen",
+                "P.A. Bandettini",
+                "V.D. Calhoun",
+                "M. Corbetta",
+                "S. Della Penna",
+                "J.H. Duyn",
+                "G.H. Glover",
+                "J. Gonzalez-Castillo",
+                "D.A. Handwerker",
+                "S. Keilholz",
+                "V. Kiviniemi",
+                "D.A. Leopold",
+                "F. de Pasquale",
+                "O. Sporns",
+                "M. Walter",
+                "C. Chang"
+            ],
+            "title": "Dynamic functional connectivity: Promise",
+            "venue": "issues, and interpretations. NeuroImage,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "B. Lee",
+                "W. Cai",
+                "C.B. Young",
+                "R. Yuan",
+                "S. Ryman",
+                "J. Kim",
+                "V. Santini",
+                "V.W. Henderson",
+                "K.L. Poston",
+                "V. Menon"
+            ],
+            "title": "Latent brain state dynamics and cognitive flexibility in older adults",
+            "venue": "Progress in Neurobiology,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D.D. Lee",
+                "H.S. Seung"
+            ],
+            "title": "Learning the parts of objects by non-negative matrix factorization",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "D.J. Lurie",
+                "D. Kessler",
+                "D.S. Bassett",
+                "R.F. Betzel",
+                "M. Breakspear",
+                "S. Kheilholz",
+                "A. Kucyi",
+                "R. Li\u00e9geois",
+                "M.A. Lindquist",
+                "A.R. McIntosh",
+                "R.A. Poldrack",
+                "J.M. Shine",
+                "W.H. Thompson",
+                "N.Z. Bielczyk",
+                "L. Douw",
+                "D. Kraft",
+                "R.L. Miller",
+                "M. Muthuraman",
+                "L. Pasquini",
+                "V.D. ... Calhoun"
+            ],
+            "title": "Questions and controversies in the study of time-varying functional connectivity in resting fMRI",
+            "venue": "Network Neuroscience,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "E.S. Lutkenhoff",
+                "M. Rosenberg",
+                "J. Chiang",
+                "K. Zhang",
+                "J.D. Pickard",
+                "A.M. Owen",
+                "M.M. Monti"
+            ],
+            "title": "Optimized Brain Extraction for Pathological Brains (optiBET)",
+            "venue": "PLOS ONE, 9(12),",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "T.V. Maia",
+                "M.J. Frank"
+            ],
+            "title": "An Integrative Perspective on the Role of Dopamine in Schizophrenia",
+            "venue": "Biological Psychiatry,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J.D. Medaglia",
+                "T.D. Satterthwaite",
+                "A. Kelkar",
+                "R. Ciric",
+                "T.M. Moore",
+                "K. Ruparel",
+                "R.C. Gur",
+                "R.E. Gur",
+                "D.S. Bassett"
+            ],
+            "title": "Brain state expression and transitions are related to complex executive cognition in normative neurodevelopment",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "R.L. Miller",
+                "M. Yaesoubi",
+                "J.A. Turner",
+                "D. Mathalon",
+                "A. Preda",
+                "G. Pearlson",
+                "T. Adali",
+                "V.D. Calhoun"
+            ],
+            "title": "Higher Dimensional Meta-State Analysis Reveals Reduced Resting fMRI Connectivity Dynamism in Schizophrenia Patients",
+            "venue": "PLOS ONE,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "R.M. Murray",
+                "P. Sham",
+                "J. Van Os",
+                "J. Zanelli",
+                "M. Cannon",
+                "C. McDonald"
+            ],
+            "title": "A developmental model for similarities and dissimilarities between schizophrenia and bipolar disorder",
+            "venue": "Schizophrenia Research,",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "T.T. Nguyen",
+                "S. Kovacevic",
+                "S.I. Dev",
+                "K. Lu",
+                "T.T. Liu",
+                "L.T. Eyler"
+            ],
+            "title": "Dynamic functional connectivity in bipolar disorder is associated with executive function and processing speed: A preliminary study",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "S. Noble",
+                "A.F. Mejia",
+                "A. Zalesky",
+                "D. Scheinost"
+            ],
+            "title": "Improving power in functional magnetic resonance imaging by moving beyond cluster-level inference",
+            "venue": "Proceedings of the National Academy of Sciences, 119(32),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S. Noble",
+                "M.N. Spann",
+                "F. Tokoglu",
+                "X. Shen",
+                "R.T. Constable",
+                "D. Scheinost"
+            ],
+            "title": "Influences on the Test-Retest Reliability of Functional Connectivity MRI and its Relationship with Behavioral Utility",
+            "venue": "Cerebral Cortex",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "L.A. O\u2019Donnell",
+                "P.J. Deldin",
+                "B. Pester",
+                "M.G. McInnis",
+                "S.A. Langenecker",
+                "K.A. Ryan"
+            ],
+            "title": "Cognitive flexibility: A trait of bipolar disorder that worsens with length of illness",
+            "venue": "Journal of Clinical and Experimental Neuropsychology,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "G. Orellana",
+                "A. Slachevsky"
+            ],
+            "title": "Executive Functioning in Schizophrenia",
+            "venue": "Frontiers in Psychiatry,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "R.A. Poldrack",
+                "E. Congdon",
+                "W. Triplett",
+                "K.J. Gorgolewski",
+                "K.H. Karlsgodt",
+                "J.A. Mumford",
+                "F.W. Sabb",
+                "N.B. Freimer",
+                "E.D. London",
+                "T.D. Cannon",
+                "R.M. Bilder"
+            ],
+            "title": "A phenome-wide examination of neural and cognitive function",
+            "venue": "Scientific Data,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "B. Rashid",
+                "M.R. Arbabshirani",
+                "E. Damaraju",
+                "M.S. Cetin",
+                "R. Miller",
+                "G.D. Pearlson",
+                "V.D. Calhoun"
+            ],
+            "title": "Classification of schizophrenia and bipolar patients using static and dynamic resting-state fMRI brain",
+            "venue": "connectivity. NeuroImage,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "B. Rashid",
+                "E. Damaraju",
+                "G.D. Pearlson",
+                "V.D. Calhoun"
+            ],
+            "title": "Dynamic connectivity states estimated from resting fMRI Identify differences among Schizophrenia, bipolar disorder, and healthy control subjects",
+            "venue": "Frontiers in Human Neuroscience,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "J.M. Reinen",
+                "O.Y. Ch\u00e9n",
+                "R.M. Hutchison",
+                "B.T.T. Yeo",
+                "K.M. Anderson",
+                "M.R. Sabuncu",
+                "D. \u00d6ng\u00fcr",
+                "J.L. Roffman",
+                "J.W. Smoller",
+                "J.T. Baker",
+                "A.J. Holmes"
+            ],
+            "title": "The human cortex possesses a reconfigurable dynamic network architecture that is disrupted in psychosis",
+            "venue": "Nature Communications,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J.M. Sheffield",
+                "D.M. Barch"
+            ],
+            "title": "Cognition and resting-state functional connectivity in schizophrenia",
+            "venue": "Neuroscience & Biobehavioral Reviews,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "X. Shen",
+                "F. Tokoglu",
+                "X. Papademetris",
+                "R.T. Constable"
+            ],
+            "title": "Groupwise whole-brain parcellation from resting-state fMRI data for network node identification",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "D.A. Sturman",
+                "B. Moghaddam"
+            ],
+            "title": "The neurobiology of adolescence: Changes in brain architecture, functional dynamics, and behavioral tendencies",
+            "venue": "Neuroscience & Biobehavioral Reviews,",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "S.C. Tanaka",
+                "A. Yamashita",
+                "N. Yahata",
+                "T. Itahashi",
+                "G. Lisi",
+                "T. Yamada",
+                "N. Ichikawa",
+                "M. Takamura",
+                "Y. Yoshihara",
+                "A. Kunimatsu",
+                "N. Okada",
+                "R. Hashimoto",
+                "G. Okada",
+                "Y. Sakai",
+                "J. Morimoto",
+                "J. Narumoto",
+                "Y. Shimada",
+                "H. Mano",
+                "W. Yoshida",
+                "H. ... Imamizu"
+            ],
+            "title": "A multi-site, multi-disorder resting-state magnetic resonance image database",
+            "venue": "Scientific Data,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "H. Tost",
+                "T. Alam",
+                "A. Meyer-Lindenberg"
+            ],
+            "title": "Dopamine and psychosis: Theory, pathomechanisms and intermediate phenotypes",
+            "venue": "Neuroscience & Biobehavioral Reviews,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "D.C. Van Essen",
+                "S.M. Smith",
+                "D.M. Barch",
+                "T.E.J. Behrens",
+                "E. Yacoub",
+                "K. Ugurbil"
+            ],
+            "title": "The WU-Minn Human Connectome Project: An overview",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "D. Wahlstrom",
+                "P. Collins",
+                "T. White",
+                "M. Luciana"
+            ],
+            "title": "Developmental changes in dopamine neurotransmission in adolescence: Behavioral implications and issues in assessment",
+            "venue": "Brain and Cognition,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "D. Wang",
+                "X. Peng",
+                "A. Pelletier-Baldelli",
+                "N. Orlov",
+                "A. Farabaugh",
+                "S. Nasr",
+                "H. Eryilmaz",
+                "M. Fava",
+                "A.J. Holmes",
+                "J.L. Roffman",
+                "H. Liu",
+                "D.J. Holt"
+            ],
+            "title": "Altered temporal, but intact spatial, features of transient network dynamics in psychosis",
+            "venue": "Molecular Psychiatry,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "H. Wang",
+                "R. Zhu",
+                "S. Tian",
+                "S. Zhang",
+                "Z. Dai",
+                "J. Shao",
+                "L. Xue",
+                "Z. Yao",
+                "Q. Lu"
+            ],
+            "title": "Dynamic connectivity alterations in anterior cingulate cortex associated with suicide attempts in bipolar disorders with a current major depressive episode",
+            "venue": "Journal of Psychiatric Research,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D. Yurgelun-Todd"
+            ],
+            "title": "Emotional and cognitive changes during adolescence",
+            "venue": "Current Opinion in Neurobiology,",
+            "year": 2007
+        }
+    ],
+    "sections": [
+        {
+            "text": "Previous studies often adopted a state discretization approach when investigating how individuals recruited recurring brain states. Since multiple brain states are likely engaged simultaneously at any given moment, focusing on the dominant state can obscure changes in less prominent but critical brain states in clinical populations. To address this limitation, we introduced a novel framework to simultaneously assess brain state engagement for multiple brain states, and we examined how brain state engagement differs in patients with BD or SCZ compared to healthy controls (HC). Using task-based data from the Human Connectome Project, we applied nonlinear manifold learning and K-means clustering to identify four recurring brain states. We then examined how the engagement and transition variability of these four states differed between patients with BD, SCZ, and HC across two other international, open-source datasets. Comparing these measures across groups revealed significantly altered state transition variability, but not engagement, across all four states in individuals with BD and SCZ during both resting-state and task-based fMRI. In our post hoc and exploratory analysis, we also observed associations between state transition variability and age as well as avolition. Our results suggest that disrupted state transition variability affects multiple brain states in BD and SCZ. By studying several brain states simultaneously, our framework more comprehensively reveals how brain dynamics differ across individuals and in psychiatric disorders.\nNOTE: This preprint reports new research that has not been certified by peer review and should not be used to guide clinical practice."
+        },
+        {
+            "heading": "Introduction",
+            "text": "Bipolar disorder (BD) and schizophrenia (SCZ) are multifaceted, heterogeneous psychiatric disorders characterized by psychotic symptoms and impaired executive functioning (Murray et al., 2004; Eisenberg & Berman, 2010; Cotrena et al., 2020). These illnesses and their cardinal symptoms putatively reflect disruptions in the interactions between functional brain networks (Chase & Phillips, 2016; Sheffield & Barch, 2016; Dong et al., 2018). Many studies of functional networks in these illnesses have studied these disruptions from the perspective of \u201cstatic\u201d functional network structure estimated over the course of a minutes-long scan. Nevertheless, as communications within the brain are dynamic and fluctuate over small time windows (Hutchison et al., 2013; Lurie et al., 2020), our understanding of the neural correlates underpinning these disorders may be incomplete. Indeed, a new wave of methods have emerged to capture this additional temporal information in the form of brain states, or distinct, recurring patterns of brain activity or connectivity (Lurie et al., 2020). Brain states can be characterized in terms of state engagement (i.e., the proportion of time points spent in a particular state, also called dwell time) and transition variability (i.e., the number of times individuals transitioned from one state to another, also known as transition). These methods have revealed aberrant brain dynamics in BD and SCZ that were undetectable using static approaches (Rashid et al., 2016; Du et al., 2017; Nguyen et al., 2017). Compared to healthy controls (HC), individuals with these disorders demonstrate aberrant dwell time in brain states and altered transitions between them (Damaraju et al., 2014; Du et al., 2016; Reinen et al., 2018; Miller et al., 2016; Rashid et al., 2014; Du et al., 2021; Wang et al., 2021; Wang et al., 2022). Brain dynamic alterations, in turn, are associated with psychiatric symptoms in these groups, including elevated suicide risk, psychotic symptom severity, and hallucinations (Wang et al., 2022; Wang et al., 2021; Miller et al., 2016; Reinen et al., 2018). However, these studies mainly assigned each time unit to only one state despite the possibility that the activity or connectivity patterns in a given time window can be considered a combination of several patterns (Miller et al., 2016). Individuals are also likely to recruit multiple states simultaneously to support many complex behaviors, such as cognitive control. Thus, this state discretization approach might ignore meaningful but non-dominant states, and potentially misrepresent dynamic information. For instance, assigning each time window to only one state makes it challenging to evaluate whether the elevated recruitment of one state might accompany reduced engagement of another as an alternative or compensatory mechanism in clinical populations. To address this limitation, we developed a novel method that combines nonlinear manifold learning and non-negative least squares regression to simultaneously assess frame-to-frame state engagement for multiple states. We applied 2-step Diffusion Mapping (2sDM) and nonlinear manifold learning to project fMRI data from the Human Connectome Project (HCP; Van Essen et al., 2013) onto a low-dimensional space, and we subsequently identified reproducible brain activity patterns across multiple fMRI tasks (Gao et al., 2021). Next, we used non-negative least squares regression to extend these recurring brain activity patterns to two international datasets to examine how individuals with BD, SCZ, and HC engaged and transitioned through these brain states while at rest. We hypothesized that individuals with BD and SCZ would show aberrant overall state engagement and transition variability compared to HC during rest. Since difficulties with executive functioning and cognitive flexibility have been consistently reported in individuals with BD and SCZ (O\u2019Donnell et al., 2016; Cotrena et al., 2016; Eisenberg & Berman, 2010; Orellana & Slachevsky, 2013), secondary analyses were performed using fMRI data from a task-switching paradigm to further investigate state transition in clinical populations and link altered brain state dynamics to clinical symptoms. We found aberrant state transition variability\nin clinical populations and evidence suggesting that decreased state transition variability was associated with avolition symptoms and older age. Our approach simultaneously provides individualized, moment-to-moment information for multiple states, painting a more complete picture of brain dynamic alterations in patients with BD and SCZ."
+        },
+        {
+            "heading": "Methods",
+            "text": "Participants Data from three independent, publicly available datasets were analyzed in this study. First, we used the HCP S500 release (Van Essen et al., 2013) to identify recurring brain states. The moment-to-moment engagement of the brain states identified in HCP was explored in HC, BD, and SCZ groups from the UCLA Consortium for Neuropsychiatric Phenomics (CNP) and the University of Tokyo Hospital site in the Japanese Strategic Research Program for the Promotion of Brain Sciences (SRPBS) datasets (Poldrack et al., 2016; Tanaka et al., 2021). Patient diagnoses were made by trained clinicians using DSM-IV criteria for BD and SCZ (Poldrack et al., 2016; Tanaka et al., 2021). For the SRPBS dataset, the HC group was screened using the Mini-International Neuropsychiatric Interview. HCs with lifetime psychiatric disorder diagnoses were excluded from the CNP dataset. Demographic information for each dataset is shown in Table 1 (see Supplementary Table 1 for patient participants\u2019 medication information). HCP fMRI data from six different tasks (motor, working memory, social, emotional, relational and gambling) were used to identify recurring brain states. As the HCP dataset contains tasks ranging from simple motor to complex cognitive and affective paradigms, it has the potential to reveal brain states underlying a rich set of cognitive processes. Additionally, finding brain states in an independent dataset allows us to avoid circular analysis and overfitting when examining them in the CNP and SRPBS cohorts. We used the resting-state fMRI data from CNP and SRPBS dataset for primary analyses. Task-based fMRI data from the CNP task-switching paradigm were used for secondary analyses.\nFMRI data preprocessing Acquisition and imaging parameters for the HCP, CNP and SRPBS datasets have been detailed elsewhere (Van Essen et al., 2013; Poldrack et al., 2016; Tanaka et al., 2021). The HCP minimal preprocessing pipeline was used for the HCP dataset (Glasser et al., 2013). Standard preprocessing procedures described in previous work (Gao et al., 2021) were applied to the structural and functional data from both the CNP and SRPBS datasets. Briefly, we removed the first four volumes to allow magnetic field stabilization for the SRPBS dataset. After brain extraction with OptiBet (Lutkenhoff et al., 2014), structural data was nonlinearly registered to the standard MNI-152 space. For functional data, slice time and motion correction were performed using SPM8 before being linearly aligned to the structural data. Data cleaning for all datasets was performed with BioImage Suite. Regression of covariates of no interest, including linear and quadratic drift, a 24-parameter model of motion, and mean white matter, cerebrospinal fluid and gray matter signals, was performed. Timeseries data were temporally smoothed (cutoff frequency approximately ~0.12Hz) and then extracted using the Shen-268 atlas (Shen et al., 2013) from all resting state fMRI datasets for each participant. We applied the same preprocessing pipeline and quality control procedures to the task-based fMRI data used in our secondary analysis. Several brain nodes were excluded from resting-state (n=7) and task-based (n=5) brain dynamics analyses due to noise and/or incomplete coverage. For the CNP and SRPBS data, we additionally scrubbed time points with\nover 0.45 framewise displacement, and we excluded participants with over 20% of their time points censored due to motion. Additional quality control criteria for the HCP and CNP datasets were described in a previous study (Gao et al., 2021). One CNP participant was excluded due to an incomplete resting-state scan. Fourteen SRPBS participants were excluded from further analysis after not meeting preprocessing quality control benchmarks (i.e., issues with skull stripping, nonlinear or linear registration). After these exclusions, 390 HCP participants remained for brain state identification. For brain dynamics analyses, 336 participants from the CNP and SRPBS datasets were included in the resting-state analysis (177 participants from the CNP dataset, HC: n=104, BD: n=35, SCZ: n=38; 159 participants from the SRPBS dataset: HC: n=86, BD: n=40, SCZ: n=33, Table 1), and 217 participants (CNP dataset, HC: n=120, BD: n=49, SCZ: n=48; Table 1) were included in the task-based analysis.\nTable 1\nDemographic information by dataset\nSRPBS\nHC BD SCZ\nN 86 40 33\nSelf-reported sex (F/M) 56/30 15/25 11/22\nAge (years) (M\u00b1SD) 47.07\u00b115.18 34.48\u00b19.11 31.64\u00b110.77\nCNP (Resting-state dataset)\nHC BD SCZ\nN 103 35 38\nSelf-reported sex (F/M) 49/54 15/20 9/29\nAge (years) (M\u00b1SD) 30.29\u00b17.99 34.09\u00b19.01 35.42\u00b18.99\nCNP (task-switching dataset)\nHC BD SCZ\nN 120 49 48\nSelf-reported sex (F/M) 56/64 21/28 11/37\nAge (years) (M\u00b1SD) 31.65\u00b18.84 35.29\u00b19.03 36.19\u00b18.87\nHC: healthy control; BD: bipolar disorder; SCZ: schizophrenia\nBrain state identification As detailed information on 2sDM was described in an earlier work (Gao et al., 2021), we provide a brief overview here. Nonlinear approaches like 2sDM can project complex neural data onto a manifold\nthat is more representative of its temporal dynamics than linear methods to find robust brain states (Gao et al., 2021). In brief, diffusion maps was applied twice to fMRI timeseries data: first, to reduce fMRI timeseries in the participant\u2019s and brain node\u2019s dimensions, and second, to embed it into a lower-dimensional space, where time points showing similar activity were located close to each other (Figure 1). We applied K-means clustering for 100 iterations using the first three embedding dimensions and found the optimal number of clusters, or brain states, as four using the Calinski-Harabasz criterion (Cali\u00f1ski & Harabasz, 1974). These labels can be applied back to the original data to find time points that are associated with each state across participants. For each brain state, all associated fMRI data from all participants were averaged first across the individual level and next across time points to establish a representative timepoint.\nTo understand which canonical functional networks were associated with each brain state, we first identified the activated and deactivated regions within each representative time point (defined as having activation above or below 0, respectively). Next, we extracted the activation and deactivation percentages\nof each network using the ten functional networks previously defined with the Shen-268 atlas (Finn et al., 2015; Noble et al., 2017). Percentages were computed by dividing the number of activated or deactivated regions by the total number of regions in a network for each representative time point. This procedure allowed us to account for the different network sizes and to see how different networks activate or deactivate for each brain state.\nResting-state brain dynamics analyses To evaluate moment-to-moment brain state engagement, we regressed each representative time point from every CNP and SRPBS rest time point using non-negative least squares regression (implemented with the MATLAB function lsqnonneg; Figure 2). Non-negative least squares was selected over standard regression to ensure brain state engagements were positive, as a negative state engagement, which is possible with standard regression, might be difficult to interpret (Lee & Seung, 1999). It fits with the intuition that multiple brain states might be engaged simultaneously at any given moment, allowing us to study their overlapping, moment-to-moment contribution. Representative time points and all rest time points were first normalized by standard deviation before regression. By concatenating the output beta coefficients for each state across time, we can create a brain state timeseries indicating a particular state\u2019s weighted contribution over time for each participant (Figure 2). Two summary measures can be extracted from each brain state timeseries: 1) overall state engagement \u2014a continuous version of state engagement computed by dividing the sum of each state\u2019s beta coefficients by the sum of all beta coefficients, and 2) state transition variability \u2014a continuous version of state transition defined as the standard deviation of brain state timeseries.\nSecondary analysis with task-based fMRI data As our resting-state results suggested aberrant state transition variability in clinical populations, we opted to study altered state transition further by performing secondary analyses in a smaller sample with task-based fMRI data. This task-switching paradigm contained 96 total trials and required participants to flexibly switch between task rules (i.e., responding to the color vs. the shape of the\nstimulus) based on the cue presented (Poldrack et al., 2016). Overall state engagement and transition variability were extracted and studied in this dataset.\nStatistical analysis We combined the two datasets for group comparison to maximize statistical power for detecting brain dynamic alterations in BD and SCZ and to examine the extent to which these alterations generalize across cultures. Both datasets collected eye-open resting-state scans from adult participants (Poldrack et al., 2016; Tanaka et al., 2021). As we have an overall state engagement and state transition variability measure for each of the four brain states, multivariate group differences were examined across all three groups using MANCOVA, with site, medication, age and sex as covariates.The group comparison analysis was then supplemented by assessing group differences between both patient groups and HC (i.e., BD vs HC and SCZ vs HC) with t-squared test, including site, medication, age and sex as covariates. Cohen\u2019s d effect sizes in pairwise differences were computed to quantify how much each brain state contributed to multivariate group differences (Bettinardi, 2022). For our primary and secondary analyses, p<0.0125 (i.e., p<0.05/4) was considered significant after Bonferroni correction for multiple comparisons. We did not correct for multiple comparisons for our post hoc or exploratory analyses.\nComparison with a state discretization approach We additionally examined brain dynamics using a state discretization approach to more directly evaluate our results in the context of previous studies. For this analysis, each rest and task time point was first correlated with each state representative time point and then assigned to the state showing the highest correlation value. State transition was measured as the number of times there was a change in state assignment from one time point to the next, whereas dwell time was operationalized as the number of time points assigned to one state divided by the total number of time points. As the state transition measure here required a continuous assessment, we did not censor based on motion. But participants with excessive motion (criteria same as described above) were excluded from this analysis. We then compared dwell time and state transition across groups using ANCOVA, with site (when appropriate), medication, age and sex as covariates. ANCOVA was used here since the dwell time measures were not completely independent from each other, and there was only one state transition measure.\nExploratory analysis with behavioral data To further understand the implications of differences in state transition variability, we examined the association between overall state transition variability and symptom measures in patient participants. We focused on brain dynamics measures from task-based fMRI data, as the sample size was larger here relative to the resting-state dataset. To estimate overall state transition variability, we applied principal component analysis (PCA) to the state transition variability measures from all brain states using data from the clinical groups. The first component scores were then correlated with measures from the Scale for Assessment of Negative Symptoms (Andreasen, 1983) and Scale for Assessment of Positive Symptoms (Andreasen, 1984) in the BD and SCZ groups using Spearman correlation. We specifically focused on avolition, anhedonia, and attention since the other factor measures were zero inflated (Supplementary Figure 1). These symptom measures were only available in clinical populations not in HCs. As similar state transition variability patterns were found in both clinical groups during task, data from participants with BD and SCZ were combined in this analysis to increase statistical power and to examine transdiagnostic associations between altered brain dynamics and clinical symptoms."
+        },
+        {
+            "heading": "Results",
+            "text": "Brain states and canonical functional brain networks Replicating previous work (Gao et al., 2021), we identified four brain states with distinct activity patterns using 2sDM and K-means clustering. We then characterized these brain states as high cognition, low cognition, fixation and cue/transition based on the task conditions involved in each cluster (Figure 3A) and examined the extent to which each canonical network contributed to each state\u2019s representative time point. We found that default mode network (DMN), motor network, and medial frontal network (MF) had the highest activation percentage in the fixation brain state (DMN: 88.89%; Motor: 85.71%; MF: 82.76%; Figure 3B), while the visual networks had the highest deactivation percentage (visual association (VAs): 94.44%; Visual I: 66.67%; Visual II: 66.67%; Figure 3B). For high cognition, the VAs network, the Visual II network and the frontoparietal (FP) network had the highest activation percentage (VAs: 100%; Visual II: 88.87%; FP: 82.35%; Figure 3B), whereas the motor network, the DMN and the subcortical network had the highest deactivation percentage (Motor: 87.76%; DMN: 83.33%; subcortical: 79.31%; Figure 3B). The motor network, the medial frontal (MF) network and the cerebellum network had the highest activation percentage in the low cognition brain state (Motor: 100%; MF: 86.21%; cerebellum: 84%; Figure 3B), while the DMN and the visual networks had higher deactivation percentage for this state (Visual I: 100%; Visual II: 66.67%; VAs: 66.67%; DMN: 66.67%; Figure 3B). All three visual networks showed high activation percentage for the cue/transition brain state (Visual I: 100%; VAs: 72.22%; Visual II: 66.67%; Figure 3B), but the MF network, the DMN and the motor network showed the highest deactivation percentage (MF: 89.66%; DMN: 88.87%; Motor: 83.67%; Figure 3B). In general, the networks associated with each brain state align with the presumed cognitive processes invoked by each state. For example, the entire motor network was activated for the low cognition state, which contained time points from the motor task. Additionally, the high cognition state, which included time points from working memory, emotional, social and relational tasks, was associated with FP activation and DMN deactivation.\nindicates the four brain state output from K-means clustering. These states were characterized as fixation, high cognition, low cognition, and cue/transition based on the prominent task conditions associated with the time points in each cluster (each dot here represents a time point; see Figure 1 for their task conditions). B) visualizes the four representative time points. Spider plots show the relative extent to which functional brain networks were activated and deactivated in each representative timepoint. For illustrative purposes, the raw activation values were multiplied by 100. MF, medial frontal network; CBL, cerebellum network; SC, subcortical network; SAL, salience network; Vas, visual association network; VII, visual II network; VI, visual I network; motor, motor network; DMN, default mode network; FP, frontoparietal network.\nPrimary and secondary analysis: Resting-state and task brain dynamics across groups Before group comparisons, we first examined the residual term from non-negative least squares regression. We did not find any rest or task time point with an outlier residual term (defined as 1.5 times the interquartile range), suggesting that the activity patterns of all rest and task time points can be considered as some weighted combinations of the four brain states obtained from the HCP. During rest, we observed a significant main effect of diagnosis group on state transition variability (MANCOVA; F(8,648) =3.093, p=0.002; Figure 4B) but not for overall state engagement (MANCOVA; F(8,648)=1.327, p=0.227; Figure 4A). There were additionally main effects of site and age on state transition variability (Supplementary Table 2). Main effects of medication use were not significant (Supplementary Table 2).\nFollow-up tests were performed to understand how each clinical group differed from HC for state transition variability. Participants with BD (t-squared; F(4,253)=4.850, p<0.001) and SCZ (t-squared; F(4,249)=2.883, p=0.023) showed significant differences in state transition variability compared to HCs when including site, medication, age, and sex as covariates (Supplementary Table 3). Both clinical groups showed lower state transition variability across all four states, with the high cognition brain state showing the largest effect size (Supplementary Table 4). During task, we similarly observed significant main effects of diagnostic group on state transition variability (MANCOVA; F(8,412)=2.536, p=0.011; Figure 5B) but not on overall state engagement (MANCOVA; F(8,412)=0.734, p=0.662; Figure 5A). While the main effect of medication was not significant, there were significant main effects of age, site, and sex (Supplementary Table 5). With medication, age, and sex as covariates, both participants with SCZ (t-squared; F(4,157)=3.103, p=0.017) and BD (t-squared; F(4,158)=2.792, p=0.028) demonstrated lower state transition variability across most states compared to HCs (Supplementary Table 6), with the high cognition state again showing a large effect size (Supplementary Table 7).\nBrain dynamics with a state discretization With discretized states, we did not observe a significant group effect on state transition during rest (F(2,326)=1.404, p=0.247; Supplementary Table 8) or task-based runs (F(2,208)=0.167, p=0.846; Supplementary Table 9). Similarly, the main effect of diagnostic group on dwell times was not significant for both rest and task data following Bonferroni correction (Supplementary Table 8 and 9).\nPost hoc analysis examining the association between age and state transition variability To further understand the significant main age effect, we correlated age with overall state transition variability within each group during rest and task in a post hoc analysis. Overall state transition variability was estimated by applying PCA to the four state transition variability measures. The 1st component accounted for 94.424% of the variance in rest and 92.526% in task. During rest, older HCs showed lower state transition variability (r=-0.414, p=2.854x10-9; Figure 6A). While there was also a significant negative correlation in SCZ (r=-0.348, p=0.003; Figure 6A), this effect was smaller in BD (r=-0.192, p=0.098; Figure 6A). The association between age and state transition variability was significant in all three groups during the task (HC: r=-0.269, p=0.003; BD: r=-0.355, p=0.012; SCZ: r=-0.318, p=0.028; Figure 6B).\nExploratory analysis studying the associations between altered state transition variability and symptom measure Using data from the two clinical groups, the first PCA component on overall state transition variability accounted for 92.56% of the variance. Our post hoc analysis revealed that lower overall state transition variability during task-switching was associated with elevated avolition in individuals with BD and SCZ (r=-0.222, p=0.029; Figure 7), but not the other symptom measures (attention: r=0.154, p=0.132; anhedonia: r=-0.152, p=0.138; Figure 7)."
+        },
+        {
+            "heading": "Discussion",
+            "text": "Here, we leveraged nonlinear manifold learning and non-negative least squares regression to assess the continuous engagement of multiple brain states simultaneously during resting-state and task-based neuroimaging. After deriving four brain states from the HCP dataset, we detected aberrant state transition variability across these states in two independent datasets of individuals with BD and SCZ. Both clinical groups showed reduced state transition variability across all four states during rest. While the same alteration patterns were observed in most states for task, we also found a pattern of higher low cognition and cue/transition state transition variability in the SCZ group. However, our version of state discretization approach did not reveal aberrant state transition in clinical populations, indicating that our framework might be more sensitive to altered brain dynamics than a state discretization approach. Strong associations between overall state transition variability and age were observed. These results deepen our understanding of the neural correlates of BD and SCZ and highlight the importance of considering multiple brain states simultaneously when studying psychiatric disorders.\nAligning our work with previous studies using a state discretization approach Other works examining brain dynamics in BD and SCZ have found mixed results, reporting increased, similar, and decreased state transition and dwell time in clinical populations (Damaraju et al., 2014; Rashid et al., 2014; Du et al., 2016; Miller et al., 2016; Du et al., 2021; Wang et al., 2021). Varying methods might have contributed to this discrepancy. However, our work suggests that aberrant state transition variability is a global deficit affecting all brain states in BD and SCZ, potentially complementing previous findings. Since our approach allows us to examine multiple states concurrently, we found that altered state transition can manifest in various ways for different states (i.e., decreased or increased variability). This was shown in our task results in the SCZ group. It can potentially explain the mixed findings regarding state transition in clinical populations, as one can come to very different conclusions depending on which state is considered as dominant and, therefore, highlighted in a state discretization approach. Notably, our version of the forced state approach did not elucidate significant group differences in state transition, suggesting that the current approach might be more powerful in detecting brain dynamic alterations. We found similar overall state engagement across patient and control groups even though previous studies have revealed altered dwell time in BD and SCZ (Damaraju et al., 2014; Du et al., 2016; Reinen et al., 2018; Wang et al., 2021). One possible explanation is that our overall state engagement measure might not be a direct equivalent of dwell time. A state with less dwell time (i.e., considered dominant in fewer time points) can still show high overall state engagement if it is consistently engaged in the background. However, our results also suggest that a state discretization approach might mask variability differences as dwell time differences. For instance, if a state demonstrated decreased transition variability (as in most states examined here), it would likely show consistent engagement across time and be assigned to more time points if it is a dominant state or fewer if it is less prominent. This difference in variability could then be interpreted as increased or decreased dwell time, respectively. Our results suggest that state transition variability, rather than dwell time or overall state engagement, was the main factor driving brain dynamic differences in the clinical populations examined here.\nLinking the dopaminergic system with brain dynamic differences The dopaminergic system is a possible convergent mechanism for the various topics discussed in this paper, including SCZ (Maia & Frank, 2016; Howes & Kapur, 2009, Tost et al., 2010), BD (Cousins et\nal., 2009), cognitive flexibility (Cools & D\u2019Esposito, 2011), aging (B\u00e4ckman et al., 2006; Li et al., 2009), and avolition (Heinz et al., 1998). Emerging works further suggest that changes in the dopaminergic system can lead to brain dynamic differences. A recent network control theory study (Braun et al., 2021) found that dopamine gene expression and pharmacological manipulations of dopaminergic tone were associated with changes in state transition and stability. Altered brain dynamics in SCZ was also reported in that study (Braun et al., 2021). Decreased dopamine has additionally been associated with changes in executive functions as people gradually age (B\u00e4ckman et al., 2000; Erixon-Linroth et al., 2005). One natural speculation following previous findings in aging and clinical populations is that fluctuations in dopamine neurotransmission can affect the coordination between brain states to influence behaviors.\nStudying brain dynamic changes in other critical developmental periods This study and our earlier discussion focused on adults, but other critical developmental periods should also be examined further. Adolescence, a period of dramatic brain changes (Yurgelun-Todd, 2007; Blakemore, 2008; Sturman & Moghaddam, 2011), has been associated with the emergency of psychiatric disorders (Belfer, 2008; Costello et al., 2011) and a more active dopaminergic system (Wahlstrom et al., 2010). Previous work investigating brain dynamics in this population has additionally reported a positive association between age and brain state transition (Medaglia et al., 2018), the opposite of that in older adults (Ezaki et al., 2018; Lee et al., 2022). Systematically investigating the trajectory of brain dynamic changes across the lifespan can allow the identification of markers indicating the early emergence of psychiatric disorders and provide insight into whether individuals with these markers might experience more drastic behavioral and brain dynamic alterations as they age.\nDetecting altered brain dynamics with task-based fMRI data Here, we supplemented our resting-state analysis with fMRI data that were collected during performance of a cognitive flexibility task. Compared to the HC group, individuals with BD and SCZ demonstrated aberrant transition variability across states during task switching. This might suggest that altered brain dynamics underlie the difficulties with executive functioning often reported by these patients (O\u2019Donnell et al., 2017; Contrena et al., 2016; Eisenberg & Berman, 2010; Orellana & Slachevsky, 2013). Furthermore, altered brain dynamics were detected in a smaller sample (n=217) using a fMRI task paradigm that specifically challenged the ability to respond flexibly to changing cognitive demands. This result supports prior arguments that more robust brain-behavior relationships can be identified when the construct of interest (cognitive flexibility in this case) is engaged during the scan (Greene et al., 2018; Finn, 2021).\nLimitations and future directions Our approach allows a more complete picture of brain dynamics by tracking multiple states at the same time, and it can be flexibly applied to a large variety of datasets. For example, future work can apply this method to fMRI data that are acquired during naturalistic paradigms, which can advance understanding of how brain state engagement fluctuates to support cognition in a more ecologically valid task. Additionally, we use multivariate analysis to examine activation at the whole-brain level, which has increased statistical power compared to univariate analysis (Noble et al., 2022). Studying the brain at this broader level can potentially better reveal the neural mechanisms underpinning complex psychiatric disorders. While many studies have turned to time-varying functional connectivity to study dynamic changes in whole-brain patterns, most of these approaches require a few time points to measure the\ncorrelation between brain regions\u2019 activity levels. It can then be challenging to extract moment-specific information. As we rely on brain activation during tasks to identify brain states and measure their engagement, we were able to provide frame-to-frame state engagement information and additionally had some insight into the cognitive processes each brain state might be associated with. But as recent approaches have demonstrated the feasibility of studying the interaction between brain regions on a more frame-to-frame basis (Esfahlani et al., 2022), future work should more systematically compare various brain dynamic approaches. These evaluations can inform whether different methods provide complementary information or if one method might be preferable in certain scenarios. A few limitations of the present study bear further investigation. As we used open-source data, some clinical information, such as medication information, was unavailable for the SRPBS participants included in this study. However, when including medication as a covariate for our task-based analyses in the CNP dataset, we still observed aberrant state transition variability in patients with either BD or SCZ, which would suggest that group differences are potentially robust to medication effects. Future work should investigate how medication type, dose, and treatment history relate to brain dynamics in these patient groups. Since we did not group participants with BD based on their mood state at the time of the scan, future research should examine whether euthymic, manic or depressive mood states might be associated with variations in brain dynamics. Finally, only a limited number of participants were included in our analysis studying the relationship between altered brain dynamics and clinical symptoms. Although we increased our sample size by combining both clinical groups, future work should explore the association between state transition variability and symptoms in a larger sample."
+        },
+        {
+            "heading": "Conclusion",
+            "text": "In summary, we introduced a novel approach to investigate multiple brain states that co-occur simultaneously, which painted a more comprehensive picture of brain dynamics in a population-based cohort, as well as in patients with serious mental illness. Our results suggest that aberrant state transition variability\u2014instead of overall state engagement\u2014drives brain dynamic differences in BD and SCZ. We also observed a robust association between state transition variability and age. As less dominant brain states are often neglected when states are discretized, our work demonstrates that approaches assessing multiple brain states simultaneously can better reflect the inherent complexity of brain dynamics."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "Data was provided in part by the Human Connectome Project, WU-Minn Consortium (Principal Investigators: David Van Essen and Kamil Ugurbil; 1U54MH091657 funded by the 16 NIH institutes and Centers that support the NIH Blueprint for Neuroscience Research; and by the McDonnell Center for Systems Neuroscience at Washington University) and the Consortium for Neuropsychiatric Phenomics (NIH Roadmap for Medical Research grants UL1-DE019580, RL1MH083268, RL1MH083269, RL1DA024853, RL1MH083270, RL1LM009833, PL1MH083271, and PL1NS062410). The CNP dataset was accessed through OpenNEURO (https://openneuro.org/datasets/ds000030/). A portion of the data used in the preparation of this work were obtained from the DecNef Project Brain Data Repository (https://bicr-resource.atr.jp/srpbsopen/), collected as part of the Japanese Strategic Research Program for the Promotion of Brain Sciences (SRPBS) supported by the Japanese Advanced Research and Development Programs for Medical Innovation (AMED). JY was supported by the Gruber Science Fellowship from the Gruber Foundation through Yale University. MR was supported by the National Science Foundation Graduate Research Fellowship under Grant No. DGE-2139841. RXR was supported\nby the National Research Service Award (award number: 5T32GM100884-09) from the National Institute of General Medicine. SN was supported by the National Institute of Mental Health under award number K00MH122372. MLW was supported by the National Institute on Drug Abuse (T32DA022975). DS was supported by R01MH121095. We thank Ignacio Ruiz-Sanchez, Huda Siddiqui and Iris Cheng for data quality control help."
+        },
+        {
+            "heading": "Supplementary materials",
+            "text": "Supplementary Table 1. Medication information for the CNP dataset\nCNP (Resting-state dataset)\nBD SCZ\nAntipsychotic 8 28\nAntidepressant 5 3\nMood stabilizer 13 2\nOthers 2 1\nCNP (Task-switching dataset)\nBD SCZ\nAntipsychotic 11 33\nAntidepressant 6 6\nMood stabilizer 18 4\nOthers 4 1\nSupplementary Figure 1. Distributions of clinical symptom scores. A) showed the distribution of symptom scores used to correlate with state transition variability. We did not perform further analysis with the symptom scores shown in B) since the distribution was zero-inflated.\nSupplementary Table 2. Resting-state MANCOVA covariates\nState transition variability\nF-stat p\nSite F(4,323)=23.884 2.2x10-16\nMedication F(16,1304)=1.078 0.371\nAge F(4,323)=8.749 1.024x10-6\nSex F(4,323)=1.337 0.256\nOverall state engagement\nSite F(4,323)=3.734 0.005\nMedication F(16,1304)=1.584 0.066\nAge F(4,323)=1.793 0.130\nSex F(4,323)=0.857 0.490\nSupplementary Table 3. Resting-state state transition variability T-squared covariates\nHC vs. BD\nF-stat p\nSite F(4,253)=20.803 7.72x10-15\nMedication F(16,1024)=1.232 0.236\nAge F(4,253)=6.070 0.0001\nSex F(4,253)=1.745 0.141\nHC vs. SCZ\nSite F(4,249)=18.753 1.72x10-13\nMedication F(16,1008)=1.264 0.213\nAge F(4,249)=6.084 0.0001\nSex F(4,249)=1.130 0.343\nSupplementary Table 4. Resting-state state transition variability effect sizes\nHC vs. BD\nState Cohen\u2019s d\nFixation 0.499\nHigh cognition 0.524\nLow cognition 0.213\nCue/transition 0.394\nHC vs. SCZ\nState Cohen\u2019s d\nFixation 0.317\nHigh cognition 0.382\nLow cognition 0.233\nCue/transition 0.272\nSupplementary Table 5. Task-switching MANCOVA covariates\nState transition variability\nF-stat p\nMedication F(16,832)=1.195 0.265\nAge F(4,205)=9.352 5.81x10-7\nSex F(4,205)=3.727 0.006\nOverall state engagement\nMedication F(16,832)=1.642 0.053\nAge F(4,205)=1.876 0.116\nSex F(4,205)=1.424 0.227\nSupplementary Table 6. Task-switching state transition variability T-squared covariates\nHC vs. BD\nF-stat p\nMedication F(16,644)=1.588 0.067\nAge F(4,158)=6.582 6.34x10-5\nSex F(4,158)=4.422 0.002\nHC vs. SCZ\nMedication F(16,640)=0.573 0.905\nAge F(4,157)=6.464 7.69x10-5\nSex F(4,157)=1.872 0.118\nSupplementary Table 7. Task-switching state transition variability effect size\nHC vs. BD\nState Cohen\u2019s d\nFixation 0.420\nHigh cognition 0.415\nLow cognition 0.201\nCue/transition 0.246\nHC vs. SCZ\nState Cohen\u2019s d\nFixation 0.245\nHigh cognition 0.349\nLow cognition -0.129\nCue/transition -0.011\nSupplementary Table 8. Discrete state approach results for resting-state data\nFixation dwell time\nF-stat p\nDiagnosis F(2,326)=2.830 0.060\nSite F(1,326)=0.012 0.913\nMedication F(4,326)=1.446 0.219\nAge F(1,326)=0.183 0.669\nSex F(1,326)=1.569 0.211\nHigh cognition dwell time\nF-stat p\nDiagnosis F(2,326)=0.866 0.422\nSite F(1,326)=1.767 0.185\nMedication F(4,326)=2.053 0.087\nAge F(1,326)=6.875 0.009\nSex F(1,326)=0.069 0.792\nLow cognition dwell time\nF-stat p\nDiagnosis F(2,326)=0.400 0.670\nSite F(1,326)=0.0002 0.990\nMedication F(4,326)=1.398 0.234\nAge F(1,326)=0.022 0.883\nSex F(1,326)=2.844 0.093\nCue/transition dwell time\nF-stat p\nDiagnosis F(2,326)=1.973 0.141\nSite F(1,326)=2.214 0.138\nMedication F(4,326)=1.692 0.151\nAge F(1,326)=5.685 0.018\nSex F(1,326)=0.018 0.895\nState transition\nF-stat p\nDiagnosis F(2,326)=1.404 0.247\nSite F(1,326)=1480.383 2x10-16\nMedication F(4,326)=0.990 0.413\nAge F(1,326)=0.296 0.587\nSex F(1,326)=0.029 0.865\nSupplementary Table 9. Discrete state approach results for task-switching data\nFixation dwell time\nF-stat p\nDiagnosis F(2,208)=3.221 0.042\nMedication F(4,208)=0.304 0.875\nAge F(1,208)=1.921 0.167\nSex F(1,208)=2.851 0.093\nHigh cognition dwell time\nF-stat p\nDiagnosis F(2,208)=0.160 0.853\nMedication F(4,208)=0.419 0.795\nAge F(1,208)=0.852 0.357\nSex F(1,208)=1.772 0.185\nLow cognition dwell time\nF-stat p\nDiagnosis F(2,208)=0.491 0.613\nMedication F(4,208)=0.301 0.877\nAge F(1,208)=1.757 0.187\nSex F(1,208)=0.132 0.717\nCue/transition dwell time\nF-stat p\nDiagnosis F(2,208)=1.829 0.163\nMedication F(4,208)=0.540 0.707\nAge F(1,208)=0.800 0.372\nSex F(1,208)=0.047 0.828\nState transition\nF-stat p\nDiagnosis F(2,208)=0.167 0.846\nMedication F(4,208)=0.678 0.608\nAge F(1,208)=0.154 0.695\nSex F(1,208)=5.469 0.020"
+        }
+    ],
+    "title": "Title: Altered brain dynamics across bipolar disorder and schizophrenia revealed by overlapping brain states",
+    "year": 2024
+}

@@ -1,0 +1,153 @@
+{
+    "abstractText": "The RSA algorithm has been around for nearly five decades ([RSA78]) and remains one of the most studied public key cryptosystems. Many attempts have been made to break it or improve it and questions remain about the equivalence of the strength of its security to well known hard problems in computational number theory. A basic question which has received much attention (cf. [AM09], [BV98]) is: Is breaking RSA equivalent to factoring? In this note we propose a modified version which we call RSA+ which is at least as secure as RSA and show that breaking RSA+ is probably computationally equivalent to factoring n, the public modulus. The motivation came from wanting to obscure the encryption exponent in RSA.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "KRISHNAN SHANKAR"
+        }
+    ],
+    "id": "SP:2ed6f25fed4697bafbc72d9a44e831dc80cffa36",
+    "references": [
+        {
+            "authors": [
+                "D. Aggarwal",
+                "U. Maurer"
+            ],
+            "title": "Breaking RSA generically is equivalent to factoring",
+            "venue": "EUROCRYPT 2009,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "D. Boneh",
+                "G. Durfee"
+            ],
+            "title": "Cryptanalysis of RSA with Private Key d Less than n",
+            "venue": "IEEE Trans. Information Theory,",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "D. Boneh",
+                "G. Durfee",
+                "N. Howgrave-Graham"
+            ],
+            "title": "Factoring N = pq for Large r",
+            "venue": "Proceedings of Crypto \u201999,",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "D. Boneh",
+                "R. Venkatesan"
+            ],
+            "title": "Breaking RSA may not be equivalent to factoring",
+            "venue": "editor, EUROCRYPT\u201998,",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "M.J. Hinek"
+            ],
+            "title": "Cryptanalysis of RSA and its variants, Cryptography & Network Security series",
+            "venue": "Chapman and Hall publishers,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "D. Hofheinz",
+                "E. Kiltz",
+                "V. Shoup"
+            ],
+            "title": "Practical Chosen Ciphertext Secure Encryption from Factoring",
+            "venue": "J. of Cryptology",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "M. Rabin"
+            ],
+            "title": "Digital signatures and public key functions as intractable as factorization",
+            "venue": "Technical Report MIT/LCS/TR-212,",
+            "year": 1979
+        },
+        {
+            "authors": [
+                "D. Shanks"
+            ],
+            "title": "Five Number Theoretic Algorithms",
+            "venue": "Proceedings of the Second Manitoba Conference on Numerical Mathematics. Pp",
+            "year": 1973
+        },
+        {
+            "authors": [
+                "T. Takagi"
+            ],
+            "title": "Fast RSA-type Cryptosystem",
+            "venue": "Modulo pq,",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "S. Turner"
+            ],
+            "title": "Square roots mod p, The American Mathematical Monthly",
+            "venue": "vol. 101,",
+            "year": 1994
+        },
+        {
+            "authors": [
+                "D. Vigilant"
+            ],
+            "title": "RSA with CRT: A New Cost-Effective Solution to Thwart Fault Attacks, In: Cryptographic Hardware and Embedded Systems \u2013 CHES",
+            "venue": "Lecture Notes in Computer Science,",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "M. Wiener"
+            ],
+            "title": "Cryptanalysis of Short RSA Secret Exponents",
+            "venue": "IEEE Trans. Information Theory 36(3):553\u2013558",
+            "year": 1990
+        }
+    ],
+    "sections": [
+        {
+            "text": "ar X\niv :2\n30 1.\n01 28\n2v 1\n[ cs\n.C R\n] 3\n1 D\nec 2\n02 2"
+        },
+        {
+            "heading": "RSA+: AN ALGORITHM AT LEAST AS SECURE AS RSA",
+            "text": ""
+        },
+        {
+            "heading": "KRISHNAN SHANKAR",
+            "text": ""
+        },
+        {
+            "heading": "Introduction",
+            "text": "The RSA algorithm has been around for nearly five decades ([RSA78]) and remains one of the most studied public key cryptosystems. Many attempts have been made to break it or improve it and questions remain about the equivalence of the strength of its security to well known hard problems in computational number theory. A basic question which has received much attention (cf. [AM09], [BV98]1) is: Is breaking RSA equivalent to factoring? In this note we propose a modified version which we call RSA+ which is at least as secure as RSA and show that breaking RSA+ is probably computationally equivalent to factoring n, the public modulus. The motivation came from wanting to obscure the encryption exponent in RSA."
+        },
+        {
+            "heading": "1. The RSA+ Algorithm",
+            "text": "RSA: Bob wishes to send a message m to Alice whose RSA public key is (n, e) and private key is (p, q, d) where n = pq and de \u2261 1 (mod \u03d5(n)). In the usual implementation of RSA Bob computes c \u2261 me (mod n) and sends it to Alice. Decryption is straightforward: cd \u2261 (md)e \u2261 mde \u2261 m (mod n) since de \u2261 1 (mod \u03d5(n)). RSA+: We start with the same setup as above namely that Bob has a message m to transmit to Alice whose RSA public key is (n, e).\nEncryption:\n1. Bob finds a random number x (mod n) and computes y \u2261 x2 (mod n). 2. Bob computes c \u2261 mx (mod n) and r \u2261 ye (mod n). 3. Bob transmits the pair (c, r) to Alice.\nDecryption:\n1. Alice computes y \u2261 (ye)d (mod n). This step is similar to decrypting in RSA. 2. Alice then writes down the equation y \u2261 x2 (mod n). She uses her knowledge of\nthe factorization of n = pq to compute all four square roots of y (see Section 4).\n3. For each square root, say {x1, x2, x3, x4}, Alice sequentially computes the inverse ui \u2261 x\u22121i (mod \u03d5(n)) and evaluates cui (mod n) until she sees an intelligible message m (but see 1.2 below).\nTheorem A. Breaking RSA+ is probably computationally equivalent to factoring n = pq.\n1In [BV98] there seems to be an issue in the proof of Lemma 3.2, where it is assumed that a cyclotomic\npolynomial \u03a6d(x) is irreducible over Fp, which is not always true.\nencryption. If Bob chooses x < \u221a n, then y = x2 as integers and it is easy to find the square root if one knows y. In this case the system is as secure as RSA since y is RSA-encrypted. It is also important that gcd(x, \u03d5(n)) = 1 since otherwise Alice cannot decrypt the message even if she can find x (Euler\u2019s theorem). So, Bob could choose x to be a prime of at least 150 digits assuming n is around 300 digits.\n1.2. In Step 3 of decryption as stated Alice must compute all four square roots and then try to uncover an intelligible message by sequentially decrypting each mxi (mod n) which is onerous in practice. We describe a way around this problem as long as both primes dividing n are congruent to 3 mod 4 (this is the workaround suggested by Blum and Williams).\nConsider the setup with y \u2261 x2 (mod n), where Bob chooses x, y. Then y has four square roots mod n which come from combining the two square roots each mod p and mod q using the Chinese Remainder Theorem (CRT). Suppose both primes p, q in the factorization of n are chosen (by Alice) to be congruent to 3 mod 4. Now Bob chooses x, y such that x itself is a square mod n. Then solving the equation X2 \u2261 y (mod n) has solutions (say) X \u2261 \u00b1a (mod p) and X \u2261 \u00b1b (mod q). These are combined using CRT to yield X \u2261 xi (mod n), for i = 1, 2, 3, 4 and let us suppose x = x1. Note that p, q \u2261 3 (mod 4) so ( \u22121 p )\n= \u22121 and (\n\u22121 q\n)\n= \u22121 i.e., \u22121 is not a quadratic residue mod p nor mod q. This implies that exactly one of the roots \u00b1 (mod p) and one of the roots \u00b1b (mod q) is a quadratic residue (mod the respective primes) and the other is not. Since Bob picked x to be a square mod n, it follows that the congruences that yielded x1 must also be squares i.e., suppose X \u2261 a (mod p) and X \u2261 b (mod q) yields X \u2261 x1 (mod n), then it follows that ( a p ) = +1, ( b q )\n= +1 and (\n\u2212a p\n) = \u22121, (\n\u2212b q\n)\n= \u22121. From this it follows that none of x2, x3, x4 is a square mod n. We summarize this via the following\nProposition 1.1. Suppose n = pq, where p and q are congruent to 3 mod 4. Given x, y such that y \u2261 x2 (mod n), gcd(x, n) = 1. Then y has four square roots mod n exactly one of which is a square mod n.\nThis suggests a way to pinpoint x without having to search all square roots, namely, Bob picks x to be a square mod n and then computes y \u2261 x2 (mod n). By the above Proposition this will be the only square root of y mod n. It also follows from the discussion above that: (i) If one of the primes is congruent to 1 mod 4, then the number of square roots that are themselves perfect squares is either 0 or 2; (ii) If both primes are congruent to 1 mod 4, then the number of square roots that are themselves perfect squares is 0 or 4.\n1.3. Decryption is more involved if at least one of the primes dividing n is congruent to 1 (mod 8). Nevertheless, the overall algorithm\u2019s security is tied to the difficulty of factoring and as such lies in class NP , although it is unknown whether it is in P .\nIn this section we show that RSA+ is at least as secure as RSA. We will show this via the use of a so-called black box i.e., an unknown machine or method or algorithm that takes in a specified input and returns an output that is otherwise currently computationally intractable.\nTheorem B. RSA+ is at least as secure as RSA.\nProof. Suppose we have a black box that is able to decrypt RSA+ messages i.e., this black box takes as input (n, e,mx (mod n), ye (mod n)) and returns m. Here y \u2261 x2 (mod n). Given an RSA ciphertext c \u2261 me (mod n) one would then input (n, e, c, (e2)e (mod n)) which should generate the output of m. This shows that any system that can decrypt RSA+ ciphertexts can also decrypt RSA ciphertexts.\nConversely, suppose there is a black box that is able to decrypt RSA messages i.e., this black box takes as input (n, e, c \u2261 me (mod n)) and returns m. Given an RSA+ ciphertext (mx (mod n), ye (mod n)) one can only decrypt y. In order to get to m one would need to know the exponent x for input into this black box, i.e., one would now need x in order to input (n, x,mx (mod n)) into the black box. This means computing a square root of y. It is not known whether this black box which can decrypt RSA ciphertexts can also compute square roots (but see Theorem C)."
+        },
+        {
+            "heading": "3. Computational Black Boxes",
+            "text": "In this section we explore further computational black boxes which may circumvent known methods like factoring. Suppose one is able to decrypt y by ascertaining d. One needs to compute the particular square root x used to encrypt m. Is it possible to compute just one (pair of) square root(s) without knowledge of the factors? If there exists a computational black box that can produce one square root when the input is (y, n), then there are two possibilities.\n3.1. Suppose the black box spits out a random square root mod n for the equation y \u2261 x2 mod n. In this case one simply inputs the same pair (y, n) repeatedly until we get two distinct square roots that do not add up to zero mod n. By Lemma 4.1 this will yield a factorization of n.\n3.2. Suppose the black box spits out a random square root mod n but always the same square root for the equation y \u2261 x2 mod n i.e., for a given input (y, n), the output is always the same x rather than one of the four distinct square roots at random. In this case we start with some known x and square it to obtain y \u2261 x2 (mod n). Now input (y, n) into the black box; if the output is \u00b1x, then discard and try again with a different x. If the output, say x\u2032 is different from \u00b1x (mod n), then by Lemma 4.1 we can factor n by computing gcd(x\u2212 x\u2032, n).\nthen \u03d5(n) | (de \u2212 1). Therefore, for any x we have xde\u22121 \u2261 1 (mod \u03d5(n)). Since \u03d5(n) = (p\u22121)(q\u22121) is divisible by 4, we may compute y \u2261 x(de\u22121)/2 (mod n). Then, by construction y2 \u2261 1 (mod n) which means n | (y\u2212 1)(y+1). Then either y \u2261 \u00b11 (mod n) or by Lemma 2.1 gcd(y \u00b1 1, n) yields a factor of n. Again, we can repeat this for several different x as needed to factor n with high probability.\nWhether RSA+ is computationally equivalent to factoring depends on the following thought experiment. Suppose we have a black box like the one in the previous Section which takes as input (n, e,mx (mod n), ye (mod n)), where y \u2261 x2 (mod n) and produces as output m. Does this allow us to factor n?\nTheorem C. A black box with input (n, e,mx (mod n), ye (mod n)) and output m can probably factor n.\nProof. Start with a known pair (x, y), where y \u2261 x2 (mod n). Then note that:\ny x \u2261 (x2)x \u2261 x2x \u2261 (xx)2 (mod n)\nx y \u2261 xx2 \u2261 xx\u00b7x \u2261 (xx)x (mod n)\nIf we were to input (n, e, xy (mod n), ye (mod n)) into the black box, then this is the same as the input (n, e, (xx)x (mod n), ye (mod n)). The output should therefore be xx (mod n) which is a square root of yx (mod n). From 3.1 and 3.2 above, repeating this procedure for several different x should yield a factorization of n.\n3.4. Remark. The above proof carries over for RSA as well i.e., if we had a black box for RSA, then the same argument above yields a procedure to compute square roots mod n.\n3.5. Remark. The only caveat in Theorem C above is the nature of the black box. Suppose the black box were to always return the distinguished square root xx (mod n) for the square yx \u2261 (xx)2 (mod n), then this will not allow us to factor n."
+        },
+        {
+            "heading": "4. Computing square roots and factoring",
+            "text": "In the absence of a black box an adversary Eve would need y and then a square root of y to attempt to decrypt m. Computing y \u2261 (ye)d mod n without (p, q, d) is as hard as breaking RSA. Even if Eve can deduce d without factoring n, she would next have to solve the equation y \u2261 x2 (mod n). See Section 3 for a discussion on black boxes that may compute square roots.\nLemma 4.1. Given n = pq if we can solve the (generic) equation y \u2261 x2 (mod n) and find all four roots \u00b1a,\u00b1b mod n, then we can factor n.\nConversely, if one can solve the equation y \u2261 x2 (mod p) and y \u2261 x2 (mod q), then one can combine the roots using the Chinese Remainder Theorem to produce (in general) four square roots mod pq.\nProof. Since a 6\u2261 \u00b1b (mod n) and a2 \u2261 b2 mod n implies that n | (a \u2212 b)(a + b). Thus, computing gcd(a\u00b1 b, n) yields a non-trivial factor of n.\nLemma 4.2. If p \u2261 3 (mod 4) is prime, then one can solve y \u2261 x2 (mod p) by computing x \u2261 y(p+1)/4 (mod p). Then (\u00b1x)2 \u2261 y (mod p).\nLemma 4.3. If p = 8k + 5 is prime, i.e., p \u2261 5 (mod 8), then one can solve y \u2261 x2 (mod p).\nProof. Since y is a square mod p, we have that y(p\u22121)/2 \u2261 1 (mod p). Since (p\u2212 1)/4 is an integer we can take a square root and we obtain that y(p\u22121)/4 \u2261 \u00b11 (mod p).\nCase 1 : If y(p\u22121)/4 \u2261 1 (mod p) and p = 8k + 5, then x \u2261 yk+1 \u2261 y(p+3)/8 (mod p) is a desired square root. This is because\nx2 \u2261 y(p+3)/4 \u2261 y(p\u22121)/4 \u00b7 y \u2261 y (mod p)\nCase 2 : If y(p\u22121)/4 \u2261 \u22121 (mod p), then x \u2261 22k+1yk+1 \u2261 2(p\u22121)/4y(p+3)/8 (mod p) is a desired square root. This is because\nx2 \u2261 2(p\u22121)/2y(p+3)/4 \u2261 (\u22121) \u00b7 y(p\u22121)/4 \u00b7 y \u2261 (\u22121)(\u22121)y \u2261 y (mod p)\nNote that 2(p\u22121)/2 \u2261 \u22121 (mod p) since p \u2261 5 (mod 8).\nLemma 4.4. If p \u2261 1 (mod 8) is prime, then there exists an algorithm terminating in at most r steps to compute y \u2261 x2 (mod p), where p\u2212 1 = 2rs.\nProof. This is the most involved case of the Tonelli\u2013Shanks algorithm, which covers all the above Lemmas; see [Sh73], [Ton1891]. See [Tur94] for a nice exposition.\nNow we can prove Theorem A.\nProof of Theorem A. If an adversary Eve can factor n, then she can certainly decrypt the message m: compute \u03d5(n) = (p\u22121)(q\u22121), find d using the Extended Euclidean Algorithm and use this to find y \u2261 (ye)d mod n. Now using Lemmas 4.2, 4.3, 4.4, depending on whether p, q are congruent to 1 (mod 4) or 3 (mod 4), Eve can find the square roots of y mod p and mod q. Then she can combine them to obtain all square roots mod n using the Chinese Remainder Theorem. Finally Eve solves for x\u22121 (mod \u03d5(n)) to decrypt m.\nIf Eve possesses a black box as described in Theorem C, then Eve can probably factor n (with the caveat introduced in Remark 3.5). If Eve has instead a black box or method to find square roots mod n, then by Lemma 4.1 she can factor n."
+        },
+        {
+            "heading": "5. Similar cryptosystems",
+            "text": "A search of the literature by the author yielded similar cryptosystems and these are described briefly here. Any other omissions are entirely accidental. To the author\u2019s knowledge this particular protocol has not been described before. For each protocol below the description is brief and only intended to serve as a reference or comparison.\nthe method proposed here. Its security is tied to square roots and factoring. Alice finds primes p, q both congruent to 3 mod 4 and computes n = pq and exponents e, d with de \u2261 1 (mod \u03d5(n)) same as in RSA.\nBob encrypts his message m as c \u2261 m2 (mod n) and transmits c. To decrypt Alice computes the square root mod p and mod q by the method outlined in Lemma 4.2. Then she combines them using the Chinese Remainder Theorem to obtain all four square roots and then examines which of these is intelligible. This latter disambiguation problem was addressed by Blum and Williams. The Rabin cryptosystem was shown to be vulnerable to a chosen ciphertext attack. This attack can be thwarted by adding redundancies to the message.\n5.2. D\u2013RSA (Dependent RSA). This cryptosystem, described in [Po99], was in response to finding a so-called semantically secure cryptosystem as efficient as RSA. Similar to RSA Alice has public key (n, e). Then Bob picks a random k \u2208 (Zn)\u2217 and computes A \u2261 ke (mod n) and B \u2261 m \u00b7 (k + 1)e (mod n). Decryption is via computing k \u2261 (ke)d (mod n) and then B \u00b7 (k + 1)\u2212e (mod n). This is also similar in spirit to what we have described in that Bob picks a random number during the encryption process. Among the theorems in the paper it is shown that a slight modification of this protocol is semantically secure against adaptive chosen ciphertext attacks relative to the Decision D\u2013RSA Problem in the random oracle model.\n5.3. RSA\u2013CRT. This is a variant of RSA ([Vig08]) in which the public key is the same, namely (n, e), but the private key is split up as dp \u2261 d (mod p \u2212 1), dq \u2261 d (mod q \u2212 1), qinv \u2261 q\u22121 (mod p). The encrypted message c \u2261 me (mod n) is then decrypted as m1 \u2261 mdp (mod p),m2 \u2261 mdq (mod q), h \u2261 qinv(m1 \u2212 m2) (mod p) and finally, m = m2 + hq. This variant runs faster than RSA in practice but it was found in 1996 to be vulnerable to a differential fault attack by the Bellcore Institute.\n5.4. Multi-prime RSA. In this variant more than two primes are used in the public modulus. The system yields some advantages in efficiency but may be more vulnerable to attacks to factor n.\n5.5. Multi-power RSA. In this variant one considers public moduli of the form n = prqs, where gcd(r, s) = 1 (when s = 1 this is also called Takagi\u2019s variant; [Ta98]). The method offers advantages in speedier decryption using Hensel\u2019s lemma and the Chinese Remainder theorem mod pr and mod qs.\n5.6. More RSA variants. Several other variants exist: Dual RSA (using two distinct moduli that share the same d, e), Batch RSA (encrypting using two different small exponents; [F89]) etc. Most RSA variants are vulnerable to small private exponent attacks first described by Boneh and Durfee; [BD00]. A fairly exhaustive survey of RSA variants and their cryptanalysis can be found in the book by Hinek; [Hin09].\nso-called Key Exchange Mechanism (KEM); [HKS13]. The precise details would take up a few pages so an abbreviated version is outlined here. To set up Alice picks two safe primes P,Q i.e., Sophie Germain primes, P = 2p + 1, Q = 2q + 1. Moreover, P,Q \u2261 3 (mod 4). Then N = PQ is a so-called Blum integer.\nLet QRN \u2286 (ZN )\u2217 denote the subset of quadratic residues mod N ; this has pq elements. A signed quadratic residue is an element of QRN which is normalized to lie in the set, [\u2212 (N\u22121)2 , (N\u22121) 2 ]; this normalized set is denoted QR + N . We also a target collision resistant function (also known as universal one way hash function), say T . The desired key to be transmitted is K and the notation \u2113K denotes the number of bits in K. Finally, for u \u2208 ZN (thought of as an element in [\u2212 (N\u22121)2 , (N\u22121) 2 ]) define the function LBSN (u) = u (mod 2) and then use this to define bits of the key using the Blum\u2013Blum\u2013Shub pseudorandom number generator ([BBS86]):\nBBSN (u) := (LBSN (u),LBSN (u 2), . . . ,LBSN (u 2\u2113K\u22121)) \u2208 {0, 1}\u2113K\nPublic and Private keys: Given N , Alice picks a signed quadratic residue g \u2208 QR+N and an element \u03b1 \u2208 {1, 2, . . . , (N\u22121)4 }. Let X \u2261 g \u03b12\u2113K+\u2113T (mod N). Then the public key is (N, g,X) and the private key is (N, g, \u03b1).\nEncapsulation: Bob chooses r \u2208 {1, 2, . . . , (N\u22121)4 } and computes R \u2261 gr2\u2113K+\u2113T (mod N), t = T (R), S \u2261 (gtX)r (mod N) The ciphertext is C = (R,S) and the key transmitted is K = BBSN (g\nr\u00b72\u2113T ) \u2208 {0, 1}\u2113K . Decapsulation: The receiver computes t = T (R) and verifies whether\nS2 \u2113K+\u2113T ?\u2261 Rt+\u03b12\u2113K+\u2113T (mod N)\nAssuming this equality is satisfied the receiver (Alice) computes integers a, b, c such that 2c = gcd(t, 2\u2113K+\u2113T ) = at+ b2\u2113K+\u2113T . Alice then derives\nU \u2261 (SaRb\u2212a\u03b1)2\u2113T \u2212c (mod N), =\u21d2 K = BBSN (U) We don\u2019t add any more details; the reason for describing this algorithm is to point out that the ciphertext has the same flavor of the algorithm presented in this paper. Note that decapsulation here does not require knowing the factorization of N ."
+        },
+        {
+            "heading": "6. Remarks",
+            "text": "6.1. The method proposed is probably computationally equivalent to factoring. To be certain one would have to solve the following thought exercise: Suppose there is a black box which takes in input (c, r, n, e) in the proposed algorithm and returns m. Can one factor n given this information? A similar formulation can be made for RSA itself: Suppose there is a black box which takes input (c, n, e) and outputs m; can one factor m? This is similar in spirit to a chosen plaintext attack on either system. While Theorem C indicates this may be true the caveat of Remark 3.4 suggests uncertainty.\nThe author is grateful to Kimball Martin, Steven Miller and Larry Washington for their careful reading of early drafts and for providing valuable comments that helped greatly improve this paper."
+        }
+    ],
+    "year": 2023
+}

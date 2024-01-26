@@ -1,0 +1,380 @@
+{
+    "abstractText": "Diophantine problems arise frequently in physics, in for example anomaly cancellation conditions, string consistency conditions and so forth. We present methods to solve such problems to high order on annealers that are based on the quadratic Ising Model. This is the intrinsic framework for both quantum annealing and for common forms of classical simulated annealing. We demonstrate the method on so-called Taxicab numbers (discovering some apparently new ones), and on the realistic problem of anomaly cancellation in U(1) extensions of the Standard Model.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Steven A. Abel"
+        },
+        {
+            "affiliations": [],
+            "name": "Luca A. Nutricati"
+        }
+    ],
+    "id": "SP:1172cc77eab0e5a1123e2cf5a814de6ab7639dc7",
+    "references": [
+        {
+            "authors": [
+                "R.K. Guy"
+            ],
+            "title": "Sums of like powers. euler\u2019s conjecture, \u00a7d1 in unsolved problems in number theory,",
+            "year": 1994
+        },
+        {
+            "authors": [
+                "R. Tanburn",
+                "E. Okada",
+                "N. Dattani"
+            ],
+            "title": "Reducing multi-qubit interactions in adiabatic quantum computation without adding auxiliary qubits. part 1: The \u201ddeduc-reduc\u201d method and its application to quantum factorization of numbers,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "S. Jiang",
+                "K.A. Britt",
+                "A.J. McCaskey",
+                "T.S. Humble",
+                "S. Kais"
+            ],
+            "title": "Quantum annealing for prime factorization,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "N. Dattani"
+            ],
+            "title": "Quadratization in discrete optimization and quantum mechanics,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Abel",
+                "J.C. Criado"
+            ],
+            "title": "M",
+            "venue": "Spannowsky",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "V. Chvatal"
+            ],
+            "title": "Discrete Appl",
+            "venue": "Math. 1979, 4, 233. Fortschr. Phys. 2022, 2200114 2200114 ",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "T. Lanting"
+            ],
+            "title": "The D-Wave 2000Q Processor,",
+            "venue": "AQC",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Z P"
+            ],
+            "title": "Particle Data Group)",
+            "venue": "Progress of Theoretical and Experimental Physics 2020,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Smolkovi\u010d",
+                "M. Tammaro",
+                "J. Zupan"
+            ],
+            "title": "J",
+            "venue": "High Energy Phys. 2019",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Podo"
+            ],
+            "title": "F",
+            "venue": "Revello",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "E. Lobe",
+                "A. Lutz"
+            ],
+            "title": "Minor embedding in broken chimera and pegasus graphs is np-complete,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Abel",
+                "N. Chancellor"
+            ],
+            "title": "M",
+            "venue": "Spannowsky",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S. Abel",
+                "A. Blance"
+            ],
+            "title": "M",
+            "venue": "Spannowsky",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Krippendorf"
+            ],
+            "title": "R",
+            "venue": "Kroepsch,M. Syvaeri",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A. Constantin",
+                "T.R. Harvey"
+            ],
+            "title": "A",
+            "venue": "Lukas",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "G.J. Loges",
+                "G. Shiu"
+            ],
+            "title": "Fortsch",
+            "venue": "Phys. 2022, 70, 2200038, arXiv:2112.08391 [hep-th]. Fortschr. Phys. 2022, 2200114 2200114 ",
+            "year": 2022
+        }
+    ],
+    "sections": [
+        {
+            "text": "RESEARCH ARTICLE www.fp-journal.org\nIsing Machines for Diophantine Problems in Physics\nSteven A. Abel* and Luca A. Nutricati\nDiophantine problems arise frequently in physics, in for example anomaly cancellation conditions, string consistency conditions and so forth. We present methods to solve such problems to high order on annealers that are based on the quadratic Ising Model. This is the intrinsic framework for both quantum annealing and for common forms of classical simulated annealing. We demonstrate the method on so-called Taxicab numbers (discovering some apparently new ones), and on the realistic problem of anomaly cancellation in U(1) extensions of the Standard Model."
+        },
+        {
+            "heading": "1. Introduction",
+            "text": "As well as being of intrinsic interest in number theory, Diophantine problems play an important role in fundamental physics. The purpose of this paper is to develop methods for solving the kinds of Diophantine problems that frequently occur in particle physics, where for example they appear in anomaly cancellation conditions as systems of cubic equations. They also appear in index theorems, in consistency conditions in string theory, in problems relevant for computing the effective potential in string theory and for finding vacua with small cosmological constant, as well as in powerful nonperturbative methods that are used in field theory, such as \u2019t Hooft anomaly matching,[1] and a multitude of other applications. Unfortunately Diophantine problems are also notoriously difficult to solve. Sometimes they can be significantly simplified using for example Gr\u00f6bner basis methods, but typically such a problem is computationally hard. This is certainly the case for the typical anomaly cancellation problem, which entails the solving of a coupled set of cubic equations with an independent rational variable appearing for every charge of every particle. In a system whose size is comparable to that of say the Standard Model of\nS. A. Abel Institute for Particle Physics Phenomenology Durham University Durham DH1 3LE, UK E-mail: steve.abel@durham.ac.uk L. A. Nutricati Department of Mathematical Sciences Durham University Durham DH1 3LE, UK E-mail: luca.a.nutricati@durham.ac.uk\nThe ORCID identification number(s) for the author(s) of this article can be found under https://doi.org/10.1002/prop.202200114\n\u00a9 2022 The Authors. Fortschritte der Physik published by Wiley-VCH GmbH. This is an open access article under the terms of the Creative Commons Attribution License, which permits use, distribution and reproduction in any medium, provided the original work is properly cited.\nDOI: 10.1002/prop.202200114\nparticle physics, an exhaustive scan for anomaly cancellation becomes infeasible even when the domain of allowed charges is restricted. (See for example Refs. [2\u20135].) In the case of string theory even well established heuristic techniques such as genetic algorithms run up against a bottleneck with parameter spaces that are far smaller than the ones that we shall consider here. (For example the study of monad bundle constructions in Ref. [6] involved a\ncomplicated set of constraints that prevented it being extended to consider the full set of phenomenological constraints of the StandardModel, including for example the correct Yukawa couplings, because the search space is too large, indeed comparable to some of the larger parameter spaces that we will consider here.) Indeed determining precisely which complexity class a problem falls into is itself an important question. (See for example Ref. [7], and for discussions in the string theory context Refs. [8\u201311].) For such problems, scaleable Ising hardware solvers, which form the basis of both simulated and quantum annealers (as introduced in Ref. [12, 13]), could have huge impact, particularly as NP problems can be formulated as Ising problemswith only polynomial overhead.[14,15] (For some practical applications of Ising machines and for recent reviews see Refs. [16, 17]). This paper will show how to encode Diophantine problems of the kind described above onto such machines. We shall do this by focusing on two Diophantine tasks. The first is the purely number theoretic one of finding what we will refer to generally as \u201cTaxicab\u201d numbers, namely those numbers that can be expressed inmore than one way as sums of equal powers. The most famous example is the number of Hardy and Ramanujan\u2019s eponymous taxi, Ta(2) = 1729. This is the smallest of the following list of numbers, all of which are expressible as the sum of two cubes in two different ways:\n1729 = 13 + 123 = 93 + 103,\n4104 = 93 + 153 = 163 + 23,\n20683 = 243 + 193 = 103 + 273,\n32832 = 323 + 43 = 183 + 303, (1)\n\u2026\nWe shall use the notation (k,m, n), to refer to such numbers, where k is the power, while m and n are the number of terms on each side. Thus Ta(2) = 1729 is defined to be the smallest (3,2,2) number, while Fermat\u2019s theorem is the statement that (k, 1, 2) numbers only exist for k = 2. Here we will develop annealing methods to determine the above list of (3,2,2) numbers (where\nFortschr. Phys. 2022, 2200114 2200114 (1 of 12) \u00a9 2022 The Authors. Fortschritte der Physik published by Wiley-VCH GmbH\nnloaded from https://onlinelibrary.w iley.com /doi/10.1002/prop.202200114 by D urham U niversity - U niversity L ibrary and C ollections, W iley O nline L ibrary on [25/10/2022]. See the T erm s and C onditions (https://onlinelibrary.w iley.com /term s-and-conditions) on W iley O nline L ibrary for rules of use; O A articles are governed by the applicable C reative C om m ons L icense\nwww.advancedsciencenews.com www.fp-journal.org\nwe consider all numbers in the list to be of interest not just the smallest). We also test our methods on several variations, namely (4,3,3), (3,1,5), (3,1,7), (3,6,6), (3,7,7), (3,8,8). Examples of most of these are known, and can be found in Refs. [18\u201322], although some were discovered only with the advent of high performance computing and appeared relatively recently. However some, such as (3,7,7) and (3,8,8) numbers, do not seem to have been known before. (Indeed as we shall see the latter represent solutions in a search space of size \u223c 1024.) The second task that we will consider is the physical one of finding solutions to the anomaly cancellation conditions of a typical extension of the Standard Model of particle physics. In four space-time dimensions this is as mentioned also a cubic (i.e. homogeneous, third order) Diophantine problem, in which the integers correspond to the numerators of rational gauge charges. (In 2d dimensions the equations are instead order d + 1). In this case as well, we will find that a sufficiently well-crafted encoding onto an annealer allows one to solve for anomaly cancellation in the systems considered in Refs. [3\u20135], at an already relatively advanced level, and in a very short time, and certainly without having to perform any kind of exhaustive scan. Although we will not consider \u2019t Hooft anomaly matching explicitly in our discussion, it is worthmentioning that this nonperturbative procedure is morally a generalisation of the Ta(2) Taxicab problem. That is, when two particle theories are duals of each other, then by \u2019t Hooft\u2019s argument they must realise the same set of global anomalies in two different ways. Similarly physical trialities and quadralities are generalisations of the Ta(3) and Ta(4) Taxicab problems (which realise the same number in 3 and 4 different ways respectively). Such systems exist but are comparatively rare.[23\u201325]\nConstructing suitably efficient encodings for these sorts of problems requires significant advancement. Firstly as we shall review we are interested in the kinds of set-ups found in quantum annealers, in which problems are encoded in the Hamiltonian of a quadratic Ising model, which must then be minimised to solve the problem. Thus the crux of thematter in encoding a non-trivial system of cubic- and higher-order Diophantine equations is to implement a reduction procedure that can represent the complete system as a single loss-function represented by a spinHamiltonian that is at most quadratic. Of course Diophantine problems, in particular factorisation, have been considered on Ising model annealers before,[26\u201331] along with quadratic systems of polynomial equations.[32,33] However both these problems can be mapped into the optimisation of an order four Hamiltonian which can in turn be reduced to a quadratic Ising model suitable for a quantum annealer, with only two layers of reduction. By contrast, here we will be considering problems of order much higher than two. To accomplish this, we use a procedure to automate the reduction of an arbitrary order Hamiltonian to a quadratic one. This procedure, which iterates that first appearing in Ref. [34] and then more recently in Refs. [16, 27, 35, 36], is completely problem-independent and therefore potentially applicable to any set of Diophantine equations. It can perform the many layers of reduction required to reach a quadratic spin-Hamiltonian representation of the high order problems we will be considering. Furthermore, the integers in the Diophantine equations are naturally encoded using a binary representation, which is what ultimately will enable the procedure to be much more efficient\nthan a systematic scan. However this in turn leads to large and highly connected Ising model encodings of the Diophantine system of equations. Thus to improve efficiency we introduce a technique we refer to as solution-mining. This innovation begins by finding one solution in the conventional manner. A random perturbation from this solution then serves as the new starting point for the next run. From there the system often tunnels to a new solution nearby, and when it does so this serves as the next starting point, and so on. This approach appears to be effective for problems, like anomaly cancellation, that contain many coupled Diophantine equations, and it allows the domain of solutions to wander in the parameter space. We shall describe these techniques in Section 2. The rest of the paper is organised as follows. In Section 3we begin with a warm-up problem which is to solve a single Diophantine polynomial equation with two variables. We use this simple problem to discuss how annealing is implemented on a quantum annealer, and to compare the performance of currently available quantum annealers with classical simulated annealers. Our conclusion here is that quantum annealers are only just beginning to catch up with classical simulated annealing in terms of the complexity of problems that can be embedded and solved, but when they do become competitive the potential speed-ups could be substantial for this kind of problem. Then Sections 4 and 5 consider the Taxicab problems, and anomalies respectively."
+        },
+        {
+            "heading": "2. Methods for encoding Diophantine problems",
+            "text": "The general principle behind an Ising machine is to solve problems by reformulating their solution as the minimisation of a function H of spin variables \ud835\udf0e\ud835\udcc1 = \u00b11, where \ud835\udcc1 labels the spin sites. On a quantum annealer this so-called problem-Hamiltonian, H, is forced (by the physical architecture of the annealer) to be quadratic in the spins,\nH(\ud835\udf0e\ud835\udcc1) = \u2211 \ud835\udcc1 h\ud835\udcc1\ud835\udf0e\ud835\udcc1 + \u2211 \ud835\udcc1m J\ud835\udcc1m\ud835\udf0e\ud835\udcc1\ud835\udf0em , (2)\nwhere the spins would of course correspond to physical qubits. We can postpone further discussion of the physical realisation of the system (which will be described later) and focus on the embedded abstract problem which will apply to any annealer of this kind. Specialising to the present case, we are interested in solving a set of polynomial Diophantine equations fA(ti) = 0, where ti \u2208 \u2124 are the would-be integer solutions to the problem of interest. These integers will be encoded on the annealer in a binary format, namely we will use the following encoding:\nti = \ud835\udf0fi,0 + 2\ud835\udf0fi,1 +\u22ef + 2\ud835\udefd\u22121\ud835\udf0fi,\ud835\udefd\u22121 + si . (3)\nWe use \ud835\udf0f to denote the binary variables corresponding to a given spin,\n\ud835\udf0fi,k = 1 2 (1 + \ud835\udf0ei,k) , (4)\nwith \ud835\udf0fi,k \u2208 {0, 1}, and where we allow classical integer shifts, si \u2208 \u2124. These shifts can for example be negative to allow the\nFortschr. Phys. 2022, 2200114 2200114 (2 of 12) \u00a9 2022 The Authors. Fortschritte der Physik published by Wiley-VCH GmbH\niley.com /doi/10.1002/prop.202200114 by D urham U niversity - U niversity L ibrary and C ollections, W iley O nline L ibrary on [25/10/2022]. See the T erm s and C onditions (https://onlinelibrary.w iley.com /term s-and-conditions) on W iley O nline L ibrary for rules of use; O A articles are governed by the applicable C reative C om m ons L icense\nwww.advancedsciencenews.com www.fp-journal.org\ndomain to include negative integers or, as will be the case for solution-mining, they can be adjusted iteratively to explore the search space. We would like to use such an encoding to solve the Diophantine equations, and this can in principle be done by finding the minimum of a loss-function Hamiltonian, HD \u2261 \u2211 A (fA(ti(\ud835\udf0e\ud835\udcc1))) 2 . (5)\nIn addition one may wish to add several constraints: for example the Taxicab numbers are usually defined as the smallest numbers expressible in two different ways. Such conditions can be included with a constraint Hamiltonian,HC, which might in the case of the Taxicab numbers be simply the numbers themselves (since they are positive). Thus we begin with an idealised (i.e. non-quadratic) system,\nH\u0303(\ud835\udf0e\ud835\udcc1) = HD(ti(\ud835\udf0e\ud835\udcc1)) +HC(ti(\ud835\udf0e\ud835\udcc1)) . (6)\nNote that solutions to theDiophantine equations all haveHD = 0, so that constraints imposed by HC would independently select the preferred solution. However the converse is generally not true: that is one should avoid over-weighting the constraints HC such that competing minima appear that have lower HC but HD \u2260 0. Of course in many cases the desired solutions are very rare, so it is often much more efficient (or more precisely not an NP-hard problem) to simply apply any desired constraints by post-processing the solutions (e.g. for the Taxicab numbers, one could simply select by hand the smallest number)."
+        },
+        {
+            "heading": "2.1. Reduction",
+            "text": "For a Diophantine system containing order-d polynomials in ti, the rawHamiltonian H\u0303 in Equation (6) is an order-2d polynomial in the spins, \ud835\udf0e\ud835\udcc1 . For example the Ta(2) problem yields an order-6 spin-polynomial. Therefore we now arrive at the task of transforming H\u0303 into an equivalent quadratic problem-Hamiltonian, H, that is guaranteed to have the same minima, but which can be implemented on the annealer. For this task we shall use the reduction method described in the Appendix of Ref. [36]. This method works by introducing auxilliary spins1 to represent pairs of spins in the original Hamiltonian of Equation (6), and is one of the many methods in the comprehensive survey of Ref. [35]. (We should remark that there exist \u201cqubit-saving\u201d reduction methods that do not require auxilliary spins, but these are more task specific and currently appear to be restricted to reduction of terms in the Hamiltonian with products of 3 or 4 spins.[27]) The method works as follows. We begin with the raw polynomial H\u0303(\ud835\udf0e\ud835\udcc1) written as a function of binary variables using Equation (4). Suppose H\u0303 has terms involving products of two binary variables \ud835\udf0f1 and \ud835\udf0f2. Now consider adding to the polynomial H\u0303 a\n1 We think it is more accurate to use \u2018auxilliary\u2019 to refer to both abstract spins and later to qubits, rather than the quantum computing term, \u2018ancillary\u2019.\nquadratic term that involves the binary variables together with a new auxiliary variable \ud835\udf0f12, which is of the form\nQ(\ud835\udf0f12; \ud835\udf0f1, \ud835\udf0f2) = \u039b(\ud835\udf0f1\ud835\udf0f2 \u2212 2\ud835\udf0f12(\ud835\udf0f1 + \ud835\udf0f2) + 3\ud835\udf0f12) . (7)\nInspection shows that a sufficiently large and positive overall coupling \u039b enforces \ud835\udf0f12 = \ud835\udf0f1\ud835\udf0f2. Importantly the minimum at this point hasQ = 0. Therefore we may replace the product \ud835\udf0f1\ud835\udf0f2 with \ud835\udf0f12 wherever it appears within H\u0303, and the new Hamiltonian is guaranteed to have the same set of minima as the original H\u0303. Therefore the process can be iterated until one arrives at the desired problem-Hamiltonian which is quadratic in spins, and which is schematically of the form\nHD +HC = H\u0303(\ud835\udf0f1, \ud835\udf0f2,\u2026 , \ud835\udf0f12, \ud835\udf0f13,\u2026 , \ud835\udf0f12,34, \ud835\udf0f12,56 \u22ef) + \u2211 i>j Q(\ud835\udf0fij; \ud835\udf0fi, \ud835\udf0fj) + \u2211 i<j,k<m Q(\ud835\udf0fij,km; \ud835\udf0fij, \ud835\udf0fkm)\n+\u22ef (8)\nwith the constraints imposed by the Q terms ensuring that this quadratic Hamiltonian has the same minima as the original order-2d polynomial. We can check that the reduction works correctly with the example order-3 Hamiltonian\nH\u0303 = \ud835\udf0e1\ud835\udf0e2\ud835\udf0e3\n\u2261 8\ud835\udf0f1\ud835\udf0f2\ud835\udf0f3 \u2212 4\ud835\udf0f1\ud835\udf0f2 \u2212 4\ud835\udf0f1\ud835\udf0f3 \u2212 4\ud835\udf0f2\ud835\udf0f3 + 2\ud835\udf0f1 + 2\ud835\udf0f2 + 2\ud835\udf0f3 , (9)\nwhere we drop the constant \u22121 in translating to the binary variables. This Hamiltonian has 4 minima at \ud835\udf0e1\ud835\udf0e2\ud835\udf0e3 = \u22121 (which corresponds in binary language to any one of the \ud835\udf0f\ud835\udcc1 being zero, or all of them), as opposed to the seven solutions to \ud835\udf0f1\ud835\udf0f2\ud835\udf0f3 = 0. As described above we can reduce the trilinear term by trading \ud835\udf0f1\ud835\udf0f2 for an auxiliary binary \ud835\udf0f12 and adding the Hamiltonian Q(\ud835\udf0f12; \ud835\udf0f1, \ud835\udf0f2). The quadratic problem-Hamiltonian (in socalled \u2018quadratic unconstrained binary optimisation\u2019 (QUBO) language) is then\nH = Q(\ud835\udf0f12; \ud835\udf0f1, \ud835\udf0f2) + 8\ud835\udf0f12\ud835\udf0f3 \u2212 4\ud835\udf0f12 \u2212 4\ud835\udf0f1\ud835\udf0f3 \u2212 4\ud835\udf0f2\ud835\udf0f3\n+ 2\ud835\udf0f1 + 2\ud835\udf0f2 + 2\ud835\udf0f3. (10)\nIt is easy to verify that provided \u039b > 2 the original 4 degenerate solutions hold in the new combined Hamiltonian as required. With the increasing complexity of the raw Hamiltonian H\u0303 and a limited number of physical qubits at our disposal, we of course aim to find a reduction procedure that minimises the number of auxiliary variables. Therefore, the central question is how can we choose the smallest set of spin pairs that correctly collapses all the higher order terms to quadratics? In the case of cubic to quadratic, finding a spin-optimised procedure is equivalent to the set cover problem which can in turn be cast as 0-1 \u2018integer linear programming\u2019 (ILP).[37] Both set cover and 0-1 ILP are well known to be NP-complete by analogy with vertex cover.[38] Therefore, generalising this to arbitrary order Hamiltonians would recast our spin-optimised problem into a task which is at least equivalent to solving k \u2212 2 NP-complete problems, where k is the\nFortschr. Phys. 2022, 2200114 2200114 (3 of 12) \u00a9 2022 The Authors. Fortschritte der Physik published by Wiley-VCH GmbH\nnloaded from https://onlinelibrary.w iley.com /doi/10.1002/prop.202200114 by D urham U niversity - U niversity L ibrary and C ollections, W iley O nline L ibrary on [25/10/2022]. See the T erm s and C onditions (https://onlinelibrary.w iley.com /term s-and-conditions) on W iley O nline L ibrary for rules of use; O A articles are governed by the applicable C reative C om m ons L icense\nwww.advancedsciencenews.com www.fp-journal.org\norder of the Hamiltonian and therefore k \u2212 2 are the required layers of reduction. For this reason, we shall use a different approach based on a simple greedy algorithm which works as follows: at each reduction stage it finds the pair of binary variables \ud835\udf0fi\ud835\udf0fj that appearsmost often in theHamiltonian; wherever the pair appears, we replace \ud835\udf0fi\ud835\udf0fj with the auxilliary logical spin \ud835\udf0fij, and add the penalty term in Equation (7). The quadratised Hamiltonian is constructed by repeating these three steps iteratively. In the language of set covering, this is equivalent to the greedy heuristic algorithm first proposed in Ref. [39]. In Figure 1 we have collected\nthree plots which show how the average number of required auxilliary variables grows as we increase the number of cubic interactions, the rate of this growth in the linear central region and the time required to perform the reduction as a function of the number of cubic couplings. These results are very similar to those obtained in Ref. [37] where the optimal reduction is found by solving exactly the equivalent 0-1 ILP. Two important remarks are in order. First, as we can see in Figure 1a, both methods saturate approximately when the Hamiltonian contains all possible cubic interactions with n qubits, namely when N3-couplings \u2248 (n 3 ) . Second, we see that in either case the number of auxilliary spins increases linearly with the square root of the number of cubic interactions and the growth rate is given by the square root of the total number of spins, as shown in Figure 1b. Nevertheless, as we can see in Fig 1a, in some regions our procedure uses a number of auxiliaries that is larger than the value at saturation, especially in the n = 12 and n = 13 cases. This is of course due to the fact that we are not seeking an exact solution of the spin-optimised reduction problem. Indeed, a local optimal choice of our reduction algorithm does not necessarily lead to a global minimum in terms of the number of auxilliary spins. More precisely, in the language of the equivalent set covering problem, it has been shown in Ref. [39] that this greedy algorithm returns to an approximate solution which cannot be bigger than H(n) times the minimum one, where H(n) is the n-th harmonic number and n the size of the set to be covered (namely in our case the set of all higher order couplings). However, in the problems treated below, the greedy algorithmwe adopt returns quadratisedHamiltonians with at most \u223c 300 logical spins, far below the limit imposed by for example the number of available qubits in the currently accessible quantum annealers, making it unnecessary to solve the problem exactly. Finally, we should remark that this procedure is straightforwardly generalisable to Hamiltonians of arbitrary order, requiring a number of steps which grows roughly linearly with the size of the problem, as we can see in Figure 1c and also in Ref. [39]. As expected, this is in contrast with the exact method discussed in Ref. [37] which shows an exponentially increasing amount of time with the increasing complexity of the Hamiltonian. Reduced Hamiltonians can be represented using connected graphs in which nodes correspond to spins and links to couplings. As an example, Figure 2 is a representation of the quadratisedHamiltonian associated to the first Diophantine equation in Table 2."
+        },
+        {
+            "heading": "2.2. Solution Mining for Improved Performance",
+            "text": "Given the increase in difficulty with bitnumber, \ud835\udefd, we will utilise a method for improving the performance. This method allows one to explore larger regions of parameter space (i.e. larger integers) without increasing \ud835\udefd, yielding in turn solutions with larger values. The method operates iteratively, by at each run constructing a brand new Hamiltonian from the previously found solutions. At say the k-th iteration, we minimise the Hamiltonian looking for solutions of the form\ntki = \ud835\udf0f (k) i,0 + 2\ud835\udf0f (k) i,1 + s k i , (11)\nFortschr. Phys. 2022, 2200114 2200114 (4 of 12) \u00a9 2022 The Authors. Fortschritte der Physik published by Wiley-VCH GmbH\niley.com /doi/10.1002/prop.202200114 by D urham U niversity - U niversity L ibrary and C ollections, W iley O nline L ibrary on [25/10/2022]. See the T erm s and C onditions (https://onlinelibrary.w iley.com /term s-and-conditions) on W iley O nline L ibrary for rules of use; O A articles are governed by the applicable C reative C om m ons L icense\nwww.advancedsciencenews.com www.fp-journal.org\nFigure 2. Representation ofH = (x21 + x 2 2 \u2212 149) 2 as a quadratised Ising model. Nodes, corresponding to spins, can be arranged in a circle, and they are quadratically coupled by the links. (Diagrams for non-quadratised models would contain junctions in the couplings). Weaker couplings are represented in light grey, gradually getting darker for higher coupling strengths. Linear couplings are coloured from dark blue (large negative terms) to dark red (large positive terms).\nwhere k = 0,\u2026 , N (with N being the total number of anneal runs), and where ski is a classical shift that centres the new search, which is determined from a solution found in the (k \u2212 1)-th run: if we designate the previous solution t\u0302k\u22121i , then the {s k i } are chosen such that\ntki \u2208 [t\u0302 k\u22121 i \u2212 1 , t\u0302 k\u22121 i + 2] or\ntki \u2208 [t\u0302 k\u22121 i \u2212 2 , t\u0302 k\u22121 i + 1] , (12)\nbased on a random choice. This procedure finds new solutions by performing a kind of \u201crandom tunnelling\u201d from previously found solutions (hence the name \u201csolution-mining\u201d). It generally operates well when there are many variables in the system and many different equations, because in such systems the solutions can be relatively close in each dimension of the search space (even though the total Hamming distance could be very large due to the large number of dimensions). For the two specific example problems we are dis-\ncussing here, it is not a useful enhancement for finding Taxicab numbers because there one is seeking the smallest numbers, and (as we shall see) the solutions to the Diophantine system are very widely spaced. However for solving anomaly equations the method is a significant improvement. In such systems, new solutions to the anomaly equations tend to appear with consistent frequency when the allowed charge size is increased, and it is the sheer number of anomaly equations and charges that makes the problem difficult. It should be noted that there is no additional cost for solutionmining because even though a brand new Hamiltonian must be constructed at each stage, the embedding graph remains the same if the values of \ud835\udefd do not change. This means we construct an entirely new Hamiltonian H\u0303, but do not need to perform a new reduction of the solution. On a quantum annealer we perform reverse annealing (to be explained below) in order to collect the solution and construct the new Hamiltonian at each stage, which then simply has to be translated into new couplings via the updated {ski } values.\nFortschr. Phys. 2022, 2200114 2200114 (5 of 12) \u00a9 2022 The Authors. Fortschritte der Physik published by Wiley-VCH GmbH\niley.com /doi/10.1002/prop.202200114 by D urham U niversity - U niversity L ibrary and C ollections, W iley O nline L ibrary on [25/10/2022]. See the T erm s and C onditions (https://onlinelibrary.w iley.com /term s-and-conditions) on W iley O nline L ibrary for rules of use; O A articles are governed by the applicable C reative C om m ons L icense\nwww.advancedsciencenews.com www.fp-journal.org"
+        },
+        {
+            "heading": "3. Quantum versus Classical Annealers for Diophantine Equations",
+            "text": "In this section we shall compare quantum and classical annealers to solve Diophantine equations, using the encoding methods described above on a simple warm-up problem. It has been already shown in Ref. [32] that a quantum annealer can successfully be used to solve second order systems of polynomial equations. On the other hand, simulated annealing and variations thereof have been extensively applied for similar purposes (see Ref [40, 41]) along with other techniques such as genetic algorithms, particle swarm optimisation and so on (see for example [42\u201345]). In the following we shall see that quantum annealing is also successful in solving equations of order higher than two, retrieving most of the results found using Particle Swarm Optimisation in Ref. [43] and Fuzzy Adaptive Simulated Annealing in Ref. [40]. We shall find that simulated annealing on the quadratised Hamiltonian can be used to solve problems which are still hard to embed in a quantum annealer due to technological limitations (restricted number of qubits and limited connectivity). Such problems will realistically be solvable in the near futurewith annealers that have higher connectivity but still with at most quadratic interactions. Let us first outline the central features of the quantum annealer that we will need for this study (for a comprehensive review see Ref. [16]). The quantum annealer is defined by a Hamiltonian of physical qubits of the form (s) = A(s) \u2211 \ud835\udcc1 \ud835\udf0e\ud835\udcc1,x + B(s)H(\ud835\udf0e\ud835\udcc1,z) , (13)\nwhere H is the problem-Hamiltonian in Equation 2, \ud835\udf0e\ud835\udcc1,x and \ud835\udf0e\ud835\udcc1,z are the Pauli matrices acting on the \ud835\udcc1\nth qubit, and A(s), B(s) are smooth functions such that A(1) = B(0) = 0 and A(0) = B(1) = 1. Meanwhile the internal couplings h\ud835\udcc1 and J\ud835\udcc1m are fixed in each anneal session. Since(1) = H(\ud835\udf0e\ud835\udcc1), the usual quantum annealing strategy is adiabatically to adjust the pre-factors A(s) and B(s) using the parameter s, such that the system ends up in a global minimum of H. The time dependence of s(t) is defined by the user in a so-called anneal-schedule. Thus during a reverse anneal for example one begins at s = 1 andwith the system set in any eigenstate of \u2a02 \ud835\udcc1 \ud835\udf0e\ud835\udcc1,z. Then one allows the system to evolve quantum-mechanically by bringing s to small values using a piecewise-linear function s(t) of time t, which completes back at s(tfinal) = 1 when the measurement of final spins is made. A technological limitation is that the connectivity of the quantum annealing device in terms of the allowed non-vanishing couplings J\ud835\udcc1m between qubits is limited. Let us be specific to the architecture we will be using in this work, namely D-Wave\u2019s [46] Advantage_system4.1: this annealer contains 5627 qubits, connected in a Pegasus structure, but only has a total of 40279 couplings between them. The warm-up problem that we will use to compare this kind of annealer with classical simulated annealing is simply to find solutions of a generic Diophantine equation\nf (x1,\u2026 , xN) = 0 , (14)\nTable 1. A selection of Diophantine equations and corresponding solutions found using the D-Wave\u2019s quantum annealer. Naux is the number of auxilliary qubits necessary to quadratise the Hamiltonian, and \ud835\udefd is the number of qubits used to encode each variable (see Equation (3)).\nEquation Solution Naux \ud835\udefd\nx21 + x 2 2 = 625 15,20 35 5 x31 + x 3 2 = 1008 2,10 33 4 x41 + x 4 2 = 1921 6,5 12 3 \u22ee\nx71 + x 7 2 = 4799353 9,4 26 4 \u22ee\nx151 + x 15 2 = 1088090731 4,3 12 3\nwhere x1,\u2026 , xN \u2208 \u2124 and f : \u2124N \u2192 \u2124 is a generic order k polynomial function. In order to solve such an equation, we again square it to form the problem-Hamiltonian:\nH(x1,\u2026 , xN) \u2261 [f (x1,\u2026 , xN)]2 . (15)\nThe next step is to binary encode x1,\u2026 , xN as in Equation (3), choosing the values of si and \ud835\udefd depending on the specific problem. The above Hamiltonian is therefore an order-2k polynomial in \ud835\udf0fi,j. Nevertheless, regardless of how high the order is, it can always be reduced to a quadratic Ising Hamiltonian making use of the procedure described in Section 2.1. Using the D-Wave\u2019s quantum annealer we find all the solutions listed in Table 2 of Ref. [43] (which have also been found using Fuzzy Adaptive Simulated Annealing in Ref. [40]). We report some of them in Table 1. To test this method further, we move on to Diophantine equations with increasingly many variables. As one would expect, the higher the number of variables, the higher will be the average number of interactions per qubit. This often means that when the connectivity of the problem exceeds the native connections supported by the D-Wave Quantum Processor Unit (QPU), a single binary variable in the quadratic optimization problem needs to be represented by two (ormore) qubits (called a \u2018chain\u2019) instead of one. This procedure, known as embedding is carried out by an embedding algorithm, and should be carefully monitored as it can lead to so-called broken-chains that have two or more physical qubits in the same chain taking different values. This ultimately limits the size of problems that can be solved on quantum annealers, while performing classical annealing on the same Ising Hamiltonian turns out to be successful in all the examples treated in Table 2, where we list the equations solved using both classical (cyan) and quantum (blue) annealing. This reproduces the results in Refs. [40, 43] obtained using Particle SwarmOptimisation and Fuzzy Adaptive Simulated Annealing respectively."
+        },
+        {
+            "heading": "4. Ramanujan (TaxiCab) Numbers",
+            "text": "Having demonstrated that problems such as these can in principle be already solved on a quantum annealer, we are now ready\nFortschr. Phys. 2022, 2200114 2200114 (6 of 12) \u00a9 2022 The Authors. Fortschritte der Physik published by Wiley-VCH GmbH\niley.com /doi/10.1002/prop.202200114 by D urham U niversity - U niversity L ibrary and C ollections, W iley O nline L ibrary on [25/10/2022]. See the T erm s and C onditions (https://onlinelibrary.w iley.com /term s-and-conditions) on W iley O nline L ibrary for rules of use; O A articles are governed by the applicable C reative C om m ons L icense\nwww.advancedsciencenews.com www.fp-journal.org\nto move on to the more complicated class of problems outlined in the introduction, beginning in this section with Taxicab numbers. In line with the above discussion, classical simulated annealing turns out to be superior currently for these problems, so we will use that annealing method in this and the next section. In general, finding Taxicab numbers is not a trivial task and for higher Taxicabs, such as Ta(7), Ta(8) etc., only an upper bound is known.[47] Indeed (using the (k,m, n) notation for these numbers), it is interesting to note that no (5,2,2) numbers have been found, despite searches up to 1026 (see Ref. [18]). Let us show explicitly how we use the reduction technique of Subsection 2.1 to construct an Ising Model Hamiltonian whose ground states are precisely the Taxicab numbers we want to find. As a first example we focus on Ta(2), i.e. we want to find four non-negative integer numbers such that\na3 + b3 = c3 + d3 , a \u2260 {c, d} . (16)\nWe again use binary encoding (see Equation (3)) with \ud835\udefd = 5, si = 1 (numbers from 1 to 32) and ti \u2208 {a, b, c, d}. To impose the equality between the two sums of cubes we define the following Hamiltonian\nHD = (a3 + b3 \u2212 c3 \u2212 d3)2 . (17)\nHowever, this is not the end of the story as must also encode the constraint a \u2260 {c, d} to avoid all the trivial minima of the above Hamiltonian, which occur when a = c and b = d or vice versa. In\nother wordswewant to construct theHC Hamiltonian such that it has its globalminimumwhen a \u2260 c and a \u2260 d. It ismore straightforward to write such a constraint Hamiltonian directly in terms of binary variables \ud835\udf0fi,k, where i \u2208 {a, b, c, d} and k = 0,\u2026 , \ud835\udefd \u2212 1. It is easy to see that the Hamiltonian\nHC \u2261 H\ud835\udeff(a, c) +H\ud835\udeff(a, d)\n\u2261 \ud835\udefd\u22121\u220f k=0 ( 1 \u2212 (\ud835\udf0fa,k \u2212 \ud835\udf0fc,k)2 ) + \ud835\udefd\u22121\u220f k=0 ( 1 \u2212 (\ud835\udf0fa,k \u2212 \ud835\udf0fd,k)2 ) (18)\nachieves this. Explicitly, one finds that\nHC = \u23a7\u23aa\u23aa\u23a8\u23aa\u23aa\u23a9 0, when a \u2260 c and a \u2260 d , 1, when a = c and a \u2260 d , 1, when a = d and a \u2260 c , 2, when a = c = d .\n(19)\nThe Hamiltonian we shall use is then the sum\nH\u0303 = HD +HC . (20)\nWritten is terms of \ud835\udf0f\u2019s, this Hamiltonian is a polynomial of order 2\ud835\udefd for \ud835\udefd \u2265 3. Again, setting \ud835\udefd = 5 and using the technique described in Section 2 we can reduce it to a quadratic Hamiltonian by adding 98 auxilliary spins. In Figure 3 we represent the reduced Hamiltonian for \ud835\udefd = 4. We see that stronger couplings are rare among the interactions, which mostly form a very complex network of weaker couplings in the background. Classical annealing on the reduced Hamiltonian yields all the solutions written in Equation (1), namely all the Taxicab numbers with a, b, c, d \u2264 32. Let us now push this further and attempt to solve more complicated generalisation of the Taxicab problem, (k,m, n) where\n(k,m, n) \u2261 ak1 + \u2026 + a k m\n= bk1 + \u2026 + b k n, (21)\nwhere {a1,\u2026 , am} \u2260 {b1,\u2026 , bn}. Beginning with (4,3,3) numbers,\n(4, 3, 3) = a4 + b4 + c4\n= d4 + e4 + f 4 , (22)\nwe define the following Hamiltonians\nHD = (a4 + b4 + c4 \u2212 d4 \u2212 e4 \u2212 f 4)2 , (23)\nand"
+        },
+        {
+            "heading": "HC = H\ud835\udeff(a, d) +H\ud835\udeff(a, e) +H\ud835\udeff(a, f ) , (24)",
+            "text": "to impose the equality in Equation (22) and also to force a \u2260 d, e, f . The order of the complete Hamiltonian, which is the sum of Equation 24 and Equation 23, is 2\ud835\udefd for \ud835\udefd \u2265 4. Again, it can be reduced to a quadratic one by adding 66 auxilliary variables in the case with \ud835\udefd = 4 and 154 in the case with \ud835\udefd = 5. Several anneal\nFortschr. Phys. 2022, 2200114 2200114 (7 of 12) \u00a9 2022 The Authors. Fortschritte der Physik published by Wiley-VCH GmbH\niley.com /doi/10.1002/prop.202200114 by D urham U niversity - U niversity L ibrary and C ollections, W iley O nline L ibrary on [25/10/2022]. See the T erm s and C onditions (https://onlinelibrary.w iley.com /term s-and-conditions) on W iley O nline L ibrary for rules of use; O A articles are governed by the applicable C reative C om m ons L icense\nwww.advancedsciencenews.com www.fp-journal.org\nFigure 3. Representation of the Ising Hamiltonian corresponding to the Ta(2) problem.\nruns (each with 10000 reads) with \ud835\udefd = 4, 5 yield the following results (Table 3) To comment on the efficacy of the method: the search space is of order 326 \u223c 109, and yet these solutions are found after order 105 reads. For the remainder of this section we consider the (3, n,m) numbers, where n,m \u2208 \u2115+. For this purpose we define the following Hamiltonian\nH\u0303 = ( n\u2211 i=1 a3i \u2212 m\u2211 i=1 b3i )2 , (25)\nwhere in this case we do not add any constraint Hamiltonian to enforce {ai} \u2260 {bi} when n = m, because here it is sufficient to simply check at the end of each anneal run if the minimum is trivial or not. Tables 4-5 list some of the solutions found for n = 1 and m = 5, 7 with \ud835\udefd = 5, 6. Cases with n = m \u2261 N, with N = 6, 7, 8 are listed in Tables 6\u20138. Note that all the above solutions are non-trivial (3, n,m) numbers, in that they are not sums of smaller solutions. Indeed, it\nTable 3. List of (4,3,3) numbers found using \ud835\udefd = 3, 4, 5 and 10000 reads per anneal run.\n(4,3,3) a b c d e f"
+        },
+        {
+            "heading": "2673 3 6 6 7 2 4",
+            "text": ""
+        },
+        {
+            "heading": "16562 9 1 10 11 6 5",
+            "text": ""
+        },
+        {
+            "heading": "28593 2 13 2 9 6 12",
+            "text": ""
+        },
+        {
+            "heading": "35378 13 4 9 11 12 1",
+            "text": ""
+        },
+        {
+            "heading": "43218 11 13 2 14 7 7",
+            "text": ""
+        },
+        {
+            "heading": "54977 4 8 15 9 14 10",
+            "text": ""
+        },
+        {
+            "heading": "195122 21 5 2 9 13 20",
+            "text": ""
+        },
+        {
+            "heading": "324818 14 9 23 21 2 19",
+            "text": ""
+        },
+        {
+            "heading": "619337 28 8 5 7 26 20",
+            "text": ""
+        },
+        {
+            "heading": "847602 1 25 26 29 19 10",
+            "text": ""
+        },
+        {
+            "heading": "1071713 12 32 7 28 26 3",
+            "text": ""
+        },
+        {
+            "heading": "1178898 29 11 26 1 32 19",
+            "text": ""
+        },
+        {
+            "heading": "1328498 29 9 28 23 32 3",
+            "text": "Fortschr. Phys. 2022, 2200114 2200114 (8 of 12) \u00a9 2022 The Authors. Fortschritte der Physik published by Wiley-VCH GmbH\niley.com /doi/10.1002/prop.202200114 by D urham U niversity - U niversity L ibrary and C ollections, W iley O nline L ibrary on [25/10/2022]. See the T erm s and C onditions (https://onlinelibrary.w iley.com /term s-and-conditions) on W iley O nline L ibrary for rules of use; O A articles are governed by the applicable C reative C om m ons L icense\nwww.advancedsciencenews.com www.fp-journal.org"
+        },
+        {
+            "heading": "729 9 1 3 4 5 8",
+            "text": ""
+        },
+        {
+            "heading": "1728 12 3 10 4 8 5",
+            "text": ""
+        },
+        {
+            "heading": "68921 41 3 17 21 28 32",
+            "text": ""
+        },
+        {
+            "heading": "125000 50 2 8 24 36 40",
+            "text": ""
+        },
+        {
+            "heading": "185193 57 16 17 30 40 44",
+            "text": ""
+        },
+        {
+            "heading": "216000 60 11 16 25 45 47",
+            "text": ""
+        },
+        {
+            "heading": "262144 64 9 18 31 44 52",
+            "text": ""
+        },
+        {
+            "heading": "2744 14 2 3 5 7 8 9 10",
+            "text": ""
+        },
+        {
+            "heading": "13824 24 3 5 8 9 13 15 19",
+            "text": ""
+        },
+        {
+            "heading": "32768 32 1 6 15 16 17 20 23",
+            "text": ""
+        },
+        {
+            "heading": "148877 53 3 21 24 28 29 32 36",
+            "text": ""
+        },
+        {
+            "heading": "205379 59 5 12 13 18 23 43 47",
+            "text": ""
+        },
+        {
+            "heading": "238328 62 17 20 22 31 32 38 46",
+            "text": "may happen that a (3, n,m) number is actually the sum of (3, p, q) and (3, k, l) numbers with p + k = n and q + l = m. In order to avoid such trivial solutions, we have simply removed them by hand at the end of each anneal run."
+        },
+        {
+            "heading": "5. Anomaly Cancellation in the Standard Model",
+            "text": "with an Extra U(1)\nHaving road-tested our reduction methods on simple problems, we now turn to a physical application, namely the anomaly cancellation conditions in the Standard Model extended by an extra U(1) gauge symmetry. This is one of the simplest and most studied extensions of the Standard Model (see Ref. [48] for a review of Z\u2032 physics), and it has been the target of numerous experimental searches.[49]"
+        },
+        {
+            "heading": "5012 2 4 5 7 12 14 3 6 8 9 11 13",
+            "text": ""
+        },
+        {
+            "heading": "7975 1 7 8 10 14 15 3 4 9 11 12 16",
+            "text": ""
+        },
+        {
+            "heading": "8309 1 5 7 10 14 16 4 6 9 12 13 15",
+            "text": ""
+        },
+        {
+            "heading": "41873 3 8 11 14 26 27 1 6 13 19 22 28",
+            "text": ""
+        },
+        {
+            "heading": "48438 9 13 17 20 22 28 1 4 15 18 23 30",
+            "text": ""
+        },
+        {
+            "heading": "51318 1 10 15 17 21 32 3 5 9 16 28 29",
+            "text": ""
+        },
+        {
+            "heading": "52359 5 6 7 11 26 32 3 14 15 20 24 29",
+            "text": ""
+        },
+        {
+            "heading": "78730 2 3 23 26 28 30 11 14 16 20 31 32",
+            "text": "Table 7. (3,7,7) solutions with \ud835\udefd = 5. The reduction needs 280 auxilliary spins.\n(3,7,7) a1 a2 a3 a4 a5 a6 a7 b1 b2 b3 b4 b5 b6 b7"
+        },
+        {
+            "heading": "39256 3 8 9 14 17 22 27 2 5 11 16 19 21 26",
+            "text": ""
+        },
+        {
+            "heading": "45063 3 5 7 13 14 19 32 2 9 10 15 18 23 28",
+            "text": ""
+        },
+        {
+            "heading": "46411 7 9 14 17 18 23 27 3 5 8 10 11 22 32",
+            "text": ""
+        },
+        {
+            "heading": "52094 1 6 13 17 22 23 28 3 7 14 16 18 21 31",
+            "text": ""
+        },
+        {
+            "heading": "63224 7 9 12 18 20 24 32 2 3 13 14 19 29 30",
+            "text": ""
+        },
+        {
+            "heading": "73276 6 12 14 15 24 29 30 9 17 18 20 23 27 28",
+            "text": ""
+        },
+        {
+            "heading": "77687 2 9 17 21 24 28 30 4 5 15 16 26 27 32",
+            "text": "Table 8. (3,8,8) solutions with \ud835\udefd = 5. The reduction needs 320 auxilliary spins. Note that even the smallest (3,8,8) number represents a solution in a search space of size 3216 \u223c 1024.\n(3,8,8) a1 a2 a3 a4 a5 a6 a7 a8 b1 b2 b3 b4 b5 b6 b7 b8"
+        },
+        {
+            "heading": "50139 1 3 6 10 12 20 23 30 2 5 9 13 17 19 25 27",
+            "text": ""
+        },
+        {
+            "heading": "73206 1 3 4 17 20 25 26 30 5 8 9 10 19 21 28 32",
+            "text": ""
+        },
+        {
+            "heading": "78202 3 4 17 18 19 24 27 30 1 2 9 16 20 22 28 32",
+            "text": ""
+        },
+        {
+            "heading": "85418 2 3 9 16 18 23 31 32 6 10 14 15 24 26 27 30",
+            "text": "The generalities of anomaly cancellation for such systems have been discussed in Refs. [2\u20135, 50\u201360]. In this work we will for concreteness specialise to the models studied in Ref. [4]. Here, the main assumption is that the chiral fermions appear in the usual 3 families of quarks and leptons, together with 3 right-handed neutrinos. The charges under the additional U(1) are labelled by {Qi,Ui, Di, Li, Ei, Ni}, respectively, with i \u2208 {1, 2, 3} indicating the generation number. Under this assumption the anomaly cancellation condition yields the following set of Diophantine equations for the charges: 3\u2211 i=1 (6Qi + 3Ui + 3Di + 2Li + Ei + Ni) = 0 , (26) 3\u2211 i=1 (3Qi + Li) = 0 , (27) 3\u2211 i=1 (2Qi +Ui + Di) = 0 , (28) 3\u2211 i=1 (Qi + 8Ui + 2Di + 3Li + 6Ei) = 0 , (29) 3\u2211 i=1 (Q2i \u2212 2U 2 i + D 2 i \u2212 L 2 i + E 2 i ) = 0 , (30) 3\u2211 i=1 (6Q3i + 3U 3 i + 3D 3 i + 2L 3 i + E 3 i + N 3 i ) = 0 . (31)\nA general solution to the above equations has already been found analytically in Ref. [4]. However, we shall demonstrate here that these problems can be also tackled using Ising model annealing (in practice here we use simulated annealing, but ultimately quantum annealers will be practicable).\nFortschr. Phys. 2022, 2200114 2200114 (9 of 12) \u00a9 2022 The Authors. Fortschritte der Physik published by Wiley-VCH GmbH\niley.com /doi/10.1002/prop.202200114 by D urham U niversity - U niversity L ibrary and C ollections, W iley O nline L ibrary on [25/10/2022]. See the T erm s and C onditions (https://onlinelibrary.w iley.com /term s-and-conditions) on W iley O nline L ibrary for rules of use; O A articles are governed by the applicable C reative C om m ons L icense\nwww.advancedsciencenews.com www.fp-journal.org\nAs for the Taxicab problem, we begin constructing the Hamiltonian by simply squaring and summing the left hand side of all the above equations. We encode all the variables involved as in Equation (3) with ti \u2208 {Qi,Ui, Di, Li, Ei, Ni} and take si = \u22121 for all the charges. We set \ud835\udefd = 2, thus looking for solutions with entries from \u22121 to 2. Note that although the number of bits we use to represent each variable is relatively low, the number of possible configurations of these 3 \u00d7 6 = 18 charges with possible values in [\u22121, 2] is already quite high: 418 \u223c 1010. It is worth mentioning that in this particular case a comprehensive scan can be completed with far fewer attempts due to generation permutation symmetry in the equations. Indeed, it is easy to see that the anomaly equations are invariant under arbitrary permutations of {A1, A2, A3}, where A \u2208 {Q,U,D, L, E, N}, giving an (S3)6 permutational symmetry that could be exploited if we were looking for solutions by exhaustive scanning over all the different configurations. Of course our goal here is to avoid using such tricks, but to instead find solutions using annealing on the reduced IsingHamiltonian. For \ud835\udefd = 2 the reduction requires only 18 auxiliaries. We have performed several anneal runs with 10000 reads obtaining an average of 60 distinct solutions per anneal run. In the following table we present a sample of three of them. One might expect higher values of \ud835\udefd to lead to new solutions with bigger entries, along with those previously found. However, for this specific problem, classical annealing turns out to be unfruitful for \ud835\udefd > 2. To explain why it is useful to inspect how the energy gap \u0394 between the ground state and the first excited state scales as a function of the size of the problem. It can be shown (see Ref. [33]) that \u0394 \u223c  (2\u2212n\ud835\udf07 m\ud835\udefc ) , (32)\nwhere \ud835\udefc and \ud835\udf07 are the number of additions and multiplications respectively in the Hamiltonian written in terms of binary variables,m is the number of equations we want to solve and n is the the effective precision, which is the difference between the largest and smallest nonzero absolute values representable among all the variables in the system. Increasing \ud835\udefd makes all these parameter bigger, including n and \ud835\udf07, causing an exponential shrinkage of the energy gap between the ground states and the first excited states, which in turn considerably affects the algorithm\u2019s performance. To improve our results and find solutions with bigger entries we use the solution-mining method described in Section 2.2. After 30 anneal runs this yields 153 solutions with entries between \u221213 and 13. Note that a complete scan on all possible such configurations, even exploiting the (S3) 6 permutational symme-\ntry, would involve (13\u00d72+1\n3\n)6 \u223c 1020 trials, which is infeasible with\nconventional computing methods. It should be noted that we do not make use of the permutational symmetry and the Ising machine is in principle succeeding within a search space of 2618 \u223c 3 \u00d7 1025, although it is not yet clear how exhaustive the method of small \ud835\udefd plus solution mining can eventually be. In Table 9 we present a sample of ten of the solutions found. The first of these solutions is equivalent to one found previously in Table 10. This is because in the first anneal run the algorithm looks for solutions centered around zero, i.e. with entries\nTable 9. A sample of ten solutions found using the solution-mining method.\nQ1 Q2 Q3 U1 U2 U3 D1 D2 D3 L1 L2 L3 E1 E2 E3 N1 N2 N3\n\u22121 0 1 \u22121 0 1 1 \u22121 0 1 0 \u22121 0 \u22121 1 1 0 \u22121\n0 \u22122 2 1 \u22121 2 \u22122 0 0 0 1 \u22121 0 \u22121 \u22121 0 1 1\n3 \u22121 \u22122 \u22121 \u22122 3 \u22124 2 2 0 \u22123 3 2 \u22122 0 2 \u22123 1\n3 \u22122 \u22121 1 \u22123 3 \u22124 3 0 \u22121 0 1 \u22121 0 0 3 \u22123 1\n\u22121 1 0 \u22122 \u22121 4 \u22125 4 0 \u22122 \u22121 3 0 2 \u22123 1 \u22122 2\n1 \u22121 0 0 \u22122 5 \u22126 4 \u22121 \u22121 0 1 0 \u22121 \u22122 0 \u22122 5\n1 0 0 \u22121 \u22122 6 \u22127 4 \u22122 \u22123 0 0 2 1 \u22124 0 0 7\n2 \u22121 \u22121 2 \u22123 4 \u22126 2 1 0 0 0 \u22123 1 \u22121 \u22123 \u22122 8\n2 \u22122 \u22122 2 1 2 \u22122 \u22121 2 6 \u22121 1 \u22123 \u22121 \u22125 \u221210 \u22122 9\n1 \u22123 0 1 5 2 \u22122 1 \u22123 2 1 3 \u22125 \u22123 \u22124 \u221213 0 13\nTable 10. A sample of three solutions found using \ud835\udefd = 2 and 10000 reads in each anneal run.\nQ1 Q2 Q3 U1 U2 U3 D1 D2 D3 L1 L2 L3 E1 E2 E3 N1 N2 N3\n1 0 \u22121 \u22121 1 0 1 \u22121 0 \u22121 0 1 \u22121 0 1 0 1 \u22121\n\u22121 1 0 0 \u22121 1 \u22121 1 0 \u22121 0 1 0 1 \u22121 1 0 \u22121\n1 \u22121 0 \u22121 1 0 1 0 \u22121 1 0 \u22121 \u22121 1 0 \u22121 0 1\nbetween [\u22121, 2]. Then it starts exploring the neighborhood of the solution found in the previous anneal run, gradually finding solutions with larger entries."
+        },
+        {
+            "heading": "6. Conclusions",
+            "text": "Diophantine problems in physics and beyond are often computationally hard. In this paper we have investigated the use of Ising machines for finding solutions to such problems, and have shown that they can succeed within search spaces that are vast. For example finding the (3,8,8) number 50139, the lowest number we find that can be written as the sum of eight cubes in two different ways, represents a search in a space of size 1024. Furthermore using \u201csolution mining\u201d for the task of anomaly cancellation, we find a proven ability to find solutions in search spaces of order 1026. The methods described here are valid for any Ising machine, including both quantum and simulated annealers. We found that currently available quantum annealers can already solve a large variety of Diophantine problems at a relatively advanced level, but they are not yet competitive with their simulated counterparts. Nevertheless there are several reasons to believe that ultimately quantum annealers will become dominant for such tasks. The first is to do with the current obstacle to performing higher order tasks on a quantum annealer which is the fact that with the increasing complexity of the equations, finding a suitable embedding (i.e. an embedding such that the connectivity and the number of auxilliary qubits required are within the limits imposed by the quantum processing unit) is a non trivial task. Indeed it is worth noting that deciding whether a graph G can be embedded in a graphH is itself an NP-complete problem (whenH is arbitrary but as in current annealers G is built out of Chimera or Pegasus sub-graphs).[61] Thus one expects significant\nFortschr. Phys. 2022, 2200114 2200114 (10 of 12) \u00a9 2022 The Authors. Fortschritte der Physik published by Wiley-VCH GmbH\niley.com /doi/10.1002/prop.202200114 by D urham U niversity - U niversity L ibrary and C ollections, W iley O nline L ibrary on [25/10/2022]. See the T erm s and C onditions (https://onlinelibrary.w iley.com /term s-and-conditions) on W iley O nline L ibrary for rules of use; O A articles are governed by the applicable C reative C om m ons L icense\nwww.advancedsciencenews.com www.fp-journal.org\nimprovement in embedding as the overall size of the annealer, and the connectivity of its sub-graphs is continually increased. The second reason to be optimistic about quantum annealers is in the potential speed-up in the way that they find global minima. For example there are many techniques open to quantum annealers such as diabatic annealing that have the potential to avoid anneal times increasing exponentially with the difficulty of the problem,[62] an issue that is seen in both adiabatic quantum annealing and in simulated annealing. These physical aspects of quantum annealing which were also crucial in the quantum field theory tunneling studies in Refs. [63\u201365] cannot be efficiently simulated classically. Indeed discrete problems generally favour quantum annealers because in a sense these machines can operate by performing a quantum gradient descent by tunnelling. By contrast any simulation method requires a defined dynamical process for its evolution, in order to hop between potential solutions, and this tends to become increasingly delicate with the difficulty of the problem. Thus for certain problems quantum tunneling could be an enormous advantage. For example, it has already been shown that quantum annealing overcomes simulated annealing in a large variety of cases (see for example Refs. [66\u201368]). Particularly interesting are the results found in Ref. [68] showing quantum annealing outperforming classical annealing by a factor of 108 in finding the minimum of a particular crafted problem with tall and narrow energy barriers separating local minima. This is precisely the kind of configuration one expects when solving Diophantine problems. In summary, we believe that the methods presented here should be an effective heuristic search method for the many discrete problems one encounters in physics. In particular it will be interesting to employ them in the string theory landscape context, and compare them to the genetic algorithmic and machine learning techniques that have been studied in Refs. [6, 69\u201386]."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "We would like to thank Ben Allanach, Andrei Constantin, Juan Criado, Jim Halverson, Thomas Harvey, Andre Lukas, Fabian Ruehle and Michael Spannowsky for helpful discussions. S.A. is supported by the STFC under grant ST/P001246/1.\nConflict of Interest The authors declare no conflict of interest.\nKeywords anomaly cancellation, diophantine equations in physics, quantum annealing, simulated annealing\nReceived: July 19, 2022 Revised: August 26, 2022\n[1] G. \u2019t Hooft, NATO Sci. Ser. B 1980, 59, 135. [2] B. C. Allanach, J. Davighi, S. Melville, JHEP 2019, 02, 082, [Erratum:\nJHEP 2019, 08, 064], arXiv:1812.04602 [hep-ph].\n[3] B. C. Allanach, B. Gripaios, J. Tooby-Smith, Phys. Rev. D 2020, 101, 075015, arXiv:1912.10022 [hep-th]. [4] B. C. Allanach, B. Gripaios, J. Tooby-Smith, Phys. Rev. Lett. 2020, 125, 161601, arXiv:2006.03588 [hep-th]. [5] B. C. Allanach, B. Gripaios, J. Tooby-Smith, Phys. Rev. D 2021, 104, 035035, arXiv:2104.14555 [hep-th]. [6] S. Abel, A. Constantin, T. R. Harvey, A. Lukas, Fortsch. Phys. 2022, 70, 2200034, arXiv:2110.14029 [hep-th]. [7] S. Tung, J. Algorithms 1987, 8, 324. [8] F. Denef, M. R. Douglas, Annals Phys. 2007, 322, 1096, arXiv:hep-\nth/0602072. [9] F. Denef, M. R. Douglas, B. Greene, C. Zukowski, Annals Phys. 2018,\n392, 93, arXiv:1706.06430 [hep-th]. [10] J. Halverson, F. Ruehle, Phys. Rev. D 2019, 99, 046015,\narXiv:1809.08279 [hep-th]. [11] J. Halverson, M. Plesser, F. Ruehle, J. Tian, Phys. Rev. D 2020, 101,\n046010, arXiv:1911.07835 [hep-th]. [12] T. Kadowaki, H. Nishimori, Phys. Rev. E 1998, 58, 5355. [13] E. Farhi, J. Goldstone, S. Gutmann, J. Lapan, A. Lundgren, D. Preda,\nScience 2001, 292, 472, https://www.science.org/doi/pdf/10.1126/ science.1057726 [14] A. Das, B. K. Chakrabarti, Rev. Mod. Phys. 2008, 80, 1061. [15] A. Lucas, Front. Phys. 2014, 2, https://doi.org/10.3389/fphy.2014.\n00005 [16] P. Hauke, H. G. Katzgraber, W. Lechner, H. Nishimori, W. D. Oliver,\nRep. Prog. Phys. 2020, 83, 054401. [17] N. Mohseni, P. McMahon, T. Byrnes, Nat. Rev. Phys. 2022. [18] R. K. Guy, \u201cSums of like powers. euler\u2019s conjecture, \u00a7d1 in unsolved\nproblems in number theory,\u201d 1994. [19] J.-C. Meyrignac, \u201cComputing minimal equal sums of like powers.\u201d. [20] Eulernet. [21] E. W. Weisstein, \u201cDiophantine equation\u2013nth powers (replace \u201cn\u201d by\nthe power): From mathworld\u2013a wolfram web resource.\u201d. [22] T. Piezas, \u201cA collection of algebraic identities,\u201d. [23] A. Gadde, S. Gukov, P. Putrov, JHEP 2014, 03, 076, arXiv:1310.0818\n[hep-th]. [24] S. Franco, S. Lee, R.-K. Seong, JHEP 2016, 05, 020, arXiv:1602.01834\n[hep-th]. [25] S. Franco, S. Lee, R.-K. Seong, C. Vafa, JHEP 2017, 07, 053,\narXiv:1612.06859 [hep-th]. [26] N. S. Dattani, N. Bryans, arXiv preprint 2014. [27] R. Tanburn, E. Okada, N. Dattani, \u201cReducing multi-qubit interactions\nin adiabatic quantum computation without adding auxiliary qubits. part 1: The \u201ddeduc-reduc\u201d method and its application to quantum factorization of numbers,\u201d 2015. [28] S. Jiang, K. A. Britt, A. J. McCaskey, T. S. Humble, S. Kais, \u201cQuantum annealing for prime factorization,\u201d 2018. [29] W. Peng, B. Wang, F. Hu, Y. Wang, X. Fang, X. Chen, C. Wang, Sci. China Phys., Mech. Astron. 2019, 62, 1. [30] R. H. Warren, Quantum Inf. Comput. 2019, 19, 252. [31] B. Wang, F. Hu, H. Yao, C. Wang, Sci. Rep. 2020, 10, 1. [32] C. C. Chang, A. Gambhir, T. S. Humble, S. Sota, Sci. Rep. 2019, 9,\nhttps://doi.org/10.1038/s41598-019-46729-0 [33] T. H. Chang, T. C. Lux, S. S. Tipirneni,Quantum Inf. Process. 2019, 18,\n1. [34] I. G. Rosenberg, Cahiers du Centre d\u2019Etudes de Recherche Opera-\ntionnelle 1975, 17, 71. [35] N. Dattani, \u201cQuadratization in discrete optimization and quantum\nmechanics,\u201d 2019. [36] S. Abel, J. C. Criado, M. Spannowsky, 2022, arXiv:2202.11727 [quant-\nph]. [37] R. Babbush, B. O\u2019Gorman, A. Aspuru-Guzik, Ann. Phys. 2013, 525,\n877. [38] E. Boros, P. L. Hammer, Discrete Appl. Math. 2002, 123, 155. [39] V. Chvatal, Discrete Appl. Math. 1979, 4, 233.\nFortschr. Phys. 2022, 2200114 2200114 (11 of 12) \u00a9 2022 The Authors. Fortschritte der Physik published by Wiley-VCH GmbH\niley.com /doi/10.1002/prop.202200114 by D urham U niversity - U niversity L ibrary and C ollections, W iley O nline L ibrary on [25/10/2022]. See the T erm s and C onditions (https://onlinelibrary.w iley.com /term s-and-conditions) on W iley O nline L ibrary for rules of use; O A articles are governed by the applicable C reative C om m ons L icense\nwww.advancedsciencenews.com www.fp-journal.org\n[40] H. Aguiar, 2014. [41] M. Moradi, Journal of Hyperstructures 2019, 7. [42] S. Abraham, M. Sanglikar, in Mathematical Colloquium journal, Vol.\n15 2001. [43] S. Abraham, S. Sanyal, M. Sanglikar, \u201cParticle swarm optimization\nbased diophantine equation solver,\u201d 2010. [44] S. Abraham, S. Sanyal, M. Sanglikar, Appl. Math. Comput. 2013, 219,\n11376. [45] O. P\u00e9rez, I. Amaya, R. Correa, Appl. Math. Comput. 2013, 225, 737. [46] T. Lanting, \u201cThe D-Wave 2000Q Processor,\u201d 2017, presented at AQC\n2017. [47] C. Boyer, \u201cNew Upper Bounds for Taxicab and Cabtaxi Numbers.\u201d. [48] P. Langacker, Rev. Mod. Phys. 2009, 81, 1199. [49] P. Z. et al. (Particle Data Group), Progress of Theoretical and Experi-\nmental Physics 2020, 2020, https://academic.oup.com/ptep/articlepdf/2020/8/083C01/34673722/ptaa104.pdf [50] T. Appelquist, B. A. Dobrescu, A. R. Hopper, Phys. Rev. D 2003, 68, 035012. [51] P. Batra, B. A. Dobrescu, D. Spivak, J. Math. Phys. 2006, 47, 082301, arXiv:hep-ph/0510181. [52] J.-Y. Liu, Y. Tang, Y.-L. Wu, J. Phys. G 2012, 39, 055003, arXiv:1108.5012 [hep-ph]. [53] A. Ismail, W.-Y. Keung, K.-H. Tsao, J. Unwin, Nucl. Phys. B 2017, 918, 220, arXiv:1609.02188 [hep-ph]. [54] Y. Tang, Y.-L. Wu, Chin. Phys. C 2018, 42, 033104, [Erratum: Chin.Phys.C 2020, 44, 069101], arXiv:1705.05643 [hep-ph]. [55] J. Ellis, M. Fairbairn, P. Tunney, Eur. Phys. J. C 2018, 78, 1. [56] D. B. Costa, B. A. Dobrescu, P. J. Fox, Phys. Rev. Lett. 2019, 123,\n151601. [57] A. Smolkovic\u030c, M. Tammaro, J. Zupan, J. High Energy Phys. 2019, 2019,\n1. [58] B. C. Allanach, B. Gripaios, J. Tooby-Smith, JHEP 2020, 05, 065,\narXiv:1912.04804 [hep-th]. [59] D. B. Costa, Phys. Rev. D 2020, 102, 115006. [60] A. Podo, F. Revello, 2022, arXiv:2205.03428 [hep-th]. [61] E. Lobe, A. Lutz, \u201cMinor embedding in broken chimera and pegasus\ngraphs is np-complete,\u201d 2021. [62] E. Crosson, D. Lidar, Nat. Rev. Phys. 2021, 3, 466. [63] S. Abel, N. Chancellor, M. Spannowsky, 2020, arXiv:2003.07374 [hep-\nph].\n[64] S. Abel, M. Spannowsky, P. R. X. Quantum. 2021, 2, 010349, arXiv:2006.06003 [hep-th]. [65] S. Abel, A. Blance, M. Spannowsky, 2021, arXiv:2105.13945 [quantph]. [66] G. E. Santoro, R. Marton\u00e1k, E. Tosatti, R. Car, Science 2002, 295, 2427. [67] R. Marton\u030c\u00e1k, G. E. Santoro, E. Tosatti, Phys. Rev. E 2004, 70, 057701. [68] V. S. Denchev, S. Boixo, S. V. Isakov, N. Ding, R. Babbush, V. Smelyan-\nskiy, J. Martinis, H. Neven, Phys. Rev. X 2016, 6, 031015. [69] S. Abel, J. Rizos, JHEP 2014, 08, 010, arXiv:1404.7359 [hep-th]. [70] Y.-H. He, Phys. Lett. B 2017, 774, 564. [71] F. Ruehle, JHEP 2017, 08, 038, arXiv:1706.07024 [hep-th]. [72] J. Carifio, J. Halverson, D. Krioukov, B. D. Nelson, JHEP 2017, 09, 157,\narXiv:1707.00655 [hep-th]. [73] K. Bull, Y.-H. He, V. Jejjala, C. Mishra, Phys. Lett. B 2018, 785, 65. [74] A. M\u00fctter, E. Parr, P. K. S. Vaudrevange, Nucl. Phys. B 2019, 940, 113,\narXiv:1811.05993 [hep-th]. [75] D. Klaewer, L. Schlechter, Phys. Lett. B 2019, 789, 438,\narXiv:1809.02547 [hep-th]. [76] C. R. Brodie, A. Constantin, R. Deen, A. Lukas, Fortsch. Phys. 2020, 68,\n1900087, arXiv:1906.08730 [hep-th]. [77] K. Bull, Y.-H. He, V. Jejjala, C. Mishra, Phys. Lett. B 2019, 795, 700,\narXiv:1903.03113 [hep-th]. [78] A. Cole, A. Schachner, G. Shiu, JHEP 2019, 11, 045, arXiv:1907.10072\n[hep-th]. [79] J. Halverson, B. Nelson, F. Ruehle, JHEP 2019, 06, 003,\narXiv:1903.11616 [hep-th]. [80] F. Ruehle, Phys. Rept. 2020, 839, 1. [81] S. Krippendorf, R. Kroepsch,M. Syvaeri, 2021, arXiv:2107.04039 [hep-\nth]. [82] S. AbdusSalam, S. Abel, M. Cicoli, F. Quevedo, P. Shukla, JHEP 2020,\n08, 047, arXiv:2005.11329 [hep-th]. [83] I. Bena, J. Bl\u00e5b\u00e4ck, M. Gra na, S. L\u00fcst, JHEP 2021, 11, 223,\narXiv:2010.10519 [hep-th]. [84] M. Larfors, R. Schneider, Fortsch. Phys. 2020, 68, 2000034,\narXiv:2003.04817 [hep-th]. [85] A. Constantin, T. R. Harvey, A. Lukas, 2021, https://doi.org/10.1002/\nprop.202100186, arXiv:2108.07316 [hep-th]. [86] G. J. Loges, G. Shiu, Fortsch. Phys. 2022, 70, 2200038,\narXiv:2112.08391 [hep-th].\nFortschr. Phys. 2022, 2200114 2200114 (12 of 12) \u00a9 2022 The Authors. Fortschritte der Physik published by Wiley-VCH GmbH\niley.com /doi/10.1002/prop.202200114 by D urham U niversity - U niversity L ibrary and C ollections, W iley O nline L ibrary on [25/10/2022]. See the T erm s and C onditions (https://onlinelibrary.w iley.com /term s-and-conditions) on W iley O nline L ibrary for rules of use; O A articles are governed by the applicable C reative C om m ons L icense"
+        }
+    ],
+    "title": "Ising Machines for Diophantine Problems in Physics",
+    "year": 2022
+}

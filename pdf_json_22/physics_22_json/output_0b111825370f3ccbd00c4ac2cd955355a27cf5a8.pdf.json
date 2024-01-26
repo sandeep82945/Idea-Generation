@@ -1,0 +1,526 @@
+{
+    "abstractText": "In this paper, we analzye propagating fronts in the context of hyperbolic theories of dissipative processes. These can be considered as a natural alternative to the more classical parabolic models. Emphasis is given toward the numerical computation of the invasion velocity. The first Section is devoted to the presentation of different models for reaction-diffusion phenomena, supporting the idea of the advantages of a description based on hyperbolic equations. Among other advantages, such modeling could provide a detailed description of the transient dynamics of the phenomenon under observation. Three basic numerical schemes are also presented; two of them can, in principle, be applied to general hyperbolic systems, at the price of reduced performances when dealing with discontinuous initial data. In the second Section, we focus on a specific class of 2\u00d7 2 system corresponding to second order partial differential equations in one space dimension, adapted for simplified modeling of reaction-diffusion equations. Specifically, we focus on notable traveling wave solutions, called propagation fronts. Particular cases where the speed of propagation can be explicitly computed are also provided. The third (and final) Section starts with the presentation of the phase-plane algorithm which bears a reliable approximation of the propagation speed, assessing its validity in the case with damping where an explicit formula is available. Then, we propose two PDEbased algorithms to approximate such velocity, named, respectively, scout&spot algorithm (based on tracking the level curve of some intermediate value of the profile) and LeVeque\u2013Yee formula (given by the average value of the discrete transport velocity). Finally, we attest the well-foundedness of both the approaches and conclude by suggesting the second one as more efficient tool in the determination of the speed. Corrado Lattanzio Dipartimento di Ingegneria e Scienze dell\u2019Informazione e Matematica, Universit\u00e0 degli Studi dell\u2019Aquila (Italy), e-mail: corrado@univaq.i Corrado Mascia Dipartimento di Matematica \u201cGuido Castelnuovo\u201d, Sapienza Universit\u00e0 di Roma (Italy), e-mail: corrado.mascia@uniroma1.it Ramon G. Plaza Instituto de Investigaciones en Matem\u00e1ticas Aplicadas y en Sistemas, Universidad Nacional Aut\u00f3noma de M\u00e9xico (M\u00e9xico), e-mail: plaza@mym.iimas.unam.mx Chiara Simeoni Laboratoire J.A. Dieudonn\u00e9, Universit\u00e9 C\u00f4te d\u2019Azur, Nice (France), e-mail: chiara.simeoni@ univ-cotedazur.fr 1 ar X iv :2 20 6. 09 71 4v 1 [ m at h. N A ] 2 0 Ju n 20 22 2 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni 1 Models for reaction-diffusion phenomena In this Section, we present different type of models useful for describing reaction-diffusion phenomena. The standard approach gives raise to a parabolic equation which is very well suited to explain simple events such as heat transmission in close-to-equilibrium regime. In the standard linear case, such modeling has been criticised for three main reasons: 1. infinite speed of propagation; 2. lack of time-delay and related inertial effects; 3. excepionality of well-posed boundary value problems. In addition to the discussion relative to inertia (started by Eckart in the 40s [18] and continued in [21, 35] in the context of relativity), other fields where the hyperbolic terms are relevant for applications are, among others, in biological tissues [17, 44, 47, 48], population growth [40], forest fire models [41]... Here, starting from Subsection 1.1 (dealing with scalar equations) and proceeding with Subsection 1.2 (focusing on systems), we follow the point of view that a description making use of hyperbolic equations \u2013starting from the basic example of the telegraph equation\u2013 is viable and more appropriate when the relaxation time required to sense the change of the overall phenomenon is sufficiently large as compared to the diffusivity coefficient. Indeed, differences may emerge in the transient time, whose cumulation may influence significantly the final outcome. Section ends with a presentation of three different numerical schemes which can be easily implemented in order to obtain reliable approximation of a reaction-diffusion model of hyperbolic type. We stress that we do not regard hyperbolic numerical schemes as a tool for approximating parabolic equations; rather, we focus on hyperbolic models considered as a different language useful for describing dissipative mechanisms in a modified manner which could be interesting in the modelling of distinct phenomena in far-from-equilibrium regimes. 1.1 Diffusion is not always a parabolic mechanism The standard approach to heat conduction in a homogeneous medium is based on the continuity relation linking the scalar unknown variable u with the vector-valued flux function v, by means of the balance identity d dt \u222b",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Corrado Lattanzio"
+        },
+        {
+            "affiliations": [],
+            "name": "Corrado Mascia"
+        },
+        {
+            "affiliations": [],
+            "name": "Ramon G. Plaza"
+        },
+        {
+            "affiliations": [],
+            "name": "Chiara Simeoni"
+        },
+        {
+            "affiliations": [],
+            "name": "C. Simeoni"
+        }
+    ],
+    "id": "SP:626c54348d0335dfdd45229b07802025fbf72d48",
+    "references": [
+        {
+            "authors": [
+                "Y.M. Ali",
+                "L.C. Zhang"
+            ],
+            "title": "Relativistic heat conduction",
+            "venue": "International J. Heat Mass Transfer",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "D.G. Aronson",
+                "H.F. Weinberger"
+            ],
+            "title": "Multidimensional nonlinear diffusion arising in population genetics",
+            "venue": "Adv. in Math",
+            "year": 1978
+        },
+        {
+            "authors": [
+                "D.G. Aronson",
+                "H.F. Weinberger"
+            ],
+            "title": "Nonlinear diffusion in population genetics, combustion, and nerve pulse propagation, in J.A. Goldstein \u201cPartial differential equations and related topics",
+            "venue": "Lecture Notes in Mathematics,",
+            "year": 1975
+        },
+        {
+            "authors": [
+                "P.W. Bates",
+                "X. Chen"
+            ],
+            "title": "Chmaj A.J.J.; Traveling waves of bistable dynamics on a lattice",
+            "venue": "SIAM J. Math. Anal. 35,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "S. Benzoni-Gavage"
+            ],
+            "title": "Semi-discrete shock profiles for hyperbolic systems of conservation laws",
+            "venue": "Physica D 115,",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "E. Bouin",
+                "V. Calvez",
+                "G. Nadin"
+            ],
+            "title": "Hyperbolic traveling waves driven by growth",
+            "venue": "Math. Models Meth. Appl. Sci. 24,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "A. Carpio",
+                "G. Duro"
+            ],
+            "title": "Instability and collapse in discrete wave equations",
+            "venue": "J. Comput. Methods Appl. Math,",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "C. Cattaneo"
+            ],
+            "title": "Sulla conduzione del calore",
+            "venue": "Atti Sem. Fis. Univ. Modena",
+            "year": 1949
+        },
+        {
+            "authors": [
+                "C. Cattaneo"
+            ],
+            "title": "Sur une forme de l\u2019equation de la chaleur eliminant le paradoxe d\u2019une propagation instantan\u00e9e",
+            "venue": "C. R. Acad. Sci. Paris",
+            "year": 1958
+        },
+        {
+            "authors": [
+                "M. Chester"
+            ],
+            "title": "Second sound in solids",
+            "venue": "Phys. Rev. 131,",
+            "year": 1963
+        },
+        {
+            "authors": [
+                "S-N. Chow",
+                "J. Mallet-Paret",
+                "W. Shen"
+            ],
+            "title": "Traveling waves in lattice dynamical systems",
+            "venue": "J. Differ. Equ. 149,",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "C.I. Christov"
+            ],
+            "title": "On frame indifferent formulation of the Maxwell-Cattaneo model of finite speed heat conduction",
+            "venue": "Mech. Res. Commun",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "V.A. Cimmelli",
+                "D. Jou",
+                "T. Ruggeri"
+            ],
+            "title": "V\u00e1n P.; Entropy principle and recent results in non-equilibrium theories",
+            "venue": "Entropy",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "F. Courchamp",
+                "L. Berec",
+                "J. Gascoigne"
+            ],
+            "title": "Allee effects in ecology and conservation",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "M. Criado-Sancho"
+            ],
+            "title": "Llebot J.E.; Behavior of entropy in hyperbolic heat conduction",
+            "venue": "Phys. Review E 47,",
+            "year": 1993
+        },
+        {
+            "authors": [
+                "M. Dreher",
+                "R. Quintanilla",
+                "R. Racke"
+            ],
+            "title": "Ill-posed problems in thermomechanics",
+            "venue": "Appl. Math. Letters",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "S.R. Dunbar",
+                "H.G. Othmer"
+            ],
+            "title": "On a nonlinear hyperbolic equation describing transmission lines, cell movement, and branching random walks. In \u201cNonlinear oscillations in biology and chemistry",
+            "venue": "(Salt Lake City,",
+            "year": 1986
+        },
+        {
+            "authors": [
+                "C. Eckart"
+            ],
+            "title": "The thermodynamics of irreversible processes, I. The simple fluid. II. Fluid mixtures. III. Relativistic theory of the simple fluid",
+            "venue": "Phys. Rev",
+            "year": 1940
+        },
+        {
+            "authors": [
+                "C.E. Elmer",
+                "E.S. Van Vleck"
+            ],
+            "title": "Analysis and computation of travelling wave solutions of bistable differentialdifference equations",
+            "venue": "Nonlinearity 12,",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "C.E. Elmer",
+                "E.S. Van Vleck"
+            ],
+            "title": "Dynamics of monotone travelling fronts for discretizations of Nagumo PDEs",
+            "venue": "Nonlinearity 18,",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "R. Geroch",
+                "L. Lindblom"
+            ],
+            "title": "Dissipative relativistic fluid theories of divergence type, Phys,Rev",
+            "venue": "D 41,",
+            "year": 1990
+        },
+        {
+            "authors": [
+                "K.P. Hadeler"
+            ],
+            "title": "Hyperbolic travelling fronts",
+            "venue": "Proc. Edinb. Math. Soc. 31,",
+            "year": 1988
+        },
+        {
+            "authors": [
+                "K.P. Hadeler",
+                "F. Rothe"
+            ],
+            "title": "Travelling fronts in nonlinear diffusion equations",
+            "venue": "J. Math. Biol. 2,",
+            "year": 1975
+        },
+        {
+            "authors": [
+                "H.J. Hupkes",
+                "L. Morelli",
+                "W.M. Schouten-Straatman",
+                "E.S. Van Vleck"
+            ],
+            "title": "Traveling waves and pattern formation for spatially discrete bistable reaction-diffusion equations. in \u201c Difference Equations and Discrete Dynamical Systems with Applications",
+            "venue": "M. Bohner et al. (eds.), Springer Proceedings in Mathematics",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "H.J. Hupkes",
+                "E.S. Van Vleck"
+            ],
+            "title": "Traveling waves for complete discretizations of reaction diffusion systems",
+            "venue": "J. Dyn. Diff. Equat",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "P.M. Jordan",
+                "W. Dai",
+                "R.E. Mickens",
+                "equation A note on the delayed heat"
+            ],
+            "title": "Instability with respect to initial data",
+            "venue": "Mechanics Research Communications 35",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "D. Jou",
+                "J. Casas-V\u00e0zquez",
+                "G. Lebon"
+            ],
+            "title": "Extended irreversible thermodynamics",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "J.P. Keener"
+            ],
+            "title": "Propagation and its failure in coupled systems of discrete excitable cells",
+            "venue": "SIAM J. Appl. Math. 47,",
+            "year": 1987
+        },
+        {
+            "authors": [
+                "C. K\u00f6rner",
+                "H.W. Bergmann"
+            ],
+            "title": "The physical defects of the hyperbolic heat conduction equation",
+            "venue": "Appl. Phys. A 67,",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "C. Lattanzio",
+                "C. Mascia",
+                "R.G. Plaza",
+                "C. Simeoni"
+            ],
+            "title": "Analytical and numerical investigation of traveling waves for the Allen\u2013Cahn model with relaxation",
+            "venue": "Math. Models Meth. Appl. Sci",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "C. Lattanzio",
+                "C. Mascia",
+                "R.G. Plaza",
+                "C. Simeoni"
+            ],
+            "title": "Kinetic schemes for assessing stability of traveling fronts for the Allen\u2013Cahn equation with relaxation",
+            "venue": "Appl. Numer. Math",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "L. Lehner",
+                "O.A. Reula",
+                "M.E. Rubio"
+            ],
+            "title": "Hyperbolic theory of relativistic conformal dissipative fluids",
+            "venue": "Phys. Rev. D",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "R.J. LeVeque",
+                "H.C. Yee"
+            ],
+            "title": "A study of numerical methods for hyperbolic conservation laws with stiff source terms",
+            "venue": "J. Comput. Phys. 86,",
+            "year": 1990
+        },
+        {
+            "authors": [
+                "A. Majda",
+                "J. Ralston"
+            ],
+            "title": "Discrete shock profiles for systems of conservation laws Commun",
+            "venue": "Pure Appl. Math. 32,",
+            "year": 1979
+        },
+        {
+            "authors": [
+                "J. Mallet-Paret"
+            ],
+            "title": "The global structure of traveling waves in spatially discrete dynamical systems",
+            "venue": "J. Dyn. Differ. Equ. 11,",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "H.P. McKean"
+            ],
+            "title": "Jr.; Nagumo\u2019s equation",
+            "venue": "Adv. Math. 4,",
+            "year": 1970
+        },
+        {
+            "authors": [
+                "M\u00e9ndez V",
+                "Camacho"
+            ],
+            "title": "Dynamics and thermodynamics of delayed population growth",
+            "venue": "Phys. Rev., E Stat. phys. plasmas fluids relat. interdiscip. topics 55,",
+            "year": 1997
+        },
+        {
+            "authors": [
+                "V. M\u00e9ndez",
+                "J.E. Llebot"
+            ],
+            "title": "Hyperbolic reaction-diffusion equations for a forest fire",
+            "venue": "model, Phys. Rev., E Stat. phys. plasmas fluids relat. interdiscip. topics 56,",
+            "year": 1997
+        },
+        {
+            "authors": [
+                "P.M. Morse"
+            ],
+            "title": "Feshbach H.; Methods of theoretical physics",
+            "year": 1953
+        },
+        {
+            "authors": [
+                "L. Onsager"
+            ],
+            "title": "Reciprocal relations in irreversible processes I",
+            "venue": "Phys. Rev. 37,",
+            "year": 1931
+        },
+        {
+            "authors": [
+                "G. Othmer H",
+                "R. Dunbar S",
+                "W. Alt"
+            ],
+            "title": "Models of dispersal in biological systems",
+            "venue": "J. Math. Biol. 26,",
+            "year": 1988
+        },
+        {
+            "authors": [
+                "D. Serre"
+            ],
+            "title": "Discrete shock profiles: existence and stability. In \u201cHyperbolic systems of balance laws\u201d, Lectures given at the C.I.M.E",
+            "venue": "Summer School held in Cetraro, Italy, July 14-21,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "F. Xu",
+                "T. Lu"
+            ],
+            "title": "Introduction to skin biothermomechanics and thermal pain",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "F Xu",
+                "KA Seffen",
+                "TJ Lu"
+            ],
+            "title": "Non-Fourier analysis of skin biothermomechanics",
+            "venue": "Int. J. Heat Mass Transf",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "B. Zinner"
+            ],
+            "title": "Existence of traveling wavefront solutions for the discrete Nagumo equation",
+            "venue": "J. Differ. Equ. 96,",
+            "year": 1992
+        }
+    ],
+    "sections": [
+        {
+            "text": "Corrado Lattanzio Dipartimento di Ingegneria e Scienze dell\u2019Informazione e Matematica, Universita\u0300 degli Studi dell\u2019Aquila (Italy), e-mail: corrado@univaq.i\nCorrado Mascia Dipartimento di Matematica \u201cGuido Castelnuovo\u201d, Sapienza Universita\u0300 di Roma (Italy), e-mail: corrado.mascia@uniroma1.it\nRamon G. Plaza Instituto de Investigaciones en Matema\u0301ticas Aplicadas y en Sistemas, Universidad Nacional Auto\u0301noma de Me\u0301xico (Me\u0301xico), e-mail: plaza@mym.iimas.unam.mx\nChiara Simeoni Laboratoire J.A. Dieudonne\u0301, Universite\u0301 Co\u0302te d\u2019Azur, Nice (France), e-mail: chiara.simeoni@ univ-cotedazur.fr\n1\nar X\niv :2\n20 6.\n09 71\n4v 1\n[ m\nat h.\nN A\n] 2\n0 Ju\n2 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni"
+        },
+        {
+            "heading": "1 Models for reaction-diffusion phenomena",
+            "text": "In this Section, we present different type of models useful for describing reaction-diffusion phenomena. The standard approach gives raise to a parabolic equation which is very well suited to explain simple events such as heat transmission in close-to-equilibrium regime. In the standard linear case, such modeling has been criticised for three main reasons:\n1. infinite speed of propagation; 2. lack of time-delay and related inertial effects; 3. excepionality of well-posed boundary value problems.\nIn addition to the discussion relative to inertia (started by Eckart in the 40s [18] and continued in [21, 35] in the context of relativity), other fields where the hyperbolic terms are relevant for applications are, among others, in biological tissues [17, 44, 47, 48], population growth [40], forest fire models [41]...\nHere, starting from Subsection 1.1 (dealing with scalar equations) and proceeding with Subsection 1.2 (focusing on systems), we follow the point of view that a description making use of hyperbolic equations \u2013starting from the basic example of the telegraph equation\u2013 is viable and more appropriate when the relaxation time required to sense the change of the overall phenomenon is sufficiently large as compared to the diffusivity coefficient. Indeed, differences may emerge in the transient time, whose cumulation may influence significantly the final outcome.\nSection ends with a presentation of three different numerical schemes which can be easily implemented in order to obtain reliable approximation of a reaction-diffusion model of hyperbolic type. We stress that we do not regard hyperbolic numerical schemes as a tool for approximating parabolic equations; rather, we focus on hyperbolic models considered as a different language useful for describing dissipative mechanisms in a modified manner which could be interesting in the modelling of distinct phenomena in far-from-equilibrium regimes."
+        },
+        {
+            "heading": "1.1 Diffusion is not always a parabolic mechanism",
+            "text": "The standard approach to heat conduction in a homogeneous medium is based on the continuity relation linking the scalar unknown variable u with the vector-valued flux function v, by means of the balance identity\nd dt \u222b \u2126 u(x, t)dx+ \u222b \u2202\u2126 v \u00b7nd\u03c3 = \u222b \u2126 f dx,\nwhere \u2126 is an arbitrarily chosen control region with dx corresponding volume element, n is the outward normal to the smooth boundary \u2202\u2126 with d\u03c3 boundary element, and f is a volume contribution, to be considered, at first, as a given external constraint.\nApplying Divergence Theorem, we can consider the localised version\n\u2202tu+divx v = f , (1.1)\nwhere u and v describe respectively (heat) density and (heat) flux. The former is a scalar quantity; the latter is a vector with same dimension of the space variable x.\nTo provide a closed system, equation (1.1) has to be coupled with some relation between u and v. A frequent choice is the Fourier\u2019s law\nAnalysis and numerics for hyperbolic reaction-diffusion models 3\nv =\u2212agradxu (1.2)\nfor some non-negative proportionality parameter a, which may explicitly depend on space x and time t \u2013as in the case of heterogeneous media\u2013 and also on the density variable itself u and its derivatives. Here, we focus mainly on the case where a is a given positive constant, i.e. a > 0. Linear relation (1.2) is also called Fick\u2019s law when considered in bio-mathematical settings, Ohm\u2019s law in electromagnetism, and Darcy\u2019s law in porous media.\nCoupling identity (1.1) with relation (1.2) gives raise to the balance law\n\u2202tu = divx (agradxu)+ f . (1.3)\nWhile the continuity equation (1.1) can be considered reliable in general contexts, equation (1.2) should be regarded as a single possible choice among many others. In fact, quoting Lars Onsager (see [43]), Fourier\u2019s law is an approximate description of the process of conduction, which neglects the (short) relaxation time \u03c4 needed for acceleration. For practical purposes (as in heat conduction) the time-lag can be neglected in all cases that are likely to be studied. Nevertheless, in many applications \u2013among others, for far-from-equilbrium regimes, such as the study of living tissues and thermal resonance\u2013 extensions of the Fourier\u2019s law are required, with the specific aim of providing a more robust model.\nA first significant alternative to (1.2) is supported by the intuition that a delayed version should hold in place of the instantaneous response. The fact that the system requires a strictly positive amount of time \u03c4 to sense the gradient change translates into an identity of the phase-lag relationship\nv(x, t + \u03c4) =\u2212agradxu(x, t). (1.4)\nUnfortunately, as proved in [27], the phase-lag model is ill-posed in the sense of Hadamard since it lacks of continuous dependence with respect to the initial data (see also [16]).\nSurprisingly enough, well-posedness can be restored by truncating the Taylor\u2019s expansion for the unknown v. Assuming \u03c4 to be small, we can consider the approximation\nv(x, t + \u03c4) = v(x, t)+ \u03c4\u2202tv(x, t)+o(\u03c4) \u2248 v(x, t)+ \u03c4 \u2202tv(x, t),\ngiving raise to the Maxwell\u2013Cattaneo\u2019s law. Putting together with the balance law (1.1), we obtain the (hyperbolic) reaction-diffusion system with relaxation{\n\u2202tu+divxv = f , \u03c4\u2202tv+agradxu =\u2212v.\n(1.5)\nThe Maxwell\u2013Cattaneo\u2019s law can be considered as a way for incorporating into the diffusion modelling some additional physical terms arising in the framework of Extended Irreversible Thermodynamics, [13, 29]. Such law, to be considered as a constitutive identity, has been originally proposed by Cattaneo [8, 9], following some pioneering intuition of James Clerk Maxwell (among others, let us quote [28, 42]). Sometimes, equation (1.5) is attributed to Vernotte [46], and \u2013more rarely\u2013 to Chester [10]. Extensions has been also proposed in [12].\nEliminating the unknown v in the coupled system (1.1) and (1.5), we obtain the one-field equation, namely\n\u03c4\u2202ttu+\u2202t (u\u2212 \u03c4 f ) = divx (agradxu)+ f . (1.6)\n4 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni\nThe focal idea is that the balance between the flux v and the gradient gradxu of the density u is achieved only asymptotically in time, with decay described by the relaxation time \u03c4 > 0. Such quantity can be regarded as the characteristic time for the crossover between ballistic motion and the onset of diffusion.\nThe Maxwell\u2013Cattaneo\u2019s law furnishes the differential version of the delayed response to a change in the gradient gradxu as described by a memory kernel given by the exponential-rate law\nv(x, t) = v0(x)e\u2212t/\u03c4 \u2212 1 \u03c4 \u222b t 0 e\u2212(t\u2212s)/\u03c4 agradxu(x,s)ds\nwhich corresponds to the analogous formula in the context of viscoelasticity. Incidentally, let us observe that the nonlocality of the time-integral \u2013to be compared with the instantaneous relationship (1.4)\u2013 can be regarded as a partial justification of the fact that the reaction-diffusion system (1.5) is proved to be time-locally well-posed.\nThe main flaw is that equation (1.6) can violate the second law of thermodynamics, admitting scenarios where heat appear to be moving from cold to hot (see [31]). In this respect, correction to the notion of entropy have been proposed in order to partially solve the problem (for the case with no source term, see [15]).\nAn alternative approach is based on the postulation that the usual continuity equation (1.1) should be replaced by a delayed identity\n\u2202tu(x, t + \u03c4)+divx v(x, t) = f (x, t).\nTruncating again the Taylor\u2019s expansion for u with respect to the second argument, we end up with\n\u03c4 \u2202ttu+\u2202tu+divx v = f . (1.7)\nThen, coupling with the standard Fourier\u2019s law (1.2), equation (1.7) gives the so-called (hyperbolic) reaction-diffusion equation with damping\n\u03c4 \u2202ttu+\u2202tu = divx (agradxu)+ f . (1.8)\nAn alternative approach leading to a variation of (1.8) is proposed in [1], where the hyperbolic equation (1.8) is obtained by starting from space\u2013time duality of a Minkowski space, and a simple Lorentz transformation, that are basic to the theory of special relativity. The starting point is an adapted version of the continuity equation, namely\n\u2202tu+div(t,x) w = f (\u03c4 > 0),\nwhere div(t,x) is the scalar product of the operator (i \u221a\n\u03c4 \u2202t ,\u2202x1 , . . . ,\u2202xn) against the extended (n+ 1)\u2212dimensional flux w. Assuming the extended Fourier\u2019s relation\nw =\u2212agrad(t,x)u,\nwhere grad(t,x) = (i \u221a \u03c4 \u2202t ,gradx), we infer\n\u03c4\u2202t(a\u2202tu)+\u2202tu = divx(agradxu)+ f ,\nwhich coincides with (1.8) when a\u2261 1. However, the latter equation give rise to significant conceptual issues that makes the theory somewhat controversial. Among others, some quantities into play\nAnalysis and numerics for hyperbolic reaction-diffusion models 5\nare described by complex numbers, with values involving imaginary \u201cdensities\u201d, which are hard to be interpreted.\nFinally, let us determine an intermediate form somewhat in between (1.8) and (1.6). Let us denote by \u03c41 and \u03c42 the parameters for (1.7) and (1.5), respectively. Combining the delayed version of the continuity equation and the Maxwell\u2013Cattaneo\u2019s law{\n\u03c41\u2202ttu+\u2202tu+divx v = f , \u03c42\u2202tv+v+agradxu = 0.\nDifferentiating the first equation with respect to t, taking the divergence with respect to x of the second equation and subtracting, we obtain the one-field equation for u\n\u03c41\u03c42\u2202tttu+(\u03c41 + \u03c42)\u2202ttu+\u2202t (u\u2212 \u03c42 f ) = divx (agradxu)+ f .\nIn the regime of product \u03c41\u03c42 small with respect to the other 0-th/1-st order terms in \u03c41 and \u03c42, the third order time derivative can be disregarded (if bounded), thus giving raise to the hyperbolic equation\n\u03c4\u2202ttu+\u2202t (u\u2212\u03c3 f ) = divx (agradxu)+ f . (1.9)\nwhere \u03c4 := \u03c41 + \u03c42 and \u03c3 := \u03c42. In particular, note that 0\u2264 \u03c3 \u2264 \u03c4 for any choice of non-negative \u03c41 and \u03c42."
+        },
+        {
+            "heading": "1.2 Reaction-diffusion by means of PDE systems",
+            "text": "Passing to vector-valued density function u \u2208Rp, some modifications have to be taken into account. First of all, the vectorial form of the continuity equation becomes\n\u2202tu+Divx V = f, (1.10)\nwhere Div denotes the divergence operator applied to each row of the matrix V, and f is some given vector-valued function.\nAgain, some additional relations coupling the dynamical variables u and V are required to close the system. As before, these could be of different nature. Denoting by Gradx the jacobian operator and having in mind the Fourier\u2019s law, we can conceive a relation of the following form\nV = linear functional applied to Gradxu =\u2212AGradxu.\nfor some (4th-order) tensor-valued function A. Coupling with (1.10), the above identity gives the (parabolic) reaction-diffusion system\n\u2202tu = Divx (AGradxu)+ f, (1.11)\nwhich can be regarded as the vectorial extension of the scalar equation (1.3). As in Subsection 1.1, we may search for alternatives to the Fourier\u2019s law, the first being the Maxwell\u2013Cattaneo\u2019s law. In vectorial version, this reads as\n\u03c4\u2202tV+V =\u2212AGradxu.\n6 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni\nOf course, the latter equality can be generalized to the (more realistic) case in which any line of the flux matrix V has a different delay \u03c41, . . . ,\u03c4p. However, for the sake of simplicity, we will mainly concentrate on the case of a single time-scale \u03c4 .\nCoupling with the continuity equation (1.10), we end up with the (hyperbolic) reaction-diffusion system with relaxation {\n\u2202tu+DivxV = f, \u03c4\u2202tV+AGradxu =\u2212V.\nApplying \u2202t to the first equation, Divx to the second and taking the difference, we deduce the onefield system\n\u03c4\u2202ttu+\u2202t (u\u2212 \u03c4f) = Divx (AGradxu)+ f. (1.12)\nThe hyperbolic system (1.12) can be understood as a possible singular perturbation of the parabolic limit system (1.11).\nAlternatively, we can follow the strategy previously proposed considering a delayed continuity equality, which ends up in the (hyperbolic) reaction-diffusion system with damping\n\u03c4\u2202ttu+\u2202tu = Divx ( AGradxu ) + f. (1.13)\nto be regarded as the vectorial version of (1.8). In order to derive a sort of interpolation between (1.12) and (1.13), we follow the strategy proposed in deducing equation (1.9), that is considering delays in both continuity identity and flux constitutive equality, with small relaxation times \u03c41 and \u03c42, so that the term with the product \u03c41\u03c42 can be formally disregarded. In addition, restricting the attention to\nA= constant and f = f(u),\nwe end up with the system\n\u03c4\u2202ttu+\u2202t {u\u2212\u03c3 f(u)}= Divx {AGradxu}+ f(u), (1.14)\nLater on, it will be transparent how the apparently harmless term \u03c3df(u), negligible for \u03c3 small, may affect the transient dynamics and plays a crucial role also in the long run.\nIn the class described by system (1.14), there are some significant limiting regimes, with respect to the values of the parameters \u03c4 and \u03c3 \u2208 [0,\u03c4]:\ni. \u03c3 = \u03c4 = 0 (undelayed continuity/undelayed flux):\n\u2202tu = Divx {AGradxu}+ f(u);\nii. \u03c3 = 0, \u03c4 > 0 (delayed continuity/undelayed flux):\n\u03c4\u2202ttu+\u2202tu = Divx {AGradxu}+ f(u);\niii.\u03c3 = \u03c4 > 0 (undelayed continuity/delayed flux):\n\u03c4\u2202ttu+\u2202t{u\u2212 \u03c4f(u)}= Divx {AGradxu}+ f(u).\nAdditional specifications can be required on the zero-th order term f to add structure to the whole system. In the scalar case, any continuous function f has a smooth primitive, producing a corresponding potential W , i.e. W \u2032 = \u2212 f . Differently, when the dimension is strictly greater than 1, ad-\nAnalysis and numerics for hyperbolic reaction-diffusion models 7\nditional constraints are needed in order to make this requirement to be satisfied. Specifically, for smooth functions, a necessary condition for the existence of a potential function W : Rp\u2192Rp such that\ngraduW (u) =\u2212f(u), (1.15)\nis requiring that the jacobian matrix df of f is symmetric, that is\ndf(u)> = df(u). (1.16)\nSuch condition is also sufficient if the domain for the variable u is simply connected or star-shaped. Assuming the symmetry condition (1.16), system (1.14) is endowed with a natural Lyapunov functional, i.e. a global function which is not-increasing along any given trajectory t 7\u2192 u(\u00b7, t) . To simplify the formalism, we concentrate on the one-dimensional spatial case, limiting ourselves to\n\u03c4\u2202ttu+\u2202t {u\u2212\u03c3 f(u)}= A\u2202xxu+ f(u), (1.17)\nFor \u03c4 = \u03c3 = 0, we obtain the standard parabolic reaction-diffusion system\n\u2202tu = A\u2202xxu+ f(u) (1.18)\nProperty (1.15) guarantees the presence of a variational structure: the functional\nE0[u] := \u222b R { 1 2 A\u2202xu \u00b7\u2202xu+W (u) } dx,\ntogether with some appropriate integrability conditions at \u00b1\u221e, is a Lyapunov functional for the system (1.18). Indeed, multiplying by \u2202tu and integrating by parts, there holds\nd dt E0[u]+ \u222b R |\u2202tu|2 dx = 0,\nexhibiting a dissipative property for E0, playing the role of an energy functional. Similar considerations can be done also in the case (1.17), giving raise to a differential equality for the modified energy E\u03c4 [u] := 12 \u03c4|\u2202tu| 2 +E0[u].\nThen, setting Q\u03c3 := I\u2212\u03c3df(u), there holds\nd dt E\u03c4 [u]+ \u222b R Q\u03c3 \u2202tu \u00b7\u2202tudx = 0.\nAgain, choosing \u03c3 \u2265 0 sufficiently small so that Q\u03c3 > 0, dissipation is transparent."
+        },
+        {
+            "heading": "1.3 Three basic numerical schemes in one space dimension",
+            "text": "For u \u2208 Rp and in one space dimension, the tensor A reduces now to a p\u00d7 p matrix A, that is A= A = (ai11`) since two of the four indeces are now fixed and equal to 1. For the sake of simplicity, we limit ourselves to the case A = aI for some constant a > 0. Hence, we consider the system in one space-dimension\n\u03c4\u2202ttu+\u2202t {u\u2212\u03c3 f(u)}= a\u2202xxu+ f(u). (1.19)\n8 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni\nLet us stress once more that the idea is not to consider hyperbolic models as perturbations of the limiting parabolic ones, but rather to explore numerical approximation of the hyperbolic equations regarded as intriguing models on their own with different properties, with particular care to the transient behavior. Later on, we will test and compare the numerical schemes with specific attention to their capability of providing precise approximations of the propagation speed of the special solutions called fronts."
+        },
+        {
+            "heading": "First-order reduction algorithm",
+            "text": "System (1.19) has an immediate numerical description, obtained by rewriting it in first-order form as {\n\u2202tu = v, \u03c4 \u2202tv = a\u2202xxu+ f(u)\u2212{I\u2212\u03c3 df(u)}v.\n(1.20)\nFirstly, we discretize the spatial part by introducing a uniform mesh with step dx, du j dt = v j\n\u03c4 dv j dt = a dx2 ( u j+1\u22122u j +u j\u22121 ) + f(u j)\u2212 { I\u2212\u03c3 df(u j) } v j\n(1.21)\nThen, a subsequent time-discretization, that can be performed in different ways, is applied. To start with, we choose an implicit-explicit scheme (IMEX), limiting the implicit description to the linear part of the system, so that un+1j \u2212unj dt = vn+1j \u03c4 vn+1j \u2212vnj\ndt = a dx2\n( un+1j+1\u22122u n+1 j +u n+1 j\u22121 ) + f(unj)\u2212vn+1j +\u03c3df(u n j)v n j\nwhich gives the first-order (reduction) algorithm un+1j \u2212dtv n+1 j = u n j \u03b1 ( \u2212un+1j+1 +2u n+1 j \u2212u n+1 j\u22121 ) +(1+\u03b2 )vn+1j = v n j +\u03b2 f(u n j)\n+\u03c3\u03b2 df(unj)v n j ,\n(1.22)\nwhere \u03b1 := adt/\u03c4dx2, \u03b2 := dt/\u03c4 . Solving such an implicit-explicit algorithm furnishes the numerical approximation of the real solution(\nun+1 vn+1\n) = A\u22121 ( un\nvn +\u03b2 f(un)+\u03c3\u03b2 df(un)vn dt ) where A describes the coefficients of the left-hand side matrix in (1.22)."
+        },
+        {
+            "heading": "Lie\u0301nard-type algorithm",
+            "text": "A second type of algorithm is inspired by the so-called Lie\u0301nard second order equation which is\n\u03c4 d2u dt2 +g(u) du dt +h(u) = 0.\nAnalysis and numerics for hyperbolic reaction-diffusion models 9\nfor some given functions g and h. The above equation can be rewritten as a first order system by setting\n\u03c4 du dt = v\u2212G(u), dv dt =\u2212h(u)\nwhere G is a primitive of the function g. Applied to system (1.19), let us consider an algorithm, which will be later named Lie\u0301nard-type algorithm, based on the decomposition{\n\u03c4\u2202tu = v\u2212u+\u03c3 f(u), \u2202tv = a\u2202xxu+ f(u).\n(1.23)\nAs before, discretizing with respect to a mesh with step dx, we infer \u03c4 du j dt\n= \u03c3 f(u j)\u2212u j +v j dv j dt = a dx2 ( u j+1\u22122u j +u j\u22121 ) + f(u j).\n(1.24)\nAt the continuous level, systems (1.20) and (1.23), and the corresponding semi-discrete algorithms, viz. systems (1.21) and (1.24), are completely equivalent, the difference being only in the choice of the variable v.\nDistinctions emerge in the subsequent step, where the time discretization is taken into account and the difference between linear (implicit) vs nonlinear (explicit) discretizations emerges. On top of that, we observe that the Lie\u0301nard-type algorithm does not require an explicit computation of the jacobian matrix d f at the value unj ; hence, in principle, it could be considered also for less smooth reaction term f.\nProceeding in the same spirit as above, we infer \u03c4 un+1j \u2212unj dt = \u03c3 f(unj)\u2212un+1j +v n+1 j\nvn+1j \u2212vnj dt = a dx2 ( un+1j+1\u22122u n+1 j +u n+1 j\u22121 ) + f(unj)\nfrom which we obtain the IMEX linear system (1+\u03b2 )u n+1 j \u2212\u03b2v n+1 j = u n j +\u03b2\u03c3 f(u n j) \u03b1 ( \u2212un+1j+1 +2u n+1 j \u2212u n+1 j\u22121 ) +vn+1j = v n j + f(u n j)dt\n(1.25)\nwith \u03b1 := adt/dx2 and \u03b2 := dt/\u03c4 . The solution of such an iteration provides the numerical approximation of the solution (u,v) (\nun+1 vn+1\n) = A\u22121 ( unj +\u03b2\u03c3 f(unj) vnj + f(unj)dt ) where A describes the coefficients of the left-hand side matrix in (1.25)."
+        },
+        {
+            "heading": "Kinetic algorithm",
+            "text": "A third viable algorithm is limited to the special case \u03c3 = \u03c4 > 0. In such a situation, let us start back from the derivation of the model, i.e. the coupling of the balance law together with the Maxwell\u2013\n10 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni\nCattaneo\u2019s relation, \u2202tu+\u2202xv = f(u), \u03c4 \u2202tv+v =\u2212a\u2202xu.\nHere, \u03c4 and a can be considered as diagonal matrices with elements (\u03c41, . . . ,\u03c4n) and (a1, . . . ,an), with components \u03c4i and ai which are considered possibly different one from the other. Therefore, we end up with the system {\n\u2202tui +\u2202xvi = fi(u1, . . . ,un), \u03c4i \u2202tvi +ai \u2202xui =\u2212vi.\n(1.26)\nThe coupling is due to the presence of the term f = ( f1, . . . , fn) in the first equation. The coefficients of the principal part of the differential operator at the left-hand side of (1.26) are described by the block-diagonal matrix A = blockdiag(A1, . . . ,An) with\nAi := (\n0 1 ai/\u03c4i 0\n) i = 1, . . . ,n.\nTherefore, the eigenvalues of the matrix A with size 2n, are given by the roots of the polynomial\np(\u03bb ) = det(A\u2212\u03bb I) = n\n\u220f i=1\n( \u03bb 2\u2212\u03c12i ) ,\nwhere \u03c1i := \u221a\nai/\u03c4i, are \u03bb =\u00b1\u03c1i for i = 1, . . . ,n. Introducing the diagonal variables (r,s) = (r1, . . . ,rn,s1, . . . ,sn), defined by\nri := 1 2\n( ui\u2212\nvi \u03c1i\n) , si :=\n1 2\n( ui +\nvi \u03c1i\n) ,\nsystem (1.26) becomes \u2202tri\u2212\u03c1i\u2202xri = 1 2\u03c4i (\u2212ri + si)+ 1 2 fi(r1 + s1, . . . ,rn + sn), \u2202tsi +\u03c1i\u2202xsi = 1\n2\u03c4i (+ri\u2212 si)+ 1 2 fi(r1 + s1, . . . ,rn + sn).\nAs before, we firstly consider a spatial discretization with a uniform mesh of step dx. Taking into account the up-wind nature of the model, we obtain dri, j dt \u2212\u03c1i ri, j+1\u2212 ri, j dx + 1 2\u03c4i (+ri, j\u2212 si, j) = 1 2 fi(r1 + s1, . . . ,rn + sn),\ndsi, j dt +\u03c1i si, j\u2212 si, j\u22121 dx + 1 2\u03c4i (\u2212ri, j + si, j) = 1 2 fi(r1 + s1, . . . ,rn + sn).\nNext, we follow the same strategy of the IMEX algorithm, that is we discretize implicitly only the linear part of the system. Thus, we infer rn+1i, j \u2212 rni, j dt \u2212 \u03c1 dx ( rn+1i, j+1\u2212 r n+1 i, j ) \u2212 1 2\u03c4i ( \u2212rn+1i, j + s n+1 i, j ) = 1 2 fi(rn + sn),\nsn+1i, j \u2212 sni, j dt + \u03c1 dx ( sn+1i, j \u2212 s n+1 i, j\u22121 ) \u2212 1 2\u03c4i ( rn+1i, j \u2212 s n+1 i, j ) = 1 2 fi(rn + sn),\nthat gives\nAnalysis and numerics for hyperbolic reaction-diffusion models 11 (1+\u03b1i +\u03b2i)rn+1i, j \u2212\u03b1ir n+1 i, j+1\u2212\u03b2is n+1 i, j = r n i, j + 1 2 fi(rn + sn)dt,\n\u2212\u03b2irn+1i, j \u2212\u03b1is n+1 i, j\u22121 +(1+\u03b1i +\u03b2i)s n+1 i, j = s n i, j + 1 2 fi(rn + sn)dt,\nwhere \u03b1i = \u03c1i dt/dx, \u03b2i = dt/2\u03c4i. Again, denoting by A the coefficients\u2019 matrix of the couple (r,s) in the above system, we obtain the iteration formula(\nrn+1 sn+1\n) = A\u22121 ( rn + f(rn + sn)dt/2 sn + f(rn + sn)dt/2 ) ,\ndefining the mapping at the base of the numerical algorithm."
+        },
+        {
+            "heading": "2 Some waves are better than others",
+            "text": "In this Section the attention moves towards a class of particularly significant special solutions: the traveling waves. Such solutions are indeed supported by hyperbolic reaction-diffusion system corresponding to scalar parabolic reaction-diffusion equations for both monostable and bistable reaction terms. Moreover, we focus on a special class of waves, called propagation fronts explored in details in the case of a bistable reaction term. Special cases where the speed of propagation can be explicitly computed are also provided. A detailed discussion on the monostable case can be found in [22] (see also [6])."
+        },
+        {
+            "heading": "2.1 Traveling waves",
+            "text": "Among the infinitely many solutions of a partial differential equations, some solutions exhibits usually an augmented \u201cstability\u201d, inherited by the additional amount of internal symmetry. A recurrent type of such kind of solutions are the so-called planar traveling waves (or simply traveling waves), i.e. solutions of the form\nu(x, t) := \u03c6(k \u00b7x\u2212 ct) (2.1)\nfor some unitary vector k. Here \u03c6 is called the profile of the wave and c its propagation speed. For such special solutions, PDEs are reduced to ODEs with unknowns depending on the scalar variable \u03be := k \u00b7 x\u2212 ct and for a value c to be determined together with the function \u03c6 . As an example, inserting the ansatz (2.1) in (1.14) and noticing that\nGradxu = d\u03c6 d\u03be \u2297k,\nDivx { A ( d\u03c6 d\u03be \u2297k )} = ADivx ( d\u03c6 d\u03be \u2297k ) = A ( d2\u03c6 d\u03be 2 \u2297k ) ,\nwe end up with an ODE for the profile \u03c6 , parametrized by the velocity c,\nA ( d2\u03c6 d\u03be 2 \u2297k ) + c2\u03c4 d2\u03c6 d\u03be 2 + c{I\u2212\u03c3df(\u03c6)} d\u03c6 d\u03be + f(\u03c6) = 0.\n12 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni\nSince the above system is autonomous, the profile is determined up to translations. In particular, translation \u03c6 \u03b4 := \u03c6(\u00b7\u2212 \u03b4 ) with \u03b4 \u2208 R of a given traveling wave \u03c6 = \u03c6(\u00b7) is itself a traveling wave solution for the same equation. Such properties have an immediate consequence: the derivative of \u03c6 with respect to its argument is an eigenfunction for the corresponding linearized operator at \u03c6 relative to the eigenvalue \u03bb = 0. This influences the stability properties of the wave, dictating the fact that, at most, orbital stability could be expected, meaning convergence of small perturbations to the manifold \u03a6 := {\u03c6 \u03b4 : \u03b4 \u2208 R}. Presence/absence of an asymptotic phase \u2013viz. convergence to a definite element of the manifold \u03a6\u2013 is the (natural) subsequent issue.\nDepending on specific properties of the profile function \u03c6 , different names are associated to traveling waves:\ni. if \u03c6 converges to some asymptotic states \u03c6\u00b1 (which are necessarily two equilibria of the model) with \u03c6\u2212 6= \u03c6+, the solution is called a front; ii. if \u03c6 converges to the same asymptotic state \u03c6 ( again, equilibrium of the model), the solution is said to be a pulse; iii. if \u03c6 is periodic, the solution is a wave-train.\nIn the state space, the three configurations correspond, respectively, to the presence of a heteroclinic orbit, a homoclinic orbit, a cycle. From now on, we focus on the analysis of fronts; also, we restrict the attention to the spatial one-dimensional case. A further reduction concerns with the size of the vector u which is, from the time being, regarded as a scalar quantity u, thus restricting the attention to the second-order scalar equation\n\u03c4 \u2202ttu+\u2202t {u\u2212\u03c3 f (u)}= a\u2202xxu+ f (u). (2.2)\nwhere f is an appropriate functions and \u03c4,\u03c3 ,a are positive constants with \u03c3 \u2208 [0,\u03c4]."
+        },
+        {
+            "heading": "Monostable and bistable nonlinearities",
+            "text": "Following [2, 3], we focus on two types of nonlinearities.\ni. Monostable. The function f is assumed to be smooth, strictly positive in some fixed interval (0,1), negative in (\u2212\u221e,0)\u222a (1,+\u221e), with simple zeros; ii. Bistable. The function f is assumed to be smooth, strictly positive in some fixed interval (\u2212\u221e,0)\u222a (\u03b1,1), negative in (0,\u03b1)\u222a (1,+\u221e), with simple zeros.\nIn both situations, we introduce the corresponding potential\nW (u) :=\u2212 \u222b u\n0 f (s)ds\nThe function W is decreasing for the monostable regime and it has a double-well form for the bistable one (see Fig.1).\nThe former case, whose prototype is f (u) \u221d u(1\u2212u), corresponds to a logistic-type reaction term and it is usually referred to as Fisher\u2013KPP equation (using the initials of the names Kolmogorov, Petrovskii and Piscounov). The potential corresponding to the logistic function f (u) = \u03ba u(1\u2212u) is\nW (u) = 16 \u03ba ( \u22123u2 +2u3 ) ,\ndrawn in Figure 1 (continuous line). Different kind of monostable reaction function f are the Gompertz term, i.e. f (u) = \u03ba u lnu, and von Bertalanffy term, i.e. f (u) = \u03ba(u\u00b5 \u2212 u) with \u00b5 \u2208 (0,1),\nAnalysis and numerics for hyperbolic reaction-diffusion models 13\ncorresponding potentials being W (u) = \u03bau2(2ln |u|\u2212 1)/4 and W (u) = \u03ba { u2/2\u2212u\u00b5+1/(\u00b5 +1) }\n, respectively. The main difference is in the location of the tangent line at u = 0, vertical in the last two cases, and playing a crucial role in the statement of existence of propagating fronts.\nThe latter, whose behaviour is roughly given by the third order polynomial f (u)\u221d u(u\u2212\u03b1)(1\u2212u) with \u03b1 \u2208 (0,1), is called Allen\u2013Cahn equation (sometimes, also bear the names of Nagumo and/or Ginzburg\u2013Landau). The potential which corresponds to f (u) = \u03ba u(u\u2212\u03b1)(1\u2212u) is\nW (u) = 112 \u03ba u 2{6\u03b1\u22124(1+\u03b1)u+3u2} . (2.3)\nThe presence of the additional intermediate zero of f given by \u03b1 emerged in ecological context where it describes the so-called Allee-type effect, needed when cooperation is required for survival (see [14] for a detailed description of the topic)."
+        },
+        {
+            "heading": "2.2 Propagating fronts",
+            "text": "Both monostable and bistable nolinearities share a common crucial feature: they support existence of heteroclinic traveling waves.\nDefinition 2.1 A propagating front is a traveling wave solution for a given PDE system having the special form u(x, t) = \u03c6(\u03be ) where \u03be := x\u2212 ct, connecting two different asymptotic states \u03c6(\u00b1\u221e) = \u03c6\u00b1 with \u03c6\u2212 6= \u03c6+.\nThe main goal stems in showing existence of a heteroclinic solution to the corresponding second order differential equation\n(a\u2212 \u03c4c2)d 2\u03c6\nd\u03be 2 + c d d\u03be\n{ \u03c6 +\u03c3\ndW du\n(\u03c6) } \u2212 dW\ndu (\u03c6) = 0, (2.4)\nwith boundary conditions \u03c6(\u2212\u221e) = \u03c6\u2212, \u03c6(+\u221e) = \u03c6+ where we assume, for definiteness, \u03c6\u2212 = 1 and \u03c6+ = 0.\nEquivalentlly, the second order differential equation (2.4) can be rewritten as\n14 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni d\u03c6 d\u03be = \u03c8,\nd\u03c8 d\u03be = 1 a\u2212 \u03c4c2 { dW du (\u03c6)\u2212 c [ 1+\u03c3 d2W du2 (\u03c6) ] \u03c8 } (2.5)\nNext, assume 1+\u03c3W \u2032\u2032(s) > 0 for any s under consideration, which is indeed satisfied if \u03c3 is sufficiently small. Multiplying by d\u03c6/d\u03be , we deduce the identity\nd d\u03be { 1 2 (a\u2212 \u03c4c 2) ( d\u03c6 d\u03be )2 \u2212W (\u03c6) } + c [ 1+\u03c3 d2W du2 (\u03c6) ]( d\u03c6 d\u03be )2 = 0.\nThus, integrating in R, we infer\nc = W (0)\u2212W (1)\u222b\nR [1+\u03c3W \u2032\u2032(\u03c6)] (\u03c6 \u2032) 2 dx\n(2.6)\nFrom this relation, it is readily observed that the speed c is strictly positive if and only if W (1) < W (0). In particular, in the monostable case, \u03c6\u2212 = 0 is a maximum point and \u03c6+ = 1 is a minimum for W and thus c is strictly positive. Differently, in the bistable case, W is a double-well potential and thus the speed is positive or negative depending on the depth difference W (0)\u2212W (1) of the two wells located at 0 and 1.\nThe starting point in proving existence of propagation fronts is the stability analysis of the singular points of (2.4), i.e. constant values u\u0304 with the property f (u\u0304) = 0, with respect to the ordinary differential system obtained by considering the traveling wave ansatz where the speed c is, for the moment, an external parameter.\nLinearizing at u\u0304 the second order differential equation (2.4), we infer d\u03c6 d\u03be = \u03c8,\nd\u03c8 d\u03be = 1 a\u2212 \u03c4c2 { W \u2032\u2032(u\u0304)\u03c6 \u2212 c [ 1+\u03c3W \u2032\u2032(u\u0304) ] \u03c8 } .\n(2.7)\nThe corresponding characteristic polynomial is\np(\u03bb ; u\u0304,c) := 1 (a\u2212 \u03c4c2) { (a\u2212 \u03c4c2)\u03bb 2 + c ( 1+\u03c3W \u2032\u2032(u\u0304) ) \u03bb \u2212W \u2032\u2032(u\u0304) } .\nThus, setting \u2206(u\u0304,c) := c2 { 1+\u03c3W \u2032\u2032(u\u0304) }2 +4(a\u2212 \u03c4c2)W \u2032\u2032(u\u0304)> 0, (2.8)\nthe two roots of p = p(\u00b7; u\u0304,c) are\n\u03bb\u00b1(u\u0304,c) = \u2212c{1+\u03c3W \u2032\u2032(u\u0304)}\u00b1\n\u221a \u2206(u\u0304,c)\n2(a\u2212 \u03c4c2) . (2.9)\nSince they have opposite signs if W \u2032\u2032(u\u0304) > 0, the singular point (u\u0304,0) is a saddle point for (2.7). Differently, if W \u2032\u2032(u\u0304)< 0 (hence u\u0304 is unstable with respect to the PDE), the two roots are either complex conjugates or both real with the same sign, thus they define either a spiral or a node. Assuming 1+\u03c3W \u2032\u2032(u\u0304) > 0, the spiral and the node are stable (or unstable, respectively) if c > 0 (or c < 0, resp.). Hence, the heteroclinic orbit is a node/saddle connection in the case of Fisher\u2013KPP equation (monostable case) and a saddle/saddle connection in the case of the Allen\u2013Cahn equation (bistable\nAnalysis and numerics for hyperbolic reaction-diffusion models 15\ncase) for both the parabolic (\u03c4 = 0) and the hyperbolic equations (\u03c4 > 0), with relevant consequence in term of the multiplicity of the speeds c.\nTo fix idea, let us give a closer look to traveling waves with a monotone decreasing profile, that is \u03c6\u2212 := 1 > 0 =: \u03c6+. The opposite case can be deduced by straightforward symmetry arguments.\nFor the node/saddle connection, the situation is rather complicated. First of all, we have to restrict the attention to the regimes of the parameter c such that the critical point is an unstable node, ruling out stable/unstable spirals and stable nodes. For W \u2032\u2032(u\u0304) < 0, the discriminant \u2206 , defined in (2.8), distinguishes whether the two roots of the polynomial p are real or not. When strictly positive, such roots are real and distinct and we search for intersection between the two-dimensional unstable manifold of the critical point \u03c6\u2212= 1 at\u2212\u221e and the one-dimensional stable manifold at \u03c6+ = 0 at +\u221e. In term of dimensions, the situation is favourable. Additional computations show that existence could be provided for a whole half-line of values for the parameter c. For more details on the monostable case, we refer to [23] in the parabolic case (i.e. \u03c3 = \u03c4 = 0) and to [6] for the case \u03c3 = \u03c4 > 0.\nFor the saddle/saddle connection, the one-dimensional manifold of the steady state \u03c6\u2212 = 1 has to intersect the stable manifold of the steady state \u03c6+ = 0. Being the system planar, the corresponding stable and unstable manifolds are one-dimensional and the intersection of the two manifolds is nongeneric, corresponding to the fact that the speed c has to be appropriately tuned. This translates into the existence of a specific value of the speed c\u2217 for which the heteroclinic connection emerges.\nFrom now on, we restrict the attention to the bistable case with W (1) \u2264W (0) so that c \u2265 0, see formula (2.6), with the exception of some minor deviations from the mainstream dedicated to the monostable case. In particular, we may restrict the attention to the sub-characteristic regime, determined by the additional requirement a\u2212 \u03c4c2 > 0.\nIntroducing the variable \u03b6 := \u03be/ \u221a a\u2212 \u03c4c2, equation (2.4) becomes simpler, namely\nd2\u03c6 d\u03b6 2 + \u03b3 d d\u03b6 { \u03c6 +\u03c3W \u2032(\u03c6) } \u2212W \u2032(\u03c6) = 0, (2.10)\nwhere c\u03c4 :=\nc\u221a a\u2212 \u03c4c2 . (2.11)\nEquation (2.10) can be equivalently rewritten as the first order system d\u03c6 d\u03b6 = \u03c8,\nd\u03c8 d\u03b6\n=W \u2032(\u03c6)\u2212 c\u03c4 { 1+\u03c3W \u2032\u2032(\u03c6) } \u03c8 (2.12)\nwith asymptotic conditions (\u03c6 ,\u03c8)(\u2212\u221e) = (1,0) and (\u03c6 ,\u03c8)(+\u221e) = (0,0). A different first order form for (2.10) is given by the Lie\u0301nard form d\u03c6 d\u03b6 =\u2212c\u03c4 { \u03c6 +\u03c3W \u2032(\u03c6) } +\u03c7,\nd\u03c7 d\u03b6 =W \u2032(\u03c6),\nwith asymptotic conditions (\u03c6 ,\u03c7)(\u2212\u221e) = (1,0) and (\u03c6 ,\u03c7)(+\u221e) = (0,0). The simplified form (2.12) for (2.4) is particularly convenient when passing from local to global analysis, using the rotated vector field property of system (2.10). The final statement relative to existence of propagating front is reported here, for readers\u2019 convenience, as taken from [34].\n16 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni\nTheorem 2.1 Let W be a double-well potential with local minima at 0 and 1. If \u03c4 > 0, \u03c3 \u2208 [0,\u03c4] and 1+\u03c3W \u2032\u2032(s)> 0 for any s \u2208 [0,1], then there exists a unique value c\u2217 \u2208R such that the equation (2.4) has a monotone increasing solution \u03c6 with asymptotic states \u03c6(\u2212\u221e) = 1 and \u03c6(+\u221e) = 0."
+        },
+        {
+            "heading": "2.3 Special cases with explicit propagation speeds",
+            "text": "Next, we focus on three special cases for which an explicit formula is available. The first one concerns with the case of two wells of equal depth. Next, we pass to consider the specific case of a third order polynomial reaction term for which explicit formulas for both the standard parabolic equation and the damped hyperbolic one can be determined. Finally, we discuss the case of a piecewise linear reaction function with a jump located at some intermediate value \u03b1 ."
+        },
+        {
+            "heading": "Two wells of equal depth",
+            "text": "The case of a double-well potential W with wells of equal depth can be treated separately, since (2.6) indicates that c\u2217 = 0, indipendently on the values of \u03c3 \u2265 0.\nProposition 2.1 Let \u03c4 \u2265 0 and \u03c3 \u2208 [0,\u03c4]. In addition, let f = \u2212W \u2032 with W double-well potential having wells located at 0 and 1 with W (0) =W (1). Then, equation (2.2) supports monotone steady states connecting equilibria \u03c6\u2212 = 1 and \u03c6+ = 0.\nProof. We report here the standard proof for reader\u2019s convenience. Substituting c = 0, equation (2.4) reduces to\na d2\u03c6 d\u03be 2 \u2212W \u2032(\u03c6) = 0,\nMultiplying by the derivative d\u03c6/d\u03be , we end up with the conservative form\nd d\u03be { a 2 ( d\u03c6 d\u03be )2 \u2212W (\u03c6) } = 0,\nwhich can be integrated. Then, we infer\nd\u03c6 d\u03be\n=\u2212 \u221a 2/a \u00b7 \u221a W (\u03c6)\u2212W (\u03c6\u00b1), (2.13)\nrecalling that \u03c6 is monotone decreasing since \u03c6+ = 0 < 1 = \u03c6\u2212. Hence, among other solutions, equation (2.13) defines implicitly the steady profile \u03c6 = \u03c6(\u03be ) by\u222b \u03c6(\u03be )\n\u03c6(\u03be0) ds\u221a W (s)\u2212W (\u03c6\u00b1)\n= \u221a 2/a(\u03be0\u2212\u03be )\nconnecting \u03c6\u2212 = 1 to \u03c6+ = 0 for any given \u03be0 \u2208 R. ut\nAs an example, let us consider the case f (u) = \u03ba u(u\u22121/2)(1\u2212u). Since the potential is given by W (u) = 14 \u03ba u 2(1\u2212u)2, there holds\n\u222b \u03c6(x) 1/2 2ds s(1\u2212 s) = \u221a 2\u03ba/a(x0\u2212 x)\nAnalysis and numerics for hyperbolic reaction-diffusion models 17\nthat gives\nln (\n\u03c6(x) 1\u2212\u03c6(x)\n) = \u221a \u03ba/2a(x0\u2212 x).\nExpliciting the value \u03c6 = \u03c6(x), we obtain\n\u03c6(x) = 1\n1+ e \u221a \u03ba 2a (x\u2212x0) (x0 \u2208 R). (2.14)\nAs stated at the beginning, the propagation speed is c = 0.\nThird-order polynomial reaction function\nNext, we focus on the case c\u2217 > 0, which occurs, again by formula (2.6) for W (1) < W (0). In the case of the third order polynomial\nf (u) = \u03ba u(u\u2212\u03b1)(1\u2212u) (2.15)\nwith \u03ba > 0, this translates into the choice \u03b1 \u2208 (0,1/2). To start with, let us focus on the limiting case \u03c3 = \u03c4 = 0, that is on the parabolic reaction-diffusion equation \u2202tu = a\u2202xxu+\u03bau(u\u2212\u03b1)(1\u2212u). (2.16)\nIn such a case, there exist explicit formulas for both propagation speed c and front profile \u03c6 . Indeed, let us set\nd\u03c6 d\u03be =\u2212A\u03c6(1\u2212\u03c6).\nfor some constant A > 0. Since\nd2\u03c6 d\u03be 2 =\u2212A(1\u22122\u03c6)d\u03c6 d\u03be = A2\u03c6(1\u2212\u03c6)(1\u22122\u03c6),\ninserting in (2.4) with \u03c3 = \u03c4 = 0 and simplifying the factor \u03c6(1\u2212\u03c6), we infer\n(\u03ba\u22122aA2)\u03c6 +aA2\u2212 cA\u2212\u03ba\u03b1 = 0\nwhich gives A = \u221a\n\u03ba/(2a) and c = c0 := \u221a 2a\u03ba ( 1 2 \u2212\u03b1 ) . (2.17)\nThus, the corresponding profile \u03c6 solves the Bernoulli equation d\u03c6/d\u03b7 = \u2212\u03c6 + \u03c6 2 where \u03b7 = (\u03ba/2a)1/2 \u03be , which is explictly given by\n\u03c6(\u03be ) = 1\n1+ e \u221a \u03ba 2a (\u03be\u2212\u03be0) (\u03be0 \u2208 R),\nwhich, incidentally, coincide with (2.14) when \u03be = x. When dealing with propagation fronts for (2.2) with \u03c3 = 0, that is\n\u03c4 \u2202ttu+\u2202tu = a\u2202xxu+ f (u),\na formula, corresponding to (2.17), can be provided. Indeed, equation (2.4) with \u03c3 = 0 coincide with the traveling wave equation for (2.16) where a has been replaced by a\u2212 \u03c4c2. Thus, adding the subscript \u03c4 to c to give evidence to dependency, there holds\n18 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni c\u03c4 = \u221a 2(a\u2212 \u03c4c2\u03c4)\u03ba \u00b7 ( 1 2 \u2212\u03b1 ) .\nSquaring and rearranging, we infer{ 1+2\u03ba\u03c4 ( 1 2 \u2212\u03b1 )2} c2\u03c4 = 2a\u03ba ( 1 2 \u2212\u03b1 )2 ,\nand thus c\u03c4 = c0\u221a 1+ \u03c4c20/a2 . (2.18)\nwhere c0 is given in (2.17). There is a strict connection between relation (2.18) and (2.11), being one the inverse of the other in the case a = 1. Specifically, relation (2.18) goes beyond the special case of the cubic f , holding for general reaction function. In particular, since 0 \u2264 c\u03c4 < c0 for \u03c4 > 0, as shown by the inequality\nc\u03c4 \u2212 c0 c0\n= 1\u221a\n1+ \u03c4c20/a2 \u22121 < 0,\nthe propagation phenomena is always slowed down when pure damping is added, inertia being limited to the deceleration effect of the front.\nWhen dealing with hyperbolic reaction-diffusion equation (2.2) with \u03c3 \u2208 (0,\u03c4] and cubic f , to our knowledge, there is no available extension of the explicit formulas (2.17) and (2.18). In particular, as it will be shown later on, the addition of the relaxation term, i.e. \u03c3 = \u03c4 , the situation relative to the difference in propagation speed can change in some regime of the parameter \u03b1 \u2208 (0,1).\nPiecewise affine reaction function with a bistable shape\nFinally, following the approach in [39], we compute explicit traveling wave solutions for a very specific form for the reaction function f of bistable type. Specifically, we concentrate on a piecewise affine function given by\nf (u) = { \u2212mu u < \u03b1, m(1\u2212u) u\u2265 \u03b1.\nm > 0, \u03b1 \u2208 (0,1), (2.19)\n(see Fig.2). In such a special case, it is possible to provide an explicit expression for both the traveling wave profile (\u03c6 ,\u03c8) and of its speed c also for the hyperbolic model (2.4). Indeed, let us go back to\nAnalysis and numerics for hyperbolic reaction-diffusion models 19\n(2.12) and rewrite it as\nd\u03c6 d\u03be = \u03c8, (a\u2212 \u03c4c2) d\u03c8 d\u03be = m\u03c6 \u2212 c(1+\u03c3m)\u03c8,\nto be matched at \u03c6 = \u03b1 with\nd\u03c6 d\u03be = \u03c8, (a\u2212 \u03c4c2) d\u03c8 d\u03be = m(\u03c6 \u22121)\u2212 c(1+\u03c3m)\u03c8.\nSince the two singular points are saddles, the matching amounts in choosing the critical value of the parameter c such that the unstable manifold of the singular point (0,0) intersects, at \u03c6 = \u03b1 , the stable manifold of (1,0).\nThe directions of the unstable/stable manifolds are described by the eigenvectors of the corresponding linearized equation. Hence, denoted by (\u03c6\u0303 , \u03c8\u0303) the perturbation of the equilbrium state (\u03c6\u0304 ,0), they are given by the eigendirection of the matrix\nA := 1\na\u2212 \u03c4c2 ( 0 a\u2212 \u03c4c2 m \u2212c(1+\u03c3m) ) In particular, this means that (\u03c6 ,\u03c8) belongs to the unstable/stable manifold if and only if \u03c8\u0303 = \u03bb\u00b1\u03c6\u0303 , where \u03bb\u00b1 denote the (positive/negative) roots of the characteristic polynomial\np(\u03bb ) = det(A\u2212\u03bb I) = 1 a\u2212 \u03c4c2\n{ (a\u2212 \u03c4c2)\u03bb 2 + c(1+\u03c3m)\u03bb \u2212m } .\nSpecifically, the explicit values for \u03bb\u00b1 are\np(\u03bb\u00b1) = 0 \u21d0\u21d2 \u03bb = \u03bb\u00b1 := \u2212c(1+\u03c3m)\u00b1\n\u221a \u2206(c)\n2(a\u2212 \u03c4c2)\nwhere the discriminant \u2206 is\n\u2206(c) := c2(1+\u03c3m)2 +4(a\u2212 \u03c4c2)m = [ (1\u2212\u03c3m)2\u22124(\u03c4\u2212\u03c3)m ] c2 +4am,\nwhich is strictly positive in the regime c2 < a/\u03c4 . Thus, the stable manifold of (0,0) and the unstable manifold at (1,0) are given by \u03c8\u0303 = \u03bb+\u03c6\u0303 and \u03c8\u0303 = \u03bb\u2212\u03c6\u0303 , that is\n\u03c8 = \u03bb\u2212\u03c6 and \u03c8 = \u03bb+(\u03c6 \u22121).\nThe two graphs intersect at \u03c6 = \u03b1 if and only if |\u03bb\u2212|\u03b1 = \u03bb+(1\u2212\u03b1). Recalling the explicit formulas for \u03bb\u2212 and \u03bb+, the latter equality can be rewritten as\u221a\n\u2206(cex)(1\u22122\u03b1) = cex(1+m\u03c3).\nAfter some straightforward algebraic manipulations, we end up with\ncex = {\nma (1+m\u03c3)2\u03b1(1\u2212\u03b1)+m\u03c4(2\u03b1\u22121)2\n}1/2 (1\u22122\u03b1). (2.20)\nComparing the speeds cex for a generic choice of parameters \u03c3 and \u03c4 and c0 for \u03c3 = \u03c4 = 0 gives\n20 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni\ncex c0 =\n{ \u03b1(1\u2212\u03b1)\n(1+\u03c3m)2\u03b1(1\u2212\u03b1)+ \u03c4m(2\u03b1\u22121)2 }1/2 For \u03c3 \u2208 [0,\u03c4], since \u03b1(1\u2212\u03b1)< 1/4 for \u03b1 6= 1/2, there holds\n\u03b1(1\u2212\u03b1) (1+m\u03c3)2\u03b1(1\u2212\u03b1)+m\u03c4(2\u03b1\u22121)2 < 1 (1+m\u03c3)2 +4m\u03c4(2\u03b1\u22121)2 \u2264 1\nwith the equality holding if and only if \u03c4 = 0. Hence, in the same regime, it follows\ncex\u2212 c0 c0 =\n{ \u03b1(1\u2212\u03b1)\n(1+m\u03c3)2\u03b1(1\u2212\u03b1)+m\u03c4(2\u03b1\u22121)2\n}1/2 \u22121 < 0.\nIn particular, the (hyperbolic) propagation speed cex is always smaller than the corresponding (parabolic) speed c0 for any choice of the couple \u03c3 and \u03c4 . This could be also recognised, observing directly that the value of cex, regarded as a function of \u03c3 and \u03c4 , is strictly decreasing with respect to both variables.\nLet us remark that, in such a case, the function f is discontinuous (increasing) at the value u = \u03b1 and, thus, the first derivative of f is, lousely speaking, equal to +\u221e. In particular, the dissipativity condition 1\u2212\u03c3 f \u2032 > 0 is never satisfied at such a point whenever \u03c3 > 0, with dramatic consequences to be explored in the next Section."
+        },
+        {
+            "heading": "3 Numerical computation of the propagation speed",
+            "text": "From now on, we restrict the attention to two main cases corresponding to the choices: \u03c3 = 0, \u03c4 > 0 and \u03c3 = \u03c4 > 0, reported here for reader\u2019s convenience,\n\u03c4\u2202ttu+\u2202tu = a\u2202xxu+ f (u) (damping) \u03c4\u2202ttu+\u2202t {u\u2212 \u03c4 f (u)}= a\u2202xxu+ f (u) (relaxation)\nAnalysis and numerics for hyperbolic reaction-diffusion models 21\nwhere f (u) = \u03ba u(u\u2212\u03b1)(1\u2212u) with \u03ba > 0 and \u03b1 \u2208 (0,1). Coherently with the previous part of the paper, we focus on propagating waves connecting 1 at \u2212\u221e with 0 at +\u221e in the case \u03b1 \u2208 (0,1/2], so that the speed cex is non-negative as a consequence of the relation W (1)\u2264W (0), see identity (2.6)."
+        },
+        {
+            "heading": "3.1 Computation of the propagation speed",
+            "text": "In the purely damped case, the explicit formula (2.18) for the propagation speed can be used to assess the reliability of the so-called phase-plane algorithm, presented in detail in the next subsection. On the other hand, when relaxation is taken into account, there is no explicit formula for the velocity. Thus, an approximated version of its value should be considered as furnished by some algorithm. Based on the tests used in the damped case, we will consider as \u201cexact\u201d speed cex the ones provided by the phase-plane algorithm (later on, denoted by cdu,\u03b8 ), and use it to test the capability of two (dynamical) numerical schemes to provide genuine predictions."
+        },
+        {
+            "heading": "Phase plane algorithm",
+            "text": "As stated before, both singular points of the ODE system for traveling waves (2.5) are saddles in the bistable case. As a consequence, both the corresponding unstable/stable manifold are onedimensional. Therefore, the existence of a heteroclinic connection is equivalent to the fact that, for an appropriately tuned parameter c = cex, the unstable curve exiting from the critical point (1,0) intersects the stable curve entering the critical point (0,0). Based on the rotated vector field property, we can perform a shooting-type argument and transform the problem of the existence of a heteroclinic orbit into the search of a zero of a given function. Such a step can be performed by preliminarily finding a reliable approximation of the solution to an ordinary differential equation and then by means of a standard interval division scheme, furnishing the exact value cex of the propagation speed.\nTo enter the details, we denote by v0 = v0(\u03c6 ,c), the stable manifold of (0,0) and by v1 = v1(\u03c6 ,c) the unstable manifold of (1,0). Then, we look for two different solutions of the first order equation\n\u2202v \u2202\u03c6 = d\u03c8/d\u03be d\u03c6/d\u03be = 1 a\u2212 \u03c4c2 { 1 \u03c8 dW du (\u03c6)\u2212 c [ 1+\u03c3 d2W du2 (\u03c6) ]}\n(3.1)\nwith initial conditions along the stable/unstable manifold of (0,0)/(0,1). Curves v0 and v1 are determined by choosing an initial datum on the corresponding stable/unstable manifold as provided by the linearized operator at the two critical points. Namely, at u\u0304, we compute the eigenvectors relative to the eigenvalues \u03bb\u00b1 = \u03bb\u00b1(u\u0304;c) as given by (2.9). Then, we approximate the solutions v0 = v0(\u00b7,c) and v1 = v1(\u00b7,c) with the ones defined by the initial data\nv0(\u03b5,c) = \u03bb\u2212(0,c)\u03b5 and v1(1\u2212 \u03b5,c) =\u2212\u03bb+(1,c)(1\u2212 \u03b5)\nfor \u03b8 small enough and solving forward/backward (3.1) for v0/v1, respectively. Denoting by v0 and v1 such approximations, we evaluate the difference function h of v0 and v1 at u = \u03b1 , that is h(c) := v0(\u03b1,c)\u2212 v1(\u03b1,c),\nfor c \u2208 (\u2212 \u221a a/\u03c4, \u221a a/\u03c4). It can be readily seen that\n22 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni h(\u2212 \u221a a/\u03c4)< 0 < h( \u221a a/\u03c4).\nMoreover, relying on the rotated vector field property, the function h is strictly increasing in (\u2212 \u221a a/\u03c4, \u221a\na/\u03c4) and, thus, it has a single zero, corresponding to the value cex. The heteroclinic orbit corresponds to such a choice of the critical speed cex such that h(cex) = 0, which is uniquely determined since the function h is strictly monotone increasing,\nHeuristic validation of the phase-plane algorithm in the purely damped case\nNext, we compare the exact formula (2.18) in the case \u03c3 = 0, a = \u03ba = 1, recalled here for reader\u2019s convenience, viz.\ncex =\n\u221a 2 (1/2\u2212\u03b1)\u221a\n1+2\u03c4 (1/2\u2212\u03b1)2 ,\nwith the approximated value cdu,\u03b5 provided by the phase-plane algorithm using the value Edu,\u03b5 as measure of the relative error, defined by\nEdu,\u03b5 := \u2223\u2223\u2223\u2223cdu,\u03b5 \u2212 cexcex \u2223\u2223\u2223\u2223 (3.2) To start with, we learn from Fig.4 that there is numerical evidence of a scheme of order 1 in the case \u03c4 = 1. Different values of \u03c4 , a and \u03ba fits into the same scenery.\nFrom this, we extrapolate the final (reliable) choices du = 10\u22125 and \u03b5 = 10\u22128. The corresponding values for the exact formula cex, the approximated value cdu,\u03b5 and the relative error Edu,\u03b5 , are reported in Table 1, for different values of the unstable zero \u03b1 , chosen as a value in (0,1/2).\nIn the case \u03c3 \u2208 (0,\u03c4] for some \u03c4 > 0, to our knowledge, there is no explicit formula for the case of the double-well potential W , given by (2.3). Hence, we consider the speed approximation provided by the phase-plane algorithm with the values for du and \u03b5 previously detected. From now on, for simplicity, we will denote cdu,\u03b5 by cex and consider the relative errors with respect to such an approximated value.\nAnalysis and numerics for hyperbolic reaction-diffusion models 23\nTo conclude, in Figure 5, we compare the values for the Allen\u2013Cahn equation in the standard parabolic case, in the hyperbolic case with damping, in the hyperbolic case with relaxation. It is transparent that the role played in the latter is crucially different and it exhibits values \u03b1 where the role of inertia is purely dissipative and others values for which sustained propagation is present."
+        },
+        {
+            "heading": "3.2 PDE-based algorithms to approximate the propagation speed",
+            "text": "The aim of this Subsection is to compare the capability of two different PDE-based algorithms to recover a reliable approximation of the speed of a front. The strategy is different with respect to the one presented in Subsection 3.1 being of dynamical nature, i.e. grounded on the preliminary determination of the numerical solution of the underlying partial differential equation. Entering the details, we choose a scheme for the PDE and solve it in the space interval [0,L], with zero-flux boundary conditions, in the time span [0,T ], corresponding to some initial datum. Then, choosing two consecutive frames u(\u00b7,s) and u(\u00b7, t) with 0 < s < t, we look for a strategy furnishing a scalar\n24 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni\nvalue c such that u(x, t)\u2212u(y,s)\u2248 \u03c6(x\u2212 ct)\u2212\u03c6(y\u2212 cs).\nThe key point stems in reducing from two functions (i.e. the solution profiles) to a single scalar value which should be able to describe, in principle, the overall propagating characteristic of the wave.\nWe consider the three numerical schemes described in Subsection 1.3 (with the kinetic algorithm limited to the relaxation case), freezing the data relative to the two profiles u(\u00b7,s) and u(\u00b7, t) with 0 < s < t appropriately chosen. Then, we determine an approximation of the speed by means of some suitably chosen algorithm.\nTwo main tools can be used to provide an estimate of the speed, the scout & spot algorithm and the LeVeque\u2013Yee formula, which we present in details in the following paragraphs.\nAt this point, a word of caution is required. Indeed, the approximated expression c = cdx,dt for the velocity is relative to the specific numerical scheme and, in addition to the scheme itself, it depends on both choices of space and time mesh sizes. Also, the potential existence of a propagating front for the semi- and fully-discrete schemes (not explored in this Chapter) is not necessarily related to the existence of a continuous propagating front (sketched in this Chapter and rigorously proved in [6, 22, 33, ?] for different types of hyperbolic reaction-diffusion equations). Results on the existence of parabolic reaction-diffusion traveling waves can be found in [4, 30, 38, 49] for spatially-discrete schemes (sometimes referred to as \u201clattices\u201d) and in [11, 20, 24, 25] for the fully-discrete case. Moreover, discussions relative to hyperbolic equations can be found in [7, 19]. For completeness, let us also mention that a corresponding exploration in the context of conservation laws, started in [26, 37], can be found in [5, 45]. To our knowledge, a detailed scrutiny of existence of propagating front for both semi- and fully-discrete schemes proposed in Subsection 1.3 is not currently available and we regard at it as a very interesting issue.\nIn any case, as shown in most of the previous references, it is reasonable to associate to any convergent numerical scheme a number \u2013coinciding with the \u201cdiscrete\u201d speed of propagation\u2013 that could be regarded as an approximation of the exact velocity value in the continuous setting under appropriate limiting behavior of the parabolic ratio dt/dx2.\nPrecisely, given one of the three numerical schemes to approximate the hyperbolic reactiondiffusion equation (first-order, Lie\u0301nard, kinetic) together with one of the two possible algorithms to estimate the speed (scout&spot, LeVeque\u2013Yee, with details provided in the subsequent pages), we consider as a reliable error measure the value\nEscheme\u2217 := \u2223\u2223\u2223\u2223cscheme\u2217 \u2212 cexcex \u2223\u2223\u2223\u2223 , where, as stated before, cex coincides with cdu,\u03b8 with du = 10\u22125 and \u03b5 = 10\u22128 and cscheme\u2217 is the estimated value for the propagation speed. We anticipate that we are going to compare the three schemes considering spatial and temporal mesh size given, respectively, by dx= 10\u22121 and dt= 10\u22123, so that the ratio dt/dx2 has the exact value 10\u22121 to be regarded as a \u201csmall number\u201d."
+        },
+        {
+            "heading": "Scout & spot algorithm",
+            "text": "The first determines the speed of propagation considering a fixed level curve, say \u03b8 , taking into account the fact that, whenever the solution u converges to the propagating front \u03c6 , the relation u(x, t) \u2248 \u03c6(x\u2212 ct) holds asymptotically in time, i.e. as t \u2192 +\u221e. Let \u03c6\u2212 < \u03c6+ and fix a value \u03b8 \u2208 (\u03c6\u2212,\u03c6+) and consider two different time instants, denoted here by t and s, such that u(x(s),s) = u(x(t), t) = \u03b8 , then\nAnalysis and numerics for hyperbolic reaction-diffusion models 25\nx(t)\u2212 ct \u2248 \u03c6\u22121(\u03b8)\u2248 x(s)\u2212 cs.\nHence, we deduce the approximation formula\nc\u2248 x(t)\u2212 x(s) t\u2212 s . (3.3)\nTranslating such approximated rule in a definite algorithm is based on the introduction of a specific space mesh J = {x1, . . . ,x j}= {dx,2dx, . . . , jdx}. Assuming that the profile unj is strictly monotone increasing with respect to j, the first step consists in considering the first value where the threshold \u03b8 is trespassed for any given time tn, that is\nn 7\u2212\u2192 jn(\u03b8) := max{ j \u2208 J : unj < \u03b8}.\nApproximation formula (3.3) becomes\ncn,ps&s = c n,p s&s(\u03b8) = jn+p(\u03b8)\u2212 jn(\u03b8) tn+p\u2212 tn \u00b7 dx\n= [ jn+p(\u03b8)\u2212 jn(\u03b8) ] \u00b7 dx\npdt\n(3.4)\nSuch procedure corresponds to a piecewise constant interpolation of the states unj and u n j+1. Moreover, the above formula shows that the propagation speed of slow waves provided by such a level curve algorithm is \u201cquantized\u201d, that is any candidate as limiting speed is an integer multiple of the positive value by dx/(pdt).\nApplying such an algorithm requires a number of choices, which can be matter of criticism, starting from the fact that the profile is expected to be monotone increasing. Here, we choose \u03b8 = \u03b1 , p = T/(2dt) so that the speed is approximated up to an error of order dx/(pdt) = 10\u22122 in the case T = 50 and dx = 10\u22121."
+        },
+        {
+            "heading": "LeVeque\u2013Yee formula",
+            "text": "The second strategy, inspired by [36], makes use of a spatial average of the profile and it does not require any monotone assumption on the solution. Anyway, it is still needed that the two asymptotic states, \u03c6\u2212 at \u2212\u221e and \u03c6+ at +\u221e, are different, i.e. the connection has to be heteroclinic.\nLet \u03c6 be a differentiable function with asymptotic states \u03c6(\u00b1\u221e) = \u03c6\u00b1. The LeVeque\u2013Yee formula takes advantage from the exact relation\u222b\nR {\u03c6(x+h)\u2212\u03c6(x)} dx = h [\u03c6 ]\nwhere [\u03c6 ] := \u03c6+\u2212\u03c6\u2212. The above formula can be proved by observing that\u222b R {\u03c6(x+h)\u2212\u03c6(x)} dx = h \u222b R \u222b 1 0 d\u03c6 dx (x+\u03b8h)d\u03b8 dx\n= h \u222b 1\n0 \u222b R d\u03c6 dx (x+\u03b8h)dxd\u03b8\n= h \u222b R d\u03c6 dx (x+\u03b8h)dx = h [\u03c6 ] .\nConsidering h equal to \u2212cdt and assuming [\u03c6 ] 6= 0, the equality becomes\n26 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni\nc = 1\n[\u03c6 ] dt \u222b R {\u03c6(x)\u2212\u03c6(x\u2212 cdt)} dx.\nAssuming that unj is an approximation of \u03c6(x j\u2212 ctn), we infer the estimate\nc\u2248 cn,1LY := 1 \u00b7 (un\u2212un+1) [\u03c6 ] \u00b7 dx dt = 1 [\u03c6 ] \u2211j (unj \u2212un+1j ) \u00b7 dx dt , (3.5)\nwhere 1 = (1, . . . ,1). Hence, the value cn can be considered as a space averaged propagation speed, which is expected to stabilize when the approximation un converges to the given asymptotic profile \u03c6 with constant velocity c."
+        },
+        {
+            "heading": "3.3 Numerical experiments",
+            "text": "Next, we intend here to compare the results produced by the two algorithms. In this respect, we have to specify the initial datum which will be chosen in the class of Riemann type, i.e. corresponding to the discontinuous function\nu0(x) =\n{ 1 x < 0,\n0 x > 0,\nwith v0 determined by the corresponding values obtained by setting \u2202tu(x,0) = 0 in the corresponding algorithm. Such choice is very natural, since we are looking for a solution converging to the traveling front connecting the two stable state.\nWe focus on the case of the cubic bistable nonlinearity (2.15) with \u03b1 \u2208 (0,1), with the goal of matching the values for the velocity c\u2217 as given by comparing the values provided by the exact formula (2.18) in the case \u03c3 = 0 and \u03c4 = 1 and the value provided by the shooting argument, as described in Subsection 3.1. For sakeness of simplicity, we limit ourselves to the case a = \u03ba = 1.\nWe numerically solve the corresponding PDE in the space interval [0,L] \u2013with zero-flux boundary conditions\u2013 in the time span [0,T ], where we consider the case L = 50, T = 20 with spatial mesh dx = 10\u22121 and time discretization dt = 10\u22123.\nFinally, to quantify the error of the estimates we use the standard quantity E\u2217 := \u2223\u2223\u2223\u2223cn,p\u2217 \u2212 cexcex \u2223\u2223\u2223\u2223 , where \u2217 \u2208 {s&s,LY} and p = 1 if \u2217= LY."
+        },
+        {
+            "heading": "Allen\u2013Cahn equation with damping",
+            "text": "Here, we compare the exact formula for the propagation speed (2.18) with the approximated estimates obtained by applying in series one of the two scheme (first-order and Lie\u0301nard) and, after that, the scout&spot algorithm (3.4) and the LeVeque\u2013Yee formula (3.5). The results are summarized in Table 2, relatively to three different choices of the intermediate (unstable) zero \u03b1 .\nIt is transparent the higher precision of the LeVeque\u2013Yee formula (3.5) which add to the number of free parameters to be chosen in the scout&spot algorithm (such as the level \u03b8 , the value of p...), making the use of the latter strategy less effective.\nAnalysis and numerics for hyperbolic reaction-diffusion models 27\nNext, we pass to analyze the Allen\u2013Cahn equation with a piecewise linear reaction function with a jump point located at u = \u03b1 . In this case, the crucial problem is, of course, the presence of a discontinuity in the source term. Thus, we compare the capability of the scout&spot algorithm and the LeVeque\u2013Yee formula. The results, obtained by using the same numerical data previously described, are reported in Table 3. As can be appreciated from the values, the error is always of the order of 1%, which is largely acceptable.\nAs shown by the numerical results, also the case of a discontinuous reaction function can be handled by both algorithms, with slightly better error estimates for the LeVeque\u2013Yee formula (which is also very easy to implement)."
+        },
+        {
+            "heading": "Allen\u2013Cahn equation with relaxation",
+            "text": "Finally, we consider the case of the hyperbolic Allen\u2013Cahn equation with relaxation, that is (2.2) with \u03c3 = \u03c4 > 0 (fixed equal to 1, for simplicity) for the third order polynomial reaction function, given by (2.15). In such a case, in addition to the first-order and Lie\u0301nard schemes, we may also apply the kinetic scheme, also presented in Subsection 1.3. A selection of the results are collected in Table 4 and confirm the same conclusion as above: with the same space-time grid, the LeVeque\u2013Yee formula is to be preferred, since it guarantees greater precision in speed approximation.\nOther numerical experiments have been performed with different choices of p and better precision for the estimate of the scout&spot algorithm, providing a corrisponding higher order of precision of the LeVeque\u2013Yee formula, which appear again as a more precise tool. Comparing the three types\n28 C. Lattanzio, C. Mascia, R.G. Plaza, C. Simeoni\nof scheme \u2013first-order reduction, Lie\u0301nard, kinetic\u2013 the first two have some very poor resolution of the equation for short time, in particular when considered in relation with the third one. Spurious oscillations are generated by both the schemes due to the presence of a discontinuity in the initial datum. Differently, the kinetic algorithm is capable of reproducing the correct behavior also in the short time (see [32, 33] for more numerical simulations). Nevertheless, we stress that the latter is much slower with respect to the other two. Thus, computing the propagation speed \u2013which is a parameter relevant for the large-time behavior\u2013 the short time behavior is of secondary importance with respect to the capability of the scheme of being capable to reproduce the main features of the model in the long run, once the evolution has already solved the initial problem of the presence of a jump. This is particularly crucial because of the presence of the reaction term which, in large part of the space, pushes the solutions to stay close to stable solution of the underlying ODE.\nThe case of the piecewise affine reaction function, described in the last paragraph of Subsection 2.3, is harder to be simulated, since the numerical schemes of Subsection 1.3 are not well-behaved in the presence of discontinuous reaction function due to the presence of the term \u03c4 f (u) differentiated with respect to time. Numerical deficiencies arise already when performing simulations of the PDE, inherited by the jump of the reaction function f , probably due to the fact that the dissipativity condition 1\u2212 \u03c4 f \u2032 > 0 is never satisfied at \u03b1 whenever \u03c4 > 0, At the moment, we are not aware of any numerical schemes which is capable of performing reliable simulations in presence of discontinuities.\nAcknowledgements The authors are thankful to the anonymous referee for a number of significant remarks which drastically improved the content of the manuscript. Simulations have been performed by SCILAB 6.0.2, https: //www.scilab.org/."
+        }
+    ],
+    "title": "Analysis and numerics of the propagation speed for hyperbolic reaction-diffusion models",
+    "year": 2022
+}

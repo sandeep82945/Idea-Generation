@@ -1,0 +1,921 @@
+{
+    "abstractText": "State-of-the-art performance in electroencephalography (EEG) decoding tasks is currently often achieved with either Deep-Learning (DL) or Riemannian-Geometry-based decoders (RBDs). Recently, there is growing interest in Deep Riemannian Networks (DRNs) possibly combining the advantages of both previous classes of methods. However, there are still a range of topics where additional insight is needed to pave the way for a more widespread application of DRNs in EEG. These include architecture design questions such as network size and end-to-end ability.How these factors affect model performance has not been explored. Additionally, it is not clear how the data within these networks is transformed, and whether this would correlate with traditional EEG decoding. Our study aims to lay the groundwork in the area of these topics through the analysis of DRNs for EEG with a wide range of hyperparameters. Networks were tested on two public EEG datasets and compared with state-of-the-art ConvNets. Here we propose end-to-end EEG SPDNet (EE(G)-SPDNet), and we show that this wide, end-to-end DRN can outperform the ConvNets, and in doing so use physiologically plausible frequency regions. We also show that the end-to-end approach learns more complex filters than traditional band-pass filters targeting the classical alpha, beta, and gamma frequency bands of the EEG, and that performance can benefit from channel specific filtering approaches. Additionally, architectural analysis revealed areas for further improvement due to the possible loss of Riemannian specific information throughout the network. Our study thus shows how to design and train DRNs to infer task-related information from the raw EEG without the need of handcrafted filterbanks and highlights the potential of end-to-end DRNs such as EE(G)-SPDNet for high-performance EEG decoding.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Daniel Wilson"
+        },
+        {
+            "affiliations": [],
+            "name": "Robin T. Schirrmeister"
+        },
+        {
+            "affiliations": [],
+            "name": "Lukas A. W. Gemein"
+        },
+        {
+            "affiliations": [],
+            "name": "Tonio Ball"
+        }
+    ],
+    "id": "SP:d49a7a1fcf4ed84d7fa3166b368aa0013c0aaaaf",
+    "references": [
+        {
+            "authors": [
+                "Y. LeCun",
+                "Y. Bengio",
+                "Hinton",
+                "G. Deep learning. en. Nature 521",
+                "436\u2013444. ISSN"
+            ],
+            "title": "1476-4687",
+            "venue": "https://www. nature.com/articles/nature14539 (2021)",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Schirrmeister",
+                "R.T. et al. Deep learning with convolutional neural networks for EEG decoding",
+                "visualization. en. Human Brain Mapping 38",
+                "5391\u20135420. ISSN"
+            ],
+            "title": "1097-0193",
+            "venue": "https://onlinelibrary.wiley.com/doi/ abs/10.1002/hbm.23730 (2021)",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Lawhern",
+                "V.J. et al. EEGNet"
+            ],
+            "title": "a compact convolutional neural network for EEG-based brain-computer interfaces",
+            "venue": "eng. Journal of Neural Engineering 15, 056013. ISSN: 1741-2552",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Congedo",
+                "A. Barachant",
+                "R. Bhatia"
+            ],
+            "title": "Riemannian geometry for EEG-based brain-computer interfaces; a primer and a review. Brain-Computer Interfaces 4. Publisher: Taylor & Francis _eprint: https://doi.org/10.1080/2326263X.2017.1297192, 155\u2013174",
+            "venue": "ISSN: 2326-263X",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "F. Yger",
+                "M. Berar",
+                "Lotte",
+                "F. Riemannian Approaches in Brain-Computer Interfaces"
+            ],
+            "title": "A Review",
+            "venue": "en. IEEE Transactions on Neural Systems and Rehabilitation Engineering 25, 1753\u20131762. ISSN: 1534-4320, 1558-0210. https://ieeexplore.ieee.org/document/7740054/ (2021)",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Lotte",
+                "F. et al. A review of classification algorithms for EEG-based brain\u2013computer interfaces"
+            ],
+            "title": "a 10 year update",
+            "venue": "en. 15. Publisher: IOP Publishing, 031005. ISSN: 1741-2552. https://doi.org/10.1088/1741-2552/aab2f2 (2021)",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "A. Barachant",
+                "S. Bonnet",
+                "M. Congedo",
+                "Jutten",
+                "C. Classification of covariance matrices using a Riemannianbased kernel for BCI applications. en. Neurocomputing. Advances in artificial neural networks",
+                "machine learning",
+                "computational intelligence 112",
+                "172\u2013178. ISSN"
+            ],
+            "title": "0925-2312",
+            "venue": "https://www.sciencedirect.com/science/ article/pii/S0925231213001574 (2021)",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "S. Chevallier",
+                "Corsi",
+                "M.-C.",
+                "F. Yger",
+                "De Vico Fallani",
+                "F. Riemannian geometry for combining functional connectivity metrics",
+                "covariance in BCI. en. Software Impacts 12",
+                "100254. ISSN"
+            ],
+            "title": "2665-9638",
+            "venue": "https://www. sciencedirect.com/science/article/pii/S2665963822000197 (2022)",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "R. Chakraborty",
+                "J. Bouza",
+                "J. Manton",
+                "Vemuri",
+                "B.C. ManifoldNet"
+            ],
+            "title": "A Deep Network Framework for Manifoldvalued Data",
+            "venue": "arXiv:1809.06211 [cs]. arXiv: 1809.06211. http://arxiv.org/abs/1809.06211 (2021)",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Chakraborty",
+                "R. ManifoldNorm"
+            ],
+            "title": "Extending normalizations on Riemannian Manifolds",
+            "venue": "arXiv: 2003.13869 [cs, stat]. arXiv: 2003.13869. http://arxiv.org/abs/2003.13869 (2021)",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Pennec",
+                "X. en. in Riemannian Geometric Statistics in Medical Image Analysis 75\u2013134 (Elsevier",
+                "2020). ISBN"
+            ],
+            "title": "978-0-12-814725-2",
+            "venue": "https://linkinghub.elsevier.com/retrieve/pii/B9780128147252000108",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Z. Huang",
+                "R. Wang",
+                "S. Shan",
+                "X. Li",
+                "X. Chen"
+            ],
+            "title": "Log-Euclidean Metric Learning on Symmetric Positive Definite Manifold with Application to Image",
+            "venue": "Set Classification. en,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "M. Engin",
+                "L. Wang",
+                "L. Zhou",
+                "Liu",
+                "X. DeepKSPD"
+            ],
+            "title": "Learning Kernel-Matrix-Based SPD Representation For FineGrained Image Recognition",
+            "venue": "en. Computer Vision \u2013 ECCV 2018 11206 (eds Ferrari, V., Hebert, M., Sminchisescu, C. & Weiss, Y.) 629\u2013645. http://link.springer.com/10.1007/978-3-030-01216-8_38 (2021)",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Z. Dong",
+                "S. Jia",
+                "C. Zhang",
+                "M. Pei",
+                "Y. Wu"
+            ],
+            "title": "Deep Manifold Learning of Symmetric Positive Definite Matrices with Application",
+            "venue": "Face Recognition. en,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "H. Liu",
+                "J. Li",
+                "Y. Wu",
+                "Ji",
+                "R. Learning Neural Bag-of-Matrix-Summarization with Riemannian Network. en. Proceedings of the AAAI Conference on Artificial Intelligence 33. Number"
+            ],
+            "title": "01, 8746\u20138753",
+            "venue": "ISSN: 2374-3468. https://ojs.aaai.org/index.php/AAAI/article/view/4899 (2021)",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "K. Yu",
+                "M. Salzmann"
+            ],
+            "title": "Second-order Convolutional Neural Networks",
+            "venue": "[cs]. arXiv: 1703.06817",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Suh",
+                "Y.-J.",
+                "Kim",
+                "B.H. Riemannian Embedding Banks for Common Spatial Patterns with EEG-based SPD Neural Networks. en. Proceedings of the AAAI Conference on Artificial Intelligence 35. Number"
+            ],
+            "title": "1, 854\u2013862",
+            "venue": "ISSN: 2374-3468. https://ojs.aaai.org/index.php/AAAI/article/view/16168 (2021)",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C Ju"
+            ],
+            "title": "Federated Transfer Learning for EEG Signal Classification in 2020 42nd Annual International Conference of the IEEE Engineering in Medicine Biology Society (EMBC",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D. Brooks",
+                "O. Schwander",
+                "F. Barbaresco",
+                "Schneider",
+                "J.-Y",
+                "M. Cord"
+            ],
+            "title": "Riemannian batch normalization for SPD neural networks. arXiv:1909.02414 [cs, stat",
+            "venue": "arXiv: 1909.02414",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Sukthanker",
+                "R. S"
+            ],
+            "title": "Neural Architecture Search of SPD Manifold Networks. arXiv: 2010.14535 [cs",
+            "venue": "arXiv: 2010.14535",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "I. Majidov",
+                "Whangbo",
+                "T. Efficient Classification of Motor Imagery Electroencephalography Signals Using Deep Learning Methods. en. Sensors 19. Number"
+            ],
+            "title": "7 Publisher: Multidisciplinary Digital Publishing Institute, 1736",
+            "venue": "https://www.mdpi.com/1424-8220/19/7/1736 (2021)",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "D. Acharya",
+                "Z. Huang",
+                "D.P. Paudel",
+                "Van Gool",
+                "L. Covariance Pooling for Facial Expression Recognition en. in 2018 IEEE/CVF Conference on Computer Vision",
+                "Pattern Recognition Workshops (CVPRW) (IEEE",
+                "UT Salt Lake City",
+                "USA",
+                "June 2018)",
+                "480\u20134807. ISBN"
+            ],
+            "title": "978-1-5386-6100-0",
+            "venue": "https://ieeexplore.ieee.org/ document/8575539/",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Ju",
+                "Guan",
+                "C. Tensor-CSPNet"
+            ],
+            "title": "A Novel Geometric Deep Learning Framework for Motor Imagery Classification",
+            "venue": "arXiv:2202.02472 [cs, eess]. arXiv: 2202.02472. http://arxiv.org/abs/2202.02472 (2022)",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "P. Yang",
+                "J. Wang",
+                "H. Zhao",
+                "Li",
+                "R. MLP With Riemannian Covariance for Motor Imagery Based EEG Analysis. IEEE Access 8. Conference Name"
+            ],
+            "title": "IEEE Access, 139974\u2013139982",
+            "venue": "ISSN: 2169-3536",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "R.J. Kobler",
+                "Hirayama",
+                "J.-i",
+                "Q. Zhao",
+                "M. Kawanabe"
+            ],
+            "title": "SPD domain-specific batch normalization to crack interpretable unsupervised domain adaptation in EEG en",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "G. Zhang",
+                "Etemad",
+                "A. RFNet"
+            ],
+            "title": "Riemannian Fusion Network for EEG-based Brain-Computer Interfaces",
+            "venue": "arXiv:2008.08633 [cs]. arXiv: 2008.08633. http://arxiv.org/abs/2008.08633 (2021)",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "M. Hajinoroozi",
+                "J. Zhang",
+                "Y. Huang"
+            ],
+            "title": "Prediction of fatigue-related driver performance from EEG data by deep Riemannian model in 2017 39th Annual International Conference of the IEEE Engineering in Medicine and Biology Society (EMBC",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M. Hajinoroozi",
+                "J.M. Zhang",
+                "Y. Huang"
+            ],
+            "title": "Driver\u2019s fatigue prediction by deep covariance learning from EEG",
+            "venue": "IEEE International Conference on Systems, Man, and Cybernetics (SMC) (Oct",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "K.K. Ang",
+                "Z.Y. Chin",
+                "C. Wang",
+                "C. Guan",
+                "Zhang",
+                "H. Filter Bank Common Spatial Pattern Algorithm on BCI Competition IV Datasets 2a",
+                "2b. Frontiers in Neuroscience 6",
+                "39. ISSN"
+            ],
+            "title": "1662-453X",
+            "venue": "https://www. frontiersin.org/article/10.3389/fnins.2012.00039 (2021)",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "M.R. Islam",
+                "T. Tanaka",
+                "Molla",
+                "M.K.I. Multiband tangent space mapping",
+                "feature selection for classification of EEG during motor imagery. en. Journal of Neural Engineering 15",
+                "046021. ISSN"
+            ],
+            "title": "1741-2560, 1741-2552",
+            "venue": "https://iopscience.iop.org/article/10.1088/1741-2552/aac313 (2021)",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Akter",
+                "M.S. et al. Multiband entropy-based feature-extraction method for automatic identification of epileptic focus based on high-frequency components in interictal iEEG. en. Scientific Reports 10. Number"
+            ],
+            "title": "1 Publisher: Nature Publishing Group, 7044",
+            "venue": "ISSN: 2045-2322. https://www.nature.com/articles/s41598-020-62967-z (2021)",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "K.P. Thomas",
+                "C. Guan",
+                "L.C. Tong",
+                "V.A. Prasad"
+            ],
+            "title": "An adaptive filter bank for motor imagery based Brain",
+            "venue": "Computer Interface in 2008 30th Annual International Conference of the IEEE Engineering in Medicine and Biology Society",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "K.P. Thomas",
+                "C. Guan",
+                "L.C. Tong",
+                "A.P. Vinod"
+            ],
+            "title": "Discriminative FilterBank selection and EEG information fusion for Brain Computer Interface in 2009",
+            "venue": "IEEE International Symposium on Circuits and Systems",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "Wu",
+                "F. et al. A New Subject-Specific Discriminative",
+                "Multi-Scale Filter Bank Tangent Space Mapping Method for Recognition of Multiclass Motor Imagery. Frontiers in Human Neuroscience 15",
+                "104. ISSN"
+            ],
+            "title": "1662-5161",
+            "venue": "https://www.frontiersin.org/article/10.3389/fnhum.2021.595723 (2021)",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "K. Belwafi",
+                "R. Djemal",
+                "F. Ghaffari",
+                "O. Romain"
+            ],
+            "title": "An adaptive EEG filtering approach to maximize the classification accuracy in motor imagery in 2014 IEEE Symposium on Computational Intelligence, Cognitive Algorithms, Mind, and Brain (CCMB) (Dec",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Belwafi",
+                "K. et al. An embedded implementation based on adaptive filter bank for brain\u2013computer interface systems. en. Journal of Neuroscience Methods 305",
+                "1\u201316. ISSN"
+            ],
+            "title": "01650270",
+            "venue": "https://linkinghub.elsevier.com/ retrieve/pii/S016502701830116X (2022)",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Mousavi",
+                "de Sa",
+                "V.R. Temporally Adaptive Common Spatial Patterns with Deep Convolutional Neural Networks en. in 2019 41st Annual International Conference of the IEEE Engineering in Medicine",
+                "Biology Society (EMBC) (IEEE",
+                "Berlin",
+                "Germany",
+                "July 2019)",
+                "4533\u20134536. ISBN"
+            ],
+            "title": "978-1-5386-1311-5",
+            "venue": "https: //ieeexplore.ieee.org/document/8857423/",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Mane",
+                "R. et al. FBCNet"
+            ],
+            "title": "A Multi-view Convolutional Neural Network for Brain-Computer Interface en",
+            "venue": "arXiv:2104.01233 [cs, eess]. Mar. 2021. http://arxiv.org/abs/2104.01233",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Li",
+                "Y. et al. A Channel-Projection Mixed-Scale Convolutional Neural Network for Motor Imagery EEG Decoding. IEEE Transactions on Neural Systems",
+                "Rehabilitation Engineering 27. Conference Name"
+            ],
+            "title": "IEEE Transactions on Neural Systems and Rehabilitation Engineering, 1170\u20131180",
+            "venue": "ISSN: 1558-0210",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "D. Brooks",
+                "O. Schwander",
+                "F. Barbaresco",
+                "Schneider",
+                "J.-Y.",
+                "Cord",
+                "F.M. en. in Geometric Science of Information (eds Nielsen",
+                "Barbaresco",
+                "F.) Series Title"
+            ],
+            "title": "Lecture Notes in Computer Science, 751\u2013758 (Springer International Publishing, Cham, 2019)",
+            "venue": "ISBN: 978-3-030-26979-1 978-3-030-26980-7. http://link.springer.com/10. 1007/978-3-030-26980-7_78",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Li",
+                "J. Zhang",
+                "Q. Hua"
+            ],
+            "title": "Second-Order Convolutional Neural Network Based on Cholesky Compression Strategy en. in Parallel and Distributed Computing, Applications and Technologies",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Tangermann",
+                "M. et al. Review of the BCI Competition IV. Frontiers in Neuroscience 6",
+                "55. ISSN"
+            ],
+            "title": "1662-4548",
+            "venue": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3396284/ (2022)",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "V. Arsigny",
+                "P. Fillard",
+                "X. Pennec",
+                "Ayache",
+                "N. Geometric Means in a Novel Vector Space Structure on Symmetric Positive-Definite Matrices. en. SIAM Journal on Matrix Analysis",
+                "Applications 29",
+                "328\u2013347. ISSN"
+            ],
+            "title": "0895-4798, 1095-7162",
+            "venue": "http://epubs.siam.org/doi/10.1137/050637996 (2021)",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "C. Ionescu",
+                "O. Vantzos",
+                "Sminchisescu",
+                "C. Matrix Backpropagation for Deep Networks with Structured Layers en. in 2015 IEEE International Conference on Computer Vision (ICCV) (IEEE",
+                "Santiago",
+                "Chile",
+                "Dec. 2015)",
+                "2965\u20132973. ISBN"
+            ],
+            "title": "978-1-4673-8391-2",
+            "venue": "http://ieeexplore.ieee.org/document/7410696/",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A. Edelman",
+                "T.A. Arias",
+                "S.T. Smith"
+            ],
+            "title": "The Geometry of Algorithms with Orthogonality Constraints en. arXiv:physics/9806030",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "V. Jayaram",
+                "Barachant",
+                "A. MOABB"
+            ],
+            "title": "trustworthy algorithm benchmarking for BCIs",
+            "venue": "en. Journal of Neural Engineering 15. Publisher: IOP Publishing, 066011. ISSN: 1741-2552. https://dx.doi.org/10.1088/17412552/aadea0 (2023)",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Ball",
+                "T. et al. Movement related activity in the high gamma range of the human EEG. en. NeuroImage 41",
+                "302\u2013 310. ISSN"
+            ],
+            "title": "1053-8119",
+            "venue": "https://www.sciencedirect.com/science/article/pii/S1053811908001717 (2021)",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "G. Pfurtscheller",
+                "Neuper",
+                "C. Motor imagery",
+                "direct brain-computer communication. Proceedings of the IEEE 89. Conference Name"
+            ],
+            "title": "Proceedings of the IEEE, 1123\u20131134",
+            "venue": "ISSN: 1558-2256",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "P.I. Frazier"
+            ],
+            "title": "A Tutorial on Bayesian Optimization en. arXiv:1807.02811 [cs, math, stat",
+            "venue": "July 2018. http:",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Tan",
+                "Le",
+                "Q.V. EfficientNet"
+            ],
+            "title": "Rethinking Model Scaling for Convolutional Neural Networks en",
+            "venue": "arXiv:1905.11946 [cs, stat]. Sept. 2020. http://arxiv.org/abs/1905.11946",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Frankle",
+                "Carbin",
+                "M. The Lottery Ticket Hypothesis"
+            ],
+            "title": "Finding Sparse, Trainable Neural Networks en",
+            "venue": "arXiv:1803.03635 [cs]. Mar. 2019. http://arxiv.org/abs/1803.03635",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S. Balasubramanian",
+                "E. Garcia-Cossio",
+                "N. Birbaumer",
+                "E. Burdet",
+                "Ramos-Murguialday",
+                "A. Is EMG a Viable Alternative to BCI for Detecting Movement Intention in Severe Stroke? IEEE Transactions on Biomedical Engineering 65. Conference Name"
+            ],
+            "title": "IEEE Transactions on Biomedical Engineering, 2790\u20132797",
+            "venue": "ISSN: 1558-2531",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Yarici",
+                "M. Thornton",
+                "D. Mandic"
+            ],
+            "title": "Ear-EEG Sensitivity Modelling for Neural and Artifact Sources en. arXiv:2207.08497 [physics",
+            "venue": "July 2022",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "L. Wang",
+                "J. Zhang",
+                "L. Zhou",
+                "C. Tang",
+                "Li",
+                "W. Beyond Covariance"
+            ],
+            "title": "Feature Representation with Nonlinear Kernel Matrices en",
+            "venue": "in 2015 IEEE International Conference on Computer Vision (ICCV) (IEEE, Santiago, Chile, Dec. 2015), 4570\u20134578. ISBN: 978-1-4673-8391-2. http://ieeexplore.ieee.org/document/7410876/",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Virtanen",
+                "P. et al. SciPy 1.0"
+            ],
+            "title": "fundamental algorithms for scientific computing in Python",
+            "venue": "en. Nature Methods 17. Number: 3 Publisher: Nature Publishing Group, 261\u2013272. ISSN: 1548-7105. https://www.nature.com/ articles/s41592-019-0686-2 (2023)",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Harris",
+                "C.R. et al. Array programming with NumPy. en. Nature 585. Number"
+            ],
+            "title": "7825 Publisher: Nature Publishing Group, 357\u2013362",
+            "venue": "ISSN: 1476-4687. https://www.nature.com/articles/s41586-020-2649-2 (2023)",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Gramfort",
+                "A. et al. MEG",
+                "EEG data analysis with MNE-Python. Frontiers in Neuroscience 7. ISSN"
+            ],
+            "title": "1662-453X",
+            "venue": "https://www.frontiersin.org/articles/10.3389/fnins.2013.00267 (2023)",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "A Paszke"
+            ],
+            "title": "PyTorch: An Imperative Style, High-Performance Deep Learning Library arXiv:1912.01703 [cs, stat",
+            "venue": "Dec. 2019",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "W. McKinney"
+            ],
+            "title": "Data Structures for Statistical Computing in Python en",
+            "venue": "in (Austin, Texas,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "Pedregosa",
+                "F. et al. Scikit-learn"
+            ],
+            "title": "Machine Learning in Python",
+            "venue": "en. Journal of Machine Learning Research 12, 2825\u20132830",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "J. Bergstra",
+                "D. Yamins",
+                "D.D. Cox"
+            ],
+            "title": "Making a science of model search: hyperparameter optimization in hundreds of dimensions for vision architectures",
+            "venue": "Proceedings of the 30th International Conference on International Conference on Machine Learning - Volume",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Waskom",
+                "M.L. seaborn"
+            ],
+            "title": "statistical data visualization",
+            "venue": "en. Journal of Open Source Software 6, 3021. ISSN: 24759066. https://joss.theoj.org/papers/10.21105/joss.03021 (2023)",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Hunter",
+                "J.D. Matplotlib"
+            ],
+            "title": "A 2D Graphics Environment",
+            "venue": "Computing in Science & Engineering 9. Conference Name: Computing in Science & Engineering, 90\u201395. ISSN: 1558-366X",
+            "year": 2007
+        }
+    ],
+    "sections": [
+        {
+            "text": "Keywords EEG \u22c5 Filterbank \u22c5 Riemannian \u22c5 Deep Learning"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "Optimizing the amount of information that can be extracted from brain signals such as the Electroencephalography (EEG) is crucial for Brain-Computer Interface (BCI) performance and thus for the development of viable BCI applications. The multivariate EEG data is inherently complex as task-relevant information can be found in multiple frequencies as well as in the correlation structure of the signals across different electrodes. Also, the generative processes which give rise to the EEG signals are not fully understood. To handle such complex data, most current EEG-BCIs use Machine Learning (ML) for the analysis of the recorded brain signals. Currently, the state-of-the-art in EEG-BCI decoding with ML is often achieved through two relatively distinct strategies that have been developed in parallel over the last decade, Deep-Learning (DL) [1\u20133] and Riemannian-Geometry-based\nar X\niv :2\n21 2.\n10 42\n6v 6\n[ cs\n.L G\ndecoders (RBDs) [4\u20138]. RBDs employ concepts from Riemannian geometry to leverage inherent geometrical properties of the covariance matrix of the EEG [4\u20137]. The covariance matrix captures task relevant information in not only the variances of the signals from single electrodes, but also the covariance between electrode pairs. DL uses multi-layered artificial neural network models and training using backpropagation to learn to extract hierarchical structure from input data, which has led to state-of-the-art performance in a number of fields, including EEG decoding [1\u20133]. The network\u2019s multilayered structure means that they are able to learn sequential and/or parallel data transformations which were not pre-defined manually. This has led to the development of end-to-end models for EEG decoding (such as those by Schirrmeister et al. [2]) that can be fed raw or minimally preprocessed data. An advantage of such end-to-end analyses is that processing steps such as data whitening or feature extraction are implicitly learned and optimised jointly with the classification during model training. Therefore, while DL can be viewed as a more general classification model, in principle suitable to extract and use arbitrary learned EEG features, RBDs are specialised to optimally leverage the information contained in the EEG covariance structure. In the last few years, the success of RBDs and DL on EEG decoding and on other domains has motivated a number of works that sought to combine these two methods, leading to various types of Deep Riemannian Networks (DRNs) [9\u201322]. Some are orientated towards manifold valued data [9\u201311], such as the arrays produced by Diffusion Tensor Imaging (DTI) but not EEG. Others are designed to operate on symmetric-positive definite (SPD) matrices (the category of matrix to which the covariance matrix belongs) [13, 15\u201318, 20, 23]. While some of these methods are demonstrated on facial/image recognition datasets [13, 15\u201317, 20, 23], some have also been demonstrated with EEG [16, 18, 22, 24\u201327]. One particular model of note is the SPDNet [13] (demonstrated on action, emotion and facial recognition data) which was designed to mimic some of the functions of a convolutional network, but entirely on SPD data. Table 1 summarises the literature concerning Deep Riemannian Networks for EEG. Of the literature seen in Table 1, SPDNet-like networks are the most widely used DRN, with several of the cited works using various combinations of its layers within their architecture [16, 18, 24, 26, 28]. The differing architectures for these works suggests there to be no clear choice for SPDNet architecture on EEG, including the filterbanking applied pre-SPDNet.\nSince a variety of subject-specific frequency bands may contain task-relevant information, EEG decoding pipelines regularly feature a filterbanking step designed to separate the incoming signal into multiple frequency bands [2, 22, 24\u201327, 30\u201339]. For methods like RBDs that use variance information this filterbanking approach is a logical step: Different frequency bands are well-known to reflect different aspects of the brain\u2019s functional connectivity, and hence the covariance structure of the recorded EEG signals is strongly affected by the frequency composition of the input signal. While filtering or filterbanking is a ubiquitous step for EEG decoding, the literature summarised in Table 1 show that for DRNs there is no clear-cut filterbanking method or architecture. The construction of the filterbank can be done either by using or selecting from a set of predefined filters or by freely learning the filters (e.g. learning the cut-offs, or convolutional kernel). We will call the first construction method pre-defined filterbanks and the second method learnable filterbanks. Pre-defined filterbanks have been used in many related areas, including Common Spatial Patterns (CSP) [30, 33, 34, 37], RBDs [31, 35] and DRNs [24, 25, 27] and consist of an array of specific filters. Despite being explicitly defined, these filterbanks are frequently large and the filters are often searched through in order to reduce feature dimension [30, 31, 33\u201335, 37], although some models use all filters and do not explicitly reduce feature dimension at this stage [24, 25, 27, 39]. Search metrics vary, but all are intended as a proxy for class separability, be it the Fisher information ratio [33, 34], mutual information [31] or a statistical test [35]. Due to their explicit nature, they are easy to interpret and implement, but also require hand-crafting which may preclude some level of domain knowledge - something that a learnable filterbank or end-to-end model can avoid. Learnable filterbanks are those that are flexible and not limited to a pre-defined set of filters but instead search a much larger space as part of an optimisation process, and they have been generally explored within the confines of DL [2, 26, 38, 40]. These deep models have multiple parallel convolutional layers which are intended to mimic the effects of band-pass filtering on EEG, first introduced by Schirrmeister et al. [2]. However, the convolutional layer is not guaranteed to learn a strict bandpass filter, through random initialisation and the following optimisation it may also learn a notch, low-pass, high-pass filter or even a multi-band filter. The process of optimising the the convolutional layer, is essentially searching the band-space with the backpropagated loss of the network serving as the search metric, which, it can be argued, is a more direct measurement of class separability. This search process is not limited to a pre-defined set of bands/band-types and is inherently less granular and also more adaptable to datasets with a wider range of frequencies (such as those designed to measure frequencies in the high-gamma region). Learnable filterbanks remain underutilised in EEG decoding, particularly in a DRNs. As can be seen from Table 1 there is a relatively small amount of work exploring DRNs in the context of EEG [16, 18, 22, 24\u201327, 29]. Furthermore a number of these models have Riemannian transforms prepended onto standard deep networks [22, 25, 27], as opposed to being based on the SPDNet [13], where the data is manipulated in the Riemannian space through many layers of the network [16, 18, 24, 26, 29]. Moreover, even fewer of these methods used a multispectral approach [22, 24\u201327] and most used a pre-defined filterbank [22, 24, 25, 27] with the exception of the domain adaptation focused TSMNet [26]. This is despite the theoretical advantages that learnable filterbanks possess. Therefore, how DRNs can be best equipped with learnable filterbanks remains unclear. The learning of the filterbank can be achieved in an end-to-end manner, with parallel convolutions, or with a black box optimiser using typical bandpass filters, although which method is superior is not known. In addition to this, the size of the filterbank and its channel specificity can also be altered. Furthermore, how much DRNs use well known regions in the EEG (e.g. alpha, beta and high-gamma for motor movement) has gained only limited insight [24, 26]. It is not yet clear how these factors will affect performance, or whether Deep Riemannian Networks (DRNs) with learnable filterbanks can compete with state-of-the-art networks. Therefore, we designed a study to address these questions, wherein we propose and systematically compare two SPDNetbased DRNs with learnable filterbanks for EEG, the end-to-end EEG SPDNet (EE(G)-SPDNet) and the Bayesian optimised EEG SPDNet (BO-SPDNet). EE(G)-SPDNet is a second-order convolutional neural network [17, 41, 42], comprised of a convolutional layer designed to mimic filterbanking, followed by a covariance pooling layer and then an SPDNet. BO-SPDNet uses a Bayesian optimiser to search the optimal array of bandpass filters. The filterbank is learned via backpropagation with the EE(G)-SPDNet or Bayesian optimisation with BO-SPDNet. The post-filterbank data is then used to generate the covariance matrices that are passed to the SPDNet. These two models present two different approaches to deep-RBDs with learned filterbanks, and are tested and compared across different modalities e.g. filterbank channel specificity, filterbank size etc. The design of the EE(G)-SPDNet allows for the learning of a custom filterbank from the input data while also being able to use Riemannian geometry to process data on the SPD manifold. The EE(G)-SPDNet can be separated into two stages, a standard SPDNet and a convolutional stage. The SPDNet stage reduces the size of the input SPD matrix, layer-by-layer, while preserving class discriminability before applying a Riemannian transform to whiten the data prior to classification. The convolutional layer filters the EEG signals and, over multiple iterations, becomes optimised to\nselect the ideal frequencies for the covariance matrix. This removes the need for explicit filterbank architecture design, offering a more precise search of the frequency space. This precision can be enhanced as the convolutional filters can be optimised for each individual electrode, creating an electrode-specific filterbank, something that could be cumbersome to design manually. Furthermore, the convolutional layer allows EE(G)-SPDNet to be flexible in adapting to datasets of different sampling rates (and therefore different frequency ranges) since the filterbank architecture does not have to be redesigned, nor the data low-pass filtered to accommodate the filterbank. Overall, the convolutional layer prepended to the SPDNet allows it to learn an optimal filterbank, as well as potentially create a filterbank composed of various filter types (notch, bandpass etc). The BO-SPDNet uses regular bandpass filters in conjunction with a Bayesian Optimiser (BO) to search the filterbank space, as opposed to the convolution in EE(G)-SPDNet - the SPDNet stage remains the same. At each step in the iterative search, a filterbank is constructed which is used to filter the data before creating the set of SPD matrices. The performance of the filterbank is evaluated via cross-validation with an Riemannian Support-Vector Machine (rSVM) on the aforementioned matrices. The matrices created from the highest scoring filterbank are then passed to the SPDNet. The rSVM accuracy was chosen as a search metric as a more direct measurement of class separability for the SPDNet. The BO-SPDNet possesses almost all the previously mentioned advantages of the learnable filterbank approach such as electrode specific architecture and adaptability between datasets, it is restricted only in terms of its filter type. The bandpass filters used by BO-SPDNet are more rigid in their approach to filtering when compared to the convolutional kernel, which may learn things other than a bandpass filter, but this also gives the BO-SPDNet a smaller space to search. On the whole, BO-SPDNet represents a model that is somewhere in-between the EE(G)-SPDNet and the traditional filterbank approach, with the main difference to the traditional methods being that its array of bandpass filters are learned, rather than explicitly pre-defined. Through the experiments performed in this study, we show that our models are capable of outperforming other state-of-the-art classifiers, the convolutional networks ShallowFBCSP and Deep4 [2]. Variants of EE(G)-SPDNet & BO-SPDNet achieved statistically significant classification accuracy increases over the ShallowFBCSP and Deep4. These improvements were shown on two public EEG datasets (High-Gamma Dataset (HGD) [2] and BCIC iv 2a [43]), with the highest accuracies achieved by the EE(G)-SPDNet (HGD: 97.0%, BCIC iv 2a: 75.2% compared to ShallowFBCSP: 94.4% & 72.9%, Deep4: 93.1% & 73.0% ). In addition to analysing the performance of the different models, we also analysed some of the features learnt by the networks, and investigated the network\u2019s layer-by-layer performance. We identified the frequencies that contribute most to classifier performance by looking at the frequency gain caused by the trained filterbanks. We also visualised and tested separability of the data as it passes through the network in both Euclidean and Riemannian spaces."
+        },
+        {
+            "heading": "2 Methods",
+            "text": ""
+        },
+        {
+            "heading": "2.1 Outline",
+            "text": "The structure of our paper is as follows. The following methods section will cover: the necessary theoretical background (Section 2.2), details of EE(G)-SPDNet & BO-SPDNet (Sections 2.3 & 2.4), specific SPD matrix operations (2.6), main hyperparameter choices and subsequent model types (Section 2.7), methods used for analysis (Section 2.8), and the datasets that were used (Section 2.9). After this the results will be presented with figures, in a series of key findings (Section 3) before a discussion of the main points (Section 4) and the subsequent conclusion (Section 5)."
+        },
+        {
+            "heading": "2.2 Riemannian Methods Overview",
+            "text": "Riemannian methods for EEG are usually applied on the sample covariance matrix1 of the EEG electrodes: \ud835\udc36 = 1\n\ud835\udc41\ud835\udc47 \u2212 1 \ud835\udc4b\ud835\udc4b\u22a4 (1)\nwhere \ud835\udc4b \u2208 \u211d\ud835\udc41\ud835\udc52\u00d7\ud835\udc41\ud835\udc47 . For EEG \ud835\udc4b would represent a single trial of \ud835\udc41\ud835\udc52 electrodes and \ud835\udc41\ud835\udc47 samples. Equation 1 is theequation for the Sample Covariance Matrix (SCM), which is, by construction, both symmetric and positive definite (all its eigenvalues are greater than zero). RBDs use tools from Riemannian geometry to make computations on the SPD manifold, which has helped them to achieve state-of-the-art performance. They measure the Riemannian distance between the matrices, as opposed to the Euclidean. Since the SPD matrices reside on a Riemannian manifold, the Riemannian distance represents the shortest path (i.e. a straight line) between the points on the manifold. This path, when viewed with a Euclidean metric, may\n1The sample covariance matrix is the most common, but any other SPD matrix would be possible.\nappear curved or distorted. In practice, the SPD matrices are mapped to the Euclidean space using Riemannian geometry, which preserves their structure on the manifold (this is how the rSVM is implemented here, a Riemannian transform followed by SVM classification). This mapping can then be seen as a form of data whitening being applied to the SPD matrices. This study employs the SPDNet, which was first introduced by Huang & Gool [13] and is a deep network designed to \"non-linearly learn desirable SPD matrices on Riemannian manifolds\" [13]. The SPDNet uses three SPD specific layers to process the input data. BiMap layers are used to reduce SPD feature dimension and enhance discriminability. For the \ud835\udc58\ud835\udc61\u210e layer this is done to an input matrix \ud835\udc4b\ud835\udc58 as follows:\n\ud835\udc4b\ud835\udc58 = \ud835\udc53 (\ud835\udc58) \ud835\udc4f (\ud835\udc4b\ud835\udc58\u22121,\ud835\udc4a\ud835\udc58) = \ud835\udc4a \u22a4 \ud835\udc58 \ud835\udc4b\ud835\udc58\u22121\ud835\udc4a\ud835\udc58 (2)\nwhere \ud835\udc4a\ud835\udc58 is the learned weight matrix (must be constrained to a Stiefel manifold of dimension \ud835\udc51\ud835\udc58\u22121 \u00d7 \ud835\udc51\ud835\udc58). The ReEig layers aim to mimic the Rectified Linear Unit (ReLU) by preventing eigenvalues from from becoming too small, (as the ReLU prevents negative values). The ReEig function is defined as follows:\n\ud835\udc4b\ud835\udc58 = \ud835\udc53 (\ud835\udc58)\ud835\udc5f (\ud835\udc4b\ud835\udc58\u22121) = \ud835\udc48\ud835\udc58\u22121\ud835\udc5a\ud835\udc4e\ud835\udc65(\ud835\udf16\ud835\udc3c,\u03a3\ud835\udc58\u22121)\ud835\udc48 \u22a4 \ud835\udc58\u22121 (3)\nwhere \ud835\udc58 is the layer index, \ud835\udc3c an identity matrix and \ud835\udf16 is a threshold of rectification. An eigenvalue decomposition leads to \ud835\udc48 and \u03a3. The \ud835\udc5a\ud835\udc4e\ud835\udc65() function in this case forces the elements of the diagonal matrix \u03a3 to be above the threshold value, \ud835\udf16. This prevents the matrices from getting to close to the singular boundary of the set of positive definite matrices of size \ud835\udc5b, \ud835\udc5d\ud835\udc51\ud835\udc5b . The LogEig layer transforms the input data into Euclidean space using the Log-Euclidean Metric (LEM) [13, 44]. This means a matrix logarithm is applied to each matrix in the input batch. This is faster than applying the logarithmic map from the Affine Invariant Riemannian Metric (AIRM), and there is no need for determining a reference matrix. The speed difference means it is better suited to the deep learning pipeline, where it will be used for every epoch. The LogEig function, \ud835\udc53\ud835\udc59, is defined as follows:\n\ud835\udc4b\ud835\udc59 = \ud835\udc53 (\ud835\udc58) \ud835\udc59 (\ud835\udc4b\ud835\udc58\u22121) = \ud835\udc59\ud835\udc5c\ud835\udc54(\ud835\udc4b\ud835\udc58\u22121) = \ud835\udc48\ud835\udc58\u22121\ud835\udc59\ud835\udc5c\ud835\udc54(\u03a3\ud835\udc58\u22121)\ud835\udc48 \u22a4 \ud835\udc58\u22121 (4)\nwhere \ud835\udc4b = \ud835\udc48\u03a3\ud835\udc48\u22a4 is an eigenvalue decomposition and \ud835\udc58 is the layer index. After this, the output can be passed to a regular fully connected layer for label prediction. Three pairs of BiMap - ReEig layers were applied to the data before reaching the LogEig layer 2. For this study each BiMap layer reduced the SPD matrix dimension by roughly half. Since the networks layers handle matrices, SPDNet requires matrix backpropagation. For this there are two variations in the literature, the Ionescu method [45] as used in the original SPDNet paper [13], and also the Daleckii\u0306-Krei\u0306n method [14]. An initial test found these methods to give us identical results, therefore throughout this study, we use the Ionescu method."
+        },
+        {
+            "heading": "2.3 End-to-End EEG SPDNet",
+            "text": "The EE(G)-SPDNet has two layers on top of the SPDNet, to allow for end-to-end processing of EEG signals (see Figure 1 for an example of the architecture). The convolutional layer follows a design similar to that seen in Schirrmeister et al. [2], convolving the the input signals temporally. The SCM pooling layer then creates SCMs from the convolved signals and passes them to an SPDNet. These two layers allow for the optimisation of the convolutional filterbank jointly with model training. The convolutional kernels can be applied to the electrodes in a channel independent, or channel specific manner. Channel independent refers to there being a single convolutional filter for all the electrodes (per band used), whereas the channel specific mode refers to there being a single convolutional filter for each electrode (per band used). The channel specific architecture is therefore less lightweight than the channel independent, but it will also filter the data at an channel specific level, allowing for the selection of individual frequency regions per channel. For channel independent models where the number of bands is greater than 1, the inter frequency band covariance can then also be calculated (see Section 2.6.3 for a further discussion on this)."
+        },
+        {
+            "heading": "2.4 Bayesian Optimised EEG SPDNet",
+            "text": "The BO-SPDNet uses a Bayesian Optimiser (BO) to search the frequency space for the optimal filterbank, instead of the Conv and CovPool layers used in the EE(G)-SPDNet. This pipeline is shown in Figure 2. A Bayesian optimiser will\n2The original SPDNet paper [13] also tested with 1 and 2 BiMap-ReEig pairs, but the version with 3 pairs performed the best.\niteratively adjust the input parameters of an objective function in order to minimise the output (the loss). In this case the input parameters are filterbank parameters, which consist of bandpass filter cut-offs, 1 pair for each band. The output of the objective function is negative cross-validation accuracy, thus the optimised filterbank parameters will be those that maximise the cross-validation accuracy. The classifier used in the cross-validation stage was an rSVM. Ideally an SPDNet would be used here, so that the filterbank is optimised for the classifier that it is eventually used with. This would, however, make each evaluation of the objective function considerably more expensive to compute. Therefore a more lightweight classifier than the SPDNet was used (an SVM) to serve as a proxy for SPDNet classification performance. Since the objective function classifier is intended to approximate SPDNet performance, it is intuitive to not only incorporate Riemannian geometry, but to also use the same Riemannian metric as is used in the SPDNet. With this in mind, an rSVM with the LEM was selected as the classifier to be used in the objective function. The SPD matrices created from the optimised filterbank are passed to an SPDNet. This SPDNet is identical in architecture to the one in the EE(G)-SPDNet."
+        },
+        {
+            "heading": "2.5 SPDNet Design Choices",
+            "text": "In the following section we elaborate on some design choices specific to the SPDNet, but are applicable to BO-SPDNet and EE(G)-SPDNet."
+        },
+        {
+            "heading": "2.5.1 Optimiser Integration",
+            "text": "For this study, we use an optimisation style that better integrates the networks overall optimiser into the SPDNet itself. Of the layers introduced with SPDNet, only the BiMap layer (see Equation 2) requires a weight update. This update, as described in Huang & Gool [13] imposes an SGD-style update on the BiMap weights, whereas the Meta optimisation used here allows for more advanced optimisers (e.g. Adam) to be used. We will first briefly outline the BiMap weight update, which consists of three main steps. The first step involves converting the Euclidean gradient, \u2207\ud835\udc38 to the Riemannian gradient \u2207\ud835\udc45 by subtracting the component of the Euclideangradient normal to the Stiefel manifold [46]:\n\u2207\ud835\udc45 = \u2207\ud835\udc38 \u2212\ud835\udc4a\ud835\udc61\ud835\udc46\ud835\udc66\ud835\udc5a(\ud835\udc4a \u22a4\ud835\udc61 \u2207\ud835\udc38) (5) where \ud835\udc4a\ud835\udc61 is the BiMap weight at iteration \ud835\udc61 and \ud835\udc46\ud835\udc66\ud835\udc5a(\ud835\udc34) = 12 (\ud835\udc34 + \ud835\udc34\u22a4). Next the the SGD parameter update is applied,except using the \u2207\ud835\udc45:\n\ud835\udc4a \u2032 \ud835\udc61+1 = \ud835\udc4a\ud835\udc61 \u2212 \ud835\udf06\u2207\ud835\udc45 (6)where \ud835\udf06 is the learning rate. Finally the updated weight is retracted back to the Stiefel manifold, ensuring that it remains semi-orthogonal:\n\ud835\udc4a\ud835\udc61+1 = \u0393(\ud835\udc4a \u2032 \ud835\udc61+1) (7) where \u0393 is the retraction operation. The meta optimisation used here3 replaces Equation 6 with:\n\ud835\udc4a \u2032 \ud835\udc61+1 = \ud835\udc42\ud835\udc5d\ud835\udc61(\ud835\udc4a\ud835\udc61,\u2207\ud835\udc45, \ud835\udf06) (8) where \ud835\udc42\ud835\udc5d\ud835\udc61() is the optimisation algorithm (e.g. Adam, Adadelta etc). This allows for more of these other optimistaion algorithms to be used on the SPDNet. Initial testing with this setup suggested that Adam was the best optimiser to use, although a thorough exploration into optimisers and learning rates was not performed in this work."
+        },
+        {
+            "heading": "2.6 SPD Matrix Operations",
+            "text": "This section will briefly outline some of the SPD Matrix operations that are common to most models/pipelines."
+        },
+        {
+            "heading": "2.6.1 Vectorisation",
+            "text": "In the \"Vect\" layer, and when using the rSVM, SPD matrices were vectorised. The vectorisation process is as follows: For \ud835\udc46 \u2208 \ud835\udc5d\ud835\udc51\ud835\udc5b , the vectorisation operation, \ud835\udc49 \ud835\udc52\ud835\udc50\ud835\udc61(\ud835\udc46) stacks the unique elements of \ud835\udc46 into a \ud835\udc5b2 (\ud835\udc5b+ 1) dimensional vector4:\n\ud835\udc49 \ud835\udc52\ud835\udc50\ud835\udc61(\ud835\udc46) = [\ud835\udc461,1, \ud835\udc461,2, \ud835\udc462,2, \ud835\udc461,3, \ud835\udc462,3, \ud835\udc463,3, ..., \ud835\udc46\ud835\udc5b,\ud835\udc5b] (9)"
+        },
+        {
+            "heading": "2.6.2 Concatenation",
+            "text": "When constructing the SPD matrices from the filterbank parameters (number of bands, \ud835\udc41\ud835\udc35 > 1) with channel independentfiltering, an SPD matrix was constructed for each band (a pair of cut-off frequencies for a bandpass filter). These SPD matrices were then concatenated into one larger SPD matrix, before being passed to the next stage of the pipeline. The following describes a concatenation procedure for multiple SPD matrices (of variable size) that results in a matrix that is provably SPD5. Let \ud835\udc46\ud835\udc5b and \ud835\udc46\ud835\udc5a be SPD matrices of size \ud835\udc5b and \ud835\udc5a, respectively. Let \ud835\udc36\ud835\udc5c\ud835\udc5b\ud835\udc50(\ud835\udc46\ud835\udc5b, \ud835\udc46\ud835\udc5a) be the mapping: \ud835\udc5d\ud835\udc51\ud835\udc5b \u00d7  \ud835\udc5d\ud835\udc51 \ud835\udc5a \u21d2  \ud835\udc5d\ud835\udc51 \ud835\udc5b+\ud835\udc5a such that the output is a block diagonal matrix of the form:\n\ud835\udc36\ud835\udc5c\ud835\udc5b\ud835\udc50(\ud835\udc46\ud835\udc5b, \ud835\udc46\ud835\udc5a) =\n\u239b\n\u239c\n\u239c\n\u239c\n\u239d\n\ud835\udc46\ud835\udc5b 0\ud835\udc5b\u00d7\ud835\udc5a\n0\ud835\udc5a\u00d7\ud835\udc5b \ud835\udc46\ud835\udc5a\n\u239e\n\u239f\n\u239f\n\u239f\n\u23a0\n(10)\n3As far as we are aware, this change was introduced in a public GitHub repository (see appendix) but was never in a published paper. Recognition for this change presumably lies with the author of this repository.\n4It is also possible to flatten the input matrix entirely, but some early testing suggested keeping redundant information (from the off diagonals) at this stage decreased classification performance.\n5See Appendix for proof.\nNaturally, the size of the concatenated matrix is equal to the sum of the sizes of the input matrices. It is trivial to see how this mapping can be consecutively applied to concatenate any number of SPD matrices. This allows for the simple concatenation of multiple SPD matrices, potentially of different size (although this property is not explored here), in a way that retains the SPD property."
+        },
+        {
+            "heading": "2.6.3 Interband Covariance",
+            "text": "The above described concatenation procedure allows for the combining of SPD matrices to form a single SPD matrix. As previously mentioned, this is used when creating an SPD matrix for each band of a channel independent filterbank. Therefore, the block diagonal matrix, \ud835\udc36 , may be composed of SPD matrices \ud835\udc461 & \ud835\udc462 (of size \ud835\udc5b) which are independentlycomputed after filtering trials \ud835\udc471 & \ud835\udc472 through bands \ud835\udc351 & \ud835\udc352.\n\ud835\udc36 =\n\u239b\n\u239c\n\u239c\n\u239c\n\u239d\n\ud835\udc461 0\ud835\udc5b\u00d7\ud835\udc5b\n0\ud835\udc5b\u00d7\ud835\udc5b \ud835\udc462\n\u239e\n\u239f\n\u239f\n\u239f\n\u23a0\n(11)\nIn \ud835\udc36 the off diagonal blocks are all 0, however, if \ud835\udc471 & \ud835\udc472 were first stacked along the electrode axis, one can computea slightly altered covariance matrix \ud835\udc36 \u2032. The off diagonal blocks of \ud835\udc36 \u2032 contain the covariance between electrodes of different bands, labelled here as the inter frequency band covariance (simply, the interband covariance), and the diagonal blocks contain, as in \ud835\udc36 , the within band covariance. Setting the off diagonal blocks to 0 turns \ud835\udc36 \u2032 into \ud835\udc36 . Both with and without interband covariance models have been explored in this study. The interband covariance can only be calculated for models with \ud835\udc41\ud835\udc35 \u2265 2. This means that in figures showing singlebandresults, there is only one channel independent model."
+        },
+        {
+            "heading": "2.6.4 Regularisation",
+            "text": "Estimated SPD matrices can be regularised if necessary. Artefacts in the input data can result in the estimated matrices being merely positive semi-definite (PSD), instead of positive-definite (PD). Regularisation can be employed to move the matrices to \ud835\udc5d\ud835\udc51\ud835\udc5b [23]. This involves adding a certain amount to the diagonals of the problematic matrix:\n\ud835\udc40\ud835\udc5f\ud835\udc52\ud835\udc54 = \ud835\udc40 + \ud835\udf06\ud835\udc3c (12) where \ud835\udf06 is some regularisation coefficient. For regularisation algorithms, such as Oracle-Approximating Shrinkage (OAS), the value of \ud835\udf06 can be calculated analytically. Regularisation was only applied in the cases where individual matrices became, non-PD. The regularisation process first involved analytically calculating a regularisation coefficient using a formula similar to OAS. If this value failed to successfully regularise the non-PD matrix regularisation coefficients of 1e-10 to 1e-1 were successively applied until the matrix was found to be PD. Overall however, this regularisation was rarely needed, and usually introduced to deal with a very small number of problematic trials (estimated at \u00ab0.01% of all trials from all models). Additionally, both the BiMap and ReEig layers will force non-PD input matrices to be PD."
+        },
+        {
+            "heading": "2.7 Model Types",
+            "text": "Both BO-SPDNet and EE(G)-SPDNet were tested and compared across a range of filterbank specific hyperparmeters. Firstly, the models were tested for a number of bands ranging from 1 - 8 bands. These models were all tested in channel specific and channel independent forms. \ud835\udc41\ud835\udc35 bands implies \ud835\udc41\ud835\udc35 filters for all electrodes, or \ud835\udc41\ud835\udc35 filters per electrode,in the channel independent or channel specific cases, respectively. Additionally, the channel independent versions were also tested in a variant where the interband covariance had been removed (see Section 2.6.3). This results in 3 main classes of EE(G)-SPDNet/BO-SPDNet (channel specific, channel indepedent and channel independent without interband covariance) that have been tested with up to 8 bands."
+        },
+        {
+            "heading": "2.8 Analysis",
+            "text": "In the following section the techniques used for analysis will be detailed. The main methods of analysis used are those that produce the frequency gain spectra figures and the layer-by-layer (LBL) performance assessment. All analysis was performed using the train/test split from the validation set (i.e. no final evaluation set)."
+        },
+        {
+            "heading": "2.8.1 Frequency Gain Spectra",
+            "text": "One of the advantages of the BO-SPDNet is that its filterbank parameters can be easily accessed and understood. As sets of high- and low-pass filter cutoff frequencies, one can easily understand the range of frequencies the filterbank is selecting for. With the EE(G)-SPDNet this is not so simple, as it uses convolutional filters, which do not directly correspond to a particular region in the frequency space. Therefore to assess and visualise the frequencies filtered by the convolutional layer in EE(G)-SPDNet, the frequency gain spectra was calculated. This is acquired by comparing the frequency spectra of signals pre- and post-filterbank/convolution. From this we calculated the frequency gain (shown in dB) caused by the filtering step. In the frequency gain spectra (e.g. Appendix Section 7.2, Figure 11 (upper)) positive regions represent positive frequency gain i.e. amplification of that frequency relative to the original input and negative regions represent negative frequency gain i.e. attenuation of that frequency relative to the original input. These frequency gain spectra are therefore a relatively simple way to visualise the effect of the filterbank/convolution on the input signal, in frequency space. Unfortunately the high number of channels & filters (as well as participants) often means that the data becomes too large to visualise as a heatmap (as in Appendix Figure 11 (upper)). In this case the average frequency gain or average positive frequency gain can be computed, for a more compact visualisation, at the loss of of specificity, this can be seen in Appendix Figure 11 (middle and lower, respectively). This is calculated by averaging the rows of the heatmap. In the case of the average positive gain the rows of the heatmap (these are individual gain spectra) are clipped to 0, before averaging. The signals are clipped so that the positive sections of the spectra are not lost in the aggregation. This is based on the assumption that positive frequency gain (i.e. amplification of the frequency) implies its importance for classification. The occurrence of multi-band convolutional filters is later analysed using these frequency gain spectra, the number of bands in a convolutional filter is found by counting the number of positive peaks in its gain spectra. The precise order of calculations and operations performed for the gain spectra is detailed in the Appendix (Section 7.2). While frequency gain spectra for the BO-SPDNet are also given, these were also supplemented by histograms of the selected frequencies. These histograms show the selected frequencies in the form of a percentage. This percentage denotes the ratio of the number of times the associated frequency was \"selected\" i.e. (is within a chosen band) and how many times it could have been selected. In other words a value of 100% for 10Hz implies that 10Hz was between the chosen high and low- pass cut-off frequencies for every band chosen. This then allows for a simple visualisation of the range of frequencies chosen by the BO."
+        },
+        {
+            "heading": "2.8.2 Layer-by-Layer Performance",
+            "text": "In order to provide some insight into architectural performance, the network was analysed in a layer-by-layer (LBL) manner. This involved passing the data through the trained network, and classifying at every suitable stage in the network. The same preprocessing and data splitting was used here, such that the data exposed to the classifier is the same as the data used by the network. This allows for an understanding of the effect of each layer on classification performance as well as an evaluation of network architecture which may lead to possible areas of improvement. Classification was performed with a Euclidean (SVM) and a Riemannian (rSVM) classifier, to give insight into the data in each of these spaces. Furthermore this may lead to some insights into the internal representation of the data, which is explored in some visualisation."
+        },
+        {
+            "heading": "2.9 Dataset",
+            "text": "We used two public datasets for this study: the High-Gamma Dataset (HGD) [2] and BCIC iv 2a [43]. HGD is a 14 participant motor movement dataset, comprised of ~1000 trials per subject, recorded from 44 electrodes. The final evaluation set contains ~160 trials per subject, and the validation ~880 per subject. During the validation phase, the validation used a train/test split of ~80:20. There are 4 classes which correspond to movement of the right hand, left hand or tongue, with an additional rest state class. Preprocessing involved re-sampling to 250Hz before applying a 4-125Hz bandpass filter. Further details can be found in the Appendix (section 7.6) and also the supplementary material of [2]. BCIC iv 2a is a 9 participant motor imagery dataset, comprised of ~576 trials recorded from 22 electrodes. BCIC iv 2a was recorded over two sessions on different days (~288 trials per session). The first session is used for the train/test split (also 80:20) during validation, and the entire second session is used as the the final evaluation set. Preprocessing also followed that done in Schirrmeister et al. [2], including bandpassing in the range of 4-38Hz."
+        },
+        {
+            "heading": "2.10 Data and Code Availability Statement",
+            "text": "Both datasets used in this study are publicly available, and were accessed via MOABB [47]. Code for the models can be found on the public github repo https://github.com/dcwil/eegspdnet."
+        },
+        {
+            "heading": "3 Results",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Finding 1: Deep Riemannian Networks with Learnable Filterbanks Can Outperform ConvNets",
+            "text": "Figure 3 shows the classification scores (on the HGD) of BO-SPDNet and EE(G)-SPDNet for both validation and final evaluation (final evaluation set accuracies are also given in Table 2). Looking at the high-gamma dataset [2], the EE(G)-SPDNet and BO-SPDNet have shown someimprovements (and for EE(G)-SPDNet, statistically significant imrpovements) over re-implementations of state-of-the-art convolutional networks, Deep4Net and ShallowFBCSPNet [2] with the EE(G)-SPDNet performing better than BO-SPDNet. While the BO-SPDNet scored marginally higher during the validation phase, its performance decreased on the evaluation set, when compared to the EE(G)-SPDNet. As an independent test of our results, and to avoid overfitting to one dataset, we also tested the best performing models from the validation set of HGD on the BCIC iv 2a motor imagery dataset [43]. In this case the models were re-trained and re-tested on this dataset, albeit without the hyperparameter optimisation explored with HGD. The results of this are also shown in Table 2, where it can be seen that the effects demonstrated on the HGD were largely reproduced with BCIC iv 2a, although with decreased significance."
+        },
+        {
+            "heading": "3.2 Finding 2: Filterbank Channel Specificity can Improve Performance",
+            "text": "BO-SPDNet and EE(G)-SPDNet possessed different preferences for the mode of channel filtering, which can be seen in Figure 4 (center). The EE(G)-SPDNet strongly favoured the channel specific setups, with a statistically significant\naverage performance increase of 2.2% by using the channel specific architecture. For the BO-SPDNet this is reversed, as it slightly favoured the channel independent, with a smaller but nonetheless statistically significant performance increase (1.7%) by using the channel independent architecture. For EE(G)-SPDNet the difference between the two filtering modalities decreased as the number of bands increased. For BO-SPDNet there is no clear relationship between the number of bands and the performance of the different filterbank types."
+        },
+        {
+            "heading": "3.3 Finding 3: Including Covariance Between Frequency Bands can Boost Accuracy",
+            "text": "The average validation accuracies between models with and without the interband covariance (only channel independent models) are shown in Figure 4 (right). The inclusion of the interband covariance resulted in a statistically significant performance boost of 2.1% and 0.42% for EE(G)-SPDNet and BO-SPDNet, respectively."
+        },
+        {
+            "heading": "3.4 Finding 4: Highest Decoding Performance Arises from Learning an End-to-End Filterbank",
+            "text": "EE(G)-SPDNet and BO-SPDNet presented two methods of learning a filterbank for DRNs. Shown in Figure 4 (left), the BO-SPDNet generally performed better than EE(G)-SPDNet during the validation phase (with the exception of the channel specific models). However, when moving to the final evaluation set, the very highest accuracies were obtained by the EE(G)-SPDNet, although the performance difference between the best EE(G)-SPDNet against the best BO-SPDNet on the final evaluation set was only marginally statistically significant (\ud835\udc5d = 0.0495, Wilcoxon signed-rank test). As already noted in Section 3.2, the EE(G)-SPDNet performed better using channel specific filtering, and BO-SPDNet with channel independent. Additionally, it can be seen that a higher number of bands, regardless of filtering mode, appears to improve performance, although the effect does appear to plateau. Overall, the method with the best performance as well as most the robustness between test sets, was the channel specific end-to-end approach to learning filterbanks, EE(G)-SPDNet."
+        },
+        {
+            "heading": "3.5 Finding 5: Learned Frequency Profile is Physiologically Plausible",
+            "text": "The frequencies selected by the optimised filterbanks were also analysed, giving some information about which frequency bands were most relevant for classification. The results of this analysis for the EE(G)-SPDNet can be seen in Figure 5, which shows the frequency gain due to the trained convolutional filters. Large peaks can be seen in these spectra for bands in the 10-20Hz & 20-35Hz regions. Additionally, many models feature a third peak in the high-gamma region (65-90Hz). In particular, there is a noticeable peak in the high-gamma region for the channel independent model that is not present when interband covariance is removed. These areas are consistent with the areas activated by motor movement [48, 49]. Figure 5 also shows that these peaks generally decrease and spread out as the number of bands increases, resulting in an increasingly flat distribution.\nThe results of the frequency analysis for BO-SPDNet are shown in Figure 6. Since the filters used with BO-SPDNet will never amplify any regions (thus their spectra are more uniform) and the bandpass cut-offs are directly selected by the BO there is no need to calculate the gain spectra, as the cut-offs are sufficient to observe the filterbank response. Figure 6 shows the selected frequencies as histograms. Similar peaks that were found in the EE(G)-SPDNet analysis can also be found here, however only in the channel independent models. Furthermore, what was clearly 2 peaks at 10-20Hz and 20-35Hz in Figure 5, is in Figure 6, 1 wider peak that covers most of the 10-40Hz region. The decrease of these peaks as \ud835\udc41\ud835\udc35 increases is also present, althoughinstead of moving to a flatter distribution, the data trends towards a single full-spectrum peak. Unlike 5, the channel specific model shows no clear thin peaks, even for low \ud835\udc41\ud835\udc35 ."
+        },
+        {
+            "heading": "3.6 Finding 6: Role of Network Architecture",
+            "text": "The layer-by-layer (LBL) classification was used to assess the network architecture at each stage of data transformation. The LBL figures (Figure 7 as well as Figures 12 and 13 in the Appendix) show how an rSVM or SVM performed on the data being transformed within the network. As seen most prominently in Figure 7, there are many cases where an rSVM achieved greater classification accuracies than the EE(G)-SPDNet would go on to achieve. The aforementioned figures also show the regular, Euclidean SVM (the heatmaps on the right in the LBL figures) performing much worse than its Riemannian counterpart. This decrease in performance is, in some cases, improved as the data is passed through the layers of the network, but never entirely. In some cases these accuracies converge, with the Riemannian scores decreasing to slightly below SPDNet levels and Euclidean scores increasing to match this (this is most notable for 1 and 2 bands in the channel specific model)."
+        },
+        {
+            "heading": "3.7 Finding 7: Networks Learned Multi-band Convolutional Filters",
+            "text": "The EE(G)-SPDNet tended to learn filters with multiple positive frequency gain regions, as shown in Figure 8. For both the sub-types that included interband covariance, the distributions are mostly centered around 2 positive peaks. However, the models with no interband covariance predominantly learned \"singleband\" convolutional filters. The distributions for the two model sub-types with interband covariance tended to widen as network width (number of bands) increased, although they remained centered at 2 positive peaks. The remove interband model sub-type also widened, but remained centred at 1 positive peak."
+        },
+        {
+            "heading": "3.8 Finding 8: Role of Network Depth",
+            "text": "We also explored network depth, as an additional investigation after our initial experiments. This was done by testing the channel specific model with different numbers of BiMap-ReEig pairs, the feature size reduction remained as previously discussed (reduction by half with each BiMap layer). These results, highlighted in Figure 9, suggest that network depth does not play a large role in classification performance, as long as a minimum threshold for final layer size is met. This minimum threshold (of around 10-20) can be observed for both the widest (\ud835\udc41\ud835\udc35 = 8) and least wide (\ud835\udc41\ud835\udc35 = 1)."
+        },
+        {
+            "heading": "3.9 Visualisation",
+            "text": "We also visualised the LBL data using tSNE, an example of this is shown in Figure 10. This particular example shows a number of trends that can be seen in the LBL heatmaps in general. Firstly, we see the accuracies with a Euclidean classifier (SVM) increase through the network (top row, relative accuracy titles), which also correlates with visual separability using the Euclidean metric (top row). Conversely the accuracies using a Riemannian classifier (rSVM) decrease as the data is passed through the network (bottom row, relative accuracy titles), even though the data appears more visually separable with the Riemannian metric (bottom row). Both of these trends match those than can be seen in the LBL data, Figure 7, which shows the same classification data except for all participants and bands."
+        },
+        {
+            "heading": "4 Discussion",
+            "text": "The following section will discuss each of the findings presented in the previous section (in order), as well as offer potential avenues of further exploration."
+        },
+        {
+            "heading": "4.1 Deep Riemannian Networks (DRNs) versus ConvNets",
+            "text": "The results presented in Figure 3 and Section 3.1 strongly suggest that EE(G)-SPDNet can outperform the state-of-the-art convolutional neural networks Deep4 and ShallowFBCSP [2]. In particular, the 8 band channel specific EE(G)-SPDNet has the highest accuracy and appears to be most robust to overfitting, and could be seen as the \"best\" of the models presented in this study. Additionally, BO-SPDNet and EE(G)-SPDNet also showed improvement on BCIC iv 2a, when compared to Deep4 and ShallowFBCSP [2]. This suggests not only that they can be a powerful classification algorithm on both motor movement (HGD) and motor imagery (BCIC iv 2a) data, but also shows the models ability to generalise across datasets - especially considering the hyperparameters (channel specificity, number of bands etc) were not optimised for BCIC iv 2a. This notion is also reinforced by the concurrently developed work from Kobler et al. [26], whose convolution + SPDNet based model, TSMNet, achieved state-of-the-art performance in a domain adaptation motor imagery task featuring 6 motor imagery datasets (including BCIC iv 2a)."
+        },
+        {
+            "heading": "4.2 Hyperparameter Choices",
+            "text": "The findings presented in sections 3.2 and 3.3 suggest different parameter choices between BO-SPDNet and EE(G)-SPDNet, although all favoured at least 4 or 5 bands. The EE(G)-SPDNet favours channel specific filtering and the inclusion of interband covariance. The BO-SPDNet favours channel independent filtering, however, and the inclusion of interband covariance has a smaller positive effect on the results, when compared to EE(G)-SPDNet. The different preferences for channel filtering are surprising and are most likely due to the ways in which the filterbanks are optimised for the different models. The degradation of performance for BO-SPDNet with the channel specific filtering is likely due to scaling issues with the number of parameters being optimised. Generally, Bayesian optimisation algorithms perform optimally on search domains with fewer than 20 parameters [50]. The number of parameters being optimised increases by a factor of 44 (the number of channels in the high-gamma dataset) when switching from channel independent to channel specific filtering. This could explain why the BO-SPDNet performed better with the channel independent models, there were fewer parameters in need of optimisation. Unlike the BO-SPDNet, the performance of the EE(G)-SPDNet was not negatively impacted by switching to channel specific filtering. Although this is an architectural change, it is also a form of scaling, as the number of weights in the network is dramatically increased. Deep networks, in general, respond favourably from an increase in the number\nSp In 0\n2\n4\n6\n8\n10\n12\n14\nN Po\nsit iv\ne Pe\nak s\nNB = 1\nSp In In[R]\nNB = 2\nSp In In[R]\nNB = 3\nSp In In[R]\nNB = 4\nSp In In[R]\nNB = 5\nSp In In[R]\nNB = 6\nSp In In[R]\nNB = 7\nSp In In[R]\nNB = 8\nSp In In[R]\nNB=ALL\n0.0\n2.5\n5.0\n7.5\n10.0\n12.5\n15.0\n17.5\n20.0\nRe l.\nOc cu\nre nc\ne [%\n]\nModel Sub-Type\nFigure 8: Occurrence of Distinct Positive Frequency Gain Regions Caused by Learned Convolutional Filters. For every convolutional filter, the numbers of distinct positive gain regions were counted. These are displayed in the heatmaps. The columns of the heatmaps are separated by model sub-type (Sp: Spec, In: Ind, In [R]: Ind [RMINT]). The y-axis shows the number of positive peaks found in the response of each filter, a value of 0 implies that the entire spectrum was attenuated. The colour of each cell indicates the relative occurrence of the associated number of positive peaks and model sub-type. The occurrence is a percentage relative to the data shown in its own subplot i.e. the heatmap values of a single subplot sum to 100% (the convolutional filter responses are counted per electrode such that the models a proportioned equally - each column of a heatmap represents 33.3%). Each subplot shows the data for a particular number of bands, with the first eight subplots showing the data for a 1 to 8 bands; the last subplot shows the data for all bands. Data used was all from the validation phase.\n1 2 3 4 5 6 7 N BiMap-ReEig Pairs\n75\n80\n85\n90\n95\nCl as\nsif ica\ntio n\nAc cu\nra cy\n[% ]\n2 4 8 16 32 64 128 Final Mat Size\nN Bands 1 8\nFigure 9: Effect of Changing Network Depth The figure above shows the effects on classification accuracy due to changing the network depth, in terms of the number of BiMap-ReEig pairs. The left subplot shows this as the number of BiMap-ReEig pairs changes, the right shows this in terms of the size of the data matrix after the final matrix transform. Colour denotes the number of bands the model used (i.e. network width). The model used for this exploration was a channel specific EE(G)-SPDNet.\nof weights [51], so it is to be expected that this hyperparameter change would result in an increase in performance. Furthermore, potentially over-parameterising the network like this increases the chances of \"lucky\" sub-network initialisations which could lead to superior performance [52]. All models consistently favoured at \ud835\udc41\ud835\udc35 \u2265 4, suggesting that at least 4 bands are needed to capture all relevantinformation. Additionally, the channel specific EE(G)-SPDNet achieved the highest accuracy out of all the singleband models, suggesting that much of the task-relevant information may exist in single bands in distinct electrodes. This topic is further discussed in the section regarding the frequency analysis, Section 4.4. Regarding the interband covariance, the results in 3.3 suggest that its inclusion can have a positive impact on performance. In what way the covariance between electrodes at different frequencies affected classification performance remains to\nbe seen, and is a topic worthy of its own investigation. It is also unclear why the BO-SPDNet was less able to benefit from this information, when compared to the EE(G)-SPDNet. This could be performed by looking at classification performance on purely the interband covariance, and analysing their robustness as informative features (i.e. their frequency or electrode dependence). Furthermore, the additional exploration into the network depth (Figure 9) showed that further improvements could be made to the architecture of the EE(G)-SPDNet (both \ud835\udc41\ud835\udc35 = 1 and \ud835\udc41\ud835\udc35 = 8 achieved their best scores using shallowernetworks than those used for the majority of the work presented here). As also mentioned in the further work section, exploring this via a network architecture search [21] would likely be the ideal direction."
+        },
+        {
+            "heading": "4.3 Learned Filterbank",
+            "text": "The final evaluation set results seem to suggest that EE(G)-SPDNet is the superior model, but this first warrants a discussion on their differences. The only architectural difference between BO-SPDNet and EE(G)-SPDNet is the filterbanking approach, and this approach can be demarcated into 2 areas, the filtering, the learning of the filters. Fundamentally, both EE(G)-SPDNet and BO-SPDNet use the same filtering method, just in different domains. For a given pair of cut-off frequencies BO-SPDNet multiplies a -6dB at cut-off filter response with the frequency spectra of the input signal, resulting in attenuation outside of the specified band, this is the norm for most EEG filtering methods. The smoothed rectangular functions used as the frequency response curves correspond to a subset of Sinc functions in the time domain. The EE(G)-SPDNet convolves its kernel in the time-domain, also resulting in the multiplication of spectra in the frequency domain. However, the kernel is initialised at random and can theoretically form any shape (of fixed length), which would include some Sinc functions, but also many others. From a view in the time-domain, BO-SPDNet searches a space of viable Sinc functions and EE(G)-SPDNet searches the space of all kernels of that length. Therefore, EE(G)-SPDNet can produce more variable filters (band, low, high-pass, notch, or multiband6), whereas BO-SPDNet is limited to those in its search space. The data presented in Section 3.7 shows that the majority of convolutional filters learned to bandpass multiple regions, instead of one single region, highlighting one of the benefits of using convolutional filters.\n6Examples of this can be directly seen in Figure 11, which although given as an example demonstrating the analysis method, does contain real experimental data, just from a single subject and single seed.\nEE(G)-SPDNet and BO-SPDNet also had different approaches to learning the filterbank. The BO-SPDNet used Bayesian probability theory to select the next ideal choice for a band, doing so using the cross-validation accuracies of an rSVM as the evaluation metric. This is quite different from backpropagating the actual classification loss, to the convolutional filter and may result in different optimal filterbanks. Together, these differences led towards better and more robust performance for the EE(G)-SPDNet. Compared to BO-SPDNet, its accuracy was more stable moving from validation to final evaluation, as well as its final evaluation accuracy being higher, and on the HGD, more significant. It is unclear which of the aforementioned differences contributed the most towards the better performance of the end-to-end style of filterbank learning, although the prominence of multiband convolutional filters in the EE(G)-SPDNet filterbanks suggests that their flexibility may be a key factor. However, no exploration has been done in this study into optimising other hyperparameters, no other black-box optimisers have been trialled, nor have the number of objective function calls been optimised. For the SPDNet, classification performance would likely be improved by optimising many of the other hyperparameters that are available (optimiser, batch size, learning rate etc) For this study, these values were largely chosen heuristically. With a greater optimisation of the available hyperparameters, it is possible that the performance differences between these two models could be reversed or levelled out."
+        },
+        {
+            "heading": "4.4 Frequency Analysis",
+            "text": "The appearance of peaks in the positive frequency gain spectra of the EE(G)-SPDNet around 10-20Hz, 20-35Hz and 65-90Hz suggests that task-relevant information is present at these frequencies. This agrees with previous literature regarding motor movement in EEG [48, 49] and suggests that EE(G)-SPDNet is using known frequency bands for classification. However, this interpretation of the positive frequency gain is predicated on the assumption that positive frequency gain correlates with feature importance. Most of the gain spectra show a flattening effect as \ud835\udc41\ud835\udc35 (number of bands) increases, possibly suggesting that that taskrelevant information may be present at regions outside of the aforementioned 3 peaks. It may be that these 3 peaks are the baseline from which most trials can be classified, hence their dominance when \ud835\udc41\ud835\udc35 is low, but as more frequency bandsbecome available other highly specific regions are used to boost performance. A similar statement can be made when looking at the decrease in the relative size of the 65-90Hz peak when comparing channel specific to channel independent modes, specifically when \ud835\udc41\ud835\udc35 = 1. In this scenario the data appears to suggest that the 10-20Hz and 20-35Hz peaksare the most important for classification performance, with the 65-90Hz only becoming more prominent as channel specific filtering is used. This increase when using channel specific could suggest that task-relevant information is present in the 65-90Hz at a fewer number of electrodes compared to the 10-20Hz and 20-35Hz, thus when tasked with selecting one band for all electrodes, the 65-90Hz region is ignored. The above provides some evidence as to why the channel specific filtering with the EE(G)-SPDNet outperformed the channel independent, particularly at low values of \ud835\udc41\ud835\udc35 . This reasoning also makes sense intuitively, if one accepts the premise that task relevant information may bepresent in multiple frequency bands of individual or groups of electrodes. The frequency analysis of the BO-SPDNet also provides some insights into its performance. The large, spectrum wide, peak that can be seen in Figure 6, particularly for the channel specific model, could be indicative of random guesses by the Bayesian optimiser. This is because evenly distributed random guesses would favour the selection of frequencies in the middle of the spectrum, leading to a rounded peak such as the ones seen in Figure 6. This lends credence to the idea that the number of variables in the filterbank that the Bayesian optimiser must optimise is too large. Furthermore, this would explain its performance (and clearer peaks) for the channel independent models, where the number of optimisable parameters is reduced by a factor of \ud835\udc41\ud835\udc38 = 44. The BO-SPDNet was possibly selecting bands almost at random. Additionally, as mentioned in Section 4.2, the improved performance as \ud835\udc41\ud835\udc35 increases could be due to favourablesub-network initialisations [52]. A wider network results in many more convolutional filters, thereby increasing the chances that some of them are already ideal filters. In this scenario the network must simply learn to select and use the ideal filters, rather than optimising the filters themselves. This would also result in a flattening of the gain spectra, as can be observed in Fig 5."
+        },
+        {
+            "heading": "4.5 Architectural Analysis of EE(G)-SPDNet",
+            "text": "Our investigation into the layer-by-layer performance produced a number of interesting findings. As noted in Section 3.6, the rSVM was able to outperform the EE(G)-SPDNet\u2019s final accuracy at various stages midnetwork, especially for the channel specific EE(G)-SPDNet. The presence of positive accuracy difference regions in\nthe LBL figures (positive implying rSVM/SVM outperformed the associated EE(G)-SPDNet) prior to the final layer suggests that task relevant information has been lost through the layers of the network. Although this assumes that the final linear classification layer of the SPDNet can perform equally to the linear-kernel rSVM used here. The pattern of outperformance in the associated figures show, in most cases, the rSVM achieving its best performance in the earlier and middle layers for the channel specific model (Fig 7) and in the middle and later layer of the network for both the channel independent models (Figures 12 and 13). This suggests that the architecture of the SPDNet could be improved, something that is also supported by the network depth results shown in Figure 9. In order to avoid adding further hyperparameter optimisations, the ideal architecture could be searched in a network architecture search (NAS). A NAS for SPDNet has already been proposed by Sukthanker et al. [21], and would be a clear next step for improvement. If the wide networks are indeed benefiting from \"lucky\" sub-network initalisations, then pruning these networks may also yield performance increases, both in terms of training time and classification accuracies. Comparing the Euclidean SVM results to those of the Riemannian Support-Vector Machine (rSVM) suggest learning of Riemannian specific features, but that this is not always optimally repeated throughout the network. The relatively poor performance of the Euclidean SVM in the LBL figures (Figure 7, Appendix Figures 12 and 13) provide evidence that the EE(G)-SPDNet is learning features specifically for a RBD. However, for Figure 7, the decrease in rSVM performance by the end network, when compared with the increase in performance of of the SVM throughout the layers, suggests an optimisation of features that are not positively impacted by Riemannian transformations. This is further supported by the visualisation shown in Figure 10 (which shows the SPDNet layers transforming the data into visually separable clusters in the Euclidean domain) and the network depth assessment in Figure 9 (which suggests that slightly shallower networks could perform better)."
+        },
+        {
+            "heading": "4.6 Future Perspectives and Further Work",
+            "text": "In addition to the previously mentioned approaches such as NAS [21], there are a number of other areas in which the ideas presented here could be improved. A more complete exploration of additional datasets would likely be the first and foremost issue, such that the presented models can be better compared with other models and the performance verified. This could begin with other BCI datasets (Such as those found on MOABB [47]) as well as exploring EMG [53] or in-ear EEG [54]. A number of methodological additions could also be explored, such as augmenting the covariance matrix with additional information such as done by Wang et al. [55], including a temporal covariance matrix [28], using functional connectivity information [8], incorporating additional Riemannian layers, such as Riemannian Batch Norm [20, 26] (although this could be included as part of a NAS), spatial convolution layers [2, 26] and exploring learnable time-window selection (in a similar approach to optimised frequency band selection). Furthermore, the possible difficulties faced by the Bayesian optimiser, when optimising a large number of variables, could be potentially alleviated through the usage of a different black box optimiser."
+        },
+        {
+            "heading": "5 Conclusion",
+            "text": "In this paper we have presented two novel Deep Riemannian Networks (DRNs) with learnable filterbanks (EE(G)-SPDNet & BO-SPDNet) for decoding EEG BCI data, which were then shown to have state-of-the-art performance on public motor movement and motor imagery dataset. EE(G)-SPDNet was shown to have the highest decoding accuracy, performing statistically significantly better than state-of-the-art Deep4Net and ShallowFBCSPNet by Schirrmeister et al. [2]. These models have therefore shown improvement in what is arguably the most important factor of a BCI - raw decoding performance, while also providing a black-box approach to learning filterbank architecture. Standard filterbank architecture design is essentially a grid-search over the frequency band space, and the learned filterbank approach of BO-SPDNet & EE(G)-SPDNet allow for an optimised search of the filter space. In particular, EE(G)-SPDNet, which encapsulates the filterbank optimisation as a convolutional layer, allows for this optimisation step to be completed enclosed within a single model, in an end-to-end manner. Furthermore the convolutional layer was shown to be flexible and consistently selecting physiologically plausible frequency regions. Finally the LBL analysis shows there is still room for improvement on the both of the proposed models, with a number of potential avenues of further exploration. In summary it would appear that DL and RBDs can be successfully combined and implemented in an end-to-end manner for EEG, and that the learned filterbank approach can provide state-of-the-art decoding performance."
+        },
+        {
+            "heading": "6 Declaration of Competing Interests",
+            "text": "The authors declare no competing financial interests.\nCRediT Authorship Contribution Statement\nDaniel Wilson: Conceptualization, Methodology, Software, Visualisation, Writing - Original draft preparation. Robin T. Schirrmeister: Conceptualization, Writing - Reviewing and Editing, Supervision. Lukas A. W. Gemein: Writing - Reviewing and Editing, Supervision. Tonio Ball: Conceptualization, Writing - Reviewing and Editing, Supervision, Funding acquisition."
+        },
+        {
+            "heading": "Acknowledgments",
+            "text": "The authors acknowledge support by the state of Baden-W\u00fcrttemberg through bwHPC and the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) through grant no INST 39/963-1 FUGG (bwForCluster NEMO). This work was funded by BMBF (Grant No. 01IS19077C Renormalized Flows) and DfG (grants AI-Cog and KI-DELIR)."
+        },
+        {
+            "heading": "7 Appendix",
+            "text": ""
+        },
+        {
+            "heading": "7.1 Proof for Equation 10",
+            "text": "A definition for the definiteness of a matrix is for a real symmetric matrix, \ud835\udc40 : \ud835\udc5b \u2236= {\ud835\udc40 = \ud835\udc40\u22a4 \u2223 \ud835\udc5a\ud835\udc56\ud835\udc57 \u2208 \u211d\ud835\udc5b} (13)\nthe scalar \ud835\udc67\u22a4\ud835\udc40\ud835\udc67 will be positive (or non-negative in the case of PSD matrices) for every non-zero column vector, \ud835\udc67 \u2208 \u211d\ud835\udc5b. Formally this is: Let \ud835\udc40 \u2208 \ud835\udc5b. \ud835\udc40 is said to be positive-definite if:\n\ud835\udc67\u22a4\ud835\udc40\ud835\udc67 > 0, \u2200 \ud835\udc67 \u2208 \u211d\ud835\udc5b \u2212 {0} (14)\nLet \ud835\udc46\ud835\udc5b and \ud835\udc46\ud835\udc5a be SPD matrices of size \ud835\udc5b and \ud835\udc5a, respectively. Let \ud835\udc36\ud835\udc5c\ud835\udc5b\ud835\udc50(\ud835\udc46\ud835\udc5b, \ud835\udc46\ud835\udc5a) be the mapping: \ud835\udc5d\ud835\udc51\ud835\udc5b \u00d7 \ud835\udc5d\ud835\udc51\ud835\udc5a \u21d2 \ud835\udc5d\ud835\udc51\ud835\udc5b+\ud835\udc5asuch that the output is a block diagonal matrix of the form:\n\ud835\udc36 = \ud835\udc36\ud835\udc5c\ud835\udc5b\ud835\udc50(\ud835\udc46\ud835\udc5b, \ud835\udc46\ud835\udc5a) =\n\u239b\n\u239c\n\u239c\n\u239c\n\u239d\n\ud835\udc46\ud835\udc5b 0\ud835\udc5b\u00d7\ud835\udc5a\n0\ud835\udc5a\u00d7\ud835\udc5b \ud835\udc46\ud835\udc5a\n\u239e\n\u239f\n\u239f\n\u239f\n\u23a0\n(15)\nApplying Equation 14 we get:\n\ud835\udc67\u22a4\ud835\udc36\ud835\udc67 = (\n\ud835\udc67\ud835\udc5b \ud835\udc67\ud835\udc5a\n)\n\u239b\n\u239c\n\u239c\n\u239c\n\u239d\n\ud835\udc46\ud835\udc5b 0\ud835\udc5b\u00d7\ud835\udc5a\n0\ud835\udc5a\u00d7\ud835\udc5b \ud835\udc46\ud835\udc5a\n\u239e\n\u239f\n\u239f\n\u239f\n\u23a0\n\u239b\n\u239c\n\u239c\n\u239c\n\u239d\n\ud835\udc67\ud835\udc5b\n\ud835\udc67\ud835\udc5a\n\u239e\n\u239f\n\u239f\n\u239f\n\u23a0\n(16)\nwhich reduces to:\n\ud835\udc67\u22a4\ud835\udc5b\ud835\udc46\ud835\udc5b\ud835\udc67\ud835\udc5b + \ud835\udc67 \u22a4 \ud835\udc5a\ud835\udc46\ud835\udc5a\ud835\udc67\ud835\udc5a (17)\nwhich will be > 0 provided \ud835\udc46\ud835\udc5b and \ud835\udc46\ud835\udc5a are positive definite, which was the initial assertion.\nP:11 S:0"
+        },
+        {
+            "heading": "7.2 Frequency Gain Spectra",
+            "text": "The order of calculations for frequency gain spectra (e.g. Figure 5) is as follows: Data for a single model is of the form: \ud835\udc42 = \ud835\udc43 \u00d7 \ud835\udc46 \u00d7 \ud835\udc47 \u00d7 \ud835\udc38 \u00d7 \ud835\udc61\ud835\udc42 (18)\nwhere \ud835\udc43 is the number of participants, \ud835\udc46 is the number of initialisation seeds for each network, \ud835\udc47 is the number of trials for each participant, \ud835\udc38 is the number of electrodes and \ud835\udc61\ud835\udc42 is the length of a trial in samples. After going through the convolutional layer of a network the data array is of the form:\n\ud835\udc36 = \ud835\udc43 \u00d7 \ud835\udc46 \u00d7 \ud835\udc47 \u00d7 \ud835\udc36\u210e \u00d7 \ud835\udc61\ud835\udc36 (19) where \ud835\udc36\u210e is the number of channels (\ud835\udc38 times number of bands, \ud835\udc35) and \ud835\udc61\ud835\udc36 is the length of a trial after convolution. Then the Fourier transform of the signals was calculated:\n\ud835\udc42 \ud835\udc39\ud835\udc39\ud835\udc47 \u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2192 \ud835\udc42, \ud835\udc36 \ud835\udc39\ud835\udc39\ud835\udc47 \u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2192 \ud835\udc36 (20)\nWith the length of the signals in \ud835\udc42 & \ud835\udc36 being reduced to ?\u0303?\ud835\udc42 & ?\u0303?\ud835\udc36 , respectively. Then the signals were averaged across trials:\n\ud835\udc42 \ud835\udc34\ud835\udc49 \ud835\udc3a\ud835\udc47 \u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2192 \ud835\udc42 \u2236 \ud835\udc43 \u00d7 \ud835\udc46 \u00d7 \ud835\udc38 \u00d7 ?\u0303?\ud835\udc42 (21)\n\ud835\udc36 \ud835\udc34\ud835\udc49 \ud835\udc3a\ud835\udc47 \u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2192 \ud835\udc36 \u2236 \ud835\udc43 \u00d7 \ud835\udc46 \u00d7 \ud835\udc36\u210e \u00d7 ?\u0303?\ud835\udc36 (22)\n\ud835\udc36 was then interpolated (cubic) such that its signals were of the same length as \ud835\udc36 \ud835\udc36 \ud835\udc3c\ud835\udc5b\ud835\udc61\ud835\udc52\ud835\udc5f\ud835\udc5d \u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2190\u2192 \ud835\udc36 \u2236 \ud835\udc43 \u00d7 \ud835\udc46 \u00d7 \ud835\udc36\u210e \u00d7 ?\u0303?\ud835\udc42 (23)\nThe electrode arrays in \ud835\udc42 were then duplicated such that they matched the number of channels in \ud835\udc36 . \ud835\udc42 \u2236 \ud835\udc43 \u00d7 \ud835\udc46 \u00d7 \ud835\udc36\u210e \u00d7 ?\u0303?\ud835\udc42 (24)\nThe signal gain (in dB), \ud835\udc3a, was then calculated: \ud835\udc3a = 20\ud835\udc59\ud835\udc5c\ud835\udc5410 (\n\ud835\udc42 \ud835\udc36\n)\n(25)\nIf clipping was applied then the gain, \ud835\udc3a, was then clipped to to a minimum of zero, leaving just the positive frequency gain, \ud835\udc3a+. \ud835\udc3a+ or \ud835\udc3a was then averaged across \ud835\udc46, before summing or averaging across \ud835\udc36\u210e, before finally averaging across \ud835\udc43 . This gives a single signal that represents the aggregate (positive) frequency gain across participants for a particular model. Such a signal is represented by a single line in the line plots, such as those seen in Figure 5."
+        },
+        {
+            "heading": "7.3 Additional LBL Figures",
+            "text": "Figures 12 and 13 show the channel independent LBL figures."
+        },
+        {
+            "heading": "7.4 Software",
+            "text": "All code was written with Python 3.8 and featured the following libraries:\n\u2022 SciPy [56] \u2022 NumPy [57] \u2022 MNE [58] \u2022 PyTorch [59] \u2022 Pandas [60] \u2022 Sci-Kit Learn [61] \u2022 Braindecode [2] \u2022 HyperOpt [62] \u2022 Seaborn [63] \u2022 Matplotlib [64]\nFurthmore, we used and adapted code from the following libraries \u2022 SPDNet (Python): https://github.com/adavoudi/spdnet \u2022 TorchSPDNet (Python): https://gitlab.lip6.fr/schwander/torchspdnet/-/tree/master/ \u2022 SPDNet (Matlab): https://github.com/zhiwu-huang/SPDNet\nThe first SPDNet library (author \"adavoudi\") is the library containing the implementation of the meta-optimisation. Attempts to contact the author regarding credit for this idea have so far been unsuccessful. Upon publication a GitHub repository containing all the code used for generating the results in this paper will be made public."
+        },
+        {
+            "heading": "7.5 Hardware",
+            "text": "All computations were performed using bwForCluster NEMO, hardware details of which can be found here: https: //wiki.bwhpc.de/e/NEMO/Hardware"
+        },
+        {
+            "heading": "7.6 Data",
+            "text": "The HGD and BCIC iv 2a can both be found as part of the MOABB: http://moabb.neurotechx.com/docs/ generated/moabb.datasets.Schirrmeister2017.html (HGD) and http://moabb.neurotechx.com/docs/ generated/moabb.datasets.BNCI2014001.html#moabb.datasets.BNCI2014001 (BCIC iv 2a). HGD consists of 128 channel EEG recordings of 14 healthy participants, divided up into 1000 trials per participant, 880 for training, 160 for testing/final evaluation/holdout. There four classes, corresponding to a rest state, toe clenching or finger tapping on the right or left hand. More details can be found in the dataset links above, and also the associated paper [2]. BCIC iv 2a consists of 22 channel EEG recordings of 9 healthy participants, divided up into two sessions of 288 trials per participant per session, the first session was used for training, the second for testing/final evaluation/holdout. There four classes, corresponding to mental imagery of left hand, right hand, toe or tongue movement. More details can be found in the dataset links above, and also the associated paper [2]."
+        },
+        {
+            "heading": "7.6.1 Preprocessing",
+            "text": "Before being used the data was preprocessed. The preprocessing steps used were chosen to match those from Schirrmeister et al. [2] For HGD this involved reducing the number of channels from 128 to the following 44 channels: FC5, FC1, FC2, FC6, C3, C4, CP5, CP1, CP2, CP6, FC3, FCz, FC4, C5, C1, C2, C6, CP3, CPz, CP4, FFC5h, FFC3h, FFC4h, FFC6h, FCC5h, FCC3h, FCC4h, FCC6h, CCP5h, CCP3h, CCP4h, CCP6h, CPP5h, CPP3h, CPP4h, CPP6h, FFC1h, FFC2h, FCC1h, FCC2h, CCP1h, CCP2h, CPP1h, CPP2h. The electrodes used with BCIC iv 2a were: Fz, FC3, FC1, FCz, FC2, FC4, C5, C3, C1, Cz, C2, C4, C6, CP3, CP1, CPz, CP2, CP4, P1, Pz, P2, POz. The data was then clipped at 800 \ud835\udf07 V before resampling to 250Hz. During the validation phase, the data was split 80:20 for training and testing, with the 20% test set serving as a proxy for the final evaluation/hold out set."
+        },
+        {
+            "heading": "7.7 Model Parameters",
+            "text": "In this section the parameters for the models can be found."
+        },
+        {
+            "heading": "7.7.1 General",
+            "text": "\u2022 Num Random Seeds: 4 \u2022 SPD Estimator: Sample Covariance Matrix"
+        },
+        {
+            "heading": "7.7.2 SPDNet",
+            "text": "\u2022 Learning Rate: 0.001 \u2022 Optimiser: Adam \u2022 Batch Size: 216 \u2022 LR Scheduler: Cosine Annealing \u2022 Epochs: 1000 \u2022 Loss: Cross-entropy loss"
+        },
+        {
+            "heading": "7.7.3 EE(G)-SPDNet",
+            "text": "\u2022 Convolutional Kernel Length: 25"
+        },
+        {
+            "heading": "7.7.4 BO-SPDNet",
+            "text": "\u2022 BO Stopping Criteria: 2500 iterations OR 12 hours \u2022 rSVM C: 10 \u2022 rSVM Kernel: linear \u2022 Cross-validation: Stratified 5-fold"
+        }
+    ],
+    "title": "DEEP RIEMANNIAN NETWORKS FOR EEG DECODING",
+    "year": 2023
+}

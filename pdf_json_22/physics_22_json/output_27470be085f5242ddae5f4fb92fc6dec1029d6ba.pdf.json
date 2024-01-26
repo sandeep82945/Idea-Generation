@@ -1,0 +1,152 @@
+{
+    "abstractText": "This paper studies the dependability of the Xilinx Deep-Learning Processing Unit (DPU) under neutron irradiation. It analyses the impact of Single Event Effects (SEEs) on the accuracy of the DPU running the resnet50 model on a Xilinx Ultrascale+ MPSoC.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Dimitris Agiakatsikas"
+        },
+        {
+            "affiliations": [],
+            "name": "Nikos Foutris"
+        },
+        {
+            "affiliations": [],
+            "name": "Aitzan Sari"
+        },
+        {
+            "affiliations": [],
+            "name": "Vasileios Vlagkoulis"
+        },
+        {
+            "affiliations": [],
+            "name": "Ioanna Souvatzoglou"
+        },
+        {
+            "affiliations": [],
+            "name": "Mihalis Psarakis"
+        },
+        {
+            "affiliations": [],
+            "name": "Mikel Luj\u00e1n"
+        },
+        {
+            "affiliations": [],
+            "name": "Maria Kastriotou"
+        },
+        {
+            "affiliations": [],
+            "name": "Carlo Cazzaniga"
+        }
+    ],
+    "id": "SP:b172ea7c8570d3793b28cb4d730d99687dea8fe1",
+    "references": [
+        {
+            "authors": [
+                "A.M. Keller",
+                "M.J. Wirthlin"
+            ],
+            "title": "Impact of Soft Errors on Large-Scale FPGA Cloud Computing",
+            "venue": "ACM/SIGDA International Symposium on Field-Programmable Gate Arrays (FPGA). New York, NY, USA: Association for Computing Machinery, 2019, p. 272\u2013281. [Online]. Available: https://doi.org/10.1145/3289602.3293911",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "E. Wang",
+                "J.J. Davis",
+                "R. Zhao",
+                "H.-C. Ng",
+                "X. Niu",
+                "W. Luk",
+                "P.Y.K. Cheung",
+                "G.A. Constantinides"
+            ],
+            "title": "Deep Neural Network Approximation for Custom Hardware: Where We\u2019ve Been, Where We\u2019re Going",
+            "venue": "ACM Comput. Surv., vol. 52, no. 2, May 2019. [Online]. Available: https://doi.org/10.1145/3309551",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "F. Libano",
+                "B. Wilson",
+                "J. Anderson",
+                "M. Wirthlin",
+                "C. Cazzaniga",
+                "C.D. Frost",
+                "P. Rech"
+            ],
+            "title": "Selective Hardening for Neural Networks in FPGAs",
+            "venue": "IEEE Transactions on Nuclear Science, vol. 66, no. 1, pp. 216\u2013222, 2019. [Online]. Available: https://doi.org/10.1109/TNS.2018.2884460",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J.D. Anderson",
+                "J.C. Leavitt",
+                "M.J. Wirthlin"
+            ],
+            "title": "Neutron Radiation Beam Results for the Xilinx UltraScale+ MPSoC",
+            "venue": "IEEE Radiation Effects Data Workshop (REDW), 2018, pp. 1\u20137. [Online]. Available: https://doi.org/10.1109/NSREC.2018.8584297",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "C. Cazzaniga",
+                "M. Bagatin",
+                "S. Gerardin",
+                "A. Costantino",
+                "C.D. Frost"
+            ],
+            "title": "First Tests of a New Facility for Device-Level, Board-Level and System- Level Neutron Irradiation of Microelectronics",
+            "venue": "IEEE Transactions on Emerging Topics in Computing, vol. 9, no. 1, pp. 104\u2013108, 2021. [Online]. Available: https://doi.org/10.1109/TETC.2018.2879027 5",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Cazzaniga",
+                "R.G. Al\u0131\u0301a",
+                "M. Kastriotou",
+                "M. Cecchetto",
+                "P. Fernandez- Martinez",
+                "C.D. Frost"
+            ],
+            "title": "Study of the Deposited Energy Spectra in Silicon by High-Energy Neutron and Mixed Fields",
+            "venue": "IEEE Transactions on Nuclear Science, vol. 67, no. 1, pp. 175\u2013180, 2020. [Online]. Available: https://doi.org/10.1109/TNS.2019.2944657",
+            "year": 2020
+        }
+    ],
+    "sections": [
+        {
+            "text": "Index Terms\u2014DPU, Data-center, Radiation-test, Neutrons, Reliability, DNN, AI\nI. INTRODUCTION\nF IELD Programmable Gate Arrays (FPGAs) have evolvedfrom glue-logic devices to sophisticated heterogeneous computing platforms that pave the way to the new Artificial Intelligence (AI) wave.\nAs a result, datacenter market leaders increasingly integrate FPGA System-on-Chip (SoC) in their infrastructure to target complex AI applications. Companies like Microsoft, Amazon Web Services, and Baidu scale up AI and high-performance applications on hundreds of thousands of Intel and Xilinx FPGA devices [1].\nA popular application of AI is Convolutional Neural Networks (CNNs). A growing body of research shows that deploying optimised CNN models on FPGAs achieves a higher performance per watt than CPU and GPU solutions [2]. However, modern FPGAs are vulnerable to Single Event Upsets (SEUs) due to their reliance on SRAM memory to store their configuration and application data. SEUs in SRAM FPGASoCs are not destructive but cause various failure modes, such as Silent Data Corruption (SDC), application crashes and kernel panics when an OS is used.\nPrevious works have explored the Architectural Vulnerability Factor (AVF) of custom FPGA CNN designs with faultinjection campaigns and irradiation experiments [3], [4]. These\nExperiments at the ISIS Neutron and Muon Source were supported by a beamtime allocation RB2000230 from the Science and Technology Facilities Council. This work has been partially supported by the University of Piraeus Research Center and the EU Horizon 2020 EuroEXA 754337 grant.\nDimitris Agiakatsikas (e-mail: agiakatsikas@gmail.com), Aitzan Sari, Vasileios Vlagkoulis, Ioanna Souvatzoglou, and Mihalis Psarakis (e-mail: mpsarak@unipi.gr) are with the Dept. of Informatics, University of Piraeus, Greece.\nNikos Foutris and Mikel Luja\u0301n are with the Dept. of Computer Science, The University of Manchester, UK.\nMaria Kastriotou and Carlo Cazzaniga are with the ISIS Facility, STFC, Rutherford Appleton Laboratory, Didcot OX110 QX, UK.\n\u00a92021 IEEE. Personal use of this material is permitted. Permission from IEEE must be obtained for all other uses, in any current or future media, including reprinting/republishing this material for advertising or promotional purposes, creating new collective works, for resale or redistribution to servers or lists, or reuse of any copyrighted component of this work in other works. This paper has been accepted by the 2021 European Conference on Radiation and Its Effects on Components and Systems (RADECS)\nworks have targeted relative simple CNN case studies for edge computing that neither require an Operating System (OS) nor have complex CNN topologies. Simple case studies serve well when focusing on analysing the reliability tradeoffs of various CNN configurations, e.g., the reliability of a CNN under different quantisation and model-compression schemes. Exploring the reliability of large-scale datacenter CNN applications, however, requires a different testing paradigm. The case studies should test additional aspects of a system, such as the operating system\u2019s stability, while SEUs are occurring in resources of the CPU, e.g., L1 and L2 caches, on the onchip Ethernet controller and in custom logic implemented with Programmable Logic (PL).\nTo this extent, this work analyses the dependability of the whole computational stuck of a commercial CNN inference solution, namely the Xilinx Vitis AI Deep Learning Processing Unit (DPU). In more detail, we implemented the DPU on a Zynq Ultrascale+ XCZU9EG MPSoC, which executed image classification with the resnet50 CNN model. By performing Neutron Irradiation experiments, we observed that the FPGASoC OS did not crash due to errors in L1 and L2 caches of the CPU, while the DPU application had a very low AVF."
+        },
+        {
+            "heading": "II. BACKGROUND",
+            "text": "A. Vitis AI and the Deep Learning Processing Unit (DPU)\nXilinx has introduced a rich ecosystem of tools and Intellectual Property (IP) cores to ease the development of AI applications. In more detail, Xilinx provides the Vitis AI development environment that encompasses 1) AI frameworks (e.g., Tensorflow), 2) pre-optimised AI models, 3) quantization and model compression tools, and 4) the DPU, with all necessary Linux drivers to seamlessly deploy a CNN application on Xilinx devices.\nThe DPU is a convolution neural network accelerator IP offered by Xilinx for Zynq-7000 SoC and Zynq Ultrascale+ MPSoC devices. The DPU is implemented with PL and is tightly interconnected via the AXI bus to the SoC processing system (PS), as shown in Fig. 1. The DPU executes special instructions that are generated by the Vitis AI compiler. A typical Vitis AI development flow involves 1) the optimisation and compilation of a CNN model to DPU instructions and 2) the compilation of software running on the Application Processing Unit (APU), i.e., CPU.\nThe APU pre- and post-processes DNN data, controls the DPU, and orchestrates the movement of instructions and data between the DPU, the CPU, and the off-chip DDR memory.\nar X\niv :2\n20 6.\n01 98\n1v 1\n[ ph\nys ic\ns. in\nsde\nt] 4\nJ un\n2 02\n2\n2 Processing System (PS) APU\nProgrammable Logic (PL)\nDeep Learnign Processing Unit (DPU)\nComputing Engine\nOn-Chip BRAM Buffer\nAPU\nAXI interconnect bus\nInstruction Scheduler\nDDR Memory Controller APUAPUcore_N\nOff-Chip DDR memory\nComputing EngineComputing Engine\nOn-Chip BRAM BufferOn-Chip BRAM Buffer\nFig. 1. Deep-learing acceleration with the Xilinx Deep Processing Unit (DPU) on Zynq\u00a9-7000 SoC and Zynq\u00a9 Ultrascale+TM MPSoC devices.\nThe DPU consists of an instruction scheduler and up to three on-chip BRAM buffers and computing engines. The instruction scheduler fetches and decodes DPU instructions from off-chip memory and controls the on-chip memories and computing engines. The DPU is available in eight configurations, i.e., B512, B800, B1024, B1152, B1600, B2304, B3136, and B4096. Each configuration utilises a different number of computing engines and on-chip memories in order to target different sized devices and support various DPU functionalities, e.g., ReLU, RELU6, or Leaky ReLU."
+        },
+        {
+            "heading": "III. EXPERIMENTAL SETUP",
+            "text": ""
+        },
+        {
+            "heading": "A. ChipIr Neutron Beam",
+            "text": "ChipIr is an ISIS neutron and muon facility instrument at the Rutherford Appleton Laboratory (UK), designed to deliver an atmospheric-like fast neutron spectrum to test radiation effects on electronic components and devices [5], [6]. The ISIS accelerator provides a proton beam of 800 MeV, 40 \u00b5A, 10 Hz, impinging on the tungsten target of its Target Station 2, where ChipIr is located. The spallation neutrons produced illuminate a secondary scatterer which optimises the atmospheric-like spectrum arriving at ChipIr, with an acceleration factor of up to 109 for ground-level applications. With a frequency of 10 Hz, the beam pulses consist of two 70 ns wide bunches separated by 360 ns. The beam fluence at the position of the Device Under Test (DUT) was continuously monitored by a silicon diode, while the beam flux of neutrons above 10 MeV during the experimental campaign was 5.6 x 106 neutrons/cm2/s. The beam size was set through the two sets of the ChipIr jaws to 7cm x 7cm.\nFig. 2. Neutron beam experiment at the ChipIr facility of RAL, UK."
+        },
+        {
+            "heading": "B. Design Under Test (DUT): DPU-B4096",
+            "text": "The Vivado DPU targeted reference design (TRD) [7] provided by Vitis AI v1.3.1 was implemented with Vivado 2020.2 for a ZCU102 development board. The ZCU102 board features the Zynq UltraScale+ XCZU9EG MPSoC. The B4096 configuration of the DPU was synthesised with default settings, i.e., with RAM_USAGE_LOW, CHANNEL_AUGMENTATION_ENABLE, DWCV_ENABLE, POOL_AVG_ENABLE, RELU_LEAKYRELU_RELU6, Softmax.\nThe design was implemented with Vivado\u2019s Performance_ExplorePostRoutePhysOpt* run strategy because Vivado\u2019s default run strategy resulted in time violations. Table I shows the resource utilisation and operating frequency of the DPU TRD. Due to the high resource utilisation of the TRD, Vivado reported a relatively high percentage (41.45%) of essential bits \u2013 59281993 out of the 143015456 total configuration bits were essential bits. Please recall that essentials bits are configuration bits that, when corrupted have the potential to cause functional errors. Two important notes can be made for Table I.\n1st note: All resources in the DPU operate at 325 MHz except for the DSPs, which run at 2 x 325 MHz = 650 MHz. This is because the DPU design applies a double data rate technique on DSP\n3 resources. Since DSPs are able to operate in a much higher frequency than other PL resources, one can perform N times more computation by running the DSPs with N times the frequency of the surrounding logic while multiplexing and de-multiplexing their input and output data, respectively.\n2nd note: The design utilises 319, 55, 405, 4 and 1 LUT, LUTRAM, Flip-Flops (FF), BRAM and DSP more resources, respectively, than the baseline DPU-TRD design. This is because we included the Xilinx Soft Error Mitigation (SEM) controller in the design to perform fault injection and validate our experimental setup prior to the radiation tests. The clock of the SEM controller was gated off during beamtime to replicate a simple out-of-the-box implementation scenario.\nWe used Petalinux 2020.2 to generate a Linux OS image for the ZCU102 by using the default Board Support Package (BSP) provided by the DPU-TRD, except 1) the nfs_utils package which was additionally added in RootFS to mount a Network File Sharing (NFS) folder on Linux, and 2) the u-boot bootloader that mounted an external SD EXT4 file system instead of INITRD RAM disk.\nThe CNN application that run on the DPU was the resnet50.xmodel, which was also provided by the Vitis AI DPU-TRD. This resnet50 model is neither compressed nor quantised but serves nice as a baseline application for comparison with more optimised models that we aim to implement and test in future work."
+        },
+        {
+            "heading": "C. Test procedure",
+            "text": "Fig. 3 shows the test setup of the radiation experiment. A laptop in ChipIr\u2019s control room orchestrated the test procedure of the DUT. The ZCU102 development board (hosting the DUT), an Ethernet-controlled Power Supply Unit (PSU), and a USB device that remotely reset the ZCU102 (i.e., by electrically shorting the SRTS_B and POR_B buttons of the board) was located in the beam room.\nThe test of the DUT took place as follows. 1) An Experiment Control Software (ECS) running on the laptop remotely resets the DUT and waits for the DUT to boot, 2) the DUT Linux OS restarts, and 3) after a successful kernel boot, an /etc/init.d/startup.sh script executes the following sub-tasks: 4a) the DUT connects on an NFS folder located on the laptop, 4b) the DUT writes a sync.log file in the shared NFS folder to notify the ECS of a successful boot, 4c) an initial resnet50 classification takes place to warmup the CPU caches, 4d) the sync.log is updated to notify ECS that it is ready to start image classifications, 4e) the /etc/init.d/startup.sh enters an infinite loop where it continuously runs DPU classifications and stores the results in the NFS folder to be checked by the ECS. The result checking (i.e. by the ECS) of each classification iteration is synchronised with the DUT via a mutex stored in the shared sync.log file. The ECS remotely resets the DUT when it detects a boot timeout, a Critical Error (see Sec. IV) or a result timeout. It is worth noting that for each classification iteration, the DUT saves the classification result and the Linux dmesg.log for post-analysis.\nZCU102\nEthernet switch\n12VDC PSU Reset\nUSB\nEthernet switch\nBeam room Control room\nUSB extender\nCheck Results\nLaptop\nFig. 3. Test setup at the ChipIr facility of RAL, UK."
+        },
+        {
+            "heading": "IV. EXPERIMENTAL RESULTS",
+            "text": "In this section, we discuss the impact of neutron radiation effects on the reliability of the DPU accelerator. Given that the DPU comprises of a heterogeneous architecture including the ARM SoC and the FPGA fabric, we first present the crosssections of the memories of the PS part (i.e. CPU caches) and then discuss how the SEUs in the PL configuration memory affect the behaviour of the system. Please note that the neutron radiation experiments took place at ChipIr on May 2021.\nTable II presents the cross-sections of the 32KB Level1 Data (L1-D) Cache, the 32KB Level-1 Instruction (L1-I) Cache, and the translation lookaside buffer (TLB) \u2013 a twolevel TLB with 512 entries that handles all translation table operations of the CPU. Table III presents the cross-sections of the 1MB Level-2 (L2) Cache and the Snoop Control Unit (SCU). The SCU has duplicate copies of the L1 data-cache tags. It connects the APU cores with the device\u2019s accelerator coherency port (ACP) to enable hardware accelerators issue coherent accesses to the L1 memory space. The upsets in the data and tag arrays in both the L1 and L2 caches have been separately identified. The cross-sections of the tag arrays have been calculated based on the tag sizes of the caches, e.g., a 16-bit tag in the 16-way set associative 1MB L2 cache. The cross sections have been calculated for a total fluence of 5.5x1010 neutrons/cm2 on a more than 3-hour radiation experiment. The results show that the cross-sections of the tag arrays are slightly lower than those of the data arrays. Our cross-section calculations for all caches (i.e., L1 and L2) are very close to those reported in [4].\nFig. 4 presents the proportion of detected upsets during cache accesses per CPU core. As shown in the figure, the upsets in the L1 caches are balanced between the four cores, while in the L2 cache, more upsets were observed in Core 3. In future work, we aim to save the utilisation of all MPSoC cores and OS running processes to better understand the unbalanced distribution of detected upsets per core in L2.\nAll MPSoC caches are protected against SEUs with Error Correction Code (ECC) mechanisms, e.g., L1-D and L2 caches\n4\nincorporate ECC with Single Error Correction Double Error Detection (SECDED) capability, while the L1-I cache has parity that supports only SED. All these SED and SECDEC mechanisms in L1 and L2 caches mitigated soft errors in the CPU of the FPGA-SoC, therefore resulting in a stable OS execution, with no application crashes or kernel panics during the radiation tests. This was achieved either by having the ECC scheme correct the error or by flushing and reloading the cache during exceptions of the Linux EDAC driver (/sys/devices/system/edac/mc).\nNext, we discuss the impact of radiation effects on the DPU classification accuracy. During the 3-hour experiment, the DPU performed 5896 classification runs. Only a very small portion of runs (0.78%) resulted in misclassification. Notice that the errors of the resnet50 classification results are categorized similarly to [3] as a) Critical Errors, which lead\nto misclassification and b) Tolerable Errors, where the errors observed in a result do not affect the classification decision. Table IV presents the number of Critical Errors and Tolerable Errors and their cross-sections. Based on the SEU vulnerability of the configuration memory and the BRAM reported in [4] and the programmable resources of the DPU (i.e. essential configuration bits and BRAMs used), we calculate the rate of upsets affecting the DPU execution. These are 0.14 and 0.55 upsets per classification run in the configuration memory and BRAM contents, respectively. This means that each classification run (which lasts 1.7 seconds), experienced, on average, 0.69 upsets. Notice that since scrubbing was not supported in the experiment, the upsets in the configuration memory were accumulated until the next reset cycle of the system. Moreover, we estimated that more than one upsets were accumulated during the 38 seconds boot and warm-up period of each reset cycle. Thus, for all classification runs, the DPU circuit encountered more than one upsets in the PL memories. As a worst-case analysis, we estimate that the AVF of the DPU accelerator is less than 0.78%, assuming any single upset in the DPU leads to a critical error."
+        },
+        {
+            "heading": "V. CONCLUSION",
+            "text": "The neutron radiation experiment demonstrated that the ECC and the interleaving schemes integrated into the UltraScale+ MPSoC caches considerably protect the software stack (OS, pre and post-processing of DNN data, data movement) of the Xilinx Vitis AI DPU from radiation-induced SEUs. It was shown that the most vulnerable part of the DPU is the logic implemented in the FPGA PL. Due to the large amount of utilised PL resources by the DPU, we reasoned that it is likely that the CNN application will be highly vulnerable to SEUs. However, due to the inherent error resiliency of the neural network, only a small portion of SEUs lead to classification errors, resulting in a significantly small AVF. In future work, we aim to perform fault injection experiments in the DPU to obtain a better understanding of its failure mechanisms and propose efficient SEE mitigation approaches to further reduce its AVF."
+        }
+    ],
+    "title": "Evaluation of Xilinx Deep Learning Processing Unit under Neutron Irradiation",
+    "year": 2022
+}

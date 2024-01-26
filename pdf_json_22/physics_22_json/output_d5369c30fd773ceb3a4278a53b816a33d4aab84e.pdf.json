@@ -1,0 +1,111 @@
+{
+    "abstractText": "The most widely used method for analysis of diffusive motion in particle tracking is based on estimation of the mean squared displacement (MSD) and subsequently relevant motion parameters. This approach is only valid for a population of particles exhibiting a single type of motion (e.g., super or sub-diffusive). Thus, to deal with trajectories that describe dynamics with switching motion patterns, trajectory segmentation techniques are of major importance. Here, we propose an unsupervised trajectory segmentation technique, which employs the ideas of the state-of-theart image denoising \u201cnoise2noise\u201d approach. Using typical single-particle tracking data, our method is capable of unsupervised trajectory segmentation in the most difficult situations (e.g. unknown number of purely diffusive states), and computation of the relevant parameters. The applicability of the method is demonstrated using simulated and real experimental data, showing that its performance is comparable to similar top performing supervised methods.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "H\u00e9l\u00e8ne Kabbech"
+        }
+    ],
+    "id": "SP:5ae6db270d69d72d1a9e465f51b235e63275e625",
+    "references": [
+        {
+            "authors": [
+                "N. Chenouard"
+            ],
+            "title": "Objective comparison of particle tracking methods",
+            "venue": "Nature Methods, vol. 11, 2014.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "G. Mu\u00f1oz-Gil"
+            ],
+            "title": "Objective comparison of methods to decode anomalous diffusion",
+            "venue": "Nature Communications, vol. 12, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "G. Mu\u00f1oz-Gil"
+            ],
+            "title": "Unsupervised learning of anomalous diffusion data an anomaly detection approach",
+            "venue": "Journal of Physics A: Mathematical and Theoretical, vol. 54, no. 50, pp. 504001, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "H.D. Pinholt"
+            ],
+            "title": "Single-particle diffusional fingerprinting: A machine-learning framework for quantitative analysis of heterogeneous diffusion",
+            "venue": "Proceedings of the National Academy of Sciences, vol. 118, no. 31, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Lehtinen"
+            ],
+            "title": "Noise2noise: Learning image restoration without clean data",
+            "venue": "Proceedings of the 35th International Conference on Machine Learning, vol. 80, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Arts"
+            ],
+            "title": "Particle mobility analysis using deep learning and the moment scaling spectrum",
+            "venue": "Scientific Reports, vol. 9, 2019.",
+            "year": 2019
+        }
+    ],
+    "sections": [
+        {
+            "text": "Here, we propose an unsupervised trajectory segmentation technique, which employs the ideas of the state-of-theart image denoising \u201cnoise2noise\u201d approach. Using typical single-particle tracking data, our method is capable of unsupervised trajectory segmentation in the most difficult situations (e.g. unknown number of purely diffusive states), and computation of the relevant parameters. The applicability of the method is demonstrated using simulated and real experimental data, showing that its performance is comparable to similar top performing supervised methods.\nIndex Terms\u2014 Single-particle tracking, trajectory segmentation, unsupervised learning, recurrent neural networks"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "Single-particle tracking (SPT) is a microscopy technique that permits tracking and observation of dynamics of individual fluorescently-labeled particles and is broadly used to quantify the diffusive movement of molecules and proteins in living cells. Advances in fluorescence microscopy techniques and tracking algorithms [1] have increased the amounts of available SPT data, which led to the development of various automated methods for understanding of the imaged dynamics and estimation of motion parameters.\nA recent international competition [2] challenged the SPT field by making a call for methods to decipher diffusion, where the tasks included classification and segmentation of trajectories into a set of predefined physical/mathematical models (fractional Brownian motion (fBm), continuoustime random walk (CTRW), annealed transient time model (ATTM), etc.) and accurate estimation of diffusion parameters [2]. All the top-scoring methods used artificial neural networks (NNs), trained in a supervised manner, meaning that for training of those NNs, annotated ground-truth (la-\nbels) were required, which could be easily accessible for synthetically generated data but are always lacking in the case of real data. Using theoretical models to generate training data is useful for mimicking the real and understanding the diffusive behaviors of simple biological entities. However, most of the time, such an approach fails to realistically represent experimental data, since the typical behavior of intracellular structures (such as vesicles, viruses, microtubules, or DNA repair proteins) exhibits more complex motion patterns, where the corresponding trajectories contain several \u201csegments\u201d representing a mixture of various dynamics (linear, diffusive, accelerated), also called \u201cstates\u201d.\nUsing unsupervised techniques (which learn patterns from unlabeled data using clustering methods or autoencoders) avoids specifying theoretical models and makes it possible to extract physical parameters and detect heterogeneous diffusing states in unbiased (compared to the supervised methods) way [3, 4]. Here, we present an unsupervised deep learning method for trajectory segmentation by exploiting the idea of the powerful noise2noise (N2N) approach [5], originally proposed for image denoising. The proposed method is capable of splitting complex trajectories exhibiting several types of diffusive motion patterns into shorter segments from which the parameters of interest (diffusion constant, duration of each state, etc.) can be easily computed. Contrary to the existing supervised method (here referred as noise2label (N2L)) [6], the proposed approach is applied directly to real data, without necessity for synthetic data generation, demonstrating comparable performance."
+        },
+        {
+            "heading": "2 Method",
+            "text": ""
+        },
+        {
+            "heading": "2.1 Problem statement",
+            "text": "In terms of dynamics, we consider the most complex case: a combination of unknown number of diffusive states with unknown diffusion constants and levels of confinement. In the case of DNA repair proteins, for example, fluorescentlylabeled particles transition between several states (sub- and \u201cfree\u201d diffusion), caused by properties of the proteins (e.g., bound/unbound to the DNA) and/or heterogeneity of the environment (e.g., overcrowded/void). Presence of any \u201cstructure\u201d in the dynamics (e.g., linearity of the motion for some states, as in the case of vesicles or microtubules) would\nlargely simplify the segmentation task.\nHaving 2D trajectories (sequences of xt and yt coordinates, t = 1, 2, ...) from SPT experiments (extension to 3D is straightforward), we are interested in the segmentation of each trajectory into a set of shorter pieces (segments), which correspond to a single-dynamics (state), based on their onestep absolute displacements: |dx| = |xt+1 \u2212 xt| and |dy| = |yt+1 \u2212 yt| (Fig. 1). We assume that for each of k = 1, ...,K states, the displacements dxkt and dy k t are coming from the corresponding probability distributions Pk. In the case of free diffusion, those distributions are zero-mean Gaussians with given standard deviations \u03c3k. To model anomalous diffusion, the displacements are sampled from similar distributions, underlying the fBm or CTRW models. The result of segmentation is the labeling sequence st \u2208 {1, ...,K}. Having such labeling, we can compute any parameter of interest for specific model k by using the displacements {dxkt , dykt } or coordinates {xkt , ykt }, such that st = k."
+        },
+        {
+            "heading": "2.2 Adaptation of noise2noise approach",
+            "text": "N2N is a powerful unsupervised image denoising method based on deep learning [5]. The idea behind the N2N is to train a NN by giving a pair of noise-corrupted images x1 and x2, where one of them is used as an input and the second as a target, which the NN tries to predict. No \u201cclean\u201d (denoised) image or labeling is therefore necessary as it might be indispensable in supervised training. N2N has only one requirement: the two noisy observations x1 and x2 should contain the same signal s corrupted with any sort of noise, but such that both expectations of x1 and x2 equal s. During the training, the network tries to learn the mapping between two corrupted signals, but actually \u201cfails\u201d to do so, and the best it can do is to produce the expectation of the noisy input, which in fact is the clean target (without ever observing it) [5].\nIn typical SPT applications, the observed motion is isotropic, meaning that the statistical properties of the displacements in x and y directions are the same. By exploiting the idea of N2N, we consider noisy pairs of dxt and dyt displacements as realizations from the same underlying model/state st (similarly to images x1 and x2). After successful training (trying to predict |dyt| from |dxt| or vice versa), the output of the NN is m\u0302t (from the same inputs |dxt| or |dyt|, or even their average), which in our case will consists of first moments (expectations) of Pk\u2019s (Fig. 1). In\npractice, the inferred m\u0302t will not be perfectly \u201cdiscrete\u201d but rather \u201ccontinuous\u201d. The peaks in the histogram of m\u0302t show the number of discovered states. To produce the final labeling st and split trajectories into segments, extra thresholding (e.g at the local minima) of that histogram (and correspondingly m\u0302t) is required. Knowing st, the motion parameters such as the diffusion constant D and anomalous exponent \u03b1 can be extracted for each segment by applying a least-square fit to the logarithm form of MSD(\u2206t) \u223c 4D\u2206t\u03b1."
+        },
+        {
+            "heading": "2.3 Network architecture and training",
+            "text": "The implementation of N2N can be done using various NN architectures, with negligible influence on performance [5]. Here, we successfully trained two NNs: i) 1D UNet [7] and ii) a recurrent NN based on a stack of Long Short-Term Memory (LSTM) layers [7]. We proceeded with the stack of LSTM units as it is well-suited for time-series (can naturally handle length-varying sequential data). The proposed NN consists of three bidirectional LSTM layers with respectively 256, 64 and 16 hidden nodes, followed by a (time-distributed) fullyconnected layer with the output dimension of 1, representing the predicted displacement.\nWe trained N2N with trajectories of 100 time points, each time point representing an absolute displacement. N2N approach fails to work with the raw (signed) displacements because the mathematical expectations for all states are zero. We used a mini-batch size of 128, the mean squared error (MSE) as a loss function and ADAM optimizer [7] with parameter values \u03b21 = 0.9, \u03b22 = 0.999 and learning rate lr = 10\u22123. As in [5], no batch normalization, dropout or other regularization techniques were necessary.\nThe results of N2N were also compared with one of the top performing supervised method, referred here as noise2label (N2L) [2, 6]. To fairly compare N2N with N2L, the NN architecture described above was identically applied to N2L, making their process of training disparate. The N2L is trained as a classifier (optimizing the cross entropy loss function) to predict the ground-truth st (which should be known in this case) by using the displacements dx and dy."
+        },
+        {
+            "heading": "3 Results",
+            "text": "To illustrate the application of the N2N to SPT data we present 3 showcases. Showcases 1 and 2 are based on simulated SPT data containing a mixture of several diffusive states. Showcase 3 shows the applicability of the technique to real experimental data of breast cancer susceptibility protein 2 (BRCA2), which is involved in double-strand break repair and was shown to exhibit dynamics with three states [6]."
+        },
+        {
+            "heading": "3.1 Generating datasets",
+            "text": "Simulated SPT data were generated using the fractional Brownian motion (fBm) model [6]. Simulation of each state requires specification of two parameters: the exponent \u03b1 and a scale \u03b7, which permits to adjust the diffusion\ncoefficient. Showcase 1 was simulated using three freely diffusing (\u03b1 = 1) states with well separated diffusion rates \u03b7 = {0.3, 0.9, 2}. Showcase 2 was simulated using two freely diffusing states with closer diffusion rates \u03b7 = {0.2, 0.35}, which drastically complicates the estimation. For both showcases, the ground-truth (necessary for training of N2L) was known from the simulation. However, the labeled groundtruth is not available for the experimental data of showcase 3, and therefore training of the supervised N2L required modeling of the real data by approximating synthetic data, which was also generated using the fBm model [6]. For that, we used \u03b1 = {0.2, 0.4, 0.65} and \u03b7 = {1, 3, 5}. The transition probabilities for the Markovian dynamics of switching between the states were given by the following matrices \u03c0 (depending on the number of states K):\n\u03c0K=3 = 0.8 0.1 0.10.1 0.8 0.1 0.1 0.1 0.8  , \u03c0K=2 = (0.9 0.10.1 0.9 ) .\nFor showcases 1 and 2 we used 50,000 simulated trajectories (32,000 for training, 8,000 for validation and 10,000 for testing) and trained the network for 10 epochs. For showcase 3, 25,709 experimental trajectories of BRCA2 of diverse lengths with an acquisition time of 11 ms were used. Approximately 1.34% of linkers between two time points had a gap of 2-3 missing frames. To avoid measuring large displacements that would alter the N2N outputs, the trajectories were split into individual trajectories at the location of the gaps. The absolute displacements were subsequently computed and concatenated into 100 time points, thus obtaining 6,036 trajectories for the test set. By doing data augmentation (shuffling the order of short trajectories before concatenating them, inverting the inputs with the targets, reversing one dimension and keeping the other one as it is.), we got a training set of 36,216 trajectories, of which 7,000 were used for validation."
+        },
+        {
+            "heading": "3.2 Showcases 1 and 2: Simulated SPT data",
+            "text": "Experiments with the simulated data allowed evaluation of the method and comparison with the standard supervised approach (N2L). The histogram of m\u0302t for showcase 1 shows three distinct peaks (Fig. 2A), two of which are centered at the theoretical averages. The peak in the middle is localized next to the theoretical average. For the actual trajectory segmentation (Fig. 2B), we chose to threshold at 0.6 and 1.1, corresponding to local minima. Using the average of |dxt| and |dyt| as inputs for N2N showed a higher performance compared to using only |dxt| or |dyt|. For comparison, we also tried to threshold the raw inputs, which resulted in the lowest performance (Table 1). The proportion of times spent in each state and the average length of the segments are about the same for both methods (Table 2).\nShowcase 2 represents a more realistic situation, where the diffusion rates are very close to each other. Distribution of N2N outputs (Fig. 3A) shows two peaks with a heavy tail\nin between, which were separated using the threshold value of 0.225. The accuracy of the N2N approach is lower compared to showcase 1, but we also observed lower accuracy for N2L. Compared to the raw data, the accuracy is considerably improved (Table 1). In this case, the proportion of time points for state 1 is higher, especially for N2N method, which resulted also in larger average segment length (Table 2).\nIn both showcases, the accuracy of N2L is somewhat higher than that of N2N. One may conclude that the N2L has overall better performance than the N2N. However, both methods were tested with the same type of simulated data that was used to train the N2L. In a real case (absence of groundtruth), the parameters necessary to simulate trajectories for the training (i.e. the number of states, the motion parameters D and \u03b1) have to be approximated first, which may result in the training set (simulated trajectories) not quite matching the test set (real trajectories). This estimation may lower the accuracy of the N2L for unlabeled complex trajectory motions, making the N2N comparable or even better than the N2L method to segment diffusive states."
+        },
+        {
+            "heading": "3.3 Showcase 3: Experimental data of BRCA2",
+            "text": "We also applied N2N on BRCA2 SPT data, which in previous studies was shown to exhibit three-state diffusive behavior [6]. The results of N2N clearly show presence of three states (Fig. 4). For the segmentation, thresholds of 1.1 and 2.4 were used. The motion parameters D and \u03b1 were estimated for each state (and per track segment) (Fig. 4B). The same was done with the segments labeled by N2L (Fig. 4C). For both methods, the values ofD and \u03b1 are similar, showing that the unsupervised N2N method is a strong alternative to supervised approaches, without having to guess the number of states or try to simulate trajectories close to the real ones. The proportion in each state is however slightly different, N2N segmented more points at state 2 than N2L (Table 2)."
+        },
+        {
+            "heading": "4 Discussion and Conclusion",
+            "text": "N2N is a powerful unsupervised technique for image \u201cdenoising\u201d, which is easy to apply as it only requires a pair of corrupted images. Here, we demonstrated how the main ideas of N2N can be applied for segmentation of single-particle tracking data, automatic identification of the number of diffusive states and showed that its performance is comparable to supervised segmentation methods. The latter having the disadvantage of requiring labeled ground-truth data, which is never available for real data sets. The main advantage of our unsupervised approach is that no modeling of real data with simulations is required, which can be a delicate process as it requires exact knowledge about the number of states, the motion parameters D and \u03b1, and the probabilities of switching between states. The future extensions include replacing the simple histogram thresholding for identification of the states with more complex histogram modeling using mixture models. If one still prefers to use slightly more accurate supervised methods, the proposed unsupervised technique can be used as preprocessing in order to estimate the number of states, present in the data and the initial values for motion parameters.\nAcknowledgments. Special thanks to H. Zijlstra, M. W. Paul and C. Wyman for sharing the BRCA2 SPT image data. This work was supported by the Dutch Research Council through the NWO-BBOL research program (Grant No. 737.016.014). Compliance with Ethical Standards. This is a numerical simulation study for which no ethical approval was required."
+        },
+        {
+            "heading": "5 References",
+            "text": "[1] N. Chenouard et al., \u201cObjective comparison of particle\ntracking methods,\u201d Nature Methods, vol. 11, 2014.\n[2] G. Mun\u0303oz-Gil et al., \u201cObjective comparison of methods to decode anomalous diffusion,\u201d Nature Communications, vol. 12, 2021.\n[3] G. Mun\u0303oz-Gil et al., \u201cUnsupervised learning of anomalous diffusion data an anomaly detection approach,\u201d Journal of Physics A: Mathematical and Theoretical, vol. 54, no. 50, pp. 504001, 2021.\n[4] H. D. Pinholt et al., \u201cSingle-particle diffusional fingerprinting: A machine-learning framework for quantitative analysis of heterogeneous diffusion,\u201d Proceedings of the National Academy of Sciences, vol. 118, no. 31, 2021.\n[5] J. Lehtinen et al., \u201cNoise2noise: Learning image restoration without clean data,\u201d Proceedings of the 35th International Conference on Machine Learning, vol. 80, 2018.\n[6] M. Arts et al., \u201cParticle mobility analysis using deep learning and the moment scaling spectrum,\u201d Scientific Reports, vol. 9, 2019.\n[7] I. Goodfellow, Y. Bengio, and A. Courville, Deep Learning, MIT Press, 2016."
+        }
+    ],
+    "title": "IDENTIFICATION OF DIFFUSIVE STATES IN TRACKING APPLICATIONS USING UNSUPERVISED DEEP LEARNING METHODS",
+    "year": 2022
+}

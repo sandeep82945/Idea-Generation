@@ -1,0 +1,141 @@
+{
+    "abstractText": "This work presents a fast direct solver strategy for electromagnetic integral equations in the high-frequency regime. The new scheme relies on a suitably preconditioned combined field formulation and results in a single skeleton form plus identity equation. This is obtained after a regularization of the elliptic spectrum through the extraction of a suitably chosen equivalent circulant problem. The inverse of the system matrix is then obtained by leveraging the Woodbury matrix identity, the low-rank representation of the extracted part of the operator, and fast circulant algebra yielding a scheme with a favorable complexity and suitable for the solution of multiple right-hand sides. Theoretical considerations are accompanied by numerical results both of which are confirming and showing the practical relevance of the newly developed scheme.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Davide Consoli"
+        },
+        {
+            "affiliations": [],
+            "name": "Cl\u00e9ment Henry"
+        },
+        {
+            "affiliations": [],
+            "name": "Alexandre D\u00e9ly"
+        },
+        {
+            "affiliations": [],
+            "name": "Lyes Rahmouni"
+        },
+        {
+            "affiliations": [],
+            "name": "John Erik Ortiz Guzman"
+        },
+        {
+            "affiliations": [],
+            "name": "Tiffany L. Chhim"
+        },
+        {
+            "affiliations": [],
+            "name": "Simon B. Adrian"
+        },
+        {
+            "affiliations": [],
+            "name": "Adrien Merlini"
+        },
+        {
+            "affiliations": [],
+            "name": "Francesco P. Andriulli"
+        }
+    ],
+    "id": "SP:e0daa822ae8b6091122198c042989fa1c9993d4f",
+    "references": [
+        {
+            "authors": [
+                "R.J. Adams",
+                "Y. Xu",
+                "X. Xu",
+                "J.-s. Choi",
+                "S.D. Gedney",
+                "F.X. Canning"
+            ],
+            "title": "Modular Fast Direct Electromagnetic Analysis Using Local-Global Solution Modes",
+            "venue": "IEEE Transactions on Antennas and Propagation, vol. 56, no. 8, pp. 2427\u20132441, Aug. 2008.",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "H. Guo",
+                "Y. Liu",
+                "J. Hu",
+                "E. Michielssen"
+            ],
+            "title": "A Butterfly-Based Direct Integral-Equation Solver Using Hierarchical LU Factorization for Analyzing Scattering From Electrically Large Conducting Objects",
+            "venue": "IEEE Transactions on Antennas and Propagation, vol. 65, no. 9, pp. 4742\u2013 4750, Sep. 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "A. Sharshevsky",
+                "Y. Brick",
+                "A. Boag"
+            ],
+            "title": "Direct Solution of Scattering Problems Using Generalized Source Integral Equations",
+            "venue": "IEEE Transactions on Antennas and Propagation, vol. 68, no. 7, pp. 5512\u20135523, Jul. 2020. Fig. 4: Spectrum of the C\u2212Cc for increasing frequencies. Fig. 5: Accuracy of the solution and rank of the compressed matrix as a function of k, with a compression parameter \u03b5 = 0.015.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "F.P. Andriulli",
+                "I. Bogaert",
+                "K. Cools"
+            ],
+            "title": "On the high frequency behavior and stabilization of a preconditioned and resonance-free formulation",
+            "venue": "2015 International Conference on Electromagnetics in Advanced Applications (ICEAA), Sep. 2015, pp. 1321\u20131324.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "M. Darbas"
+            ],
+            "title": "Generalized combined field integral equations for the iterative solution of the three-dimensional Maxwell equations",
+            "venue": "Applied Mathematics Letters, vol. 19, no. 8, pp. 834\u2013839, Aug. 2006.",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "Y. Boubendir",
+                "C. Turc"
+            ],
+            "title": "Well-conditioned boundary integral equation formulations for the solution of high-frequency electromagnetic scattering problems",
+            "venue": "Computers & Mathematics with Applications, vol. 67, no. 10, pp. 1772\u20131805, Jun. 2014.",
+            "year": 1805
+        },
+        {
+            "authors": [
+                "H.V. Henderson",
+                "S.R. Searle"
+            ],
+            "title": "On Deriving the Inverse of a Sum of Matrices",
+            "venue": "SIAM Review, vol. 23, no. 1, pp. 53\u201360, Jan. 1981.",
+            "year": 1981
+        }
+    ],
+    "sections": [
+        {
+            "text": "Index Terms\u2014Integral equations, preconditioning, fast direct solvers.\nI. INTRODUCTION Integral equation strategies are effective for solving scattering and radiation problems over a wide range of frequencies since they do not require absorbing boundary conditions, they are free from numerical dispersion, and they only require the discretization of the surfaces of the scatterers and the radiators. Unfortunately, matrices arising from their discretization are dense and have dimensions that grow for increasing frequencies. Naive solutions would scale cubically with the number of unknowns and easily jeopardize the advantages of integral equation approaches. Fast matrix-vector multiplication algorithms [1] can substantially decrease this computational burden, but they require iterative solutions, which renders them less attractive when many right-hand sides (RHSs) must be considered. An alternative is the use of fast direct solvers that are building, in reduced complexity, directly the inverse of the system matrix and are efficient for solving problems with multiple RHSs. There are several effective strategies for direct solutions that often rely on hierarchical decompositions both for problems in the low- and in the high-frequency regimes (see [2]\u2013[4] and references therein).\nIn this work, we leverage a different approach. We first precondition the combined field integral equation (CFIE) in\nThis work has been funded by the European Research Council (ERC) under the European Union\u2019s Horizon 2020 research and innovation program (ERC project 321, grant No.724846) and by the ANR Labex CominLabs under the project \u201cCYCLE\u201d.\na suitable way [5]. We then exploit the particular structure of the preconditioned spectrum to separate its principal part contribution and compress its remainder. This is made practical by extracting an equivalent circulant problem, which has the advantage of automatically extracting the principal part contribution and the remainder is compressed in favorable complexity. This results in a non-hierarchical scheme in which a single skeleton form is required and the solution for several RHSs can be obtained efficiently. Theoretical considerations are matched with numerical results confirming and showing the practical relevance of the new scheme."
+        },
+        {
+            "heading": "II. NOTATION AND BACKGROUND",
+            "text": "Consider the scattering of a TE time-harmonic incident electromagnetic field (Einc, H inc) of angular frequency \u03c9 impinging on a perfectly electrically conducting (PEC) body, modeled by a 2-dimensional convex contour \u03b3 that resides in a medium of permittivity , permeability \u00b5, impedance \u03b7 = (\u00b5/ )1/2, and corresponding wavenumber k = \u03c9 \u221a \u00b5 . The combined field integral equation (CFIE) that relates the induced tangential current density j on \u03b3 to the incident electric and magnetic fields reads\n1 ik N k(jt) + ( I 2 \u2212Dk ) (jt) = \u2212 1 \u03b7 Einct \u2212H incz (1)\nwith\n(N kjt)(r) := \u2212 \u2202\n\u2202n \u222b \u03b3 \u2202 \u2202n\u2032 gk(r, r \u2032)jt(r \u2032)dr\u2032 , (2)\n(Dkjt)(r) := \u222b \u03b3 \u2202 \u2202n\u2032 gk(r, r \u2032)jt(r \u2032)dr\u2032 , (3)\nand gk(r, r\u2032) = i/4H (1) 0 (k\u2016r\u2212 r\u2032\u2016). After boundary element discretization with piecewise linear functions \u03bbi(r), (1) is discretized as\n1 ik Nkj+\n( G\n2 \u2212Dk\n) j = \u22121\n\u03b7 e\u2212 h (4)\nwith [e]i = \u222b \u03b3 \u03bbi(r)E inc t (r)dr,[h]i = \u222b \u03b3 \u03bbi(r)H inc z (r)dr,\n[Nk]ij = \u2329 \u03bbi,N k\u03bbj \u232a , [Dk]ij = \u2329 \u03bbi,Dk\u03bbj \u232a , [G]ij = \u3008\u03bbi, \u03bbj\u3009,\nwith \u3008f, g\u3009 = \u222b \u03b3 f(r)g(r)dr.\nar X\niv :2\n20 3.\n13 28\n3v 2\n[ m\nat h.\nN A\n] 4\nA pr\n2 02"
+        },
+        {
+            "heading": "III. A SUITABLE INTEGRAL EQUATION AND ITS SPECTRAL ANALYSIS",
+            "text": "A well conditioned equation can be obtained from (1) by leveraging a modified version of the preconditioner proposed in [5](\nSk\u0303G\u22121Nk +\n( G\n2 +Dk\u0303\n) G\u22121 ( G\n2 \u2212Dk\n)) j\n= \u2212 ik \u03b7 Sk\u0303G\u22121e\u2212\n( G\n2 +Dk\u0303\n) G\u22121h , (5)\nwhere k\u0303 := k + 0.4ik1/3a\u22122/3 following [6], [7] with a a suitable average of the radii of curvature along \u03b3. When comparing the spectrum of the above equation (Fig. 1) with that of the standard formulations such as the EFIE, the MFIE (Fig. 2), or even the Calder\u00f3n-preconditioned CFIE, one can see that the spectral content of (5) clusters, and is maximal, around the surface resonant point attained when the spatial frequency equals ka. Note that for ease of reading the singular values are ordered by the Fourier content of their singular vectors. This suggests that selecting the singular vectors corresponding to this region of maximal spectral strength and filtering out the deviation from the halved identity of the others would lead to a compression of the electromagnetic operator in the high frequency regime\u2014in which the discretization parameter is kept at a fixed proportion of the wavelength. In particular, this would correspond to searching the solution in the space of corrections to the RHS in (5) of the form s 7\u2192M(s)eiks, with M(s) slowly varying."
+        },
+        {
+            "heading": "IV. HANDLING THE ERROR ON THE ELLIPTIC SPECTRUM",
+            "text": "Although eigenvector extraction (after proper shifting and symmetrization) is an option for obtaining a direct solver out of (5), at higher precision this may become less practical and skeleton form obtaining algorithms can be used instead. However, the discretization error in the elliptic part of the spectrum can interfere with this approach. The discretization will cause a constant (O(1)) error in the elliptic spectrum for first kind preconditioned operators (see Fig. 3). There are\nseveral strategies to overcome this problem. Here we opted for subtracting an equivalent circular problem from the operators defined on \u03b3. This will, in practice, extract the second kind part of the original operators, leaving only a compact operator for which the relative error (with respect to the identity) will be decreasing."
+        },
+        {
+            "heading": "V. THE DIRECT SOLVER",
+            "text": "To exploit these considerations to the fullest, we will study the deviation of the electromagnetic operators defined on \u03b3 from their equivalents defined on the circle \u03b3c that has the same perimeter as \u03b3. These auxiliary matrices, denoted by the subscript c, are obtained with the same uniform discretization in the curvilinear abscissa as the main matrices defined on \u03b3\u2014both of which are discretized with piecewise linear basis functions in the curvilinear abscissa. Note that under these conditions we have G = Gc, among other critical properties. Then by defining\nC :=\n(( G\n2 +Dk\u0303\n) G\u22121 ( G\n2 \u2212Dk\n) + Sk\u0303G\u22121Nk ) (6)\nand its circle counterpart Cc, we compute the skeleton form of the matrix\nC\u2212Cc =: UVT , (7)\nwhich can be obtained efficiently based on the expected low rank of the difference and on the fact that all operations involving the matrices and operators on \u03b3c are done rapidly via fast Fourier transform (FFT). Finally, the solution of the original problem can be obtained efficiently, for any number of RHSs, by inverting\nC = Cc ( I+ (Cc) \u22121 UVT ) , (8)\nwhere I is the identity matrix, using the Woodbury matrix identity [8]\nC\u22121 = C\u22121c \u2212C\u22121c U ( I+VTC\u22121c U )\u22121 VTC\u22121c (9)\nthat can be computed efficiently given the low-rank (i.e., the inner dimension) nature of the skeleton form and circulant algebra."
+        },
+        {
+            "heading": "VI. NUMERICAL RESULTS",
+            "text": "The direct solution strategy of this work has been tested on an ellipse with semi-major axis 2m and semi-minor axis 1m. A close inspection of the spectrum of C (Fig. 3) reveals that the spectral corruption caused by the discretization error poses a real challenge for compression purposes, since they would artificially increase the rank of the compression if the lookedfor accuracy was too high (the limit case is indicated by the red lines in the figure). On the contrary, the elliptic spectrum of (C\u2212Cc) (Fig. 4) does not remain constant, but it decreases for the high spatial frequencies, which makes it an ideal candidate for applying the proposed compression scheme. Fig. 5 shows the behavior of the inner rank of the skeleton in (7) that shows a growth not larger than k 1 3 (which is a bound that can be theoretically predicted for the circular case). This provides in this case an upper bound for the computational complexity not larger than O(N 4 3 ) where in practice lower complexities can be obtained given that for a constant truncation error on the matrix the accuracy of the solution increases with frequency, as can be seen in Fig. 5. Thus, the effectiveness of the scheme is ensured in the high-frequency regime."
+        }
+    ],
+    "title": "On the Fast Direct Solution of a Preconditioned Electromagnetic Integral Equation",
+    "year": 2022
+}

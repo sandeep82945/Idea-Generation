@@ -1,0 +1,147 @@
+{
+    "abstractText": "The solution of systems of non-autonomous linear ordinary differential equations is crucial in a variety of applications, such us nuclear magnetic resonance spectroscopy. A new method with spectral accuracy has been recently introduced in the scalar case. The method is based on a product that generalizes the convolution. In this work, we show that it is possible to extend the method to solve systems of non-autonomous linear ordinary differential equations (ODEs). In this new approach, the ODE solution can be expressed through a linear system that can be equivalently rewritten as a matrix equation. Numerical examples illustrate the method\u2019s efficacy and the low-rank property of the matrix equation solution.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Stefano Pozza"
+        },
+        {
+            "affiliations": [],
+            "name": "Niel Van Buggenhout"
+        }
+    ],
+    "id": "SP:d35aa3bba3c04100e0cd2409f45a5581c3cb33e7",
+    "references": [
+        {
+            "authors": [
+                "S. Hafner",
+                "H.W. Spiess"
+            ],
+            "title": "Concepts Magn",
+            "venue": "Reson. 10, 99\u2013128 ",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "P.L. Giscard",
+                "K. Lui",
+                "S.J. Thwaite",
+                "D. Jaksch",
+                "J. Math"
+            ],
+            "title": "Phys",
+            "venue": "56(5), 053503 ",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "P.L. Giscard",
+                "C. Bonhomme"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Research 2(Apr), 023081 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P.L. Giscard",
+                "S. Pozza"
+            ],
+            "title": "Appl",
+            "venue": "Math. 65(6), 807\u2013827 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P.L. Giscard",
+                "S. Pozza"
+            ],
+            "title": "Linear Algebra Appl",
+            "venue": "624, 153\u2013173 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R.A. Silverman"
+            ],
+            "title": "Special functions and their applications",
+            "venue": "(Courier Corporation,",
+            "year": 1972
+        },
+        {
+            "authors": [
+                "S. Cipolla",
+                "S. Pozza",
+                "M. Redivo-Zaglia",
+                "N. Van Buggenhout"
+            ],
+            "title": "Numer",
+            "venue": "Algorithms ",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "V. Simoncini",
+                "SIAM J. Sci"
+            ],
+            "title": "Comput",
+            "venue": "29(3), 1268\u20131288 ",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "D. Palitta",
+                "P. K\u00fcrschner"
+            ],
+            "title": "Numer",
+            "venue": "Algorithms 88(3), 1383\u20131417 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Brezinski",
+                "M. Redivo Zaglia"
+            ],
+            "title": "Extrapolation methods",
+            "venue": "Studies in Computational Mathematics, Vol. 2 ",
+            "year": 1991
+        },
+        {
+            "authors": [
+                "D. Buoso",
+                "A. Karapiperi",
+                "S. Pozza"
+            ],
+            "title": "Appl",
+            "venue": "Numer. Math. 90, 38\u201354 ",
+            "year": 2015
+        }
+    ],
+    "sections": [
+        {
+            "text": "ar X\niv :2\n21 0.\n07 05\n2v 1\n[ m\nat h.\nN A\n] 1\n3 O\nct 2\n02 2\nThe solution of systems of non-autonomous linear ordinary differential equations is crucial in a variety of applications, such us nuclear magnetic resonance spectroscopy. A new method with spectral accuracy has been recently introduced in the scalar case. The method is based on a product that generalizes the convolution. In this work, we show that it is possible to extend the method to solve systems of non-autonomous linear ordinary differential equations (ODEs). In this new approach, the ODE solution can be expressed through a linear system that can be equivalently rewritten as a matrix equation. Numerical examples illustrate the method\u2019s efficacy and the low-rank property of the matrix equation solution."
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "Systems of non-autonomous linear ordinary differential equations (ODEs) appear in a variety of applications, and its numerical computation is often challenging, particularly for large-to-huge size systems. For instance, in nuclear magnetic resonance spectroscopy (NMR) [1], the system solution describes the dynamics of the nuclear spins of a sample in a time-varying magnetic field. The size of such systems is 2k \u00d7 2k for a sample with k spins and is usually sparse. In [2], we proposed a new method with spectral accuracy for solving scalar nonautonomous ordinary differential equations. In the present work, we extend this method to the case of systems of non-autonomous ODEs.\nConsider a matrix A\u0303(t) \u2208 CN\u00d7N composed of elements from C\u221e(I), i.e., the set of functions infinitely differentiable (smooth) over I, with I a closed and bounded interval in R. The system\nd dt Us(t) = A\u0303(t)Us(t), Us(s) = IN , for t \u2265 s, t, s \u2208 I, (1)\nhas a unique solution Us(t) \u2208 CN\u00d7N ; IN stands for the N \u00d7N identity matrix. Note that the condition Us(s) = IN is not restrictive, since, given a matrix B \u2208 CN\u00d7N , the matrix-valued function Vs(t) := Us(t)B solves the ODE\nd dt Vs(t) = A\u0303(t)Vs(t), Vs(s) = B for t \u2265 s, t, s \u2208 I.\nAt the heart of the new method for solving (1) is a non-commutative convolution-like product, denoted by \u22c6, defined between certain distributions [3]. Thanks to this product, the solution of (1) can be expressed through the \u22c6-product inverse and its formulation as a sequence of integrals and differential equations; see [4\u20138]. In [2], we illustrated that, by discretizing the \u22c6-product with orthogonal functions, the solution of a scalar ODE is accessible by solving a linear system. In this work, we extend the results in [2], showing that, following the same principles, we can solve (1) through a linear system. Moreover, we show that the linear system solution can be expressed as the solution of a matrix equation with a rank one right-hand side. Numerical experiments illustrate that the solution of the matrix equation can also be low-rank.\nIn Section 2, we recall the \u22c6-product definition and the related expression for the solution of an ODE. The expression is then discretized and approximated by the solution of a linear system. Section 3 shows how to transform the linear system into a matrix equation, and Section 4 concludes the paper.\n\u2020Charles University, Sokolovsk\u00e1 83 186, 75 Praha 8, Czech Republic. (pozza@karlin.mff.cuni.cz, buggenhout@karlin.mff.cuni.cz )\nThis work was supported by Charles University Research programs No. PRIMUS/21/SCI/009 and UNCE/SCI/023, and by the Magica\nproject ANR-20-CE29-0007 funded by the French National Research Agency."
+        },
+        {
+            "heading": "2 Solution of an ODE by the \u22c6-product",
+            "text": "We use the Heaviside theta function\n\u0398(t\u2212 s) = { 1, t \u2265 s 0, t < s ,\nto rewrite (1) in the following equivalent form\nd dt U(t, s) = A\u0303(t)\u0398(t\u2212 s)U(t, s), U(s, s) = IN , for t, s \u2208 I. (2)\nNote that \u0398(t\u2212 s) endows the condition t \u2265 s in equation (2) and that U(t, s) is the bivariate function expressing the solutions of (1) for every initial time s \u2208 I, with U(t, s) = 0 for t < s. From now on, we will denote with a tilde all the bivariate functions that are infinitely differentiable in both t and s over I, i.e., f\u0303 \u2208 C\u221e(I \u00d7 I). Moreover, we define the following class of functions\nC\u221e\u0398 (I) := { f : f(t, s) = f\u0303(t, s)\u0398(t\u2212 s), f\u0303 \u2208 C\u221e(I \u00d7 I) } .\nConsider now the N \u00d7N matrices A1(t, s), A2(t, s) \u2208 (C\u221e\u0398 (I))N\u00d7N , i.e., matrices composed of elements from C\u221e\u0398 (I). Then, the \u22c6-product is defined as\n( A2 \u22c6 A1 ) (t, s) :=\n\u222b\nI\nA2(t, \u03c4)A1(\u03c4, s) d\u03c4. (3)\nThe \u22c6-product can be extended to a larger class of matrices composed of elements from the class D(I) \u2283 C\u221e\u0398 (I), that is, the class of the superpositions of \u0398(t \u2212 s), Dirac delta distribution \u03b4(t \u2212 s), and Dirac delta derivatives described in [6]. In such a class, \u03b4(t \u2212 s)IN is the \u22c6-product identity, i.e., A(t, s) \u22c6 \u03b4(t \u2212 s)IN = \u03b4(t \u2212 s)IN \u22c6 A(t, s) = A(t, s). Moreover, in the larger class D(I), the \u22c6-product admits inverses under certain conditions [6], i.e., for certain f(t, s) \u2208 C\u221e\u0398 , there exists f(t, s)\u2212\u22c6 such that f(t, s) \u22c6 f(t, s)\u2212\u22c6 = f(t, s)\u2212\u22c6 \u22c6 f(t, s) = \u03b4(t\u2212 s).\nFollowing [4], the solution of (2) can be expressed as\nU(t, s) = \u0398(t\u2212 s) \u22c6 R\u22c6(A)(t, s), (4)\nwhere A(t, s) = A\u0303(t)\u0398(t\u2212 s) and R\u22c6(A) is the \u22c6-resolvent of A, i.e.,\nR\u22c6(A)(t, s) = \u03b4(t\u2212 s)IN + \u221e \u2211\nk=1\nA(t, s)k\u22c6,\nwith A(t, s)k\u22c6 = A \u22c6 \u00b7 \u00b7 \u00b7 \u22c6 A, the kth power of the \u22c6-product. Note that the series \u2211 \u221e k=1 A(t, s) \u22c6k converges for every A \u2208 (C\u221e\u0398 (I))N\u00d7N . Expression (4) hides an infinite series of nested integrals. However, as shown in [2], it is possible to approximate the \u22c6-product by the usual matrix-matrix product in the scalar case. This approximation allows us to compute (4) more simply and cheaply. We recall its basics below.\nWithout loss of generality, we set I = [0, 1]. Moreover, we consider the family of orthonormal shifted Legendre polynomials {pk}k. Then, any f(t, s) \u2208 C\u221e\u0398 (I) can be expanded into the following series (e.g., [9])\nf(t, s) =\n\u221e \u2211\nk=0\n\u221e \u2211\n\u2113=0\nfk,\u2113 pk(t)p\u2113(s), t 6= s, t, s \u2208 I, fk,\u2113 = \u222b\nI\n\u222b\nI\nf(\u03c4, \u03c1)pk(\u03c4)p\u2113(\u03c1) d\u03c1 d\u03c4. (5)\nBy defining the coefficient matrix FM and the vector \u03c6M (t) as\nFM :=\n\n   \nf0,0 f0,1 . . . f0,M\u22121 f1,0 f1,1 . . . f1,M\u22121\n... ...\n...\nfM\u22121,0 fM\u22121,1 . . . fM\u22121,M\u22121\n\n    , \u03c6M (t) :=\n\n   \np0(s) p1(s)\n...\npM\u22121(s)\n\n    , (6)\nthe truncated expansion series can be written in the matrix form:\nfM (t, s) :=\nM\u22121 \u2211\nk=0\nM\u22121 \u2211\n\u2113=0\nfk,\u2113 pk(t)p\u2113(s) = \u03c6M (t) TFM \u03c6M (s).\nLet us consider the functions f, g, h \u2208 C\u221e\u0398 (I) so that h = f \u22c6 g, and the related coefficient matrices (6), respectively, FM , GM , HM . Following [6], HM can be approximated by the expression\nHM \u2248 H\u0302m := FMGM . (7)\nTherefore, there is a connection between the \u22c6-algebra over D(I) and the usual matrix algebra. The elements and operations which form the \u22c6-algebra and the related elements and operations forming the usual matrix algebra are given in Table 1 (in the first two columns for the scalar case); for more details, we refer to [6].\nThe approximation in the scalar case can be easily extended to the matrix one. Indeed, if A(t, s) = [aij(t, s)] N i,j=1\nis an N \u00d7 N matrix with elements aij(t) \u2208 C\u221e\u0398 (I), then for each aij , we can compute the related coefficient matrices F\n(i,j) M (6) obtaining the block matrix\nAM =\n\n    \nF (1,1) M\n. . . F (1,N) M\n... . . .\n...\nF (N,1) M\n. . . F (N,N) M\n\n     \u2208 CMN\u00d7MN . (8)\nLet us define the N \u00d7 N matrices A(t, s), B(t, s), C(t, s) \u2208 (C\u221e\u0398 (I))N\u00d7N so that C(t, s) = A(t, s) \u22c6 B(t, s) and let their coefficient matrices (8) be, respectively, AM ,BM , CM . Then, analogously to the scalar case, CM is approximated by CM \u2248 C\u0302M := AMBM . As a consequence, also in the matrix case, the \u22c6-algebra can be approximated by the usual matrix algebra, as summarized in the last two columns of Table 1.\nThe matrix-valued function U(t, s) in (2) is composed of elements from C\u221e\u0398 (I). Therefore, we can define the related coefficient matrix UM as in (8). Then, expression (4) can be approximated by\nUM \u2248 (IN \u2297 TM )(IMN \u2212AM )\u22121,\nwhere \u2297 is the Kronecker product, TM is the coefficient matrix of \u0398(t \u2212 s), and AM is the coefficient matrix of A\u0303(t)\u0398(t\u2212 s), with A\u0303(t) from (2). Moreover, we can approximate the solution of (2) for s = 0 by the formula:\nU(t, 0) \u2248 \u03c6M (t)TUM \u03c6M (0) = (IN \u2297 \u03c6M (t)T )(IN \u2297 TM )(IMN \u2212AM )\u22121(IN \u2297 \u03c6M (0)) = (IN \u2297 \u03c6M (t)TTM )(IMN \u2212AM )\u22121(IN \u2297 \u03c6M (0)).\nNote that, as explained in [2], the approximation converges quickly enough to the solution only when s is the left endpoint of the interval I, i.e., s = 0. In practical situations, the initial time s of the evolution is fixed (s = 0), and the initial condition is given as a vector v \u2208 CN . Then, we get the simpler problem, d\ndt u(t) = A\u0303(t)\u0398(t\u2212 s)u(t), u(0) = v, for t, s \u2208 I, (9)\nwhere the solution u(t) is an N -size vector. Thus, u(t) is approximated by:\nu(t) \u2248 (IN \u2297 \u03c6M (t)TTM )(IMN \u2212AM )\u22121(IN \u2297 \u03c6M (0)) v \u2248 (IN \u2297 \u03c6M (t)TTM )(IMN \u2212AM )\u22121(v \u2297 \u03c6M (0)).\nThen, solving the linear system\n(IMN \u2212AM )x = v \u2297 \u03c6M (0), (10)\none can approximate the solution of (9) in terms of its expansion coefficients uM := (IN \u2297 TM )x, that is,\nu(t) \u2248 u\u0302(t) := (IN \u2297 \u03c6M (t)T )uM . (11)"
+        },
+        {
+            "heading": "2.1 Numerical examples",
+            "text": "Given a random vector v with elements in [0, 1], we aim to compute the bilinear form vTu(t) obtained by solving the following ODE system\nd dt u(t) = \u22122\n\u221a \u22121\u03c0H\u0303(t)u(t), u(0) = v, for t \u2208 [0, T ]. (12)\nThis system of ODEs comes from Experiment 2 (Strong coupling) in [10], and vTu(t) represents an NMR experiment with a magic angle spinning (MAS) for k spins; see, e.g., [1]. The so-called Hamiltonian H\u0303(t) is a 2k \u00d7 2k matrix-valued function and has the form\nH\u0303(t) = D +B(cos(2\u03c0\u03bdt) + cos(4\u03c0\u03bdt)), (13)\nwith D,B sparse matrices described in [10]. In our experiments, we set T = 10\u22123, \u03bd = 104, and k = 4, 7, 10, so obtaining three systems with exponentially increasing sizes.\nThe approximated solution u\u0302(t) (11) is computed by solving the linear system (10)* with M = 1000. The numerical experiments were performed using MatLab R2022a, and the linear systems were solved by the MatLab GMRES method implementation, gmres, with tolerance set to 1e \u2212 15. In Figure 1, we compare the approximated bilinear form vT u\u0302(t) with the solution obtained by the MatLab function ode45 with relative and absolute tolerance set to 3e\u221214. Figure 2 reports the corresponding relative and absolute errors over the interval [0, T ] (the reference for the error is again the ode45 solution). In all the experiments, GMRES stopped after a maximum of 27 iterations (for the cases k = 7, 10 due to residual stagnation). The numerical results show that the method is able to compute the solution with accuracy comparable with a well-established method."
+        },
+        {
+            "heading": "3 Matrix equation formulation",
+            "text": "The matrix-valued function A\u0303(t) in (1) can always be written in the form\nA\u0303(t) =\nd \u2211\nk=1\nAkf\u0303k(t), (14)\n*The matrices F (i,j) M in the block coefficient matrix (8) are numerically banded with bandwidth bi,j . In order to avoid error accumulation,\nthe last bi,j rows of each F (i,j) M have been set equal to zero; see [2].\nwith f\u03031, . . . , f\u0303d distinct scalar functions and A1, . . . , Ad constant matrices. In many applications, d is small. For instance, in the examples from Section 2.1, we have d = 2. Then, exploiting expression (14), the (block) coefficient matrix (8) of A(t, s) = A\u0303(t)\u0398(t\u2212 s) becomes\nAM = d \u2211\nk=1\nAk \u2297 F (k)M ,\nwith F (k) M the coefficient matrix (6) of f\u0303k(t). The solution x of the linear system (10) can, hence, be rewritten in terms of the solution X of the following matrix equation\nX \u2212 d \u2211\nk=1\nF (k) M XA T k = \u03c6M (0)b T , x = vec(X), (15)\nwhere vec(X) denotes the vectorization of X , i.e., the vector obtained by stacking the columns of X into a single vector. The matrix equation (15) has a rank 1 right-hand side \u03c6M (0)b T . This suggests that the solution X may have a low numerical rank. Figure 3 reports the computed singular values of X , where x = vec(X) is the linear system solution of each of the experiments performed in Section 2.1. For k = 4, the solution X is full rank, while for k = 7, 10, the numerical rank of X is, respectively, 12, 72 (we consider as numerical rank the index of the last singular value before the stagnation visible in the plots). Clearly, this preliminary study shows that the numerical rank of X increases slowly with the size of X ."
+        },
+        {
+            "heading": "4 Discussions and conclusion",
+            "text": "In this work, we present a new method for solving systems of non-autonomous linear ODEs. The method is based on the solution of a linear system that can be rewritten as a matrix equation. Several examples illustrate that the method is able to compute the solution with accuracy comparable to the well-established Runge-Kutta method implemented by the MatLab function ode45. Moreover, the experiments show that the solution of the matrix equation is a numerical low-rank matrix when the ODE system is large enough. This may be exploited\nusing projection methods with low-rank techniques (see, e.g., [11, 12]). In [10], we also show that matrix AM in (8) can be compressed by the Tensor Train decomposition (note that [10] uses a different family of orthogonal functions instead of the Legendre polynomials). A Tensor Train approach may further reduce the memory and computational cost of the method. Another possible approach could be extrapolation methods able to exploit the dependence of equation (10) on s; see, e.g., [13, 14].\nOverall, the results suggest that the presented method may be an effective solver for large-to-huge systems of ODEs once we are able to exploit the solution\u2019s low-rank structure and the other mentioned properties. We are currently investigating these possible approaches."
+        }
+    ],
+    "title": "A new matrix equation expression for the solution of non-autonomous linear systems of ODEs",
+    "year": 2022
+}

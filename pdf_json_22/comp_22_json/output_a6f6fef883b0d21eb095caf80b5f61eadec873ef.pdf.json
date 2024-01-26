@@ -1,0 +1,963 @@
+{
+    "abstractText": "In this work, we build upon our previous publication and use diffusion-based generative models for speech enhancement. We present a detailed overview of the diffusion process that is based on a stochastic differential equation and delve into an extensive theoretical examination of its implications. Opposed to usual conditional generation tasks, we do not start the reverse process from pure Gaussian noise but from a mixture of noisy speech and Gaussian noise. This matches our forward process which moves from clean speech to noisy speech by including a drift term. We show that this procedure enables using only 30 diffusion steps to generate high-quality clean speech estimates. By adapting the network architecture, we are able to significantly improve the speech enhancement performance, indicating that the network, rather than the formalism, was the main limitation of our original approach. In an extensive cross-dataset evaluation, we show that the improved method can compete with recent discriminative models and achieves better generalization when evaluating on a different corpus than used for training. We complement the results with an instrumental evaluation using real-world noisy recordings and a listening experiment, in which our proposed method is rated best. Examining different sampler configurations for solving the reverse process allows us to balance the performance and computational speed of the proposed method. Moreover, we show that the proposed method is also suitable for dereverberation and thus not limited to additive background noise removal. Code and audio examples are available online.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Julius Richter"
+        },
+        {
+            "affiliations": [],
+            "name": "Simon Welker"
+        },
+        {
+            "affiliations": [],
+            "name": "Timo Gerkmann"
+        }
+    ],
+    "id": "SP:5809459afe5208634e03724221858caf17b7e91c",
+    "references": [
+        {
+            "authors": [
+                "R.C. Hendriks",
+                "T. Gerkmann",
+                "J. Jensen"
+            ],
+            "title": "DFT-domain based singlemicrophone noise reduction for speech enhancement: A survey of the state-of-the-art",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "T. Gerkmann",
+                "E. Vincent"
+            ],
+            "title": "Spectral masking and filtering",
+            "venue": "Audio Source Separation and Speech Enhancement, E. Vincent, T. Virtanen, and S. Gannot, Eds. John Wiley & Sons, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "D. Wang",
+                "J. Chen"
+            ],
+            "title": "Supervised speech separation based on deep learning: An overview",
+            "venue": "IEEE Trans. on Audio, Speech, and Language Proc. (TASLP), vol. 26, no. 10, pp. 1702\u20131726, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "D.S. Williamson",
+                "Y. Wang",
+                "D. Wang"
+            ],
+            "title": "Complex ratio masking for monaural speech separation",
+            "venue": "IEEE Trans. on Audio, Speech, and Language Proc. (TASLP), vol. 24, no. 3, pp. 483\u2013492, 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "S.-W. Fu",
+                "T.-Y. Hu",
+                "Y. Tsao",
+                "X. Lu"
+            ],
+            "title": "Complex spectrogram enhancement by convolutional neural network with multi-metrics learning",
+            "venue": "IEEE Int. Workshop on Machine Learning for Signal Proc. (MLSP), pp. 1\u20136, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "S.-W. Fu",
+                "Y. Tsao",
+                "X. Lu",
+                "H. Kawai"
+            ],
+            "title": "Raw waveform-based speech enhancement by fully convolutional networks",
+            "venue": "IEEE Asia-Pacific Signal and Inf. Proc. Assoc. Annual Summit and Conf. (APSIPA ASC), 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "P. Wang",
+                "K. Tan",
+                "D.L. Wang"
+            ],
+            "title": "Bridging the gap between monaural speech enhancement and recognition with distortion-independent acoustic modeling",
+            "venue": "IEEE Trans. on Audio, Speech, and Language Proc. (TASLP), vol. 28, pp. 39\u201348, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S. Pascual",
+                "A. Bonafonte",
+                "J. Serr\u00e0"
+            ],
+            "title": "SEGAN: Speech enhancement generative adversarial network",
+            "venue": "ISCA Interspeech, pp. 3642\u20133646, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Y. Bando",
+                "M. Mimura",
+                "K. Itoyama",
+                "K. Yoshii",
+                "T. Kawahara"
+            ],
+            "title": "Statistical speech enhancement based on probabilistic integration of variational autoencoder and non-negative matrix factorization",
+            "venue": "IEEE Int. Conf. on Acoustics, Speech and Signal Proc. (ICASSP), pp. 716\u2013720, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "S. Leglaive",
+                "L. Girin",
+                "R. Horaud"
+            ],
+            "title": "A variance modeling framework based on variational autoencoders for speech enhancement",
+            "venue": "IEEE Int. Workshop on Machine Learning for Signal Proc. (MLSP), pp. 1\u20136, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Richter",
+                "G. Carbajal",
+                "T. Gerkmann"
+            ],
+            "title": "Speech enhancement with stochastic temporal convolutional networks.",
+            "venue": "ISCA Interspeech,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "G. Carbajal",
+                "J. Richter",
+                "T. Gerkmann"
+            ],
+            "title": "Guided variational autoencoder for speech enhancement with a supervised classifier",
+            "venue": "IEEE Int. Conf. on Acoustics, Speech and Signal Proc. (ICASSP), pp. 681\u2013685, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "\u2014\u2014"
+            ],
+            "title": "Disentanglement learning for variational autoencoders applied to audio-visual speech enhancement",
+            "venue": "IEEE Workshop on Applications of Signal Proc. to Audio and Acoustics (WASPAA), pp. 126\u2013130, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Bando",
+                "K. Sekiguchi",
+                "K. Yoshii"
+            ],
+            "title": "Adaptive neural speech enhancement with a denoising variational autoencoder.",
+            "venue": "ISCA Interspeech,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "H. Fang",
+                "G. Carbajal",
+                "S. Wermter",
+                "T. Gerkmann"
+            ],
+            "title": "Variational autoencoder for speech enhancement with a noise-aware encoder",
+            "venue": "IEEE Int. Conf. on Acoustics, Speech and Signal Proc. (ICASSP), pp. 676\u2013680, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A.A. Nugraha",
+                "K. Sekiguchi",
+                "K. Yoshii"
+            ],
+            "title": "A flow-based deep latent variable model for speech spectrogram modeling and enhancement",
+            "venue": "IEEE Trans. on Audio, Speech, and Language Proc. (TASLP), vol. 28, pp. 1104\u20131117, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "X. Bie",
+                "S. Leglaive",
+                "X. Alameda-Pineda",
+                "L. Girin"
+            ],
+            "title": "Unsupervised speech enhancement using dynamical variational autoencoders",
+            "venue": "IEEE Trans. on Audio, Speech, and Language Proc. (TASLP), vol. 30, pp. 2993\u20133007, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D.P. Kingma",
+                "M. Welling"
+            ],
+            "title": "Auto-encoding variational Bayes",
+            "venue": "Int. Conf. on Learning Representations (ICLR), 2014.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "I. Goodfellow",
+                "J. Pouget-Abadie",
+                "M. Mirza",
+                "B. Xu",
+                "D. Warde-Farley",
+                "S. Ozair",
+                "A. Courville",
+                "Y. Bengio"
+            ],
+            "title": "Generative adversarial networks",
+            "venue": "Advances in Neural Inf. Proc. Systems (NeurIPS), vol. 27, 2014.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Y.-J. Lu",
+                "Y. Tsao",
+                "S. Watanabe"
+            ],
+            "title": "A study on speech enhancement based on diffusion probabilistic model",
+            "venue": "IEEE Asia-Pacific Signal and Inf. Proc. Assoc. Annual Summit and Conf. (APSIPA ASC), pp. 659\u2013666, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y.-J. Lu",
+                "Z.-Q. Wang",
+                "S. Watanabe",
+                "A. Richard",
+                "C. Yu",
+                "Y. Tsao"
+            ],
+            "title": "Conditional diffusion probabilistic model for speech enhancement",
+            "venue": "IEEE Int. Conf. on Acoustics, Speech and Signal Proc. (ICASSP), pp. 7402\u2013 7406, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S. Welker",
+                "J. Richter",
+                "T. Gerkmann"
+            ],
+            "title": "Speech enhancement with score-based generative models in the complex STFT domain",
+            "venue": "ISCA Interspeech, pp. 2928\u20132932, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Serr\u00e0",
+                "S. Pascual",
+                "J. Pons",
+                "R.O. Araz",
+                "D. Scaini"
+            ],
+            "title": "Universal speech enhancement with score-based diffusion",
+            "venue": "arXiv preprint arXiv:2206.03065, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Sohl-Dickstein",
+                "E. Weiss",
+                "N. Maheswaranathan",
+                "S. Ganguli"
+            ],
+            "title": "Deep unsupervised learning using nonequilibrium thermodynamics",
+            "venue": "Int. Conf. on Machine Learning (ICML), pp. 2256\u20132265, 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "J. Ho",
+                "A. Jain",
+                "P. Abbeel"
+            ],
+            "title": "Denoising diffusion probabilistic models",
+            "venue": "Advances in Neural Inf. Proc. Systems (NeurIPS), vol. 33, pp. 6840\u20136851, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Y. Song",
+                "S. Ermon"
+            ],
+            "title": "Generative modeling by estimating gradients of the data distribution",
+            "venue": "Advances in Neural Inf. Proc. Systems (NeurIPS), vol. 32, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Hyv\u00e4rinen",
+                "P. Dayan"
+            ],
+            "title": "Estimation of non-normalized statistical models by score matching.",
+            "venue": "Journal of Machine Learning Research,",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "Y. Song",
+                "J. Sohl-Dickstein",
+                "D.P. Kingma",
+                "A. Kumar",
+                "S. Ermon",
+                "B. Poole"
+            ],
+            "title": "Score-based generative modeling through stochastic differential equations",
+            "venue": "Int. Conf. on Learning Representations (ICLR), 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "B.D. Anderson"
+            ],
+            "title": "Reverse-time diffusion equation models",
+            "venue": "Stochastic Processes and their Applications, vol. 12, no. 3, pp. 313\u2013326, 1982.",
+            "year": 1982
+        },
+        {
+            "authors": [
+                "Y. Koizumi",
+                "H. Zen",
+                "K. Yatabe",
+                "N. Chen",
+                "M. Bacchiani"
+            ],
+            "title": "SpecGrad: Diffusion probabilistic model based neural vocoder with adaptive noise spectral shaping",
+            "venue": "ISCA Interspeech, pp. 803\u2013807, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "P. Vincent"
+            ],
+            "title": "A connection between score matching and denoising autoencoders",
+            "venue": "Neural Computation, vol. 23, no. 7, pp. 1661\u20131674, 2011.",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "J.-M. Lemercier",
+                "J. Richter",
+                "S. Welker",
+                "T. Gerkmann"
+            ],
+            "title": "Analysing diffusion-based generative approaches versus discriminative approaches for speech restoration",
+            "venue": "ICASSP 2023-2023 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP). IEEE, 2023, pp. 1\u20135.",
+            "year": 2023
+        },
+        {
+            "authors": [
+                "T. Gerkmann",
+                "R. Martin"
+            ],
+            "title": "Empirical distributions of DFT-domain speech coefficients based on estimated speech variances",
+            "venue": "Int. Workshop on Acoustic Echo and Noise Control, 2010.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "S. Braun",
+                "I. Tashev"
+            ],
+            "title": "A consolidated view of loss functions for supervised deep learning-based speech enhancement",
+            "venue": "Int. Conf. on Telecom. and Signal Proc. (TSP), pp. 72\u201376, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C.H. You",
+                "S.N. Koh",
+                "S. Rahardja"
+            ],
+            "title": "spl beta/-order MMSE spectral amplitude estimation for speech enhancement",
+            "venue": "IEEE Trans. on Audio, Speech, and Language Proc. (TASLP), vol. 13, no. 4, pp. 475\u2013486, 2005.",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "C. Breithaupt",
+                "R. Martin"
+            ],
+            "title": "Analysis of the decision-directed snr estimator for speech enhancement with respect to low-snr and transient conditions",
+            "venue": "IEEE Trans. on Audio, Speech, and Language Proc. (TASLP), vol. 19, no. 2, pp. 277\u2013289, 2010.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "N. Chen",
+                "Y. Zhang",
+                "H. Zen",
+                "R.J. Weiss",
+                "M. Norouzi",
+                "W. Chan"
+            ],
+            "title": "WaveGrad: Estimating gradients for waveform generation",
+            "venue": "Int. Conf. on Learning Representations (ICLR), 2021. 13",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "G. Batzolis",
+                "J. Stanczuk",
+                "C.-B. Sch\u00f6nlieb",
+                "C. Etmann"
+            ],
+            "title": "Conditional image generation with score-based diffusion models",
+            "venue": "arXiv preprint arXiv:2111.13606, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P. Dhariwal",
+                "A. Nichol"
+            ],
+            "title": "Diffusion models beat GANs on image synthesis",
+            "venue": "Advances in Neural Inf. Proc. Systems (NeurIPS), vol. 34, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C.-W. Huang",
+                "J.H. Lim",
+                "A.C. Courville"
+            ],
+            "title": "A variational perspective on diffusion-based generative models and score matching",
+            "venue": "Advances in Neural Inf. Proc. Systems (NeurIPS), vol. 34, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. S\u00e4rkk\u00e4",
+                "A. Solin"
+            ],
+            "title": "Applied Stochastic Differential Equations",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "T. Karras",
+                "M. Aittala",
+                "T. Aila",
+                "S. Laine"
+            ],
+            "title": "Elucidating the design space of diffusion-based generative models",
+            "venue": "Advances in Neural Inf. Proc. Systems (NeurIPS), vol. 35, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J.R. Dormand",
+                "P.J. Prince"
+            ],
+            "title": "A family of embedded Runge-Kutta formulae",
+            "venue": "Journal of Computational and Applied Mathematics, vol. 6, pp. 19\u201326, 1980.",
+            "year": 1980
+        },
+        {
+            "authors": [
+                "O. Ronneberger",
+                "P. Fischer",
+                "T. Brox"
+            ],
+            "title": "U-net: Convolutional networks for biomedical image segmentation",
+            "venue": "Int. Conf. on Medical image computing and computer-assisted intervention, pp. 234\u2013241, 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "A. Brock",
+                "J. Donahue",
+                "K. Simonyan"
+            ],
+            "title": "Large scale GAN training for high fidelity natural image synthesis",
+            "venue": "Int. Conf. on Learning Representations (ICLR), 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Y. Wu",
+                "K. He"
+            ],
+            "title": "Group normalization",
+            "venue": "Proc. of the European conference on computer vision (ECCV), pp. 3\u201319, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "R. Zhang"
+            ],
+            "title": "Making convolutional networks shift-invariant again",
+            "venue": "Int. Conf. on Machine Learning (ICML), pp. 7324\u20137334, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "P. Ramachandran",
+                "B. Zoph",
+                "Q.V. Le"
+            ],
+            "title": "Swish: a self-gated activation function",
+            "venue": "arXiv preprint arXiv:1710.05941, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "A. Vaswani",
+                "N. Shazeer",
+                "N. Parmar",
+                "J. Uszkoreit",
+                "L. Jones",
+                "A.N. Gomez",
+                "\u0141. Kaiser",
+                "I. Polosukhin"
+            ],
+            "title": "Attention is all you need",
+            "venue": "Advances in Neural Inf. Proc. Systems (NeurIPS), vol. 30, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "T. Karras",
+                "S. Laine",
+                "M. Aittala",
+                "J. Hellsten",
+                "J. Lehtinen",
+                "T. Aila"
+            ],
+            "title": "Analyzing and improving the image quality of StyleGAN",
+            "venue": "IEEE/CVF Conf. on Computer Vision and Pattern Recognition (CVPR), pp. 8110\u2013 8119, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J. Barker",
+                "R. Marxer",
+                "E. Vincent",
+                "S. Watanabe"
+            ],
+            "title": "The third \u2018CHiME\u2019 speech separation and recognition challenge: Dataset, task and baselines",
+            "venue": "IEEE Workshop on Automatic Speech Recognition and Understanding (ASRU), pp. 504\u2013511, 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "C. Valentini-Botinhao",
+                "X. Wang",
+                "S. Takaki",
+                "J. Yamagishi"
+            ],
+            "title": "Investigating RNN-based speech enhancement methods for noise-robust text-tospeech",
+            "venue": "ISCA Speech Synthesis Workshop (SSW), pp. 146\u2013152, 2016.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "J. Thiemann",
+                "N. Ito",
+                "E. Vincent"
+            ],
+            "title": "The Diverse Environments Multi-channel Acoustic Noise Database (DEMAND): A database of multichannel environmental noise recordings",
+            "venue": "The Journal of the Acoustical Society of America, vol. 133, no. 5, pp. 3591\u20133591, 2013.",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "R. Scheibler",
+                "E. Bezzam",
+                "I. Dokmanic"
+            ],
+            "title": "Pyroomacoustics: A python package for audio room simulation and array processing algorithms",
+            "venue": "IEEE Int. Conf. on Acoustics, Speech and Signal Proc. (ICASSP), 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "ITU-T Rec. P.863"
+            ],
+            "title": "Perceptual objective listening quality prediction",
+            "venue": "Int. Telecom. Union (ITU), 2018. [Online]. Available: https://www.itu. int/rec/T-REC-P.863-201803-I/en",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "A. Rix",
+                "J. Beerends",
+                "M. Hollier",
+                "A. Hekstra"
+            ],
+            "title": "Perceptual evaluation of speech quality (PESQ) - a new method for speech quality assessment of telephone networks and codecs",
+            "venue": "IEEE Int. Conf. on Acoustics, Speech and Signal Proc. (ICASSP), vol. 2, pp. 749\u2013752, 2001.",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "J. Jensen",
+                "C.H. Taal"
+            ],
+            "title": "An algorithm for predicting the intelligibility of speech masked by modulated noise maskers",
+            "venue": "IEEE Trans. on Audio, Speech, and Language Proc. (TASLP), vol. 24, no. 11, pp. 2009\u20132022, 2016.",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "C.K. Reddy",
+                "V. Gopal",
+                "R. Cutler"
+            ],
+            "title": "DNSMOS: A non-intrusive perceptual objective speech quality metric to evaluate noise suppressors",
+            "venue": "IEEE Int. Conf. on Acoustics, Speech and Signal Proc. (ICASSP), pp. 6493\u20136497, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "B. Naderi",
+                "R. Cutler"
+            ],
+            "title": "An open source implementation of ITU-T recommendation P.808 with validation",
+            "venue": "ISCA Interspeech, pp. 2862\u2013 2866, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "ITU-T Rec. P.808"
+            ],
+            "title": "Subjective evaluation of speech quality with a crowdsourcing approach",
+            "venue": "Int. Telecom. Union (ITU), 2021. [Online]. Available: https://www.itu.int/rec/T-REC-P.808-202106-I/en",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C.K. Reddy",
+                "V. Gopal",
+                "R. Cutler"
+            ],
+            "title": "DNSMOS P.835: A non-intrusive perceptual objective speech quality metric to evaluate noise suppressors",
+            "venue": "IEEE Int. Conf. on Acoustics, Speech and Signal Proc. (ICASSP), 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "ITU-T Rec. P.835"
+            ],
+            "title": "Subjective test methodology for evaluating speech communication systems that include noise suppression algorithm",
+            "venue": "Int. Telecom. Union (ITU), 2003. [Online]. Available: https://www.itu.int/rec/T-REC-P.835-200311-I/en",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "P. Andreev",
+                "A. Alanov",
+                "O. Ivanov",
+                "D. Vetrov"
+            ],
+            "title": "Hifi++: a unified framework for bandwidth extension and speech enhancement",
+            "venue": "arXiv preprint arXiv:2203.13086, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "A. Baevski",
+                "Y. Zhou",
+                "A. Mohamed",
+                "M. Auli"
+            ],
+            "title": "wav2vec 2.0: A framework for self-supervised learning of speech representations",
+            "venue": "Advances in Neural Inf. Proc. Systems (NeurIPS), vol. 33, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "ITU-R Rec. BS.1534-3"
+            ],
+            "title": "Method for the subjective assessment of intermediate quality level of audio systems",
+            "venue": "Int. Telecom. Union (ITU), 2014. [Online]. Available: https://www.itu.int/rec/R-REC-BS.1534",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "M. Schoeffler",
+                "S. Bartoschek",
+                "F.-R. St\u00f6ter",
+                "M. Roess",
+                "S. Westphal",
+                "B. Edler",
+                "J. Herre"
+            ],
+            "title": "webmushra\u2014a comprehensive framework for web-based listening tests",
+            "venue": "Journal of Open Research Software, vol. 6, no. 1, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "W. Falcon"
+            ],
+            "title": "Pytorch lightning",
+            "venue": "GitHub: https://github.com/ PyTorchLightning/pytorch-lightning, vol. 3, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "D.P. Kingma",
+                "J. Ba"
+            ],
+            "title": "Adam: A method for stochastic optimization",
+            "venue": "Int. Conf. on Learning Representations (ICLR), 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Y. Song",
+                "S. Ermon"
+            ],
+            "title": "Improved techniques for training score-based generative models",
+            "venue": "Advances in Neural Inf. Proc. Systems (NeurIPS), vol. 33, pp. 12 438\u201312 448, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "E. Aksan",
+                "O. Hilliges"
+            ],
+            "title": "Stcn: Stochastic temporal convolutional networks",
+            "venue": "Int. Conf. on Learning Representations (ICLR), 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "L. Girin",
+                "S. Leglaive",
+                "X. Bie",
+                "J. Diard",
+                "T. Hueber",
+                "X. Alameda- Pineda"
+            ],
+            "title": "Dynamical variational autoencoders: A comprehensive review",
+            "venue": "Foundations and Trends in Machine Learning, vol. 15, no. 1-2, pp. 1\u2013175, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "H.-S. Choi",
+                "J.-H. Kim",
+                "J. Huh",
+                "A. Kim",
+                "J.-W. Ha",
+                "K. Lee"
+            ],
+            "title": "Phaseaware Speech Enhancement with Deep Complex U-Net",
+            "venue": "arXiv preprint arXiv:1903.03107, 2019.",
+            "year": 1903
+        },
+        {
+            "authors": [
+                "S.-W. Fu",
+                "C. Yu",
+                "T.-A. Hsieh",
+                "P. Plantinga",
+                "M. Ravanelli",
+                "X. Lu",
+                "Y. Tsao"
+            ],
+            "title": "MetricGAN+: An improved version of MetricGAN for speech enhancement",
+            "venue": "arXiv preprint arXiv:2104.03538, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Luo",
+                "N. Mesgarani"
+            ],
+            "title": "Conv-TasNet: Surpassing ideal time\u2013frequency magnitude masking for speech separation",
+            "venue": "IEEE Trans. on Audio, Speech, and Language Proc. (TASLP), vol. 27, no. 8, pp. 1256\u20131266, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Li",
+                "C. Zheng",
+                "L. Zhang",
+                "X. Li"
+            ],
+            "title": "Glance and gaze: A collaborative learning framework for single-channel speech enhancement",
+            "venue": "Applied Acoustics, vol. 187, p. 108499, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Y. Zhao",
+                "D. Wang",
+                "B. Xu",
+                "T. Zhang"
+            ],
+            "title": "Monaural speech dereverberation using temporal convolutional networks with self attention",
+            "venue": "IEEE Trans. on Audio, Speech, and Language Proc. (TASLP), vol. 28, pp. 1598\u20131607, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "G. Yu",
+                "A. Li",
+                "H. Wang",
+                "Y. Wang",
+                "Y. Ke",
+                "C. Zheng"
+            ],
+            "title": "DBT-Net: Dual-branch federative magnitude and phase estimation with attentionin-attention transformer for monaural speech enhancement",
+            "venue": "IEEE Trans. on Audio, Speech, and Language Proc. (TASLP), vol. 30, pp. 2629\u20132644, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "R. Cao",
+                "S. Abdulatif",
+                "B. Yang"
+            ],
+            "title": "CMGAN: Conformer-based metric GAN for speech enhancement",
+            "venue": "ISCA Interspeech, 2022, pp. 936\u2013940.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "ITU-T Rec. P.862.3"
+            ],
+            "title": "Application guide for objective quality measurement based on Recommendations P.862, P.862.1 and P.862.2",
+            "venue": "Int. Telecom. Union (ITU), 2007. [Online]. Available: https://www.itu. int/rec/T-REC-P.862.3/en",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "S.-W. Fu",
+                "C. Yu",
+                "K.-H. Hung",
+                "M. Ravanelli",
+                "Y. Tsao"
+            ],
+            "title": "MetricGAN- U: Unsupervised speech enhancement/dereverberation based only on noisy/reverberated speech",
+            "venue": "IEEE Int. Conf. on Acoustics, Speech and Signal Proc. (ICASSP), pp. 7412\u20137416, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S. Uhlich",
+                "Y. Mitsufuji"
+            ],
+            "title": "Open-unmix for speech enhancement (UMX SE)",
+            "venue": "2020. [Online]. Available: https://github.com/sigsep/ open-unmix-pytorch",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "T. Peer",
+                "T. Gerkmann"
+            ],
+            "title": "Phase-aware deep speech enhancement: It\u2019s all about the frame length",
+            "venue": "JASA Express Letters, vol. 2, no. 10, p. 104802, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C.K. Reddy",
+                "V. Gopal",
+                "R. Cutler",
+                "E. Beyrami",
+                "R. Cheng",
+                "H. Dubey",
+                "S. Matusevych",
+                "R. Aichner",
+                "A. Aazami",
+                "S. Braun"
+            ],
+            "title": "The Interspeech 2020 Deep Noise Suppression Challenge: Datasets, subjective testing framework, and challenge results",
+            "venue": "ISCA Interspeech, pp. 2492\u20132496, 2020. 14",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "M. Lincoln",
+                "I. McCowan",
+                "J. Vepa",
+                "H.K. Maganti"
+            ],
+            "title": "The multi-channel wall street journal audio visual corpus (MC-WSJ-AV): Specification and initial experiments",
+            "venue": "IEEE Workshop on Automatic Speech Recognition and Understanding, pp. 357\u2013362, 2005.",
+            "year": 2005
+        }
+    ],
+    "sections": [
+        {
+            "text": "Index Terms\u2014speech enhancement, dereverberation, diffusion models, score-based generative models, score matching.\nThis is the accepted version of the publiction. \u00a9 2023 IEEE. Personal use of this material is permitted. Permission from IEEE must be obtained for all other uses, in any current or future media, including reprinting/republishing this material for advertising or promotional purposes, creating new collective works, for resale or redistribution to servers or lists, or reuse of any copyrighted component of this work in other works.\nI. INTRODUCTION\nSPEECH enhancement aims to recover clean speech signalsfrom audio recordings that are impacted by acoustic noise or reverberation [1]. To this end, computational approaches often exploit the different statistical properties of the target and interference signals [2]. Machine learning algorithms can be used to extract these statistical properties by learning useful representations from large datasets. A wide class of methods employed for speech enhancement are discriminative models\nThis work has been funded by the German Research Foundation (DFG) in the transregio project Crossmodal Learning (TRR 169), DASHH (Data Science in Hamburg - HELMHOLTZ Graduate School for the Structure of Matter) with the Grant-No. HIDSS-0002, and the Federal Ministry for Economic Affairs and Climate Action, project 01MK20012S, AP380. We would like to thank J. Berger and Rohde&Schwarz SwissQual AG for their support with POLQA.\nSimon Welker is with the Signal Processing Group, Department of Informatics, Universita\u0308t Hamburg, 22527 Hamburg Germany, and with the Center for Free-Electron Laser Science, DESY, 22607 Hamburg, Germany (email: simon.welker@uni-hamburg.de). The other authors are all with the Signal Processing Group, Department of Informatics, Universita\u0308t Hamburg, 22527 Hamburg Germany (e-mail: {julius.richter; jeanmarie.lemercier; bunlong.lay; timo.gerkmann}@uni-hamburg.de).\n1https://github.com/sp-uhh/sgmse\nthat learn to directly map noisy speech to the corresponding clean speech target [3]. Common approaches include timefrequency (T-F) masking [4], complex spectral mapping [5], or operating directly in the time domain [6]. These supervised methods are trained with a variety of clean/noisy speech pairs containing multiple speakers, different noise types, and a large range of signal-to-noise ratios (SNRs). However, it is nearly impossible to cover all possible acoustic conditions in the training data to guarantee generalization. Furthermore, some discriminative approaches have been shown to result in unpleasant speech distortions that outweigh the benefits of noise reduction [7].\nThe use of generative models for speech enhancement, on the other hand, follows a different paradigm, namely to learn a prior distribution over clean speech data. Thus, they aim at learning the inherent properties of speech, such as its spectral and temporal structure. This prior knowledge can be used to make inferences about clean speech given noisy or reverberant input signals that are assumed to lie outside the learned distribution. Several approaches follow this idea and utilized deep generative models for speech enhancement [8]\u2013[17]. Among them are methods that employ likelihood-based models for explicit density estimation such as the variational autoencoder (VAE) [18], or leverage generative adversarial networks (GANs) [19] for implicit density estimation. Bando et al. propose a statistical framework using a VAE trained in an unsupervised fashion to learn a prior distribution over clean speech [9]. At test time they combine the speech model with a low-rank noise model to infer the signal variances of speech and noise to build a Wiener filter for denoising. However, since the VAE is trained with clean speech only, the inference model (i.e. the encoder) that predicts the latent variable remains sensitive to noise. This has been shown to cause the generative speech enhancement method to produce speech-like sounds although only noise is present [9]. To mitigate this, it has been proposed to make the inference model robust to noisy speech by training on labeled data in a supervised manner [14], [15], or by disentangling the latent variable from high-level information such as speech activity which can be estimated by supervised classifiers [12], [13]. Nevertheless, VAE-based speech enhancement methods remain limited due to the dimensionality reduction in the latent layer and the combined use of a linear noise model based on non-negative matrix factorization [9]\u2013[15].\nMore recently, a new class of generative models called diffusion-based generative models, has been introduced to the task of speech enhancement [20]\u2013[23]. Diffusion-based generative models, or simply diffusion models, are inspired by\nar X\niv :2\n20 8.\n05 83\n0v 2\n[ ee\nss .A\nS] 1\n3 Ju\nn 20\n23\n2 non-equilibrium thermodynamics and exist in several variants [24]\u2013[26]. All of them share the idea of gradually turning data into noise, and training a neural network that learns to invert this process for different noise scales. More specifically, the inference model is a fixed Markov chain, that slowly transforms the data into a tractable prior, such as the standard normal distribution. The generative model is another Markov chain that is trained to revert this process iteratively [25]. Therefore, diffusion models can be considered as deep latent variable models and have similar properties to VAEs, with the crucial difference that the inference model is not trained and that the latent variables have the same dimensionality as the input. This has the advantage of not relying on surrogate objectives to approximate maximum likelihood training such as the evidence lower bound and enforces no strong restrictions on the model architecture. Recently, diffusion models have been connected with score matching [27] by looking at the stochastic differential equation (SDE) associated with the discrete-time Markov chain [28]. The forward process can be inverted, resulting in a corresponding reverse SDE which depends only on the score function of the perturbed data [29]. Using this continuoustime SDE formalism creates the opportunity to design novel diffusion processes that support the underlying generation task. In contrast to discrete Markov chains, it also allows the use of general-purpose SDE solvers to numerically integrate the reverse process for sampling.\nConcerning the application of diffusion models for speech enhancement, there exist currently two approaches that differ conceptually in how the diffusion process is used. One approach is based on speech re-generation, i.e. a diffusion-based vocoder network is used to synthesize clean speech by sampling from an unconditional prior, while a conditioner network takes noisy speech as input and performs the core part of denoising by providing enhanced speech representations to the vocoder network [23], [30]. An auxiliary loss is introduced for the conditioner network to facilitate its ability to estimate clean speech representations [23]. The second approach, on the other hand, does not require any auxiliary loss and is not using two separate models for generation and denoising. Instead, it models the corruption of clean speech by environmental background noise or reverberation directly within the forward diffusion process, so that reversing this process would consequently result in generating clean speech. This has been proposed as a discrete diffusion process for time-domain speech signals [21], and as a continuous SDE-based diffusion process in the complex spectrogram domain [22]. Interestingly, the original denoising score matching objective [31], which is to estimate the white Gaussian noise in the perturbed data, is essentially reminiscent of the goal of speech enhancement, which is to remove interfering noise or reverberation from speech signals. However, under realistic conditions, the environmental noise or reverberation may not match the assumption of stationary white Gaussian noise. Therefore, it was proposed to include real noise recordings in the diffusion process, either by linearly interpolating between clean and noisy speech along the process [21], or by defining such a transformation within the drift term of an SDE [22]. The choice of linear interpolation in [21], however, implies that the trained deep neural network\n(DNN) must explicitly estimate a portion of environmental noise at each step in the reverse process. This can be seen in the resulting objective function [21, Eq. (21)] which exhibits characteristics of a discriminative learning task. In contrast, an SDE-based formulation results in a pure generative objective function [22, Eq. (9)] and avoids any prior assumptions on the noise distribution.\nNonetheless, note that diffusion-based speech enhancement methods, unlike the VAE-based method described above, are not counted as unsupervised methods, since labeled data (i.e. clean and noisy speech pairs) are used for training. However, the learning objective remains generative in nature which is to learn a prior for clean speech per se rather than a direct mapping from noisy to clean speech. In fact, supervision is only exploited to learn the conditional generation of clean speech when noisy speech is given. Thus, current diffusionbased models for speech enhancement, such as [21]\u2013[23], can be considered conditional generative models trained in a supervised manner.\nIn this work, we build upon our previous publication which defines the diffusion process in the complex short-time Fourier transform (STFT) domain [22]. We present a comprehensive theoretical review of the underlying score-based generative model and include an expanded discussion on the conditional generation process which is based on the continuous-time SDE formalism. By using a network architecture developed in the image processing community [28], in the work at hand we significantly improve performance in comparison to our previous model [22]. This indicates that the network, rather than the formalism, was the main limitation of our original approach. In an extensive cross-dataset evaluation, we show that the improved method can compete with recent discriminative models and achieves better generalization when evaluating on a different corpus than used for training. To confirm the effectiveness of the proposed method on nonsimulated data, we perform an instrumental evaluation with real-world noisy recordings using non-intrusive metrics. We complement the results with a listening experiment, in which our proposed method is rated best. Interestingly, using the improved network, we show that the proposed method is also suitable for dereverberation when an individual model is trained on simulated reverberant data. Thus, the method is not limited to the removal of additive background noise and can also be applied to non-additive corruptions such as reverberation or, as shown in [32], for bandwidth extension. Furthermore, we investigate different sampler configurations for solving the reverse process which reveals a trade-off between the performance and computational speed of the proposed method.\nWe summarize our major contributions as follows. Regarding the novelty with respect to Song et al. [28], we introduce a drift term to the SDE to achieve the required task adaptation for reconstruction problems and furthermore apply the diffusion process and score matching objective to a complex data representation. Also note that the approach in [28] is not explicitly trained on reconstruction tasks and the application is different from ours. Regarding the novelty with respect to our previous publication [22], we use an improved network architecture and\n3 increase the performance significantly. Moreover, we include an extended theoretical discussion and investigate different sampler configurations. Finally, we expand the evaluation by means of a cross-dataset evaluation, an instrumental evaluation with real-world noisy recordings, and a listening experiment."
+        },
+        {
+            "heading": "II. METHOD: SCORE-BASED GENERATIVE MODEL FOR SPEECH ENHANCEMENT (SGMSE)",
+            "text": "In this section, we motivate and describe in detail the approach of using score-based generative models for speech enhancement, as proposed in our previous publication [22]."
+        },
+        {
+            "heading": "A. Data representation",
+            "text": "We represent our data in the complex-valued STFT domain, as it has been observed that both real and imaginary parts of clean speech spectrograms exhibit clear structure and are therefore amenable to deep learning models [4]. Following the approach of complex spectral mapping [5], we use our conditional generative model to estimate the clean real and imaginary spectrograms from the noisy ones.\nThe use of complex coefficients as data representation allows the definition of the diffusion process in the complex spectral domain, in which additive Gaussian noise corresponds to the signal model used for the denoising task. This relates to traditional STFT-based methods, where spectral coefficients are usually assumed to be complex Gaussian distributed and mutually independent [1], [2]. Statistical approaches often consider an additive signal model assuming that the speech process and the noise process are realizations of stochastic processes that are statistically independent. Observing that the overall noise process is a sum of several independent sources, the central limit theorem ensures that the observed noise process tends to be Gaussian [1].\nAlthough it would be theoretically possible to define the diffusion process in the magnitude domain, additive Gaussian noise would not relate to the signal model anymore. This becomes evident considering that in the magnitude domain, additive Gaussian noise could result in negative amplitudes which are physically not defined.\nThus, we operate on complex spectrograms that are elements of CT\u00d7F , where T denotes the number of time frames dependent on the audio length, and F represents the number of frequency bins. To compensate for the typically heavy-tailed distribution of STFT speech amplitudes [33], we apply an amplitude transformation\nc\u0303 = \u03b2|c|\u03b1ei\u2220(c) (1)\nto all complex STFT coefficients c, where \u2220(\u00b7) represents the angle of a complex number, \u03b1 \u2208 (0, 1] is a compression exponent which brings out frequency components with lower energy (e.g. fricative sounds of unvoiced speech) [34], and \u03b2 \u2208 R+ is a simple scaling factor to normalize amplitudes roughly to within [0, 1]. Such a compression has been argued to be perceptually more meaningful in speech enhancement [35], [36], and the transformation ensures that the neural network operates on consistently scaled inputs with respect to the Gaussian diffusion noise [25].\nx0 xTForward process\nxTReverse processx0\nFig. 1: Diffusion process on a spectrogram: In the forward process noise is gradually added to the clean speech spectrogram x0, while the reverse process learns to generate clean speech in an iterative fashion starting from the corrupted signal xT ."
+        },
+        {
+            "heading": "B. Stochastic Process",
+            "text": "The tasks at hand, speech enhancement and dereverberation, can be considered as conditional generation tasks: Given the corrupted noisy/reverberant speech, generate clean speech by using a conditional generative model. Most previously published diffusion-based generative models are adapted to such conditional tasks either through explicit conditining channels added to the DNN [37], [38], or through combining an unconditionally trained score model with a separate model (such as a classifier) that provides conditioning in the form of a gradient [28], [39]. With our method, we explore a third possibility, which is to incorporate the particular task directly into the forward and reverse processes of a diffusion-based generative model. a) Forward Process: Following Song et al. [28], we design a stochastic diffusion process {xt}Tt=0 that is modeled as the solution to a linear SDE of the general form,\ndxt = f(xt,y)dt+ g(t)dw , (2)\nwhere xt is the current process state, t \u2208 [0, T ] a continuous time-step variable describing the progress of the process (not to be confused with the time index of any signal in the time or T-F domain), y the noisy or reverberant speech, and w denotes a standard Wiener process. The vector-valued function f(xt,y) is referred to as the drift coefficient, while g(t) is called the diffusion coefficient and controls the amount of Gaussian white noise injected at each time-step. Note that different to Song et al. [28], our drift term is now a function of y, by which we tailor the proposed SDE to reconstruction tasks. The process is defined for each T-F bin independently. Thus, the variables in bold are assumed to be vectors in Cd with d = TF containing the coefficients of a flattened complex spectrogram.\nThe forward process in Eq. (2) turns a clean speech sample x0 into a corrupted sample xT by gradually adding noise from the Wiener process, as illustrated in Fig. 1. To account for the intended task adaptation of speech enhancement or dereverberation, we propose a drift term that ensures the mean of the process moving from clean speech x0 to noisy/reverberant speech y. In particular, we define the drift coefficient f and the diffusion coefficient g as\nf(xt,y) := \u03b3(y \u2212 xt) , (3)\n4 g(t) := \u03c3min ( \u03c3max \u03c3min )t \u221a 2 log ( \u03c3max \u03c3min ) , (4)\nwhere \u03b3 is a constant called stiffness controlling the transition from x0 to y, and \u03c3min and \u03c3max are parameters defining the noise schedule of the Wiener process. Note that we choose the diffusion coefficient identical to that of the so-called Variance Exploding SDE from Song et al. [28]. Our novel contribution lies in the modified drift term, by which the intended task adaptation is achieved. b) Reverse Process: Following Anderson [29] and Song et al. [28], the SDE in Eq. (2) has an associated reverse SDE,\ndxt = [ \u2212f(xt,y) + g(t)2\u2207xt log pt(xt|y) ] dt+g(t)dw\u0304 , (5)\nwhere the score \u2207xt log pt(xt|y) is the term to be approximated by a DNN which is therefore called a score model. We denote the score model as s\u03b8(xt,y, t), which is parameterized by a set of parameters \u03b8 and receives the current process state xt, the noisy speech y, and the current time-step t as an input. Finally, by substituting the score model into the reverse SDE in Eq. (5), we obtain the so-called plug-in reverse SDE [40],\ndxt = [ \u2212f(xt,y) + g(t)2s\u03b8(xt,y, t) ] dt+ g(t)dw\u0304 , (6)\nwhich can be solved by various solver procedures, to be discussed in detail in Sec. III.\nFor inference, we assume that a trained score model s\u03b8 is given, which approximates the true score for all t \u2208 [0, T ]. We can then generate clean speech x0 conditioned on the noisy or reverberant speech y by solving the plug-in reverse SDE in Eq. (6). To determine the initial condition of the reverse process at t = T , we sample\nxT \u223c NC(xT ;y, \u03c3(T )2I), (7)\nwhich is a strongly corrupted version of the noisy speech y, as illustrated in Fig. 1. The denoising process which solves the task of speech enhancement or dereverberation is then based on iterating through the reverse process starting at t = T and ending at t = 0."
+        },
+        {
+            "heading": "C. Training objective",
+            "text": "Next, we derive the objective function used for training the score model s\u03b8. Since the SDE in Eq. (2) describes a Gaussian process, the mean and variance of the process state xt can be derived when its initial conditions are known [41]. This allows for direct sampling of xt at an arbitrary time step t given x0 and y by using the so-called perturbation kernel,\np0t(xt|x0,y) = NC ( xt;\u00b5(x0,y, t), \u03c3(t) 2I ) , (8)\nwhere NC denotes the circularly-symmetric complex normal distribution and I denotes the identity matrix. We utilize Eqs. (5.50, 5.53) in Sa\u0308rkka\u0308 & Solin [41] to determine closed-form solutions for the mean\n\u00b5(x0,y, t) = e \u2212\u03b3tx0 + (1\u2212 e\u2212\u03b3t)y , (9)\nand the variance\n\u03c3(t)2 = \u03c32min\n( (\u03c3max/\u03c3min) 2t \u2212 e\u22122\u03b3t ) log(\u03c3max/\u03c3min)\n\u03b3 + log(\u03c3max/\u03c3min) . (10)\nVincent [31] shows that fitting the score model s\u03b8 to the score of the perturbation kernel \u2207xt log p0t(xt|x0,y) is equivalent to implicit and explicit score matching [27] under some regularity conditions. This technique is called denoising score matching and essentially results in estimating\n\u2207xt log p0t(xt|x0,y) = \u2207xt log [ |2\u03c0\u03c3I|\u2212 12 e\u2212 \u2225xt\u2212\u00b5\u222522 2\u03c32 ] (11)\n= \u2207xt log |2\u03c0\u03c3(t)I|\u2212 1 2 \u2212\u2207xt \u2225xt \u2212 \u00b5(x0,y, t)\u222522 2\u03c3(t)2 (12) = \u2212xt \u2212 \u00b5(x0,y, t) \u03c3(t)2 , (13)\nwhere for simplicity we derived the score for the real and imaginary part of the complex normal distribution in Eq. (8), assuming they are independently distributed and each follows a real-valued multivariate normal distribution. Note that Eq. (13) involves division by \u03c3(t)2, which has very small numerical values (including 0) around t = 0. To avoid undefined values and numerical instabilities, we thus introduce a small minimum process time t\u03b5, as done previously in the literature [28].\nAt each training step, the procedure can then be described as follows: 1) sample a random t \u223c U [t\u03b5, T ], 2) sample (x0,y) from the dataset, 3) sample z \u223c NC(z; 0, I), and 4) sample xt from Eq. (8) by effectively computing\nxt = \u00b5(x0,y, t) + \u03c3(t)z. (14)\nAfter passing (xt,y, t) to the score model, the final loss is an unweighted L2 loss between the model output and the score of the perturbation kernel. By substituting Eq. (14) into Eq. (13), the overall training objective becomes,\nargmin \u03b8 Et,(x0,y),z,xt|(x0,y) [\u2225\u2225\u2225\u2225s\u03b8(xt,y, t) + z\u03c3(t) \u2225\u2225\u2225\u22252 2 ] , (15)\nwhere the expectation is approximated by sampling all random variables at each training step as described above. Note that due to the cancellation of \u00b5(x0,y, t), the loss function does not explicitly involve y, only as an input to the score model. This means that the score model is not tasked with estimating any portion of the environmental noise directly. Finally, the minimization is achieved by optimizing the parameters \u03b8 using stochastic gradient descent.\nD. Interpretation and limitations\nLet pt be the distribution of the perturbed data xt from the diffusion process for a given dataset. Then its time evolution can be thought of as a continuum of distributions {pt}t\u2208[0,T ] which is determined by the drift and the diffusion coefficient of the forward SDE. For fixed x0 and y, this time evolution can be described in close form using Eq. (8), which we illustrate in Fig. 2 for a one-dimensional case. In the reverse process, the DNN has the task of learning this continuous family of distributions starting from p\u0303T as defined in Eq. (7). Due to the exponential increase of the diffusion coefficient in the forward process with initial condition \u03c3(0)2 = 0 the distribution p0 essentially corresponds to the clean speech distribution, whereas the terminating distribution pT is a strongly corrupted version\n5 p0\n0 TForward SDE \u2212\u2192\nx0\ny\npT\np\u0303T\nT 0Reverse SDE \u2212\u2192\nx\u03020\ny\np\u03020\n0 T/2 T 10\n20\n30\n40\n50\nSN R\n[d B\n]\n\u03b3 = 0.5 \u03b3 = 1.5 \u03b3 = 5\nFig. 2: (Left) The forward and reverse process illustrated with a single scalar variable. The mean \u00b5 (thick black line) of the forward process exponentially decays from clean speech x0 (blue) towards noisy speech y (green), and the standard deviation (shaded gray region) increases exponentially. The reverse process moves back to x0, starting from a slightly mismatched distribution p\u0303T which is centered around y rather than xT . Sample paths from both processes are shown as thin black lines. (Right) Time evolution of the SNR of the mean \u00b5 (black) with respect to the SNR of y (green) for three different values of \u03b3.\nof the noisy speech distribution. The particular characteristics in each noisy speech sample are strongly masked by the Gaussian white noise at t = T . Therefore, by learning the reverse process, the generative model learns a strong prior p0 on clean speech, whereas the forward process terminates in a strongly corrupted distribution of the noisy speech, used as a weakly informative prior for generation. In Fig. 2, we simulate five sample paths from the diffusion process. All sample paths of the forward process start exactly at x0 but exhibit starkly different trajectories at large t. The reverse process should then turn a high-variance sample xT back into a low-variance estimate of x0.\nEq. (9) indicates that the mean \u00b5 of the forward process exponentially decays from x0 to y, which can also be seen in Fig. 2 (thick black line). However, for finite t it does not fully reach the corrupted speech y (dashed green line), particularly we have \u00b5(x0,y, T ) \u0338= y. Thus, the final distribution of the forward process pT exhibits a slight mismatch to the initial distribution of the reverse process p\u0303T . We can make this mismatch arbitrarily small by either choosing a high stiffness parameter \u03b3 or by increasing \u03c3max to further smooth the density functions of both distributions. However, increasing \u03b3 would bring the mean close to y within a short time of the forward process, which may lead to an unstable reverse process because only the last steps are concerned with removing environmental noise. This effect can be seen in Fig. 2 (right plot), where we plot the SNR of the process mean \u00b5 averaged over 256 randomly selected files from the dataset for three values of \u03b3. Note that we calculated the SNR in the time domain as the ratio of the power of clean speech to the power of environmental noise after inverting the non-linear amplitude transformation of Eq. (1). We see that while for \u03b3 = 5 the mismatch at t = T becomes virtually zero, the change in SNR occurs mainly in the first half of the process. For \u03b3 = 0.5, on the other hand, the mismatch is already more than 10 dB. However, the slope in the SNR is still apparent at the end of the process. Therefore, there is a trade-off to consider when choosing \u03b3 which depends on the dataset to be used. Increasing \u03c3max would come at the cost of more reverse iterations since the more white Gaussian noise is added, the less high-level information about the structure of the speech is preserved to serve as a guide in the reverse process. In the experiments, we choose a set of parameters based on empirical hyperparameter optimization."
+        },
+        {
+            "heading": "III. NUMERICAL SDE SOLVERS",
+            "text": "There exist several computational methods to find numerical solutions for SDEs, which are based on an approximation to discrete time steps. To this end, the interval [0, T ] is partitioned into N equal subintervals of width \u2206t = T/N , which approximates the continuous formulation into the discrete reverse process {xT ,xT\u2212\u2206t, . . . ,x0}. A common single-step method for solving this discretization is the Euler-Maruyama method. In each iteration step, the method refers to a previous state of the process and utilizes the drift and the Brownian motion to determine the current state.\nIn this work, we employ so-called predictor-corrector (PC) samplers proposed by Song et al. [28], which combine singlestep methods for solving the reverse SDE with numerical optimization approaches such as annealed Langevin Dynamics [26]. PC samplers consist of two parts, a predictor and a corrector. The predictor can be any single-step method that aims to solve the reverse process by iterating through the reverse SDE. After each iteration step of the predictor, the current state of the process is refined by the corrector. The correction is based on Markov chain Monte Carlo sampling and can be understood as a stochastic gradient ascent optimizer that adds at each iteration step a small amount of noise after taking a step in the direction of the estimated score. One possible intuition about the use of stochastic correctors is that they allow the process state to escape local minima by the use of stochasticity. However, Karras et al. [42] have recently argued that in the reverse process, stochasticity is only necessary to correct for numerical truncation errors of the predictor, a need that could be effectively circumvented by further improving the quality of the score model and predictor.\nAnother numerical way of approximating the reverse process is by solving the corresponding probability flow ordinary differential equation (ODE),\ndxt = [ \u2212f(xt,y) + g(t)2s\u03b8(xt,y, t) ] dt , (16)\nwhich is the associated deterministic process of the stochastic reverse SDE in Eq. (6). It can be shown that for each diffusion process, there exists an ODE that describes the same marginal probability density pt(xt) [28]. Enhancing the noisy or reverberant mixture is then based on solving this ODE. In Sec. V-E, we also evaluate and compare this class of solvers\n6 256 256\n256\n256\n256\n256\n128\n128\n256\n256\n256\n256\n128\n1284\n8\u00d7 8\n4\u00d7 4 16 \u00d7\n16\n32 \u00d7\n32\n64 \u00d7\n64\n12 8\u00d7\n12 8\n25 6\u00d7\n25 6\n25 6\u00d7\n25 6\n4 4\n4 4\n4 4\n4\n25 6\u00d7\n25 6\n12 8\u00d7\n12 8\n64 \u00d7\n64\n32 \u00d7\n32\n16 \u00d7\n16\n8\u00d7 8 4\u00d7 4\nConv2D\n25 6\u00d7\n25 6\n12 8\u00d7\n12 8\n64 \u00d7\n64\n32 \u00d7\n32\n16 \u00d7\n16\n8\u00d7 8\n4\u00d7 4\ns\u03b8\n[x t ;y\n]\n4 4\n4 4\n4 4\n4 2\n4\u00d7 4\n8\u00d7 8\n16 \u00d7\n16\n32 \u00d7\n32\n64 \u00d7\n64\n12 8\u00d7\n12 8\n25 6\u00d7\n25 6\n25 6\u00d7\n25 6[x t ;y\n] DownLayer UpLayer\natt. att. att.\nBottleneckLayer ProgDown ProgUp\n(a) Feature maps at multiple resolutions.\n6\n256 256\n256 256\n256\n256\n128\n128\n256\n256\n256\n256 128\n1284\n8\u00d7 8\n4\u00d7 4 16 \u00d7\n16\n32 \u00d7\n32\n64 \u00d7\n64\n12 8\u00d7\n12 8\n25 6\u00d7\n25 6\n25 6\u00d7\n25 6\n4 4\n4 4\n4 4\n4\n25 6\u00d7\n25 6\n12 8\u00d7\n12 8\n64 \u00d7\n64\n32 \u00d7\n32\n16 \u00d7\n16\n8\u00d7 8 4\u00d7 4\nConv2D 25 6\u00d7 25 6 12 8\u00d7 12 8\n64 \u00d7\n64\n32 \u00d7\n32\n16 \u00d7\n16\n8\u00d7 8\n4\u00d7 4\ns\u03b8\n[x t ;y\n]\n4 4\n4 4\n4 4\n4 2\n4\u00d7 4\n8\u00d7 8\n16 \u00d7\n16\n32 \u00d7\n32\n64 \u00d7\n64\n12 8\u00d7\n12 8\n25 6\u00d7\n25 6\n25 6\u00d7\n25 6[x t ;y\n] DownLayer UpLayer\natt. att. att.\nBottleneckLayer ProgDown ProgUp\n(a) Feature maps at multiple resolutions.\nh\nGroupNorm\nFIR up/down optional\nConv2D ch adaption\n+temb\nGroupNorm\nConv2D\nFIR up/down optional\nConv2D optional\n+\n1/ p 2\nh\n(b) Residual block.\nFig. 3: NCSN++ network architecture used as a score model s\u2713: The architecture is based on a multi-resolution U-Net structure containing skip connections and an additional progressive growing path as shown in (a). Each up- and downsampling layer and the bottleneck layer consist of multiple residual blocks in series which are illustrated in (b).\nfor our task, specifically employing the Runge-Kutta method of fourth order with an error estimator of fifth order [43].\nIV. NETWORK ARCHITECTURE We utilize the Noise Conditional Score Network (NCSN++) architecture [28] for the score model s\u2713 and adapt it for the use of complex spectrograms. For this purpose, we consider the real and imaginary parts of the complex input as separate channels, since the original network only works with realvalued numbers. Estimating both the real and imaginary parts of the score allows to generate complex spectrograms of clean speech.\nThe network is based on a multi-resolution U-Net structure, which has been experimentally shown to be powerful for tasks such as generation and segmentation [44]. In Fig. 3a, we illustrate the architecture by showing the feature maps at each resolution, indicating their spatial dimension and the corresponding number of channels. The transformations between the feature maps are represented by arrows, where the color of the arrow specifies the type of transformation (see the legend on top). We use Conv2D layers with a 3x3 kernel and stride 1 as input and output layers, and 1x1 Conv2D layers to aggregate information from the progressive growing path that we describe later. Up- and downsampling layers are based on residual network blocks which are taken from the BigGAN architecture [45], shown in Fig. 3b. A residual block consists of Conv2D layers with the same configuration as above, group normalization [46], up- or downsampling with finite impulse response (FIR) filters [47], and the Swish activation function [48]. Each upsampling layer consists of three residual blocks and each downsampling layer of two residual blocks in series with the last block performing the up- or downsampling. Global attention mechanisms [49] are added at a resolution of 16\u21e5 16\nand in the bottleneck layer to better learn global dependencies within the feature maps.\nTo make the model time-dependent, information about the current progression of the diffusion process is fed into the network architecture. A common practice is to use Fourierembeddings [49], i.e., a learned projection that maps the scalar time coordinate t to an M -dimensional vector temb that is integrated into every residual block as can be seen in Fig. 3b.\nIn addition to the main feature extraction path of the multiresolution U-Net structure, the network incorporates a so-called progressive growing of the input which is seen at the top of Fig. 3a. The idea is to provide a downsampled version of the input to every feature map in the contracting path, which has been successful in stabilizing high-resolution image generation [50]. Note that the downsampling operation in the progressive growing use shared weights for each resolution. The same procedure is also used in the expansive path where a progressive growing of the output is informed by the feature maps at each resolution, resulting in the final score estimate.\nV. EXPERIMENTS\nIn this section, we describe the experimental setup for our speech enhancement and speech dereverberation experiments using the proposed method.\nA. Datasets\nFor the evaluation of the speech enhancement task we use two datasets, the WSJ0-CHiME3 dataset and the VB-DMD dataset, which are described below. The use of two datasets allows cross-dataset evaluation, i.e. the test is performed on the other dataset than the one used for training. This mismatched condition reveals information about how well the\n(b) Residual block.\nFig. 3: NCSN++ network architecture used as a score model s\u03b8: The architecture is based on a multi-resolution U-Net structure containing skip connections and an additional progressive growing path as shown in (a). Each up- and downsampling layer and the bottleneck layer consist of multiple residual blocks in series which are illustrated in (b).\nfor our task, specifically employing the Runge-Kutta method of fourth order with an error estimator of fifth order [43]."
+        },
+        {
+            "heading": "IV. NETWORK ARCHITECTURE",
+            "text": "We utilize the Noise Conditional Score Network (NCSN++) architecture [28] for the score model s\u03b8 and adapt it for the use of complex spectrograms. For this purpose, we consider the real and imaginary parts of the complex input as separate channels, since the original network only works with realvalued numbers. Estimating both the real and imaginary parts of the score allows to generate complex spectrograms of clean speech.\nThe network is based on a multi-resolution U-Net structure, which has been experimentally shown to be powerful for tasks such as generation and segmentation [44]. In Fig. 3a, we illustrate the architecture by showing the feature maps at each resolution, indicating their spatial dimension and the corresponding number of channels. The transformations between the feature maps are represented by arrows, where the color of the arrow specifies the type of transformation (see the legend on top). We use Conv2D layers with a 3x3 kernel and stride 1 as input and output layers, and 1x1 Conv2D layers to aggregate information from the progressive growing path that we describe later. Up- and downsampling layers are based on residual network blocks which are taken from the BigGAN architecture [45], shown in Fig. 3b. A residual block consists of Conv2D layers with the same configuration as above, group normalization [46], up- or downsampling with finite impulse response (FIR) filters [47], and the Swish activation function [48]. Each upsampling layer consists of three residual blocks and each downsampling layer of two residual blocks in series with the last block performing the up- or downsampling. Global attention mechanisms [49] are added at a resolution of 16\u00d7 16\nand in the bottleneck layer to better learn global dependencies within the feature maps.\nTo make the model time-dependent, information about the current progression of the diffusion process is fed into the network architecture. A co mon practice is to use Fourierembeddings [49], i.e., a learned projection that maps the scalar time coordinate t to an M -dimensional vector temb that is integrated into every residual block as can be seen in Fig. 3b.\nIn addition to the main feature extraction path of the multiresolution U-Net structure, the network incorporates a so-called progressive growing of the input which is seen at the top of Fig. 3a. The idea is to provide a downsampled version of the input to every feature map in the contracting path, which has been successful in stabilizing high-resolution image generation [50]. Note that the downsampling operation in the progressive growing use shared weights for each resolution. The same procedure is also used in the expansive path where a progressive growing of the output is informed by the feature maps at each resolution, resulting in the final score estimate."
+        },
+        {
+            "heading": "V. EXPERIMENTS",
+            "text": "In this section, we describe the experimental setup for our speech enhancement and speech dereverberation experiments using the proposed method."
+        },
+        {
+            "heading": "A. Datasets",
+            "text": "For the evaluation of the speech enhancement task we use two datasets, the WSJ0-CHiME3 dataset and the VB-DMD dataset, which are described below. The use of two datasets allows cross-dataset evaluation, i.e. the test is performed on the other dataset than the one used for training. This mismatched condition reveals information about how well the\n7 method generalizes to unseen data with different characteristics such as distinct noise types or different recording conditions. Moreover, to train and evaluate our proposed method on the dereverberation task, we create the WSJ0-REVERB dataset, which is also described below. a) WSJ0-CHiME3: We create the WSJ0-CHiME3 dataset using clean speech utterances from the Wall Street Journal (WSJ0) dataset [51] and noise signals from the CHiME3 dataset [52]. The mixture signal is created by randomly selecting a noise file and adding it to a clean utterance. Each utterance is used only once, and the SNR is sampled uniformly between 0 and 20 dB for the training, validation, and test set. b) VB-DMD: We use the publicly available VoiceBankDEMAND dataset (VB-DMD) [53] which is often used as a benchmark for single-channel speech enhancement. The utterances are artificially contaminated with eight real-recorded noise samples from the DEMAND database [54] and two artificially generated noise samples (babble and speech shaped) at SNRs of 0, 5, 10, and 15 dB. The test utterances are mixed with different noise samples at SNR levels of 2.5, 7.5, 12.5, and 17.5 dB. We split the training data into a training and validation set using speakers \u201cp226\u201d and \u201cp287\u201d for validation. c) WSJ0-REVERB: To create the WSJ0-REVERB dataset, we use clean speech data from the WSJ0 dataset [51] and convolve each utterance with a simulated room impulse response (RIR). We use the pyroomacoustics engine [55] to simulate the RIRs. The reverberant room is modeled by sampling uniformly a T60 between 0.4 and 1.0 seconds. A dry version of the room is generated with the same geometric parameters but a fixed absorption coefficient of 0.99, to generate the corresponding anechoic target. The resulting average directto-reverberant ratio (DRR) is around -9 dB.\nB. Instrumental evaluation metrics To evaluate the performance of the proposed method we use standard metrics which we will describe in detail below. Metrics (a)-(d) employ full reference algorithms that rate the processed signal in relation to the clean reference signal using conventional digital signal analysis. On the other hand, metrics (e)-(g) are non-intrusive metrics that can be used to evaluate real recordings when the clean reference is unavailable. a) POLQA: The Perceptual Objective Listening Quality Analysis (POLQA) is an ITU-T standard that includes a perceptual model for predicting speech quality [56]. The POLQA score takes values from 1 (poor) to 5 (excellent) as usual for mean opinion scores (MOS). b) PESQ: The Perceptual Evaluation of Speech Quality (PESQ) is used for objective speech quality testing and is standardized in ITU-T P.862 [57]. Although it is the predecessor of POLQA, it is still widely used in the research community. The PESQ score lies between 1 (poor) and 4.5 (excellent) and there exist two variants, namely wideband PESQ and narrowband PESQ denoted as PESQnb. c) ESTOI: The Extended Short-Time Objective Intelligibility (ESTOI) is an instrumental measure for predicting the intelligibility of speech subjected to various kinds of degradation [58]. The metric is normalized and lies between 0 and 1, with higher values indicating better intelligibility.\nd) SI-SDR, SI-SIR, SI-SAR: Scale-Invariant (SI-) Signalto-Distortion Ratio (SDR), Signal-to-Interference Ratio (SIR), and Signal-to-Artifact Ratio (SAR) are standard evaluation metrics for single-channel speech enhancement and speech separation [59]. They are all measured in dB, with higher values indicating better performance. e) DNSMOS: The Deep Noise Suppression MOS (DNSMOS) is a reference-free metric to evaluate perceptual speech quality [60]. The evaluation method uses a DNN that is trained on human ratings obtained by using an online framework for listening experiments [61] based on ITU-T P.808 [62]. f) SIG, BAK, OVRL: The non-intrusive speech quality assessment model DNSMOS P.835 [63] is based on a listening experiment according to ITU-T P.835 [64] and provides three MOS scores: speech quality (SIG), background noise quality (BAK), and the overall quality (OVRL) of the audio. g) WVMOS: Wav-to-Vec MOS (WVMOS) [65] is a MOS prediction method for speech quality evaluation using a finetuned wav2vec2.0 model [66]."
+        },
+        {
+            "heading": "C. Listening Experiment",
+            "text": "Instrumental evaluation metrics do not always correlate to human perception because there are many aspects of perception that are very difficult to capture by computational means. Therefore, we conduct a MUSHRA listening experiment [67] with ten participants using the webMUSHRA framework [68]. The participants were asked to rate the overall quality of twelve randomly sampled examples from the WSJ0-CHiME3 test set as reconstructed by the compared algorithms. The results are reported on a quality scale from 0 to 100."
+        },
+        {
+            "heading": "D. Hyperparameters and training configuration",
+            "text": "a) Input representation: We convert each audio input with sampling rate 16 kHz into a complex-valued STFT representation using a window size of 510, resulting in F = 256, a hop length of 128 (i.e. approximately 75% overlap), and a periodic Hann window. To process multiple examples for batch training, the length of each spectrogram is trimmed to T = 256 STFT time frames, with start and end times selected randomly at each training step. For the spectrogram transformation in Eq. (1), we have chosen \u03b1 = 0.5 and \u03b2 = 0.15 empirically. b) Stochastic process: The SDE in Eq. (2) is parameterized with \u03c3min = 0.05, \u03c3max = 0.5, and \u03b3 = 1.5 based on hyperparameter optimization with grid search. c) Training configuration: We train the DNN on four Quadro RTX 6000 (24 GB memory each) for 160 epochs using the distributed data-parallel (DDP) approach in PyTorch Lightning [69], which takes about one day. We use the Adam optimizer [70] with a learning rate of 10\u22124 and an effective batch size of 4 \u00d7 8 = 32. We track an exponential moving average of the DNN weights with a decay of 0.999, to be used for sampling [71]. We log the average PESQ value of 20 randomly chosen examples from the validation set during training and select the best-performing model for evaluation."
+        },
+        {
+            "heading": "E. Sampler settings",
+            "text": "To find optimal sampler settings for the reverse process, we run a hyperparameter search using the VB-DMD dataset.\n8\na) Sampler type: We investigate which choice of sampler yields the best speech enhancement performance, comparing the PC sampler with different numbers of corrector steps and an ordinary ODE sampler as described in Sec. III. In Tab. I we can see that use of one correction step in the PC sampler seems to be advantageous, but the use of two steps does not lead to a further increase in performance. Thus, we decide to use the PC sampler with one corrector step for the evaluation. However, it should be noted that the use of one correction step doubles the number of function evaluations (NFE) of the sampler. The function being the expensive score model, this results in an average real-time factor (RTF) of 1.77, i.e., 1 sec of audio requires 1.77 sec of processing2. Comparing the PC sampler with the ODE sampler, we find that the PC sampler performs better in both metrics. However, with suitable settings, the ODE sampler requires only 14 NFE on average which results in an improved RTF of only 0.46.\nb) Number of reverse steps N: The number of reverse steps N can be used to set a balance between the computational effort and the performance of the model. In Fig. 4a, we show the speech enhancement performance as a function of N . It can be seen that SI-SDR starts to stagnate earlier than PESQ. We opt for a value of N = 30, at which both metrics show no further increase in performance.\nc) Step size in corrector: In Fig. 4b, we vary the step size r of the annealed Langevin dynamics in the corrector. Interestingly, this parameter represents a compromise between PESQ and SI-SDR. We choose r = 0.5 to achieve a maximum PESQ value while still obtaining a good value for SI-SDR.\n2Average processing time for 10 audio files on an NVIDIA GeForce RTX 2080 Ti GPU, in a machine with an Intel Core i7-7800X CPU @ 3.50GHz."
+        },
+        {
+            "heading": "F. Baselines",
+            "text": "We compare the performance of our proposed method with four generative and four discriminative baselines which we describe in more detail below. All methods are re-trained by us, except for DVAE, MetricGAN+, and CDiffuSE on VB-DMD, for which we obtained the pre-trained model from the authors who used the exact same training data. a) STCN [11]: A generative VAE-based speech enhancement method which uses a stochastic temporal convolutional network (STCN) [72] that allows the latent variables to have both hierarchical and temporal dependencies. The parameters of the noise model and the latent variables are estimated using a Monte Carlo expectation maximization (MCEM) algorithm. b) DVAE [17]: Generative speech enhancement method based on an unsupervised dynamical VAE (DVAE) [73] which models temporal dependencies between successive observable and latent variables. Parameters are updated at test time using a variational expectation maximization (VEM) method where the encoder is fine-tuned using stochastic gradient ascent. c) CDiffuSE [21]: Most related to our proposed method is CDiffuSE, a generative speech enhancement method based on a conditional diffusion process defined in the time domain. d) SGMSE [22]: Score-based Generative Model for Speech Enhancement (SGMSE) is our previous publication on which the proposed method is based. The main difference is that it uses a deep complex U-Net [74] instead of the NCSN++ architecture as the score model. e) MetricGAN+ [75]: A discriminative speech enhancement method that uses a generator network for mask-based prediction of clean speech and introduces a discriminator network trained to approximate the PESQ score. f) Conv-TasNet [76]: An end-to-end neural network that estimates a mask that is used for filtering a learned representation of the noisy mixture. The filtered representation is transformed back to the time domain by a learned decoder. g) GaGNet [77]: This neural network is trained on a hybrid complex-domain and magnitude-domain regression objective for single-channel dereverberation. It uses so-called \u201cglance\u201d and \u201cgaze\u201d (GaG) modules, which respectively perform a coarse estimation of the magnitude and refine it with phase estimation in the complex domain. h) TCN+SA+S [78]: This single-channel dereverberation approach uses a self-attention module to extract features from the input magnitude. This representation is then used by a temporal convolutional network followed by a single-layer convolutional smoother that outputs a magnitude estimate, which is used as the training objective. Griffin-Lim iterations are used to reconstruct the phase."
+        },
+        {
+            "heading": "VI. RESULTS",
+            "text": ""
+        },
+        {
+            "heading": "A. Speech Enhancement",
+            "text": "In Tab. II, we report the speech enhancement results on the WSJ0-CHiME3 test set for the matched and mismatched condition, i.e. when the training set was also WSJ0-CHiME3 or when the training set was VB-DMD. We compare our proposed method, which we call SGMSE+, with selected baseline methods and sort the results by the type of algorithm,\n9\nwhich is either generative or discriminative. Considering the matched condition in the upper half of Tab. II, we see that SGMSE+ outperforms all other generative methods in all metrics. Note that STCN and RVAE are both unsupervised speech enhancement methods, i.e. they are trained on clean speech only (WSJ0 or VB). RVAE shows competitive results for SI-SAR, however, its VEM optimization algorithm is very time-consuming due to the fine-tuning of the encoder at test time, resulting in a RTF of >10000. This is significant in contrast to STCN with a RTF of 0.64 and SGMSE+ with a RTF of 1.772. Although both VAE-based methods model temporal dependencies, they are limited in their ability to produce high-quality speech, likely due to the dimensionality reduction of the latent variable and the encoder\u2019s sensitivity to noisy input, which causes the latent variable to be incorrectly initialized [15].\nComparing SGMSE+ to our previous model SGMSE, we find a significant improvement, especially for the perceptual metrics. We report improvements of 0.75 for POLQA and 0.68 for PESQ. This shows that the proposed generative diffusion process benefits significantly from the adapted network architecture. In our previous paper [22], we have already shown improvements over CDiffuSE for SGMSE in SI-SDR and SI-SAR, which we now back up with also reporting an improvement in ESTOI and DNSMOS and on par results in PESQ and POLQA. With SGMSE+, these improvements become even more significant, e.g. with 0.65 improvement in POLQA and 9.1 dB in SISDR compared to CDiffuSE. In qualitative analysis, we found that SGMSE+ is more accurate than CDiffuSE in preserving the high frequencies of fricatives after the completion of the reverse process. To compensate for that, CDiffuSE combines the enhanced files with the original noisy speech signal at a ratio of 0.2 for the final prediction [21]. This results in a trade-off between noise removal and the conservation of the signal. In our proposed approach, on the other hand, we found no significant suppression of high frequencies after completing the reverse process. Therefore, it is not necessary to mix back the noisy mixture to improve the signal quality, resulting in a significantly higher SI-SIR.\nThe comparison with Conv-TasNet and MetricGAN+ shows that SGMSE+ can keep up with the performance of discriminative methods and even surpasses them in terms of POLQA, SI-SIR, and DNSMOS. Discriminative methods are based on regression problems that optimize certain pointwise loss functions between the corrupted speech and a clean speech reference. For Conv-TasNet and MetricGAN+ these loss functions correspond to established intrusive metrics, namely SI-SDR for Conv-TasNet and PESQ for MetricGAN+. Note that both these discriminative methods shine in particular on the respective metric they used as a loss function. In contrast, generative methods like SGMSE+ are usually not trained to achieve the exact reconstruction of the reference clean speech but rather aim at generating a realization of speech that is on the manifold of clean speech. Thus, we suggest the use of non-intrusive metrics as a complementary measure since they allow an estimation of speech quality without relying on the exact reconstruction of a reference signal. In fact, for the non-intrusive metric DNSMOS our proposed method yields a significantly higher value than the discriminative baselines, indicating the strong ability of our generative model to generate high-quality clean speech.\nLooking at the results for the mismatched condition in the bottom half of Tab. II, a general trend of decreasing metrics can be seen for all methods when compared to the corresponding values of the matched condition. This was to be expected since particular properties of the mismatched test set, such as distinct noise types or different recording characteristics of the clean speech have not been seen during training. However, generative methods generally show less degradation in the mismatched condition than discriminative methods. CDiffuSE is an exception, as this method shows significant degradation in the mismatched case. Informal listening reveals a problem with gain control, which is evident in strong volume fluctuations in the enhanced files. Furthermore, we see that SGMSE+ outperforms all other methods in all metrics under this condition, which shows the ability of our proposed method to generalize well.\nComplementary to the average results above, we present in\n10\nFig. 5 violin plots of the full distribution of the POLQA scores obtained for SGMSE+, Conv-TasNet, MetricGAN+, and the noisy mixture for reference. For each method, the distributions are plotted side by side for the matched and mismatched conditions, so that the ability to generalize can be inferred from the horizontal alignment between both distributions. It can be seen that both distributions for SGMSE+ are relatively similar, whereas they are skewed for Conv-TasNet and especially for MetricGAN+.\nIn Fig. 6, we report the results of the MUSHRA listening experiment in a boxplot. On average, the ten participants rated the overall quality of our proposed approach with the highest score. In addition, our method remains fairly robust when the model was trained on a different training set, while discriminative methods show much stronger degradation for the mismatched condition. This also corresponds with the results of the non-intrusive metric DNSMOS in Tab. II and thus supports the use of non-intrusive methods for instrumental evaluation. Interestingly, MetricGAN+ was only rated with a median score less than 50 for the matched condition, although the method performed best among all baselines for PESQ (see Tab. II). This reveals the discrepancy between the use of instrumental metrics for evaluation and people\u2019s actual perceptions. We suspect that MetricGAN+ has simply learned to utilize the internal operations of the PESQ algorithm to obtain a high value in this metric, neglecting the naturalness of the clean speech estimate. In fact, listening to the enhanced files, it can be recognized that the energy of the speech signal estimated by MetricGAN+ is mainly concentrated in the low- and midfrequency area of the spectrogram, while high frequencies are strongly attenuated.\nListening to the enhanced files of our method, we notice that at very low input SNRs, some \u201cvocalizing\u201d artifacts with very poor articulation and no linguistic meaning are occasionally produced. In other examples, we find that breathing sounds or speech-like sounds were generated in noisy regions where no speech was originally present. These artifacts may also explain the outliers of our method in the listening experiment (see Fig. 6). For the matched condition, for example, the two lowest outliers come from the same utterance with clearly noticeable vocalizing artifacts. We hypothesize that these artifacts can be linked to the generative nature of the proposed approach.\nIndeed, for very noisy inputs, the score model may erroneously identify noise energy in some T-F areas as corrupted speech. The reverse diffusion process then produces speech where it did not originally exist. We argue that this behavior could be mitigated if some conditioning with respect to speech activity and phoneme identity would be added to the score model.\nFinally, Tab. III lists the results for the standardized VBDMD dataset. This has the advantage that one can take values from other methods and copy them from the corresponding papers for a quick algorithmic comparison. It can be seen that SGMSE+ outperforms all other generative baselines, further narrowing the performance gap with discriminative methods that currently lead the benchmark based on PESQ3, including recent approaches such as [79] and [80]. It should however be noted that PESQ formally requires a minimum file length of 3.2 sec according to P.862.3 [81], which is not the case for most files in VB-DMD [53].\nInvestigating whether phase estimation has actually been improved with the modeling of the complex coefficients, we use the noisy phase in place of the estimated phase which does not show a significant performance difference. This is also in line with a recent study on the role of phase enhancement, where it has been shown that the impact of phase enhancement is rather small for \u223c32 ms spectral analysis frames but increasingly\n3https://paperswithcode.com/sota/speech-enhancement-on-demand\n11\nlarge with shorter frame lengths [84]."
+        },
+        {
+            "heading": "B. Dereverberation",
+            "text": "We report in Tab. IV the performance of our approach when trained and tested on a single-channel dereverberation task. We compare with SGMSE [22] and three discriminative baselines, namely Conv-TasNet [76], GaGNet [77] and TCN+SA+S [78].\nOur proposed SGMSE+ approach performs particularly well in terms of instrumental metrics compared to all other baseline models. The low average input DRR of -9 dB constitutes a real challenge for discriminative approaches, which do not manage to separate the reverberation from the target without distorting the target signal, resulting in low-quality scores. On the other hand, our approach benefits from generative modeling and is able to reconstruct speech with very high quality in most cases. When comparing our previous SGMSE model [22] with SGMSE+, we see that for speech dereverberation, the method benefits greatly from the improved network architecture. This effect is even more significant than for additive background noise removal in the speech enhancement task.\nIn particular, using the proposed approach SGMSE+ on a single-channel dereverberation task does not produce any of the vocalized artifacts observed in the speech enhancement experiments for low input SNRs. Although the reverberant signal is formally decorrelated in the time domain from the target by the randomness of reflections across the room, it still originates from the dry speech source. Therefore, we conjecture that the score model effectively detects whether the energy in a particular time-frequency area is associated with the clean speech nearby that needs to be reconstructed."
+        },
+        {
+            "heading": "C. Evaluation on real data",
+            "text": "Complementing the experiments using simulated data, we evaluate the speech enhancement performance on real-world noisy recordings. For real-world noisy recordings, there exists no clean speech reference. Thus, we can only non-intrusive metrics to evaluate the perceptual speech quality which we describe in Sec. V-B (e)-(g). For the evaluation, we use 300 files from the test set of the Deep Noise Suppression (DNS) Challenge 2020 [85]. In Tab. V, we report the results for models that were trained on VB-DMD. It turns out that our proposed method performs better than all other methods in all non-intrusive metrics, demonstrating its robustness to realworld noisy examples. Interestingly, a trend of degradation in speech quality (SIG) can be observed for the discriminative\nmethods, whereas all generative models improve this metric with respect to the mixture. For the background noise quality (BAK) metric, on the other hand, discriminative models seem to perform well, yet our proposed method performs superior. It is important to note that non-intrusive metrics do not require a corresponding clean reference signal and only assess speech quality based on the method\u2019s estimate. We hypothesize that our generative model works well on these metrics, as it was trained to generate clean speech. However, \u201cvocalizing\u201d artifacts as mentioned above or phonetic confusions may not be captured with these metrics.\nWe provide on our project page4 some listening examples for all evaluated tasks. Furthermore, we include real reverberant examples from the MC-WSJ-AV dataset [86]."
+        },
+        {
+            "heading": "VII. CONCLUSIONS",
+            "text": "In this work, we built upon our existing work [22] that uses a novel stochastic diffusion process to design a generative model for speech enhancement in the complex STFT domain. We presented an extended theoretical analysis of the underlying score-based generative model and derived in detail the objective function used for training. In further explorations, we considered the time evolution of the conditional diffusion process which revealed a slight mismatch between the forward and reverse process, which can be adjusted with a careful parameterization of the forward SDE.\nBy using an adopted network architecture, we were able to significantly improve the performance compared to our previous model. In addition, we trained and evaluated the proposed method on the task of speech dereverberation and show significantly superior performance compared to discriminative baseline methods. Hence, we showed that with our proposed\n4https://uhh.de/inf-sp-sgmse\n12\nmethod, a single framework can be used to train individual models for different distortion types. For the task of speech enhancement, we evaluated performance under matched and mismatched conditions, i.e. when the training and test data were taken from the same or different corpora. For the matched condition, the proposed generative speech enhancement method performs on par with competetive discriminative methods. For the mismatched condition, our method shows strong generalization capabilities and outperforms all baselines in all metrics, as confirmed by a listening experiment. In very adverse conditions, however, we observe that the proposed method sometimes introduces vocalizing and breathing artifacts. We argue that these could be mitigated in future work if some conditioning concerning speech activity and phoneme information would be added to the score model.\nIn addition, we explored different sampling strategies to solve the reverse process at test time which allows us to balance the performance and computational speed of the proposed method. Future work could include other sampling techniques to further reduce the number of diffusion steps [87] and thus the computational complexity."
+        }
+    ],
+    "title": "Speech Enhancement and Dereverberation with Diffusion-based Generative Models",
+    "year": 2023
+}

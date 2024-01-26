@@ -1,0 +1,984 @@
+{
+    "abstractText": "Coarse-grained (CG) models parameterized using atomistic reference data, i.e., \u201cbottom up\u201d CG models, have proven useful in the study of biomolecules and other soft matter. However, the construction of highly accurate, low resolution CG models of biomolecules remains challenging. We demonstrate in this work how virtual particles, CG sites with no atomistic correspondence, can be incorporated into CG models within the context of relative entropy minimization (REM) as latent variables. The methodology presented, variational derivative relative entropy minimization (VD-REM), enables optimization of virtual particle interactions through a gradient descent algorithm aided by machine learning. We apply this methodology to the challenging case of a solvent-free CG model of a 1,2-dioleoyl-sn-glycero-3phosphocholine (DOPC) lipid bilayer and demonstrate that introduction of virtual particles captures solvent-mediated behavior and higher-order correlations which REM alone cannot",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Patrick G. Sahrmann"
+        },
+        {
+            "affiliations": [],
+            "name": "Timothy D. Loose"
+        },
+        {
+            "affiliations": [],
+            "name": "Aleksander E.P. Durumeric"
+        },
+        {
+            "affiliations": [],
+            "name": "Gregory A. Voth"
+        }
+    ],
+    "id": "SP:db735e1076899d448172aaeeb991da19ac7bd432",
+    "references": [
+        {
+            "authors": [
+                "C.L. Brooks"
+            ],
+            "title": "Computer simulation of liquids",
+            "venue": "J. Solution Chem. 1989,",
+            "year": 1989
+        },
+        {
+            "authors": [
+                "M. Karplus",
+                "J.A. McCammon"
+            ],
+            "title": "Molecular dynamics simulations of biomolecules",
+            "venue": "Nat Struct Biol 2002,",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "R.O. Dror",
+                "R.M. Dirks",
+                "J.P. Grossman",
+                "H. Xu",
+                "D.E. Shaw"
+            ],
+            "title": "Biomolecular simulation: a computational microscope for molecular biology",
+            "venue": "Annu Rev Biophys 2012,",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "A.J. Pak",
+                "G.A. Voth"
+            ],
+            "title": "Advances in coarse-grained modeling of macromolecular complexes",
+            "venue": "Curr. Opin. Struct. Biol. 2018,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "V. Tozzini"
+            ],
+            "title": "Coarse-grained models for proteins",
+            "venue": "Curr Opin Struct Biol 2005,",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "G.A. Voth"
+            ],
+            "title": "Coarse-Graining of Condensed Phase and Biomolecular Systems",
+            "venue": "CRC Press:",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "W.G. Noid"
+            ],
+            "title": "Perspective: Coarse-grained models for biomolecular systems",
+            "venue": "J Chem Phys 2013,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "J. Jin",
+                "A.J. Pak",
+                "A.E.P. Durumeric",
+                "T.D. Loose",
+                "G.A. Voth"
+            ],
+            "title": "Bottom-up Coarse-Graining: Principles and Perspectives",
+            "venue": "J Chem Theory Comput 2022,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "L. Monticelli",
+                "S.K. Kandasamy",
+                "X. Periole",
+                "R.G. Larson",
+                "D.P. Tieleman",
+                "S.J. Marrink"
+            ],
+            "title": "The MARTINI Coarse-Grained Force Field: Extension to Proteins",
+            "venue": "J Chem Theory Comput 2008,",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "H.J. Risselada",
+                "S.J. Marrink"
+            ],
+            "title": "The molecular face of lipid rafts in model membranes",
+            "venue": "Proc Natl Acad Sci U S A 2008,",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "Z. Jarin",
+                "J. Newhouse",
+                "G.A. Voth"
+            ],
+            "title": "Coarse-Grained Force Fields from the Perspective of Statistical Mechanics: Better Understanding of the Origins of a MARTINI Hangover",
+            "venue": "J Chem Theory Comput 2021,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Izvekov",
+                "G.A. Voth"
+            ],
+            "title": "A multiscale coarse-graining method for biomolecular systems",
+            "venue": "J Phys Chem B 2005,",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "W.G. Noid",
+                "J.W. Chu",
+                "G.S. Ayton",
+                "G.A. Voth"
+            ],
+            "title": "Multiscale coarse-graining and structural correlations: connections to liquid-state theory",
+            "venue": "J Phys Chem B 2007,",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "W.G. Noid",
+                "J.W. Chu",
+                "G.S. Ayton",
+                "V. Krishna",
+                "S. Izvekov",
+                "G.A. Voth",
+                "A. Das",
+                "H.C. Andersen"
+            ],
+            "title": "The multiscale coarse-graining method. I. A rigorous bridge between atomistic and coarse-grained models",
+            "venue": "J Chem Phys 2008,",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "W.G. Noid",
+                "P. Liu",
+                "Y. Wang",
+                "J.W. Chu",
+                "G.S. Ayton",
+                "S. Izvekov",
+                "H.C. Andersen",
+                "G.A. Voth"
+            ],
+            "title": "The multiscale coarse-graining method. II. Numerical implementation for coarse-grained molecular models",
+            "venue": "J Chem Phys 2008,",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "M.S. Shell"
+            ],
+            "title": "The relative entropy is fundamental to multiscale and inverse thermodynamic problems",
+            "venue": "The Journal of Chemical Physics 2008,",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "N.J. Dunn",
+                "T.T. Foley",
+                "Noid",
+                "W. G",
+                "Van der"
+            ],
+            "title": "Waals Perspective on CoarseGraining: Progress toward Solving Representability and Transferability Problems",
+            "venue": "Acc Chem Res 2016,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "J.W. Wagner",
+                "J.F. Dama",
+                "A.E. Durumeric",
+                "G.A. Voth"
+            ],
+            "title": "On the representability problem and the physical meaning of coarse-grained models",
+            "venue": "J Chem Phys 2016,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "J. Jin",
+                "A. Yu",
+                "G.A. Voth"
+            ],
+            "title": "Temperature and Phase Transferable Bottom-up CoarseGrained Models",
+            "venue": "J Chem Theory Comput 2020,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J. Wang",
+                "N. Charron",
+                "B. Husic",
+                "S. Olsson",
+                "F. Noe",
+                "C. Clementi"
+            ],
+            "title": "Multi-body effects in a coarse-grained protein force field",
+            "venue": "J. Chem. Phys. 2021,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S.T. John",
+                "G. Csanyi"
+            ],
+            "title": "Many-Body Coarse-Grained Interactions Using Gaussian Approximation Potentials",
+            "venue": "J Phys Chem B 2017,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "A. Chaimovich",
+                "M.S. Shell"
+            ],
+            "title": "Coarse-graining errors and numerical optimization using a relative entropy framework",
+            "venue": "J Chem Phys 2011,",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "L. Larini",
+                "L. Lu",
+                "G.A. Voth"
+            ],
+            "title": "The multiscale coarse-graining method. VI. Implementation of three-body coarse-grained potentials",
+            "venue": "J Chem Phys 2010,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "J.W. Wagner",
+                "T. Dannenhoffer-Lafage",
+                "J. Jin",
+                "G.A. Voth"
+            ],
+            "title": "Extending the range and physical accuracy of coarse-grained models: Order parameter dependent interactions",
+            "venue": "J Chem Phys 2017,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J.F. Dama",
+                "J. Jin",
+                "G.A. Voth"
+            ],
+            "title": "The Theory of Ultra-Coarse-Graining. 3. CoarseGrained Sites with Rapid Local Equilibrium of Internal States",
+            "venue": "J Chem Theory Comput 2017,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "T. Sanyal",
+                "M.S. Shell"
+            ],
+            "title": "Coarse-grained models using local-density potentials optimized with the relative entropy: Application to implicit solvation",
+            "venue": "J Chem Phys 2016,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "T. Sanyal",
+                "M.S. Shell"
+            ],
+            "title": "Transferable Coarse-Grained Models of Liquid-Liquid Equilibrium Using Local Density Potentials Optimized with the Relative Entropy",
+            "venue": "J Phys Chem B 2018,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "P.G. Lafond",
+                "S. Izvekov"
+            ],
+            "title": "Multiscale Coarse-Graining of Polarizable Models through Force-Matched Dipole Fluctuations",
+            "venue": "J Chem Theory Comput 2016,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "T. Lemke",
+                "C. Peter"
+            ],
+            "title": "Neural Network Based Prediction of Conformational Free Energies - A New Route toward Coarse-Grained Simulation Models",
+            "venue": "J Chem Theory Comput 2017,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "L. Zhang",
+                "J. Han",
+                "H. Wang",
+                "R. Car",
+                "W. E"
+            ],
+            "title": "DeePCG: Constructing coarse-grained models via deep neural networks",
+            "venue": "J Chem Phys 2018,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Wang",
+                "S. Olsson",
+                "C. Wehmeyer",
+                "A. Perez",
+                "N.E. Charron",
+                "G. de Fabritiis",
+                "F. Noe",
+                "C. Clementi"
+            ],
+            "title": "Machine Learning of Coarse-Grained Molecular Dynamics Force Fields",
+            "venue": "ACS Cent Sci 2019,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "B.E. Husic",
+                "N.E. Charron",
+                "D. Lemm",
+                "J. Wang",
+                "A. Perez",
+                "M. Majewski",
+                "A. Kramer",
+                "Y. Chen",
+                "S. Olsson",
+                "G. de Fabritiis",
+                "F. Noe",
+                "C. Clementi"
+            ],
+            "title": "Coarse graining molecular dynamics with graph neural networks",
+            "venue": "J Chem Phys 2020,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D. Reith",
+                "M. Putz",
+                "F. Muller-Plathe"
+            ],
+            "title": "Deriving effective mesoscale potentials from atomistic simulations",
+            "venue": "J. Comput. Chem. 2003,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "J.F. Rudzinski",
+                "W.G. Noid"
+            ],
+            "title": "Coarse-graining entropy, forces, and structures",
+            "venue": "J Chem Phys 2011,",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "J. Jin",
+                "Y. Han",
+                "A.J. Pak",
+                "G.A. Voth"
+            ],
+            "title": "A new one-site coarse-grained model for water: Bottom-up many-body projected water (BUMPer). I. General theory and model",
+            "venue": "J Chem Phys 2021,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J.M.A. Grime",
+                "J.F. Dama",
+                "B.K. Ganser-Pornillos",
+                "C.L. Woodward",
+                "G.J. Jensen",
+                "M. Yeager",
+                "G.A. Voth"
+            ],
+            "title": "Coarse-grained simulation reveals key features of HIV-1 capsid self-assembly",
+            "venue": "Nat Commun 2016,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "J. Jin",
+                "Y. Han",
+                "G.A. Voth"
+            ],
+            "title": "Coarse-graining involving virtual sites: Centers of symmetry coarse-graining",
+            "venue": "J Chem Phys 2019,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A.J. Pak",
+                "T. Dannenhoffer-Lafage",
+                "J.J. Madsen",
+                "G.A. Voth"
+            ],
+            "title": "Systematic CoarseGrained Lipid Force Fields with Semiexplicit Solvation via Virtual Sites",
+            "venue": "J Chem Theory Comput 2019,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "W.L. Jorgensen",
+                "J. Chandrasekhar",
+                "J.D. Madura",
+                "R.W. Impey",
+                "M.L. Klein"
+            ],
+            "title": "Comparison of simple potential functions for simulating liquid water",
+            "venue": "The Journal of Chemical Physics 1983,",
+            "year": 1983
+        },
+        {
+            "authors": [
+                "M.N. Melo",
+                "H.I. Ingolfsson",
+                "S.J. Marrink"
+            ],
+            "title": "Parameters for Martini sterols and hopanoids based on a virtual-site description",
+            "venue": "J Chem Phys 2015,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Y. Liu",
+                "A.H. De Vries",
+                "J. Barnoud",
+                "W. Pezeshkian",
+                "J. Melcr",
+                "S.J. Marrink"
+            ],
+            "title": "Dual Resolution Membrane Simulations Using Virtual Sites",
+            "venue": "J Phys Chem B 2020,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A.E.P. Durumeric",
+                "G.A. Voth"
+            ],
+            "title": "Adversarial-residual-coarse-graining: Applying machine learning theory to systematic molecular coarse-graining",
+            "venue": "J Chem Phys 2019,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M. Sch\u00f6berl",
+                "N. Zabaras",
+                "P.-S. Koutsourelakis"
+            ],
+            "title": "Predictive coarse-graining",
+            "venue": "Journal of Computational Physics 2017,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "T. Dannenhoffer-Lafage",
+                "J.W. Wagner",
+                "A.E.P. Durumeric",
+                "G.A. Voth"
+            ],
+            "title": "Compatible observable decompositions for coarse-grained representations of real molecular systems",
+            "venue": "J Chem Phys 2019,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "G. Ke",
+                "Q. Meng",
+                "T. Finley",
+                "T. Wang",
+                "W. Chen",
+                "W. Ma",
+                "Q. Ye",
+                "T.-Y. Liu"
+            ],
+            "title": "LightGBM: a highly efficient gradient boosting decision tree",
+            "venue": "In Proceedings of the 31st International Conference on Neural Information Processing Systems,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "I. Bilionis",
+                "N. Zabaras"
+            ],
+            "title": "A stochastic optimization approach to coarse-graining using a relative-entropy framework",
+            "venue": "J Chem Phys 2013,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "K. Simons",
+                "J.L. Sampaio"
+            ],
+            "title": "Membrane organization and lipid rafts",
+            "venue": "Cold Spring Harb. Perspect. Biol",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "C. Hong",
+                "D.P. Tieleman",
+                "Y. Wang"
+            ],
+            "title": "Microsecond molecular dynamics simulations of lipid mixing",
+            "venue": "Langmuir 2014,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "D. Chandler"
+            ],
+            "title": "Interfaces and the driving force of hydrophobic assembly",
+            "venue": "Nature",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "D. Marsh"
+            ],
+            "title": "Equation of State for Phospholipid Self-Assembly",
+            "venue": "Biophys J 2016,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "S. Izvekov",
+                "G.A. Voth"
+            ],
+            "title": "Solvent-free lipid bilayer model using multiscale coarsegraining",
+            "venue": "J Phys Chem B 2009,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "L. Lu",
+                "G.A. Voth"
+            ],
+            "title": "Systematic coarse-graining of a multicomponent lipid bilayer",
+            "venue": "J Phys Chem B 2009,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "Z.J. Wang",
+                "M. Deserno"
+            ],
+            "title": "A systematically coarse-grained solvent-free model for quantitative phospholipid bilayer simulations",
+            "venue": "J Phys Chem B 2010,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "A.J. Sodt",
+                "T. Head-Gordon"
+            ],
+            "title": "An implicit solvent coarse-grained lipid model with correct stress profile",
+            "venue": "J Chem Phys 2010,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "A. Srivastava",
+                "G.A. Voth"
+            ],
+            "title": "A Hybrid Approach for Highly Coarse-grained Lipid Bilayer Models",
+            "venue": "J Chem Theory Comput 2013,",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "A. Srivastava",
+                "G.A. Voth"
+            ],
+            "title": "Solvent-Free, Highly Coarse-Grained Models for Charged Lipid Systems",
+            "venue": "J Chem Theory Comput 2014,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "M.J. Abraham",
+                "T. Murtola",
+                "R. Schulz",
+                "S. P\u00e1ll",
+                "J.C. Smith",
+                "B. Hess",
+                "E. Lindahl"
+            ],
+            "title": "GROMACS: High performance molecular simulations through multi-level parallelism from laptops to supercomputers",
+            "venue": "SoftwareX",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "W.G. Hoover"
+            ],
+            "title": "Canonical dynamics: Equilibrium phase-space distributions",
+            "venue": "Phys Rev A Gen Phys 1985,",
+            "year": 1985
+        },
+        {
+            "authors": [
+                "S. Jo",
+                "J.B. Lim",
+                "J.B. Klauda",
+                "W. Im"
+            ],
+            "title": "CHARMM-GUI Membrane Builder for mixed bilayers and its application to yeast membranes",
+            "venue": "Biophys J 2009,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "E.L. Wu",
+                "X. Cheng",
+                "S. Jo",
+                "H. Rui",
+                "K.C. Song",
+                "E.M. Davila-Contreras",
+                "Y. Qi",
+                "J. Lee",
+                "V. Monje-Galvan",
+                "R.M. Venable",
+                "J.B. Klauda",
+                "W. Im"
+            ],
+            "title": "CHARMM-GUI Membrane Builder toward realistic biological membrane simulations",
+            "venue": "J Comput Chem 2014,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "J.B. Klauda",
+                "R.M. Venable",
+                "J.A. Freites",
+                "J.W. O'Connor",
+                "D.J. Tobias",
+                "C. Mondragon-Ramirez",
+                "I. Vorobyov",
+                "MacKerell",
+                "A.D.",
+                "R.W. Pastor"
+            ],
+            "title": "Update of the CHARMM all-atom additive force field for lipids: validation on six lipid",
+            "venue": "types. J Phys Chem B 2010,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "T. Schneider",
+                "E. Stoll"
+            ],
+            "title": "Molecular-dynamics study of a three-dimensional onecomponent model for distortive phase transitions",
+            "venue": "Physical Review B 1978,",
+            "year": 1978
+        },
+        {
+            "authors": [
+                "H.J.C. Berendsen",
+                "J.P.M. Postma",
+                "W.F. van Gunsteren",
+                "A. DiNola",
+                "J.R. Haak"
+            ],
+            "title": "Molecular dynamics with coupling to an external bath",
+            "venue": "The Journal of Chemical Physics 1984,",
+            "year": 1984
+        },
+        {
+            "authors": [
+                "S. Plimpton"
+            ],
+            "title": "Fast Parallel Algorithms for Short-Range Molecular Dynamics",
+            "venue": "Journal of Computational Physics 1995,",
+            "year": 1995
+        },
+        {
+            "authors": [
+                "J. Pan",
+                "S. Tristram-Nagle",
+                "N. Kucerka",
+                "J.F. Nagle"
+            ],
+            "title": "Temperature dependence of structure, bending rigidity, and bilayer interactions of dioleoylphosphatidylcholine bilayers",
+            "venue": "Biophys J 2008,",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "R.M. Venable",
+                "F.L.H. Brown",
+                "R.W. Pastor"
+            ],
+            "title": "Mechanical properties of lipid bilayers from molecular dynamics simulation",
+            "venue": "Chem Phys Lipids 2015,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "C.-P. Lafrance",
+                "A. Nabet",
+                "R.E. Prud'homme",
+                "M. P\u00e9zolet"
+            ],
+            "title": "On the relationship between the order parameter and the shape of orientation distributions",
+            "venue": "Canadian Journal of Chemistry 1995,",
+            "year": 1995
+        },
+        {
+            "authors": [
+                "W. Helfrich"
+            ],
+            "title": "Elastic properties of lipid bilayers: theory and possible experiments",
+            "venue": "Z Naturforsch C 1973,",
+            "year": 1973
+        },
+        {
+            "authors": [
+                "P.B. Canham"
+            ],
+            "title": "The minimum energy of bending as a possible explanation of the biconcave shape of the human red blood cell",
+            "venue": "J Theor Biol 1970,",
+            "year": 1970
+        },
+        {
+            "authors": [
+                "E.G. Brandt",
+                "A.R. Braun",
+                "J.N. Sachs",
+                "J.F. Nagle",
+                "O. Edholm"
+            ],
+            "title": "Interpretation of fluctuation spectra in lipid bilayer simulations",
+            "venue": "Biophys J 2011,",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "M.C. Watson",
+                "E.G. Brandt",
+                "P.M. Welch",
+                "F.L. Brown"
+            ],
+            "title": "Determining biomembrane bending rigidities from simulations of modest size",
+            "venue": "Phys Rev Lett 2012,",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "B.J. Reynwar",
+                "G. Illya",
+                "V.A. Harmandaris",
+                "M.M. Muller",
+                "K. Kremer",
+                "M. Deserno"
+            ],
+            "title": "Aggregation and vesiculation of membrane proteins by curvature-mediated interactions",
+            "venue": "Nature",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "M. Simunovic",
+                "G.A. Voth"
+            ],
+            "title": "Membrane tension controls the assembly of curvaturegenerating proteins",
+            "venue": "Nat Commun 2015,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "J.W. Mullinax",
+                "W.G. Noid"
+            ],
+            "title": "Generalized Yvon-Born-Green theory for molecular systems",
+            "venue": "Phys Rev Lett 2009,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "H. Frauenfelder",
+                "P.W. Fenimore",
+                "G. Chen",
+                "B.H. McMahon"
+            ],
+            "title": "Protein folding is slaved to solvent motions",
+            "venue": "Proceedings of the National Academy of Sciences 2006,",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "J.N. Dahanayake",
+                "K.R. Mitchell-Koch"
+            ],
+            "title": "How Does Solvation Layer Mobility Affect Protein Structural Dynamics",
+            "venue": "Frontiers in Molecular Biosciences 2018,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Pfaendtner",
+                "E.M. De La Cruz",
+                "G.A. Voth"
+            ],
+            "title": "Actin filament remodeling by actin depolymerization factor/cofilin",
+            "venue": "Proc Natl Acad Sci U S A 2010,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "P.D. Blood",
+                "R.D. Swenson",
+                "G.A. Voth"
+            ],
+            "title": "Factors influencing local membrane curvature induction by N-BAR domains as revealed by molecular dynamics simulations",
+            "venue": "Biophys J 2008,",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "Z. Zhang",
+                "L. Lu",
+                "W.G. Noid",
+                "V. Krishna",
+                "J. Pfaendtner",
+                "G.A. Voth"
+            ],
+            "title": "A systematic methodology for defining coarse-grained sites in large biomolecules",
+            "venue": "Biophys J 2008,",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "J. Katsaras",
+                "S. Tristram-Nagle",
+                "Y. Liu",
+                "R.L. Headrick",
+                "E. Fontes",
+                "P.C. Mason",
+                "J.F. Nagle"
+            ],
+            "title": "Clarification of the ripple phase of lecithin bilayers using fully hydrated, aligned samples",
+            "venue": "Phys Rev E Stat Phys Plasmas Fluids Relat Interdiscip Topics 2000,",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "L.S. Shapley"
+            ],
+            "title": "A Value for n-Person Games Contributions to the Theory of Games (AM-28)",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "S. Manzhos",
+                "Carrington",
+                "T."
+            ],
+            "title": "A random-sampling high dimensional model representation neural network for building potential energy surfaces",
+            "venue": "J Chem Phys 2006,",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "M. Malshe",
+                "R. Narulkar",
+                "L.M. Raff",
+                "M. Hagan",
+                "S. Bukkapatnam",
+                "P.M. Agrawal",
+                "R. Komanduri"
+            ],
+            "title": "Development of generalized potential-energy surfaces using many-body expansions, neural networks, and moiety energy approximations",
+            "venue": "The Journal of Chemical Physics 2009,",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "J. Behler",
+                "M. Parrinello"
+            ],
+            "title": "Generalized neural-network representation of highdimensional potential-energy surfaces",
+            "venue": "Phys Rev Lett 2007,",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "A.P. Bartok",
+                "M.C. Payne",
+                "R. Kondor",
+                "G. Csanyi"
+            ],
+            "title": "Gaussian approximation potentials: the accuracy of quantum mechanics, without the electrons",
+            "venue": "Phys Rev Lett 2010,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "H. Wang",
+                "L. Zhang",
+                "J. Han",
+                "W. E"
+            ],
+            "title": "DeePMD-kit: A deep learning package for many-body potential energy representation and molecular dynamics",
+            "venue": "Computer Physics Communications 2018,",
+            "year": 2018
+        }
+    ],
+    "sections": [
+        {
+            "text": "Coarse-grained (CG) models parameterized using atomistic reference data, i.e., \u201cbottom up\u201d CG models, have proven useful in the study of biomolecules and other soft matter. However, the construction of highly accurate, low resolution CG models of biomolecules remains challenging. We demonstrate in this work how virtual particles, CG sites with no atomistic correspondence, can be incorporated into CG models within the context of relative entropy minimization (REM) as latent variables. The methodology presented, variational derivative relative entropy minimization (VD-REM), enables optimization of virtual particle interactions through a gradient descent algorithm aided by machine learning. We apply this methodology to the challenging case of a solvent-free CG model of a 1,2-dioleoyl-sn-glycero-3phosphocholine (DOPC) lipid bilayer and demonstrate that introduction of virtual particles captures solvent-mediated behavior and higher-order correlations which REM alone cannot\ncapture in a more standard CG model based only on the mapping of collections of atoms to the CG sites.\nI. Introduction\nAtomistic molecular dynamics (MD) simulations have enabled key insights into\nbiological and material processes.1-3 but modern hardware limits the practicality of MD to the study of millions of atoms on the multi-microsecond scale. This precludes sampling of many biologically relevant phenomena, such as macromolecular assembly.4 Coarse-grained (CG) models aim to extend the spatiotemporal scales of MD by simulating a lower-resolution representation of a system, increasing the efficiency of the simulation.5-8\nCG model construction and parameterization often follow either a top-down or bottom-\nup approach.7, 8 In the top-down approach, a CG model is parameterized to directly reproduce macroscopic properties such as thermodynamic data. Popular top-down approaches such as MARTINI have been used to simulate biomolecular structures such as proteins and multicomponent lipid bilayers.9-11 However, these models are not parameterized to reproduce the microscopic correlations and enthalpy-entropy decompositions underpinning these properties.12 Bottom-up models instead aim to reproduce the microscopic behavior of a reference atomistic model, with the intent of indirectly capturing emergent behavior.8, 13-18 While bottom-up CG models have an explicit correspondence to the atomistic representation and in principle have a greater potential in accurately describing the underlying physics, their application is limited due to the necessity of imperfect basis sets (force field expressions) to represent the CG interactions, as well as issues of representability and transferability.19-21\nIdeally, equilibrium simulations of bottom-up CG models will reproduce the\nconfigurational distribution of the CG variables implied by the atomistic reference simulation. The exact CG model Hamiltonian whose Boltzmann statistics reproduce the reference distribution is referred to as the CG variable potential of mean force (mbPMF),14, 15 and is often\nmany-body in nature.22, 23 In the limit of infinite sampling and a perfect basis set to represent the CG interactions, bottom-up CG methods such as Multiscale Coarse-graining13, 15, 16 (MSCG) and Relative Entropy Minimization17, 18, 24 (REM) are guaranteed to reproduce the mbPMF. However, practical considerations often relegate the CG force-field (basis set) to pairwise non-bonded interactions. Enhancing the expressivity of CG force fields beyond a pairwise basis set through explicit higher-order terms25 and order parameter (e.g., local density) based interactions26-30 enables the capture of certain many-body statistics. However, for biological systems, it is generally not clear which higher-order terms should be included. Machine-learned CG force-fields can be utilized to construct general approximations to manybody statistics,31-35 albeit at increased computational cost.\nPractical implementations of bottom-up CG methods possess characteristic\napproximations often affiliated with matching lower-order correlations. Certain methods such as REM,24 inverse Monte Carlo36 (IMC), and iterative Boltzmann inversion37 (IBI) guarantee fidelity of correlations which correspond to a particular interaction in the CG force field (e.g., optimization of a pair interaction reproduces the corresponding pair correlation). This matching of lower-order correlations often comes at the expense of accurately describing the higherorder correlations. The MS-CG method instead attempts a complete fit to the mbPMF through approximation of the mean forces on CG sites via an integral equation connection of the twoand three-body correlations,14 but it is not guaranteed to completely reproduce any structural correlations when an incomplete basis set is used to represent the interactions at the CG level.38 For any CG method, improvement of the CG models must proceed through either an increase in the complexity of the CG force field or a change in the considered CG resolution.\nRecent advances have, however, focused on augmenting the CG force field while\nmaintaining a pairwise basis set. For example, the pairwise interactions in CG models can be altered to explicitly include higher-order correlations by projecting many-body interactions\nonto the pairwise basis set.39 Alternatively, various kinds of \u201cvirtual\u201d sites have been introduced in bottom-up CG models, which can reintroduce orientational information in isotropic CG models and/or capture solvent-mediated interactions.40-42\nOne can define virtual sites generally as sites with more complex relationships to the\nCG (or AA) model than other sites within the model. Such virtual sites may be related to the atomistic system through a non-linear mapping, or they may be defined in relation to other variables present in the model system. Ideally, the optimization of virtual site interactions in a CG model results in direct improvement of the behavior of the non-virtual or \u201creal\u201d CG particles. Consequently, the inclusion of virtual particles into a CG model may be most fruitful for very low-resolution CG models, as shown in Figure 1. Virtual sites have similarly been introduced in both all-atom (AA) and top-down CG models to suit a variety of model-specific needs. These include imparting anisotropic projections, such as in the TIP4P water model, improving stability of cholesterol in top-down CG models, and aiding in mixed resolution AA/CG simulations.43-45\nIn the context of bottom-up CG models, development of virtual particles has generally\nbeen impeded by their complex relationship to the associated CG model. Methods centered around distribution matching, e.g., REM, can be directly incorporated so long as virtual sites are observed in the reference simulation, and can furthermore indirectly enable force-based parameterization.42 However, parameterization of virtual sites directly through force-based methods, although possible for particularly defined virtual sites,41 is limited. In either case, these limitations are a consequence of missing information regarding virtual site behavior within the reference (usually all-atom) simulation. Such missing information may include forces for virtual sites whose non-linear mapping precludes their direct computation or, for latent virtual sites, a reference distribution altogether. We consider virtual sites of the latter form in this manuscript.\nAlthough limited, certain methods do exist which are capable of optimizing CG models\nfor which a reference virtual site distribution is not directly available. Such methods include Inverse Monte Carlo (IMC) and Adversarial-Residual-Coarse-Graining (ARCG).46 In IMC, the expectation of a vector-valued observable, necessarily a function of exclusively real particles, is considered for optimization.36 ARCG by contrast minimizes a selected f-divergence between reference and model distributions at the CG resolution, which subsequently results in the optimization of a scalar-value observable whose form must be obtained variationally.46\nAlthough the two methods are conceptually different, their approach to virtual particle optimization is similar in that the observable expectations considered must be calculable either directly (IMC) or indirectly through variational search (ARCG) at the CG resolution.\nWe present here a REM-based methodology for virtual particle optimization,\nvariational derivative relative entropy minimization (VD-REM), which utilizes a distinct variational statement to approximate the derivative of the relative entropy. Similar to both IMC and ARCG, this enables a gradient descent algorithm for which all calculations are performed at the CG resolution. We find that machine-learned models can be useful in VD-REM in approximating target functions necessary for optimization. We apply VD-REM to construct a VCG model of a 1,2-dioleoyl-sn-glycero-3-phosphocholine (DOPC) lipid bilayer without solvent (i.e., \u201csolvent free\u201d or sometimes called \u201cimplicit\u201d solvent). Inclusion of virtual particles optimized by VD-REM demonstrates improved model behavior at the CG resolution, including recapture of self-assembly and bilayer flexibility. Lastly, we note that the presented\nmethodology bears conceptual similarities with Predictive Coarse-Graining,47 which further suggests an alternative approach to virtual particle optimization, as detailed in the Discussion."
+        },
+        {
+            "heading": "II. Theory",
+            "text": ""
+        },
+        {
+            "heading": "A. Model Definitions",
+            "text": "Before introducing virtual CG particles, we first explicitly define the AA and CG\nmodels. The fine-grained (FG) model is described by a collection of masses, \ud835\udc26, and configurational and momentum degrees of freedom \ud835\udc2b\ud835\udc5b and \ud835\udc29\ud835\udc5b , respectively. Reference simulations of the FG model are generated using the dynamics of the FG Hamiltonian\n\u210e(\ud835\udc2b\ud835\udc5b, \ud835\udc29\ud835\udc5b ) = \ud835\udc62(\ud835\udc2b\ud835\udc5b) + \u2211 \ud835\udc29\ud835\udc56\n2\n2\ud835\udc5a\ud835\udc56\n\ud835\udc5b\n\ud835\udc56=1\n(1)\nIn the canonical ensemble, molecular dynamics simulations sample from the Boltzmann distribution generated by the FG Hamiltonian\n\ud835\udc5dFG(\ud835\udc2b\ud835\udc5b, \ud835\udc29\ud835\udc5b ) = 1\n\ud835\udc67 exp(\u2212\ud835\udefd\u210e(\ud835\udc2b\ud835\udc5b, \ud835\udc29\ud835\udc5b)) (2)\nwhere \ud835\udefd = 1\nkB\ud835\udc47 . The normalization factor (ignoring constants due to indistinguishability and\nunit normalization) is the classical partition function, and can be written as\n\ud835\udc67 = \u222c e\u2212\ud835\udefd\u210e(\ud835\udc2b \ud835\udc5b,\ud835\udc29\ud835\udc5b)d\ud835\udc2b\ud835\udc5bd\ud835\udc29\ud835\udc5b = \ud835\udc67\ud835\udc2b\ud835\udc67\ud835\udc29 (3)\nThe separability of position and momentum implies the configurational and momentum marginal densities can be expressed as\n\ud835\udc5d\ud835\udc2b FG(\ud835\udc2b\ud835\udc5b) =\n1 \ud835\udc67\ud835\udc2b exp(\u2212\ud835\udefd\ud835\udc62(\ud835\udc2b\ud835\udc5b)) (4)\n\ud835\udc5d\ud835\udc29 FG(\ud835\udc29\ud835\udc5b ) =\n1\n\ud835\udc67\ud835\udc29 exp {\u2212\ud835\udefd \u2211\n\ud835\udc29\ud835\udc56 2\n2\ud835\udc5a\ud835\udc56\n\ud835\udc5b\n\ud835\udc56=1\n} (5)\nAs in prior development in MS-CG methodology, we define a mapping operator, \u2133 = (\u2133\ud835\udc93 , \u2133\ud835\udc91), which connects the CG degrees of freedom, denoted \ud835\udc11 \ud835\udc41and \ud835\udc0f\ud835\udc41, and FG degrees of freedom. We consider the mapping operator linear for both position and momentum coordinates such that\n\ud835\udc11\ud835\udc3c = \u2133\ud835\udc2b,\ud835\udc3c(\ud835\udc2b \ud835\udc5b) = \u2211 \ud835\udc50\ud835\udc3c\ud835\udc56 \ud835\udc2b\ud835\udc56\n\ud835\udc5b\n\ud835\udc56=1\n(6)\n\ud835\udc0f\ud835\udc3c = \u2133\ud835\udc29,\ud835\udc3c(\ud835\udc29 \ud835\udc5b) = \u2211 \ud835\udc50\ud835\udc3c\ud835\udc56 \ud835\udc29\ud835\udc56\n\ud835\udc5b\n\ud835\udc56=1\n(7)\nAdditionally, we restrict the form of the mapping operator such that each FG particle is uniquely associated with a single CG site. The mapping between the FG and CG variables enables the construction of a probability density over the CG variables, i.e.\n\ud835\udc5d\u2133\ud835\udc2b ref (\ud835\udc11\ud835\udc41) = \u222b \ud835\udc5d\ud835\udc2b FG(\ud835\udc2b\ud835\udc5b)\ud835\udeff(\u2133\ud835\udc2b(\ud835\udc2b \ud835\udc5b) \u2212 \ud835\udc11\ud835\udc41)d\ud835\udc2b\ud835\udc5b (8)\n\ud835\udc5d\u2133\ud835\udc29 ref (\ud835\udc0f\ud835\udc41) = \u222b \ud835\udc5d\ud835\udc29 FG(\ud835\udc29\ud835\udc5b )\ud835\udeff(\u2133\ud835\udc29(\ud835\udc29 \ud835\udc5b) \u2212 \ud835\udc0f\ud835\udc41)d\ud835\udc29\ud835\udc5b (9)\nA CG model which samples from these distributions will reproduce the equilibrium static behavior of the FG model, at the CG representation, with complete fidelity. To this end, a model Hamiltonian, \ud835\udc3b\u2133, with parameters \ud835\udec9, is introduced\n\ud835\udc3b\u2133(\ud835\udc11 \ud835\udc41 , \ud835\udc0f\ud835\udc41;\ud835\udec9) = \ud835\udc48\u2133(\ud835\udc11\n\ud835\udc41; \ud835\udec9) + \u2211 \ud835\udc0f\ud835\udc3c\n2\n2\ud835\udc40\ud835\udc3c,\u2133\n\ud835\udc41\n\ud835\udc3c=1\n(10)\nThe model Hamiltonian generates its own equilibrium density, i.e.\n\ud835\udc5d\u2133 mod (\ud835\udc11\ud835\udc41 , \ud835\udc0f\ud835\udc41; \ud835\udec9) =\n1 \ud835\udc4d exp(\u2212\ud835\udefd\ud835\udc3b\u2133(\ud835\udc11 \ud835\udc41 , \ud835\udc0f\ud835\udc41; \ud835\udec9)) (11)\nThe model equilibrium density can again be separated into position and momentum distributions, \ud835\udc5d\u2133 mod (\ud835\udc11\ud835\udc41 , \ud835\udc0f\ud835\udc41) = \ud835\udc5d\u2133\ud835\udc11 mod (\ud835\udc11\ud835\udc41)\ud835\udc5d\u2133\ud835\udc0f mod(\ud835\udc0f\ud835\udc41). This defines the following consistency conditions:\n\ud835\udc5d\u2133\ud835\udc11 mod (\ud835\udc11\ud835\udc41; \ud835\udec9) = \ud835\udc5d\u2133\ud835\udc2b ref (\ud835\udc11\ud835\udc41) (12)\n\ud835\udc5d\u2133\ud835\udc0f mod (\ud835\udc0f\ud835\udc41) = \ud835\udc5d\u2133\ud835\udc29 ref (\ud835\udc0f\ud835\udc41) (13)\nMomentum space consistency is trivially satisfied by a choice of mass related to the\nmapping operator.15 Complete configurational consistency would necessitate introduction of many-body terms into the CG FF. Instead, bottom-up CG methods aim to obtain a parameter set \ud835\udf3d\u2020 which satisfies a minimization principle unique to each method. B. Variational Derivative Relative Entropy Minimization\nAt this point, we now consider the introduction of virtual particles into the CG model\nto produce a VCG model. The VCG model is described by configurational and momentum degrees of freedom ?\u0302?\ud835\udf08 and \ud835\udc0f\ud835\udf08, respectively. The parameters of the VCG model are separated into those describing interactions between exclusively real particles, \ud835\udec9\ud835\udc50, and those which feature at least one virtual particle, \ud835\udec9\ud835\udf08. We define the VCG Hamiltonian, \ud835\udc3b\ud835\udca2, as\n\ud835\udc3b\ud835\udca2(?\u0302? \ud835\udf08, \ud835\udc0f\ud835\udf08; \ud835\udec9\ud835\udc50, \ud835\udec9\u03bd) = \ud835\udc48\ud835\udca2 (?\u0302? \ud835\udf08; \ud835\udec9\ud835\udc50 , \ud835\udec9\ud835\udf08 ) + \u2211 \ud835\udc0f\ud835\udc3c\n2\n2\ud835\udc40\ud835\udc3c,\ud835\udca2\n\ud835\udf08\n\ud835\udc3c=1\n(14)\nThe Boltzmann distribution generated by the VCG Hamiltonian is referred to as \ud835\udc5dpre mod . We consider a mapping operator, \ud835\udca2, which takes the VCG resolution to the CG resolution. The marginal densities of the VCG resolution are then connected to the associated CG densities through this mapping operator\n\ud835\udc5d\u2133\ud835\udc11 mod(\ud835\udc11\ud835\udc41; \ud835\udec9\ud835\udc50, \ud835\udec9\ud835\udf08 ) = \u222b \ud835\udc5dpre mod (?\u0302?\ud835\udf08; \ud835\udec9\ud835\udc50, \ud835\udec9\ud835\udf08 )\ud835\udeff(\ud835\udca2?\u0302?(?\u0302? \ud835\udf08) \u2212 \ud835\udc11\ud835\udc41)d?\u0302?\ud835\udf08 (15)\n\ud835\udc5d\u2133\ud835\udc0f mod (\ud835\udc0f\ud835\udc41) = \u222b \ud835\udc5dpre mod(\ud835\udc0f\ud835\udf08)\ud835\udeff(\ud835\udca2?\u0302?(?\u0302? \ud835\udf08) \u2212 \ud835\udc0f\ud835\udc41)d?\u0302?\u03bd (16)\nWe note that consistency in momentum space is trivially achieved for all real particles\nby setting \ud835\udc40\ud835\udc3c,\ud835\udca2 = \ud835\udc40\ud835\udc3c,\u2133 \u2200 \ud835\udc3c. 46 We note that the dependence of the marginal density \ud835\udc5d\u2133\ud835\udc11 mod on the VCG model parameters \ud835\udec9\ud835\udc50 and \ud835\udec9\ud835\udf08 as shown in Equation 15 is not directly considered in the work presented and omit representation of this dependence via notation for clarity in future\nequations. Since all virtual particle degrees of freedom are removed prior to model evaluation, momentum consistency is achieved for virtual particles at any chosen mass.\nSimilarly, we introduce a mapping operator \u210a, which takes the unobserved VAA\nensemble, \ud835\udc5dpre ref , with FG degrees of freedom ?\u0302?\ud835\udf07 and \ud835\udc29\ud835\udf07, to the observed AA ensemble\n\ud835\udc5d\ud835\udc2b FG(\ud835\udc2b\ud835\udc5b) = \u222b \ud835\udc5dpre ref (?\u0302?\ud835\udf07)\ud835\udeff(\u210a\ud835\udc2b(?\u0302? \ud835\udf07) \u2212 \ud835\udc2b\ud835\udc5b)d?\u0302?\ud835\udf07 (17)\n\ud835\udc5d\ud835\udc29 FG(\ud835\udc29\ud835\udc5b ) = \u222b \ud835\udc5dpre ref (\ud835\udc29\ud835\udf07)\ud835\udeff(\u210a\ud835\udc29(\ud835\udc29 \ud835\udf07) \u2212 \ud835\udc29\ud835\udc5b )d\ud835\udc29\ud835\udf07 (18)\nAs the remainder of this article is concerned only with configurational consistency, we\nomit subscripts on mapping operators \u2133, \ud835\udca2, and \u210a as the type of mapping is implicitly understood to be configurational. We denote the collection of virtual particles \ud835\udc18 such that ?\u0302?\ud835\udf08 = (\ud835\udc11\ud835\udc41 , \ud835\udc18) and ?\u0302?\ud835\udf07 = (\ud835\udc2b\ud835\udc5b, \ud835\udc18). The relative entropy between the configurational densities when including virtual particles is then\nSrel = \u222b \ud835\udc5dpre ref (\ud835\udc2b\ud835\udc5b, \ud835\udc18) ln (\n\ud835\udc5dpre ref (\ud835\udc2b\ud835\udc5b, \ud835\udc18)\n\ud835\udc5dpremod(\u2133(\ud835\udc2b\ud835\udc5b), \ud835\udc18) ) d\ud835\udc2b\ud835\udc5b\ud835\udc51\ud835\udc18 + \u27e8Smap\u27e9VAA\n(19)\nWe note that the introduction of virtual particles does not affect the ensemble averaged value of the mapping entropy, which can be evaluated equivalently in the AA ensemble. We next consider the derivative of the relative entropy with respect to a VCG model parameter\n\u2202Srel \u2202\ud835\udf03 = \ud835\udefd \u27e8 \u2202\ud835\udc48\ud835\udca2 \u2202\ud835\udf03 \u27e9\nVAA\n\u2212 \ud835\udefd \u27e8 \u2202\ud835\udc48\ud835\udca2\n\u2202\ud835\udf03 \u27e9\nVCG\n(20)\nFor model parameters which govern interactions between exclusively real particles, the\nrelative entropy derivative can be calculated explicitly by integration of the virtual particle degrees of freedom in the ensemble averages of Equation 20. This produces the standard relative entropy derivative\n\ud835\udf15\ud835\udc46rel \ud835\udf15\ud835\udf03\ud835\udc50 = \ud835\udefd \u27e8 \ud835\udf15\ud835\udc48\ud835\udca2 \ud835\udf15\ud835\udf03\ud835\udc50 \u27e9\nAA\n\u2212 \ud835\udefd \u27e8 \ud835\udf15\ud835\udc48\ud835\udca2 \ud835\udf15\ud835\udf03\ud835\udc50 \u27e9\nCG\n(21)\nThe ensemble averages in Equation 21 can simply be evaluated over the configuration\nof real particles, just as in a standard REM algorithm.24 We note that functional minimization of the relative entropy proceeds identically for real particle functions as in standard REM, and hence the recapitulation of the correlations dual to the potential energy function optimized are also guaranteed for VD-REM.\nThe relative entropy derivative with respect to a model parameter that governs virtual\nparticle interactions cannot be calculated in the same manner as the VAA ensemble, unlike the VCG ensemble, is not observed. We proceed by defining the following conditional distribution\n\ud835\udc5dpre mod (?\u0302?\ud835\udf08) = \ud835\udc5d\u2133\ud835\udc11 mod(\ud835\udc11\ud835\udc41)\ud835\udc5dcond(\ud835\udc18|\ud835\udc11\ud835\udc41; \ud835\udec9\ud835\udc50 , \ud835\udec9\ud835\udf08) (22)\n\ud835\udc5dpre ref (?\u0302?\ud835\udf07) = \ud835\udc5d\ud835\udc2b FG(\ud835\udc2b\ud835\udc5b)\ud835\udc5dcond(\ud835\udc18|\u2133(\ud835\udc2b\ud835\udc5b); \ud835\udec9\ud835\udc50, \ud835\udec9\ud835\udf08) (23)\nWe note that the conditional distributions in Equations 22 and 23 are identical, i.e.,\n\ud835\udc5dcond (\ud835\udc18|\ud835\udc11\ud835\udc41; \ud835\udec9\ud835\udc50, \ud835\udec9\ud835\udf08) = \ud835\udc5d cond(\ud835\udc18|\u2133(\ud835\udc2b\ud835\udc5b); \ud835\udec9\ud835\udc50, \ud835\udec9\ud835\udf08), and emphasize that the virtual particle distributions across both ensembles are dictated by the VCG model parameters. We now explicitly evaluate the VAA ensemble average in Equation 20 for a VCG model parameter involving virtual particles, \ud835\udf03\ud835\udf08,\n\u27e8 \u2202\ud835\udc48\ud835\udca2\n\u2202\ud835\udf03\ud835\udf08 \u27e9\nVAA\n= \u222c \u2202\ud835\udc48\ud835\udca2\n\u2202\ud835\udf03\ud835\udf08 (\u2133(\ud835\udc2b\ud835\udc5b), \ud835\udc18) \ud835\udc5dpre ref (\ud835\udc2b\ud835\udc5b, \ud835\udc18)d\ud835\udc2b\ud835\udc5bd\ud835\udc18 (24)\nSubstituting the conditional distribution as defined in Equation 23 produces\n\u27e8 \u2202\ud835\udc48\ud835\udca2\n\u2202\ud835\udf03\ud835\udf08 \u27e9\nVAA\n= \u222b [\u222b \u2202\ud835\udc48\ud835\udca2 \u2202\ud835\udf03\ud835\udf08 (\u2133(\ud835\udc2b\ud835\udc5b), \ud835\udc18)\ud835\udc5dcond(\ud835\udc18|\u2133(\ud835\udc2b\ud835\udc5b); \ud835\udec9\ud835\udc50, \ud835\udec9\ud835\udf08)d\ud835\udc18] \ud835\udc5d\ud835\udc2b FG(\ud835\udc2b\ud835\udc5b)d\ud835\udc2b\ud835\udc5b\n(25)\nThe term in the brackets is the conditional expectation of the potential energy\nderivative, \u2202\ud835\udc48\ud835\udca2\n\u2202\ud835\udf03\ud835\udf08 . The VAA ensemble average can then be re-expressed as an AA ensemble\naverage of a conditional expectation\n\u27e8 \u2202\ud835\udc48\ud835\udca2 \u2202\ud835\udf03\ud835\udf08 \u27e9\nVAA\n= \u27e8 \u2202\ud835\udc48\ud835\udca2 \u2202\ud835\udf03\ud835\udf08 \u27e9\nAA\n(26)\nSimilarly, the VCG ensemble average term in Equation 20 can be re-expressed as a CG ensemble average and the relative entropy derivative can be expressed more symmetrically as\n\u2202\ud835\udc46rel \u2202\ud835\udf03\ud835\udf08 = \ud835\udefd \u27e8 \u2202\ud835\udc48\ud835\udca2 \u2202\ud835\udf03\ud835\udf08 \u27e9\nAA\n\u2212 \ud835\udefd \u27e8 \u2202\ud835\udc48\ud835\udca2 \u2202\ud835\udf03\ud835\udf08 \u27e9\nCG\n(27)\nEquation 27 is the central equation of this section, and demonstrates how virtual particle\nparameters can be optimized exactly within a relative entropy framework. We note that while the conditional expectation is evaluated in both reference and model ensembles in Equation 27, the conditional expectation itself is evaluated only over the model ensemble. This mixing of ensembles is not unexpected, as virtual particles are only \u201cseen\u201d in the model ensemble and thus all predictive modeling for virtual particles stems from the sampling of this ensemble.\nIn practice, the conditional expectation is not explicitly known. However, since the\nconditional expectation is the minimum of a least squares prediction, simulation of the VCG model can be used to obtain an approximation to the conditional expectation, \ud835\udc5a\u03bd(\ud835\udc11 \ud835\udc41), through the following variational statement\nmin \ud835\udc5a\ud835\udf08 (\ud835\udc11 \ud835\udc41) \u222c [\ud835\udc5a\ud835\udf08(\ud835\udc11\n\ud835\udc41) \u2212 \u2202\ud835\udc48\ud835\udca2\n\u2202\ud835\udf03\ud835\udf08 (\ud835\udc11\ud835\udc41 , \ud835\udc18)]\n2\n\ud835\udc5dpre mod(\ud835\udc11\ud835\udc41 , \ud835\udc18; \ud835\udec9\ud835\udc50, \ud835\udec9\ud835\udf08 )d\ud835\udc11 \ud835\udc41 d\ud835\udc18\n= \u2202\ud835\udc48\ud835\udca2 \u2202\ud835\udf03\u03bd\n(28)\nWhen an unlimited basis set to express the model interactions is utilized, the variational statement is exact. In practice, a limited basis set for the predictor is used, and an approximate predictor, \ud835\udc5a\ud835\udf08 \u2020, is obtained. The derivative of the relative entropy with respect to the considered virtual particle parameter can then be approximated by utilizing this predictor\n\u2202Srel \u2202\u03b8\ud835\udf08 \u2248 \ud835\udefd\u27e8\ud835\udc5a\ud835\udf08 \u2020(\ud835\udc11\ud835\udc41)\u27e9 AA \u2212 \ud835\udefd\u27e8\ud835\udc5a\ud835\udf08 \u2020(\ud835\udc11\ud835\udc41)\u27e9 CG\n(29)\nVirtual particle parameters can be optimized in practice by first solving the least squares\nregression problem presented in Equation 28 to develop an approximate model of the conditional expectation. The ensemble averages of this model are then taken with respect to the AA and CG ensembles to calculate the relative entropy gradient in Equation 29. We note that the regression problem presented for virtual particle optimization shares connections with representing macroscopic observables through CG variables.48 In this sense, the averaging over and thus the removal of virtual particles can be seen as a kind of CG operation in and of itself.\nIII. Implementation\nEquations 28 and 29 suggest that a simple augmentation to a traditional REM algorithm\ncan be implemented to include virtual particles within REM optimized CG models.24 First, the VCG model is simulated for a given parameter set, and statistics pertinent to REM optimization are recorded. Second, for each virtual particle parameter to be optimized, a predictor is trained using real particle features to approximate the corresponding conditional averaged potential energy derivative through least-squares loss. Lastly, the ensemble averages of all potential energy derivatives are calculated in both the model and reference ensembles to calculate the gradient of the relative entropy, which is then used to update the parameters iteratively. This algorithm is summarized in Figure 2.\nWhile the algorithm for virtual particle optimization is exact in principle, the\napproximate nature of the gradient descent along the virtual particle parameter space may affect optimization and model performance. Additionally, as only the first derivative of the virtual particle parameter in VD-REM is approximated, update schemes which incorporate higherorder derivatives cannot be utilized. We note the complexity of the predictor bears no additional computational cost on actual simulation of the VCG model, which features only pairwise interactions.\nFurthermore, since the regression problem for each parameter is uniquely evaluated\nover the VCG ensemble, large amounts of data obtained through computational simulation can be acquired without rendering practical implementations infeasible. Consequently, we utilize machine learning (in particular, gradient boost models49) in constructing predictors for each potential energy derivative.\nThe features which comprise each descriptor must follow the symmetries present in the\ninteractions it is intended to model. For the virtual particles considered here, these include translational, rotational, and permutation (between particles of the same type) symmetries. The features utilized in each descriptor consisted of pairwise nonbonded (\ud835\udc5f), bonded (\ud835\udc4f), and angular interactions (\ud835\udc4e). Two feature types were considered. For the first feature type, the set of all values in the considered interaction types (e.g., nonbonded pair) \ud835\udc65 for a specific CG bead\ngrouping \ud835\udc3c (e.g, lipid head group and middle group) are selected for placement in a bin \ud835\udc35 corresponding to a pre-selected range of values for that interaction type\n\ud835\udc391(\ud835\udc65(\ud835\udc3c), \ud835\udc35) = 1\n|\ud835\udc65(\ud835\udc3c)| \u2211 1 \u22c5 [\ud835\udc56 \u2208 \ud835\udc35]\n\ud835\udc56\u2208\ud835\udc65(\ud835\udc3c)\n(30)\nThe ranges considered for bin construction for each interaction type is detailed in the supporting information (SI). The second feature type utilized only pairwise interactions and consisted of pair-averaged moments for each CG interaction\n\ud835\udc392(\ud835\udc5f(\ud835\udc3c)) = 1\n|\ud835\udc5f(\ud835\udc3c)| \u2211 \ud835\udc56\ud835\udc5b\n\ud835\udc56\u2208\ud835\udc5f(\ud835\udc3c)\n(31)\nAll pairwise interaction types were incorporated as features, and \ud835\udc5b = 2,4,6 and 12 moments were considered.\nVirtual particle interactions, including self-interactions and interactions with real CG\nbeads, were implemented with a pre-defined model function, in this case, Lennard-Jones, to simplify training and aid in stability during simulation. For all CG bead types of type \ud835\udc3c and \ud835\udc3d the potential energy interaction can be defined as\n\ud835\udc48\ud835\udc3c\ud835\udc3d (\u03f5, \u03c3) = \u2211 \ud835\udc48\ud835\udc3c\ud835\udc3d (\ud835\udc5f\ud835\udc56\ud835\udc57; \ud835\udf16, \ud835\udf0e) = 4\ud835\udf16 \u2211 [( \ud835\udf0e\n\ud835\udc5f\ud835\udc56\ud835\udc57 )\n12\n\u2212 ( \ud835\udf0e\n\ud835\udc5f\ud835\udc56\ud835\udc57 )\n6\n]\n\ud835\udc56 \u2208 \ud835\udc3c,\ud835\udc57 \u2208 \ud835\udc3d\ud835\udc56 \u2208 \ud835\udc3c,\ud835\udc57 \u2208 \ud835\udc3d\n(32)\nThe virtual particle parameters to be optimized for this interaction are then \ud835\udf03\ud835\udf08 = (\u03f5, \u03c3) Consequently, for each virtual particle interaction considered a predictor is constructed for the\nconditional expectation of the potential energy derivatives, \u2202\ud835\udc48\ud835\udc3c\ud835\udc3d\n\u2202\ud835\udf16 and\n\u2202\ud835\udc48\ud835\udc3c\ud835\udc3d\n\u2202\ud835\udf0e . These predictors are\nthen used to approximate the reference ensemble average used during gradient descent.\nIn practice, when a limited basis is used for the predictor, the generalization of the\npredictor across ensembles may be poor when the reference and model ensembles strongly differ. A similar issue occurs for virtual particle optimization in ARCG,46 and in both cases is most likely to occur at the beginning of training. While the exact predictor will generalize\ncompletely across CG and AA ensembles, model predictors must learn only from the CG ensemble and will inherently only be able to generalize to the AA ensemble in a limited capacity. Additionally, previous work on REM has established the gradient of the relative entropy to be noisy;50 we note it was found during training of the gradient boost models that substantial regularization was required to avoid overfitting. This is related to the insufficient sampling of the CG ensemble inherent to REM, which has necessitated additional regularization strategies during gradient descent. We suggest two alternative routes to circumvent these issues: (1) defer updating virtual particle interactions from their initialized values while VD-REM iterations exhibit strong disparities between the reference and model ensembles and (2) initialize parameters in the VCG model to reduce disparities between the two ensembles. The latter route, which we pursue in the DOPC example, can be accomplished by utilizing a REM-optimized CG model as the starting point for training and a model-specific initial guess for the virtual particle interactions."
+        },
+        {
+            "heading": "IV. Proof of Concept",
+            "text": "Lipids are generally characterized by a hydrophilic head region and hydrophobic tail\nregion. The amphipathic nature of lipids produces thermodynamically stable aggregates such as fluid bilayers, which serve as the template for cellular membranes.51 CG models of lipid bilayers are highly desirable due to the large amount of solvent require for AA bilayer simulations, and the inherently slow lateral mixing of lipids.52 The removal of solvent (i.e., a solvent-free model) necessitates encapsulation of the hydrophobic effect, a many-body interaction, within the remaining CG lipid beads.53, 54\nWhile various bottom-up CG models of lipid bilayers have been developed,42, 55-60\nbottom-up CG methods have generally been unable to replicate the self-assembling features of lipids from an initial randomized mixture.\nThis suggests the bilayer conformation of solvent-free bottom-up CG models may represent only a metastable state, and that the hydrophobic effect cannot be represented without some sort of implicit solvent representation. The only bottom-up CG model which, to our knowledge, is capable of self-assembly utilizes a semi-explicit representation of solvent, in which the interfacial water of the hydrophilic region is appended as a \u201cvirtual particle\u201d to the head group bead through a non-linear mapping.42 The (highly) CG DOPC model consists of a head group (HG) bead representing the phosphocholine moiety, a middle group (MG) bead representing the glycerol center and ester group, outermost tail bead (T1) and innermost tail bead (T2). Inspired by this approach, we utilize a similar topology to construct a 7-site VCG model\noptimized using VD-REM, we denote VD-REM-7, in which a virtual particle (VP) with no atomistic correspondence is placed near the HG. This CG topology is represented in Figure 3.\nAll-Atom Molecular Dynamics. Reference simulations of a solvated DOPC bilayer\nwere taken from Ref.42 Briefly, 1152 DOPC lipids, ~ 45000 water molecules and 0.15 M NaCl were simulated using GROMACS 5.0.7 for 100 ns in the constant NVT ensemble at a temperature of 300 K as maintained by a Nose-Hoover thermostat.61, 62 Simulations were initialized from a membrane area-equilibrated structure according to established protocol.63, 64 The CHARMM36 force field was used for lipids and the TIP3P force field was used for water.43, 65\nVD-REM. Each pair interaction between real particles was described using 4th order\nB-splines with knots placed every 0.5 \u00c5. Throughout training, the first B-spline knot value was held fixed, and the last three-B-splines were held fixed to maintain a zero value at the interaction cutoff. Initial interactions for real particles came from the REM-optimized model from Ref.42 The mass of the virtual particle was set to 100 g/mol. Bonded interactions for the virtual particle to the CG lipid were represented as harmonic with an equilibrium constant of 1.5 kcal/mol \u00c5 and equilibrium distance of 2.5 \u00c5. Angular virtual particle interactions were also considered harmonic with an equilibrium constant of 2.45 kcal/mol and equilibrium angle of 135\u00b0. Only nonbonded interactions were optimized during training. All virtual particle nonbonded interactions were initialized with LJ parameters \ud835\udf16 = 0.05 kcal/mol for all interactions and \ud835\udf0e = 4.0, 4.0,4.5 \u00c5 for VP-VP, HG-VP, and MG-VP interactions, respectively. Due to inherently minimal sampling between the hydrophobic and hydrophilic region, virtual particles and tail groups were considered non-interacting during training. All nonbonded interactions utilized a 25 \u00c5 cutoff. To improve stability during training, a maximum\ncap of 0.002 kcal/mol was permitted for B-spline coefficient updates, 0.0005 kcal/mol for \ud835\udf16 updates, and 0.005 \u00c5 for \ud835\udf0e updates for the first 100 iterations. A more refined search was then conducted for 45 iterations with caps of 0.001 kcal/mol permitted for B-spline coefficient updates, 0.0001 kcal/mol for \ud835\udf16 updates, and 0.001 \u00c5 for \ud835\udf0e updates to obtain the final VD-REM7 model. For each virtual particle interaction parameter, LightGBM was used to construct a gradient boost model to predict the conditional potential energy derivative.49 For each gradient boost model, the number of leaves was set to 5, the learning rate was set to 0.05, and 1000 estimators were chosen. The feature fraction and bagging fraction were set to 0.8 and 0.15, respectively. The L2 regularization hyperparameter was set to 20, and each tree was set to a max depth of 5. All other hyperparameters were set to default values unless specified. Information on feature construction for the machine-learned models is described in the SI.\nCG Molecular Dynamics. At each VD-REM iteration, the following simulation\nprotocol was conducted: The initial configuration for each simulation consisted of a bilayerlike lattice configuration with each lipid spaced 2 nm apart along the xy-plane. The initial structure was then minimized and simulated in the constant NPT ensemble for 25000 steps with a Langevin thermostat66 and Berendsen barostat67 with 2 ps and 5 ps damping constants, respectively. Linear deformation of the resulting structure to the reference atomistic lateral dimensions was then conducted for 25000 timesteps. A constant NVT simulation was then run for 1200000 timesteps in which 50000 frames were collected as training data for least-squares regression and to record real particle ensemble averages. A timestep of 5.0 fs was used throughout training. Large-scale production simulations of the resulting VD-REM model were performed in the constant NVT ensemble with 10,368 lipids and a 10 fs timestep to collect statistics and spectral information. All CG MD simulations were conducted using the LAMMPS MD engine.68\nResults. A subset of real particle potentials are shown in Figure 4. It is apparent from\nFigure 4 that the VD-REM alters the real particle interactions mainly by weakening attractive wells, as seen in the MG-MG, HG-MG, and MG-T2 interactions. Tail interactions are augmented to a lesser degree, which is likely explained by the absence of interactions with VPs. Virtual particle interactions of the optimized VD-REM-7 model consisted of LJ parameters \ud835\udf16 = 0.0328, 0.0052, and 0.0210 kcal/mol and \ud835\udf0e = 3.97, 3.59, and 3.98 \u00c5 for VP-VP, HG-VP, and MG-VP interactions, respectively. Consequently, the resulting interactions of the virtual particles in the VD-REM-7 model predominantly consist of hard wall interactions with minimal attraction.\nThree-dimensional radial distribution functions (RDF) for all real particles are shown\nin Figure 5. As expected, the fidelity of pair correlations in REM is also found in VD-REM. In principle, the optimization of parameters in the LJ potential describing interactions of the VPs should guarantee recapitulation of \ud835\udc5f\u221212 and \ud835\udc5f\u22126 statistics. However, the absence of an explicit representation of virtual particles in the reference ensemble precludes this direct analysis.\nInstead, we analyze the convergence of the ensemble averages of the pertinent potential energy derivatives in Equation 27 between AA and VCG ensembles, as in Figure 6. The machinelearned model constructed for each potential energy derivative was used to predict framewise values across both ensembles.\nfrom the bin-averaged normal distance between HG beads of each leaflet using a bin size of 1.0 nm. Orientational order parameters were calculated from the second-order Legendre polynomial for cos \ud835\udf03, such that71\n\ud835\udc46\ud835\udc37(\ud835\udf03) = \u27e8 1\n2 (3 cos2(\ud835\udf03) \u2212 1)\u27e9 (33)\nin which \ud835\udf03 is the angle the vector each bonded T1 and T2 makes with the bilayer normal.\nThe bending modulus, \ud835\udf05, was calculated via connections to Canham-Helfrich\ncontinuum theory.72, 73 In the tensionless ensemble, the height fluctuation spectrum \ud835\udc62 with associated reciprocal space vector \ud835\udc2a is connected to the bending modulus through the following relation\n\u27e8\ud835\udc34|\ud835\udc62(\ud835\udc5e)|2\u27e9 = \ud835\udc58\ud835\udc35\ud835\udc47\n\ud835\udf05\ud835\udc5e4 (34)\nwhere \ud835\udc34 is the instantaneous bilayer area. This method has been previously used to calculate the bending modulus for AA and CG bilayer simulations.12, 42, 74, 75 Membrane rigidity is a key biophysical metric in describing membrane-protein interactions.76, 77 This fitting was performed using data from a large-scale production run to obtain the bending modulus of VDREM-7 DOPC (see Figure 7).\nWe note that, according to Table 1, properties such as bilayer thickness and\norientational order parameter stayed consistent between REM-6 and VD-REM-7. However, the bending modulus of the VD-REM is less than half of the much too stiff REM DOPC model, indicating that the VD-REM is significantly more flexible. This suggests the introduction of virtual particles into the model has enabled recapitulation, to some extent, of higher order correlations. We note that the MS-CG-6 model of DOPC retains the most accurate bending modulus of the CG models presented. This is likely due to the MS-CG-6 model\u2019s explicit attempt to relate two- and three-body correlations via the MS-CG algorithm. While the virtual particle methodology presented here provides no method of optimization outside of REM, we detail in the Discussion section possible routes to work around this.\nFigure 7. Height fluctuation spectra of VD-REM-7 DOPC as a function of wavenumber. Simulation data (circles) were fit according to Equation 34 (solid line) to obtain the bending modulus.\nAs demonstrated in Figure 8 and Movie S1, the VD-REM-7 DOPC model is also\ncapable of self-assembly starting from a random configuration. This suggests the hydrophobic effect is more adequately represented in the VD-REM-7 model than the REM-6 model, which is unable to properly self-assemble. Since the VD-REM-7 DOPC model is entirely anhydrous, the hydrophobic effect is interpreted within model interactions implicitly through the reference statistics of the CG lipids.\nAlthough we must be careful to describe the self-assembling nature of the VD-REM-7\nmodel holistically, we note that self-assembly is lost upon rendering the virtual particle noninteracting, as shown in Figure S1. The location of the virtual particles in the context of the bilayer configuration, as well as the predominantly repulsive nature of their interactions, suggests their addition into the model may introduce a general cohesive force which maintains bilayer stability."
+        },
+        {
+            "heading": "V. Discussion",
+            "text": "We note that the methodology presented here, in which optimization of a CG model is\ndecoupled from the resolution during simulation, bears conceptual similarities to predictive coarse-graining (PCG).47 In PCG, a nondeterministic backmap from the CG to AA resolution is constructed via expectation-maximization to critique the underlying FG statistics generated by the CG model. The approach for virtual particle optimization described here has been entirely discriminative, i.e., focused on the conditional expectation of the target functions. Instead, a generative approach similar to PCG could be taken to construct an analogous CG to VCG backmapping operator. Optimization of the virtual particle interaction parameters would then proceed exactly as in CG REM, but ensemble averages of target functions are evaluated over an approximate joint distribution of virtual and real particle configurational degrees of freedom. Furthermore, this generative approach would allow for the establishment of local information of virtual particles in the reference ensemble through the joint distribution, enabling optimization in force-based methods such as MS-CG and generalized Yvon-BornGreen theory.13-16, 78 We intend to further establish this connection in future work.\nSince the introduction of virtual particles into CG models is not restricted by an AA to\nVCG mapping, the systematic optimization presents new avenues by which virtual particles can augment CG models. Given the critical role solvent plays in protein behavior,79, 80 highly CG models of large proteins such as actin-related proteins,81 HIV-1 capsid (CA) protein, and BAR domain proteins82 may benefit from introduction of virtual particles.40, 83 Alternatively, it has been demonstrated complex lipid behavior including gel-phase hexatic tail ordering and the structural diversity of the ripple phase are not fully recapitulated in low-resolution CG models.42, 84 One could in principle introduce virtual particles to lipid tails to attempt to remediate this.\nConversely, the lack of a reference mapping for virtual particles renders their meaning\nwithin the context of CG modeling somewhat nebulous. The representation of virtual particle behavior in the reference ensemble is inherently approximate and is represented via a machinelearned function of the real particle statistics. It is worth considering how the features inputted into these models relate to the function variationally obtained, i.e., what features of the real particle statistics are considered important when the model is learned. Explainable machine learning, in particular Shapley additive explanations,85 could be utilized to explore this relation.\nLastly, we note that alternative machine learning approaches could be utilized in\nsolving the regression problems presented in VD-REM beyond gradient boost models. The least-squares regression problem presented in Equation 28 relates the real particle configurational information to a scalar free energy-like function of the virtual particles. This problem is conceptually similar to other machine-learning approaches to CG free energy surfaces,23, 32, 33 as well as the fitting of atomic data to potential energy surfaces.86-91 Consequently, it may be fruitful to pursue similar machine learning approaches which incorporate neural networks and Gaussian processes in construction of model predictors."
+        },
+        {
+            "heading": "VI. Conclusions",
+            "text": "In this work, we have introduced a new coarse-graining methodology, variational\nderivative relative entropy minimization (VD-REM), to systematically introduce virtual particles, having no explicit atomistic correspondence, within a relative entropy framework. We demonstrate how virtual particles can be optimized in the absence of their reference statistics through machine-learning models of pertinent target functions. We apply this methodology to construct a solvent-free, low-resolution CG model of a 1,2-dioleoyl-snglycero-3-phosphocholine (DOPC) lipid bilayer and demonstrate that introduction of virtual particles about the lipid heads enables self-assembly within a CG model that is otherwise\nincapable of self-assembly. We additionally show that higher order correlations are matched more effectively utilizing virtual particles through a substantial reduction of the CG bending modulus. These results suggest virtual particles will be fruitful in recapitulating solventmediated behavior, as well as higher order correlations, within implicit solvent, highly CG models. Although our proof-of-concept demonstrates the utility of virtual particles, a substantial analysis is warranted into alternate machine-learning models such as Gaussian processes and neural networks which may prove more beneficial in predicting the target functions unique to VD-REM. Additionally, feature importance techniques may be informative on representing more explicitly how virtual particles may improve CG models.\nTaken as a whole, the directions outlined in this work promise to lead to entirely new,\nmore flexible, and more accurate bottom-up CG models, along with their subsequent modeling of real systems at the CG level.\nAUTHOR INFORMATION"
+        },
+        {
+            "heading": "Corresponding Author",
+            "text": "Email: gavoth@uchicago.edu"
+        },
+        {
+            "heading": "ORCID",
+            "text": "Gregory A. Voth: 0000-0002-3267-6748"
+        },
+        {
+            "heading": "ACKNOWLEDGEMENTS",
+            "text": "This material is based upon work supported in part by the National Science Foundation (NSF grant CHE-2102677) and in part by the National Institutes of Health (NIH grant R01GM063796). Simulations were performed using computing resources provided by the University of Chicago Research Computing Center (RCC). T.D.L. was also supported by the National Science Foundation Graduate Research Fellowship (DGE-1746045)."
+        },
+        {
+            "heading": "Utilizing Machine Learning to Greatly Expand",
+            "text": "the Range and Accuracy of Bottom-Up CoarseGrained Models Through Virtual Particles\nPatrick G. Sahrmann, Timothy D. Loose, Aleksander E.P. Durumeric, and Gregory A. Voth*\nDepartment of Chemistry, Chicago Center for Theoretical Chemistry, James Franck Institute, and Institute for Biophysical Dynamics, The University of Chicago, Chicago, IL 60637, USA\n*Corresponding Author: gavoth@uchicago,edu"
+        },
+        {
+            "heading": "Description of Machine-Learned Model Features",
+            "text": "As discussed in the main text, features for each machine-learned model consisted of binned statistics of pairwise nonbonded, bonded, and angular interactions, as well as pairwise moments for all interactions. For nonbonded interaction bins, the bin width was set to 0.1 \u00c5 for all bins and the outer range for each bin was the pair cutoff of 25 \u00c5. Inner cutoffs were chosen individually through analysis of pairwise statistics. Bonded and angular bins used a bin width of 0.05 \u00c5 and 5\u00b0, respectively. We list bin ranges for all interactions in Tables S1 and S2.\nTable S1. Bin ranges for nonbonded and bonded pair interactions.\nInteraction Type Type 1 Type 2 Inner Cutoff (\u00c5) Outer Cutoff (\u00c5)\nHG HG 4.0 25.0 HG MG 4.0 25.0 HG T1 5.5 25.0 HG T2 7.6 25.0 MG MG 4.0 25.0\nNonbonded MG T1 4.0 25.0\nMG T2 4.9 25.0 T1 T1 3.4 25.0 T1 T2 3.4 25.0 T2 T2 3.4 25.0 HG MG 3.25 7.5\nBonded MG T1 3.5 10.0\nT1 T2 3.25 10.0\nTable S2. Bin ranges for angular interactions.\nInteraction Type Type 1 Type 2 Type 3 Inner Cutoff (\u00b0) Outer Cutoff (\u00b0)\nHG MG T1 40 180\nAngle MG T1 T2 30 180\nT1 MG T2 32 179.5\nFigure S1. Failure of VD-REM-7 to properly self-assemble into a bilayer configuration\nwhen virtual particles are rendered non-interacting. Colors are consistent with the main text.\nMovie S1. Self-assembly of VD-REM-7 from a random, dispersed state. xy-dimensions are consistent with reference bilayer area. Simulation occurs over 2 x 106 MD timesteps. Colors are consistent with the main text."
+        }
+    ],
+    "title": "Utilizing Machine Learning to Greatly Expand the Range and Accuracy of Bottom-Up Coarse- Grained Models Through Virtual Particles",
+    "year": 2022
+}

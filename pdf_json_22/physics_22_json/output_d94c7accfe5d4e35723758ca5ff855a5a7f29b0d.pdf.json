@@ -1,0 +1,158 @@
+{
+    "abstractText": "While deep learning models have seen recent high uptake in the geosciences, and are appealing in their ability to learn from minimally processed input data, as \u2019black box\u2019 models they do not provide an easy means to understand how a decision is reached, which in safety-critical tasks especially can be problematical. An alternative route is to use simpler, more transparent \u2019white box\u2019 models, in which task-specific feature construction replaces the more opaque feature discovery process performed automatically within deep learning models. Using data from the Groningen Gas Field in the Netherlands, we build on an existing logistic regression model by the addition of four further features discovered using elastic net driven data mining within the catch22 time series analysis package. We then evaluate the performance of the augmented logistic regression model relative to a deep (CNN) model, pre-trained on the Groningen data, on progressively increasing noise-tosignal ratios. We discover that, for each ratio, our logistic regression model correctly detects every earthquake, while the deep model fails to detect nearly 20 % of seismic events, thus justifying at least a degree of caution in the application of deep models, especially to data with higher noise-to-signal ratios.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Akshat Goel"
+        },
+        {
+            "affiliations": [],
+            "name": "Denise Gorse"
+        }
+    ],
+    "id": "SP:3fa3dabf53e8d37e0ffce115cac9fd44b170a284",
+    "references": [
+        {
+            "authors": [
+                "Jannes M\u00fcnchmeyer",
+                "Jack Woollam",
+                "Andreas Rietbrock",
+                "Frederik Tilmann",
+                "Dietrich Lange",
+                "Thomas Bornstein",
+                "Tobias Diehl",
+                "Carlo Giunchi",
+                "Florian Haslinger",
+                "Dario Jozinovi\u0107",
+                "Alberto Michelini",
+                "Joachim Saul",
+                "Hugo Soto"
+            ],
+            "title": "Which picker fits my data? A quantitative evaluation of deep learning based seismic pickers",
+            "venue": "Journal of Geophysical Research: Solid Earth,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Umair bin Waheed",
+                "Ahmed Shaheen",
+                "Mike Fehler",
+                "Ben Fulcher"
+            ],
+            "title": "Winning with simple learning models: Detecting earthquakes in Groningen, the Netherlands",
+            "venue": "In 82nd EAGE Annual Conference & Exhibition,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Ahmed Shaheen",
+                "Umair bin Waheed",
+                "Michael Fehler",
+                "Lubos Sokol",
+                "Sherif Hanafy"
+            ],
+            "title": "GroningenNet: Deep learning for low-magnitude earthquake detection on a multi-level sensor",
+            "venue": "network. Sensors,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Julian D. Miranda",
+                "Ciro A. Gamboa",
+                "Angelica Florez",
+                "Miguel Altuve"
+            ],
+            "title": "Voting-based seismic data classification system using logistic regression models",
+            "venue": "XXII Symposium on Image, Signal Processing and Artificial Vision (STSIVA),",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Ben Fulcher",
+                "Nick Jones"
+            ],
+            "title": "Highly comparative feature-based time-series classification",
+            "venue": "IEEE Transactions on Knowledge and Data Engineering,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Carl Henning Lubba",
+                "Sarab Sethi",
+                "Philip Knaute",
+                "Simon Schultz",
+                "Ben Fulcher",
+                "Nick Jones"
+            ],
+            "title": "catch22: CAnonical Time-series CHaracteristics selected through highly comparative time-series analysis",
+            "venue": "Data Mining and Knowledge Discovery,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Mostafa Mousavi",
+                "William L. Ellsworth",
+                "Weiqiang Zhu",
+                "Lindsay Y. Chuang",
+                "Gregory C. Beroza"
+            ],
+            "title": "Earthquake transformer: An attentive deep-learning model for simultaneous earthquake detection and phase picking",
+            "venue": "Nature Communications,",
+            "year": 2020
+        }
+    ],
+    "sections": [
+        {
+            "text": "Keywords Seismology \u00b7Machine learning \u00b7 Feature selection \u00b7 Benchmark study"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "The geosciences have been transformed in recent years by a substantial growth in the quantity and quality of available data. This has spurred interest in machine learning methods for seismological tasks, and especially in deep learning models, as powerful feature extractors (see, for example, the benchmarking study of [1]). However, as \u2019black box\u2019 models, they do not provide an easy means to understand how a decision is reached. The aims of this paper are first to demonstrate the power of a \u2019white box\u2019 model and second to directly compare this model to a deep neural network. Using data from the Groningen Gas Field in the Netherlands, we build on the logistic regression model of [2] by the addition of four further features. We then evaluate the performance of the augmented model relative to the CNN of [3], pre-trained on the Groningen data, on progressively increasing noise-to-signal ratios. We discover that, for each ratio, our logistic regression model correctly detects every earthquake, while the deep model fails to detect nearly 20 % of seismic events. It may thus be concluded that deep models should be treated with a degree of caution, since, in addition to their lack of transparency, they may not always perform ideally well."
+        },
+        {
+            "heading": "2 Data and Methods",
+            "text": ""
+        },
+        {
+            "heading": "2.1 Data acquisition, pre-processing, and partitioning",
+            "text": "The data used in this study, as in [2] and [3], were derived from the G-network, a network of 70 seismic stations set up by the Dutch government after public protest over increased induced seismicity due to gas extraction from the\nar X\niv :2\n20 5.\n00 52\n5v 1\n[ cs\n.L G\n] 1\nM ay\nGroningen Gas Field. Each G-network station has four geophones, between 50 m and 200 m, and we gather data from all four geophone levels as the comparison model of [3] requires this. We downloaded seismograms for event examples from web services hosted by the Royal Netherlands Meteorological Institute (KNMI), applying the same date and magnitude (\u2265 0.2, resulting mean 1.05) selection criteria as in [2]. This resulted in 2300 seismograms recording 47 events. We were unable to obtain 4000 noise samples, as used in [2], from the 2017-18 period of the studies of [2] and [3] and so used the same time of year in 2020-21. Additional negative examples for the increasing noise-to-signal phase of this study were drawn from this same period, with 38100 new samples collected. All waveform data were detrended, demeaned, and bandpass-filtered to frequencies of 5-25 Hz as in [3]. In addition, in order to be compatible with the CNN of [3], the resulting seismograms were then downsampled by a factor of two. We chose to segregate our train (60 %), validation (20 %), and test (20 %) datasets by event rather than seismogram (seismogram-based segregation having been used in the studies of [2] and [3]) in order to prevent data leakage from test to train datasets. Hence, for example, our test set may not contain 20 % of the seismograms, as events are detected by varying numbers of G-network stations. This difference, and the differing time period from which noise data were derived, are not problematic for internal comparisons within this study. However, they should be borne in mind when comparing our results directly with those of [2] and [3]."
+        },
+        {
+            "heading": "2.2 Machine Learning Models",
+            "text": "The primary model used in this study is logistic regression (LR). The major appeal of this linear model is that its fitted weights can be used to understand the role and importance of different features. An elastic net penalty\n[\u03b1 p\u2211 i=1 |\u03b2i|+ (1\u2212 \u03b1) p\u2211 i=1 \u03b22i ]\nwhere the \u03b2i are the (external inputs + 1) weights of the model, may be added to the LR loss function; for a suitable setting of the hyperparameter \u03b1 this can encourage not only smaller weights but variable selection. In our work the elastic net penalty was used only for this latter purpose, as a means to filter new candidate features according to their importance, our final model being a simple, interpretable LR model as in [2].\nWe benchmarked against a convolutional neural network (CNN), a type of deep learning model originally designed for image data, and used in [3]. The CNN was not retrained as it had already been trained on data from the Groningen Gas Field. The CNN of [3] was designed to take advantage of the multiple geophone levels used in the G-network, leveraging the potential of the moveout pattern of energy to distinguish between disturbances originating underground (more likely to be seismic in origin) and ones originating at the surface (more likely to be noise)."
+        },
+        {
+            "heading": "2.3 Performance measures",
+            "text": "In order to explore the behaviour of the models for increasing amounts of noise it was important to use a performance measure that is robust for imbalanced data. Accuracy is not a good choice in this respect, though we quote it as a secondary metric in our results as it is widely used elsewhere even for imbalanced datasets. Our preferred measure will be the more robust Matthews Correlation Coefficient, defined by\nMCC = [TP \u2217 TN \u2212 FP \u2217 FN ]/[[TP + FP ] \u2217 [TP + FN ] \u2217 [TN + FP ] \u2217 [TN + FN ]]1/2\nwhere TP denotes true positives, TN true negatives, FP false positives, and FN false negatives. An MCC of 1.0 corresponds to a perfect prediction, a value of 0.0 either random prediction or an assignment of all examples to a single class. It is this last behaviour that makes the MCC valuable for imbalanced datasets, as the tendency of most machine learning models is to over-assign examples to the majority class."
+        },
+        {
+            "heading": "2.4 Use of the HCSTA and catch22 software packages",
+            "text": "Most of the work that has been done in earthquake detection with LR models has used seismologically derived features (see, for example, [4], and references therein). But it is also of interest to explore statistically-derived features, as was done by [2], who used features from the HCTSA (Highly Comparative Time-Series Analysis) package of [5]. HCTSA offers around 7,700 candidate features, with the four used in [2] being selected by a mixture of mechanisms integral to the package and qualitative judgement. The catch22 MATLAB package [6] contains a subset of features the HCTSA authors found to be best-performing for time series classification. Because there are only 22 of these features it is easy to add them to the inputs of an LR model with an elastic net penalty and use this model\u2019s inherent feature selection ability to highlight potentially useful new features. This means of feature selection differs from that used in [2] to choose the original four features, and it seemed possible it could discover some potentially valuable features the selection method of the earlier paper had missed. In fact this was so, as will be shown in the Results section to follow."
+        },
+        {
+            "heading": "3 Results",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Feature discovery using elastic net",
+            "text": "200 runs of the elastic net model (which had 26 inputs, the original four HCTSA features from [2] plus 22 new features from the catch22 package) were carried out. It was discovered that there was no single best set of weights; there were in fact many elastic net models with identical best performance in terms of the validation MCC. The distribution of weights for each feature for these 72 equally well-performing models is shown in Figure 1, above. This figure confirms the value of the original four HCTSA features (W1 to W4), but also suggests the potential value of four catch22 features (C10, C11, C14, and C15), with C11 especially promising. These four new features were added to the original four. The 18 less influential catch22 features and the use of the elastic net penalty were then discarded in order to have an interpretable LR model as in [2]."
+        },
+        {
+            "heading": "3.2 Comparison of the logistic regression and CNN models at low noise-to-signal ratio",
+            "text": "Both the LR model of [2] and our augmented LR model were trained at the noise-to-signal ratio of 1.73:1 used in [2]. The CNN of [3], which was not retrained by us, had been pre-trained at a ratio of 1.47:1. Both models were tested in this subsection at the ratio of 1.73:1 used for testing in [2]. From Table 1 it can be seen the original LR model is able to achieve an MCC of 0.9691, but that our augmented model is even so able to statistically significantly improve on it. However, the CNN does substantially less well. From the confusion matrices in Table 2 it can be seen that the CNN is very effective (having no false positives) in classifying noise, but makes a substantial number of errors (false negatives) on earthquake data, failing to detect around 20 % of the earthquake examples. As will be seen in the next subsection, the CNN\u2019s focus on correctly detecting noise becomes only more problematic as the proportion of noise to signal increases."
+        },
+        {
+            "heading": "3.3 Performance of the models on less balanced datasets",
+            "text": "Table 3 shows that as the noise ratio is increased all the models, which were trained on low ratios as described above, find classification more difficult. It can be seen, however, that the four catch22 features are of increasing value as the noise increases: at the highest noise-to-signal ratio considered in this study, 50:1, the augmented model\u2019s MCC is around 36 % better than that of the original model.\nIt is not a surprise that the LR models find prediction on less balanced data harder. What is a surprise is that the CNN appears to find it easier. However, inspection of the confusion matrices for the higher noise ratios explains this: at these higher ratios the CNN makes the same errors on the earthquake examples as it did at the starting ratio of 1.73:1, but continues to classify all noise examples perfectly; as the proportion of noise increases, the CNN therefore necessarily appears to do better."
+        },
+        {
+            "heading": "4 Conclusions",
+            "text": "This study benchmarked an eight-input logistic regression (LR) model (four new input features, discovered via the use of the catch22 software package combined with an elastic net feature selector, having been added to the model of [2] against a convolutional neural network (CNN) pre-trained on data from the same source, the Groningen Gas Field in the Netherlands [3]. Tests were carried out both at the low noise-to-signal ratio of [2] and at higher noise ratios. While the CNN scored higher as this ratio increased, as measured by the Matthews Correlation Coefficient (MCC), the mistakes made by the LR model were notably all false positives, which can be reduced by seismological agencies using pre-existing or easily adoptable [4] processes, while the mistakes made by the CNN were the more\nserious and problematic false negatives. We do not claim deep learning models have no place in seismology. They can be remarkably powerful; the EQTransformer model of [7] has been shown particularly effective in recent benchmarking trials [1]. However, deep models need to be trained with care and have yet to be proven on substantially imbalanced datasets. A degree of caution may thus be warranted and the time may not yet be right for such models to be deployed in practice."
+        },
+        {
+            "heading": "5 Acknowledgments",
+            "text": "The authors would like to thank Umair bin Waheed for helpful discussions and advice, and Ahmed Shaheen for the provision of the pre-trained CNN model used in [3]."
+        }
+    ],
+    "year": 2022
+}

@@ -1,0 +1,757 @@
+{
+    "abstractText": "In this paper, we explore the challenging problem of performing a generative task in a target language when labeled data is only available in English, using summarization as a case study. We assume a strict setting with no access to parallel data or machine translation and find that common transfer learning approaches struggle in this setting, as a generative multilingual model fine-tuned purely on English catastrophically forgets how to generate non-English. Given the recent rise of parameter-efficient adaptation techniques, we conduct the first investigation into how one such method, prompt tuning (Lester et al., 2021), can overcome catastrophic forgetting to enable zero-shot cross-lingual generation. Our experiments show that parameter-efficient prompt tuning provides gains over standard fine-tuning when transferring between lessrelated languages, e.g., from English to Thai. However, a significant gap still remains between these methods and fully-supervised baselines. To improve cross-lingual transfer further, we explore several approaches, including: (1) mixing in unlabeled multilingual data, and (2) explicitly factoring prompts into recombinable language and task components. Our approaches can provide further quality gains, suggesting that robust zero-shot crosslingual generation is within reach.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Tu Vu"
+        },
+        {
+            "affiliations": [],
+            "name": "2F"
+        },
+        {
+            "affiliations": [],
+            "name": "Aditya Barua"
+        },
+        {
+            "affiliations": [],
+            "name": "Brian Lester"
+        },
+        {
+            "affiliations": [],
+            "name": "Daniel Cer"
+        },
+        {
+            "affiliations": [],
+            "name": "Mohit Iyyer"
+        },
+        {
+            "affiliations": [],
+            "name": "Noah Constant"
+        }
+    ],
+    "id": "SP:dc0962af78c387fe0b87c1cc1175e27c99c631c0",
+    "references": [
+        {
+            "authors": [
+                "Shengnan An",
+                "Yifei Li",
+                "Zeqi Lin",
+                "Qian Liu",
+                "Bei Chen",
+                "Qiang Fu",
+                "Weizhu Chen",
+                "Nanning Zheng",
+                "JianGuang Lou."
+            ],
+            "title": "Input-tuning: Adapting unfamiliar inputs to frozen pretrained models",
+            "venue": "arXiv preprint arXiv:2203.03131.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Mikel Artetxe",
+                "Sebastian Ruder",
+                "Dani Yogatama."
+            ],
+            "title": "On the cross-lingual transferability of monolingual representations",
+            "venue": "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL 2020), pages 4623\u20134637.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Zewen Chi",
+                "Li Dong",
+                "Furu Wei",
+                "Wenhui Wang",
+                "XianLing Mao",
+                "Heyan Huang."
+            ],
+            "title": "Cross-lingual natural language generation via pre-training",
+            "venue": "Proceedings of the AAAI Conference on Artificial Intelligence (AAAI 2020), 34(05):7570\u20137577.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jonathan H. Clark",
+                "Eunsol Choi",
+                "Michael Collins",
+                "Dan Garrette",
+                "Tom Kwiatkowski",
+                "Vitaly Nikolaev",
+                "Jennimaria Palomaki."
+            ],
+            "title": "TyDi QA: A benchmark for information-seeking question answering in typologically diverse languages",
+            "venue": "Transactions of the",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Alexis Conneau",
+                "Kartikay Khandelwal",
+                "Naman Goyal",
+                "Vishrav Chaudhary",
+                "Guillaume Wenzek",
+                "Francisco Guzm\u00e1n",
+                "Edouard Grave",
+                "Myle Ott",
+                "Luke Zettlemoyer",
+                "Veselin Stoyanov."
+            ],
+            "title": "Unsupervised cross-lingual representation learning at scale",
+            "venue": "In",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Alexis Conneau",
+                "Guillaume Lample."
+            ],
+            "title": "Crosslingual language model pretraining",
+            "venue": "Proceedings of the 33rd International Conference on Neural Information Processing Systems (NeurIPS 2019), volume 32.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Alexis Conneau",
+                "Ruty Rinott",
+                "Guillaume Lample",
+                "Adina Williams",
+                "Samuel Bowman",
+                "Holger Schwenk",
+                "Veselin Stoyanov."
+            ],
+            "title": "XNLI: Evaluating cross-lingual sentence representations",
+            "venue": "Proceedings of the 2018 Conference on Empirical Methods",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Jacob Devlin",
+                "Ming-Wei Chang",
+                "Kenton Lee",
+                "Kristina Toutanova."
+            ],
+            "title": "BERT: Pre-training of deep bidirectional transformers for language understanding",
+            "venue": "Proceedings of the 2019 Conference of the North American Chapter of the Association for",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Sobrevilla Cabezudo",
+                "Hendrik Strobelt",
+                "Nishant Subramani",
+                "Wei Xu",
+                "Diyi Yang",
+                "Akhila Yerukola",
+                "Jiawei Zhou."
+            ],
+            "title": "The GEM benchmark: Natural language generation, its evaluation and metrics",
+            "venue": "Proceedings of the 1st Workshop on",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Naman Goyal",
+                "Cynthia Gao",
+                "Vishrav Chaudhary",
+                "PengJen Chen",
+                "Guillaume Wenzek",
+                "Da Ju",
+                "Sanjana Krishnan",
+                "Marc\u2019Aurelio Ranzato",
+                "Francisco Guzman",
+                "Angela Fan"
+            ],
+            "title": "The flores-101 evaluation benchmark for low-resource and multilingual",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "David Graff",
+                "Junbo Kong",
+                "Ke Chen",
+                "Kazuaki Maeda."
+            ],
+            "title": "English gigaword",
+            "venue": "Linguistic Data Consortium, Philadelphia, 4(1):34.",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "Junxian He",
+                "Chunting Zhou",
+                "Xuezhe Ma",
+                "Taylor BergKirkpatrick",
+                "Graham Neubig"
+            ],
+            "title": "Towards a unified view of parameter-efficient transfer learning",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Neil Houlsby",
+                "Andrei Giurgiu",
+                "Stanislaw Jastrzebski",
+                "Bruna Morrone",
+                "Quentin De Laroussilhe",
+                "Andrea Gesmundo",
+                "Mona Attariyan",
+                "Sylvain Gelly."
+            ],
+            "title": "Parameter-efficient transfer learning for NLP",
+            "venue": "Proceedings of the 36th International Conference",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Jeremy Howard",
+                "Sebastian Ruder."
+            ],
+            "title": "Universal language model fine-tuning for text classification",
+            "venue": "Proceedings of the 56th Annual Meeting of the Association for Computational Linguistics (ACL 2018), pages 328\u2013339.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Edward J Hu",
+                "Yelong Shen",
+                "Phillip Wallis",
+                "Zeyuan Allen-Zhu",
+                "Yuanzhi Li",
+                "Shean Wang",
+                "Weizhu Chen."
+            ],
+            "title": "Lora: Low-rank adaptation of large language models",
+            "venue": "Proceedings of the 10th International Conference on Learning Representations",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Junjie Hu",
+                "Sebastian Ruder",
+                "Aditya Siddhant",
+                "Graham Neubig",
+                "Orhan Firat",
+                "Melvin Johnson."
+            ],
+            "title": "XTREME: A massively multilingual multitask benchmark for evaluating cross-lingual generalisation",
+            "venue": "Proceedings of the 37th International",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Rabeeh Karimi Mahabadi",
+                "James Henderson",
+                "Sebastian Ruder."
+            ],
+            "title": "Compacter: Efficient low-rank hypercomplex adapter layers",
+            "venue": "Proceedings of the 35th International Conference on Neural Information Processing Systems (NeurIPS 2021), volume 34,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Fajri Koto",
+                "Jey Han Lau",
+                "Timothy Baldwin."
+            ],
+            "title": "Evaluating the efficacy of summarization evaluation across languages",
+            "venue": "Findings of the Association for Computational Linguistics: ACL-IJCNLP 2021 (Findings of ACL-IJCNLP 2021), pages 801\u2013812.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Stella Biderman",
+                "Alessia Battisti",
+                "Ahmed Baruwa",
+                "Ankur Bapna",
+                "Pallavi Baljekar",
+                "Israel Abebe Azime",
+                "Ayodele Awokoya",
+                "Duygu Ataman",
+                "Orevaoghene Ahia",
+                "Oghenefego Ahia",
+                "Sweta Agrawal",
+                "Mofetoluwa Adeyemi"
+            ],
+            "title": "Quality at a glance",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Taku Kudo",
+                "John Richardson."
+            ],
+            "title": "SentencePiece: A simple and language independent subword tokenizer and detokenizer for neural text processing",
+            "venue": "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing: System",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Faisal Ladhak",
+                "Esin Durmus",
+                "Claire Cardie",
+                "Kathleen McKeown."
+            ],
+            "title": "WikiLingua: A new benchmark dataset for cross-lingual abstractive summarization",
+            "venue": "Findings of the Association for Computational Linguistics: EMNLP 2020 (Findings of",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Brian Lester",
+                "Rami Al-Rfou",
+                "Noah Constant."
+            ],
+            "title": "The power of scale for parameter-efficient prompt tuning",
+            "venue": "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing (EMNLP 2021), pages 3045\u20133059.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Patrick Lewis",
+                "Barlas Oguz",
+                "Ruty Rinott",
+                "Sebastian Riedel",
+                "Holger Schwenk."
+            ],
+            "title": "MLQA: Evaluating cross-lingual extractive question answering",
+            "venue": "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL 2020),",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Junyi Jessy Li",
+                "Marine Carpuat",
+                "Ani Nenkova."
+            ],
+            "title": "Assessing the discourse factors that influence the quality of machine translation",
+            "venue": "Proceedings of the 52nd Annual Meeting of the Association for Computational Linguistics (ACL 2014), pages 283\u2013",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Xiang Lisa Li",
+                "Percy Liang."
+            ],
+            "title": "Prefix-tuning: Optimizing continuous prompts for generation",
+            "venue": "Proceedings of the 59th Annual Meeting of the Association for Computational Linguistics and the 11th International Joint Conference on Natural Lan-",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Chin-Yew Lin."
+            ],
+            "title": "ROUGE: A package for automatic evaluation of summaries",
+            "venue": "Proceedings of the Workshop of Text Summarization Branches Out (WAS 2004), pages 74\u201381.",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "Haokun Liu",
+                "Derek Tam",
+                "Mohammed Muqeeth",
+                "Jay Mohta",
+                "Tenghao Huang",
+                "Mohit Bansal",
+                "Colin Raffel."
+            ],
+            "title": "Few-shot parameter-efficient finetuning is better and cheaper than in-context learning",
+            "venue": "arXiv preprint arXiv:2205.05638.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Pengfei Liu",
+                "Weizhe Yuan",
+                "Jinlan Fu",
+                "Zhengbao Jiang",
+                "Hiroaki Hayashi",
+                "Graham Neubig."
+            ],
+            "title": "Pretrain, prompt, and predict: A systematic survey of prompting methods in natural language processing",
+            "venue": "arXiv preprint arXiv:2107.13586.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Kaushal Kumar Maurya",
+                "Maunendra Sankar Desarkar",
+                "Yoshinobu Kano",
+                "Kumari Deepshikha."
+            ],
+            "title": "ZmBART: An unsupervised cross-lingual transfer framework for language generation",
+            "venue": "Findings of the Association for Computational Linguistics:",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Sewon Min",
+                "Mike Lewis",
+                "Luke Zettlemoyer",
+                "Hannaneh Hajishirzi."
+            ],
+            "title": "MetaICL: Learning to Learn In Context",
+            "venue": "Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Lan-",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Xiaoman Pan",
+                "Boliang Zhang",
+                "Jonathan May",
+                "Joel Nothman",
+                "Kevin Knight",
+                "Heng Ji."
+            ],
+            "title": "Crosslingual name tagging and linking for 282 languages",
+            "venue": "Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (ACL 2017),",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Kishore Papineni",
+                "Salim Roukos",
+                "Todd Ward",
+                "WeiJing Zhu."
+            ],
+            "title": "Bleu: a method for automatic evaluation of machine translation",
+            "venue": "Proceedings of the 40th Annual Meeting of the Association for Computational Linguistics (ACL 2002), pages 311\u2013318.",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "Jonas Pfeiffer",
+                "Ivan Vuli\u0107",
+                "Iryna Gurevych",
+                "Sebastian Ruder."
+            ],
+            "title": "MAD-X: An Adapter-Based Framework for Multi-Task Cross-Lingual Transfer",
+            "venue": "Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jason Phang",
+                "Iacer Calixto",
+                "Phu Mon Htut",
+                "Yada Pruksachatkun",
+                "Haokun Liu",
+                "Clara Vania",
+                "Katharina Kann",
+                "Samuel R. Bowman."
+            ],
+            "title": "English intermediate-task training improves zero-shot crosslingual transfer too",
+            "venue": "Proceedings of the 1st Con-",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jason Phang",
+                "Thibault F\u00e9vry",
+                "Samuel R Bowman."
+            ],
+            "title": "Sentence encoders on stilts: Supplementary training on intermediate labeled-data tasks",
+            "venue": "arXiv preprint arXiv:1811.01088.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Chengwei Qin",
+                "Shafiq Joty."
+            ],
+            "title": "Lfpt5: A unified framework for lifelong few-shot language learning based on prompt tuning of t5",
+            "venue": "Proceedings of the 10th International Conference on Learning Representations (ICLR 2022).",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Colin Raffel",
+                "Noam Shazeer",
+                "Adam Roberts",
+                "Katherine Lee",
+                "Sharan Narang",
+                "Michael Matena",
+                "Yanqi Zhou",
+                "Wei Li",
+                "Peter J. Liu"
+            ],
+            "title": "Exploring the limits of transfer learning with a unified text-to-text",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Sylvestre-Alvise Rebuffi",
+                "Hakan Bilen",
+                "Andrea Vedaldi."
+            ],
+            "title": "Learning multiple visual domains with residual adapters",
+            "venue": "Proceedings of the 31th Conference on Neural Information Processing Systems (NeurIPS 2017), volume 30.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Anthony Robins."
+            ],
+            "title": "Catastrophic forgetting, rehearsal and pseudorehearsal",
+            "venue": "Connection Science, 7(2):123\u2013146.",
+            "year": 1995
+        },
+        {
+            "authors": [
+                "Sebastian Ruder",
+                "Noah Constant",
+                "Jan Botha",
+                "Aditya Siddhant",
+                "Orhan Firat",
+                "Jinlan Fu",
+                "Pengfei Liu",
+                "Junjie Hu",
+                "Dan Garrette",
+                "Graham Neubig",
+                "Melvin Johnson."
+            ],
+            "title": "XTREME-R: Towards more challenging and nuanced multilingual evaluation",
+            "venue": "In",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "heesht Sharma",
+                "Andrea Santilli",
+                "Thibault Fevry",
+                "Jason Alan Fries",
+                "Ryan Teehan",
+                "Teven Le Scao",
+                "Stella Biderman",
+                "Leo Gao",
+                "Thomas Wolf",
+                "Alexander M Rush"
+            ],
+            "title": "Multitask Prompted Training Enables Zero-Shot Task Generalization",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Abigail See",
+                "Peter J. Liu",
+                "Christopher D. Manning."
+            ],
+            "title": "Get to the point: Summarization with pointergenerator networks",
+            "venue": "Proceedings of the 55th Annual Meeting of the Association for Computational Linguistics (ACL 2017), pages 1073\u20131083.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Thibault Sellam",
+                "Dipanjan Das",
+                "Ankur Parikh."
+            ],
+            "title": "BLEURT: Learning robust metrics for text generation",
+            "venue": "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL 2020), pages 7881\u20137892.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Siamak Shakeri",
+                "Noah Constant",
+                "Mihir Kale",
+                "Linting Xue."
+            ],
+            "title": "Towards zero-shot multilingual synthetic question and answer generation for crosslingual reading comprehension",
+            "venue": "Proceedings of the 14th International Conference on Natural Lan-",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Tu Vu",
+                "Brian Lester",
+                "Noah Constant",
+                "Rami Al-Rfou",
+                "Daniel Cer"
+            ],
+            "title": "SPoT: Better frozen model adaptation through soft prompt transfer",
+            "venue": "In Proceedings of the 60th Annual Meeting of the Association for Computational Linguistics (ACL 2022),",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Tu Vu",
+                "Minh-Thang Luong",
+                "Quoc Le",
+                "Grady Simon",
+                "Mohit Iyyer."
+            ],
+            "title": "STraTA: Self-training with task augmentation for better few-shot learning",
+            "venue": "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing (EMNLP",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Tu Vu",
+                "Tong Wang",
+                "Tsendsuren Munkhdalai",
+                "Alessandro Sordoni",
+                "Adam Trischler",
+                "Andrew MattarellaMicke",
+                "Subhransu Maji",
+                "Mohit Iyyer."
+            ],
+            "title": "Exploring and predicting transferability across NLP tasks",
+            "venue": "Proceedings of the 2020 Conference on",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jason Wei",
+                "Maarten Bosma",
+                "Vincent Zhao",
+                "Kelvin Guu",
+                "Adams Wei Yu",
+                "Brian Lester",
+                "Nan Du",
+                "Andrew M. Dai",
+                "Quoc V Le."
+            ],
+            "title": "Finetuned Language Models Are Zero-Shot Learners",
+            "venue": "Proceedings of the 10th International Conference on Learning Rep-",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Linting Xue",
+                "Noah Constant",
+                "Adam Roberts",
+                "Mihir Kale",
+                "Rami Al-Rfou",
+                "Aditya Siddhant",
+                "Aditya Barua",
+                "Colin Raffel."
+            ],
+            "title": "mT5: A massively multilingual pre-trained text-to-text transformer",
+            "venue": "Proceedings of the 2021 Conference of the North",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Yinfei Yang",
+                "Yuan Zhang",
+                "Chris Tar",
+                "Jason Baldridge."
+            ],
+            "title": "PAWS-X: A cross-lingual adversarial dataset for paraphrase identification",
+            "venue": "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th In-",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Elad Ben Zaken",
+                "Shauli Ravfogel",
+                "Yoav Goldberg."
+            ],
+            "title": "Bitfit: Simple parameter-efficient fine-tuning for transformer-based masked languagemodels",
+            "venue": "arXiv preprint arXiv:2106.10199.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Mengjie Zhao",
+                "Hinrich Sch\u00fctze."
+            ],
+            "title": "Discrete and soft prompting for multilingual models",
+            "venue": "Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing (EMNLP 2021), pages 8547\u20138555.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "MODELTUNING. Maurya"
+            ],
+            "title": "2021) show that intermediate tuning on an auxiliary unsuper",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1 Introduction",
+            "text": "Cross-lingual language understanding is an important area of ongoing research (Conneau et al., 2020; Hu et al., 2020; Ruder et al., 2021). With vastly differing amounts of data (both labeled and unlabeled) available across languages, there is significant value to developing techniques that can transfer knowledge from higher-resource languages to improve performance in lower-resource languages. Zero-shot cross-lingual benchmarks push on the\nF Work done as a student researcher at Google Brain.\nlimiting case where no labeled data is available in the target language. Remarkable progress has been made on zero-shot cross-lingual tasks by scaling up the size of pre-trained multilingual models (Conneau et al., 2020; Xue et al., 2021). However, prior work has focused nearly exclusively on non-generative tasks (e.g., classification, extractive question answering, and sequence labeling).\nIn this paper, we turn our attention to zeroshot cross-lingual generation, or \u201cXGEN\u201d, which requires a model to learn a generative task from labeled data in one language (typically English), and then perform the equivalent generative task in another language. This problem is particularly challenging because generative models trained on one language are known to exhibit catastrophic forgetting, losing the ability to generate coherent text in other languages (Xue et al., 2021; Maurya et al., 2021; Shakeri et al., 2021). In particular, we focus on the relatively under-explored task of zero-shot cross-lingual summarization. We construct a new\nar X\niv :2\n20 5.\n12 64\n7v 2\n[ cs\n.C L\n] 2\n3 O\nct 2\n02 2\nzero-shot task WIKILINGUA-0 from the WIKILINGUA dataset (Ladhak et al., 2020), allowing us to test XGEN capabilities across 18 languages. We motivate a new evaluation metric for our task, SP-ROUGE, and show that it correlates well with human judgments of summary quality.\nMaurya et al. (2021) show improved performance on XGEN tasks by freezing model parameters in the input and output layers during finetuning. Inspired by recent parameter-efficient adaptation techniques (Houlsby et al., 2019; Zaken et al., 2021; Li and Liang, 2021; Lester et al., 2021), we take this approach further: can we overcome catastrophic forgetting by freezing all of the pre-trained model parameters, and only tuning a much smaller set of task-specific parameters? Parameter-efficient tuning methods are particularly appealing for multilingual NLP, as they would enable reuse of a single frozen model across many combinations of task and language, reducing storage and serving costs.\nTo this end, we conduct the first investigation of the XGEN performance of PROMPTTUNING (Lester et al., 2021), a simple parameter-efficient adaptation technique that limits learned parameters to a set of virtual tokens prepended to the text input. We compare PROMPTTUNING with standard fine-tuning (or MODELTUNING, where all model weights are tuned) across different languages and model scales. We find that increasing model size and decreasing tunable parameter capacity are key for overcoming catastrophic forgetting. Despite its inferior performance on the training language (English), PROMPTTUNING with scale typically outperforms MODELTUNING when evaluated on non-English languages, especially on languages more distantly related to English, such as Thai. This corroborates previous findings (Li and Liang, 2021; Lester et al., 2021) that parameter-efficient methods are more robust to domain shifts between training and inference.\nMotivated by our initial findings, we investigate two approaches to further improve the XGEN performance of PROMPTTUNING and MODELTUNING. Our first approach involves mixing unlabeled data in the target language into the supervised training stage. We show this dramatically alleviates catastrophic forgetting on WIKILINGUA-0. We also introduce a novel approach, \u201cfactorized prompts\u201d, which is specifically designed for PROMPTTUNING. We train prompts on a multi-task multilingual mixture, where each prompt is factorized into composable language and task modules\u2014the first half\nof the prompt encodes language knowledge, while the second half captures language-agnostic task knowledge. During inference in the zero-shot crosslingual setting, the source language module is replaced with the target language module, while the task module remains unchanged. We demonstrate that factorized prompts provide an effective means of improving XGEN performance.\nTo summarize, our main contributions are:\n\u2022 We present the first large-scale empirical investigation of parameter-efficient PROMPTTUNING and standard MODELTUNING for zero-shot cross-lingual generation (XGEN). We show that increasing model scale and decreasing tunable parameter capacity are key for overcoming catastrophic forgetting on XGEN.\n\u2022 We propose WIKILINGUA-0, a challenging XGEN benchmark and an associated SP-ROUGE evaluation metric, which we hope will facilitate future work evaluating multilingual summarization.\n\u2022 We show that mixing in unsupervised multilingual data can boost XGEN performance, and are the first to combine this approach with PROMPTTUNING.\n\u2022 We propose \u201cfactorized prompts\u201d, a novel approach that can also help PROMPTTUNING overcome severe catastrophic forgetting.\n\u2022 To facilitate future work, we release our data, pretrained models, and code at: https://github.com/google-research/\nprompt-tuning/tree/main/prompt_tuning/ x_gen."
+        },
+        {
+            "heading": "2 Challenge of zero-shot cross-lingual generation",
+            "text": "Much recent progress in multilingual NLP has been driven by zero-shot cross-lingual benchmarks that require a model to perform classification (Conneau et al., 2018; Yang et al., 2019), extractive QA (Artetxe et al., 2020; Lewis et al., 2020; Clark et al., 2020), or sequence labeling (Pan et al., 2017).1 Here, we are interested in a more challenging task of zero-shot cross-lingual generation\n1We refer the interested reader to Appendix A for a comprehensive comparison of MODELTUNING and PROMPTTUNING on these benchmarks. Overall, we find that MODELTUNING typically performs better than PROMPTTUNING, although PROMPTTUNING at scale matches the performance of MODELTUNING on English and can yield better results on some languages.\n(XGEN) where a model is trained on a generative task in one language (typically English), and then asked to perform the equivalent task in another language during inference. We construct a novel zeroshot cross-lingual summarization task and show that state-of-the-art text-to-text models adapted using MODELTUNING and PROMPTTUNING techniques are not able to successfully perform our task. Our analysis reveals that both techniques suffer from catastrophic forgetting, causing them to often generate text in the wrong language."
+        },
+        {
+            "heading": "2.1 Problem formulation",
+            "text": "Defining WIKILINGUA-0 zero-shot cross-lingual summarization: We leverage the WIKILINGUA dataset (Ladhak et al., 2020; Gehrmann et al., 2021) to create a novel zero-shot cross-lingual summarization task, which we dub WIKILINGUA-0.2 While WIKILINGUA provides labeled training data in 18 languages (including English), we are interested in a more realistic experimental setup where no training data is provided in non-English languages, as it is less practical to obtain labeled data for real low-resource languages.3 As such, we discard all training data for non-English languages, with the exception of ablation experiments, and cast WIKILINGUA as training a model with English summarization data and feeding it non-English articles during zero-shot evaluation.4\nDefining SP-RG for multilingual summarization evaluation: ROUGE (Lin, 2004) has been the metric of choice for evaluating summarization systems. However, it assumes that the input text uses spaces to separate words, which is not the case for many languages (e.g., Chinese, Japanese, and Thai).5 One possible solution is to use language-specific tokenizers, as done in Conneau and Lample (2019). To avoid language-specific preprocessing, we use SentencePiece sub-word tokenization (Kudo and Richardson, 2018), which is data-driven and lan-\n2Note that the original WIKILINGUA task is not suitable for direct use in our XGEN setting, as it aims to generate English summaries from non-English articles.\n3While one might rely on machine translation (MT) to obtain labeled data in a language of interest, this is not particularly appealing due to: (i) extra computation required, (ii) varied translation quality across languages (Ruder et al., 2021), (iii) potential loss of discourse structure (Li et al., 2014), and (iv) limited understanding of black box MT systems.\n4See Ladhak et al. (2020) for data statistics. 5In preliminary experiments, we found that standard ROUGE yielded extremely poor ROUGE scores in many languages, despite systems producing reasonably good summaries.\nguage independent.6 We call our metric SP-ROUGE (SentencePiece-based ROUGE) or SP-RG for short, and report SP-RG-LSUM in our experiments.7 In Appendix B, we demonstrate that SP-ROUGE produces a similar correlation to human judgments as BLEURT (Sellam et al., 2020) while being significantly more computationally efficient."
+        },
+        {
+            "heading": "2.2 Experimental setup",
+            "text": ""
+        },
+        {
+            "heading": "2.2.1 Baselines",
+            "text": "In addition to vanilla MODELTUNING and PROMPTTUNING, we consider the following baselines:\nLEAD-64: This baseline simply copies the first 64 SentencePiece tokens from the input article.8\nTRANS-TRAIN: We perform MODELTUNING or PROMPTTUNING on WIKILINGUA-0 English summarization data that is translated into the target language using GOOGLE TRANSLATE.\nTRANS-TEST: We train on English summarization data and evaluate on validation data that is translated from the target language to English.\nSUP & SUP-ALL: To ablate the impact of using the labeled training data provided in the original WIKILINGUA dataset for all languages, we either train on supervised data for each individual target language (SUP) or a mixture of supervised data from all languages (SUP-ALL).9"
+        },
+        {
+            "heading": "2.2.2 Training and implementation details",
+            "text": "We perform MODELTUNING and PROMPTTUNING on top of pretrained mT5 checkpoints (Xue et al., 2021) of all sizes: SMALL, BASE, LARGE, XL, XXL,10 using T5X (Roberts et al., 2022). For PROMPTTUNING, we create an LM adapted version of these checkpoints by further training them for 100K steps with the \u201cprefix LM\u201d objective (Raffel et al., 2020) using mC4 (Xue et al., 2021) data for all languages.11 Except for ablations, we use 100 prompt tokens and initialize the prompt by sampling from the vocabulary embeddings. Training inputs and targets are clipped to 1024 and 512 SentencePiece\n6Goyal et al. (2021) also use a similar approach for BLEU (Papineni et al., 2002).\n7ROUGE-LSUM is the summary-level ROUGE-L metric used in See et al. (2017).\n8In our preliminary experiments, n = 64 performed best among a range of values {32, 64, 128, 256}.\n9This is an upper bound and is not in the XGEN setting. 10These are 300M, 580M, 1.2B, 3.7B, and 13B parameters. 11A similar approach was used in Lester et al. (2021) for\nPROMPTTUNING with T5.\ntokens, respectively. We always train for 100,000 steps for both MODELTUNING and PROMPTTUNING. We save a checkpoint every 5,000 steps and report results on the model checkpoint corresponding to the highest performance on a target language using 250 validation examples for all languages.12"
+        },
+        {
+            "heading": "2.3 Results and Discussion",
+            "text": "WIKILINGUA-0 is challenging for both MODELTUNING and PROMPTTUNING: Our zero-shot evaluation results on WIKILINGUA-0 for French (FR), Vietnamese (VI), Russian (RU), and Thai (TH) are shown in Figure 2a.13 For comparison, we also include results on English. Overall, we find that zeroshot inference on an unseen language leads to a substantial performance drop for both model adaptation techniques, especially when feeding in articles in non-Latin script languages like Russian and Thai. Consistent with the findings in An et al. (2022) for other generative tasks, we find that PROMPTTUNING, even with scale, falls far below MODELTUNING on monolingual English summarization.14\nPROMPTTUNING is better on larger language shifts: Interestingly, PROMPTTUNING is competitive with or out-performs MODELTUNING when evaluated on other languages. For instance, at the XXL scale, PROMPTTUNING outperforms MODELTUNING by a large margin of +7.3 SP-ROUGE (37.4 vs. 30.1) on Thai. A closer look at these results reveals an interesting pattern: as model size increases, PROMPTTUNING usually produces better results than MODELTUNING when there is a significant language shift at inference time (e.g., from English to a non-Latin script language).15 This corroborates the view in Lester et al. (2021) that MODELTUNING may be over-parameterized and thus more prone to overfit the training task and less robust to domain shifts.\nBoth MODELTUNING and PROMPTTUNING suffer from catastrophic forgetting and this effect is more pronounced for MODELTUNING: When performing zero-shot evaluation on non-English\n12For inference, we use beam search with a beam size of 4 and a length penalty of \u03b1 = 0.6. To avoid severe penalties for predictions that repeat a phrase indefinitely, we heuristically remove all but one occurrence of any prediction-final repeated substring.\n13See Table 10 in Appendix C for full results (including variance statistics) and Table 8 in Appendix A for results across all target languages.\n14This is somewhat surprising since across the other tasks we tried above, PROMPTTUNING at XXL can match the performance of MODELTUNING when evaluated on English.\n15With the exception of a few languages (e.g., Chinese).\nlanguages, we discover that both MODELTUNING and PROMPTTUNING often partially summarize nonEnglish articles into English instead of the target language. This suggests that they suffer from overfitting on the training task. To probe more deeply into this problem, we evaluate performance for each saved checkpoint, and additionally measure: (i) LIDlang\u2014the average confidence score given by cld316 when detecting the language lang, and (ii) ASCII\u2014the average percentage of ASCII characters present in the model\u2019s predictions, with a higher value indicating a larger amount of English in the model\u2019s output for non-Latin script languages. Figure 3 shows our evaluation results as training progresses. For PROMPTTUNING, we observe a clear \u201cdeteriorating\u201d trend, where the longer the prompt is tuned on English, the more unwanted English is generated, and the lower summarization quality becomes for Russian and Thai. For MODELTUNING, even by the first checkpoint, the model has already heavily overfit to English, outputting >60% ASCII for Russian and Thai inputs. There is a modest recovery later in training, but quality as measured by SP-ROUGE remains low.\nBigger models are less prone to forget: In Figure 2b, we observe that moving to larger model sizes mitigates catastrophic forgetting to a large extent. This is true both for MODELTUNING (in line with the findings of Xue et al. (2021)), as well as for PROMPTTUNING. For example, at SMALL size, MODELTUNING and PROMPTTUNING only successfully generate Russian text 0.0% and 10.1% of the time respectively, whereas at XXL size, these numbers jump to 57.5% and 84.4%.\nToo much capacity is harmful: Figure 2c shows an interesting \u201cparadox of capacity\u201d with regard to the prompt length for PROMPTTUNING. On the one hand, greater capacity (in the form of longer prompts) clearly helps to better learn the summarization task. On the other hand, the greater the capacity to learn from English training data, the more the model forgets other languages. We observe that at the beginning of training, the little amount of English introduced in generated outputs is eclipsed by the improvement in summarization quality, which results in a better SP-ROUGE score. As training continues, however, the increased capacity becomes harmful as more and more English is introduced in the model\u2019s output, which domi-\n16https://github.com/google/cld3\nnates the improvement in summarization quality and leads to lower SP-ROUGE. For each language and model size, we observe a critical point past which adding extra capacity becomes harmful. For instance, in Thai at the XXL size, increasing capacity from 1 to 10 prompt tokens improves summarization quality (SP-ROUGE +4.8) despite a drop in language accuracy (LIDTH \u22128.0), and increasing capacity further to 100 tokens hurts both metrics.\nSignificant headroom remains: The supervised baselines in Figure 4 highlight that significant headroom remains on this XGEN task. When tuning the XXL model directly on supervised training data in all languages, SP-ROUGE scores are between +5.8 (VI) and +12.8 points (TH) higher than our highest zero-shot results. We also note that for some languages, like Thai, the supervised baseline greatly exceeds any approach using machine translation. This highlights that machine translation quality is still low in some languages, so pursuing stronger zero-shot solutions is worthwhile."
+        },
+        {
+            "heading": "3 Mitigating catastrophic forgetting",
+            "text": "We have seen that increasing model scale and decreasing tunable parameter capacity are both effective in improving XGEN performance. Can we obtain further gains by devising methods that explicitly tackle catastrophic forgetting? Here, we investigate two approaches: mixing unlabeled training data with English supervised data, and factorizing the learned prompts into composable language and task modules. We show that both methods can provide substantially better results when there is severe catastrophic forgetting. Below, we describe each method and analyze our findings in detail."
+        },
+        {
+            "heading": "3.1 Methods",
+            "text": "Mixing in unlabeled training data: This approach involves multi-task learning by mixing an unsupervised training task (UNSUP) into the WIKILINGUA-0 data. Mixing is controlled by a mixing rate \u03ba, resulting in a final mixture that is \u03ba% UNSUP data and (100 \u2212 \u03ba)% WIKILINGUA-0. As a data augmentation scheme, this method can be applied in all settings. We use the span corruption pretraining objective from T5 (Raffel et al., 2020) with mC4 data. We create separate multilingual datasets for each target language (MIXUNSUP) as well as a single multilingual dataset that includes all of the WIKILINGUA-0 languages (MIXUNSUP-ALL). Our goal is to encourage the model not to forget about other languages during training on English summarization. In our experiments, we use \u03ba = 1.17 An alternative approach is to perform model or prompt tuning on an intermediate task before tuning on WIKILINGUA-0. This intermediate tuning approach has been used to boost performance on English tasks for both MODELTUNING (Phang et al., 2019; Vu et al., 2020) and PROMPTTUNING (Vu et al., 2022), and has been successfully applied to the zero-shot cross-lingual transfer setting (Phang et al., 2020; Maurya et al., 2021) for MODELTUNING. In Appendix F, we show that intermediate tuning does not give reliable gains for XGEN.\nFactorized prompts: Inspired by the MAD-X (Pfeiffer et al., 2020) adapter-based framework that learns modular language and task representations to adapt a multilingual model to arbitrary tasks and\n17In our preliminary experiments, \u03ba = 1 performed best among a range of values {1, 5, 10, 30, 50}. We conjecture that a value of \u03ba > 1 would prevent the model from focusing on the main task of summarization as more unsupervised data is added.\nlanguages, we propose a novel method, dubbed \u201cfactorized prompts\u201d (FP) and specifically designed for PROMPTTUNING. We attempt to decompose a soft prompt into \u201ctask\u201d and \u201clanguage\u201d components that can be recombined in novel pairings (see Figure 5) with the goal of learning soft prompts that consist of disentangled and interpretable components. Unlike MAD-X, which learns language and task adapters separately for each language and each task, we learn language and task sub-prompts jointly for all languages and tasks. While we do not actively incentivize disentanglement, our multitask multilingual pretraining procedure encourages the general language and task-specific knowledge to be stored in separate regions of the prompt. Intuitively, we vary languages while keeping the task sub-prompt fixed to train one side of the prompt, and vary tasks while keeping the language subprompt fixed to learn the other side.\nWe use mC4 data for all 18 WIKILINGUA-0 languages to create 7 unsupervised tasks per language. We randomly initialize language and task sub-prompts, each 50 tokens long. For each training example in our multi-task multilingual mixture, the relevant task and language sub-prompts are concatenated to form a full 100-token prompt. This training yields a set of learned language and task sub-prompts.18 Next, we train a new task subprompt on WIKILINGUA-0 English summarization while using a frozen copy of the English language sub-prompt. Finally, when performing inference in another language, we replace the English subprompt with the target language sub-prompt, while\n18As our mixture of tasks is large, we tuned for 200,000 steps for this training procedure.\ncontinuing to use the learned summarization subprompt. To ablate the impact of the target language sub-prompt, we also report the performance using the English sub-prompt for all languages (FP-EN).\nWe use 7 unsupervised tasks per language, including: the PREFIX LM, SPAN CORRUPTION, and I.I.D. DENOISING tasks described in Raffel et al. (2020); LM, the causal left-to-right LM task with no context provided, i.e., the encoder\u2019s input is empty; MISSING PREFIX PREDICTION, predicting a missing prefix from the input; N-TOKEN PREFIX PREDICTION, copying the first n-tokens of the input; and MISSING NTOKEN PREFIX PREDICTION, predicting the missing n-token prefix of the input. When training on WIKILINGUA-0, we initialize the task sub-prompt with the learned SPAN CORRUPTION task sub-prompt.\nTo confirm that language-specific prompts trained in this way encode meaningful differences between languages, we visualize a clustered heatmap of the cosine similarities between prompts trained on a classic LM task for each language in mC4. We observe meaningful clusters reflecting both linguistic and geographical similarities across languages. See Appendix D for details."
+        },
+        {
+            "heading": "3.2 Results and Discussion",
+            "text": "Mixing in multilingual data prevents catastrophic forgetting: In Figure 6, we observe that mixing in unsupervised multilingual data helps prevent catastrophic forgetting in all conditions, increasing the likelihood of predicting text in the target language. With MODELTUNING, this improved language accuracy reliably translates into higher end task performance (SP-ROUGE). For PROMPTTUNING, mixing provides gains for non-Latin script languages (RU and TH) where catastrophic forgetting is more severe; for Latin-script languages (FR and VI), mixing harms the overall summarization quality, despite achieving higher language accuracy.\nMixing in multilingual data in all WIKILINGUA languages leads to similar results, with a marginal drop in performance. Thus, if the desired target language is known ahead of time, the simpler strategy of mixing in just that language should be preferred. However, in cases where the inference language is unknown, mixing many languages is also effective.\nFactorized prompts are helpful for overcoming severe catastrophic forgetting: Factorized prompts are successful at improving target language accuracy in all conditions. However, this does not always translate to higher SP-ROUGE.\nWhen language accuracy is already relatively high (for Latin-script languages, and for XXL models), factorized prompts are not helpful. However, in settings where vanilla PROMPTTUNING shows the most severe forgetting (e.g., at BASE size, on non-Latin script languages), factorized prompts provide large gains, similar to or exceeding our mixing approach."
+        },
+        {
+            "heading": "4 Qualitative Analysis",
+            "text": "To better understand qualitative differences between the solutions reached by MODELTUNING and PROMPTTUNING, two authors who were native speakers of Vietnamese and Hindi inspected 50 predictions of each method at the XXL model size.\nFor both languages, we observed that the MODELTUNING predictions were much more likely to include \u201ccode-switching\u201d, alternating between English and the target language, sometimes several times within a single sentence, as seen in Table 1. By comparison, the PROMPTTUNING predictions were more likely to use a consistent language throughout\u2014typically staying entirely within the target language, but for some predictions resorting entirely to English. For both methods and both languages, we found code-switching predictions to generally be well-formed, in the sense that a bilingual speaker could extract the intended meaning, and that it served as a reasonable summary.\nFor Hindi, the PROMPTTUNING method showed lower mean SP-ROUGE scores than MODELTUNING (17.9 vs. 23.1), and had higher variances across runs (std: 5.1 vs. 0.7). Manual inspection showed that the lower-scoring PROMPTTUNING runs had far more predictions that were entirely English, explaining the lower SP-ROUGE scores.\nFor Vietnamese, PROMPTTUNING achieved higher\nSP-ROUGE than MODELTUNING (38.0 vs. 34.0), with low variance in both cases (std: \u2264 0.5). On inspection, we found that most PROMPTTUNING predictions were entirely in Vietnamese, whereas MODELTUNING predictions typically contained at least some English. The PROMPTTUNING summaries tended to be shorter, but were often judged to be as good or better than the ground truth summaries. The MODELTUNING summaries tended to be a bit longer. If mentally translating any English words back to Vietnamese, the quality was judged to be similar to the prompt tuning summaries, suggesting that the lower SP-ROUGE score is primarily due to the presence of intervening English."
+        },
+        {
+            "heading": "5 Related Work",
+            "text": "Mixing unlabeled multilingual data in during finetuning can be viewed a version of rehearsal (Robins, 1995), commonly used to mitigate catastrophic forgetting. Related work has used this mixing (Xue et al., 2021; Shakeri et al., 2021) to combat \u201caccidental translation\u201d, a symptom of English overfitting. However, these works are concerned with MODELTUNING, whereas we apply it to PROMPTTUNING. Other methods of combatting catastrophic forgetting include the slowing (or stopping) of updates for some parameters. Kirkpatrick et al. (2017) reduce the learning rate of parameters important for\nearlier tasks as they train on new ones. Maurya et al. (2021) similarly stop learning for some parameters by only training input and output layers. In the context of prompt tuning, Qin and Joty (2022) address catastrophic forgetting during continual learning of new domains by combining the new training data with pseudo-labeled data of previous domains.\nPrevious work has also explored intermediate adaptation of pre-trained models, which has been shown to be effective for MODELTUNING (Howard and Ruder, 2018; Phang et al., 2019; Vu et al., 2020, 2021) and PROMPTTUNING (Vu et al., 2022). Phang et al. (2020) apply intermediate adaptation in the multilingual domain, but use English in the adaption instead of the target language. Maurya et al. (2021) use a cross-lingual intermediate task. Unlike our task, theirs is designed to closely match the downstream task. Several works use intermediate adaptation to create a model that is better in the zero- or few-shot settings (Wei et al., 2022; Sanh et al., 2022; Min et al., 2022), but these target generalization to new tasks, whereas we focus on generalizing to new languages within one task.\nMany parameter-efficient adaption methods exist (Rebuffi et al., 2017; Houlsby et al., 2019; Karimi Mahabadi et al., 2021; Zaken et al., 2021; Hu et al., 2022) and some have shown strong performance under domain shift (Lester et al., 2021; Li and Liang, 2021). We chose PROMPTTUNING due to its simplicity and the localization of parameters\u2014 making the implementation of factorized prompts easy. See Liu et al. (2021), He et al. (2022), and Liu et al. (2022) for detailed discussion of the differences between these methods.\nOther work explores cross-lingual transfer learning with parameter-efficient methods. Zhao and Sch\u00fctze (2021) find that soft prompts can effectively be used in cross-lingual settings, but their work is constrained to classification. Pfeiffer et al. (2020) use adapters rather than prompts and leverage parameter-efficient learning to create separate language and task understanding modules that can be combined at inference time.\nThere has been recent interest in cross-lingual generation. Maurya et al. (2021) and Chi et al. (2020) evaluate their methods using cross-lingual generation, including summarization as we do. However, Chi et al. (2020) use parallel data during pre-training to \u201calign\u201d representations across languages during pre-training while our approach does not."
+        },
+        {
+            "heading": "6 Conclusion",
+            "text": "In this work, we explored how different adaptation methods fare on the challenging \u201cXGEN\u201d task of zero-shot cross-lingual summarization. While many methods struggled with catastrophic forgetting (outputting English rather than the target language), we observed two factors helped to mitigate this problem: (1) increasing model scale, and (2) decreasing the number of parameters tuned during adaptation. When all of a model\u2019s weights are tuned on English (MODELTUNING), forgetting is quick and severe. By contrast, limiting the tunable parameters to a smaller soft prompt (PROMPTTUNING) helps to combat forgetting, though prompt size is an important variable to control.\nTo further close the gap with supervised methods, we explored two adaptation techniques\u2014one entirely novel, and one that has been used before, but not in combination with parameter-efficient methods like PROMPTTUNING. We find that mixing in unsupervised multilingual data is always helpful. Our novel approach, \u201cfactorized prompts\u201d, is helpful at smaller model sizes, but has no benefit at larger sizes. We hope that future work will continue to explore XGEN tasks including WIKILINGUA-0, and develop stronger zero-shot adaptation techniques to allow multilingual models to reliably generate coherent text in any target language."
+        },
+        {
+            "heading": "7 Limitations",
+            "text": "Our work focuses on a single XGEN task, WIKILINGUA-0 summarization. In future work, it would be valuable to see if our findings generalize to additional domains and tasks, including those beyond summarization.\nWIKILINGUA-0 is not a traditional summarization task. Rather than news articles, the input documents are how-to guides, and the summaries are \u201cheadings\u201d for each step, which may be more terse than a traditional summary. We observed some minor data quality issues in WIKILINGUA-0, including HTML code present in some target strings, and artifacts of machine translation evident in some non-English documents. Nevertheless, we believe that WIKILINGUA-0 is a meaningful and challenging XGEN task, with the notable advantage of covering a range of high- and low-resource languages from diverse language families and with diverse scripts.\nIn evaluating parameter-efficient methods, we focused on PROMPTTUNING due to its simplicity. There are a growing number of other parameter-\nefficient methods that could also be tested, including ADAPTERS (Rebuffi et al., 2017; Houlsby et al., 2019), BITFIT (Zaken et al., 2021), PREFIXTUNING (Li and Liang, 2021), (IA)3 (Liu et al., 2022), and many more; see Liu et al. (2021), He et al. (2022), and Liu et al. (2022) for detailed discussion of the differences between these methods. We expect many of the benefits of tuning fewer parameters to persist across methods, but this remains to be explored."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "We thank Thibault Sellam, Sebastian Gehrmann, Kalpesh Krishna, Marzena Karpinska, and the members of the UMass NLP group for helpful discussion and feedback. We would also like to thank Grady Simon, Xavier Garcia, and Douglas Eck for their comments on this manuscript. Vu and Iyyer are partially supported by awards IIS-1955567 and IIS-2046248 from the National Science Foundation (NSF)."
+        },
+        {
+            "heading": "A Evaluation on zero-shot cross-lingual benchmarks",
+            "text": "From Table 2 to Table 8, we show our results for MODELTUNING and PROMPTTUNING across different zero-shot cross-lingual benchmarks. Overall, we find that MODELTUNING typically performs better than PROMPTTUNING, although PROMPTTUNING at scale (i.e., XXL) matches the performance of MODELTUNING on English and can yield better results on some languages."
+        },
+        {
+            "heading": "B Measuring the correlation between SP-RG and human judgments",
+            "text": "To evaluate how well our proposed SP-ROUGE metric correlates with human judgments, we use the MULTISUMM EVAL dataset introduced by Koto et al. (2021), which is a manually-annotated multilingual resource for summarization evaluation with 4,320 human annotations on FOCUS (precision) and COVERAGE (recall) between machine-generated summaries and ground-truth summaries. We compare SP-ROUGE to BLEURT (Sellam et al., 2020), which is a learned evaluation metric based on BERT (Devlin et al., 2019). Table 9 shows the Pearson correlation coefficient between these metrics and human judgments across 8 MULTISUMM EVAL languages, including German (DE), English (EN), Spanish (ES), French (FR), Indonesian (ID), Russian (RU), Turkish (TR), and Mandarin Chinese (ZH). Overall, we found that the performance of SP-ROUGE and the more computationally expensive BLEURT metric were similar. Specifically, SP-ROUGE achieved an average FOCUS score of 0.68 and an average COVERAGE score of 0.65, whereas BLEURT achieved 0.68 and 0.70, respectively. Figure 7 demonstrates the linear relationship between SP-ROUGE-LSUM vs FOCUS scores on French."
+        },
+        {
+            "heading": "C Zero-shot evaluation results on",
+            "text": "WIKILINGUA-0\nOur zero-shot evaluation results on WIKILINGUA-0 for French (FR), Vietnamese (VI), Russian (RU), and Thai (TH) are shown in Table 10. See Table 8\nfor results across all target languages. Our results suggest that WIKILINGUA-0 is a challenging task for both MODELTUNING and PROMPTTUNING. As model size increases, PROMPTTUNING usually produces better results than MODELTUNING when there is a significant language shift at inference time. Longer prompts help to better learn the English summarization task. However, the increased capacity leads the model to forgets other languages."
+        },
+        {
+            "heading": "D Language-Specific Prompt Clustering Analysis",
+            "text": "To confirm that language-specific prompts trained on an LM task encode meaningful differences between languages, we train 107 prompts, one for each language in the mC4 corpus. Specifically, we train prompts for the mT5-BASE model, with a prompt length of 1, for 10K training steps, using a batch size of 32. The training task consists of classic causal language modeling, with an empty string fed as inputs to the encoder, and the document text passed as targets. Each prompt is trained exclusively on data from a single language bucket; however, we note that mC4 contains a non-trivial number of language ID errors, particularly for lowerresource languages (Kreutzer et al., 2022).\nFigure 8 shows a clustered heatmap of the cosine similarities between the trained prompts. We observe a number of interpretable clusters that give us confidence that the learned prompts encode meaningful language representations. For example, the leftmost 25 languages form a visible cluster and are all nearly all languages of Europe,19 with meaningful sub-clusters for different European regions: Northern (NO, SV, DA, NL), Central (CS, PL, SK, LT, SL), South-Western (ES, PT, FR, IT) and Eastern (KK, AZ, TR, BG, MK, BE, UK). Another prominent cluster covers languages of India, Pakistan and Nepal (ML, TE, NE, KA, KN, GU, HI, SI, BN, TA), despite the fact that these languages cover different linguistic families and are written with different scripts. While geography seems to be the primary factor influencing prompt similarity, linguistic relationships also play a role. For instance, we observe that Finnish (FI) and Hungarian (HU), both Finno-Ugric languages, form a cluster despite their geographic distance. Similarly, Igbo (IG), spoken mainly in\n19The only exceptions are Vietnamese (VI) and Indonesian (ID), which are both written with Latin(-derived) scripts. We also note that Indonesian has a high language ID error rate within mC4.\nNigeria, is clustered nearby Haitian Creole (HT), whose grammar derives from Igbo."
+        },
+        {
+            "heading": "E Mitigating catastrophic forgetting",
+            "text": "Table 11 shows our experiment results for different approaches described in \u00a73.1. As can been seen, mixing in unlabeled multilingual data (MIXUNSUP/MIX-UNSUP-ALL) helps prevent catastrophic forgetting for MODELTUNING. Intermediate tuning (IT-GIGAWORD/IT-LM) does not result in reliable gains. Finally, factorized prompts (FP-EN/ FP) lead to an improvement in target language accuracy, and an improvement in SP-RG in cases where vanilla\nPROMPTTUNING shows the worst performance.\nF Intermediate tuning\nAs an adaptation step, we perform model or prompt tuning on an intermediate task before training on WIKILINGUA-0. Intermediate tuning has been used to boost performance on English tasks for both MODELTUNING (Phang et al., 2019; Vu et al., 2020) and PROMPTTUNING (Vu et al., 2022), and has been successfully applied to the zero-shot cross-lingual transfer setting (Phang et al., 2020; Maurya et al., 2021) for MODELTUNING. Maurya et al. (2021) show that intermediate tuning on an auxiliary unsuper-\nvised task from the target language is helpful in conjunction with freezing some model components for MODELTUNING. Previous work has used an auxiliary task designed to be close to the main task, while we simply use mC4 data. For each target language we create a causal, left-to-right LM task by providing no context, i.e., the encoder\u2019s input is empty (IT-LM). To further explore the effect of continued training on English data, we include an additional experiment where the GIGAWORD (Graff et al., 2003) summarization dataset is used as the intermediate task (IT-GIGAWORD).20\nIntermediate tuning does not give reliable gains: As can be seen in Table 11, intermediate tuning on English summarization (IT-GIGAWORD) improves English performance, but generally hurts XGEN capabilities. For MODELTUNING, it exacerbates catastrophic forgetting and harms overall performance across all model sizes. For PROMPTTUNING,\n20We found that additional tuning was helpful for intermediate tuning on large datasets. As such, we performed 200,000 steps during tuning on an intermediate task and selected the best prompt checkpoint based on validation performance on that task.\nEnglish intermediate tuning provides small gains at BASE size, but is harmful at XXL size. Intermediate tuning on an LM task in the target language (IT-LM) has a neutral or negative effect in most cases, running somewhat counter to the findings of Maurya et al. (2021).21 Compared to directly mixing in unlabeled multilingual data, intermediate tuning has little benefit on language accuracy. This smaller effect is to be expected, given that the final stage of English-only training is still ample opportunity to overfit on English and catastrophically forget other languages.\n21Note, however that their unsupervised task was designed to be well-aligned with their downstream tasks of choice."
+        }
+    ],
+    "title": "Overcoming Catastrophic Forgetting in Zero-Shot Cross-Lingual Generation",
+    "year": 2022
+}

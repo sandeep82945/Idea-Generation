@@ -1,0 +1,139 @@
+{
+    "abstractText": "For motion forecasting task, methods using vectorized input have been shown to be more efficient than methods using rasterized input, and can get a better performance. Our motion forecasting model also uses vectorized data as input. We call our motion forecasting model BANet, which means boundary-aware network, and it is a variant of LaneGCN[3]. We believe that only using lane centerline as input to get the embedding feature of vector map nodes is not enough. The lane centerline can only provide the topology of the lanes, and other elements of the vector map also contain rich information. For example, the lane boundary can provide traffic rule constraint information such as whether it is possible to change lanes which is very important. Therefore, we believe a motion forecasting model can get a better performance by encoding more vector map elements and do feature fusion on them. We report our results on the 2022 Argoverse2 Motion Forecasting challenge and rank 1st on the test leaderboard.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Chen Zhang"
+        },
+        {
+            "affiliations": [],
+            "name": "Honglin Sun"
+        },
+        {
+            "affiliations": [],
+            "name": "Chen Chen"
+        },
+        {
+            "affiliations": [],
+            "name": "Yandong Guo"
+        }
+    ],
+    "id": "SP:fadc05f345a636e5368cff5c54a456736d7f9c23",
+    "references": [
+        {
+            "authors": [
+                "M.-F. Chang",
+                "J.W. Lambert",
+                "P. Sangkloy",
+                "J. Singh",
+                "S. Bak",
+                "A. Hartnett",
+                "D. Wang",
+                "P. Carr",
+                "S. Lucey",
+                "D. Ramanan",
+                "J. Hays"
+            ],
+            "title": "Argoverse: 3d tracking and forecasting with rich maps",
+            "venue": "In Conference on Computer Vision and Pattern Recognition (CVPR),",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "T. Dozat"
+            ],
+            "title": "Incorporating nesterov momentum into adam",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "M. Liang",
+                "B. Yang",
+                "R. Hu",
+                "Y. Chen",
+                "R. Liao",
+                "S. Feng",
+                "R. Urtasun"
+            ],
+            "title": "Learning lane graph representations for motion forecasting",
+            "venue": "In European Conference on Computer Vision,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "I. Loshchilov",
+                "F. Hutter"
+            ],
+            "title": "Sgdr: Stochastic gradient descent with warm restarts",
+            "venue": "arXiv preprint arXiv:1608.03983,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "B. Wilson",
+                "W. Qi",
+                "T. Agarwal",
+                "J. Lambert",
+                "J. Singh",
+                "S. Khandelwal",
+                "B. Pan",
+                "R. Kumar",
+                "A. Hartnett",
+                "J.K. Pontes",
+                "D. Ramanan",
+                "P. Carr",
+                "J. Hays"
+            ],
+            "title": "Argoverse 2: Next generation datasets for self-driving perception and 3 forecasting",
+            "venue": "In Proceedings of the Neural Information Processing Systems Track on Datasets and Benchmarks (NeurIPS Datasets and Benchmarks 2021),",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "BANet: Motion Forecasting with Boundary Aware Network\nChen Zhang1 Honglin Sun1,2 Chen Chen1 Yandong Guo1 1OPPO Research Institute. 2Waseda University. {zhangchen4, chenchen, guoyandong}@oppo.com\nhsun@akane.waseda.jp\nFigure 1: The overall network structure of BANet.We use Encoder Net to extract the embeddings of the vectorized data. Then Fusion Net fuses the embedding features. Trajectory Decoder Net outputs the final predicted future trajectories."
+        },
+        {
+            "heading": "1. Method",
+            "text": "For motion forecasting task, methods using vectorized input have been shown to be more efficient than methods using rasterized input, and can get a better performance. Our motion forecasting model also uses vectorized data as input.\nWe call our motion forecasting model BANet, which means boundary-aware network, and it is a variant of LaneGCN[3]. We believe that only using lane centerline as input to get the embedding feature of vector map nodes is not enough. The lane centerline can only provide the topology of the lanes, and other elements of the vector map also contain rich information. For example, the lane boundary can provide traffic rule constraint information such as whether it is possible to change lanes which is very important. Therefore, we believe a motion forecasting model can get a better performance by encoding more vector map elements and do feature fusion on them. We report our results\non the 2022 Argoverse2 Motion Forecasting challenge and rank 1st on the test leaderboard."
+        },
+        {
+            "heading": "1.1. Architecture",
+            "text": "Our motion forecasting model consists of three parts: Encoder Net, Fusion Net, and Trajectory Decoder Net. We use the Encoder Net to extract embedding from different vectorized data. And then we use the Fusion Net to fuse and exchange information between actors and vector map. Finally we use the Trajectory Decoder Net to decode multiple trajectories. The whole network is shown in Fig.1. Encoder Net: We divide the vectorized data into three parts: historical observable variables of actors, lane centerlines, and lane boundaries. Correspondingly, the Encoder Net also consists of three parts. For the historical observable variables of actors, including coordinate, heading angle, and velocity, we use 1D CNN combined with a max pooling layer to extract features. The coordinate, heading angle and\nar X\niv :2\n20 6.\n07 93\n4v 3\n[ cs\n.C V\n] 1\nJ ul\n2 02\n2\nvelocity first pass through a 1D CNN resnet block respectively, and then the output features are added together and then pass through more 1D CNN resnet blocks and a FPN. For the lane centerlines and lane boundaries of the vector map, we use MLP to extract features respectively. The lane graph convolution structure proposed in LaneGCN[3] is an effective method to update information on the lane centerlines according to the topological relationships, but for different lane centerline nodes, the influence of each category of adjacency relationship is different. Therefore, we add learnable weights to lane graph convolution for each category of the adjacency relationship, thereby we can generate a set of different weights for different lane centerline nodes to represent the influence of the adjacency relationship of different categories. Experiments show that this improvement has positive benefits. Fusion Net: As shown in the Fig.1, our Fusion Net consists of four sub-fusion blocks. First, the features of the lane boundaries are fused into the lane centerlines through the matching relationship between the lane boundary and the lane centerline, so that each node on the lane centerline can get the traffic rule constraints provided by the nearby boundary. Secondly, the features of the lane centerline are fused into the features of the actors. And then the features of the boundary are fused into the actors, so that the actors can know the nearby lane constraints. Finally, feature interactions are performed between actors in the scenario. Except for the first sub-fusion block, other sub-fusion blocks are implemented by the distance attention module which is proposed in LaneGCN[3]. Trajectory Decoder Net As mentioned in many related works, the target point of the predicted trajectory contain most of the trajectory\u2019s intent information, so we divide the trajectory decoder net into two stages. In the first stage, we regress the target point. And in the second stage, we encode the target points regressed in the first stage and concatenate them with the features of the actors to decode the complete trajectory points. For each agent, we get six future trajectories with confidence."
+        },
+        {
+            "heading": "1.2. Loss Function",
+            "text": "Since we decompose the prediction task into two subtasks: target prediction and trajectory completion, the final loss consists of three parts: trajectory confidence loss, target regression loss, and trajectory regression loss. The calculation details are as follows."
+        },
+        {
+            "heading": "1.2.1 Trajectory confidence loss",
+            "text": "For the confidence loss, we dropped predictions with minFDE > 2m during training, in which case, we consider the model does not yield a good prediction due to the lack of encoded information.\nWe use a max entropy model to assign the ground truth confidence score to each trajectory to get the ground truth distribution.\nc(s) = exp(\u2212D(s, s\u0302))\u2211N\ni=1 exp(\u2212D(si, s\u0302)) , (1)\nwhere s is predicted trajectories, s\u0302 is the ground truth trajectory. For each time step in the trajectory si, the displacement error D(si, s\u0302) = max(\u2016si,0 \u2212 s\u0302i,0\u20162, \u2016si,1 \u2212 s\u0302i,1\u20162, ..., \u2016si,T \u2212 s\u0302i,T \u20162)\nWe utilize Kullback-Leibler Divergence to calculate the loss, aiming to make the predicted probability distribution close to the ground truth distribution.\nLconf = 1\nN N\u2211 i LKL(ci, c\u0302i), (2)\nwhere c and c\u0302 are the predicted confidence scores and the ground truth scores respectively."
+        },
+        {
+            "heading": "1.2.2 Target regression loss",
+            "text": "For the target regression, we only regress target points of the actors that have observations at the last time step, ensuring that the task of the target prediction net is always to predict the coordinates on the same time step.\nLtarget = 1\nN N\u2211 i Lreg(gi, g\u0302i), (3)\nwhere, Lreg is the smooth `1 loss over the offset between the predicted target points g and the ground truth target points g\u0302."
+        },
+        {
+            "heading": "1.2.3 Trajectory regression loss",
+            "text": "For the trajectory regression, we consider only the coordinates before the last time steps. The coordinate of each time step is denoted with st. Similar to the target regression loss, we adopt the smooth `1 loss.\nLtraj = 1\nN(T \u2212 1) N\u2211 i T\u22121\u2211 t Lreg(si,t, s\u0302i,t) (4)"
+        },
+        {
+            "heading": "1.2.4 Total loss",
+            "text": "Our total loss is a linear combination of the above loss terms. We divide the training process into two stages. The first stage is to train the network except the trajectory completion module. Since at the early stage of training, the trajectory completion module cannot obtain accurate target point features from the target prediction net. Thus, similarly, only the coordinates of the target points are considered for calculating the confidence loss at this stage.\nLS1 = Lconf + Ltarget. (5)\nIn the second stage, we add the trajectory completion module to train the whole network.\nLS2 = Lconf + Ltarget + Ltraj. (6)"
+        },
+        {
+            "heading": "1.3. Implementation details",
+            "text": "Our model is trained on the training set with a batch size of 32. We adopt NAdam [2] optimizer and cosine annealing with warm restart [4] learning rate, making the learning rate periodically decay and restart between 1 \u00d7 10\u22123 and 1\u00d7 10\u22125. Specifically, we let the learning rate restart at the epoch 6 for the first time, and double the period after each restart. The training procedure will last for 4 restart periods (90 epochs) in total, where the second training stage starts at the first restart. At the end of the last period, we continue training the model with the minimum learning rate (1\u00d7 10\u22125) until epoch 100 to make the network stable."
+        },
+        {
+            "heading": "1.4. Ensemble",
+            "text": "Ensemble is an important trick to refine the final prediction results. We selected 7 sub-models with different learning rates and distance attention thresholds, which means that for each agent, we have 42 predicted future trajectories. Then we use k-means to cluster the 42 target points and set the number of cluster centers to six. The final six trajectories are the average values calculated by multiplying the original trajectories contained in the six clusters by the weightW respectively. It should be noted that the result of multiplying the confidence c of each original trajectory by the weightW , as the sampling weight of k-means, will get a better result than the general k-means clustering. The weightW is calculated according to the value of the brierminFDE \u03b1 of the original models used for clustering, and the calculation formula is as follows:\nWi = ci \u2217 exp(\u2212\u03b1j)\u2211N\nj=1 exp(\u2212\u03b1j)) (7)\nN is the number of submodels used for clustering, and for each trajectory used for clustering, its corresponding alpha\nis the value of the brier-minFDE of the model to which it belongs."
+        },
+        {
+            "heading": "2. Experiments",
+            "text": "Because the performance validation of our BANet was initially performed on the Argoverse1 dataset[1], our experimental records consist of two stages, the Argoverse1 dataset[1] and the Argoverse2 dataset[5]. The experimental results on the testset of the Argoverse1 dataset[1] are shown in Table 1, and the experimental results on the testset of the Argoverse2 dataset[5] are shown in Table 2.\nHere we compare the performance of BANet and LaneGCN[3] on the testset of Argoverse1 dataset[1]. Because the vector map of the Argoverse1 dataset[1] does not contain lane boundary, and the number of observable variables for actors is also less than that of the Argoverse2 dataset[5]. Therefore, the BANet we tested on the Argoverse1 dataset[1] does not contain boundary encoder and fusion, nor does its input contain heading angle and velocity. We call this model BANet(lite)."
+        }
+    ],
+    "title": "BANet: Motion Forecasting with Boundary Aware Network",
+    "year": 2022
+}

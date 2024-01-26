@@ -1,0 +1,238 @@
+{
+    "abstractText": "In this paper we study the effects of quantization in DNN training. We hypothesize that weight quantization is a form of regularization and the amount of regularization is correlated with the quantization level (precision). We confirm our hypothesis by providing analytical study and empirical results. By modeling weight quantization as a form of additive noise to weights, we explore how this noise propagates through the network at training time. We then show that the magnitude of this noise is correlated with the level of quantization. To confirm our analytical study, we performed an extensive list of experiments summarized in this paper in which we show that the regularization effects of quantization can be seen in various vision tasks and models, over various datasets. Based on our study, we propose that 8-bit quantization provides a reliable form of regularization in different vision tasks and models.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "MohammadHossein AskariHemmat"
+        },
+        {
+            "affiliations": [],
+            "name": "Reyhane Askari Hemmat"
+        },
+        {
+            "affiliations": [],
+            "name": "Alex Hoffman"
+        },
+        {
+            "affiliations": [],
+            "name": "Ivan Lazarevich"
+        },
+        {
+            "affiliations": [],
+            "name": "Ehsan Saboori"
+        },
+        {
+            "affiliations": [],
+            "name": "Olivier Mastropietro"
+        },
+        {
+            "affiliations": [],
+            "name": "Sudhakar Sah"
+        },
+        {
+            "affiliations": [],
+            "name": "Yvon Savaria"
+        },
+        {
+            "affiliations": [],
+            "name": "Jean-Pierre David"
+        }
+    ],
+    "id": "SP:19af858438c823623807bf30c7a5ec41f45390f8",
+    "references": [
+        {
+            "authors": [
+                "A. Abdolrashidi",
+                "L. Wang",
+                "S. Agrawal",
+                "J. Malmaud",
+                "O. Rybakov",
+                "C. Leichner",
+                "L. Lew"
+            ],
+            "title": "Pareto-optimal quantized resnet is mostly 4-bit",
+            "venue": "In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M. Alizadeh",
+                "A. Behboodi",
+                "M. van Baalen",
+                "C. Louizos",
+                "T. Blankevoort",
+                "M. Welling"
+            ],
+            "title": "Gradient `1 regularization for quantization robustness",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "W. Chen",
+                "H. Qiu",
+                "J. Zhuang",
+                "C. Zhang",
+                "Y. Hu",
+                "Q. Lu",
+                "T. Wang",
+                "Y. Shi",
+                "M. Huang",
+                "X. Xu"
+            ],
+            "title": "Quantization of deep neural networks for accurate edge computing",
+            "venue": "J. Emerg. Technol. Comput. Syst.,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Choi",
+                "Z. Wang",
+                "S. Venkataramani",
+                "Chuang",
+                "P.I.-J",
+                "V. Srinivasan",
+                "K. Gopalakrishnan"
+            ],
+            "title": "PACT: Parameterized clipping activation for quantized neural networks, 2018",
+            "venue": "URL https://openreview.net/forum? id=By5ugjyCb",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "S.K. Esser",
+                "J.L. McKinstry",
+                "D. Bablani",
+                "R. Appuswamy",
+                "D.S. Modha"
+            ],
+            "title": "Learned step size quantization",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D. Hendrycks",
+                "T. Dietterich"
+            ],
+            "title": "Benchmarking neural network robustness to common corruptions and perturbations",
+            "venue": "Proceedings of the International Conference on Learning Representations,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Hochreiter",
+                "J. Schmidhuber"
+            ],
+            "title": "Simplifying neural nets by discovering flat minima",
+            "venue": "Advances in neural information processing systems,",
+            "year": 1994
+        },
+        {
+            "authors": [
+                "L. Hou",
+                "J.T. Kwok"
+            ],
+            "title": "Loss-aware weight quantization of deep networks",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "L. Hou",
+                "Q. Yao",
+                "J.T. Kwok"
+            ],
+            "title": "Loss-aware binarization of deep networks",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "I. Hubara",
+                "M. Courbariaux",
+                "D. Soudry",
+                "R. El-Yaniv",
+                "Y. Bengio"
+            ],
+            "title": "Quantized neural networks: Training neural networks with low precision weights and activations",
+            "venue": "J. Mach. Learn. Res.,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "https://arxiv. org/abs",
+                "K. 2018b. Zhang",
+                "M. Yin",
+                "Wang",
+                "Y.-X"
+            ],
+            "title": "Why quantization",
+            "year": 2018
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1. Introduction",
+            "text": "Deep neural network (DNN) quantization has been an active research topic in the past few years. Quantization is the task of approximating high precision (floating point) weights and activations of a model with lower bit resolution counterparts (usually 1 to 8 bit integers). Quantization can be done after (post training quantization) or during training (quantization aware training). Although both methods can compress the model and reduce overall execution time, at the cost of model accuracy, post training quantization usually takes less time to quantize a model. On the other hand, quantization aware training usually requires a full training session and with a moderate quantization level (int8) can produce quantized models with little to no accuracy loss compared to their full precision counterparts. In fact, as we will discuss in Section 2, there are many existing works\n1Ecole Polytechnique Montreal 2Mila, Universite\u0301 de Montreal 3Deeplite Inc., Montreal. Correspondence to: MohammadHossein AskariHemmat <m.h.askari.hemmat@gmail.com>.\nO bj\nec tiv\nen es\ns L\nos s\nV al\nue\nEpoch Number\n0.022\n0.026\n0.03\n0.034\n0.038\n0 40 80 120 ep n r\nob je\nct ne\nss lo\nss v\nal ue\n160 200 240\nFigure 1. Validation objective loss of 4-bit quantized , 8-bit quantized and full precision model for the YOLOv5n model on the VOC dataset. This figure illustrates that unlike the quantized model, the full precision model exhibits heavy overfitting. We believe that the quantized model has better generalization performance due to its regularization effect.\nclaiming that quantization aware training produced accuracy improvements compared to some of the best full precision models. In these studies, the authors usually attribute such accuracy gains to the regularization effect of quantization. This has motivated us to explore how quantization affects training. In this work, we first hypothesize the regularization effect of quantization. Moreover, we hypothesize that this regularization effect is correlated with the quantization level. To confirm our hypothesis, we analytically explore how quantization noise propagates in a network at training time, and how the quantization level is correlated with the amount of regularization. We then empirically explore the regularization effect of quantization by applying different quantization aware training methods on different models and datasets with different quantization levels. In both analytical and empirical studies, we confirm our initial hypothesis."
+        },
+        {
+            "heading": "2. Background",
+            "text": "The regularization effect of quantization has previously been reported in the literature. We have categorized earlier works into three main lines of work, which we will review briefly in the following subsections.\nar X\niv :2\n20 6.\n12 37\n2v 2\n[ cs\n.C V\n] 2\n7 Ju\nn 20\n22"
+        },
+        {
+            "heading": "2.1. Effect of Quantization on Accuracy Improvements",
+            "text": "In (Courbariaux et al., 2015), one of the first quantization methods for DNNs, the authors empirically show that modern deep learning optimization techniques such as stochastic gradient descent are compatible with noisy weights, as they appear in quantization. They also empirically show that noisy weights provide a form of regularization. They confirm their hypothesis by achieving state-of-the-art results on MNIST, CIFAR-10 and SVHN datasets. Similar to this work, authors in (Hubara et al., 2017), argue that weight quantization is a form of noise injection to weights and as shown in DropConnect (Hou & Kwok, 2018), this noise injection can improve the generalization performance. However, both studies are only limited to small-scale classification tasks. Their studies are also limited to one quantization technique. Furthermore, their hypotheses lack analytical study.\nIn (Abdolrashidi et al., 2021) the authors study the effect of quantization on accuracy and provide an analysis of the regularization effect of quantization. Their study is limited to showing a generalization gap between a quantized model with 8 and 4 bit precision and full precision models on the Imagenet dataset on Resnet50. On the other hand, in addition to their work, they reported the generalization gap of different quantization methods. However, in their experiments, the regularization effect of quantization is not investigated. Furthermore, they did not explain whether this generalization gap is coming from quantization or whether they have used other regularization techniques that might have affected the overall results.\nApart from the papers above, there are many other works reporting accuracy improvement after quantization, (Xu et al., 2018a; Louizos et al., 2019; Chen et al., 2021; Xu et al., 2018b; Andri et al., 2018; Wang et al., 2019; Liu et al., 2020; Mishchenko et al., 2019). However, to the best of our knowledge, none of them provided analytical or empirical studies and the authors justified the boost in performance (accuracy) with a conjectured regularization effect of quantization."
+        },
+        {
+            "heading": "2.2. Analytical Studies",
+            "text": "As presented in 2.1, the regularization effect of quantization has been observed in previous works. In the following, we present three papers that provide an analytical study on how quantization affects training.\nIn (Merolla et al., 2016), the authors claim that applying a constraint on the weights can act as a regularizer. They investigate how DNNs are robust to different types of weight distortion. As an example, for quantization, they studied the effect of binarization proposed in (Courbariaux et al., 2015) on training. Using proximal methods, the authors\nshowed that applying weight clipping during training can be modeled as a type of regularization that penalizes weights outside the unit ball of the `\u221d norm. Their study is limited to applying binarization on weights and they do not explain how different levels of weight quantization affect training. Moreover, like (Courbariaux et al., 2015) , they only investigate the regularization effect of weight distortion on small models.\nA more recent study in (Alizadeh et al., 2020) provides an analytical overview on how quantization can affect robustness. Although not directly relevant to our work, the authors in this paper provide an analytical study on how quantization affects training and the loss function. In this paper, the authors propose a regularization based quantization method that, unlike most quantization-aware methods, provides a selectable quantization bit-width after training. Like previous methods, the authors model quantization as a form of noise. Using first order Taylor approximation, they then provide an analytical study on how this noise affects the robustness of DNNs. With their method, they show that if the `1-norm of the gradient is small, the perturbation (at least to the first-order approximation) can be effectively controlled for various quantization bit-widths. To guarantee the `1-norm of the gradients, they propose a regularization term in the loss function. As we will show in 3, we used similar quantization noise modeling and approximation techniques to investigate the effect of quantization on the loss function.\nIn (Zhang et al., 2022), the authors provide an analytical study on how models with stochastic binary quantization can have a smaller generalization gap compared to their full precision counterparts. In this work, the authors propose a so-called \u201dquasi neural network\u201d to approximate the effect of binarization on neural networks. The authors then derive the neural tangent kernel for the proposed quasi neural network approximation. With this formalization, the authors show that binary neural networks have lower capacity, hence lower training accuracy, but also a smaller generalization gap than their full precision counterparts. Finally, the authors provide some empirical results to support their derivations. However, the authors fail to show the effect of different quantization levels on the generalization gap. As mentioned earlier, the authors only focused their analysis on statistical binary quantization and they did not explore how different quantization methods and precision levels affect generalization. Also, their empirical results are only limited to a two layer model."
+        },
+        {
+            "heading": "2.3. Using Quantization for its Regularization Effect",
+            "text": "Although very limited, the idea of using quantization solely for its regularization effect has been explored before. In (Hou et al., 2017), the authors studied the effect of binarization on the loss function. They then proposed an algorithm\nthat uses diagonal Hessian approximation that directly minimizes the loss function with regard to the binarized weights. For training their binarized model, the authors claimed that they only used regularization that is induced by weight binarization. Furthermore they further developed their method in (Hou & Kwok, 2018) where they show that the same techniques can be applied to weight ternerization."
+        },
+        {
+            "heading": "3. Quantization Noise as a Regularizer",
+            "text": "The authors in the previous works usually assume that weight quantization is similar to adding noise to a model\u2019s weights. However, it is not clear how this noise propagates through the network at training time. Also, it is not clear how different quantization levels and algorithms affect the magnitude of this noise. In this section, we will show how quantization noise can be modeled as a regularization term. We will then extend our study and show that this noise is directly related to the quantization level.\nFor simplicity, let us consider a regression problem where the mean square error loss is defined as,\nL = 1 m m\u2211 i=1 \u2016y\u0302i \u2212 yi\u201622, (1)\nwhere yi is the target, and y\u0302i = f(x,w) is the predicted target of the network f parameterized by w. Weight quanti-\nzation can be characterized as noise perturbing the weights and activations. Such noise can be described as:\nf(x,wq) = f(x,w + \u03b4) (2)\nThus, a quantized neural network, effectively has the following loss,\nL\u0303 = 1 m m\u2211 i=1 \u2016y\u0302iq \u2212 yi\u201622, (3)\nwhere y\u0302iq = f(x,w + \u03b4). Theorem 3.1. Given the mean square error loss defined in Eq. 3, assuming that the quantization noise follows a normal distribution, \u03b4 \u223c N (0, \u03c3I), applying a first-order Taylor approximation around the weights of the full precision model, results in the following approximation on the L\u0303:\nL\u0303 \u2248 L+ \u03c3\u03b4 2\nm m\u2211 i=1 \u2016\u2207wy\u0302i\u201622, (4)\nThis means that minimizing L\u0303 is equivalent to minimizing the loss of a non-quantized neural network with gradient norm regularization.\nDerivation in Appendix A.\nDirect application of noise on the weights as a form of regularization has been studied in the literature. In (Goodfellow et al., 2016) authors argue that noisy weights result in forcing the model to find minima that are insensitive to small perturbations of the weights. In other words, noisy weights encourage finding minima in flat regions and thus lead to better generalization (Hochreiter & Schmidhuber, 1994)."
+        },
+        {
+            "heading": "4. Experimental Studies",
+            "text": "In this section, we will describe empirically how quantization has a regularization effect. Unlike previous works that was described in Section 2, we tried to explore the regularization effect of quantization over different quantization techniques, levels, models, vision tasks and datasets. In the following subsections, we briefly describe our test setup and results."
+        },
+        {
+            "heading": "4.1. Experiment Setup",
+            "text": ""
+        },
+        {
+            "heading": "4.1.1. TRAINING SETUP",
+            "text": "As we described in Section 3 we hypothesize that quantization has a regularization effect that is correlated with quantization level (precision). In order to test this hypothesis, we needed a quantization technique that could be used to quantize a model to any quantization precision. For our experiments, we picked Learned Step size Quantization (LSQ) (Esser et al., 2020) and Parameterized Clipping Activation (PACT) (Choi et al., 2018). Since PACT applies quantization only to activations, we used DoReFa (Zhou et al., 2016) quantization for weights. For PACT, DoReFa and LSQ, we used learning rate of 0.1 with momentum of 0.9 for the classification experiment. In our experiments, we initially used quantization as the only regularizer in the network. However, both full precision and quantized models were unable to achieve a good accuracy. Hence, we used weight decay of 0.0001 for both full precision and quantized models in our experiments. We trained both full precision and quantized models for 200 epochs. We used a multi-step learning scheduler with milestones of 50, 90, 130 and 180 with gamma of 0.2."
+        },
+        {
+            "heading": "4.1.2. MODELS AND DATASETS",
+            "text": "In our experiments, we explored the regularization effect of quantization in different vision tasks, models, quantization levels and datasets. We explored two popular vision tasks, object detection and classification. For small-scale classification tasks, we tested our hypothesis on CIFAR10 dataset and used Resnet20, Mobilenet V1, Resnet18 and Resnet50. For bigger classification tasks we used CIFAR100 dataset and used Mobilenet V1, Resnet18, Resnet50. For object detection, we used VOC dataset and tested our hypothesis on YOLOv5n model. The full list of experiments is available in Appendix B. For each experiment, we trained the model as described in 4.1.1. To measure the generalization improvement, in addition to the original test data, we applied 19 different augmentations on the original dataset as provided in (Hendrycks & Dietterich, 2019). We then tested each full precision and quantized model with the aforementioned datasets. To measure generalization improvement, we calculated the test accuracy difference between the full precision\nmodel and the quantized model when an augmentation is applied on the corresponding test dataset."
+        },
+        {
+            "heading": "4.1.3. RESULTS",
+            "text": "Figure 2 illustrates part of the experiments that we ran to test our hypothesis. Figure 2 shows results of nine different test configuration in nine squares. Each square consists of 20 cells, which as we discussed in Section 4.1.2, corresponds to the test accuracy difference between full precision model and quantized models when different augmentation is used. From left to right, each column shows the quantization levels (2-bit, 4-bit and 8-bit) that was used for our tests. From top to bottom, we have tested our hypothesis on Resnet20 on cifar10, Resnet18 on cifar100 and YOLOv5n on VOC dataset respectively. As it can be seen (i.e. the overall cell colors in the right column squares are green), regardless of model, dataset, augmentation or quantization technique, 8-bit quantized models generally have better generalization compared to full precision models. As we discussed in 2.3, we believe that this performance improvement corresponds to the regularization effect of quantizing the models. As we predicted, this regularization effect is correlated with the quantization level. Moving from left to right columns, the overall color codes for each cell changes from red to green. Which indicates that quantized models are generalizing better compared to their full precision counterparts as we use higher precision quantized models (from 2-bit to 8-bit). Regardless of the model, dataset, data augmentation or quantization technique, the generalization difference shrinks and even get worse as we use less precision for quantization. Another way to evaluate how quantization is helping with better generalization, is to compare the error of quantized and full precision models. Table 1 shows the performance improvement relative to model error. We averaged the accuracy of each square in Figure 2. We then, calculated the performance improvement relative to error using the following formula:\nErrorImprovement = log (100\u2212 fval 100\u2212 qval ) \u2217 100 (5)\nWhere fval and qval are the average accuracy of full precision and quantized model over 19 different augmentation setups. Since models on small datasets like cifar10 generally have small errors compared to models on more complex datasets (like cifar100 or VOC), we used a logarithm in Equation 5. Once again, according to Table 1, in all cases 8-bit quantized models reduce the error more (i.e, generalizing better) compared to full precision models. On all three models tested over 19 different augmentation setups, all 8-bit quantized models reduce the error when compared to full precision models (i.e last column for 8-bit quantization levels is green for all models). This effect (reducing error) is less clear as we use lower precision models .\nOur results presented in Figure 2, Table 1 and Appendix B empirically confirm our hypothesis. Unlike (Courbariaux et al., 2015), we believe that the regularization effect of quantization is in fact correlated with the quantization level. Our empirical study shows that moderate quantization (8- bit) generally helps models generalize better. In addition to these results, specially for more complex models, we observe that quantized models overfit less at training time. Figure 1 illustrates the validation loss of 8-bit, 4-bit quantized and full precision for the YOLOv5n model applied to the VOC dataset. Due to regularization effect of quantization, the quantized models overfit much less compared to full precision model. This, confirms our hypothesis. For the full list of experiments, please refer to Appendix B."
+        },
+        {
+            "heading": "5. Conclusion",
+            "text": "In this paper, we explored the regularization effect of quantization. We hypothesized that this regularization effect is correlated with the quantization level. To confirm our hypothesis, we provided an analytical study as well as an extensive list of experiments. Our experiments show that the regularization effect of quantization exist regardless of model, dataset, vision task and quantization technique. Finally, we analytically and empirically confirm that this regularization effect is correlated with quantization level. Our empirical study shows that moderate quantization (8-bit) helps models generalize better."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "The authors would like to thank Mohammad Pezeshki and Anush Sankaran for helpful discussion about designing empirical studies presented in this paper. The authors would also like to acknowledge the support for this project from Fonds de Recherche du Que\u0301bec Nature et technologies (FRQNT) and Natural Sciences and Engineering Research Council of Canada (NSERC)."
+        },
+        {
+            "heading": "A. Analytical Study",
+            "text": "A.1. Derivation of Theorem 3.1\nTheorem A.1. Given the mean square error loss defined in Eq. 3, assuming that \u03b4 \u223c N (0, \u03c3I), applying a first-order Taylor approximation around the weights of the full precision model, results in the following approximation on the L\u0303:\nL\u0303 \u2248 L+ \u03c3\u03b4 2\nm m\u2211 i=1 \u2016\u2207wy\u0302i\u201622, (6)\nThis means that minimizing L\u0303 is equivalent to minimizing a non-quantized neural network while regularizing the norm of the gradients.\nFrom Eq. 3, we have,\nL\u0303 = 1 m m\u2211 i=1 [ \u2016yi\u201622 + \u2016y\u0302i q\u201622 \u2212 2yiy\u0302i q ] = Ep(x,y,\u03b4) [ \u2016yi\u201622 + \u2016y\u0302i q\u201622 \u2212 2yiy\u0302i q ]\nAlso, since y\u0302iq = f(x,w + \u03b4), we can apply a first order Taylor approximation,\nf(x,w + \u03b4) = f(x,w) + \u03b4\u2207wf(x,w) +O(\u03b42)\nThus, y\u0302iq \u2248 y\u0302i + \u03b4\u2207wy\u0302i.\nRe-writing, the expectation on L\u0303,\nL\u0303 = Ep(x,y,\u03b4) [ \u2016yi\u201622 + \u2016y\u0302i q\u201622 \u2212 2yiy\u0302i q ]\n\u2248 Ep(x,y,\u03b4) [ \u2016yi\u201622 + \u2016y\u0302i + \u03b4\u2207wy\u0302i\u201622 \u2212 2yi(y\u0302i + \u03b4\u2207wy\u0302i) ] = Ep(x,y,\u03b4) [ \u2016yi\u201622 + \u2016y\u0302i\u201622 \u2212 2yiy\u0302i + \u03b42\u2016\u2207wy\u0302i\u201622 + 2\u03b4(\u2207wy\u0302i)(y\u0302 \u2212 y)\n] = L+ \u03c3\u03b42Ep(x,y,\u03b4)[\u2016\u2207wy\u0302i\u201622]\nNote that since \u03b4 \u223c N (0, \u03c3I), we have Ep(x,y,\u03b4)[2\u03b4(\u2207wy\u0302i)(y\u0302 \u2212 y)] = 0."
+        },
+        {
+            "heading": "B. Extended Results",
+            "text": ""
+        }
+    ],
+    "title": "QReg: On Regularization Effects of Quantization",
+    "year": 2022
+}

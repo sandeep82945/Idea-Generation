@@ -1,0 +1,167 @@
+{
+    "abstractText": "We propose a consistency-based material decomposition algorithm. The method is free from any calibration procedure. The inverse spectral mixing model is approximated by a polynomial whose indeterminates are the raw-data values and whose coefficients are estimated by minimizing a consistency-based cost function. The consistency is in both the material sinograms and their mono-energetic combination. A small a priori on the object is incorporated in the minimization problem as a constraint. The method was evaluated on dual-energy simulations of a numerical phantom made of water and bone.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "J\u00e9r\u00f4me Lesaint"
+        },
+        {
+            "affiliations": [],
+            "name": "Simon Rit"
+        }
+    ],
+    "id": "SP:204b5ad566aa0b1171f6e9c192147f790de1bd44",
+    "references": [
+        {
+            "authors": [
+                "S. Rit",
+                "C. Mory",
+                "P. No\u00ebl"
+            ],
+            "title": "Image Formation in Spectral Computed Tomography,\u201d in [Spectral, Photon Counting Computed Tomography",
+            "venue": "(jul",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "R.E. Alvarez",
+                "A. Macovski"
+            ],
+            "title": "Energy-selective reconstructions in X-ray computerized tomography.,",
+            "venue": "Physics in medicine and biology 21(5),",
+            "year": 1976
+        },
+        {
+            "authors": [
+                "E. Roessl",
+                "R. Proksa"
+            ],
+            "title": "K-edge imaging in x-ray computed tomography using multi-bin photon counting detectors,",
+            "venue": "Physics in Medicine and Biology",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "Brendel",
+                "Bernhard",
+                "Bergner",
+                "Frank",
+                "Brown",
+                "Kevin",
+                "T. Koehler"
+            ],
+            "title": "Penalized likelihood decomposition for dual layer spectral CT,\u201d in [Proc 4th intl mtg on image formation in X-ray CT",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "N. Ducros",
+                "Abascal",
+                "J.F.P.-J",
+                "B. Sixou",
+                "S. Rit",
+                "F. Peyrin"
+            ],
+            "title": "Regularization of nonlinear decomposition of spectral x-ray projection images,\u201d Medical Physics 44, e174\u2013e187 (sep 2017)",
+            "venue": "Proc. of SPIE Vol",
+            "year": 2024
+        },
+        {
+            "authors": [
+                "R.E. Alvarez"
+            ],
+            "title": "Estimator for photon counting energy selective x-ray imaging with multibin pulse height analysis,",
+            "venue": "Medical Physics",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "P. Stenner",
+                "T. Berkus",
+                "M. Kachelriess"
+            ],
+            "title": "Empirical dual energy calibration (EDEC) for cone-beam computed tomography,",
+            "venue": "Medical Physics",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "T. W\u00fcrfl",
+                "N. Maa\u00df",
+                "F. Dennerlein",
+                "X. Huang",
+                "A.K. Maier"
+            ],
+            "title": "Epipolar Consistency Guided Beam Hardening Reduction-ECC 2,\u201d in [14th International Meeting on Fully Three-Dimensional Image Reconstruction in Radiology and Nuclear Medicine",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "S. Rit",
+                "M.V. Oliva",
+                "S. Brousmiche",
+                "R. Labarbe",
+                "D. Sarrut",
+                "G.C. Sharp"
+            ],
+            "title": "The Reconstruction Toolkit (RTK), an open-source cone-beam CT reconstruction toolkit based on the Insight Toolkit (ITK),",
+            "venue": "Journal of Physics: Conference Series 489(1),",
+            "year": 2014
+        }
+    ],
+    "sections": [
+        {
+            "text": "Keywords: Data consistency conditions (DCCs), spectral CT, material decomposition."
+        },
+        {
+            "heading": "1. INTRODUCTION",
+            "text": "This work is related to projection-domain material decomposition of energy-resolved X-ray projections, which aims to decompose energy-resolved projections onto a basis of material specific functions (Ref. 1). Since the early work of Alvarez and Macovski (Ref. 2), it is known that the linear attenuation coefficient \u00b5 can be modeled as a linear combination\n\u00b5(~x,E) = M\u2211 m=1 am(~x)fm(E), (1)\nof a small number M of energy-dependent basis functions fm. In Equation 1, fm can for example be the linear attenuation of the material m (expressed in cm\u22121) and am(~x) the unitless proportion of material m at spatial position ~x. In typical photon-counting detectors, several photon counters are maintained at different energy ranges, based on pulse height analysis. We denote B the total number of energy bins. Each detector pixel returns B measurements mb, modeled by the Beer-Lambert\u2019s law:\nmb = \u222b \u221e 0 I0b (E) exp ( \u2212 M\u2211 m=1 Amfm(E) ) dE (2)\nwhere I0b (E) is the effective spectrum of the bin b and Am = \u222b L am(~x) d~x is the line integral of the material map am along the X-ray path L. In other words, Am is the equivalent length of material m in the object \u00b5 along L. In this work, the basis materials will be water and bone, so that M = 2 in the sequel.\nBy material decomposition, we mean recovering the coefficients Am from the measurements mb (or from their log sb, see Equation 4 below). Several approaches have been proposed. A rigourous and natural way is to inverse the forward model (m1, ...,mB) = \u03a6(A1, ..., Am) of Equation 2. This has been done with a maximum likelihood approach in Ref. 3 further regularized in Ref. 4 or with a regularized least-square approach in Ref. 5. In all\nThis work was partially supported by grant ANR-17-CE19-0006 (ROIdore\u0301 project) from the Agence Nationale de la Recherche (France). This work was performed within the framework of the SIRIC LYriCAN INCa-INSERM-DGOS12563 and the LABEX PRIMES (ANR-11-LABX-0063) of Universite\u0301 de Lyon, within the program \u201cInvestissements d\u2019Avenir\u201d (ANR-11-IDEX-0007) operated by the French National Research Agency (ANR).\n7th International Conference on Image Formation in X-Ray Computed Tomography, edited by Joseph Webster Stayman, Proc. of SPIE Vol. 12304, 123040F\n\u00a9 2022 SPIE \u00b7 0277-786X \u00b7 doi: 10.1117/12.2646526\nProc. of SPIE Vol. 12304 123040F-1 Downloaded From: https://www.spiedigitallibrary.org/conference-proceedings-of-spie on 18 Jan 2024 Terms of Use: https://www.spiedigitallibrary.org/terms-of-use\ncases, the forward model needs to be known and the quality of the decomposition depends on the accuracy of the model. In particular, the effective spectra need to be calibrated, e.g. with a spectrometer for the source spectrum and monochromatic sources for the detector response. To avoid such a cumbersome procedure, it is possible to calibrate a parametric model either of the direct mapping \u03a6 (Ref. 2) or of the inverse mapping (A1, ..., AM ) = \u03a6\u22121(m1, ...,mB) (or \u03a6\n\u22121(s1, ..., sB)). In Ref. 6, the measured attenuations are related to the coefficients Am via a polynomial model. The polynomial coefficients are learnt from a set of calibration measurements at various combinations of basis material lengths, which cover the range of length combinations that will be present in the imaged object. This procedure only requires a specific calibration phantom with known thicknesses of the basis materials but it is a time-consuming procedure. In Ref. 7, the authors introduce an empirical dual-energy material decomposition method. It is three-step: first, a calibration phantom, made of the basis materials, is scanned. Second, the reconstructed phantom image is segmented and regions of interest (ROI) of each material are selected. Third, the coefficients of a polynomial approximation of the inverse mapping \u03a6\u22121 are estimated so that the reconstruction obtained by applying the polynomial coefficients to the measures fits the segmented ROIs. The procedure is called empirical because the inverse mapping \u03a6\u22121 is indirectly estimated to retrieve the Am from the mb measurements without knowing I 0 b .\nThe aim of the project is to avoid the calibration scan in the material decomposition. The polynomial coefficients of the inverse mapping are estimated by enforcing data consistency conditions on the material-specific sinograms. Consistency conditions have been successfully used in a number of CT artefacts correction problems, e.g., geometric calibration, beam-hardening correction, scatter correction. In this paper, we consider 2D parallel geometry only and its corresponding set of consistency conditions known as Helgason-Ludwig consistency conditions. The proposed method does not require a calibration scan, only the scan of the object of interest. The decomposition of the sinograms is exclusively based on the raw data, plus a tiny a priori knowledge on the object."
+        },
+        {
+            "heading": "2. THEORY",
+            "text": "The method minimizes a consistency-based cost function (subject to some constraints) which is described in this section. For simplicity, we focus on a 2D parallel scanning geometry. Projections are acquired over a 180 degree angular range. In a coordinate system (O, x, y), we denote the projection angle \u03b8 (due to discretization, \u03b8 is assumed to vary in a set of discrete values \u0398, whose cardinal is denoted |\u0398|) and the corresponding unit vector ~\u03b8 = (cos \u03b8, sin \u03b8). The latter indicates the direction of the 1D linear detector, which is placed perpendicular to the direction of the X-rays. Position along the detector is denoted p (again, due to discretization, we denote \u03b4p the detector spacing and P the finite set of all pixel positions). Without loss of generality, we assume that the center of the detector is at the origin O of the coordinate system, that it rotates around O and that the object of interest fits the resulting field of view. At projection angle \u03b8, the X-ray line L(\u03b8, p) intercepted at position p of the detector has equation ~x \u00b7 ~\u03b8 = p."
+        },
+        {
+            "heading": "2.1 Photon-counts and attenuations",
+            "text": "Assuming a photon counting detector with B bins and according to Equation 2, the photon counts may be corrupted with Poisson noise. The measures become\nm\u2217b(\u03b8, p) \u223c Poisson(mb(\u03b8, p)). (3)\nWe only use mb(\u03b8, p) in the rest of the paper and explicitely indicate wether data are corrupted with noise. The projections are then log-transformed according to\nsb(\u03b8, p) = \u2212 log ( mb(\u03b8, p)\nm0,b(\u03b8, p)\n) , (4)\nwhere m0,b is the number of photons without object.\nProc. of SPIE Vol. 12304 123040F-2 Downloaded From: https://www.spiedigitallibrary.org/conference-proceedings-of-spie on 18 Jan 2024 Terms of Use: https://www.spiedigitallibrary.org/terms-of-use"
+        },
+        {
+            "heading": "2.2 The polynomial model",
+            "text": "We look for a a simplified model of the inverse mapping (A1, ..., Am) = \u03a6 \u22121(s1, ..., sB). We choose a polynomial model. Each material sinogram Am is approximated by a polynomial \u03c8m,D of degree D in the variables (s1, ..., sB). Formally,\nAm \u2248 \u03c8m,D(s1, ..., sB) = \u2211 |k|\u2264d ckms k (5)\nwhere k = (k1, ..., kB) is a multi-index, |k| = k1+...+kB and sk = sk11 ...skBB . We define N(D,B) the total number of coefficients of a polynomial of degree D in B variables, e.g., N(2,2)=6 and N(3,2)=10. Note also that the coefficients ckm must be determined for each basis material m. If D, B and M are fixed, M\u00d7N(D,B) coefficients have to be determined. For example, if B = 2, M = 2 and D = 3, we seek 2 \u00d7N(3, 2) = 20 coefficients. Note that the same polynomial is applied to all the pixels of the sinogram Am, i.e., that the source spectrum and the detector response are uniform over the beam and the detector, respectively."
+        },
+        {
+            "heading": "2.3 The consistency metric",
+            "text": "In 2D parallel geometry, the sought Am are the Radon transform of the material map am\nAm(\u03b8, p) = \u222b L(\u03b8,p) am(~x) d~x = \u222b R am(p~\u03b8 + q~\u03b8 \u22a5) dq (6)\nwhere ~\u03b8 = (cos \u03b8, sin \u03b8) and ~\u03b8\u22a5 = (\u2212 sin \u03b8, cos \u03b8) are perpendicular. To account for the spectral nature of the decomposition problem, we combine the material sinograms Am into mono-energetic sinograms Cn, in view of applying the consistency metric to them. We choose N energy levels En in the energy range of the source and form the mono-energetic sinograms Cn\nCn(\u03b8, p) = M\u2211 m=1 fm(En)Am(\u03b8, p). (7)\nThe coefficients fm(En) are known (see Equation 1).\nA consistency condition of the Radon transform states that the integral of each projection (the order-0 moment) does not depend on the projection angle \u03b8 since each of these integrals equals the integral of the attenuation coefficient over the object. We define the moment Jn(\u03b8) of the Cn by\nJn(\u03b8) = \u222b R Cn(\u03b8, p) dp = N\u2211 n=1 fm(En) \u222b R Am(\u03b8, p) dp (8)\nWe use the variance of Jn to evaluate if Jn is constant over \u0398. The consistency function hence reads:\n`n(c) = 1 |\u0398| \u2211 \u03b8\u2208\u0398 (Jn(\u03b8)\u2212 Jn(\u03b8))2 (9)\nwhere Jn(\u03b8) denotes the mean of Jn over all \u03b8. Note that the function `n depends on the polynomial coefficients c = ( ckm ) since all Am do (see Equation 5). Finally, we define M consistency functions ` \u2032 m(c) on the material sinograms Am in a similar way. The final consistency metric accumulates the consistency of all computed mono-energetic sinograms and all material-specific sinograms\n`(c) = N\u2211 n=1 `n(c) + M\u2211 m=1 `\u2032m(c) (10)\nThe consistency metric would evaluate to zero on perfectly consistent material sinograms.\nProc. of SPIE Vol. 12304 123040F-3 Downloaded From: https://www.spiedigitallibrary.org/conference-proceedings-of-spie on 18 Jan 2024 Terms of Use: https://www.spiedigitallibrary.org/terms-of-use"
+        },
+        {
+            "heading": "2.4 Minimization",
+            "text": "Due to the hardening of the beam in each bin (see e.g. Ref. 8), the measured attenuations sb do not satisfy the consistency condition. The loss ` is minimized with respect to the coefficients c to achieve mono-energetic and material sinograms which are as consistent as possible.\nSince we use only order-0 consistency conditions, a constant sinogram (i.e. Am(\u03b8, p) = constant for all \u03b8 and p) is perfectly consistent. To prevent the minimization to output such undesirable solution, we follow the idea of Ref. 8 and constrain the minimization by some known values. First, if there is no attenuation in all bins (sb = 0,\u2200b \u2208 {1, ..., B}), we enforce 0 in all material and mono-energetic sinograms by setting c0m = 0 for all m. Second, there still is a trivial solution to the minimization of the consistency loss function: the null sinogram. We enforce, for each material m, a particular value in one voxel of each reconstructed material map am. To this end, a small sample of each material is placed in the field-of-view and a reconstruction from raw data is computed. The small samples are easily identifiable in the reconstruction. Let ~xm be one voxel in each material sample and assume reconstructions are computed with a standard Filtered Backprojection (FBP) algorithm. Since FBP is a linear operation, one has\nam(~xm) = FBP \u2211 |k|\u2264d ckms k  (~xm) = \u2211 |k|\u2264d ckmFBP(s k)(~xm). (11)\nThe values FBP(sk)(~xm) are easily computed once, before the minimization. Each material map is constrained by exactly M relations, which take the form\u2211\n|k|\u2264d\nckmFBP(s k)(~xm\u2032) = { 0 if m 6= m\u2032 1 if m = m\u2032\n(12)"
+        },
+        {
+            "heading": "3. NUMERICAL EXPERIMENTS",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Simulation of data",
+            "text": "Numerical experiments used a 2D phantom made of an outer water disc of diameter 32 mm and five bone inserts (with diameters ranging from 2 to 5 mm), placed inside the water disc (see Figure 2). Two tiny inserts of bone and water (1 mm in diameter each) were placed outside the phantom. One voxel in each insert was chosen for the constraints. The material sinograms Am were analytically computed with RTK (Ref. 9). The simulated sinograms had 700 pixels with 0.05 mm spacing and 720 projections over a 180\u25e6 angular range. Two effective spectra were used. The low-energy (LE) and high-energy (HE) spectra had a tube-voltage of 80 keV and 120 keV respectively (Figure 1). Without object, the detector received a total number of photons of 1.3\u00d7106 and 2.9\u00d7106 photons for the LE and HE spectra respectively. The photon counts mb were computed by applying Equation 2, then log-transformed according to Equation 4.\nThe degree of the sought polynomials was fixed to D = 3 and the consistency metric Equation 10 was minimized under the constraints defined above, with the Sequential Least Squares Programming algorithm. The total number of estimated polynomial coefficients was 18. The initial guess was always set to zero for all coefficients."
+        },
+        {
+            "heading": "3.2 Evaluation methods",
+            "text": "Our method was compared to the calibration from a set of dedicated measurements with the same LE and HE spectra over a set of water and bone lengths. The set covered all combinations which were present in the phantom. More precisely, 100 equi-spaced lengths of each material were measured. Water lengths ranged from 0 to 32.6 mm and bone lengths ranged from 0 to 10.97 mm. All these combinations were irradiated with the same LE and HI spectra as the phantom. Then the polynomials \u03c8\u0303m,D were fitted to the calibration data and further applied to the phantom data to produce a reference polynomial decomposition.\nWe compared the poly-energetic reconstructions from raw-data with mono-energetic images computed from our DCC-based material maps and from the reference calibrated material maps.\nProc. of SPIE Vol. 12304 123040F-4 Downloaded From: https://www.spiedigitallibrary.org/conference-proceedings-of-spie on 18 Jan 2024 Terms of Use: https://www.spiedigitallibrary.org/terms-of-use\n4. RESULTS"
+        },
+        {
+            "heading": "4.1 Noise-less data",
+            "text": "Results of the decomposition are shown in Figure 2. Water and bone are adequately separated. The profiles in Figure 2 (bottom row) indicate residual cross-talk between the two material maps. In the center of the water phantom, the low-constrast feature is visible.\nSince the consistency is enforced on the mono-energetic images, Figure 3 compares poly-energetic images, DCC-based and calibration-based mono-energetic images. Poly-energetic images clearly suffer from severe beamhardening, which is almost completely corrected on both mono-energetic images. The profiles presented in Figure 4 reveal that the DCC-based and calibrated 40 keV images can hardly be distinguished. A slight discrepancy between the 80 keV images still subsists though, especially in the vicinity of the border of the phantom."
+        },
+        {
+            "heading": "4.2 Robustness to noise",
+            "text": "The photons count measurements mb were corrupted with Poisson noise according to Equation 3. The reference photon flux is given by the spectra in Figure 1, i.e. 1.3\u00d7 106 and 2.9\u00d7 106 photons for the LE and HE spectra respectively. The noise level was set by reducing the total number of emitted photons by a factor 1, 10 and 100. The influence of noise on the material maps is presented in Figure 5. The quality of the images is significantly degraded. The consistency function value at convergence increases with the level of noise. It is 0.2108 for reference noise level (factor 1), 1.4738 at factor 10 and 12.815 at factor 100. We expect the choice of the reference voxel to play a critical role in the presence of heavy noise."
+        },
+        {
+            "heading": "5. DISCUSSION AND CONCLUSION",
+            "text": "We have demonstrated a consistency-based material decomposition, which does not require any calibration procedure. Only the raw data and a tiny a priori knowledge on the object are sufficient to produce material specific sinograms. This tiny a priori can be implemented in practice by placing inserts in the field-of-view of the scanner. The resulting sinograms are free from beam-hardening. The method achieves (on simulated data) results that are close to those obtained with a standard calibration-based decomposition method.\nThe influence of the choice of the reference voxels in the reconstruction may play a critical role and should be further investigated. By choosing a voxel in the reconstruction as a reference, we indirectly incorporate in the constraint all the projections values from lines passing through the voxel (with filtered back-projection, all\nProc. of SPIE Vol. 12304 123040F-5 Downloaded From: https://www.spiedigitallibrary.org/conference-proceedings-of-spie on 18 Jan 2024 Terms of Use: https://www.spiedigitallibrary.org/terms-of-use\nthe lines are incorporated but the ramp filter drops rapidly, so mainly the lines through the voxel are). If those lines \u201csee\u201d a wider range of length combinations, we expect that the decomposition is improved.\nFinally, we used a parallel geometry for its simplicity. But order-0 DCC are also available for divergent beam 3D data. In Ref. 8, they use such DCC to correct beam-hardening in a circular acquisition. We expect that the decomposition method presented in this work generalizes to multi-energy divergent projections."
+        }
+    ],
+    "title": "Consistency-based auto-calibration of the spectral model in dual-energy CT",
+    "year": 2024
+}

@@ -1,0 +1,241 @@
+{
+    "abstractText": "In this paper we present a new method for spoken language understanding to support a spoken dialogue system handling complex dialogues in the food ordering domain. Using a small amount of authentic food ordering dialogues yields better results than a large amount of synthetic ones. The size of the data makes this approach amenable to cold start projects in the multi-level sequence labeling domain. We used windowed word n-grams, POS tag sequences and pre-trained word embeddings as features. Results show that a heterogeneous feature set with the k-NN learner performs competitively against the state-of-theart results and achieve an F-score of 60.71.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Yue Chen"
+        },
+        {
+            "affiliations": [],
+            "name": "John Chen"
+        }
+    ],
+    "id": "SP:e1f8cd80bb5ee5121b6c09c66a8c70dd84242064",
+    "references": [
+        {
+            "authors": [
+                "Steven Bird",
+                "Edward Loper."
+            ],
+            "title": "Nltk: the natural language toolkit",
+            "venue": "Proceedings of the ACL 2004 on Interactive poster and demonstration sessions, page 31. Association for Computational Linguistics.",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "John Chen",
+                "Rashmi Prasad",
+                "Svetlana Stoyanchev",
+                "Ethan Selfridge",
+                "Srinivas Bangalore",
+                "Michael Johnston"
+            ],
+            "title": "Corpus and annotation",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Layla El Asri",
+                "Hannes Schulz",
+                "Shikhar Sharma",
+                "Jeremie Zumer",
+                "Justin Harris",
+                "Emery Fine",
+                "Rahul Mehrotra",
+                "Kaheer Suleman."
+            ],
+            "title": "Frames: A corpus for adding memory to goal-oriented dialogue systems",
+            "venue": "Proceedings of the SIGDIAL 2017 Con-",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Hakan Erdogan."
+            ],
+            "title": "Sequence labeling: Generative and discriminative approaches",
+            "venue": "iCMLA.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "Dilek Hakkani-T\u00fcr",
+                "Gokhan T\u00fcr",
+                "Asli Celikyilmaz",
+                "Yun-Nung Vivian Chen",
+                "Jianfeng Gao",
+                "Li Dung",
+                "Ye yi Wang."
+            ],
+            "title": "Multi-domain joint semantic frame parsing using bi-directional rnn-lstm",
+            "venue": "Proceedings of The 17th Annual Meeting of the Interna-",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Charles T Hemphill",
+                "John J Godfrey",
+                "George R Doddington."
+            ],
+            "title": "The ATIS spoken language systems pilot corpus",
+            "venue": "Speech and Natural Language: Workshop Proceedings, Hidden Valley, Pennsylvania.",
+            "year": 1990
+        },
+        {
+            "authors": [
+                "Mitchell P Marcus",
+                "Mary Ann Marcinkiewicz",
+                "Beatrice Santorini."
+            ],
+            "title": "Building a large annotated corpus of english: The penn treebank",
+            "venue": "Computational linguistics, 19(2):313\u2013330.",
+            "year": 1993
+        },
+        {
+            "authors": [
+                "Andrew McCallum",
+                "Dayne Freitag",
+                "Fernando CN Pereira."
+            ],
+            "title": "Maximum entropy markov models for information extraction and segmentation",
+            "venue": "Icml, volume 17, pages 591\u2013598.",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "Jeffrey Pennington",
+                "Richard Socher",
+                "Christopher Manning."
+            ],
+            "title": "Glove: Global vectors for word representation",
+            "venue": "Proceedings of the 2014 conference on empirical methods in natural language processing (EMNLP), pages 1532\u20131543.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Matthew E Peters",
+                "Mark Neumann",
+                "Mohit Iyyer",
+                "Matt Gardner",
+                "Christopher Clark",
+                "Kenton Lee",
+                "Luke Zettlemoyer."
+            ],
+            "title": "Deep contextualized word representations",
+            "venue": "arXiv preprint arXiv:1802.05365.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Daniel Pressel",
+                "Sagnik Ray Choudhury",
+                "Brian Lester",
+                "Yanjie Zhao",
+                "Matt Barta."
+            ],
+            "title": "Baseline: A library for rapid modeling, experimentation and development of deep learning algorithms targeting NLP",
+            "venue": "Proceedings of Workshop for NLP Open",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Marilyn A. Walker",
+                "Owen Rambow",
+                "Monica Rogati."
+            ],
+            "title": "SPoT: A trainable sentence planner",
+            "venue": "Proceedings of the second meeting of the North American Chapter of the Association for Computational Linguistics on Language technologies.",
+            "year": 2001
+        }
+    ],
+    "sections": [
+        {
+            "text": "Proceedings of NAACL-HLT 2019, pages 149\u2013156 Minneapolis, Minnesota, June 2 - June 7, 2019. c\u00a92019 Association for Computational Linguistics\n149"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "Handling complex dialogues between customers and agents is hard, especially in the food ordering domain where there are a lot of hesitations and noise involved. A sample dialogue with only the customer side available is shown in Figure 1. The agent side is not available since our software setup does not include an Automatic Speech Recognition (ASR) component on the agent side. The complexity stems from the fact that food ordering dialogues are mixed initiative, and individual customer utterances may contain multiple intents and refer to food items with complex structure. For example, a customer might say \u201cCan I get a deluxe burger with large fries and oh put extra mayo on the burger would you?\u201d Since essentially we are trying to give each word an IOB tag with some sub-label referring to a specific class, it is natural that we approach this task as a multi-level sequence labeling problem. Additionally, this must be performed with limited authentic training data, since we are starting from scratch and not many dialogues have been collected from our customers yet.\nuh give me a medium order of onion rings and i \u2019d like to have them well done\nno tartar no lettuce but i \u2019d like to have uh mustard pickles on\nyes that \u2019s it\nFigure 1: A Sample Dialogue with only the Customer Side Available\nBoth traditional methods such as Hidden Markov Models (HMMs), Maximum Entropy Markov Models (MEMMs), or Conditional Random Fields (CRFs) and newer methods like Deep Neural Networks (DNNs) or Bi-directional Long Short-Term Memories (BiLSTMs) typically use only homogeneous feature sets. Here homogeneous feature set refers to the type of feature set within which there is only one type of feature, for example, the presence/absence word ngrams. Heterogeneous feature set, on the other hand, refers to the type of feature set within which at least more than one type of feature are used, for example, the presence/absence of word n-grams and pre-trained word embeddings, one being symbolic and the other being vectorized. Newer methods perform better but also require considerably more data. Previous research has synthesized data to obtain the required amounts for training.\nWe use a k-NN learner with a heterogeneous feature set. Instead of using a massive amount of synthetic dialogues, we are able to achieve superior results by annotating less than 1% of the authentic ones. This is within a reasonable budget of time and effort for a cold start project. To incorporate traditional linguistic knowledge and distributional word representation, we used windowed\nword n-grams, POS tag sequences and pre-trained word embeddings as features. We performed experiments comparing the use of synthetic and authentic customer data while also performing semisupervised self-training to obtain additional labeled data."
+        },
+        {
+            "heading": "2 Related Work",
+            "text": "Many techniques from slot filling and information retrieval have been adopted for the understanding task in dialogues. For example, (Xu and Sarikaya, 2013) implement a CNN-CRF that performs joint intent detection and slot filling over user utterances in the ATIS corpus. (Hakkani-Tu\u0308r et al., 2016) explore the use of bi-directional RNNs for extraction of domain type, intent, and slot-fillers from the users of a virtual assistant when they booked flights. (El Asri et al., 2017) implement a pipeline of DNNs to perform intent and slot filler extraction over user utterances in the Frames corpus for a travel planning task. Unlike the current work, the understanding task is simpler. Whereas we focus on hierarchical structure, previous work has focused on fillers for flat structures.\nTraditional methods like HMMs, MEMMs or CRFs mostly typically take only homogeneous feature set where only one type of feature (e.g., words or POS tags) can be used. The accuracy of such methods is also no longer the state of the art. Newer methods like DNNs and BiLSTMs make use of the recent advances in feature representation, like word embeddings, but are usually confined to use homogeneous features, since using heterogenous features would go against the design philosophy of DNNs of not needing feature engineering. They also require a much larger training data set that sometimes we do not have to achieve the state-of-the-art accuracy.\nA lack of a large amount of hand annotated data hampers the effectiveness of these methods. Even leaving aside the matter of annotated data, for certain applications, it is difficult to even obtain a set of raw utterances. In this kind of situation, one approach that is still feasible is to synthesize data from hand generated templates, an instantiation of which has been applied to sentence planning (Walker et al., 2001).\nWe use TiMBL as the implementation of the k-NN classifier (Daelemans et al.). It is one of the most widely-used k-NN classifiers. The implemented algorithms have in common that they\nstore some representation of the training set explicitly in memory. During testing, new cases are classified by extrapolation from the most similar stored cases. For over fifteen years TiMBL has been mostly used in natural language processing as a machine learning classifier component. Due to its particular decision-tree-based implementation, TiMBL is in many cases far more efficient in classification than a standard k-nearest neighbor algorithm would be."
+        },
+        {
+            "heading": "3 Methodology",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Data Set",
+            "text": "In this project, we the (Chen et al., 2018) data set. In that paper, an annotation scheme is described that is suitable for describing food ordering intents for a target restaurant, but can also be customized to describe ordering at other types of restaurants or even to describe ordering products in general. The annotation scheme is applied to a corpus of human-human dialogs in the food ordering domain from an undisclosed restaurant location. The resulting data set consists of 95 dialogs out of which all of the customer utterances, 462 of them, have been annotated with food item mentions and intents.\nThis data set has been annotated with three levels of annotation: entity, item and intent. Entities are atomic elements of orderable food items. One or more entities can be composed into an item, representing something that may be ordered by the customer. In general, intents represent the communicative goals of the customer. For our domain, these primarily involve adding, modifying, and removing food items from the customer\u2019s order.\nFigure 2 is an example of an utterance labeled with the three levels of our annotation scheme. In this example, there are two items, a sausage cheese croissant and a medium hash brown, which can be decomposed into five entities, sausage, cheese, croissant, medium, and hash brown. Thus, it shows the compositional nature of of food item specification in this annotation scheme.\nGenerally intent analysis is perceived as a classification task because most existing dialog corpora contain one intent per utterance (Hemphill et al., 1990). However, as around 42.2% of our data contain more than one intent per utterance, we define this intent analysis task as a sequence labeling task. We assume any consecutive Nword span in one utterance can be labeled as one\nentity/item/intent and it is possible, even likely, that there is more than one span in each utterance. For example, in Figure 2, the example utterance contains two intents, IN CONV MISC and IN ADD ITEM."
+        },
+        {
+            "heading": "3.2 Synthetic Data Set",
+            "text": "The synthetic data generator consists of a context free grammar that generates not only customer utterances but also the entities, items, and intents that go with each utterance. The grammar consists of rules each having nonzero positive integer weights. Rules to generate entities correspond to menu items and ways to specify variations of menu items (e.g. small versus large). Customer utterances are generated by randomly selecting rules from the grammar, simulating a context free derivation.\nThere are 170 rules to generate intent sequences, 1275 rules to generate items, and 450 rules to generate entities. For our experiments, the data generator was run so that 55,000 synthetic utterances were generated."
+        },
+        {
+            "heading": "3.3 Sequence Labeling as a Classification Task",
+            "text": "Sequence labeling can be treated as a set of independent classification tasks, one per member of the sequence. We acknowledge that the accuracy is generally improved by making the optimal label for a given element dependent on the choices of nearby elements, using special algorithms to choose the globally best set of labels for the entire sequence at once (Erdogan, 2010).\nHowever, we would like to present our kNN classification appproach. With the help of post-processing, our approach yields better results compared to classic MEMMs, CRFs or neural networks.\nIn our approach, each word in the utterance is labeled independently. Post-processing is performed for each utterance after all the words are labeled. The post-processing step contains two actions:\n1. If an N-word span does not begin with a beginning (B-) tag, correct it to be a beginning tag.\n2. In an N-word span, if several entities/items/intents are identified, perform a majority vote to unify the entities/items/intents.\nTable 1 is a comparison between the predicted labels and the labels after post-processing. For example, the predicted label for a certain span may look like the second column in Table 1. There are two obvious prediction mistakes we can systematically correct without introducing new ones. The first IOB tag can be corrected from \u201dI-\u201d to \u201dB-\u201d since it is the beginning of the chunk. Since there is a two-to-three split in the item labels, we can also unify the labels by taking a majority vote to make them all \u201d BURGER ITEM\u201d.\nWe will show in Section 4 that post-processing will improve upon the classification results."
+        },
+        {
+            "heading": "3.4 Experiment Setup",
+            "text": "Our series of experiment contains four subsets of experiments. The results are presented in Section 4 and discussed in Section 5.\nThe first set of experiments uses synthesized training data provided by the synthetic data generator and both human transcribed (HT) and automatic speech recognition (ASR) customergenerated test data. In the second set of experiments, we switched from using synthesized training data to using human transcribed training data.\nWe tested on both human transcribed and ASR data.\nIn the third set of experiments, we investigate how semi-supervised training can help with the classification task. We obtained additional unannotated but human transcribed data only one eighth the size of our synthesized data. We used the annotated human transcribed data, which is identical to the training set in the second set, as our seeding data and performed prediction on our additional data set. We use the distance as a confidence measure, so we could set multiple thresholds and add the prediction as additional training data to our training set. The thresholds were set at the first, second and third quartile. We also experimented with only using the predictions of the additional data as our training set. In this experiment setting, all the predictions that have a distance of zero, which is a confidence of 100%, are also removed to increase the diversity of the training set as this kind of predictions are simply exact matches to the seeding training set.\nIn the fourth set of experiments, we moved back to using only the annotated human transcribed training data. However, with the help of ASR improvement, we tested on a more accurate test set. We performed post-processing in this set of experiments as well.\nIn experiments comparing TiMBL with the use of other classifiers, we specifically compare against MEMM (McCallum et al., 2000) and BiLSTM-CRF with ELMO embeddings (Peters et al., 2018). For the BiLSTM-CRF we use the Baseline open source software package (Pressel et al., 2018).\nAll experiments include parameter optimization in reported results."
+        },
+        {
+            "heading": "3.5 Features",
+            "text": "Most machine learning models prefer homogeneous data. We usually use data of the same type in one feature matrix. For example, in bag-\nof-words (BOW) approach towards text classification, we fill in every cell of the matrix with a Boolean value (present/absent) of a certain word or character n-gram. Another example would be, for image classification, we pass the raw pixel value to a deep neural network. Such vector representations of words and sentences are also common among recent works in natural language processing. Word2vec, GloVe and ELMO word embeddings are especially popular in recent years. These kind of vector representations are generally used with a neural network classifier too (Peters et al., 2018).\nTo the best of our knowledge, no previous research has investigated using both symbolic features and vector representations in a single k-NN classifier for sequence labeling. We present this new feature vector, the concatenation of two types of features. In our approach, we use three kinds of features, two of them being symbolic and one of them being a vector representation. Our features are:\n1. Windowed left and right 5 word unigrams\n2. Windowed left and right 5 part-of-speech (POS) tag unigrams\n3. 25-dimensional GloVe word embedding vectors\nWindowed word unigrams refer to a sequence of words like this: For a given word w, the windowed word unigrams are w-4, w-3, w-2, w-1, w, w+1, w+2, w+3, and w+4. Here we are using the window size of 5. This parameter was optimized in our pilot study.\nWe tag the utterances with the Maximum Entropy POS tagger (maxent treebank pos tagger) provided by NLTK (Bird and Loper, 2004). The tagset we used is the standard Penn Treebank POS tagset (Marcus et al., 1993). Like the windowed word unigrams, windowed POS tag unigrams are also of the window size 5.\nGloVe vectors are designed to capture a word as its relation to its co-occurrent words in the global corpus (Pennington et al., 2014). Since k-NN classifiers are better at handling fewer number of symbolic and abstract features, we chose the 25- dimensional word vector. This is also under the consideration that k-NN classifier will weigh features and we would like to maintain enough weight for our symbolic features. We also did pilot study to determine the best dimensionality and the result is consistant with our observation. All hyperparameters of the classifier are optimized using leave-one-out method on the training set."
+        },
+        {
+            "heading": "4 Results",
+            "text": "In this section we present our evaluation results. All the numbers are calculated using the labeled bracketed score. For example, if a n-word span is labeled as N, the predictions need to match both the left and the right boundaries and the label N unanimously to be counted as one correct prediction. If the predictions have the wrong word span or at least one wrong label, the entire chunk is considered incorrect."
+        },
+        {
+            "heading": "4.1 Experiment Results",
+            "text": "The results are shown in Table 3. In the Experiment I, using synthesized training data and human transcribed (HT in Table 3) test data produced the best result. Overall we achieved an F-score of 41.25.\nIn the Experiment II, the leave-one-out experiment performed on human transcribed data is used to show the upper bound of the task (italicized in Table 3). This is the ideal situation in which we do not introduce errors from automatic speech recognition. The distribution of training set and the test set is identical. In this best scenario, our classifier achieved an F-score of 61.33.\nIn the Experiment III, we have two different settings. One of them is to use both human transcribed data and additional self-training labeled data, the other is to only use human transcribed data as the seed while the training set itself is the sole self-training labeled data. The second setting is closer to real world scenario especially when we are dealing with situations like a cold start. In this set, human transcribed data plus additional selftraining labeled data reached an F-score of 48.30, outperforming only the additional data by slightly over four points.\nIn the Experiment IV, we show that with the accuracy improvement from ASR, our F-score is improving as well. By performing post-processing, which is a process that is designed strictly to correct errors without compromising the performance in the long run, we manage to achieve close to upper bound performance with an F-score of 60.71."
+        },
+        {
+            "heading": "4.2 Multilevel Results",
+            "text": "The best performance for all levels is achieved when we have improved ASR output and perform post-processing to correct the errors caused by the nature of classification.\nHowever, the results in the third set of experiment show some interesting trends. When training with human transcribed data, the best performance is achieved with the least additional data. Meanwhile, when training without human transcribed data, the best performance is achieved with the most additional data. Even this cannot produce comparable results to the experiments with human transcribed data."
+        },
+        {
+            "heading": "4.3 Results of Using Other Classifiers",
+            "text": "Overall we achieve 60.71 F measure on ASR input using TiMBL. In comparison, as shown in Figure 4, two previous systems, MEMM and BiLSTM-CRF, achieved 48.26 and 47.75 respectively. When hand transcribed text is input, BiLSTM-CRF performs the best, 69.15 F, followed by MEMM and TiMBL at 67.37 F and 61.3 F, respectively."
+        },
+        {
+            "heading": "4.4 Running Times",
+            "text": "The running times for different classifiers are shown in Figure 5. It can be seen that while the BiLSTM-CRF may be a better classifier than the MEMM in terms of accuracy, there is a trade-off in terms of running time. It may be noted, however, that degradation of performance at test time for BiLSTM-CRF is not as severe as the performace drop during training."
+        },
+        {
+            "heading": "5 Discussion",
+            "text": "In this section we discuss our findings from our experiments."
+        },
+        {
+            "heading": "5.1 Experiment I",
+            "text": "The purpose of this set of experiment is to show that errors introduced early on in the pipeline will propagate through to cause performance decrease\nlater. Compared to testing on human transcribed data, testing on ASR data performed much worse with a decrease of almost fourteen points in terms of F-score. Human transcribed data tend to be more grammatical and relevant. As we can see in our first example, ASR data has a lot more noise. The word sequences occurred in the sentence are also less common. Words that sound similar can be mistaken from each other. However, this poses some difficulty on the POS tagger when it tries to tag the words based on the left and right context. We believe this is one of the reasons we saw a big performance difference here."
+        },
+        {
+            "heading": "5.2 Experiment II",
+            "text": "The leave-one-out experiment with the human transcribed data serves as the upper bound, the ideal situation where the distribution is identical and no error is introduced externally. However, it is unlikely to achieve such result in real life scenario since user input is noisy and external errors will be introduced along the pipeline inevitably.\nWhat is interesting is the second experiment. In this particular experiment, we used human transcribed data as our training set and ASR data as our test set. This is a more realistic scenario. While we only had less than 1% of the data compared to the previous experiments in Experiment I, we achieved a much better F-score. We believe\nthis shows that with very little training data we can still achieve rather decent results. The closer the distribution of both data sets have, the more likely we can achieve higher accuracy. Having just a little bit of human transcribed and annotated data is a reasonable cost for higher quality prediction."
+        },
+        {
+            "heading": "5.3 Experiment III",
+            "text": "This is a set of experiment that is rather a reinforcement of the second experiment. Though the F-score dropped minimally due to the added noise from the additional data, it is still obvious that by using real world data we are improving the accuracy.\nThe second half of this set of experiment provides a potential alternative to our approach. As much as the result is not as good as the first half of this experiment or the second set of experiments, it is still even more accurate than the first set of experiments. With better ASR quality we believe semi-supervised self-training can and should help."
+        },
+        {
+            "heading": "5.4 Experiment IV",
+            "text": "This is our best and state-of-the-art result of this task. With the help from ASR quality improvement, the classifier receives a significant boost in performance from an F-score of 48.76 to 57.87.\nIt is especially worth noticing that by postprocessing we achieve 3 points even more. Postprocessing is strictly used to correct the inconsistency in the predictions as each individual decision is made independent of each other. It will not hurt the performance in the long run."
+        },
+        {
+            "heading": "5.5 Using Other Classifiers",
+            "text": "It is interesting to note that the BiLSTM-CRF performs the worst on ASR input, perhaps because the ELMO embeddings that are used by the BiLSTM-CRF are sensitive to the context of the whole utterance, and this context can differ quite a lot between the training utterances which are hand transcribed and the test utterances which are provided by ASR."
+        },
+        {
+            "heading": "6 Conclusion",
+            "text": "In this paper we present a new method to perform multi-level sequence labeling. We show that this method actually outperforms other state-of-the-art methods for this task, showing k-NN is competitive with other methods in the not infrequent situation where only a small amount of training data is available.\nWe achieved labeled bracketed F-scores of 75.46, 52.84 and 49.66 for the three levels of sequence labeling. Overall we achieved 60.71 at all levels."
+        },
+        {
+            "heading": "7 Future Work",
+            "text": "We believe that the pipeline should be fully automated for production purposes. We could automate how the rules are obtained, or extend the rules to correct more mistakes.\nAs a future research direction for conversational AI, we think that to train and test a k-NN model for predicting which dialog move to take will be beneficial as well."
+        }
+    ],
+    "title": "A k-Nearest Neighbor Approach towards Multi-level Sequence Labeling",
+    "year": 2019
+}

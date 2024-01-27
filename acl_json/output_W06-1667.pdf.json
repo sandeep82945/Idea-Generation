@@ -1,0 +1,176 @@
+{
+    "abstractText": "We present an unsupervised learning approach to disambiguate various relations between name entities by use of various lexical and syntactic features from the contexts. It works by calculating eigenvectors of an adjacency graph\u2019s Laplacian to recover a submanifold of data from a high dimensionality space and then performing cluster number estimation on the eigenvectors. This method can address two difficulties encoutered in Hasegawa et al. (2004)\u2019s hierarchical clustering: no consideration of manifold structure in data, and requirement to provide cluster number by users. Experiment results on ACE corpora show that this spectral clustering based approach outperforms Hasegawa et al. (2004)\u2019s hierarchical clustering method and a plain k-means clustering method.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Jinxiu Chen"
+        },
+        {
+            "affiliations": [],
+            "name": "Donghong Ji"
+        },
+        {
+            "affiliations": [],
+            "name": "Chew Lim Tan"
+        },
+        {
+            "affiliations": [],
+            "name": "Zhengyu Niu"
+        }
+    ],
+    "id": "SP:587efdbe44bf790418bb98f8f06ac9e97e01bd62",
+    "references": [
+        {
+            "authors": [
+                "Agichtein E",
+                "Gravano L"
+            ],
+            "title": "2000.Snowball: Extracting Relations from large Plain-Text Collections",
+            "venue": "In Proc. of the5 ACM International Conference on Digital Libraries (ACMDL\u201900)",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "Brin Sergey."
+            ],
+            "title": "Extracting patterns and relations from world wide web",
+            "venue": "Proc. of WebDB Workshop at 6th International Conference on Extending Database Technology (WebDB\u201998)",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "Hasegawa Takaaki",
+                "Sekine Satoshi",
+                "Grishman Ralph."
+            ],
+            "title": "Discovering Relations among Named Entities from Large Corpora, Proceeding of Conference ACL2004",
+            "venue": "Barcelona, Spain.",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "N. Kambhatla"
+            ],
+            "title": "2004.Combining lexical, syntactic and semantic features with Maximum Entropy Models for extracting relations, In proceedings of 42th Annual Meeting of the Association for Computational Linguistics",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "R. Weischedel"
+            ],
+            "title": "A novel use of statistical parsing to extract information from text",
+            "venue": "In proceedings of 6th Applied Natural Language Processing Conference",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "Shi J",
+                "Malik.J"
+            ],
+            "title": "2000.Normalized cuts and image segmentation",
+            "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "Weiss Yair"
+            ],
+            "title": "1999.Segmentation using eigenvectors: A",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "Zhang Zhu"
+            ],
+            "title": "2004.Weakly-supervised relation classification for Information Extraction",
+            "venue": "In proceedings of ACM 13th conference on Information and Knowledge",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "Zhou GuoDong",
+                "Su Jian",
+                "Zhang Jie",
+                "Zhang min"
+            ],
+            "title": "Exploring Various Knowledge in Relation Extraction",
+            "venue": "In proceedings of 43th Annual Meeting",
+            "year": 2004
+        }
+    ],
+    "sections": [
+        {
+            "text": "Proceedings of the 2006 Conference on Empirical Methods in Natural Language Processing (EMNLP 2006), pages 568\u2013575, Sydney, July 2006.c\u00a92006 Association for Computational Linguistics\nWe present an unsupervised learning approach to disambiguate various relations between name entities by use of various lexical and syntactic features from the contexts. It works by calculating eigenvectors of an adjacency graph\u2019s Laplacian to recover a submanifold of data from a high dimensionality space and then performing cluster number estimation on the eigenvectors. This method can address two difficulties encoutered in Hasegawa et al. (2004)\u2019s hierarchical clustering: no consideration of manifold structure in data, and requirement to provide cluster number by users. Experiment results on ACE corpora show that this spectral clustering based approach outperforms Hasegawa et al. (2004)\u2019s hierarchical clustering method and a plain k-means clustering method."
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "The task of relation extraction is to identify various semantic relations between name entities from text. Prior work on automatic relation extraction come in three kinds: supervised learning algorithms (Miller et al., 2000; Zelenko et al., 2002; Culotta and Soresen, 2004; Kambhatla, 2004; Zhou et al., 2005), semi-supervised learning algorithms (Brin, 1998; Agichtein and Gravano, 2000; Zhang, 2004), and unsupervised learning algorithm (Hasegawa et al., 2004).\nAmong these methods, supervised learning is usually more preferred when a large amount of la-\nbeled training data is available. However, it is time-consuming and labor-intensive to manually tag a large amount of training data. Semi-supervised learning methods have been put forward to minimize the corpus annotation requirement. Most of semi-supervised methods employ the bootstrapping framework, which only need to pre-define some initial seeds for any particular relation, and then bootstrap from the seeds to acquire the relation. However, it is often quite difficult to enumerate all class labels in the initial seeds and decide an \u201coptimal\u201d number of them.\nCompared with supervised and semi-supervised methods, Hasegawa et al. (2004)\u2019s unsupervised approach for relation extraction can overcome the difficulties on requirement of a large amount of labeled data and enumeration of all class labels. Hasegawa et al. (2004)\u2019s method is to use a hierarchical clustering method to cluster pairs of named entities according to the similarity of context words intervening between the named entities. However, the drawback of hierarchical clustering is that it required providing cluster number by users. Furthermore, clustering is performed in original high dimensional space, which may induce non-convex clusters hard to identified.\nThis paper presents a novel application of spectral clustering technique to unsupervised relation extraction problem. It works by calculating eigenvectors of an adjacency graph\u2019s Laplacian to recover a submanifold of data from a high dimensional space, and then performing cluster number estimation on a transformed space defined by the first few eigenvectors. This method may help us find non-convex clusters. It also does not need to pre-define the number of the context clusters or pre-specify the similarity threshold for the clusters as Hasegawa et al.\n568\n(2004)\u2019s method. The rest of this paper is organized as follows. Section 2 formulates unsupervised relation extraction and presents how to apply the spectral clustering technique to resolve the task. Then section 3 reports experiments and results. Finally we will give a conclusion about our work in section 4."
+        },
+        {
+            "heading": "2 Unsupervised Relation Extraction Problem",
+            "text": "Assume that two occurrences of entity pairs with similar contexts, are tend to hold the same relation type. Thus unsupervised relation extraction problem can be formulated as partitioning collections of entity pairs into clusters according to the similarity of contexts, with each cluster containing only entity pairs labeled by the same relation type. And then, in each cluster, the most representative words are identified from the contexts of entity pairs to induce the label of relation type. Here, we only focus on the clustering subtask and do not address the relation type labeling subtask.\nIn the next subsections we will describe our proposed method for unsupervised relation extraction, which includes: 1) Collect the context vectors in which the entity mention pairs co-occur; 2) Cluster these Context vectors."
+        },
+        {
+            "heading": "2.1 Context Vector and Feature Design",
+            "text": "Let X = {xi}ni=1 be the set of context vectors of occurrences of all entity mention pairs, wherexi represents the context vector of thei-th occurrence, andn is the total number of occurrences of all entity pairs.\nEach occurrence of entity mention pairs can be denoted as follows:\nR \u2192 (Cpre, e1, Cmid, e2, Cpost) (1)\nwheree1 ande2 represents the entity mentions, and Cpre,Cmid,and Cpost are the contexts before, between and after the entity pairs respectively.\nWe extracted features frome1, e2, Cpre, Cmid, Cpost to construct context vectors, which are computed from the parse trees derived from Charniak Parser (Charniak, 1999) and the Chunklink script1 written by Sabine Buchholz from Tilburg University.\n1 Software available at http://ilk.uvt.nl/ sabine/chunklink/\nWords: Words in the two entities and three context windows.\nEntity Type: the entity type of both entity mentions, which can be PERSON, ORGANIZATION, FACILITY, LOCATION and GPE.\nPOS features: Part-Of-Speech tags corresponding to all words in the two entities and three context windows.\nChunking features: This category of features are extracted from the chunklink representation, which includes:\n\u2022 Chunk tag information of the two entities and three context windows. The \u201c0\u201d tag means that the word is outside of any chunk. The \u201cI-XP\u201d tag means that this word is inside an XP chunk. The \u201cB-XP\u201d by default means that the word is at the beginning of an XP chunk. \u2022 Grammatical function of the two entities and three context windows. The last word in each chunk is its head, and the function of the head is the function of the whole chunk. \u201cNP-SBJ\u201d means a NP chunk as the subject of the sentence. The other words in a chunk that are not the head have \u201cNOFUNC\u201d as their function. \u2022 IOB-chains of the heads of the two entities. Socalled IOB-chain, noting the syntactic categories of all the constituents on the path from the root node to this leaf node of tree.\nWe combine the above lexical and syntactic features with their position information in the context to form the context vector. Before that, we filter out low frequency features which appeared only once in the entire set."
+        },
+        {
+            "heading": "2.2 Context Clustering",
+            "text": "Once the context vectors of entity pairs are prepared, we come to the second stage of our method: cluster these context vectors automatically.\nIn recent years, spectral clustering technique has received more and more attention as a powerful approach to a range of clustering problems. Among the efforts on spectral clustering techniques (Weiss, 1999; Kannan et al., 2000; Shi et al., 2000; Ng et al., 2001; Zha et al., 2001), we adopt a modified version (Sanguinetti et al., 2005) of the algorithm by Ng et al. (2001) because it can provide us model order selection capability.\nSince we do not know how many relation types in advance and do not have any labeled relation\nTable 1: Context Clustering with Spectral-based Clustering technique.\nInput: A set of context vectorsX = {x1, x2, ..., xn}, X \u2208 <n\u00d7d; Output: Clustered data and number of clusters;\n1. Construct an affinity matrix byAij = exp(\u2212 s 2 ij\n\u03c32 ) if i 6=\nj, 0 if i = j. Here,sij is the similarity betweenxi and xj calculated by Cosine similarity measure. and the free distance parameter\u03c32 is used to scale the weights;\n2. Normalize the affinity matrixA to create the matrixL = D\u22121/2AD\u22121/2, whereD is a diagonal matrix whose (i,i) element is the sum ofA\u2019s ith row; 3. Setq = 2; 4. Computeq eigenvectors ofL with greatest eigenvalues.\nArrange them in a matrixY . 5. Perform elongatedK-means withq + 1 centers onY ,\ninitializing the(q + 1)-th mean in the origin; 6. If the q +1-th cluster contains any data points, then there\nmust be at least an extra cluster; setq = q + 1 and go back to step 4. Otherwise, algorithm stops and outputs clustered data and number of clusters.\ntraining examples at hand, the problem of model order selection arises, i.e. estimating the \u201coptimal\u201d number of clusters. Formally, letk be the model order, we need to findk in Equation: k = argmaxk{criterion(k)}. Here, the criterion is defined on the result of spectral clustering.\nTable 1 shows the details of the whole algorithm for context clustering, which contains two main stages: 1) Transformation of Clustering Space (Step 1-4); 2) Clustering in the transformed space using Elongated K-means algorithm (Step 5-6)."
+        },
+        {
+            "heading": "2.3 Transformation of Clustering Space",
+            "text": "We represent each context vector of entity pair as a node in an undirected graph. Each edge (i,j) in the graph is assigned a weight that reflects the similarity between two context vectorsi andj. Hence, the relation extraction task for entity pairs can be defined as a partition of the graph so that entity pairs that are more similar to each other, e.g. labeled by the same relation type, belong to the same cluster. As a relaxation of such NP-hard discrete graph partitioning problem, spectral clustering technique computes eigenvalues and eigenvectors of a Laplacian matrix related to the given graph, and construct data clusters based on such spectral information.\nThus the starting point of context clustering is to construct anaffinity matrix Afrom the data, which is ann \u00d7 n matrix encoding the distances between\nthe various points. The affinity matrix is then normalized to form a matrixL by conjugating with the the diagonal matrixD\u22121/2 which has as entries the square roots of the sum of the rows ofA. This is to take into account the different spread of the various clusters (points belonging to more rarified clusters will have lower sums of the corresponding row of A). It is straightforward to prove thatL is positive definite and has eigenvalues smaller or equal to1, with equality holding in at least one case.\nLet K be the true number of clusters present in the dataset. IfK is known beforehand, the firstK eigenvectors ofL will be computed and arranged as columns in a matrixY . Each row ofY corresponds to a context vector of entity pair, and the above process can be considered as transforming the original context vectors in ad-dimensional space to new context vectors in theK-dimensional space. Therefore, the rows ofY will cluster upon mutually orthogonal points on theK dimensional sphere,rather than on the coordinate axes."
+        },
+        {
+            "heading": "2.4 The Elongated K-means algorithm",
+            "text": "As the step 5 of Table 1 shows, the result of elongatedK-means algorithm is used to detect whether the number of clusters selectedq is less than the true numberK, and allows one to iteratively obtain the number of clusters.\nConsider the case when the number of clustersq is less than the true cluster numberK present in the dataset. In such situation, taking the firstq < K eigenvectors, we will be selecting aq-dimensional subspace in the clustering space. As the rows of the K eigenvectors clustered along mutually orthogonal vectors, their projections in a lower dimensional space will cluster along radial directions. Therefore, the general picture will be ofq clusters elongated in the radial direction, with possibly some clusters very near the origin (when the subspace is orthogonal to some of the discarded eigenvectors).\nHence, theK-means algorithm is modified as the elongatedK-means algorithm to downweight distances along radial directions and penalize distances along transversal directions. The elongated K-means algorithm computes the distance of point x from the centerci as follows:\n\u2022 If the center is not very near the origin,cTi ci > \u00b2 (\u00b2 is a parameter to be fixed by the user), the distances are cal-\n-4 -3 -2 -1 0 1 2 3 4 -4\n-3\n-2\n-1\n0\n1\n2\n3\n4\n(a)\n-4 -3 -2 -1 0 1 2 3 4 -4\n-3\n-2\n-1\n0\n1\n2\n3\n4\n(b)\n0 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 -0.08\n-0.06\n-0.04\n-0.02\n0\n0.02\n0.04\n0.06\n0.08\n0.1\n(c)\n-4 -3 -2 -1 0 1 2 3 4 -4\n-3\n-2\n-1\n0\n1\n2\n3\n4\n(d)\nFigure 1: An Example:(a) The Three Circle Dataset. (b) The clustering result using K-means; (c) Three\nelongated clusters in the 2D clustering space using Spectral clustering: two dominant eigenvectors; (d) The clustering result using Spectral-based clustering (\u03c32=0.05). (4,\u25e6 and+ denote examples in different clusters)\nculated as:edist(x, ci) = (x \u2212 ci)T M(x \u2212 ci), where M = 1\n\u03bb (Iq \u2212 cic\nT i\ncT i\nci ) + \u03bb\ncic T i cT i ci , \u03bb is thesharpnessparam-\neter that controls the elongation (the smaller, the more elongated the clusters)2.\n\u2022 If the center is very near the origin,cTi ci < \u00b2, the distances are measured using the Euclidean distance.\nIn each iteration of procedure in Table 1, elongatedK-means is initialized withq centers corresponding to data points in different clusters and one center in the origin. The algorithm then will drag the center in the origin towards one of the clusters not accounted for. Compute another eigenvector (thus increasing the dimension of the clustering space to q + 1) and repeat the procedure. Eventually, when one reach as many eigenvectors as the number of clusters present in the data, no points will be assigned to the center at the origin, leaving the cluster empty. This is the signal to terminate the algorithm."
+        },
+        {
+            "heading": "2.5 An example",
+            "text": "Figure 1 visualized the clustering result of three circle dataset using K-means and Spectral-based clustering. From Figure 1(b), we can see that K-means can not separate the non-convex clusters in three circle dataset successfully since it is prone to local minimal. For spectral-based clustering, as the algorithm described, initially, we took the two eigenvectors of L with largest eigenvalues, which gave us a twodimensional clustering space. Then to ensure that the two centers are initialized in different clusters, one center is set as the point that is the farthest from the origin, while the other is set as the point that simultaneously farthest the first center and the origin. Figure 1(c) shows the three elongated clusters in the 2D clustering space and the corresponding clustering result of dataset is visualized in Figure 1(d), which exploits manifold structure (cluster structure) in data."
+        },
+        {
+            "heading": "3 Experiments and Results",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Data Setting",
+            "text": "Our proposed unsupervised relation extraction is evaluated on ACE corpus, which contains 519 files from sources including broadcast, newswire, and newspaper. We only deal with intra-sentence ex-\nplicit relations and assumed that all entities have\n2 In this paper, thesharpnessparameter\u03bb is set to 0.2\nbeen detected beforehand in the EDT sub-task of ACE. To verify our proposed method, we only collect those pairs of entity mentions which have been tagged relation types in the given corpus. Then the relation type tags were removed to test the unsupervised relation disambiguation. During the evaluation procedure, the relation type tags were used as ground truth classes. A break-down of the data by 24 relation subtypes is given in Table 2."
+        },
+        {
+            "heading": "3.2 Evaluation method for clustering result",
+            "text": "When assessing the agreement between clustering result and manually annotated relation types (ground truth classes), we would encounter the problem that there was no relation type tags for each cluster in our clustering results.\nTo resolve the problem, we construct a contingency tableT , where each entryti,j gives the number of the instances that belong to both thei-th estimated cluster andj-th ground truth class. Moreover, to ensure that any two clusters do not share the same labels of relation types, we adopt a permutation procedure to find an one-to-one mapping function \u2126 from the ground truth classes (relation types)TC to the estimated clustering resultEC.\nThere are at most|TC| clusters which are assigned relation type tags. And if the number of the estimated clusters is less than the number of the ground truth clusters, empty clusters should be added so that |EC| = |TC| and the one-to-one mapping can be performed, which can be formulated as the function: \u2126\u0302 = arg max\u2126 \u2211|TC| j=1 t\u2126(j),j , where\u2126(j) is the index of the estimated cluster associated with thej-th class.\nGiven the result of one-to-one mapping, we adopt Precision, Recall and F-measureto evaluate the clustering result."
+        },
+        {
+            "heading": "3.3 Experimental Design",
+            "text": "We perform our unsupervised relation extraction on the devtest set of ACE corpus and evaluate the algorithm on relation subtype level. Firstly, we observe the influence of various variables, including Distance Parameter\u03c32, Different Features, Context Window Size. Secondly, to verify the effectiveness of our method, we further compare it with supervised method based on SVM and other two unsupervised methods."
+        },
+        {
+            "heading": "3.3.1 Choice of Distance Parameter\u03c32",
+            "text": "We simply search over\u03c32 and pick the value that finds the best aligned set of clusters on the transformed space. Here, the scattering criterion trace(P\u22121W PB) is used to compare the cluster quality for different value of\u03c32 3, which measures the ratio of between-cluster to within-cluster scatter. The higher thetrace(P\u22121W PB), the higher the cluster quality.\nIn Table 3 and Table 4, with different settings of feature set and context window size, we find out the corresponding value of\u03c32 and cluster number which maximize thetrace value in searching for a range of value\u03c32."
+        },
+        {
+            "heading": "3.3.2 Contribution of Different Features",
+            "text": "As the previous section presented, we incorporate various lexical and syntactic features to extract rela-\n3 trace(P\u22121W PB) is trace of a matrix which is the sum of its diagonal elements.PW is the within-cluster scatter matrix as: PW = \u2211c j=1 \u2211 Xi\u2208\u03c7j (Xi \u2212 mj)(Xi \u2212 mj) t and PB\nis the between-cluster scatter matrix as:PB = \u2211c\nj=1 (mj \u2212\nm)(mj \u2212 m)t, where m is the total mean vector andmj is the mean vector forjth cluster and(Xj \u2212 mj)t is the matrix transpose of the column vector(Xj \u2212mj).\ntion. To measure the contribution of different fea-\ntures, we report the performance by gradually in-\ncreasing the feature set, as Table 3 shows.\nTable 3 shows that all of the four categories of features contribute to the improvement of performance more or less. Firstly,the addition of entity type feature is very useful, which improvesF-measureby 6.6%. Secondly, adding POS features can increase F-measurescore but do not improve very much. Thirdly, chunking features also show their great usefulness with increasingPrecision/Recall/F-measure by 5.7%/2.5%/4.5%.\nWe combine all these features to do all other evaluations in our experiments."
+        },
+        {
+            "heading": "3.3.3 Setting of Context Window Size",
+            "text": "We have mentioned in Section 2 that the context vectors of entity pairs are derived from the contexts before, between and after the entity mention pairs. Hence, we have to specify the three context window size first. In this paper, we set the mid-context window as everything between the two entity mentions. For the pre- and post- context windows, we could have different choices. For example, if we specify the outer context window size as 2, then it means that the pre-context (post-context)) includes two words before (after) the first (second) entity.\nFor comparison of the effect of the outer context of entity mention pairs, we conducted three different settings of context window size (0, 2, 5) as Table 4 shows. From this table we can find that with the context window size setting, 2, the algorithm achieves the best performance of 43.5%/49.4%/46.3% in Precision/Recall/F-measure. With the context window size setting, 5, the performance becomes worse\nbecause extending the context too much may include more features, but at the same time, the noise also increases."
+        },
+        {
+            "heading": "3.3.4 Comparison with Supervised methods",
+            "text": "and other Unsupervised methods\nTo explore the effectiveness of our unsupervised method compared to supervised method, we perform SVM technique with the same feature set defined in our proposed method. TheLIBSVM tool is used in this test4. The kernel function we used is linear and SVM models are trained using the training set of ACE corpus.\nIn (Hasegawa et al., 2004), they preformed unsupervised relation extraction based on hierarchical clustering and they only used word features between entity mention pairs to construct context vectors. We reported the clustering results using the same clusering strategy as Hasegawa et al. (2004) proposed. In Table 5, Hasegawa\u2019s Method1 means the test used the word feature as Hasegawa et al. (2004) while Hasegawa\u2019s Method2 means the test used the same feature set as our method. In both tests, we specified\n4 LIBSV M : a library for support vector machines. Software available at http://www.csie.ntu.edu.tw/ cjlin/libsvm. It upports multi-class classification.\nthe cluster number as the number of ground truth classes.\nWe also approached the relation extraction problem using the standard clustering technique, Kmeans, where we adopted the same feature set defined in our proposed method to cluster the context vectors of entity mention pairs and pre-specified the cluster number as the number of ground truth classes.\nTable 5 reports the performance of our proposed method comparing with SVM-based supervised method and the other two unsupervised methods. As the result shows, SVM-based method by using the same feature set in our proposed method can achieve 61.2%/49.6%/54.8% inPrecision/Recall/Fmeasure. Table 5 also shows our proposed spectral based method clearly outperforms the other two unsupervised methods by 12.5% and 9.5% in F-measurerespectively. Moreover, the incorporation of various lexical and syntactic features into Hasegawa et al. (2004)\u2019s method2 makes it outperform Hasegawa et al. (2004)\u2019s method1 which only uses word feature."
+        },
+        {
+            "heading": "3.4 Discussion",
+            "text": "In this paper, we have shown that the modified spectral clustering technique, with various lexical and syntactic features derived from the context of entity pairs, performed well on the unsupervised relation disambiguation problem. Our experiments show that by the choice of the distance parameter \u03c32, we can estimate the cluster number which provides the tightest clusters. We notice that the estimated cluster number is less than the number of ground truth classes in most cases. The reason for this phenomenon may be that some relation types can not be easily distinguished using the context information only. For example, the relation subtypes \u201cLocated\u201d, \u201cBased-In\u201d and \u201cResidence\u201d are difficult\nto disambiguate even for human experts to differentiate.\nThe results also show that various lexical and syntactic features contain useful information for the task. Especially, although we did not concern the dependency tree and full parse tree information as other supervised methods (Miller et al., 2000; Culotta and Soresen, 2004; Kambhatla, 2004; Zhou et al., 2005), the incorporation of simple features, such as words and chunking information, still can provide complement information for capturing the characteristics of entity pairs. Another observation from the result is that extending the outer context window of entity mention pairs too much may not improve the performance since the process may incorporate more noise information and affect the clustering result.\nAs regards the clustering technique, the spectralbased clustering performs better than direct clustering, K-means. Since the spectral-based algorithm works in a transformed space of low dimensionality, data can be easily clustered so that the algorithm can be implemented with better efficiency and speed. And the performance using spectralbased clustering can be improved due to the reason that spectral-based clustering overcomes the drawback of K-means (prone to local minima) and may find non-convex clusters consistent with human intuition.\nCurrently most of works on the RDC task of ACE focused on supervised learning methods. Table 6 lists a comparison of these methods on relation detection and relation classification. Zhou et al. (2005) reported the best result as 63.1%/49.5%/55.5% in P ecision/Recall/F-measureon the extraction of ACE relation subtypes using feature based method, which outperforms tree kernel based method by Culotta and Soresen (2004). Although our unsupervised method still can not outperform these su-\npervised methods, from the point of view of unsupervised resolution for relation extraction, our approach already achieves best performance of 43.5%/49.4%/46.3% inPrecision/Recall/F-measure compared with other clustering methods."
+        },
+        {
+            "heading": "4 Conclusion and Future work",
+            "text": "In this paper, we approach unsupervised relation disambiguation problem by using spectral-based clustering technique with diverse lexical and syntactic features derived from context. The advantage of our method is that it doesn\u2019t need any manually labeled relation instances, and pre-definition the number of the context clusters. Experiment results on the ACE corpus show that our method achieves better performance than other unsupervised methods.\nCurrently we combine various lexical and syntactic features to construct context vectors for clustering. In the future we will further explore other semantic information to assist the relation extraction problem. Moreover, instead of cosine similarity measure to calculate the distance between context vectors, we will try other distributional similarity measures to see whether the performance of relation extraction can be improved. In addition, if we can find an effective unsupervised way to filter out unrelated entity pairs in advance, it would make our proposed method more practical."
+        }
+    ],
+    "title": "Unsupervised Relation Disambiguation with Order Identification Capabilities",
+    "year": 2006
+}

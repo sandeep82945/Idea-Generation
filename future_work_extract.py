@@ -83,6 +83,7 @@ def get_text_from_conclusion(json_file_path):
                     prompt='You are given text of conclusion of a research paper. Extract and Return only the portion of the text that discusses future works. Input text is as follows: '+ element['text']
                     op= response_chat(prompt)[2]
                     return op
+    return None
 
 
 def get_text_from_future(json_file_path):
@@ -99,7 +100,7 @@ def get_text_from_future(json_file_path):
                     else:
                         if(len(element['text'])<10 or len(enc.encode(element['text']))>2048):
                             return None
-                        prompt='You are given text of conclusion of a research paper. Extract and Return only the portion of the text that discusses future works. Input text is as follows: '+ element['text']
+                        prompt='You are given text of discussion and future of a research paper. Extract and Return only the portion of the text that discusses future works. Input text is as follows: '+ element['text']
                         op= response_chat(prompt)[2]
                         return op
     return None
@@ -112,13 +113,17 @@ def process_json_files_in_folder(folder_path, checkpoint_file, output_file):
             processed_files = file.read().splitlines()
     else:
         processed_files = []
-
+    count = 0
     for filename in os.listdir(folder_path):
+        if len(processed_files)>temp or count>temp:
+            print("completed")
+            continue
         if filename.endswith('.json') and filename not in processed_files:
             json_file_path = os.path.join(folder_path, filename)
-            result = get_text_from_future(json_file_path) or get_text_from_conclusion(json_file_path)
+            result = get_text_from_future(json_file_path)
 
             if result is not None:
+                count = count + 1
                 # Data to be appended
                 new_data = pd.DataFrame({'JSON ID': [filename], 'Future Work': [result]})
 
@@ -137,6 +142,36 @@ def process_json_files_in_folder(folder_path, checkpoint_file, output_file):
                 # Update the checkpoint file
                 with open(checkpoint_file, 'a') as file:
                     file.write(filename + '\n')
+    
+    for filename in os.listdir(folder_path):
+        if len(processed_files)>temp or count>temp:
+            print("completed")
+            continue
+        if filename.endswith('.json') and filename not in processed_files:
+            json_file_path = os.path.join(folder_path, filename)
+            result = get_text_from_conclusion(json_file_path)
+
+            if result is not None:
+                # Data to be appended
+                count = count+1
+                new_data = pd.DataFrame({'JSON ID': [filename], 'Future Work': [result]})
+
+                # Check if the output file already exists
+                if os.path.exists(output_file):
+                    # Read existing data
+                    existing_data = pd.read_excel(output_file)
+                    # Concatenate new data
+                    updated_data = pd.concat([existing_data, new_data], ignore_index=True)
+                    # Write back to the file
+                    updated_data.to_excel(output_file, index=False)
+                else:
+                    # Create a new file
+                    new_data.to_excel(output_file, index=False)
+
+                # Update the checkpoint file
+                with open(checkpoint_file, 'a') as file:
+                    file.write(filename + '\n')
+        
 
     return
 '''

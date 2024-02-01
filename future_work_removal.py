@@ -12,19 +12,22 @@ from future_work_RE_extractor import future_work_extraction_algorithm
 with open('config.yml', 'r') as config_file:
     config = yaml.safe_load(config_file)
 
-file_names = ['output_data_economics.xlsx']
+file_names = ['output_data_computer.xlsx']
 
 def read_json(json_file_path):
     with open(json_file_path, 'r') as file:
         data = json.load(file)
 
     paper_text = ''
+    if 'abstractText' in data:
+        text = paper_text + data['abstractText']
+
     if 'sections' in data:
         for element in data['sections']:
             if 'heading' in element and 'text' in element:
                 heading = element['heading'].lower()
                 text =element['text']
-                paper_text = paper_text + heading + '. ' + text
+                paper_text = paper_text + heading + text
 
     return paper_text
 

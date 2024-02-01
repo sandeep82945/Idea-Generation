@@ -1,0 +1,178 @@
+{
+    "abstractText": "The ever increasing amount of GPS-equipped vehicles provides in real-time valuable traffic information for the roads traversed by the moving vehicles. In this way, a set of sparse and time evolving traffic reports is generated for each road. These time series are a valuable asset in order to forecast the future traffic condition. In this paper we present a deep learning framework that encodes the sparse recent traffic information and forecasts the future traffic condition. Our framework consists of a recurrent part and a decoder. The recurrent part employs an attention mechanism that encodes the traffic reports that are available at a particular time window. The decoder is responsible to forecast the future traffic condition.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Nikolaos Zygouras"
+        },
+        {
+            "affiliations": [],
+            "name": "Dimitrios Gunopulos"
+        }
+    ],
+    "id": "SP:812be03ed713d3e0350f91a37c20c388e6f885b7",
+    "references": [
+        {
+            "authors": [
+                "Xiaomin Fang",
+                "Jizhou Huang",
+                "FanWang",
+                "Lingke Zeng",
+                "Haijin Liang",
+                "Haifeng Wang"
+            ],
+            "title": "Constgat: contextual spatial-temporal graph attention network for travel time estimation at baidu maps",
+            "venue": "In Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Kun Fu",
+                "Fanlin Meng",
+                "Jieping Ye",
+                "Zheng Wang"
+            ],
+            "title": "Compacteta: a fast inference system for travel time prediction",
+            "venue": "In Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Huiting Hong",
+                "Yucheng Lin",
+                "Xiaoqing Yang",
+                "Zang Li",
+                "Kung Fu",
+                "Zheng Wang",
+                "Xiaohu Qie",
+                "Jieping Ye"
+            ],
+            "title": "Heteta: heterogeneous information network embedding for estimating time of arrival",
+            "venue": "In Proceedings of the 26th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Guangyin Jin",
+                "Min Wang",
+                "Jinlei Zhang",
+                "Hengyu Sha",
+                "Jincai Huang"
+            ],
+            "title": "Stgnn-tte: travel time estimation via spatial\u2013temporal graph neural network",
+            "venue": "Future Generation Computer Systems,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Xiucheng Li",
+                "Gao Cong",
+                "Aixin Sun",
+                "Yun Cheng"
+            ],
+            "title": "Learning travel time distributions with deep generative model",
+            "venue": "In The World Wide Web Conference,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Yaguang Li",
+                "Kun Fu",
+                "Zheng Wang",
+                "Cyrus Shahabi",
+                "Jieping Ye",
+                "Yan Liu"
+            ],
+            "title": "Multi-task representation learning for travel time estimation",
+            "venue": "In Proceedings of the 24th ACM SIGKDD International Conference on Knowledge Discovery & Data Mining,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Ashish Vaswani",
+                "Noam Shazeer",
+                "Niki Parmar",
+                "Jakob Uszkoreit",
+                "Llion Jones",
+                "Aidan N Gomez",
+                "\u0141ukasz Kaiser",
+                "Illia Polosukhin"
+            ],
+            "title": "Attention is all you need",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Nikolaos Zygouras",
+                "Nikolaos Panagiotou",
+                "Yang Li",
+                "Dimitrios Gunopulos",
+                "Leonidas Guibas"
+            ],
+            "title": "Htte: a hybrid technique for travel time estimation in sparse data environments",
+            "venue": "In Proceedings of the 27th ACM SIGSPATIAL International Conference on Advances in Geographic Information Systems,",
+            "year": 2019
+        }
+    ],
+    "sections": [
+        {
+            "heading": "CCS CONCEPTS",
+            "text": "\u2022 Information systems\u2192 Data stream mining; Location based services; Geographic information systems."
+        },
+        {
+            "heading": "KEYWORDS",
+            "text": "travel time estimation, traffic forecasting, deep learning, transformer, GPS trajectories, mining mobility data"
+        },
+        {
+            "heading": "ACM Reference Format:",
+            "text": "Nikolaos Zygouras and Dimitrios Gunopulos. 2022. A Novel Framework for Handling Sparse Data in Traffic Forecast. In The 30th International Conference on Advances in Geographic Information Systems (SIGSPATIAL \u201922), November 1\u20134, 2022, Seattle,WA, USA.ACM, NewYork, NY, USA, 4 pages. https://doi.org/10.1145/3557915.3560968"
+        },
+        {
+            "heading": "1 INTRODUCTION",
+            "text": "In recent years, the wide usage of mobile devices and the corresponding collection of vast amounts of spatiotemporal data have resulted in the development of various novel Location Based Services (LBS). The LBS are software services that integrate geographic information providing appropriate services and information to the users [7]. Traffic forecasting and travel time estimation are undoubtedly two of the widely used LBS and a lot of recent research work has been conducted towards improving their performance. The importance of such services is indicated by the fact that the vast majority of drivers consults several times a day services that\nPart of this work was done while N. Zygouras was at the National and Kapodistrian University of Athens, Greece.\nPermission to make digital or hard copies of part or all of this work for personal or classroom use is granted without fee provided that copies are not made or distributed for profit or commercial advantage and that copies bear this notice and the full citation on the first page. Copyrights for third-party components of this work must be honored. For all other uses, contact the owner/author(s). SIGSPATIAL \u201922, November 1\u20134, 2022, Seattle, WA, USA \u00a9 2022 Copyright held by the owner/author(s). ACM ISBN 978-1-4503-9529-8/22/11. https://doi.org/10.1145/3557915.3560968\nEst\u00e1dio do Drag\u00e3o"
+        },
+        {
+            "heading": "Travel",
+            "text": "perform travel time estimation in order to appropriately choose the fastest route to follow.\nMotivated by this, in this paper we propose a novel path based travel time estimation technique that considers the available traffic reports that have been received by the set of the available probe vehicles. Each probe vehicle moves in the road network and reports the time that was required to traverse each individual road segment. In this way, for each road segment of the road network a time series of the reported travel times are generated, illustrated at the right part of Figure 1. Our technique receives a query path along with a time of departure and estimates the time of arrival considering the current traffic condition of the road network. Our problem is illustrated in Figure 1. A query path \ud835\udc43\ud835\udc5e and a time of departure \ud835\udc61\ud835\udc5e are received as input and the task is to estimate the time that is required to traverse the whole path \ud835\udc43\ud835\udc5e if the driver departs at \ud835\udc61\ud835\udc5e .\nWe propose a novel deep learning framework which is comprised of a recurrent part and a decoder. The recurrent part encodes the sparse traffic reports that are available at each time window using an attention mechanism and an embedding representations for each road segment. The decoder is responsible to forecast the traffic condition of the next time window."
+        },
+        {
+            "heading": "2 RELATEDWORK",
+            "text": "In DeepGTT the travel time distribution for any route is learnt by conditioning on the real-time traffic [5]. Initially, an embedding is\nar X\niv :2\n30 1.\n05 29\n2v 1\n[ cs\n.L G\n] 1\n2 Ja\nn 20\n23\nestimated for each link considering its characteristics, then a nonlinear factorization model generates the speed and finally an attention mechanism is used to generate the observed travel time. Also, in HETETA [3] the road map is translated into a multi-relational network, considering the traffic behavior patterns. Temporal and graph convolutions are used in order to learn spatiotemporal heterogeneous information, considering recent, daily and weekly traffic. CompactETA [2] provides an accurate ETA estimation with low latency. Graph attention network was employed in order to encode spatial and temporal dependencies of the weighted road network and the sequential information of the route is encoded with positional encoding. A multi-layer perceptron was used for online inference. The authors in [6] proposed a multitask representation learning model which predicts the travel time of an origindestination pair extracting a representation that preserves trips properties and road network structure. ConSTGAT [1] proposed a spatiotemporal graph neural network exploiting the spatial and temporal information with a 3D-attention mechanism and a model with convolutions over local windows in order to capture route\u2019s contextual information. STGNN-TTE [4] adopted a spatial\u2013temporal module to capture the real-time traffic condition and a transformer layer to estimate the links\u2019 travel time and the total routes\u2019 travel time synchronously."
+        },
+        {
+            "heading": "3 OUR APPROACH",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Problem Definition",
+            "text": "Road Network is represented as a directed graph \ud835\udc3a (\ud835\udc49 , \ud835\udc38), where the nodes \ud835\udc49 represent the junctions and the edges \ud835\udc38 represent the |\ud835\udc38 | roads segments. A road segment \ud835\udc5f \u2208 \ud835\udc38 is the part of the road network between two consecutive junctions without any intermediate junction between them. Trip \ud835\udc47 is a time ordered sequence of |\ud835\udc47 | points \ud835\udc5d1 \u2192 \u00b7 \u00b7 \u00b7 \u2192 \ud835\udc5d |\ud835\udc47 | ; each point \ud835\udc5d contains the geospatial coordinates of the moving object along with the corresponding timestamp \ud835\udf0f that the vehicle was at this particular location \ud835\udc5d = (\ud835\udc59\ud835\udc5c\ud835\udc5b, \ud835\udc59\ud835\udc4e\ud835\udc61, \ud835\udf0f). Map-matched Trip \ud835\udc47\ud835\udc3a is a sequence of |\ud835\udc47\ud835\udc3a | consecutive points \ud835\udc5d \u20321 \u2192 \u00b7 \u00b7 \u00b7 \u2192 \ud835\udc5d \u2032 |\ud835\udc47\ud835\udc3a | that comes from map matching trip \ud835\udc47 on the road network\ud835\udc3a . Each point \ud835\udc5d \u2032 corresponds to a road segment that was traversed by\ud835\udc47 . Each point \ud835\udc5d \u2032 of the map matched trip contains a triplet (\ud835\udc5f, \ud835\udc61\ud835\udc61, \ud835\udf0f); \ud835\udc5f is the traversed road segment, \ud835\udc61\ud835\udc61 is the travel time of the road segment \ud835\udc5f and is computed assuming that the vehicle moved with the same speed in the road network between two consecutive GPS points and \ud835\udf0f is the timestamp that the travel time is reported to the system. Travel time reports \ud835\udc37 is the collection of travel times for the road segments as they are extracted by the trips of all the available probe vehicles that traverse the road network. Each travel time report (\ud835\udc5f, \ud835\udc61\ud835\udc61, \ud835\udc61,\ud835\udc47\ud835\udc56\ud835\udc51 ) contains the information of the map-matched trips enriched by the id of the trip \ud835\udc47\ud835\udc56\ud835\udc51 . Path \ud835\udc43 is a sequence of |\ud835\udc43 | consecutive road segments \ud835\udc5f1 \u2192 \u00b7 \u00b7 \u00b7 \u2192 \ud835\udc5f |\ud835\udc43 | , where \ud835\udc5f\ud835\udc56 is the \ud835\udc56th road segment of \ud835\udc43 .\nBelow we define formally the traffic forecasting problem. Traffic Forecasting: Given the available travel times of the last \ud835\udc3f time windows T\ud835\udc61\u2212\ud835\udc3f+1:\ud835\udc61 a traffic forecasting model forecasts the travel times of the next \ud835\udc3b time windows T\ud835\udc61+1:\ud835\udc61+\ud835\udc3b , where the vector T\ud835\udc61 contains the travel times of the \ud835\udc38 road segments at time \ud835\udc61 . The\ninput matrix T\ud835\udc61\u2212\ud835\udc3f+1:\ud835\udc61 \u2208 R |\ud835\udc38 |\u00d7\ud835\udc3f has missing values for the roads that were not traversed by any vehicle at a given time window. The forecasted matrix T\ud835\udc61+1:\ud835\udc61+\ud835\udc3b \u2208 R |\ud835\udc38 |\u00d7\ud835\udc3b contains forecasts for all the road segments \ud835\udc38 for the next \ud835\udc3b time windows."
+        },
+        {
+            "heading": "3.2 Data Preparation",
+            "text": "The first step of the proposed framework is to preprocess the raw data and prepare them appropriately in order to feed them to the neural network. The overview of the data preparation approach is illustrated in Figure 2 and described below. MapMatching. Firstly, wemap-match the available trips matching them to the road network\ud835\udc3a . Each trip\ud835\udc47 is transformed into a mapmatched trip \ud835\udc47\ud835\udc3a . This procedure generates the set of the available travel time reports \ud835\udc37 . This step is common to both the historical data that are used to train our model and the streaming traffic data that will be used to make forecasts in real time. Modeling the periodicity of traffic. In order to model the periodicity of traffic we estimate from the historical travel time reports the average travel time \ud835\udc4e\ud835\udc63\ud835\udc54_\ud835\udc61\ud835\udc61\ud835\udc56,\u210e\ud835\udc5c\ud835\udc62\ud835\udc5f for each road segment \ud835\udc5f\ud835\udc56 \u2208 \ud835\udc38 and for different hours of day \u210e\ud835\udc5c\ud835\udc62\ud835\udc5f \u2208 [1 . . . 24]. Then, we subtract from each travel time the historical average travel time for that road segment at the given hour. In this way, we force the deep learning framework to model, for each different road segment, the deviation from the average travel time for the different hours of the day. Standardizing Travel Times. Since road segments have different lengths and speed limits we selected to standardize the travel time reports, considering the average behaviour of each different road segment. More specifically, for each road segment \ud835\udc5f\ud835\udc56 we compute the historical average travel time \ud835\udf07\ud835\udc56 and standard deviation of travel times \ud835\udf0e\ud835\udc56 and we use these values in order to standardize the travel times per road segment. For instance, if \ud835\udc61\ud835\udc615 is a travel time that is reported for the road segment \ud835\udc5f5 then the corresponding Z-Score will be \ud835\udc61\ud835\udc615\u2212\ud835\udf075\ud835\udf0e5 . In the rest of the paper we assume that travel times are the Z-Scores of travel times with subtracted the average historical travel time for the different hours of the day. Aggregating travel times. The historical travel time reports \ud835\udc37 are grouped together generating a sparse matrix\ud835\udc40 \u2208 R |\ud835\udc38 |\u00d7\ud835\udc4a . The rows of\ud835\udc40 correspond to the |\ud835\udc38 | road segments of the road network \ud835\udc3a and the columns correspond to the\ud835\udc4a time windows. In this work we use time windows of 15 minutes. If more than one travel time reports are available for a particular road segment \ud835\udc5f\ud835\udc56 at the same time window\ud835\udc64 \ud835\udc57 then\ud835\udc40\ud835\udc56 \ud835\udc57 contains the average travel time of the available travel times.\nRoads Embeddings\nTravel Times\nScaled Dot-Product Attention\nKi QiVi\nheadi\nMatMul MatMul\ni=1...h\nConcatenate Concatenate\nLinear Linear Linear\nLinear Linear\nh h\nFigure 3: Multi-Head Scaled Dot-Product Attention\nRoads Embeddings Travel Times\nRoads Embeddings\nTravel Times\nAttention Mechanism\n+Norm.+\n+ Linear x2\nRoads\nEmbeddings\nTravel\nTimes\nAttention Mechanism\n+Norm.+\n+ Conv1D x2\nNorm.\nV K Q\nEncoder Output\nN\nFigure 4: Encoder Block.\nV\nRoads Embeddings\nTravel Times\nAttention Mechanism\n+Norm.+\n+ Linear x2 Norm.\nV K Q\nAttention Mechanism\n+Norm.+\nK QRoads Embeddings\nTravel Times\nEncoder Output\nFigure 5: Decoder Block.\nExtracting Road Segments Embeddings. An embedding representation \ud835\udc38\ud835\udc56 is detected for each road segment \ud835\udc5f\ud835\udc56 considering its historical travel time reports. Here, we follow the process introduced by [9]. We perform matrix factorization in the sparse matrix \ud835\udc40 , learning a matrix P \u2208 R |\ud835\udc38 |\u00d7\ud835\udc51 contains a \ud835\udc51-dimensional embedding representation of the available road segments Feeding the Model. The deep learning model that is described in Section 3.4 receives as input two vectors that contain: (i) the aggregated travel times that are available for a given time window and (ii) the corresponding road segments. For instance, consider a road network \ud835\udc3a that is comprised of |\ud835\udc38 | = 5 road segments [\ud835\udc5f\ud835\udc56 ], \ud835\udc56 \u2208 [1, . . . , 5]. If for a particular time window only the travel times \ud835\udc61\ud835\udc612 and \ud835\udc61\ud835\udc615 of road segments \ud835\udc5f2 and \ud835\udc5f5 respectively are available, then the inputs to the deep learning model will be the following: the vector of the travel times T = [\ud835\udc61\ud835\udc612, \ud835\udc61\ud835\udc615, \u2205, \u2205, \u2205] \u2208 R |\ud835\udc38 | and the vector of the road segments ids R = [\ud835\udc5f2, \ud835\udc5f5, \u2205, \u2205, \u2205] \u2208 Z |\ud835\udc38 | . Then, inside the deep learning model the ids of the road segments are transmitted to an embedding layer. This layer transforms the vector R into a matrix of road segments embeddings E = [\ud835\udc382, \ud835\udc385, \u2205, \u2205, \u2205] \u2208 R |\ud835\udc38 |\u00d7\ud835\udc51 . The embedding representation of the road segments is trainable and initialized with matrix P, computed using matrix factorization as it was described above."
+        },
+        {
+            "heading": "3.3 Attention Mechanism",
+            "text": "Here, we extend the \"Scaled Dot-Product Attention\" that was introduced in [8]. The proposed attention mechanism encodes a varying number of travel time reports received at a particular time window. We consider as input here the following: (i) the embeddings\u2019 matrix of the road segments that have been traversed by the probe vehicles at a particular time window along with (ii) the vector of the corresponding reported travel times. The overview of the proposed attention mechanism is illustrated in Figure 3.\nInitially, the Query \ud835\udc44\ud835\udc56 , Key \ud835\udc3e\ud835\udc56 and Value \ud835\udc49\ud835\udc56 matrices are computed using the embeddings E of the available road segments, computed earlier. Therefore, three parameter matrices\ud835\udc4a\ud835\udc44\n\ud835\udc56 \u2208 R\ud835\udc51\u00d7\ud835\udc51 ,\n\ud835\udc4a\ud835\udc3e \ud835\udc56 \u2208 R\ud835\udc51\u00d7\ud835\udc51 and\ud835\udc4a\ud835\udc49 \ud835\udc56 \u2208 R\ud835\udc51\u00d7\ud835\udc51 are trained using the training instances and are used to compute the matrices \ud835\udc44\ud835\udc56 = E\ud835\udc4a\ud835\udc44\ud835\udc56 , \ud835\udc3e\ud835\udc56 = E\ud835\udc4a\ud835\udc3e\n\ud835\udc56 and \ud835\udc49\ud835\udc56 = E\ud835\udc4a\ud835\udc49\ud835\udc56 . The index \ud835\udc56 \u2208 [1, . . . , \u210e] of the different parameter matrices stands for the \u210e parallel attention layers. The next step is to compute the attention scores using the \ud835\udc44\ud835\udc56 and \ud835\udc3e\ud835\udc56 matrices. The scores indicate the focus that will be placed at the travel times of other road segments, that have been reported at the same time window. Multiple attention heads \u210e\ud835\udc52\ud835\udc4e\ud835\udc51\ud835\udc56 \u2208 R |\ud835\udc38 |\u00d7 |\ud835\udc38 | are computed in parallel according to eq. 1 indicating the attention at each particular road segment.\n\u210e\ud835\udc52\ud835\udc4e\ud835\udc51\ud835\udc56 = \ud835\udc60\ud835\udc5c \ud835\udc53 \ud835\udc61\ud835\udc5a\ud835\udc4e\ud835\udc65 ( \ud835\udc44\ud835\udc56\ud835\udc3e \ud835\udc47 \ud835\udc56\u221a \ud835\udc51 ), \ud835\udc56 \u2208 [1, . . . , \u210e] (1)\nThe road segments\u2019 embeddings and travel times are then updated considering the computed attention heads. More specifically we train the parameter matrices\ud835\udc4a\ud835\udc421 \u2208 R\u210e\ud835\udc51\u00d7\ud835\udc51 and\ud835\udc4a\ud835\udc422 \u2208 R\u210e |\ud835\udc38 |\u00d7 |\ud835\udc38 | that are multiplied with the concatenated values \ud835\udc49\ud835\udc56 and travel times T respectively.\nE \u2032 = \ud835\udc36\ud835\udc5c\ud835\udc5b\ud835\udc50\ud835\udc4e\ud835\udc61 (\u210e\ud835\udc52\ud835\udc4e\ud835\udc511\ud835\udc491, . . . , \u210e\ud835\udc52\ud835\udc4e\ud835\udc51\u210e\ud835\udc49\u210e)\ud835\udc4a\ud835\udc421 (2)\nT \u2032 = \ud835\udc36\ud835\udc5c\ud835\udc5b\ud835\udc50\ud835\udc4e\ud835\udc61 (\u210e\ud835\udc52\ud835\udc4e\ud835\udc511T , . . . , \u210e\ud835\udc52\ud835\udc4e\ud835\udc51\u210eT)\ud835\udc4a\ud835\udc422 (3)"
+        },
+        {
+            "heading": "3.4 Traffic Transformer\u2019s Architecture",
+            "text": "Here we describe our model\u2019s architecture, which is based on the original implementation of Transformer model described in [8].\n3.4.1 Encoder. The encoder considers all travel time reports that are available at a given time window, encodining the traffic condition of that time window. It is comprised by a set of \ud835\udc41 identical blocks. The first block receives as input the roads segments embeddings and the travel times that are available at a given time window, following the data preparation procedure described in Section 3.2. The rest encoder blocks receive as input the output of the previous block. Figure 4 illustrates the overview of the encoder block.\nEncoder\nRoads Embeddings Travel Times\nEncoder Block\nRoads Ids Travel Times\nDecoder Block\nN\nEncoder\nEncoder Block"
+        },
+        {
+            "heading": "Roads",
+            "text": "Ids Travel Times\nDecoder Block\nN\n... ... Decoder\nDecoder Block\nQuery Roads Ids \u2205\nN\n\u2205\n\u2205\nt - L - 1 t\nt + 1\n...\n...\n1st Recurrent Cell Lth Recurrent Cell\nEmbedding Embedding\nEmbedding\nFigure 6: Overview of our model.\nEach block first transmits the matrix of the available roads embeddings E and the corresponding vector of travel times T at the attention mechanism. The attention mechanism produces the matrix E \u2032 and the vector T \u2032. Then, residual connections are employed at the output of the attention mechanism, normalizing the sum of the received roads segments embeddings E with the output of the attention mechanism E \u2032. The output is transmitted to two dense layers followed by another residual connection. For the travel times the output of each encoder block is the sum of the received travel times T and the output of the attention mechanism T \u2032.\n3.4.2 Decoder. The decoder (Figure 5) is responsible to forecast the travel times of the next time window, considering the encoder\u2019s output. The decoder consists of a set of \ud835\udc41 blocks, similarly to the encoder. Each block receives as input the output of the encoder and the output of the previous block. In the training phase the first block receives as input (i) the embeddings of the road segments that are available in the target time window and (ii) a vector of zeros. For the testing phase the first block receives as input (i) the embeddings of all the road segments \ud835\udc38 and (ii) a vector of zeros. Recall that we are working with the Z-Scores of travel times aggregated per road segment. Consequently, the vector of zeros corresponds to the average travel for each road segment.\nEach block of the decoder contains two attention mechanisms. Firstly, the embeddings of the queried road segments and the travel times are transmitted to the first attention mechanism, followed by a residual connection. Then a second attention mechanism is employed, receiving as input the embedding matrix E \u20321 that resulted from the first attention mechanism along with the embeddings and the travel times that come from the output of the encoder. The main difference here is that the matrices \ud835\udc49\ud835\udc56 and \ud835\udc3e\ud835\udc56 are computed from the output of the encoder and that the considered travel times come from the encoder. Then, the embedding output E \u20322 of the second attention mechanism is followed again by a residual connection. This is followed by two dense layers and a second residual connection. Finally, the travel times that result from each block is the sum of the original travel times T that were received as input along with travel times that result from the first and the second attention mechanism T \u20321 and T \u2032 2 respectively.\n3.4.3 Recurrent Neural Network. The final module of our proposed model is a recurrent model that considers the sequence of the last\n\ud835\udc3f time windows. Each cell of the recurrent network encapsulates an encoder (consisting of \ud835\udc41 encoder blocks) along with a single decoder block. Here the decoder block is responsible to aggregate the information that has been encoded from the previous time window with the information that has been encoded from the current time window. Figure 6 illustrates this recurrent architecture. The encoder and the decoder blocks of the different recurrent cells share the same weights among the \ud835\udc3f different time windows.\nThe output of the last recurrent cell is used by the decoder model in order to make forecasts. The decoder model consists of\ud835\udc41 decoder blocks that are different from each other and from the decoder block that lies inside the recurrent cells. The output of the last decoder block contains the predicted travel times of the queried road segments for the next time window. This will be the Z-Scores of the travel times for the road segments that were queried at the first decoder block."
+        },
+        {
+            "heading": "4 CONCLUSION",
+            "text": "In this paper we presented a novel deep learning framework that considers the current traffic condition of the road network and is used to forecast the traffic condition. Our framework can efficiently encode the travel time reports that are available at a particular time window via an attention mechanism that considers only the available travel times reports and the corresponding embeddings of the road segments."
+        },
+        {
+            "heading": "ACKNOWLEDGMENTS",
+            "text": "This research has been financed by the European Union through the H2020 LAMBDA Project (No. 734242), the EU ICT-48 2020 project TAILOR (No. 952215) and the Horizon Europe AUTOFAIR Project (No. 101070568)."
+        }
+    ],
+    "title": "A Novel Framework for Handling Sparse Data in Traffic Forecast",
+    "year": 2023
+}

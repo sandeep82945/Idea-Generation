@@ -1,0 +1,193 @@
+{
+    "abstractText": "The choice of fragmentation strategies used during mass-spectrometry-based data acquisition directly affects the quality and coverage of subsequent structural identification \u2013 a crucial step in untargeted metabolomics data analysis. However, developing novel fragmentation strategies is challenging due to the high experimental cost of running an actual mass spectrometry instrument and the lack of a programmable simulation environment to support their development. ViMMS 2.0 is a software framework that can be used to develop new fragmentation strategies in metabolomics completely in-silico as well as on mass spectrometry instruments. The framework allows users to generate chemical objects (produced synthetically or extracted from existing mzML files) and simulate a tandem mass spectrometry process, where different fragmentation strategies can be rapidly implemented, tested and evaluated. In this paper, we present ViMMS 2.0, highlighting the software design choices of the framework and illustrate with an example how a new fragmentation strategy could be implemented in ViMMS 2.0.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Joe Wandy"
+        },
+        {
+            "affiliations": [],
+            "name": "Vinny Davies"
+        },
+        {
+            "affiliations": [],
+            "name": "Ross McBride"
+        },
+        {
+            "affiliations": [],
+            "name": "Stefan Weidt"
+        },
+        {
+            "affiliations": [],
+            "name": "Simon Rogers"
+        },
+        {
+            "affiliations": [],
+            "name": "R\u00f3n\u00e1n Daly"
+        }
+    ],
+    "id": "SP:9702e93d291477822c2a37299da78ea81851a57f",
+    "references": [
+        {
+            "authors": [
+                "V. Davies",
+                "J. Wandy",
+                "S. Weidt",
+                "J. J J van der Hooft",
+                "A. Miller",
+                "R. Daly",
+                "S. Rogers"
+            ],
+            "title": "Rapid development of improved data-dependent acquisition strategies",
+            "venue": "Analytical Chemistry,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "D. Goldfarb",
+                "W. Wang",
+                "M.B. Major"
+            ],
+            "title": "MSAcquisitionSimulator: Data-dependent acquisition simulator for LC-MS shotgun proteomics",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "C. Guijas",
+                "J.R. Montenegro-Burke",
+                "B. Warth",
+                "M.E. Spilker",
+                "G. Siuzdak"
+            ],
+            "title": "Metabolomics activity screening for identifying metabolites that modulate phenotype",
+            "venue": "Nature Biotechnology,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. K\u00f6sters",
+                "J. Leufken",
+                "S.A. Leidel"
+            ],
+            "title": "SMITER\u2014a Python library for the simulation of LC-MS/MS experiments",
+            "venue": "Genes, 12(3),",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A.B. Noyce",
+                "R. Smith",
+                "J. Dalgleish",
+                "R.M. Taylor",
+                "K. Erb",
+                "N. Okuda",
+                "J.T. Prince"
+            ],
+            "title": "Mspire-Simulator: LC-MS shotgun proteomic simulator for creating realistic gold",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Wandy"
+            ],
+            "title": "ViMMS 2.0: A framework to develop, test and optimise fragmentation strategies in LC-MS metabolomics",
+            "venue": "Journal of Open Source Software,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "R. Smith",
+                "A.D. Mathis",
+                "D. Ventura",
+                "J.T. Prince"
+            ],
+            "title": "Proteomics, lipidomics, metabolomics: A mass spectrometry tutorial from a computer scientist\u2019s point of view",
+            "venue": "BMC Bioinformatics,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "R. Smith",
+                "J.T. Prince"
+            ],
+            "title": "JAMSS: Proteomics mass spectrometry simulation",
+            "venue": "in Java. Bioinformatics,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "J. Wandy",
+                "V. Davies",
+                "J. J J van der Hooft",
+                "S. Weidt",
+                "R. Daly",
+                "S. Rogers"
+            ],
+            "title": "In silico optimization of mass spectrometry fragmentation strategies in metabolomics. Metabolites",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Y. Wang",
+                "F. Yang",
+                "P. Wu",
+                "D. Bu",
+                "S. Sun"
+            ],
+            "title": "OpenMS-Simulator: An open-source software for theoretical tandem mass spectrum prediction",
+            "venue": "BMC Bioinformatics,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Wandy"
+            ],
+            "title": "ViMMS 2.0: A framework to develop, test and optimise fragmentation strategies in LC-MS metabolomics",
+            "venue": "Journal of Open Source Software,",
+            "year": 2022
+        }
+    ],
+    "sections": [
+        {
+            "text": "ViMMS 2.0: A framework to develop, test and optimise fragmentation strategies in LC-MS metabolomics Joe Wandy1\u00b6, Vinny Davies2, Ross McBride3, Stefan Weidt1, Simon Rogers3, and R\u00f3n\u00e1n Daly1"
+        },
+        {
+            "heading": "1 Glasgow Polyomics, University of Glasgow, United Kingdom 2 School of Mathematics and Statistics, University of Glasgow, United Kingdom 3 School of Computing Science, University of Glasgow, United Kingdom \u00b6 Corresponding author",
+            "text": "DOI: 10.21105/joss.03990\nSoftware \u2022 Review \u2022 Repository \u2022 Archive\nEditor: Charlotte Soneson Reviewers:\n\u2022 @jspaezp \u2022 @mkoesters\nSubmitted: 25 November 2021 Published: 30 March 2022\nLicense Authors of papers retain copyright and release the work under a Creative Commons Attribution 4.0 International License (CC BY 4.0)."
+        },
+        {
+            "heading": "Summary",
+            "text": "The choice of fragmentation strategies used during mass-spectrometry-based data acquisition directly affects the quality and coverage of subsequent structural identification \u2013 a crucial step in untargeted metabolomics data analysis. However, developing novel fragmentation strategies is challenging due to the high experimental cost of running an actual mass spectrometry instrument and the lack of a programmable simulation environment to support their development. ViMMS 2.0 is a software framework that can be used to develop new fragmentation strategies in metabolomics completely in-silico as well as on mass spectrometry instruments. The framework allows users to generate chemical objects (produced synthetically or extracted from existing mzML files) and simulate a tandem mass spectrometry process, where different fragmentation strategies can be rapidly implemented, tested and evaluated. In this paper, we present ViMMS 2.0, highlighting the software design choices of the framework and illustrate with an example how a new fragmentation strategy could be implemented in ViMMS 2.0."
+        },
+        {
+            "heading": "Statement of need",
+            "text": "Metabolomics is the study of small molecules that participate in important cellular processes of an organism. Being the closest to the phenotype, changes to metabolite levels are often expressed as a response to genetic or environmental changes (Guijas et al., 2018). Liquid chromatography (LC) coupled to mass spectrometry (MS) is commonly used to identify small molecules in untargeted experiments, where the identities of molecules of interests are not known in advance (Smith et al., 2014). In this setup, molecules elute through the LC column at different retention times (RTs) before being presented to the MS instrument. In tandem mass spectrometry, selected ions produced from survey scans (MS1; typically measurements of the intact ions) are isolated for fragmentation in a second MS instrument (MS2), resulting in a spectral fingerprint for each isolated ion that is often used for structural identification.\nTypically the raw LC-MS/MS measurements are processed in a data pre-processing pipeline to produce a list of chromatographic MS1 peaks characterised by their mass-to-charge (m/z), RT and intensity values. During identification, molecular annotations are assigned to MS1 peaks through matching with internal standard compounds (having known m/z and RT values) or by searching spectral databases with the MS2 spectra associated with MS1 peaks. An important factor that determines how many molecules can be annotated with spectral databases using fragmentation data is the quality of the MS2 spectra acquired, and the coverage (for how many of the MS1 peaks were MS2 spectra collected). Good MS2 fragmentation strategies aim to produce spectra for as many unknown ions in the sample as possible, but also produce high quality spectra which can be reliably evaluated.\nWandy et al. (2022). ViMMS 2.0: A framework to develop, test and optimise fragmentation strategies in LC-MS metabolomics. Journal of Open Source Software, 7(71), 3990. https://doi.org/10.21105/joss.03990.\n1\nA common challenge faced by computational researchers with an interest in improving fragmentation strategies in tandem-mass-spectrometry-based metabolomics is the lack of access to and the high cost of running MS instruments. This issue is particularly relevant as developing and optimising novel fragmentation strategies tends to be conducted iteratively, requiring many measurements to be run to optimise the strategy until the desired performance level is reached. To lower this barrier, we present Virtual Metabolomics Mass Spectrometer (ViMMS) 2.0, a programmable and modular framework that simulates the chemical generation process and the execution of fragmentation strategies in LC-MS/MS-based metabolomics. A notable feature of the ViMMS framework is the ability to design strategies that can respond, in real time, to the data being produced."
+        },
+        {
+            "heading": "Related works",
+            "text": "Existing mass spectrometry simulators are ill-fitted to support the rapid development of fragmentation strategies that respond to incoming scans in real time. This is primarily due to the limited ways users can incorporate new strategies within existing simulator codebases. Currently available simulators such as as Mspire-Simulator (Noyce et al., 2013), JAMSS (Smith & Prince, 2015), OpenMS-Simulator (Wang et al., 2015), MSAcquisitionSimulator (Goldfarb et al., 2016) and SMITER (K\u00f6sters et al., 2021) exist as stand-alone programs or GUI applications, and are not easily scriptable or programmable.\nAdditionally the above-highlighted simulators have been developed to simulate the generation of proteomics data. In principle they could be extended to support metabolomics data, but this is not a trivial change. Our work in ViMMS 1.0 (Wandy et al., 2019) was the first simulator that allowed for a metabolomics-based simulation environment. However ViMMS 1.0 suffered from several weaknesses: its codebase was monolithic, and the tight coupling between modules made it difficult to instantiate input from different sources or to introduce different extensions to the base functionalities, including adding new fragmentation strategies. The focus of ViMMS 1.0 was on simulating a complete tandem mass spectrometry run in metabolomics, rather than enabling the development of new strategies.\nThe ViMMS 2.0 Framework In ViMMS 2.0 we significantly improved the simulator framework architecture with the goal of supporting fragmentation strategy development and validation. An overview of the overall architecture is given in Figure 1. The simulator framework consists of two core functionalities: the generation of chemicals from multiple sources, and the execution of fragmentation strategies, implemented as controller classes. The improved modularity in ViMMS 2.0 allows many aspects of the framework to be swapped out with alternative implementations, including classes that generate various aspects of chemicals (e.g. measured m/z, RT, intensity) for simulation (Figure 1A), mass spectrometry simulation (Figure 1B), controllers that implement different fragmentation strategies (Figure 1C), as well as the environmental context to run them all (Figure 1D). Different evaluation methods are also provided to compare different controllers\u2019 performance.\nWandy et al. (2022). ViMMS 2.0: A framework to develop, test and optimise fragmentation strategies in LC-MS metabolomics. Journal of Open Source Software, 7(71), 3990. https://doi.org/10.21105/joss.03990.\n2\nA. Chemical Generations\nB. Mass Spectrometry\nC. Controllers\nFormula (m/z) Sampler\nRT & Intensity Sampler\nChromatogram Sampler\nScan Time Sampler\nMS2 Spectra Sampler\nInput chemicals\n\u2022 Receive incoming scans \u2022 Generate scan parameters\nD. Environment\nFigure 1: Overall ViMMS 2.0 System Architecture.\nGenerating Input Chemicals Chemicals are input objects to the simulation process in ViMMS 2.0, and can be generated in different ways: either in a purely synthetic manner (e.g. sampling their properties from databases or fixed statistical distributions) or by construction from existing data (mzML files) via the extraction of RoI traces. The framework allows users to plug in modular classes that specify parameters of chemicals, such as the distribution of their m/z values, RT, intensities, chromatographic shapes and associated MS2 spectra (Figure 1A).\nChemicals can be generated in single-sample or multi-sample settings. When generating multi-sample data, ViMMS allows users to specify how chemicals vary across samples. Given a list of base chemicals (chemicals that are shared) across samples, users can indicate in what proportion of extracts chemicals should appear (dropout rate) or how chemical intensities should vary across a case-control experiment."
+        },
+        {
+            "heading": "Executing Fragmentation Strategies",
+            "text": "Once chemical objects have been prepared (whether for single- or multi-sample settings), different fragmentation strategies can be run. Fragmentation strategies are implemented as controllers that extend from the base Controller class. Controllers are executed in the context of an environment bringing together input chemicals, mass spectrometer and controllers as a single context (Figure 1D). Note that the modularity of the mass spectrometry and environment classes means it is possible to swap purely simulated MS and environment implementation with alternatives that control an actual MS instrument while other aspects remain unchanged. In other work, we demonstrated the practicality of this idea by building alternative implementations of these classes that use the Thermo Fisher IAPI (Thermo Fisher Scientific, n.d.) for bridging, making it possible for fragmentation strategies to be executed in simulation as well as unchanged on Thermo Tribrid Fusion instruments (Davies et al., 2021)."
+        },
+        {
+            "heading": "Implementing a New Controller",
+            "text": "To illustrate how new strategies could be built on top of ViMMS 2.0, an example is given here of a Top-N controller that selects the N most intense precursor ions for fragmentation. This strategy is common in real-world data-dependent acquisition (DDA) experiments and is included to demonstrate how straightforward its implementation is within the framework.\nIn this implementation, the controller SimpleTopNController extends from a base Controller that provides base methods to handle various scan interactions with the mass spectrometer.\nWandy et al. (2022). ViMMS 2.0: A framework to develop, test and optimise fragmentation strategies in LC-MS metabolomics. Journal of Open Source Software, 7(71), 3990. https://doi.org/10.21105/joss.03990.\n3\nThis implementation overrides the _process_scan method, which determines how precursor ions in an incoming MS1 scan are prioritised for fragmentation. Information on what the mass spectrometer should do next is stored as a list of ScanParameters, which is returned from the controller to the mass spectrometer object by _process_scan.\nScan parameters control, for example, whether a controller flexibly targets a single precursor ion for fragmentation, in what is commonly known as data-dependent acquisition (DDA), or whether it instead covers a range of m/z values, potentially fragmenting many precursor ions (data-independent acquisition; DIA). Although not shown in this example, other methods in the parent Controller could also be overridden for different purposes, such as responding when an acquisition has been started or stopped.\nimport numpy as np\nfrom vimms.Controller.base import Controller\nclass SimpleTopNController(Controller):\ndef _process_scan(self, scan):\nnew_tasks = []\n# If the controller has received an MS1 scan to process\nif self.scan_to_process is not None:\n# Extract m/z and intensity values in this MS1 scan\nmzs = self.scan_to_process.mzs\nintensities = self.scan_to_process.intensities\n# Select only the Top-N precursors, sorted by intensities descending\nidx = np.argsort(intensities)[::-1]\nidx = idx[0:self.N]\n# Loop over the Top-N precursors and target them for fragmentation\nfor i in idx:\nmz, intensity = mzs[i], intensities[i]\n# Schedule a new MS2 scan targeting the selected precursor ion\ndda_scan_params = self.get_ms2_scan_params(mz, intensity, ...)\nnew_tasks.append(dda_scan_params)\nself.current_task_id += 1\n# Schedule the next survey MS1 scan after doing N MS2 scans\nms1_scan_params = self.get_ms1_scan_params()\nnew_tasks.append(ms1_scan_params)\nself.current_task_id += 1\n# Set this MS1 scan as has been processed\n# and indicate what is the next MS1 scan id to process\nself.scan_to_process = None\nself.next_processed_scan_id = self.current_task_id\n# Return all the scheduled tasks to be executed by the mass spec\nreturn new_tasks\nThe simple Top-N scheme above could be enhanced to incorporate dynamic exclusion windows to prevent the same precursors from being fragmented repeatedly, or to incorporate different\nWandy et al. (2022). ViMMS 2.0: A framework to develop, test and optimise fragmentation strategies in LC-MS metabolomics. Journal of Open Source Software, 7(71), 3990. https://doi.org/10.21105/joss.03990.\n4\nschemes prioritising which of the precursor ions to fragment. We have included a more complete Top-N strategy as the baseline controller in ViMMS 2.0 against which other strategies can be benchmarked. Two enhanced DDA controllers (named SmartROI and WeightedDEW, outlined by Davies et al. (2021)) are also provided that demonstrate how novel fragmentation strategies could be rapidly implemented and validated in ViMMS 2.0. SmartROI accomplishes this by tracking regions-of-interest in real-time and targeting those for fragmentation, while WeightedDEW implements a weighted dynamic exclusion scheme to decide prioritisation of precursor ions for fragmentation. Code is provided to compute various evaluation metrics, such as coverage and intensities of fragmented precursors. This allows users to benchmark different controller implementations comparatively."
+        },
+        {
+            "heading": "Software requirements",
+            "text": "ViMMS 2.0 is distributed as a Python package that can be easily installed using pip. We require Python 3.0 or higher to run the framework. It depends on common packages such as numpy, scipy and pandas. Automated unit tests are available in Python, as well as continuous integration that build and run those unit tests in our code repository. Our codebase is stored in GitHub and we welcome contributions from researchers with interest in developing novel fragmentation strategies in both data-dependent and data-independent acquisitions."
+        },
+        {
+            "heading": "Conclusion",
+            "text": "in this paper, we have introduced ViMMS 2.0, an extension of the simulator framework in ViMMS 1.0. ViMMS 2.0 is modular, extensible and can be used in Python to simulate fragmentation strategies for untargeted metabolomics studies. In other work (Davies et al., 2021), the utility of ViMMS 2.0 has been validated through additional bridging code that allows simulated controllers to run unchanged on both the simulator and actual mass spectrometers. It is our hope that the work outlined here will be used to advance the development of novel fragmentation strategies in untargeted metabolomics."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "Joe Wandy, Vinny Davies, Stefan Weidt, Simon Rogers and R\u00f3n\u00e1n Daly acknowledge EPSRC project EP/R018634/1 on \u2018Closed-loop data science for complex, computationally and dataintensive analytics\u2019."
+        }
+    ],
+    "title": "ViMMS 2.0: A framework to develop, test and optimise fragmentation strategies in LC-MS metabolomics",
+    "year": 2022
+}

@@ -1,0 +1,372 @@
+{
+    "abstractText": "For transient modeling of gas flow through pipe networks, fluid dynamics and computational fluid dynamics, are well-established subjects focused on high-fidelity modeling given design and boundary conditions. They involve nonlinear partial differential equations (PDEs) and transport phenomena, which are not amenable to finite-dimensional control design but instead are targeted and tested for simulation.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Sven Br\u00fcggemann"
+        },
+        {
+            "affiliations": [],
+            "name": "Robert H. Moroto"
+        },
+        {
+            "affiliations": [],
+            "name": "Robert R. Bitmead"
+        }
+    ],
+    "id": "SP:5610508570d507ea37d38181885295d824a5c63e",
+    "references": [
+        {
+            "authors": [
+                "M. Behbahani-Nejad",
+                "A. Bagheri"
+            ],
+            "title": "A MATLAB Simulink Library for Transient Flow Simulation of Gas Networks",
+            "venue": "World Academy of Science, Engineering and Technology, International Journal of Mechanical, Aerospace, Industrial, Mechatronic and Manufacturing Engineering, 2:873\u2013879",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "P. Benner",
+                "S. Grundel",
+                "C. Himpe",
+                "C. Huck",
+                "T. Streubel",
+                "C. Tischendorf"
+            ],
+            "title": "Gas Network Benchmark Models",
+            "venue": "S. Campbell, A. Ilchmann, V. Mehrmann, and T. Reis, editors, Applications of Differential-Algebraic Equations: Examples and Benchmarks. Differential-Algebraic Equations Forum. Springer, Cham.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Sven Br\u00fcggemann",
+                "Robert H. Moroto",
+                "Robert R. Bitmead"
+            ],
+            "title": "Control-orientation, conservation of mass and model-based control of compressible fluid networks",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Sven Br\u00fcggemann",
+                "Robert H. Moroto",
+                "Robert R. Bitmead"
+            ],
+            "title": "Control-Oriented Modeling of Pipe Flow in Gas Processing Facilities",
+            "venue": "arXiv preprint:",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Olav Egeland",
+                "Jan T. Gravdahl"
+            ],
+            "title": "Modeling and Simulation for Automatic Control",
+            "venue": "Marine Cybernetics AS, 2 edition,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "Rolf Findeisen",
+                "Frank Allg\u00f6wer"
+            ],
+            "title": "Nonlinear model predictive control for index\u2013one dae systems",
+            "venue": "Nonlinear Model Predictive Control. Progress in Systems and Control Theory,",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "J.E. Funk",
+                "D.J. Wood",
+                "S.P. Chao"
+            ],
+            "title": "The Transient Response of Orifices and Very Short Lines",
+            "venue": "Journal of Basic Engineering, 94(2):483\u2013489,",
+            "year": 1972
+        },
+        {
+            "authors": [
+                "E.M. Greitzer"
+            ],
+            "title": "Surge and Rotating Stall in Axial Flow Compressors\u2014Part II: Experimental Results and Comparison With Theory",
+            "venue": "Journal of Engineering for Power, 98(2):199\u2013211,",
+            "year": 1976
+        },
+        {
+            "authors": [
+                "J Kr\u00e1lik",
+                "P Stiegler",
+                "Z Vostr\u00fd",
+                "J Z\u00e1vorka"
+            ],
+            "title": "Dynamic modeling of large-scale networks with application to gas distribution",
+            "venue": "Elsevier",
+            "year": 1988
+        },
+        {
+            "authors": [
+                "Jack. D. Mattingly"
+            ],
+            "title": "Elements of Gas Turbine Propulsion",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "M.J. Moran",
+                "H.N. Shapiro",
+                "D.D. Boettner",
+                "B.B. Margaret"
+            ],
+            "title": "Fundamentals of Engineering Thermodynamics",
+            "venue": "Wiley, 8 edition",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Bryan P Rasmussen",
+                "Andrew G Alleyne"
+            ],
+            "title": "Control-Oriented Modeling of Transcritical Vapor Compression Systems",
+            "venue": "Journal of Dynamic Systems, Measurement, and Control,",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "D.C. Rennels",
+                "H.M. Hudson"
+            ],
+            "title": "Pipe Flow: A Practical and Comprehensive Guide",
+            "venue": "Wiley",
+            "year": 2012
+        }
+    ],
+    "sections": [
+        {
+            "heading": "A COMPENDIUM OF CONTROL-ORIENTED MODELS OF GAS PROCESSING EQUIPMENT COMPONENTS",
+            "text": "Sven Br\u00fcggemann \u2217, Robert H. Moroto \u2020, and Robert R. Bitmead,\u2217 \u2021\nNovember 15, 2022\nIntroduction\nFor transient modeling of gas flow through pipe networks, fluid dynamics and computational fluid dynamics, are well-established subjects focused on high-fidelity modeling given design and boundary conditions. They involve nonlinear partial differential equations (PDEs) and transport phenomena, which are not amenable to finite-dimensional control design but instead are targeted and tested for simulation.\nOther more pragmatic modeling for gas pipeline distribution systems [1, 2, 9] is usually based on discretization and yields a system of ordinary differential algebraic equations (DAEs), which again is not well-suited to control design. Although, it can be used directly for controller synthesis in some circumstances [6] and, as noted in [2], if the DAE is of index 1. Theorem 4.1 in Benner et al. [2] establishes that the DAEs describing the gas flow through interconnected pipes are indeed of index 1 and so it is possible to rewrite the DAE as an ordinary differential equation (ODE) without the algebraic constraints.\nThis fact is used in [4] to rewrite the system of DAEs as a (state-space) system of linear ordinary differential equations (ODEs) subsuming the algebraic constraints. Thus, to synthesize model-based controllers the rich literature on Linear Systems Theory can be exploited, such as Mason\u2019s Gain Formula for modeling interconnections. An equivalent approach for interconnections adapted to state space realizations is presented in [4].\nThis work builds on [4] and provides linear control-oriented state space models of gas flow through standard equipment, such as valves, compressors, manifolds and non-trivial pipe geometries. After presenting the catalog of components, we show how to interconnect them: we briefly recall the matrix methodology derived in [4], accompanied by a Matlab example for a gas loop; secondly for the same example we provide an alternative approach using Matlab\u2019s connect function.\nAll the aforementioned models are suited to model-based MIMO control design tools as they are in state-space form and they can be physically parametrized. Conservation of mass is the source of the algebraic constraints in [1, 2, 9] and is a property subsumed in these new models. This is characterized in by model transfer function properties at frequency zero [3]. Each of the component models is shown to posses this property\nThis document is meant to serve as an accompaniment to the material in [3, 4]. Details of assumptions are provided there, along with motivations and derivations from PDEs. Accordingly, it is organized by component type for the first eight sections with Section 9 devoted to the presentation of the approach to interconnection of the components into systems amenable to use with MATLAB\u2019s control system design tools.\n\u2217S. Br\u00fcggemann and R.R. Bitmead are with the Department of Mechanical & Aerospace Engineering, University of California, San Diego, La Jolla CA 92093-0411, USA (e-mail: {sbruegge, rbitmead}@eng.ucsd.edu). \u2020R. H. Moroto was formerly with Solar Turbines Incorporated, San Diego CA 92123, USA (e-mail: rhmoroto@gmail.com). \u2021This work was supported by Solar Turbines Incorporated.\nar X\niv :2\n21 1.\n06 81\n3v 1\n[ ee\nss .S\nY ]\n1 3\nN ov\n2 02\n2\nModel Catalog & Interconnections"
+        },
+        {
+            "heading": "1 Single pipe 4",
+            "text": "1.1 Assumptions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4\n1.2 Derivation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5\n1.3 Conservation of mass . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5"
+        },
+        {
+            "heading": "2 Branch 5",
+            "text": "2.1 Derivation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6\n2.2 Conservation of mass . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6"
+        },
+        {
+            "heading": "3 Joint 6",
+            "text": "3.1 Two joining pipes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6\n3.1.1 Derivation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7\n3.1.2 Conservation of mass . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 7\n3.2 Multiple joining pipes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n3.2.1 Derivation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 8\n3.2.2 Conservation of mass . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 10"
+        },
+        {
+            "heading": "4 Star junction 10",
+            "text": "4.0.1 Derivation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 11\n4.0.2 Conservation of mass . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12"
+        },
+        {
+            "heading": "5 Control valve 12",
+            "text": "5.1 Static model . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n5.2 Dynamic model . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 12\n5.2.1 Derivation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 13"
+        },
+        {
+            "heading": "6 Tank 13",
+            "text": "6.1 Isothermal tank . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14\n6.1.1 Assumptions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14\n6.1.2 Derivation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14\n6.2 Non-isothermal tank . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 14\n6.2.1 Assumptions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15\n6.2.2 Derivation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15"
+        },
+        {
+            "heading": "7 Valve manifold 16",
+            "text": "7.1 Derivation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 16"
+        },
+        {
+            "heading": "8 Compressor 17",
+            "text": "8.1 Static model . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 17\n8.2 Dynamic model . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18\n8.2.1 Assumptions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 18\n8.2.2 Derivation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 19"
+        },
+        {
+            "heading": "9 Heat exchanger 19",
+            "text": "9.1 Derivation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20"
+        },
+        {
+            "heading": "10 Interconnections 20",
+            "text": "10.1 Directed pipe connections and \u2018ports\u2019 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20\n10.2 Interconnection rules . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20\n10.3 Matrix methodology . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 20\n10.3.1 Example: two pipes in series . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21\n10.3.2 Matlab example: vented gas loop . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 21\n10.4 Matlab\u2019s connect function . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24\n10.4.1 Matlab example: two pipes in series . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24\n10.4.2 Matlab example: vented gas loop . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 24\n11 Conclusion 26\nNotation\nWe denote pressures by p\u030c(x, t) and mass flows by q\u030c(x, t), where x is the spatial dimension and t the time. For the nominal values we write p\u0304(x) and q\u0304(x), whereas deviations are described by p(x, t) = p\u030c(x, t) \u2212 p\u0304(x) and q(x, t) = q\u030c(x, t) \u2212 q\u0304(x). Assume x \u2208 [0, X] for some X > 0. We define p` . = p(0, t) and pr . = p(X, t), and accordingly for the mass flow. The same convention holds for the temperature T (x, t) where applicable. Signals related to component i for some i \u2208 N are denoted by the additional subscript i. By 0 we denote the zero matrix of appropriate size; 0n is the related row vector, and 0n,m is the related matrix of dimension n\u00d7m. The same notation is used for the matrix of ones, 1. For matrix A, we write [A]i,j for the matrix element in row i and column j, and similarly for vectors. The following table lists the meaning of common parameters.\nSymbol Meaning SI-unit A Cross-sectional area [m2]\ncv, cp Specific heat capacities [J/(kg K)] D Pipe inside diameter [m] Do Pipe outside diameter [m] E Total energy [J] g Gravity constant [ m\ns2 ]\nh(x) Pipe elevation from x = 0 to x = X [m] Pi Pipe i Rs Specific gas constant [ m 2\ns2K ]\nT0 Constant temperature [K] V Volume [m3] X Pipe length [m] z0 Constant compressibility factor [1] \u03bb Friction factor [1]"
+        },
+        {
+            "heading": "1 Single pipe",
+            "text": ""
+        },
+        {
+            "heading": "1.1 Assumptions",
+            "text": "Assumption 1. The change in temperature along the pipe is negligible. Assumption 2. For the one-dimensional pipe flow,\n(i) the cross-sectional area of each pipe segment is constant;\n(ii) at each point in x-dimension averaged velocities suffice;\n(iii) friction along the pipe can be approximated by the Darcy-Weisbach equation, see e.g. [13];\n(iv) the compressibility factor is constant along the pipe;\n(v) capillary, magnetic and electrical forces on the fluid are negligible;\n(vi) the gas velocity is much smaller than the speed of sound."
+        },
+        {
+            "heading": "1.2 Derivation",
+            "text": "Under the assumptions above Benner et al. [2] derive a nonlinear model for an isothermal one-dimensional pipe flow. Towards a discretization and linearization of the related nonlinear dynamics, let the boundary conditions p` and qr be given, whereas pr and q are to be determined through the model. Spatial discretization and linearization of [2, Eq. 3.2] yields\np\u0307r = \u03b1(qr \u2212 ql) (2a) q\u0307` = \u03b2pr + \u03bap` + \u03b3q`, (2b)\nor equivalently,\nx\u0307t = [ 0 \u2212\u03b1 \u03b2 \u03b3 ] xt + [ 0 \u03b1 \u03ba 0 ] ut,\nwith terms as described above."
+        },
+        {
+            "heading": "1.3 Conservation of mass",
+            "text": "The DC gain from u to x can be readily extracted,\n\u2212A\u22121B = \u2212 1 \u03b1\u03b2 [ \u03b1\u03ba \u03b1\u03b3 0 \u2212\u03b1\u03b2 ] = [ \u2212\u03ba\u03b2 \u2212 \u03b3 \u03b2 0 1 ] ,\nwhich shows that Tqp(0) = 0 and 1Tqq(0) = 1, where\nX(s) = T (s)U(s) = [ Tpp(s) Tpq(s) Tqp(s) Tqq(s) ] U(s).\nBy definition [3] this is conservation of mass."
+        },
+        {
+            "heading": "2 Branch",
+            "text": "Consider a branching pipe geometry as shown in Figure 1.\nState space model simple branch\nUnder the assumptions from Section 1.1 and matching conditions at the junction\np0,r = p1,` = p2,`, q0,r = q1,` + q2,`,\nthe state space realization of the one-dimensional pipe flow through the branch depicted above is as follows:\nx\u0307 =  0 0 0 \u2212\u03b10 \u03b10 \u03b10 0 0 0 0 \u2212\u03b11 0 0 0 0 0 0 \u2212\u03b12 \u03b20 0 0 \u03b30 0 0 \u03ba1 \u03b21 0 0 \u03b31 0 \u03ba2 0 \u03b22 0 0 \u03b32 x+  0 0 0 0 \u03b11 0 0 0 \u03b12 \u03ba0 0 0 0 0 0 0 0 0 u\ny = [ 0 1 0 0 0 0 0 0 1 0 0 0 0 0 0 1 0 0 ] x,\nwith state x = [p0,r p1,r p2,r q0.` q1,` q2,`] >, input u = [p0,` q1,r q2,r] > and output y = [p1,r p2,r q0,`] > ."
+        },
+        {
+            "heading": "2.1 Derivation",
+            "text": "Building on (2), consider Assumption 2 and suppose that additional losses at the intersection are accommodated by appropriately adjusting the friction factor for all pipes. Continuity at the boundary of pressure and mass flow means\np0,r = p1,` = p2,`, q0,r = q1,` + q2,`,\nwhich sets the input signal of the single pipe model of pipe P0 as the sum of two other state variables. The related matrices for a branch model immediately follow. The extension to a split into more than two pipes is direct and hence for brevity not presented."
+        },
+        {
+            "heading": "2.2 Conservation of mass",
+            "text": "The state-space realization above satisfies conservation of mass, which follows from the first row of the steady state equation 0 = Ax+Bu and conservation of mass of the single pipe model."
+        },
+        {
+            "heading": "3 Joint",
+            "text": "We present models first for the case of two joining pipes and then consider the more complex case of multiple pipes joining."
+        },
+        {
+            "heading": "3.1 Two joining pipes",
+            "text": "Simple joint model\nUnder the assumptions in Section 1.1 and boundary conditions\np1,r = p2,r = p0,`,\nq1,r + q2,r = q0,`,\ntwo pipes merging into a single pipe are described by the following state space model:\n\u02d9 p0,r q0,` p1,r q1,` q2,`  =  0 \u2212\u03b10 0 0 0 \u03b20 \u03b30 \u03ba0 0 0 0 \u03b11\u03b12 \u03b11+\u03b12 0 \u03b121 \u03b11+\u03b12 \u2212 \u03b11 \u2212 \u03b11\u03b12\u03b11+\u03b12 0 0 \u03b21 \u03b31 0 0 0 \u03b22 0 \u03b32   p0,r q0,` p1,r q1,` q2,` \n+  0 0 \u03b10 0 0 0 0 0 0 \u03ba1 0 0 0 \u03ba2 0  p1,`p2,` q0,r  , p0,rq1,` q2,`  = 1 0 0 0 00 0 0 1 0 0 0 0 0 1   p0,r q0,` p1,r q1,` q2,`  ."
+        },
+        {
+            "heading": "3.1.1 Derivation",
+            "text": "Building on (2), each joining pipe can be described by\np\u0307j,r = \u03b1j(qj,r \u2212 qj,`), (6a) q\u0307j,` = \u03b2jpj,r + \u03bajpj,` + \u03b3jqj,`, (6b)\nwhere the subscript j corresponds to pipe Pj , with coefficients as defined above and j \u2208 {0, 1, . . . , n}. Every pj,r and qj,` are state variables and every pj,` and qj,r are input variables related to pipe Pj . Consider Assumption 2 and algebraic constraints\np1,r = p2,r = p0,`, (7a) q1,r + q2,r = q0,`, (7b)\nwhich express continuity of the pressure and mass flow. Assume further that additional losses at the intersection are accommodated by appropriately adjusting the friction factor for all pipes.\nNote that (7b) cannot directly be incorporated into the state space formulation since it is not immediate how the signal q0,` is split between the flow of pipes 1 and 2. To eliminate variables q1,r, qr,2, consider (7a), take the derivative and use (6a) to obtain\n(\u03b11 + \u03b12)q1,r = \u03b11q1,` + \u03b12(q0,` \u2212 q2,`), (8a) (\u03b11 + \u03b12)q2,r = \u03b12q2,` + \u03b11(q0,` \u2212 q1,`), (8b)\nwhich yields the state space description above."
+        },
+        {
+            "heading": "3.1.2 Conservation of mass",
+            "text": "The state-space realization above satisfies conservation of mass, which follows from the third row of the steady state equation 0 = Ax+Bu and conservation of mass of the single pipe model.\nmass flowPipe P1\nPipe P2\n...\nPipe Pn\nPipe P0"
+        },
+        {
+            "heading": "3.2 Multiple joining pipes",
+            "text": ""
+        },
+        {
+            "heading": "3.2.1 Derivation",
+            "text": "We wish to extend the model for n = 2 joining pipes to any finite number of joining pipes. In particular, first we would like to obtain an expression for qj,r only depending on state variables and sources, as in (8).\nDefinition 1. We say sources for inputs into the joint model that are not related to states of any other pipes via algebraic constraints. We say internal variables for input variables that are not sources.\nWe derive the model by induction. Consider the algebraic constraints for n = 3, p1,r = p2,r = p3,r = p0,`,\nq1,r + q2,r + q3,r = q0,`.\nThen, p\u03071,r = p\u03072,r,\n(\u03b11 + \u03b12)q1,r = \u03b11q1,` + \u03b12(q0,` \u2212 q2,` \u2212 q3,r),\np\u03073,r = p\u03072,r,\n(\u03b12 + \u03b13)q3,r = \u03b13q3,` + \u03b12(q0,` \u2212 q2,` \u2212 q1,r)\n= \u03b13q3,` + \u03b12 ( q0,` \u2212 q2,` \u2212 (\u03b11 + \u03b12)\u22121[\u03b11q1,` + \u03b12(q0,` \u2212 q2,` \u2212 q3,r)] ) .\nso that (\u03b11\u03b12 + \u03b11\u03b13 + \u03b12\u03b13)q3,r = \u03b11\u03b12(q0,` \u2212 q1,` \u2212 q2,`) + (\u03b11\u03b13 + \u03b12\u03b13)q3,`. (9) Similarly, (\u03b11\u03b12 + \u03b11\u03b13 + \u03b12\u03b13)q1,r = \u03b12\u03b13(q0,` \u2212 q2,` \u2212 q3,`) + (\u03b11\u03b12 + \u03b11\u03b13)q1,`, (10) (\u03b11\u03b12 + \u03b11\u03b13 + \u03b12\u03b13)q2,r = \u03b11\u03b13(q0,` \u2212 q1,` \u2212 q3,`) + (\u03b11\u03b12 + \u03b12\u03b13)q2,`. (11) Comparing equations (9)\u2013(11) with (8) we recognize a certain pattern, which we explore next. Facilitated by observations above we derive a general statement. Proposition 1. Consider n joining pipes with individual dynamics (6a) - (6b). Let qj,`, j \u2208 {0, 1, . . . , n}, be state variables. The internal variables qk,r, k \u2208 {1, 2, . . . , n}, can be described by state variables, n\u2211\nj=1 n\u220f i=1 i 6=j \u03b1i  qk,r = n\u220f i=1 i6=k \u03b1i q0,` \u2212 n\u2211 i=1 i 6=k qi,` +  n\u2211 j=1 n\u220f i=1 i 6=j \u03b1i \u2212 n\u220f i=1 i 6=k \u03b1i  qk,` (12) Proof. We prove the theorem by induction. We observe that (12) holds for n \u2208 {2, 3}. Hence, assume it holds for some n and for n+ 1 note that interconnections dictate the algebraic constraints\np1,r = p2,r = \u00b7 \u00b7 \u00b7 =pn+1,r = p0,`, (13a) q1,r + q2,3 + \u00b7 \u00b7 \u00b7+ qr,n + qr,n+1 . = qn0,` + qr,n+1 = q0,`. (13b)\nHence, by the algebraic constraints on the pressure and the pipe dynamics,\nqn+1,r = 1\n\u03b1n+1 (p\u0307k,r \u2212 p\u0307n+1,r) + qn+1,r\n= 1\n\u03b1n+1 (\u03b1k(qk,r \u2212 qk,`)\u2212 p\u0307n+1,r) + qn+1,` + p\u0307n+1,r \u03b1n+1\n= 1\n\u03b1n+1 \u03b1k(qk,r \u2212 qk,`) + qn+1,`,\nwhere without loss of generality k \u2208 {1, 2 . . . , n\u2212 1}. Then (12) yields n\u2211 j=1 n\u220f i=1 i 6=j \u03b1i  qk,r = n\u220f i=1 i6=k \u03b1i qn0,` \u2212 n\u2211 i=1 i 6=k qi,` +  n\u2211 j=1 n\u220f i=1 i 6=j \u03b1i \u2212 n\u220f i=1 i 6=k \u03b1i  qk,`\n= n\u220f i=1 i6=k \u03b1i q0,` \u2212 qn+1,r \u2212 n\u2211 i=1 i6=k qi,` +  n\u2211 j=1 n\u220f i=1 i6=j \u03b1i \u2212 n\u220f i=1 i 6=k \u03b1i  qk,` = \u2212 n\u220f i=1 \u03b1i 1 \u03b1n+1 (qk,r \u2212 qk,`) + n\u220f i=1 i 6=k \u03b1i q0,` \u2212 qn+1,` \u2212 n\u2211 i=1 i6=k qi,` +  n\u2211 j=1 n\u220f i=1 i 6=j \u03b1i \u2212 n\u220f i=1 i 6=k \u03b1i  qk,`\n= \u2212 1 \u03b1n+1 n\u220f i=1 \u03b1iqk,r + n\u220f i=1 i 6=k \u03b1i q0,` \u2212 n+1\u2211 i=1 i6=k qi,` +  n\u2211 j=1 n\u220f i=1 i 6=j \u03b1i \u2212 n\u220f i=1 i 6=k \u03b1i + 1 \u03b1n+1 n\u220f i=1 \u03b1i ) qk,`.\nMove the first term of the right-hand side to the left, multiply the equation by \u03b1n+1 and observe that the left-hand side is\nn\u2211 j=1 n\u220f i=1 i 6=j \u03b1i\u03b1n+1 + n\u220f i=1 \u03b1i = n\u2211 j=1 n+1\u220f i=1 i 6=j \u03b1i + n\u220f i=1 \u03b1i = n+1\u2211 j=1 n+1\u220f i=1 i 6=j \u03b1i.\nThis identity can also be used for the last term on the right-hand side. Then,\nn+1\u2211 j=1 n+1\u220f i=1 i 6=j \u03b1i  qk,r = n+1\u220f i=1 i 6=k \u03b1i q0,` \u2212 n+1\u2211 i=1 i 6=k qi,` + n+1\u2211 j=1 n+1\u220f i=1 i6=j \u03b1i \u2212 n+1\u220f i=1 i6=k \u03b1i  qk,`,\nwhich is equivalent to our induction hypothesis and thus concludes the proof.\nThe state space realization above is a direct consequence of Proposition 1, the pipe dynamics in (6), the algebraic constraint of equal pressure at the intersection in (13a), and the observation that for the ODE of p1,r,\n\u03b11  n\u2211 j=1 n\u220f i=1 i 6=j \u03b1i  \u22121 n\u2211 j=1 n\u220f i=1 i 6=j \u03b1i \u2212 n\u220f i=2 \u03b1i \u2212 \u03b11 = \u2212\u03b11  n\u2211 j=1 n\u220f i=1 i 6=j \u03b1i  \u22121 n\u220f i=2 \u03b1i."
+        },
+        {
+            "heading": "3.2.2 Conservation of mass",
+            "text": "As for n = 2 joining pipes, the state-space realization above satisfies conservation of mass, which follows from the third row of the steady state equation 0 = Ax+Bu and conservation of mass of the single pipe model."
+        },
+        {
+            "heading": "4 Star junction",
+            "text": "Consider the pipe geometry illustrated in Figure 4, combining the branch and joint model to so called star junction.\nStar junction model\nConsider the assumptions in Section 1.1 and matching conditions at the junction\np1,r = \u00b7 \u00b7 \u00b7 = pn,r = pn+1,` = \u00b7 \u00b7 \u00b7 = pn+m,`, q1,r + \u00b7 \u00b7 \u00b7+ qr,n = qn+1,` + \u00b7 \u00b7 \u00b7+ qn+m,`.\nA star junction of n pipes connecting to m pipes with individual dynamics (6a) - (6b) can be represented by the state-space model,\nx\u03071 = A1x1 +B1u, x\u03072 = A1x2 +B2u, x\u03073 = A1x3 +B3u, x\u03074 = A1x4 +B4u,\ny = C(x1 + x2 + x3 + x4),\nwhere\nx1 = x2 = x3 = x4\n= [p1,r pn+1,r pn+2,r . . . pn+m,r q1,`q2,` . . . qn+m,`] > \u2208 Rn+2m+1,\nu = [p1,` p2,` . . . pn,` qn+1,r qn+2,r. . . qn+m,r] > \u2208 Rn+m, y = [pn+1,r pn+2,r . . . pn+m,r q1,` q2,`. . . qn,`] > \u2208 Rn+m,\nA1 =\n[ 0m+1 \u2212a \u2212a1n\u22121 a1m\n0n+2m,n+2m+1\n] , B1 = 0n+2m+1,n+m,\nA2 =  0n+2m+1,n+m+1 0m \u2212\u03b1n+1 0 . . .\n0 \u2212\u03b1n+m 0n+m\n , B2 = \n0n+m\n0m,n \u03b1n+1 0 . . .\n0 \u03b1n+m 0n+m,n+m\n ,\nA3 =  0m+1,n+2m+1 \u03b21 ... \u03b2n 0n,m \u03b31 0 . . . 0 \u03b3n 0n,m\n0m,n+2m+1\n , B3 =  0m+1,n+m \u03ba1 0\n. . . 0 \u03ban 0n,m\n0m,n+m\n ,\nA4 =  0n+m+1,n+2m+1 \u03ban+1 ...\n\u03ban+m\n\u03b2n+1 0 . . .\n0 \u03b2n+m\n0m,n\n\u03b3n+1 0 . . .\n0 \u03b3n+m\n, B4 = 0n+2m+1,n+m,\nC = [ 0n+m In+m 0n+m,m ] ,\n4.0.1 Derivation\nProposition 1 also facilitates a statement about a general star junction, which consists of n pipes connecting to m pipes, as illustrated in Figure 4. Towards a state-space realization and akin to the case of a joint, we wish to express internal variables in terms of state variables.\nCorollary 1. Consider a star junction with n joining pipes connecting to m branching pipes with individual dynamics (6a) - (6b). Let qi,`, i \u2208 {1, 2, . . . , n+m}, and p1,r be state variables. The internal variables qk,r, k \u2208 {1, 2, . . . , n}\nand pj,`, j \u2208 {n+ 1, n+ 2, . . . , n+m}, can be described by state variables through n\u2211 j=1 n\u220f i=1 i 6=j \u03b1i  qk,r = n\u220f i=1 i 6=k \u03b1i  n+m\u2211 i=n+1 qi,` \u2212 n\u2211 i=1 i 6=k qi,` +  n\u2211 j=1 n\u220f i=1 i6=j \u03b1i \u2212 n\u220f i=1 i6=k \u03b1i  qk,`, (14) pj,` = p1,r. (15)\nProof. Consider (12) from Proposition 1 and note that therein that q0,` = \u2211n+m j=n+1 qj,`. The result for the first equation follows immediately. The second equation is a direct consequence of the algebraic constraint of all pressures being equal at the intersection.\nThe state space realization above follows directly: the system related to x1 describes the solution to p\u03071,r and directly follows from (14). The system corresponding to x2 describes pj,r, j \u2208 {n+ 1, n+ 2, . . . , n+m} and is immediately obtained by the dynamics (6a). The systems for x3 and x4 relate to qj,`, j \u2208 {1, 2, . . . , n+m} and are a consequence of the dynamics (6b) and the algebraic constraint (15).\n4.0.2 Conservation of mass\nConservation of mass can be established from the branch and joint above and is omitted for brevity."
+        },
+        {
+            "heading": "5 Control valve",
+            "text": "We present two models for control valves: firstly, we use a static gain (less or equal than 1) on the pressure and unity gain on mass flow; secondly, we provide a more complex model with the mass flow varying with in- and outlet pressure and cross-sectional area."
+        },
+        {
+            "heading": "5.1 Static model",
+            "text": "Static valve model\nFor the static gain model let the states and inputs be:\nx = [pr q`] > , u = [p` qr] > , (16)\nand define the static relationship\nx = [ kv 0 0 1 ] u,\nwhere kv \u2208 (0, 1).\nConservation of mass is immediate."
+        },
+        {
+            "heading": "5.2 Dynamic model",
+            "text": "Here we develop a model based on a static relationship commonly used for orifices combined with a first order low pass filter approximating the dynamics between command and actuation.\nDynamic valve model 4\nAssume an isentropic expansion and approximate the command-to-actuation relationship by a first order model. Define the state, about and input signals as\nx = [Ao] , y = [qv] , u = [uv p` pr] > .\nThe dynamics are\nx\u0307 = [\u22121/\u03c4 ]x+ [K/\u03c4 0 0]u, (17a) y = [go(Ao, p\u0304`, p\u0304r)/Ao]x+ [0 \u03b6o(Ao, p\u0304`, p\u0304r) \u03beo(Ao, p\u0304`, p\u0304r)]u, (17b)\nwhere g0 is the orifice equation from (18), \u03c4 and K the time constant and gain from transfer function (20) between the control command and actual actuation, qv the mass flow through the valve, uv \u2208 (0, 1) the control input, Ao the cross-sectional area of the valve, and \u03beo and \u03b6o the linearization terms from (21) and (22).\nWe note that conservation of mass does not apply to this model, as there are no mass flows as model inputs."
+        },
+        {
+            "heading": "5.2.1 Derivation",
+            "text": "The static mapping is justified by pipe time constants and the usual sampling time, which both vastly exceed the low time constants of the valve [7].\nIn [10, Equ. (3-34)], assuming an isentropic expansion the mass flow through an orifice is approximated by\nqo = Cpo,`Ao \u221a\u221a\u221a\u221a 2 RsT0z0 \u00b5 \u00b5\u2212 1 [( po,r po,` )2/\u00b5 \u2212 ( po,r po,` )(\u00b5+1)/\u00b5] , (18)\n. = go(Ao, pr, p`) (19) where C .= Cd/ \u221a\n1\u2212 (D0/D1)4 corrects for the head loss, with Cd being the discharge coefficient, \u00b5 the ratio of specific heat, \u00b5 = cp/cv and D0(D1) the orifice (pipe) diameter. For the control valve let the cross-sectional area, Ao, from (18) represent the manipulated variable. To approximate the dynamics of the actuator itself, i.e., the relationship between the control command and actual actuation, consider a first-order low pas filter with transfer function,\nK 1\n\u03c4s+ 1 , (20)\nwhere \u03c4 > 0 is the time constant, K = Ao,max is the gain. The control input is constrained, i.e., uv \u2208 (0, 1), where 0 is closed and 1 is open. Towards a linear model:\n\u2202go(Ao, p`, pr)\n\u2202pr\n. = \u03beo(Ao, p`, pr), (21)\n\u2202go(Ao, p`, pr)\n\u2202p`\n. = \u03b6o(Ao, p`, pr). (22)\nCombining these equations with (20) yields the state space model above."
+        },
+        {
+            "heading": "6 Tank",
+            "text": "We next introduce two tank models: the first model approximates pressure changes while assuming a constant temperature; the second model additionally admits temperature changes.\n4The dynamic valve model has not been fully tested in operational models."
+        },
+        {
+            "heading": "6.1 Isothermal tank",
+            "text": "Isothermal tank model\nAssume there are multiple in- and outlets at the tank and the temperature is constant. Under the assumptions below, for the pressure as the single state, x = p, and input vector\nu = [q1,` . . . qn`,` q1,r . . . qnr,r] ,\nwith n` \u2208 N as the number of inlets and nr \u2208 N as the number of outlets, the linear state space model is\nx\u0307 = Rsz0T0 V [1n` \u22121nr ]u,\nwith V as the constant volume."
+        },
+        {
+            "heading": "6.1.1 Assumptions",
+            "text": "Assumption 3. Suppose:\n3(i) there is perfect mixing inside the volume;\n3(ii) the compressibility factor, z, changes negligibly or if necessary can be represented by a time-varying parameter;\n3(iii) the gas is described by the ideal gas equation;"
+        },
+        {
+            "heading": "6.1.2 Derivation",
+            "text": "For the pressure inside the constant volume, we have p = \u03c1RsT0z0,\np\u0307 = Rsz0T0\u03c1\u0307 = Rsz0T0 q V = Rsz0T0 V  n\u2211\u0300 j=1 qj,` \u2212 nr\u2211 k=1 qk,r  (23) where the first equation is the ideal gas equation. The derivative uses Assumption 3(ii) and the last line conservation of mass: change in mass equals mass flow in minus mass flow out. The variables are: \u03c1 density; \u03a3jqj,` (\u03a3kqk,r) sum of mass flowing in (out). The state space model above and conservation of mass follow directly."
+        },
+        {
+            "heading": "6.2 Non-isothermal tank",
+            "text": "We now drop the isothermal assumption and incorporate temperature dynamics. This also has an effect on the pressure dynamics themselves.\nNon-isothermal tank model\nConsider Assumptions 3 and 4. We obtain a nonlinear representation relating the entering mass flows and temperatures, qi,` and Ti,`, i = {1, . . . , n`}, and exiting mass flows, qi,r, i = {1, . . . , nr}, to the pressure and temperature inside the tank, p and T :\np\u0307 = Rsz0\u00b5\nV  n\u2211\u0300 j=1 qj,`Tj,` \u2212 nr\u2211 k=1 qk,rT  , T\u0307 =\nRsTz0 pV cv  n\u2211\u0300 j=1 qi,j (cp,jTj \u2212 cvT )\u2212RsT nr\u2211 k=1 qo,k  . Therefore, with x = [p T ]> and\nu = [q1,` T1,` . . . qn`,` Tni,` q1,r . . . qnr,r] ,\nwe can use the linearized dynamics for pressure and temperature to generate a linear state space model."
+        },
+        {
+            "heading": "6.2.1 Assumptions",
+            "text": "Assumption 4. Suppose:\n4(i) potential and kinetic energy are negligible;\n4(ii) the reference states for internal energy and enthalpy are set to zero at zero degree Kelvin;\n4(iii) specific heats are constant;\n4(iv) the heat flux to the environment is negligible."
+        },
+        {
+            "heading": "6.2.2 Derivation",
+            "text": "The pressure dynamics are akin to the isothermal case but differ as the temperature is not a constant anymore:\np\u0307 = Rsz0\n(\u2211n` j=1 qj,` \u2212 \u2211nr k=1 qk,r\nV T + \u03c1T\u0307\n)\n= Rsz0\n(\u2211n` j=1 qj,` \u2212 \u2211nr k=1 qk,r\nV T +\np\nRsTz0 T\u0307\n) (24)\nWe next derive an expression for T\u0307 , which we will plug back in.\nTemperature dynamics As mentioned in Assumptions 3(iii) and 4(ii) we assume ideal gas and select the reference states for the internal energy and enthalpy to be zero at zero degree Kelvin: Tref = 0 =\u21d2 Uref , Href = 0 (see for example [11, Ch. 3.6.3]). Then, the derivative of the total energy of a system, E, is [11, Equ. (2.27)]:\nd dt E Ass.4(i) = d dt U (25)\nAss. 3(i),4(ii) =\nd dt (mcvT )\nAss. 4(iii) =  n\u2211\u0300 j=1 qj,` \u2212 nr\u2211 k=1 qk,r  cvT +mcvT\u0307 (26) with U being the internal energy. Moreover, conservation of energy implies [11, Equ. (4.9)-(4.12)]\nd dt U Ass.4(i) = Q\u0307+ n\u2211\u0300 j=1 qj,`hj \u2212 nr\u2211 k=1 qk,rhk\nAss.3(i) = Q\u0307+ cp n\u2211\u0300 j=1 qj,`Tj \u2212 cpT nr\u2211 k=1 qk,r, (27)\nwhere h is the specific enthalpy, and Q\u0307 is the rate of heat transfer to the environment, which is a function of the temperature (deviations) inside and outside the volume. Usually, empirical formulations are used for conduction, convection and radiation (see [11, Ch. 2]). Here for brevity we assume it is negligible (cf. Assumption 4(iv)). Combining (26) and (27) yields\nT\u0307 = 1\nmcv cvT  nr\u2211 k=1 qk,r \u2212 n\u2211\u0300 j=1 qj,` + n\u2211\u0300 j=1 qj,`cpTj \u2212cpT nr\u2211 k=1 qk,r ]\n= 1\nmcv  n\u2211\u0300 j=1 qj,` (cpTj \u2212 cvT ) \u2212RsT nr\u2211 k=1 qk,r  = RsTz0 pV cv  n\u2211\u0300 j=1 qj,` (cpTj \u2212 cvT )\u2212RsT nr\u2211 k=1 qk,r\n , (28) which represents the nonlinear temperature dynamics from the model. Note that (28) also coincides with that in [5, Ch. 13.4.5]. Using this equation in (24) yields the stated nonlinear dynamics for the pressure."
+        },
+        {
+            "heading": "7 Valve manifold",
+            "text": "Consider a valve manifold as illustrated in Figure 5. The following model is derived by using the tank models from\nabove for Tanks 1 and 2, the single pipe model for each pipe-valve-pipe connection with adjusted friction factor, and the orifice equation for the entrances of the tanks. We provide more details in the derivation subsequently.\nValve manifold model\nConsider Assumptions 2\u20133 (for isothermal pipes and tanks) and approximate the entering mass flow into Tanks 1 and 2 as an isentropic expansion described by orifice equation (18). Further, let each pipe-valve-pipe connection be approximated by single pipe models with adjusted friction factors. Let the state, output and input vectors be defined as\nx = [pT1 p1,r q1,` p2,r q2,` pT2 ] > , y = [pT2 qT1,`] > , u = [pT1,` qT2,r] > ,\nwhere subscript i = {1, 2} refers to middle section Pia \u2212 Vi \u2212 Pib and other terms as shown in Figure 5. Then the overall dynamics are described by\nx\u0307 =  \u03b1T1\u03beT1 0 \u2212\u03b1T1 0 \u2212\u03b1T1 0\n0 \u03b11\u03b6T2 \u2212\u03b11 0 0 \u03b11\u03beT2 \u03ba1 \u03b21 \u03b31 0 0 0 0 0 0 \u03b12\u03b6T2 \u2212\u03b12 \u03b12\u03beT2 \u03ba2 0 0 \u03b22 \u03b32 0 0 \u03b1T2\u03b6T2 0 \u03b1T2\u03b6T2 0 2\u03b1T2\u03beT2\nx+ [ \u03b1T1\u03b6T1 0 0 0 0 0 0 0 0 0 0 \u2212\u03b1T2 ]> u,\ny = [ 0 0 0 0 0 1 \u03beT1 0 0 0 0 0 ] x+ [ 0 0 \u03b6T1 0 ] u,\nwhere \u03beT1 = \u03beT1(p\u0304T1,`, p\u0304T1) from (21) and \u03b6T1 = \u03b6T1(p\u0304T1,`, p\u0304T1) from (22) are related to the linearized orifice equation for the entrance into Tank 1, and accordingly for Tank 2. The parameters \u03b1i, \u03b2i, \u03bai and \u03b3i, i = {1, 2, 3} are as defined in (1) for pipes, whereas \u03b1Ti =\nRsz0T0 VTi , i = {1, 2}."
+        },
+        {
+            "heading": "7.1 Derivation",
+            "text": "The model is based on the assumptions of each component, stated in the corresponding sections above. The primary motivation for including the orifice model for the entrance but not the exit is to obtain compatible boundary conditions. Our focus here is application and control orientation; an experimental validation is out of the scope of this work. Without loss of generality, we assume a positive flow, two middle sections, and that all outlets of Tank 1 and inlets of Tank 2 are of identical geometry, resp.\nTanks For Tank 1, (23) from the tank model above yields p\u0307T1 = \u03b1T1(qT1,` \u2212 qT1,1,r \u2212 qT1,2,r), (30) where qT1,` is the mass flow at the inlet of Tank 1 and qT1,i,r is the mass flow at its i th outlet. We interpret the tank entrance as an orifice, and as in (21) and (22) define \u2202go(pT1 , pT1,`)\n\u2202pT1\n. = \u03beT1 , \u2202go(pT1 , pT1,`)\n\u2202pT1,`\n. = \u03b6T1 . (31)\nTherefore, with (30) \u2013 (31), we obtain a model for Tank 1: x = [pT1 ] ,\ny = [pT1 qT1,`] > , u = [pT1,` qT1,1,r qT1,2,r,] >\nwith dynamics x\u0307 = [ \u03b1T1\u03beT1 ] x+ [ \u03b1T1\u03b6T1 \u2212\u03b1T1 \u2212\u03b1T1 ] u, (32a)\ny = [ 1 \u03beT1 ] x+ [ 0 0 0 \u03b6T1 0 0 ] u. (32b)\nSimilarly, for Tank 2 we have: x = [pT2 ] ,\ny = [pT2 qT2,1,` qT2,2,`] > u = [pT2,1,` pT2,2,` qT2,r] > ,\nwith dynamics x\u0307 = \u03b1T2(\u03beT2 + \u03beT2)x+ [ \u03b1T2\u03b6T2 \u03b1T2\u03b6T2 \u2212\u03b1T2 ] u, (33a)\ny =  1\u03beT2 \u03beT2 x+  0 0 0\u03b6T2 0 0 0 \u03b6T2 0 u. (33b) Composite valve manifold model The state-space models for Tanks 1 and 2 in (32) and (33) as well as the single pipe model from (2) for each connection, P1a \u2212 V1 \u2212 P1b and P2a \u2212 V2 \u2212 P2b, resp., share the following boundary conditions, pT1,i,r = pia,`, pT2,i,` = pib,`\nqT1,i,r = qia,`, qT2,i,` = qib,`,\nfor i = {1, 2}. Connecting tank and pipe models accordingly generates the model stated above."
+        },
+        {
+            "heading": "8 Compressor",
+            "text": "Similar to the valve modeling, we present a static gain model as well as a more complex dynamic model for the compressor."
+        },
+        {
+            "heading": "8.1 Static model",
+            "text": "Static compressor model\nFor the static gain model let the states and inputs be :\nx = [pr q`] > , u = [p` qr] > , (34)\nwhere the suction side corresponds to subscript ` and discharge side to subscript r. We define the static relationship\nx = [ kc 0 0 1 ] u,\nwhere kc > 1.\nConservation of mass is immediate.\n8.2 Dynamic model\nConsider a compressor system as shown in Figure 6, which consists of a compressor, a duct and a plenum. Similar to [8] and [5], we model each of these elements separately and then connect them via boundary conditions, akin to the valve manifold model above.\nDynamic compressor model\nConsider Assumptions 2 (for duct), 3 (for isothermal plenum) and 5 (for compression) below. Define state, input and output vectors as\nx = [p3 q2] > , (35) u = [p1 q3,r T1 \u03c9] > , (36) y = [p3 q2 T3] > , (37)\nwith terms as shown in Figure 6, and \u03c9 the compressor speed. The the nonlinear dynamics are\nx\u0307 =\n[ RsT2z0 Vp\n(q2 \u2212 q3,r) A2 L2 (\u03a6(q2, \u03c9)\u2212 p3)\n] (38)\ny =\n[ x\nT1 ( \u03a6(q2,\u03c9) p1 )(\u03b7\u22121)/\u03b7] , (39) where \u03a6(q2, \u03c9) = p2,` is the suction pressure after the isentropic compression modeled as a static map. A linear state space model can be derived by linearization."
+        },
+        {
+            "heading": "8.2.1 Assumptions",
+            "text": "Assumption 5. Suppose:\n5(i) The compression is isentropic.\n5(ii) The discharge pressure of the compressor, p2,`, is defined by a static relation between speed, \u03c9, suction pressure, p1, and mass flow, q2: \u03a6(q2, \u03c9) : R>0 \u00d7 R>0 \u2192 R>0.\n5(iii) The friction in the duct is negligible.\n5(iv) The temperature change in the duct is negligible.\n5(v) The gas in the duct and plenum is perfectly mixed."
+        },
+        {
+            "heading": "8.2.2 Derivation",
+            "text": "For the plenum we obtain from the isothermal tank model in (23),\np\u03073 = RsT2z0 Vp (q2 \u2212 q3,r). (40)\nFor the duct, by (2b) and boundary condition p2,r = p3,\nq\u03072 = A2 L2 (p2,` \u2212 p3). (41)\nThe suction pressure after the isentropic compression is modeled as a static map, p2.` = \u03a6(q2, \u03c9), with compressor speed \u03c9. The mapping is usually based on empirical formulas [13], or compressor geometry [5, Ch. 13]. It follows that\nq\u03072 = A2 L2 (\u03a6(q2, \u03c9)\u2212 p3). (42)\nBy the hypothesis of isentropic compression and isothermal duct and plenum,\nT3 = T1 ( p2,` p1 )(\u03b7\u22121)/\u03b7 = T1 ( \u03a6(q2, \u03c9) p1 )(\u03b7\u22121)/\u03b7 , (43)\nwith isentropic coefficient \u03b7. The model above immediately follows. Note that conservation of mass is immediate: by hypothesis and (40), q\u03041 = q\u03042 = q\u03043,r."
+        },
+        {
+            "heading": "9 Heat exchanger",
+            "text": "We provide a heat exhanger model based on the non-isothermal one-dimensional pipe model presented in [4]. The assumptions are therefore similar to those for the pipe in Section 1.1. Given the fact that under usual operating conditions no phase change occurs within the gas our model is similar to that in [12] in the context of air conditioning systems. While we provide a nonlinear formulation, linearization around the nominal operating point directly leads to a linear state-space realization.\nOur rudimentary model replaces the heat exchanger with a single pipe, with the geometric and conductivity properties accommodated by adjusting the heat transfer coefficient, krad, and friction factor, \u03bb, to parametrize the exchanger design and nominal operating point. The temperature output of the model can be used to set the temperature parameter for subsequent downstream isothermal (or other) pipe models.\nHeat exchanger\nConsidering Assumption 2, if the heat flux is dominated by radial conduction we define the state and input vectors to be\nx = [pr q` Tr] , u = [p` qr T`] .\nThen, the nonlinear dynamics of the heat exchanger are governed by\np\u0307r = Rsz0 Acv\n[ krad\u03c0Do(Tamb \u2212 Tr)\u2212\nqr \u2212 q` L Tr (cv +Rsz0) + pr \u2212 p` L Rsz0Trqr pr\n\u2212Tr \u2212 T` L qr (cv +Rsz0) + \u03bbR2sz 2 0T 2 r q 2 r |qr|\n2DA2p2r\n] (44a)\nq\u0307` = \u2212A pr \u2212 p` L \u2212 \u03bbRsT`z0 2DA q`|q`| p` \u2212 Ag RsT`z0 dh dx p` (44b) T\u0307r = Rsz0Tr Acvpr [ krad\u03c0Do(Tamb \u2212 Tr)\u2212 qr \u2212 q` L TrRsz0 + pr \u2212 p` L Rsz0Trqr pr \u2212 Tr \u2212 T` L qr (cv +Rsz0)\n+ \u03bbR2sz 2 0T 2 r q 2 r |qr|\n2DA2p2r ] (44c)"
+        },
+        {
+            "heading": "9.1 Derivation",
+            "text": "This is the spatially discretized model of non-isothermal pipe flow developed in [4]. As remarked above, the heat transfer coefficient, krad, is deliberately non-negligible and the friction factor, \u03bb, can be significant depending on exchanger geometry."
+        },
+        {
+            "heading": "10 Interconnections",
+            "text": "Suppose each component is described by a state space model with signals describing pressures, p, and mass flows, q. In this section we show how these component models can be interconnected to build an entire network model. Towards this goal, we recall interconnection rules from [3] which translate allowable boundary conditions to signal flows."
+        },
+        {
+            "heading": "10.1 Directed pipe connections and \u2018ports\u2019",
+            "text": "The signal flow graph models derived later have directions associated with each signal. Thus, p` and qr are input signals, indicating that they are specified from outside the component, and pr and q` are output signals, meaning that they are determined by the component itself and the input signals. The spatially localized connection sites, however, possess one input signal and one output signal, namely (p`, q`) at the left end and (pr, qr) at the right. We further appropriate circuit terminology and identify two distinct location types, which we term ports. As in [2], every element in our interconnected system presents signal interfaces to other elements and to the outside world.\nDefinition 2 (Ports).\np-port of a component possesses two signals: an input pressure signal p` and an output flow signal q`.\nq-port of a component possesses two signals: an input flow signal qr and an output pressure signal pr.\nInternal series connection of two components, 1 and 2, will involve the cascading of signals p2,` = p1,r and q1,r = q2,` at the junction point. This describes a p-port to q-port connection. Likewise, connection to the outside of the network must respect the type and causality of the signals. These rules are specified below."
+        },
+        {
+            "heading": "10.2 Interconnection rules",
+            "text": "Interconnection rules\nI. Connections are permitted only between: i. a p-port and a q-port, or\nii. a p-port and an external pressure source/input signal plus an external flow sink/output signal, or iii. a q-port and an external flow source/input signal plus an external pressure sink/output signal. II. Pressure input signals must connect to pressure output signals, and flow input signals must connect to flow output signals.\nIII. Connection of one variable of a port requires connection of the other. IV. All ports must be connected and algebraic loops avoided.\nThese rules conform to the connections examined in [3] to formulate the systematic interconnection of state-space models. Each component model possesses input and output signals and, in Proposition 3 [4], it is shown how a (possibly non-minimal) state-space realization of the interconnection of gas system elements can be directly constructed with the above rules. This construction replaces and extends the graph-theoretic DAE methods of [2] and yields a new input-output transfer function satisfying Mason\u2019s Gain Formula, [4, Proposition 4]."
+        },
+        {
+            "heading": "10.3 Matrix methodology",
+            "text": "Per [4], we begin by stacking the state-space models of the individual network components:\nx\u0307 = Ax+Bw, y = Cx+Dw (45)\nwhere A = blkdiag(A(1), A(2), . . . , A(N)), (46a)\nB = blkdiag(B(1), B(2), . . . , B(N)), (46b) C = blkdiag(C(1), C(2), . . . , C(N)), (46c)\nD = blkdiag(D(1), D(2), . . . , D(N)), (46d) with superscript (i), i = {1, . . . , N}, denoting the respective matrix of component i, and x \u2208 Rnx , w \u2208 Rnw and y \u2208 Rny . Interconnections and external sources u \u2208 Rnu and sinks z \u2208 Rnz are described by w = Fy +Gu, z = Hx+ Ju, (47) with structured matrices [F,G,H, J ] with 0-1 elements:\n[F ]i,j = { 1, if [y]j = [w]i, 0, otherwise.\n(48)\nMatrix interconnection methodology\nA (perhaps non-minimal) state-space realization of (45) and (47) is given by\nx = A\u0304x+ B\u0304u, y = C\u0304x+ D\u0304u, (49)\nwhere\nA\u0304 = A+BF (I \u2212DF )\u22121C, C\u0304 = (I \u2212DF )\u22121C, B\u0304 = B [ I + F (I \u2212DF )\u22121D ] G, D\u0304 = (I \u2212DF )\u22121DG.\nWe next show an example applying the methodology."
+        },
+        {
+            "heading": "10.3.1 Example: two pipes in series",
+            "text": "Consider two pipes in series, 1 and 2, with aggregated input and state/output vectors,\nx = y = p1,rq1,`p2,r q2,`  , w = p1,`q1,rp2,` q2,r  , (50) We further define the sources and sinks:\nu = [ p1,` q2,r ] , z = [ p2,r q1,` ] . (51)\nAs p1,r = p2,` and q1,r = q2,`, this leads to the following matrices:\nF = 0 0 0 00 0 0 11 0 0 0 0 0 0 0  , G = 1 00 00 0 0 1  , (52) H = [ 0 0 1 0 0 1 0 0 ] , J = 0. (53)\nThe aggregate system can directly be implemented in Matlab using (49)."
+        },
+        {
+            "heading": "10.3.2 Matlab example: vented gas loop",
+            "text": "We recall the example from [4] in Figure 7.\nThe gas flows clockwise, entering through pipe P1 and exiting through pipes P6 and P9. The compressor and valve, whose corresponding variables are respectively labeled by subscripts c and v, are modeled as static gains as in Sections 5 and 8,\nDc = [ kc 0 0 1 ] , Dv = [ kv 0 0 1 ] ,\nwhere kc = 4 and kv = 0.8. Further, pipes (P1, P2, P3) are modeled as a joint, as in Subsection 3.1, and (P5, P6, P7) and (P8, P9, P10) as branches, as in Section 2. Composing the system according to (46), results in the component input vector,\nw = [p1,` p2,` q3,r pc,` qc,r p4,` q4,r pv,` qv,r p5,` q6,r q7,r p8,`q9,r q10,r] > ,\nand the total output vector,\ny = [p3,r q1,` q2,` pc,r qc,` p4,r q4,` pv,r qv,` p6,r p7,r q5,` p9,r p10,r q8,`] > .\nThe external sources are\nu\u0304t = [p1,` q6,r q9,r] > .\nMatlab code\n1 %% Parameters 2 clear all 3 close all 4 5 pbar = 2.54e6; % nominal pressure Pa 6 qbar = 15.44; % nominal flow Kg/s 7 Re = 1.0901e7; % Reynolds number 8 T = 300; % nominal temperature K 9 z = 1; % gas compression factor\n10 Rs = 518.28; % specific gas constant JK^{-1}mol^{-1} methane 11 lambda = 0.0113; % friction factor 12 gamma = Rs*T; % constant gas state 13 mu = 1.31; % from https://www.engineeringtoolbox.com/methane-d_1420.html 14 15 %% System J123 join of three 10m pipes 16 La = 10; % m 17 Da = 27.25*2.54/100; % m 18 Aa = pi*Da*Da/4; 19 20 alfa = gamma*z/Aa/La; 21 beta = Aa/La; 22 kappa = lambda*gamma*z*qbar/Da/Aa/pbar; 23 24 Lb = 10; % m 25 Db = 17.25*2.54/100; % m 26 Ab = pi*Db*Db/4;\n27 28 alfb = gamma*z/Ab/Lb; 29 betb = Ab/Lb; 30 kappb = lambda*gamma*z*qbar/Db/Ab/pbar; 31 32 Lc = 10; % m 33 Dc = 27.25*2.54/100; % m 34 Ac = pi*Dc*Dc/4; 35 36 alfc = gamma*z/Ac/Lc; 37 betc = Ac/Lc; 38 kappc = lambda*gamma*z*qbar/Dc/Ac/pbar; 39 40 gammab = alfa/(alfa+alfb); % splitting ratio for joining problem 41 42 F123 = [0 alfa*(1-gammab) alfa*(1-gammab) 0 -alfa*(1-gammab); 43 -beta -kappa 0 0 0; 44 -betb 0 -kappb 0 0; 45 0 0 0 0 alfc; 46 betc 0 0 -betc -kappc]; 47 G123 = [0 0 0;beta 0 0;0 betb 0;0 0 -alfc;0 0 0]; 48 H123 = [0 0 0 1 0;0 1 0 0 0;0 0 1 0 0]; 49 J123 = zeros(3,3); 50 51 %% Systems Br567 and Br8910 identical branching systems 52 F567 = [0 alfa 0 -alfa 0 -alfa; 53 -beta -kappa 0 0 0 0; 54 0 0 0 alfb 0 0; 55 betb 0 -betb -kappb 0 0; 56 0 0 0 0 0 alfc; 57 betc 0 0 0 -betc -kappc]; 58 G567 = [0 0 0; beta 0 0; 0 -alfb 0;0 0 0;0 0 -alfc;0 0 0]; 59 H567 = [0 0 1 0 0 0;0 0 0 0 1 0;0 1 0 0 0 0]; 60 J567 = zeros(3,3); 61 F8910=F567; G8910=G567; H8910=H567; J8910=J567; 62 63 %% Single pipe 4 64 F4 = [0 alfa;-beta -kappa]; 65 G4 = [0 -alfa;beta 0]; 66 H4 = eye(2); 67 J4 = zeros(2,2); 68 69 %% System C compressor 70 kC = 4; 71 FC = zeros(0); 72 GC = zeros(0,2); 73 HC = zeros(2,0); 74 JC = diag([kC,1]); 75 76 %% System resistor 77 kR = 0.8; 78 FR = zeros(0); 79 GR = zeros(0,2); 80 HR = zeros(2,0); 81 JR = diag([kR,1]); 82 83 %% Compose interconnected system 84 85 % stack up components\n86 A = blkdiag(F123,FC,F4,FR,F567,F8910); 87 B = blkdiag(G123,GC,G4,GR,G567,G8910); 88 C = blkdiag(H123,HC,H4,HR,H567,H8910); 89 D = blkdiag(J123,JC,J4,JR,J567,J8910); 90 91 % Internal connections 92 F = zeros(15,15); 93 F(2,14)=1; F(3,5)=1; F(4,1)=1; F(5,7)=1; F(6,4)=1; F(7,9)=1; 94 F(8,6)=1; F(9,12)=1; F(10,8)=1; F(12,15)=1; F(13,11)=1; F(15,3)=1; 95 96 % External sources 97 G = zeros(15,3); 98 G(1,1)=1; G(11,3)=1; G(14,2)=1; 99\n100 % Interconnected systems 101 Abar = A+B*F/(eye(15)-D*F)*C; 102 Bbar = B*(eye(15)+F/(eye(15)-D*F)*D)*G; 103 Cbar = (eye(15)-D*F)\\C; 104 Dbar = (eye(15)-D*F)\\D*G; 105 106 %% State space model 107 complete_sys = ss(Abar, Bbar, Cbar, Dbar);"
+        },
+        {
+            "heading": "10.4 Matlab\u2019s connect function",
+            "text": "As an alternative to the matrix methodology we can use the connect function in Matlab. This is best explained by the example below. For each component we name the input and output signals, respecting the boundary conditions. We then define the input and output signal names of the aggregate system and call the connect function."
+        },
+        {
+            "heading": "10.4.1 Matlab example: two pipes in series",
+            "text": "1 % sys1 - Pipe 1 2 % sys2 - Pipe 2 3 4 % Pipe 1 5 sys1.InputName = {'p1l', 'q2l'}; % q1r = q2l 6 sys1.OutputName = {'p1r', 'q1l'}; 7 8 % Pipe 2 9 sys2.InputName = {'p1r', 'q2r'}; % p1r = p2l\n10 sys2.OutputName = {'p2r', 'q2l'}; 11 12 % Connect pipes 13 sys_inputs = {'p1l', 'q2r'}; 14 sys_outputs = {'p2r', 'q1l'}; 15 sys = connect(sys1,sys2, sys_inputs, sys_outputs);"
+        },
+        {
+            "heading": "10.4.2 Matlab example: vented gas loop",
+            "text": "1 %% Parameters 2 clear all 3 close all 4 5 pbar = 2.54e6; % nominal pressure Pa 6 qbar = 15.44; % nominal flow Kg/s 7 Re = 1.0901e7; % Reynolds number 8 T = 300; % nominal temperature K 9 z = 1; % gas compression factor\n10 Rs = 518.28; % specific gas constant JK^{-1}mol^{-1} methane 11 lambda = 0.0113; % friction factor 12 gamma = Rs*T; % constant gas state 13 mu = 1.31; % from https://www.engineeringtoolbox.com/methane-d_1420.html 14 15 %% System J123 join of three 10m pipes 16 La = 10; % m 17 Da = 27.25*2.54/100; % m 18 Aa = pi*Da*Da/4; 19 20 alfa = gamma*z/Aa/La; 21 beta = Aa/La; 22 kappa = lambda*gamma*z*qbar/Da/Aa/pbar; 23 24 Lb = 10; % m 25 Db = 17.25*2.54/100; % m 26 Ab = pi*Db*Db/4; 27 28 alfb = gamma*z/Ab/Lb; 29 betb = Ab/Lb; 30 kappb = lambda*gamma*z*qbar/Db/Ab/pbar; 31 32 Lc = 10; % m 33 Dc = 27.25*2.54/100; % m 34 Ac = pi*Dc*Dc/4; 35 36 alfc = gamma*z/Ac/Lc; 37 betc = Ac/Lc; 38 kappc = lambda*gamma*z*qbar/Dc/Ac/pbar; 39 40 gammab = alfa/(alfa+alfb); % splitting ratio for joining problem 41 42 F123 = [0 alfa*(1-gammab) alfa*(1-gammab) 0 -alfa*(1-gammab); 43 -beta -kappa 0 0 0; 44 -betb 0 -kappb 0 0; 45 0 0 0 0 alfc; 46 betc 0 0 -betc -kappc]; 47 G123 = [0 0 0;beta 0 0;0 betb 0;0 0 -alfc;0 0 0]; 48 H123 = [0 0 0 1 0;0 1 0 0 0;0 0 1 0 0]; 49 J123 = zeros(3,3); 50 sys123 = ss(F123,G123,H123,J123); 51 sys123.InputName = {'p1l','p10r','qCl'}; 52 sys123.OutputName = {'p3r','q1l','q2l'}; 53 54 55 %% Systems Br567 and Br8910 identical branching systems 56 F567 = [0 alfa 0 -alfa 0 -alfa; 57 -beta -kappa 0 0 0 0; 58 0 0 0 alfb 0 0; 59 betb 0 -betb -kappb 0 0; 60 0 0 0 0 0 alfc; 61 betc 0 0 0 -betc -kappc]; 62 G567 = [0 0 0; beta 0 0; 0 -alfb 0;0 0 0;0 0 -alfc;0 0 0]; 63 H567 = [0 0 1 0 0 0;0 0 0 0 1 0;0 1 0 0 0 0]; 64 J567 = zeros(3,3); 65 sys567 = ss(F567,G567,H567,J567); 66 sys567.InputName = {'pVr','q6r','q8l'}; 67 sys567.OutputName = {'p6r','p7r','q5l'}; 68 sys8910 = sys567;\n69 sys8910.InputName = {'p7r', 'q9r', 'q2l'}; 70 sys8910.OutputName = {'p9r', 'p10r', 'q8l'}; 71 72 %% Single pipe 4 73 F4 = [0 alfa;-beta -kappa]; 74 G4 = [0 -alfa;beta 0]; 75 H4 = eye(2); 76 J4 = zeros(2,2); 77 sys4 = ss(F4,G4,H4,J4); 78 sys4.InputName = {'pCr', 'qVl'}; 79 sys4.OutputName = {'p4r', 'q4l'}; 80 81 %% System C compressor 82 kC = 4; 83 FC = zeros(0); 84 GC = zeros(0,2); 85 HC = zeros(2,0); 86 JC = diag([kC,1]); 87 sysC = ss(FC,GC,HC,JC); 88 sysC.InputName = {'p3r', 'q4l'}; 89 sysC.OutputName = {'pCr', 'qCl'}; 90 91 %% System resistor 92 kR = 0.8; 93 FR = zeros(0); 94 GR = zeros(0,2); 95 HR = zeros(2,0); 96 JR = diag([kR,1]); 97 sysR = ss(FR,GR,HR,JR); 98 sysR.InputName = {'p4r', 'q5l'}; 99 sysR.OutputName = {'pVr', 'qVl'};\n100 101 %% Compose interconnected system 102 inputs = {'p1l', 'q6r', 'q9r'}; 103 outputs = {'p3r','q1l','q2l','p6r','p7r','q5l','p9r','p10r','q8l','p4r',' q4l','pVr', 'qVl'}; 104 complete_sys = connect(sysR,sysC,sys4,sys123,sys567,sys8910, inputs,\noutputs);"
+        },
+        {
+            "heading": "11 Conclusion",
+            "text": "We derived composite state-space models for the transient dynamics of gas flow through intersecting pipe geometries, valves, compressors, and valve manifolds that are well-suited candidates for model-based control design. They also capture conservation of mass at steady state by subsuming algebraic constraints that would otherwise appear as part of a system of DAEs. Additionally, we provide examples of how to use the matrix methodology introduced in [4] in Matlab and alternatively show how to use Matlab\u2019s connect function."
+        },
+        {
+            "heading": "Acknowledgement",
+            "text": "This research was supported by funding from Solar Turbines Incorporated."
+        }
+    ],
+    "title": "A COMPENDIUM OF CONTROL-ORIENTED MODELS OF GAS PROCESSING EQUIPMENT COMPONENTS",
+    "year": 2022
+}

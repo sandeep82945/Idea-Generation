@@ -1,0 +1,178 @@
+{
+    "abstractText": "Deep neural networks have surpassed human performance in key visual challenges such as object recognition, but require a large amount of energy, computation, and memory. In contrast, spiking neural networks (SNNs) have the potential to improve both the efficiency and biological plausibility of object recognition systems. Here we present a SNN model that uses spike-latency coding and winner-take-all inhibition (WTA-I) to efficiently represent visual stimuli from the Fashion MNIST dataset. Stimuli were preprocessed with center-surround receptive fields and then fed to a layer of spiking neurons whose synaptic weights were updated using spike-timing-dependent-plasticity (STDP). We investigate how the quality of the represented objects changes under different WTA-I schemes and demonstrate that a network of 150 spiking neurons can efficiently represent objects with as little as 40 spikes.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Melani Sanchez-Garcia"
+        },
+        {
+            "affiliations": [],
+            "name": "Tushar Chauhan"
+        },
+        {
+            "affiliations": [],
+            "name": "Benoit R. Cottereau"
+        },
+        {
+            "affiliations": [],
+            "name": "Michael Beyeler"
+        }
+    ],
+    "id": "SP:9b04db164f4e4e3b863806d6b1bf44e5121f4c37",
+    "references": [
+        {
+            "authors": [
+                "M Beyeler",
+                "EL Rounds",
+                "KD Carlson",
+                "N Dutt",
+                "JL Krichmar"
+            ],
+            "title": "Neural correlates of sparse coding and dimensionality reduction",
+            "venue": "PLoS Computational Biology,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "T Chauhan",
+                "T Masquelier",
+                "A Montlibert",
+                "BR Cottereau"
+            ],
+            "title": "Emergence of binocular disparity selectivity through Hebbian learning",
+            "venue": "Journal of Neuroscience,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "RM Cichy",
+                "D Pantazis",
+                "A Oliva"
+            ],
+            "title": "Similarity-Based Fusion of MEG and fMRI Reveals Spatio-Temporal Dynamics in Human Cortex During Visual Object Recognition",
+            "venue": "Cerebral Cortex, 26(8):3563\u20133579,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "JJ DiCarlo",
+                "D Zoccolan",
+                "NC Rust"
+            ],
+            "title": "How does the brain solve visual object recognition? Neuron",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "A Goel",
+                "C Tung",
+                "Y-H Lu",
+                "GK Thiruvathukal"
+            ],
+            "title": "A survey of methods for low-power deep learning and computer vision",
+            "venue": "IEEE 6th World Forum on Internet of Things (WF- IoT),",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "R G\u00fctig",
+                "R Aharonov",
+                "S Rotter",
+                "H Sompolinsky"
+            ],
+            "title": "Learning Input Correlations through Nonlinear Temporally Asymmetric Hebbian Plasticity",
+            "venue": "Journal of Neuroscience,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "K He",
+                "X Zhang",
+                "S Ren",
+                "J Sun"
+            ],
+            "title": "Delving deep into rectifiers: Surpassing human-level performance on imagenet classification",
+            "venue": "In 2015 IEEE International Conference on Computer Vision (ICCV),",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "W Maass"
+            ],
+            "title": "On the computational power of winner-take-all",
+            "venue": "Neural Computation,",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "T Masquelier",
+                "SJ Thorpe"
+            ],
+            "title": "Unsupervised learning of visual features through spike timing dependent plasticity",
+            "venue": "PLoS Computational Biology,",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "H Xiao",
+                "K Rasul",
+                "R Vollgraf"
+            ],
+            "title": "Fashion-MNIST: A novel image dataset for benchmarking machine learning algorithms",
+            "venue": "arXiv preprint arXiv:1708.07747,",
+            "year": 2017
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1. Introduction",
+            "text": "Deep convolutional neural networks (DCNNs) have been extremely successful in a wide range of computer vision applications, rivaling or exceeding human benchmark performance in key visual challenges such as object recognition [7]. However, state-of-the-art DCNNs require too much energy, computation, and memory to be deployed on most computing devices and embedded systems [5]. In contrast, the brain is masterful at representing real-world objects with a cascade of reflexive, largely feedforward computations [4] that rapidly unfold over time [3] and rely on an extremely sparse, efficient neural code (see [1] for a re-\ncent review). For example, faces are processed in localized patches within inferotemporal cortex (IT), where cells detect distinct constellations of face parts (e.g., eyes, noses, mouths), and whole faces can be recognized by taking a linear combination of neuronal activity across IT [1].\nIn recent years, spiking neural networks (SNNs) have emerged as a promising approach to improving the efficiency and biological plausibility of neural networks such DCNN, due to their potential for low power consumption, fast inference, event-driven processing, and asynchronous operation. Studying how object recognition may be implemented using biologically plausible learning rules in SNNs may not only further our understanding of the brain, but also lead to new efficient artificial vision systems.\nHere we present a SNN model that uses spike-latency encoding [2] and winner-take-all inhibition (WTA-I) [8] to efficiently represent stimuli from the Fashion MNIST dataset [10]. We show that efficient object representations can be learned with spike-timing-dependent-plasticity (STDP) [6], an unsupervised learning rule that relies on sparsely encoded visual information among local neurons. In addition, we investigate how the quality of the represented objects changes under different WTA-I schemes. Remarkably, our network is able to represent objects with as little as 150 spiking neurons and at most 40 spikes."
+        },
+        {
+            "heading": "2. Methods",
+            "text": ""
+        },
+        {
+            "heading": "2.1. Network architecture",
+            "text": "The network architecture of our model is shown in Figure 1. Inspired by [2], our network consisted of an input layer corresponding to a simplified model of the lateral\nar X\niv :2\n20 5.\n10 33\n8v 2\n[ cs\n.C V\n] 2\ngeniculate nucleus (LGN), followed by a layer of spiking neurons whose synaptic weights were updated using STDP. The LGN layer consisted of simulated firing-rate neurons with center-surround receptive fields, implemented using a 6x6 difference of Gaussian filter (see Figure 1, left). The LGN layer was fully connected to a layer of integrate-andfire neurons, each unit characterized by a threshold and a membrane potential [2]. Thus, the LGN spikes contributed to an increase in the membrane potential of V1 neurons, until one of the V1 membrane potentials reached threshold, resulting in a postsynaptic spike. The membrane potential En(t) of the nth V1 neuron at time t within the iteration was represented as:\nEn(t) =  \u2211 m\u2208LGN wmn \u00b7H(t\u2212 tm), t < min t { t | max n\u2208V 1 En(t) \u2265 \u03b8 } 0, otherwise. (1)\nwhere tm was the spiking time of the m-th LGN neuron, H was the Heaviside or unit step function, and \u03b8 was the threshold of the V1 neurons (assumed to be a constant for the entire population). The expression min{t | maxEn(t) \u2265 \u03b8} denoted the timing of the first spike in the V1 layer. Membrane potentials were calculated up to this time point, after which a WTA-I scheme [8] was triggered and all membrane potentials were reset to zero. In this scheme, the most frequently firing neuron exerted the strongest inhibition on its competitors and thereby stopped them from firing until the end of the iteration."
+        },
+        {
+            "heading": "2.2. Spike-latency code",
+            "text": "Following [2], we converted the LGN activity maps to firstspike relative latencies using a simple inverse operation: y = 1/x, where x was the LGN input and y was the assigned spike-time latency [9]. In this way, we ensured that\nthe most active units fired first, while units with lower activity fired later or not at all."
+        },
+        {
+            "heading": "2.3. Spike-timing dependent plasticity",
+            "text": "The weights of plastic synapses connecting LGN and V1 were updated using STDP, which is an unsupervised learning rule that modifies synaptic strength, w, as a function of the relative timing of pre- and postsynaptic spikes, \u2206t [6]. Long-term potentiation (LTP) (\u2206t > 0) and long-term depression (LTD) (\u2206t \u2264 0) were driven by their respective learning rates \u03b1+ and \u03b1\u2212, leading to a weight change (\u2206w):\n\u2206w = { \u2212\u03b1\u2212 \u00b7 w\u00b5\u2212 \u00b7K(\u2206t, \u03c4\u2212),\u2206t \u2264 0 \u03b1+ \u00b7 (1\u2212 w)\u00b5+ \u00b7K(\u2206t, \u03c4+),\u2206t > 0,\n(2)\nwhere \u03b1+ = 5\u00d710\u22123 and \u03b1\u2212 = 3.75\u00d710\u22123, K(\u2206t, \u03c4) = e\u2212|\u2206t|/\u03c4 was a temporal windowing filter, and \u00b5+ = 0.65 and \u00b5\u2212 = 0.05) were constants \u2208 [0, 1] that defined the nonlinearity of the LTP and LTD process, respectively. In this implementation, computation speed greatly increased by making the windowing filter K infinitely wide (equivalent to assuming \u03c4\u00b1 \u2192\u221e, or K = 1) [6].\nA ratio \u03b1+/\u03b1\u2212 = 4/3 was chosen based on previous experiments that demonstrated network stability [9]. The threshold of the V1 neurons was fixed through trial and error at \u03b8 = 20. This value was unmodified for all experiments.\nInitial weight values were sampled from a random uniform distribution between 0 and 1. After each iteration, the synaptic weights for the first V1 neuron to fire were updated using STDP (Equation 2), and the membrane potentials of all the other neurons in the V1 population were reset to zero. The STDP rule was active only during the training phase. STDP has the effect of concentrating high synaptic weights\non afferents that systematically fire early, thereby decreasing postsynaptic spike latencies for these connections."
+        },
+        {
+            "heading": "2.4. Winner-take-all inhibition",
+            "text": "We used a hard WTA-I scheme such that, if any V1 neuron fired during a certain iteration, it simultaneously prevented other neurons from firing until the next sample [8]. This scheme computes a function WTA-In: Rn \u2192 {0, 1}n whose output \u3008y1, ..., yn\u3009 = WTA-In (x1,..., xn) satisfied:\nyi = { 1, if xi > xj for all j 6= i 0, if xj > xi for some j 6= i .\n(3)\nFor a given set of n different inputs x1, ..., xn, a hard WTA-I scheme would thus yield a single output yi with value 1 (corresponding to the neuron that received the largest input xi), whereas all other neurons would be silent. We also implemented various soft WTA-I schemes to investigate how the quality of the represented objects changes. The soft WTA-I schemes consisted of 10, 50, 100 and 150 (i.e., all V1 neurons) neurons firing during a certain iteration, while all other neurons were silenced (see Figure 5)."
+        },
+        {
+            "heading": "2.5. Dataset",
+            "text": "We assessed the ability of our SNN network to represent visual stimuli using the Fashion MNIST database [10]. The Fashion-MNIST dataset comprises 28 \u00d7 28 grayscale images of 70,000 fashion products from 10 categories, with 7,000 images per category. To train the network, we randomly selected 1,000 training images and 200 test images."
+        },
+        {
+            "heading": "2.6. Stimulus reconstruction",
+            "text": "The post-convergence receptive field \u03bej of the i-th V1 neuron was estimated as follows:\n\u03bej \u2248 \u2211\nj\u2208LGN wij\u03c8j , (4)\nwhere \u03c8j was the receptive field of the j-th LGN afferent, and wij was the weight of the synapse connecting the j-th afferent to the i-th V1 neuron.\nStimuli k were then linearly reconstructed from the V1 population activity:\nORk = \u2211 j\u2208V 1 rkj\u03bej , (5)\nwhere rkj was the response of the j-th V1 neuron to the k-th image and \u03bej was its receptive field."
+        },
+        {
+            "heading": "3. Results",
+            "text": ""
+        },
+        {
+            "heading": "3.1. Object representation using hard WTA-I",
+            "text": "Example object reconstructions obtained after training with a hard WTA-I scheme (i.e., where only one neuron was active for each training image) are shown in Figure 2. Here, every spiking neuron became selective for a particular object feature (example receptive fields learned by STDP are shown in Figure 1), so that after training a whole object could be represented by a linear combination of V1 neurons (Equation 5).\nFigure 3 shows the reconstruction error after training for both the training and the test sets using different V1 neurons for a hard WTA-I scheme. Reconstruction error for an\nimage k was calculated as the mean square error between the LGN activity map (LGNk) and ORk. Figure 3 reports the mean and standard deviation of all reconstruction errors across the train and test sets, respectively. We found that the reconstruction error for the training set decreased with an increasing number of V1 neurons. On the other hand, the reconstruction error of the test set went through a minimum (at roughly 150 V1 neurons), which is consistent with the bias-variance dilemma [1]. In addition, the number of spikes needed to represent an object increased with the number of V1 neurons, nearly doubling from 37.28 spikes at 150 neurons to 70.51 spikes at 200 neurons. Increasing the V1 population beyond 150 neurons did therefore not lead to any visible benefits in reconstruction error (Figure 4), but required many more spikes to represent an object."
+        },
+        {
+            "heading": "3.2. Object representation using soft WTA-I schemes",
+            "text": "We also tested object representation using various soft WTA-I schemes, where we varied the number of V1 neurons allowed to be active for each training image. Figure 5 shows the reconstruction error on the test set across the range of possible WTA-I schemes, ranging from hard (where for every image only one neuron was active) to soft (where all neurons (150) were active). We found that the softer the WTA-I scheme, the higher the reconstruction error and the number of spikes needed to represent an object. The reason for this became evident when we visualized the resulting object representations (Figure 6). WTA-I schemes where at most 10 neurons were allowed to be active where instrumental in maintaining competition among neurons. In the absence of a strong WTA-I scheme, multiple neurons ended up learning similar visual features, which resulted in poor object reconstructions (right half of Figure 6)."
+        },
+        {
+            "heading": "4. Conclusion",
+            "text": "We have shown that a network of spiking neurons relying on biologically plausible learning rules and coding schemes can efficiently represent objects from the Fashion MNIST dataset with as little as 40 spikes. WTA-I schemes were essential for enforcing competition among neurons, which led to sparser object representations and lower reconstruction errors. A future extension of the model might focus on deeper architectures and more challenging visual stimuli."
+        }
+    ],
+    "title": "Efficient visual object representation using a biologically plausible spike-latency code and winner-take-all inhibition",
+    "year": 2022
+}

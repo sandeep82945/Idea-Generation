@@ -1,0 +1,653 @@
+{
+    "abstractText": "Surface-based analysis of magnetic resonance imaging (MRI) data of the brain plays an important role in clinical and research applications. To achieve accurate three-dimensional (3D) surface reconstruction, high-resolution (HR) MR image acquisition is needed. However, HR image acquisition is hindered by hardware limitations that result in long acquisition time and low spatial coverage. Single image super-resolution (SISR) can alleviate these problems by converting a low-resolution (LR) image to an HR image. However, unlike 2D SISR methods, conventional 3D methods incur a large computational cost and require abundant data. Further, 3D boundaries for surface reconstruction based on MR images have not been sufficiently investigated. We herein propose a cost-efficient novel regression-based framework for super-resolution of 3D brain MRI that directly analyzes 3D features by introducing a tensor using gradient information.We initially cluster features using tensors to create labels for both the training and testing stages. In the training stage, for each label, we collect LR patches and corresponding HR intensities to compute filters. In the testing stage, for each voxel, we construct a tensor to obtain a feature and predict the HR intensity using trained filters. We also propose a patch span reduction method by limiting patch orientation to reduce the orientation span and increase shape variety. Using only 30 masked T1-weighted brain MR volumes from the Human Connectome Project (HCP) 900 dataset, the proposed algorithm exhibited superior performance in terms of HR boundary recovery in the cerebral cortex as well as improved overall quality compared to conventional methods. INDEX TERMS Super-resolution, surface-based analysis, tensor analysis, brain MRI, 3D image analysis.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "SEONGSU PARK"
+        },
+        {
+            "affiliations": [],
+            "name": "JIN KYU GAHM"
+        },
+        {
+            "affiliations": [],
+            "name": "Jin Kyu Gahm"
+        }
+    ],
+    "id": "SP:29a4093c684cc2818c1774b6785206873cdcb169",
+    "references": [
+        {
+            "authors": [
+                "D. Peressutti",
+                "M. Sinclair",
+                "W. Bai",
+                "T. Jackson",
+                "J. Ruijsink",
+                "D. Nordsletten",
+                "L. Asner",
+                "M. Hadjicharalambous",
+                "C.A. Rinaldi",
+                "D. Rueckert",
+                "A.P. King"
+            ],
+            "title": "A framework for combining a motion atlas with non-motion information to learn clinically useful biomarkers: Application to cardiac resynchronisation therapy response prediction,\u2019\u2019Med",
+            "venue": "Image Anal.,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J.K. Gahm",
+                "Y. Shi"
+            ],
+            "title": "Riemannian metric optimization on surfaces (RMOS) for intrinsic brain mapping in the Laplace\u2013Beltrami embedding space,\u2019\u2019Med",
+            "venue": "Image Anal.,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J.C. Pruessner"
+            ],
+            "title": "Volumetry of hippocampus and amygdala with highresolution MRI and three-dimensional analysis software: Minimizing the discrepancies between laboratories",
+            "venue": "Cerebral Cortex, vol. 10, no. 4, pp. 433\u2013442, Apr. 2000.",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "F. Shi",
+                "J. Cheng",
+                "L. Wang",
+                "P.-T. Yap",
+                "D. Shen"
+            ],
+            "title": "LRTV: MR image super-resolution with low-rank and total variation regularizations",
+            "venue": "IEEE Trans. Med. Imag., vol. 34, no. 12, pp. 2459\u20132466, Dec. 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "E. Plenge",
+                "D.H. Poot",
+                "M. Bernsen",
+                "G. Kotek",
+                "G. Houston",
+                "P. Wielopolski",
+                "L. van der Weerd",
+                "W.J. Niessen",
+                "E. Meijering"
+            ],
+            "title": "Super-resolution methods in MRI: Can they improve the trade-off between resolution, signal-to-noise ratio, and acquisition time?\u2019",
+            "venue": "Magn. Reson. Med.,",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "C.E. Duchon"
+            ],
+            "title": "Lanczos filtering in one and two dimensions",
+            "venue": "J. Appl. Meteorol., vol. 18, no. 8, pp. 1016\u20131022, 1979.",
+            "year": 1979
+        },
+        {
+            "authors": [
+                "X. Li",
+                "M.T. Orchard"
+            ],
+            "title": "New edge-directed interpolation",
+            "venue": "IEEE Trans. Image Process., vol. 10, no. 10, pp. 1521\u20131527, Oct. 2001.",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "M. Irani",
+                "S. Peleg"
+            ],
+            "title": "Improving resolution by image registration",
+            "venue": "CVGIP, Graph. Models Image Process., vol. 53, no. 3, pp. 231\u2013239, May 1991.",
+            "year": 1991
+        },
+        {
+            "authors": [
+                "W.T. Freeman",
+                "E.C. Pasztor",
+                "O.T. Carmichael"
+            ],
+            "title": "Learning low-level vision",
+            "venue": "Int. J. Comput. Vis., vol. 40, no. 1, pp. 25\u201347, 2000.",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "J. Yang",
+                "J. Wright",
+                "T. Huang",
+                "Y.Ma"
+            ],
+            "title": "Image super-resolution as sparse representation of raw image patches",
+            "venue": "Proc. IEEE Conf. Comput. Vis. Pattern Recognit., Jun. 2008, pp. 1\u20138.",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "X. Lu",
+                "Z. Huang",
+                "Y. Yuan"
+            ],
+            "title": "MR image super-resolution via manifold regularized sparse learning",
+            "venue": "Neurocomputing, vol. 162, pp. 96\u2013104, Aug. 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "R. Zeyde",
+                "M. Elad",
+                "M. Protter"
+            ],
+            "title": "On single image scale-up using sparse-representations",
+            "venue": "Proc. Int. Conf. Curves Surf. Avignon, France: Springer, 2010, pp. 711\u2013730.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "M. Aharon",
+                "M. Elad",
+                "A. Bruckstein"
+            ],
+            "title": "K-SVD: An algorithm for designing overcomplete dictionaries for sparse representation",
+            "venue": "IEEE Trans. Signal Process., vol. 54, no. 11, pp. 4311\u20134322, Nov. 2006.",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "R. Timofte",
+                "V. De",
+                "L.V. Gool"
+            ],
+            "title": "Anchored neighborhood regression for fast example-based super-resolution",
+            "venue": "Proc. IEEE Int. Conf. Comput. Vis., Dec. 2013, pp. 1920\u20131927.",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "R. Timofte",
+                "V.D. Smet",
+                "L.V. Gool"
+            ],
+            "title": "A+: Adjusted anchored neighborhood regression for fast super-resolution",
+            "venue": "Proc. Asian Conf. Comput. Vis. Singapore: Springer, 2014, pp. 111\u2013126.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "C.-Y. Yang",
+                "M.-H. Yang"
+            ],
+            "title": "Fast direct super-resolution by simple functions",
+            "venue": "Proc. IEEE Int. Conf. Comput. Vis., Dec. 2013, pp. 561\u2013568.",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Y. Romano",
+                "J. Isidoro",
+                "P.Milanfar"
+            ],
+            "title": "RAISR: Rapid and accurate image super resolution",
+            "venue": "IEEE Trans. Comput. Imag., vol. 3, no. 1, pp. 110\u2013125, Mar. 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "S. He",
+                "B. Jalali"
+            ],
+            "title": "Fast super-resolution in MRI images using phase stretch transform, anchored point regression and zero-data learning",
+            "venue": "Proc. IEEE Int. Conf. Image Process. (ICIP), Sep. 2019, pp. 2876\u20132880.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Schulter",
+                "C. Leistner",
+                "H. Bischof"
+            ],
+            "title": "Fast and accurate image upscaling with super-resolution forests",
+            "venue": "Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), Jun. 2015, pp. 3791\u20133799.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "J. Salvador",
+                "E. Perez-Pellitero"
+            ],
+            "title": "Naive Bayes super-resolution forest",
+            "venue": "Proc. IEEE Int. Conf. Comput. Vis. (ICCV), Dec. 2015, pp. 325\u2013333.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "E. Perez-Pellitero",
+                "J. Salvador",
+                "J. Ruiz-Hidalgo",
+                "B. Rosenhahn"
+            ],
+            "title": "PSyCo: Manifold span reduction for super resolution",
+            "venue": "Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), Jun. 2016, pp. 1837\u20131845.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "D. Glasner",
+                "S. Bagon",
+                "M. Irani"
+            ],
+            "title": "Super-resolution from a single image",
+            "venue": "Proc. IEEE 12th Int. Conf. Comput. Vis., Sep. 2009, pp. 349\u2013356.",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "C. Dong",
+                "C.C. Loy",
+                "K. He",
+                "X. Tang"
+            ],
+            "title": "Learning a deep convolutional network for image super-resolution",
+            "venue": "Proc. Eur. Conf. Comput. Vis. Z\u00fcrich, Switzerland: Springer, 2014, pp. 184\u2013199.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "C. Dong",
+                "C.C. Loy",
+                "X. Tang"
+            ],
+            "title": "Accelerating the super-resolution convolutional neural network",
+            "venue": "Proc. Eur. Conf. Comput. Vis. Amsterdam, The Netherlands: Springer, 2016, pp. 391\u2013407.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "W. Shi",
+                "J. Caballero",
+                "F. Huszar",
+                "J. Totz",
+                "A.P. Aitken",
+                "R. Bishop",
+                "D. Rueckert",
+                "Z. Wang"
+            ],
+            "title": "Real-time single image and video superresolution using an efficient sub-pixel convolutional neural network",
+            "venue": "Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), Jun. 2016, pp. 1874\u20131883.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "W.-S. Lai",
+                "J.-B. Huang",
+                "N. Ahuja",
+                "M.-H. Yang"
+            ],
+            "title": "Deep Laplacian pyramid networks for fast and accurate super-resolution",
+            "venue": "Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), Jul. 2017, pp. 624\u2013632.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J. Kim",
+                "J.K. Lee",
+                "K.M. Lee"
+            ],
+            "title": "Accurate image super-resolution using very deep convolutional networks",
+            "venue": "Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), Jun. 2016, pp. 1646\u20131654.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "B. Lim",
+                "S. Son",
+                "H. Kim",
+                "S. Nah",
+                "K.M. Lee"
+            ],
+            "title": "Enhanced deep residual networks for single image super-resolution",
+            "venue": "Proc. IEEE Conf. Comput. Vis. Pattern Recognit. Workshops (CVPRW), Jul. 2017, pp. 136\u2013144.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J. Shi",
+                "Z. Li",
+                "S. Ying",
+                "C. Wang",
+                "Q. Liu",
+                "Q. Zhang",
+                "P. Yan"
+            ],
+            "title": "MR image super-resolution via wide residual networks with fixed skip connection",
+            "venue": "IEEE J. Biomed. Health Inform., vol. 23, no. 3, pp. 1129\u20131140, May 2019. VOLUME 10, 2022 4967 S. Park, J. K. Gahm: Super-Resolution of 3D Brain MRI With Filter Learning",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "C.-M. Feng",
+                "K. Wang",
+                "S. Lu",
+                "Y. Xu",
+                "X. Li"
+            ],
+            "title": "Brain MRI superresolution using coupled-projection residual network",
+            "venue": "Neurocomputing, vol. 456, pp. 190\u2013199, Oct. 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "F. Iandola",
+                "M. Moskewicz",
+                "S. Karayev",
+                "R. Girshick",
+                "T. Darrell",
+                "K. Keutzer"
+            ],
+            "title": "DenseNet: Implementing efficient ConvNet descriptor pyramids",
+            "venue": "2014, arXiv:1404.1869.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "T. Tong",
+                "G. Li",
+                "X. Liu",
+                "Q. Gao"
+            ],
+            "title": "Image super-resolution using dense skip connections",
+            "venue": "Proc. IEEE Int. Conf. Comput. Vis. (ICCV), Oct. 2017, pp. 4799\u20134807.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "D. Liu",
+                "B. Wen",
+                "Y. Fan",
+                "C. Change Loy",
+                "T.S. Huang"
+            ],
+            "title": "Non-local recurrent network for image restoration",
+            "venue": "2018, arXiv:1806.02919.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Y. Zhang",
+                "K. Li",
+                "K. Li",
+                "B. Zhong",
+                "Y. Fu"
+            ],
+            "title": "Residual non-local attention networks for image restoration",
+            "venue": "2019, arXiv:1903.10082.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Y. Zhang",
+                "K. Li",
+                "K. Li",
+                "L. Wang",
+                "B. Zhong",
+                "Y. Fu"
+            ],
+            "title": "Image superresolution using very deep residual channel attention networks",
+            "venue": "Proc. Eur. Conf. Comput. Vis., Sep. 2018, pp. 286\u2013301.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "C. Ledig",
+                "L. Theis",
+                "F. Huszar",
+                "J. Caballero",
+                "A. Cunningham",
+                "A. Acosta",
+                "A. Aitken",
+                "A. Tejani",
+                "J. Totz",
+                "Z. Wang",
+                "W. Shi"
+            ],
+            "title": "Photo-realistic single image super-resolution using a generative adversarial network",
+            "venue": "Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), Jul. 2017, pp. 4681\u20134690.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "O. Oktay",
+                "W. Bai",
+                "M. Lee",
+                "R. Guerrero",
+                "K. Kamnitsas",
+                "J. Caballero",
+                "A. de Marvao",
+                "S. Cook",
+                "D. O\u2019Regan",
+                "D. Rueckert"
+            ],
+            "title": "Multi-input cardiac image super-resolution using convolutional neural networks",
+            "venue": "Proc. Int. Conf. Med. Image Comput. Comput.-Assist. Intervent. Athens, Greece: Springer, 2016, pp. 246\u2013254.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "S. Wang",
+                "Z. Su",
+                "L. Ying",
+                "X. Peng",
+                "S. Zhu",
+                "F. Liang",
+                "D. Feng",
+                "D. Liang"
+            ],
+            "title": "Accelerating magnetic resonance imaging via deep learning",
+            "venue": "Proc. IEEE 13th Int. Symp. Biomed. Imag. (ISBI), Apr. 2016, pp. 514\u2013517.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "C. Sazak",
+                "B. Obara"
+            ],
+            "title": "Contrast-independent curvilinear structure enhancement in 3D biomedical images",
+            "venue": "Proc. IEEE 14th Int. Symp. Biomed. Imag. (ISBI), Apr. 2017, pp. 1165\u20131168.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "C. Wang",
+                "M. Oda",
+                "Y. Hayashi",
+                "Y. Yoshino",
+                "T. Yamamoto",
+                "A.F. Frangi",
+                "K.Mori"
+            ],
+            "title": "Tensor-cut: A tensor-based graph-cut blood vessel segmentation method and its application to renal artery segmentation",
+            "venue": "Med. Image Anal., vol. 60, Feb. 2020, Art. no. 101623.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J. Jin",
+                "L. Yang",
+                "X. Zhang",
+                "M. Ding"
+            ],
+            "title": "Vascular tree segmentation in medical images using hessian-based multiscale filtering and level set method",
+            "venue": "Comput. Math. Methods Med., vol. 2013, pp. 1\u20139, Oct. 2013.",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "C.-H. Pham",
+                "C. Tor-D\u00edez",
+                "H. Meunier",
+                "N. Bednarek",
+                "R. Fablet",
+                "N. Passat",
+                "F. Rousseau"
+            ],
+            "title": "Multiscale brain MRI super-resolution using deep 3D convolutional networks",
+            "venue": "Computerized Med. Imag. Graph., vol. 77, Oct. 2019, Art. no. 101647.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Y. Chen",
+                "Y. Xie",
+                "Z. Zhou",
+                "F. Shi",
+                "A.G. Christodoulou",
+                "D. Li"
+            ],
+            "title": "Brain MRI super resolution using 3D deep densely connected neural networks",
+            "venue": "Proc. IEEE 15th Int. Symp. Biomed. Imag. (ISBI), Apr. 2018, pp. 739\u2013742.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Y. Chen",
+                "A.G. Christodoulou",
+                "Z. Zhou",
+                "F. Shi",
+                "Y. Xie",
+                "D. Li"
+            ],
+            "title": "MRI super-resolution with GAN and 3D multi-level DenseNet: Smaller, faster, and better",
+            "venue": "2020, arXiv:2003.01217.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J. Wang",
+                "Y. Chen",
+                "Y. Wu",
+                "J. Shi",
+                "J. Gee"
+            ],
+            "title": "Enhanced generative adversarial network for 3D brain MRI super-resolution",
+            "venue": "Proc. IEEE Winter Conf. Appl. Comput. Vis. (WACV), Mar. 2020, pp. 3627\u20133636.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D.C. Van Essen",
+                "D.C.V. Essen",
+                "S.M. Smith",
+                "D.M. Barch",
+                "T.E. Behrens",
+                "E. Yacoub",
+                "K. Ugurbil"
+            ],
+            "title": "The WU-minn human connectome project: An overview",
+            "venue": "NeuroImage, vol. 80, pp. 62\u201379, Oct. 2013.",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "J.K. Gahm",
+                "G. Kindlmann",
+                "D.B. Ennis"
+            ],
+            "title": "The effects of noise over the complete space of diffusion tensor shape",
+            "venue": "Med. Image Anal., vol. 18, no. 1, pp. 197\u2013210, Jan. 2014.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "P. Getreuer",
+                "I. Garcia-Dorado",
+                "J. Isidoro",
+                "S. Choi",
+                "F. Ong",
+                "P. Milanfar"
+            ],
+            "title": "BLADE: Filter learning for general purpose computational photography",
+            "venue": "Proc. IEEE Int. Conf. Comput. Photography (ICCP), May 2018, pp. 1\u201311.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "F. Pedregosa",
+                "G. Varoquaux",
+                "A. Gramfort",
+                "V. Michel",
+                "B. Thirion",
+                "O. Grisel",
+                "M. Blondel",
+                "P. Prettenhofer",
+                "R. Weiss",
+                "V. Dubourg"
+            ],
+            "title": "Scikitlearn: Machine learning in Python",
+            "venue": "J. Mach. Learn. Res., vol. 12, pp. 2825\u20132830, Oct. 2011.",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "M. Abadi",
+                "P. Barham",
+                "J. Chen",
+                "Z. Chen",
+                "A. Davis",
+                "J. Dean",
+                "M. Devin",
+                "S. Ghemawat",
+                "G. Irving",
+                "M. Isard"
+            ],
+            "title": "Tensorflow: A system for largescale machine learning",
+            "venue": "Proc. 12th USENIX Symp. Operating Syst. Design Implement., 2016, pp. 265\u2013283.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Z. Wang",
+                "A.C. Bovik",
+                "H.R. Sheikh",
+                "E.P. Simoncelli"
+            ],
+            "title": "Image quality assessment: From error visibility to structural similarity",
+            "venue": "IEEE Trans. Image Process., vol. 13, no. 4, pp. 600\u2013612, Apr. 2004.",
+            "year": 2004
+        }
+    ],
+    "sections": [
+        {
+            "text": "INDEX TERMS Super-resolution, surface-based analysis, tensor analysis, brain MRI, 3D image analysis.\nI. INTRODUCTION Magnetic resonance imaging (MRI) is a non-invasivemedical imaging modality for characterizing tissue. The structural details that can be observed using this approach assist in the identification of not only tissue transformation but also malignant lesions based on abnormal tissue contrast. In particular, the structural details of the cortical and subcortical regions of the brain have been typically represented using surfaces that were reconstructed from three-dimensional (3D) MR volumes. Moreover, surface-based analysis plays an important role in the local tracking of disease based on surface registration in clinical and research settings [1], [2]. Therefore, high-resolution (HR) MRI is needed to achieve\nThe associate editor coordinating the review of this manuscript and approving it for publication was Vishal Srivastava.\naccurate surface reconstruction to aid in diagnostic decisions [3]. However, high spatial resolution MR image acquisition is inhibited by hardware limitations that adversely affect the scanning time and signal-to-noise ratio (SNR), and introduce body motion artifacts [4], [5]. Single image super-resolution (SISR) aims to recover a high-resolution (HR) image from a given low-resolution (LR) image, and can potentially be utilized to address this problem. By exploiting SISR, an HR volume can be obtained by applying a superresolution (SR) technique to an LR volume, thereby reducing the MR image acquisition time.\nThe SISR problem is an ill-posed inverse problem because the number of dimensions of an HR image is greater than that of an LR image, and the number of HR cases that can be estimated using LR data is infinite. The classical approach used in SISR involves estimating the values of pixels using\nVOLUME 10, 2022 This work is licensed under a Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 License. For more information, see https://creativecommons.org/licenses/by-nc-nd/4.0/ 4957\nmathematical models used for processing LR images, such as interpolation [6], [7] or back-projection [8]. Although these methods are not time-consuming, they cannot represent highfrequency image structures (e.g., edge or textures); thus, they appear smoother than the original.\nTo solve this problem, an example-based SR using the information in images was proposed based on the high-frequency information of HR images. This approach reformulates the SISR problem as a restoration of the HR counterpart of the LR image by manifold learning of HR images. The initial example-based SR method aims to find the nearest neighbor in the LR image patch dictionary and to match it to the corresponding HR using the Markov Random Field [9]. Since this approach has high computational complexity, sparse coding and regression-based methods were proposed. Sparse coding methods attempt to find meaningful sparse representations of LR patches by compacting image patches to a low-dimensional vector at a low computational cost [10], [11]. Zeyde et al. [12] used a sparse dictionary with K-SVD [13] to improve image quality with a significant speed improvement. Regressionbased methods commonly involve the building of regressors that approximate HR components given an LR patch, instead of using sparsity models for improved performance. Timofte et al. [14], [15] and Yang and Yang [16] used anchored neighbor regression and exemplars clustering to achieve better performance. To reduce the regressor searching time in these methods, hashing [17], [18] and forest-based searching structures [19], [20] have been proposed. P\u00e9rezPellitero et al. [21] proposed a patch span reduction method by collapsing variations of a patch transform (e.g., the symmetry and rotation) using a mirror symmetry transformbased distance to improve the performance of the regressionbasedmethod. However, unlikemost studies that estimate HR images using an external database, dictionary, or regressors, Glasner et al. [22] attempted to downscale a single image into patches at different scales, and to subsequently estimate an HR image from the recurrence of the patches without a prior example.\nMore recently, deep learning-based approaches that use convolutional neural networks (CNN) have been proposed for the SR task in natural and MR images. Dong et al. [23] proposed the first approach that utilized the end-to-end deep learning model for SR (SRCNN), which directly learned the mapping of bicubic-interpolated LR to HR images. Subsequently, the accuracy was increased at a reduced computational cost using the LR image as an input, and learning LR upscaling methods such as transposed convolution [24], pixel shuffle [25] operator, and progressive upscaling [26]. In addition, networks with more layers and capacity [27] such as deep-residual [28], wide-residual [29], or couple-projection residual [30] networks were introduced for performance improvement. Dense networks [31], [32], attention modules [33]\u2013[35], and generative adversarial networks [36] also contributed to the improvement of SR image quality.\nDespite the rapid advancement of these SISR algorithms, most methods were originally designed only for twodimensional (2D) images. However, MR images are acquired as 3D volumes. These 2D methods do not use the full 3D information of the MR volume to solve the 3D SR problem. Instead, most studies typically convert the 3Dmedical images into a stack of 2D slices projected along one specific axis (e.g., axial, sagittal, and coronal planes), apply the 2D algorithm on each slice separately, and merge the results into a stack of slices [37], [38]. In these approaches, 3D features that appear in a different dimension could be lost. To solve the 3D SR problem, therefore, a model that extracts 3D structural information is preferred. In 3D models, tensors have been used to represent 3D gradient features such as in the case of vessel segmentation in medical image analysis [39]\u2013[41]. In deep learning, 3D CNN networks [42] have achieved state-of-the-art performance with residual densely connected generators and adversarial models [43]\u2013[45]. However, these approaches are not only computationally intensive but also require an abundance of 3D datasets to optimize different parameters. However, obtaining large-scale datasets is expensive in MR applications. Moreover, most previous SISR approaches aimed to improve only the overall quality. For MR images, however, boundary regions such as gray-white matter boundaries and gyral and sulcal regions need to be more precisely restored for accurate surface reconstruction and surface-based analysis, but, to the best of our knowledge, there is limited research on the boundaries of 3D structures.\nIn this paper, we propose a cost-efficient novel 3D regression-based SR algorithm by introducing a tensor using 3D gradient information for feature extraction and filter training. The advantage of this algorithm is that it not only maintains high SR performance with a small dataset and a short training time but also recovers clear 3D boundaries for accurate surface reconstruction. In the proposed algorithm, we extract 3D features from a patch volume by constructing 3 by 3 tensors for patch label selection during the training and testing stages. To select a label, we create labels by clustering extracted features from tensors using defined distance measurement metrics. In the training stage, we compute tensors from the LR patches extracted from volumes of interest to find the label, and collect the patches and corresponding HR intensity values for each label. Filters are computed that approximate HR intensities from LR patches. In the testing stage, for each voxel, a tensor is constructed to obtain a label and to predict the HR intensity using corresponding filters. Furthermore, we suggest a patch span reduction method by limiting the orientation that can be augmented by flipping or transposing to increase the variety of shapes using a small dataset. In the experiments based on the Human Connectome Project (HCP) 900 dataset [46], visual and quantitative results are presented to show that the proposed algorithm outperforms conventional methods in terms of the recovery of MR boundary regions and the overall MR volumes.\n4958 VOLUME 10, 2022\nOur contributions in this paper are listed below: \u2022 We propose a novel SR method using 3D gradient information as tensor and span reduction. \u2022 The method uses MRI tensor shape and orientation features to create 3D filters. \u2022 The proposed algorithm delivers high SR performance with a small dataset and in a short training time. \u2022 We also provide a design to evaluate SR performance in MRI cortical boundary region. \u2022 We showed that the method outperforms conventional methods, particularly for HR boundary recovery.\nThe remainder of the paper is organized as follows. In Section II, we propose a framework for 3D SR, including tensor calculation based on the patch volume, feature clustering, and a patch span reducing method. Experimental results are presented in Section III, wherein we compare the proposed algorithm and conventional methods using masked T1-weighted MR volumes. Finally, the main conclusions are summarized in Section IV.\nII. METHOD In this section, we first define the 3D SISR problem and present the details of our regression-based approach that was developed to address this issue. We also describe the construction of the tensors from 3D patches, the extraction of the tensor shape and orientation features, and the creation of labels by clustering using the extracted features. Finally, a patch span reduction method that limits the tensor orientation and determines the relationship between the elements of the tensor and the patch orientation is introduced.\nA. PROBLEM FORMULATION AND PROPOSED ARCHITECTURE In the 3D SISR problem, the relationship between LR and HR volumes can be defined as a linear model as follows:\ny = Dsx, (1)\nwhere x \u2208 RHs\u00d7Ws\u00d7Ds and y \u2208 RH\u00d7W\u00d7D denote HR and the corresponding LR image, respectively. The operator Ds : RHs\u00d7Ws\u00d7Ds \u2192 RH\u00d7W\u00d7D downscales HR to an LR image using a factor of s along each axis. The objective of the SR task is to determine the inverse operator Fs : RH\u00d7W\u00d7D \u2192 RHs\u00d7Ws\u00d7Ds that minimizes the following errors:\nmin Fs |Fsy\u2212 x|22. (2)\nIn this paper, we address the 3D SISR problem for brain MRI using a regression-based method that involves approximating the HR intensity by applying a filter to an extracted LR patch. The overall proposed framework is illustrated in Fig. 1. In the training stage, for a given LR volume, we first cheap-interpolate the LR volume using factor s to match the size of y. A tensor wherein each cubic patch p \u2208 Rn is sampled from the upscaled LR volume is then constructed, where n is the patch volume size.We extract the patch label q from the tensor, and classify similar patches for more accurate filter learning and evaluation. To obtain the label, we compute the shape and orientation features based on the tensor and predict the clusters from the pre-fitted two cluster models. Further details on the cluster models and features that were extracted from the tensors are given in\nVOLUME 10, 2022 4959\nSection II.B. In addition, we transform the LR patch with extracted transformation 8 from the tensor and the details of the method are described in Section II.C. For each label q, the HR intensity Yq \u2208 R1\u00d7lq is regressed on the corresponding transformed LR patches Pq \u2208 Rn\u00d7lq , where lq is the total number of collected similar patches. The computation of a filter hq \u2208 R1\u00d7(n+1) can be formulated as:\nhq = argmin h \u2223\u2223\u2223\u2223Yq \u2212 h(Pq1 )\u2223\u2223\u2223\u22232 , (3)\nwhere 1 \u2208 R1\u00d7lq is a vector with all the values set as 1. For filter convergence in the right term of Eq. (3), Pq stores 105 raw patches and requires approximately 500MB of memory for each q. This causesmemory shortage considering a large number of labels. Instead, we accumulate fixed-sized Qq \u2208 R(n+1)\u00d7(n+1) and Vq \u2208 R1\u00d7(n+1) matrices using an accumulation step j as follows:\nQq = \u2211 j ( Pq,j 1 )( Pq,j 1 )T , (4)\nVq = \u2211 j Yq,j ( Pq,j 1 )T , (5)\nand initialize Pq,j and Yq,j to avoid memory constraint challenges [17]. Finally, we compute the least-squares solution of the filters hq = argminh \u2223\u2223Qq \u2212 hVq\u2223\u22232 directly using an efficient conjugate gradient method for a positivedefinite matrix.\nIn the testing stage, the k-th HR voxel x\u0302k is estimated by computing a tensor with a patch centered on the voxel, predicting a label, and applying a corresponding trained filter to the LR patch pk \u2208 Rm\u00d71 as follows:\nx\u0302k = hq\n( T (pk ,8k)\n1\n) , (6)\nwhere T (p,8) is the operator that transforms the patch p using an affine transformation 8. The estimated image x\u0302 is then constructed by simply estimating each voxel and combining them.\nB. TENSOR ANALYSIS FOR LABEL CREATION AND SELECTION Tensors are generally used to obtain quantitative features such as stress tensors in mechanics and the Hessian matrix or structure tensor in image analysis [39], [41]. A tensor can be independently decomposed into shape (structure) and orientation via eigen-decomposition. In addition, the tensor shape can be decomposed into isotopic and anisotropic components expressed as eigenvalues or tensor invariants. We approached the SR problem using tensor analysis to define a tensor that represented the gradient features of a 3D image patch, decomposed it into the tensor shape and the orientation features, and classified the features by clustering them.\nTo create labels to classify the patches, prior to the training stage, we classified a large set of tensor features that were randomly sampled patches ranging from training volumes to K types. We extracted shape and orientation features based on the tensors constructed from the patches and classified them, considering that the tensor shape and orientation are independent. We used centroid-based clustering to group features because each feature difference is indicative of the degree of similarity and the tensor shape and orientation are not independent [47]. Specifically, K-means clustering was used to change the distance metric for each shape and orientation to cluster the tensor shape and orientation. In the training and testing stages, each patch was labeled as q = (cshape, cori), where cshape and cori were the predicted cluster indexes of the tensor shape and the orientation cluster model, respectively.\nTo create the clustering models, we first defined the quantitative feature (e.g., gradient angle or strength) of the LR image as a tensor. Considering that the interpolated LR image mostly excluded the high frequencies of the HR image, we focused on the edge region where the voxel value changes rapidly, to use these statistics as a geometry measure. The image-gradient tensorD \u2208 R3\u00d73 was computed as follows:\nD = GTWG, (7)\nwhere G \u2208 Rn\u00d73 is a gradient matrix for which the column vectors are gradients along each axis for a 3D patch volume, and W\u2208 Rn\u00d7n is a diagonal Gaussian weighting matrix that assigns a large weight to the gradient around the center of the patch [17], [48]. The second-order tensor D is a symmetric positive-definite matrix that has six degrees of freedom. Each diagonal component represents the coefficient of each axis, and the other components represent the relationship between the different axes. A tensor can be typically eigen-decomposed into three orthogonal eigenvectors R =[ e1 e2 e3 ] and the corresponding non-negative eigenvalues\n3 = [ \u03bb21 \u03bb 2 2 \u03bb 2 3 ] , wherein the eigenvalues are sorted in the descending order (i.e., \u03bb1 \u2265 \u03bb2 \u2265 \u03bb3 \u2265 0). The eigenvalues correspond to the square root of each element of the scaling matrix 3 because the tensor D is computed by multiplying the gradient matrix G twice. We represent the decomposed 3, R as the independent tensor shape and orientation, respectively, to build cluster models to create labels based on the distance R = [ e1 e2 e3 ] and the corresponding non-negative eigenvalues 3 = [\u03bb21 \u03bb 2 2 \u03bb 2 3]. Each eigenvalue of the tensor represents the coefficients of the corresponding eigenvector. However, each eigenvalue fails to extract shape components such as the strength or cohesion of the patch gradient. Instead, tensor invariants computed as simple arithmetic combinations of the three eigenvalues are preferred to represent these features. Given that tensor shape invariants reflect local features, we selected trace, fractional anisotropy (FA), and a mode defined as\n4960 VOLUME 10, 2022\nfollows:\ntrace (D) = \u03bb1 + \u03bb2 + \u03bb3, (8)\nFA (D) = 1 \u221a 2\n\u221a( \u03bb1 \u2212 \u03bb\u0304 )2 + ( \u03bb2 \u2212 \u03bb\u0304 )2 + ( \u03bb3 \u2212 \u03bb\u0304 )2\u221a \u03bb21 + \u03bb 2 2 + \u03bb 2 3 ,\n(9) mode (D) = 27 ( \u03bb1 \u2212 \u03bb\u0304 ) ( \u03bb2 \u2212 \u03bb\u0304 ) ( \u03bb3 \u2212 \u03bb\u0304 ) 2 ( \u03bb21 + \u03bb 2 2 + \u03bb 2 3 \u2212 \u03bb1\u03bb2 \u2212 \u03bb1\u03bb3 \u2212 \u03bb2\u03bb3\n)3/2 (10)\nwhere \u03bb\u0304 = (\u03bb1 + \u03bb2 + \u03bb3) / 3. The range of trace, FA, and the modes are [0, \u221e), [0, 1], and [\u22121, 1], respectively. Trace was considered as the strength and the other two as the spread. These three are also used in diffusion tensor MRI [47]. Next, we extracted tensor orientation features from the rotation matrix R, which consisted of three eigenvectors and represented the rotation from the principal frame. We considered the orientation feature as only the primary eigenvector e1 = [e11 e12 e13]T to focus on the major gradient of the patch, wherein e11 \u2265 0 was used to resolve the sign ambiguity that e1 and \u2212e1 represented the same direction. Then, we carefully defined a tensor shape and orientation distance between the tensors A and B as follows:\ndshape (A,B) = 3\u2211 i=1 |Ji (A)\u2212 Ji (B)| /\u03c3i, (11)\ndori (A,B) = 1\u2212 eA1 \u00b7 eB1, (12)\nwhere J = (trace,FA,mode), \u03c3i is the standard deviation of each invariant, and eA1 and eB1 are the primary vectors of A and B, respectively. In the case of shape distance, we used\neach invariant weight equally by normalizing dividing) the standard deviation and adding the Manhattan distance (i.e., L1 distance). We used the cosine distance to compare the angle between two unit vectors in the orientation distance. To show the effect of filters according to different tensor shapes and orientations, we illustrate the learned 2\u00d7 wide variety of filters using our clustering model wherein the orientation features are predefined to be evenly distributed as shown in Fig. 2. For each column, it is evident that the direction of the filter reflects the primary eigenvector. The trace indicates the relative intensity of the directional structure and reflects the shape and strength of the filter. The FA indicates the directionality of the patch, such that the filter with the higher FA is more directional to the patch orientation. The mode represents the anisotropy associated with the gradient. Therefore, the anisotropic shape of the filter changes as the mode changes (e.g., orthotropic or linear anisotropic). Note that the shape centroids are manually chosen for visualization. As such, the tensor shape and orientation features are well-defined to generate a variety of 3D filters for SR of MR volumes."
+        },
+        {
+            "heading": "C. TENSOR ORIENTATION TRANSFORMATION FOR PATCH SPAN REDUCTION",
+            "text": "In the example-based method, a model has a trade-off between the computational time and the accuracy for the exemplar parameter K (e.g., dictionary size, several centroids). Therefore, a moderately large K (210 \u223c 211) was used for the 2D SR [14], [15], [18]. However, since the patch dimension increases when expanded to 3D space in this problem, it is more difficult to learn fine features using K for\nVOLUME 10, 2022 4961\n2D. In addition, a higher K can increase the computational time or results in memory shortage problems. To maintain K, it is necessary to learn fine features, which is achieved by reducing the patch span. We propose a patch span reduction method based on the transformation of the tensor orientation. This approach limits the orientation of the patch as shown in Fig. 3. The transformation of the patch was determined by directly associating the tensor orientation with the patch, thereby reducing the span of the tensor orientation.\nThe original span of the primary eigenvector e1 satisfies e211 + e 2 12 + e 2 13 = 1, e11 \u2265 0. To reduce the span by constraining e1, we compute the transformation 8 that collapses the variations of e1 into e\u22171:\ne\u22171 = 8e1 = e\u221711e\u221712 e\u221713  , 8 = 8P8F (13) where e\u221711 \u2265 e \u2217 12 \u2265 e \u2217\n13 \u2265 0. 8 is achieved by the composite of the two transformations. The flip transformation 8F changes only the sign of each element of the input vector so that it is nonnegative. The permutation matrix 8P then sorts each element of the input vector in descending order. For visualization, we show scatter plots of the tensor orientation (primary eigenvector) before and after span reduction in Fig. 4. Compared to the case of a half unit sphere with a normalization of 1 without any transformations, as shown in Fig. 4(a), only the positive space of the unit sphere is taken after flipping as shown in Fig. 4(b). Figure 4(c) illustrates the final reduced span, which shows that the patch density increased as the orientation span decreased. Considering the number of these orientation limitation cases, the flip and permutation matrices reduce the orientation span by 1/4 and 1/6, respectively. As such, if 72 orientational filters are created for each shape feature to cover a half unit sphere, only 3 orientation filters are required for the span reduction method.\nTo apply the proposed span reduction method to the overall algorithm, the primary vector and patch transformed with 8 were used for orientation clustering, training, and evaluation as follows: \u2022 In orientation clustering, e\u22171 was used instead of e1. The nearest neighbor of e\u22171 was also used for label selection during the training and testing stages.\n\u2022 In the training stage, we inserted the remapped patch with 8 into P instead of the original patch. \u2022 In the testing stage, we applied a filter to the LR patch that was remapped using the extracted 8.\nIII. EXPERIMENTS A. DATASETS We obtained high-resolution T1-weighted MR volumes (brain-masked) from the Human Connectome Project (HCP) 900 dataset, which is publicly accessible [46]. Of the 897 volumes (3 scans were not available), 30 were used for training and the remaining 867 were used for evaluation. The volume size of the dataset was 260 \u00d7 311 \u00d7 260 with an isotropic spatial resolution of 0.7 mm.\nB. IMAGE PREPROCESSING For the original HR volume, we clipped the maximum intensity using the upper 0.1% value for each volume to remove voxels with high-intensity values that darken the overall image. The data range of the volume was then normalized from 0 to 1. To match the size of the HR image and the interpolated LR image volume, the HR image volume was cropped to the maximum size of a multiple of the factor (2 to 4), and then downscaled using the tricubic kernel to generate the LR image volume. The LR volume was then upscaled using tricubic interpolation and the mask extracted from the HR image was overlapped on it.\nC. PARAMETERS The total number of labels K was set to 1023(\u22481024), which is a combination of 3 (reflecting span reduction method) and 341 centroids in the tensor orientation and shape cluster model, respectively. We set the patch volume to 93 to construct the tensor, and 113 for filter calculation and patch collection. The sigma of the Gaussian kernel of W used for tensor calculation in Eq. (7) was set to 0.85.We experimented with the downscaling/upscaling factors of 2, 3, and 4 using the same HR training images and test sets for quantitative comparison of the overall recovery quality between different SR methods. Other experiments were performed using a factor of 2.\nD. IMPLEMENTATION DETAILS The cluster models were implemented by overriding the scikit-learn source code [49], the centroids were initialized with k-means++, and the patches were clustered using 30 iterations. We used approximately 7.5M patches to build the cluster model, wherein all the patches in the voxel with centers in brain region of the HR volume were used for training. We updated the Q and V matrices in Eqs. (4) and (5) 5 times per volume considering the trace-off between memory capacity and computational efficiency. The proposed model was trained within 3 hours without GPU acceleration. The source code is available in GitHub: https://github.com/Snailpong/ SR_Tensor.\n4962 VOLUME 10, 2022\nE. COMPARISONS We compared the performance of the proposed method to the conventional nearest neighbor, tricubic interpolation, and the 3D extended SRCNN [23], which is a deep learning model. For the latter, we used a typical 9-1-5 structure model wherein only the 2D convolution operation was replaced in the 3D operation. This was implemented using Tensorflow2 [50] by minimizing the mean square error using the Adam optimizer (\u03b21 = 0.9, \u03b22 = 0.999) for a learning rate of 3 \u00d7 10\u22124. Convergence was achieved using a batch size of 16 for each 100 K step using 30 training subjects. The input and output size of the 3D SRCNN was 60 \u00d7 60 \u00d7 60 for the tricubic-interpolated LR and HR patches, similar to previously reported 3D-based studies, owing to insufficient GPU memory [44], [45].\nF. OVERALL QUALITY METRICS To quantitatively measure the overall quality of the recovered volumes using the SR methods, we used two standard metrics: peak signal-to-noise ratio (PSNR) and structural similarity index measure (SSIM), which consider the referencebased image similarity [51]. Specifically, PSNR directly measures the voxel value difference between two images, and SSIM evaluates image similarity in terms of luminance, contrast, and structure. These metrics are calculated per voxel and are averaged for the entire volume.\nG. BOUNDARY QUALITY METRICS For the evaluation of SR performance in the boundary areas, especially around the cortex, we used surface models to effectively represent the complicated cortical folding. The same procedures of reconstruction based on the original and recovered HR T1w volumes were performed using FreeSurfer7 to generate triangular meshes (lh.pial and lh.white) and parcellation (lh.aparc.annot) of the left gray matter and white matter [52]. We first compared the surfaces\ngenerated from the original and recovered HR volumes because the cerebral cortex and gray-white matter boundaries represented by the surface models significantly affected surface atlas registration and gyral labeling. To facilitate a quantitative comparison between the surface and the originals, we calculated the mesh-to-mesh distance between the original and recovered surfaces. We projected each vertex of the reconstructed surface onto the nearest point of the original surface, measured the distance for every vertex, and averaged all the distances. Moreover, we evaluated the recovery performance of gyral labeling by measuring the overlap of the gyral labels (34 labels selected from FreeSurfer\u2019s surface parcellation) generated from the original HR images and recovered volumes. The recovered surface was projected onto the original HR surface using the nearest point map to establish their one-to-one correspondences. For each of the 34 cortical regions, we then computed the dice coefficients (DCs) between the original and recovered labeled regions for the 867 test sets. Student\u2019s t-tests were then performed to statistically compare the DCs for each small cortical region generated from the recovered volumes using the proposed algorithm and SRCNN, and the number of labels with statistically significant DC differences was determined.\nH. ENVIRONMENT Training and inference of the proposed algorithm were performed using a CPU (Intel Xeon W-2265 3.50 GHz) with 64 GB RAM without a GPU. The NVIDIA GeForce RTX 2080 TI GPU was also used to train the SRCNNmodel.\nIV. RESULTS A. ABLATION STUDY"
+        },
+        {
+            "heading": "1) PERFORMANCE IMPACT OF THE NUMBER OF TRAINED SUBJECTS",
+            "text": "We quantitatively investigated the impact on performance depending on the number of trained subjects (T ) in the\nVOLUME 10, 2022 4963\nproposed algorithm by changing only the number of trained subjects. Note that as T increases during training, the trained subjects were added to the training dataset. Figure 5 shows the PSNR and SSIM performance according to the number of trained subjects. It was determined that 30 trained subjects were sufficient to train the proposed algorithm, resulting in a small gain in the PSNR of 0.04 dB and no gain in the SSIM compared to the case of 20 trained subjects."
+        },
+        {
+            "heading": "2) PATCH SPAN REDUCTION EFFECT",
+            "text": "To show the improvements achieved using the patch span reduction method presented in Section 2.3, the performance of the proposed method was quantitatively compared with and without span reduction. The original primary eigenvectors and patches without transformation were used for orientation clustering and training, and the number of centroids for each tensor orientation and shape cluster model was set to 32 to train the proposed algorithm without using the span reduction method. For an upscaling factor of 2, the PSNR was 35.82\u00b1 0.86, and the SSIM was 0.9827\u00b1 0.0041. It was observed that the span reduction method improved the PSNR by 0.15 dB, compared to the case when the method was not used.\nB. COMPARISONS"
+        },
+        {
+            "heading": "1) THE OVERALL QUALITY OF VOLUMES",
+            "text": "First, we evaluated the performance of the proposed algorithm and the conventional algorithms in terms of the\nprediction of the volume intensities. Figure 6 shows one of the 2\u00d7 test results from the original HR volume ((a) subject id: 996782) using the tricubic (b), SRCNN (c), and the proposed algorithm (d), where axial (top-left), coronal (top-right), and sagittal (bottom) slices at the same location are shown in each subfigure. It is evident that the tricubic algorithm failed to recover the overall volume intensities, especially around the gray-white matter boundary and the sulcus region. However, the proposed method and SRCNN were better at recovering the HR structural details, wherein these regions are highlighted in red and blue dotted boxes. Table 1 shows the quantitative PSNR and SSIM performance of the proposed algorithm, interpolation, and SRCNN using the 867 test subjects with 2\u00d7, 3\u00d7, and 4\u00d7 upscaling factors. It is evident that the proposed method and SRCNN significantly outperformed the interpolation methods for all the upscaling factors. For the factors of 2, 3, and 4, the proposed method significantly improved the PSNR by 3.80 dB (11.81%), 2.67 dB (8.91%), and 2.27 dB (8.00%), respectively, compared to tricubic; and the difference in the PSNR between the proposed approach and SRCNN is much smaller (less than 0.9%). For SSIM, the proposed method achieved 0.0163 (1.69%), 0.0197 (2.08%), and 0.0230 (2.48%) higher values than the tricubic algorithm for 2\u00d7, 3\u00d7, and 4\u00d7, respectively. However, the SSIM difference between the proposed algorithm and SRCNN was negligible (less than or equal to 0.15%)."
+        },
+        {
+            "heading": "2) BOUNDARY RECOVERY",
+            "text": "Next, we evaluated the recovery performance of the proposed method in the cortical boundary regions by measuring the distance from the recovered cortical surface to the original HR-based surface. Figure 7 represents a subject\u2019s (subject id: 849971) pial (left) and white matter (right) surface sections that were reconstructed using tricubic (a), SRCNN (b), and the proposed algorithm (c) with yellow border overlapped with the original surface with a red border, showing the sagittal (left), coronal (center), and axial (right) view of each surface. It is evident that the tricubic algorithm failed to recover the boundary region, significantly mismatching both the original pial and white matter surfaces, especially for the frontal and parietal lobes shown in the sagittal view. By contrast, the surfaces obtained for the SRCNN and the proposed algorithm exhibited well-recovered boundaries, but the proposed algorithm was slightly better than SRCNN\n4964 VOLUME 10, 2022\nfor the regions on the white surface highlighted by blue dotted circles. Table 2 shows the quantitative mesh-to-mesh\nmeasurement results of the proposed algorithm, SRCNN, and tricubic interpolation for pial and white surfaces using the\nVOLUME 10, 2022 4965\n867 test subjects with an upscaling factor of 2\u00d7. The results show that the proposed method was superior to the tricubic and SRCNN approaches in terms of the distance on the pial surface by 0.1269 mm (49.4%) and 0.0117 mm (8.2%), respectively, and by 0.1528 mm (53.5%) and 0.0189 mm (12.5%) on the white surface."
+        },
+        {
+            "heading": "3) CORTICAL PARCELLATION RECOVERY",
+            "text": "Finally, we compared the prediction of the cortical surface mapping of the proposed algorithm and the conventional algorithms. Figures 8(a) to (d) show the reconstructed white matter surfaces with predicted cortical parcellation for one subject (subject id: 162228) using the HR surface (a), tricubic (b), SRCNN (c), and the proposed algorithm with 2\u00d7 upscaling factor, for the medial (top) and bottom side (bottom). It is evident that the tricubic algorithm failed to distinguish between complex areas, such as the medial-orbitofrontal (L13) and the insula region (L34), highlighted using the dashed white circle. By contrast, the proposed algorithm and SRCNN were better at recovering the annotation without any significant mislabeling of the\n4966 VOLUME 10, 2022\nregions. Figure. 8(e) shows the quantitative DC results of the proposed algorithm, SRCNN, and tricubic interpolation for the 867 test subjects in 34 regions with a factor of 2\u00d7 and a box plot for visualization. In addition, the proposedmethod and SRCNNwere compared using unpaired Student\u2019s t-test for each region. The results are shown above the box plot. Among the 34 cortical areas, 15 areas exhibited a statistically significant difference (p-value < 0.05), and they are identified with asterisks. Among these 15 regions, the proposed algorithm achieved significantly better results than the SRCNN algorithm in 13 regions. This difference originated from the volume images, and our method performedwell on the boundaries, which is important for surface composition analysis.\nV. CONCLUSION In this paper, we developed a cost-efficient novel fully 3D super-resolution method that targets the boundaries in MRI data by introducing a tensor using 3D gradient information. Cluster models were developed to create labels using the tensor shape and the orientation features obtained from the tensor, and filters were trained by collecting similar patches for each label. We propose a patch span reduction method by collapsing the variations of the tensor orientation to learn fine patch features. Testing on MR volumes showed that the proposed method achieved comparable recovery of HR details compared to conventional methods, effectively reducing the training time and the number of trained subjects required. In addition, the results for the boundary recovery revealed that the proposed algorithm significantly outperformed conventional methods in the cerebral cortex. In practical medical applications, it facilitates successive surface-based analyses that would otherwise yield inaccurate results with low-quality MRI data. The method considers only the primary orientation of the patch, which accurately recovers the boundaries, but the improvement may be small in complex parts such as internal textures. In future work, to solve the problem, we will focus on considering all eigenvectors including principal eigenvector as features. Also, we will perform experiments with other datasets and extend this technique to different brain imaging modalities.\nREFERENCES [1] D. Peressutti, M. Sinclair, W. Bai, T. Jackson, J. Ruijsink, D. Nordsletten,\nL. Asner, M. Hadjicharalambous, C. A. Rinaldi, D. Rueckert, and A. P. King, \u2018\u2018A framework for combining a motion atlas with non-motion information to learn clinically useful biomarkers: Application to cardiac resynchronisation therapy response prediction,\u2019\u2019Med. Image Anal., vol. 35, pp. 669\u2013684, Jan. 2017. [2] J. K. Gahm and Y. Shi, \u2018\u2018Riemannian metric optimization on surfaces (RMOS) for intrinsic brain mapping in the Laplace\u2013Beltrami embedding space,\u2019\u2019Med. Image Anal., vol. 46, pp. 189\u2013201, May 2018. [3] J. C. Pruessner, \u2018\u2018Volumetry of hippocampus and amygdala with highresolution MRI and three-dimensional analysis software: Minimizing the discrepancies between laboratories,\u2019\u2019 Cerebral Cortex, vol. 10, no. 4, pp. 433\u2013442, Apr. 2000. [4] F. Shi, J. Cheng, L. Wang, P.-T. Yap, and D. Shen, \u2018\u2018LRTV: MR image super-resolution with low-rank and total variation regularizations,\u2019\u2019 IEEE Trans. Med. Imag., vol. 34, no. 12, pp. 2459\u20132466, Dec. 2015.\n[5] E. Plenge, D. H. Poot, M. Bernsen, G. Kotek, G. Houston, P. Wielopolski, L. van der Weerd, W. J. Niessen, and E. Meijering, \u2018\u2018Super-resolution methods in MRI: Can they improve the trade-off between resolution, signal-to-noise ratio, and acquisition time?\u2019\u2019 Magn. Reson. Med., vol. 68, no. 6, pp. 1983\u20131993, 2012. [6] C. E. Duchon, \u2018\u2018Lanczos filtering in one and two dimensions,\u2019\u2019 J. Appl. Meteorol., vol. 18, no. 8, pp. 1016\u20131022, 1979. [7] X. Li and M. T. Orchard, \u2018\u2018New edge-directed interpolation,\u2019\u2019 IEEE Trans. Image Process., vol. 10, no. 10, pp. 1521\u20131527, Oct. 2001. [8] M. Irani and S. Peleg, \u2018\u2018Improving resolution by image registration,\u2019\u2019 CVGIP, Graph. Models Image Process., vol. 53, no. 3, pp. 231\u2013239, May 1991. [9] W. T. Freeman, E. C. Pasztor, and O. T. Carmichael, \u2018\u2018Learning low-level vision,\u2019\u2019 Int. J. Comput. Vis., vol. 40, no. 1, pp. 25\u201347, 2000. [10] J. Yang, J. Wright, T. Huang, and Y.Ma, \u2018\u2018Image super-resolution as sparse representation of raw image patches,\u2019\u2019 in Proc. IEEE Conf. Comput. Vis. Pattern Recognit., Jun. 2008, pp. 1\u20138. [11] X. Lu, Z. Huang, and Y. Yuan, \u2018\u2018MR image super-resolution via manifold regularized sparse learning,\u2019\u2019 Neurocomputing, vol. 162, pp. 96\u2013104, Aug. 2015. [12] R. Zeyde, M. Elad, and M. Protter, \u2018\u2018On single image scale-up using sparse-representations,\u2019\u2019 in Proc. Int. Conf. Curves Surf. Avignon, France: Springer, 2010, pp. 711\u2013730. [13] M. Aharon, M. Elad, and A. Bruckstein, \u2018\u2018K-SVD: An algorithm for designing overcomplete dictionaries for sparse representation,\u2019\u2019 IEEE Trans. Signal Process., vol. 54, no. 11, pp. 4311\u20134322, Nov. 2006. [14] R. Timofte, V. De, and L. V. Gool, \u2018\u2018Anchored neighborhood regression for fast example-based super-resolution,\u2019\u2019 in Proc. IEEE Int. Conf. Comput. Vis., Dec. 2013, pp. 1920\u20131927. [15] R. Timofte, V. D. Smet, and L. V. Gool, \u2018\u2018A+: Adjusted anchored neighborhood regression for fast super-resolution,\u2019\u2019 in Proc. Asian Conf. Comput. Vis. Singapore: Springer, 2014, pp. 111\u2013126. [16] C.-Y. Yang and M.-H. Yang, \u2018\u2018Fast direct super-resolution by simple functions,\u2019\u2019 in Proc. IEEE Int. Conf. Comput. Vis., Dec. 2013, pp. 561\u2013568. [17] Y. Romano, J. Isidoro, and P.Milanfar, \u2018\u2018RAISR: Rapid and accurate image super resolution,\u2019\u2019 IEEE Trans. Comput. Imag., vol. 3, no. 1, pp. 110\u2013125, Mar. 2017. [18] S. He and B. Jalali, \u2018\u2018Fast super-resolution in MRI images using phase stretch transform, anchored point regression and zero-data learning,\u2019\u2019 in Proc. IEEE Int. Conf. Image Process. (ICIP), Sep. 2019, pp. 2876\u20132880. [19] S. Schulter, C. Leistner, and H. Bischof, \u2018\u2018Fast and accurate image upscaling with super-resolution forests,\u2019\u2019 in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), Jun. 2015, pp. 3791\u20133799. [20] J. Salvador and E. Perez-Pellitero, \u2018\u2018Naive Bayes super-resolution forest,\u2019\u2019 in Proc. IEEE Int. Conf. Comput. Vis. (ICCV), Dec. 2015, pp. 325\u2013333. [21] E. Perez-Pellitero, J. Salvador, J. Ruiz-Hidalgo, and B. Rosenhahn, \u2018\u2018PSyCo: Manifold span reduction for super resolution,\u2019\u2019 in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), Jun. 2016, pp. 1837\u20131845. [22] D. Glasner, S. Bagon, and M. Irani, \u2018\u2018Super-resolution from a single image,\u2019\u2019 in Proc. IEEE 12th Int. Conf. Comput. Vis., Sep. 2009, pp. 349\u2013356. [23] C. Dong, C. C. Loy, K. He, and X. Tang, \u2018\u2018Learning a deep convolutional network for image super-resolution,\u2019\u2019 in Proc. Eur. Conf. Comput. Vis. Z\u00fcrich, Switzerland: Springer, 2014, pp. 184\u2013199. [24] C. Dong, C. C. Loy, and X. Tang, \u2018\u2018Accelerating the super-resolution convolutional neural network,\u2019\u2019 in Proc. Eur. Conf. Comput. Vis. Amsterdam, The Netherlands: Springer, 2016, pp. 391\u2013407. [25] W. Shi, J. Caballero, F. Huszar, J. Totz, A. P. Aitken, R. Bishop, D. Rueckert, and Z. Wang, \u2018\u2018Real-time single image and video superresolution using an efficient sub-pixel convolutional neural network,\u2019\u2019 in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), Jun. 2016, pp. 1874\u20131883. [26] W.-S. Lai, J.-B. Huang, N. Ahuja, and M.-H. Yang, \u2018\u2018Deep Laplacian pyramid networks for fast and accurate super-resolution,\u2019\u2019 in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), Jul. 2017, pp. 624\u2013632. [27] J. Kim, J. K. Lee, and K. M. Lee, \u2018\u2018Accurate image super-resolution using very deep convolutional networks,\u2019\u2019 in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), Jun. 2016, pp. 1646\u20131654. [28] B. Lim, S. Son, H. Kim, S. Nah, and K. M. Lee, \u2018\u2018Enhanced deep residual networks for single image super-resolution,\u2019\u2019 in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. Workshops (CVPRW), Jul. 2017, pp. 136\u2013144. [29] J. Shi, Z. Li, S. Ying, C. Wang, Q. Liu, Q. Zhang, and P. Yan, \u2018\u2018MR image super-resolution via wide residual networks with fixed skip connection,\u2019\u2019 IEEE J. Biomed. Health Inform., vol. 23, no. 3, pp. 1129\u20131140, May 2019.\nVOLUME 10, 2022 4967\n[30] C.-M. Feng, K. Wang, S. Lu, Y. Xu, and X. Li, \u2018\u2018Brain MRI superresolution using coupled-projection residual network,\u2019\u2019 Neurocomputing, vol. 456, pp. 190\u2013199, Oct. 2021. [31] F. Iandola, M. Moskewicz, S. Karayev, R. Girshick, T. Darrell, and K. Keutzer, \u2018\u2018DenseNet: Implementing efficient ConvNet descriptor pyramids,\u2019\u2019 2014, arXiv:1404.1869. [32] T. Tong, G. Li, X. Liu, and Q. Gao, \u2018\u2018Image super-resolution using dense skip connections,\u2019\u2019 in Proc. IEEE Int. Conf. Comput. Vis. (ICCV), Oct. 2017, pp. 4799\u20134807. [33] D. Liu, B. Wen, Y. Fan, C. Change Loy, and T. S. Huang, \u2018\u2018Non-local recurrent network for image restoration,\u2019\u2019 2018, arXiv:1806.02919. [34] Y. Zhang, K. Li, K. Li, B. Zhong, and Y. Fu, \u2018\u2018Residual non-local attention networks for image restoration,\u2019\u2019 2019, arXiv:1903.10082. [35] Y. Zhang, K. Li, K. Li, L. Wang, B. Zhong, and Y. Fu, \u2018\u2018Image superresolution using very deep residual channel attention networks,\u2019\u2019 in Proc. Eur. Conf. Comput. Vis., Sep. 2018, pp. 286\u2013301. [36] C. Ledig, L. Theis, F. Huszar, J. Caballero, A. Cunningham, A. Acosta, A. Aitken, A. Tejani, J. Totz, Z. Wang, and W. Shi, \u2018\u2018Photo-realistic single image super-resolution using a generative adversarial network,\u2019\u2019 in Proc. IEEE Conf. Comput. Vis. Pattern Recognit. (CVPR), Jul. 2017, pp. 4681\u20134690. [37] O. Oktay, W. Bai, M. Lee, R. Guerrero, K. Kamnitsas, J. Caballero, A. de Marvao, S. Cook, D. O\u2019Regan, and D. Rueckert, \u2018\u2018Multi-input cardiac image super-resolution using convolutional neural networks,\u2019\u2019 in Proc. Int. Conf. Med. Image Comput. Comput.-Assist. Intervent. Athens, Greece: Springer, 2016, pp. 246\u2013254. [38] S. Wang, Z. Su, L. Ying, X. Peng, S. Zhu, F. Liang, D. Feng, and D. Liang, \u2018\u2018Accelerating magnetic resonance imaging via deep learning,\u2019\u2019 in Proc. IEEE 13th Int. Symp. Biomed. Imag. (ISBI), Apr. 2016, pp. 514\u2013517. [39] C. Sazak and B. Obara, \u2018\u2018Contrast-independent curvilinear structure enhancement in 3D biomedical images,\u2019\u2019 in Proc. IEEE 14th Int. Symp. Biomed. Imag. (ISBI), Apr. 2017, pp. 1165\u20131168. [40] C. Wang, M. Oda, Y. Hayashi, Y. Yoshino, T. Yamamoto, A. F. Frangi, and K.Mori, \u2018\u2018Tensor-cut: A tensor-based graph-cut blood vessel segmentation method and its application to renal artery segmentation,\u2019\u2019 Med. Image Anal., vol. 60, Feb. 2020, Art. no. 101623. [41] J. Jin, L. Yang, X. Zhang, and M. Ding, \u2018\u2018Vascular tree segmentation in medical images using hessian-based multiscale filtering and level set method,\u2019\u2019 Comput. Math. Methods Med., vol. 2013, pp. 1\u20139, Oct. 2013. [42] C.-H. Pham, C. Tor-D\u00edez, H. Meunier, N. Bednarek, R. Fablet, N. Passat, and F. Rousseau, \u2018\u2018Multiscale brain MRI super-resolution using deep 3D convolutional networks,\u2019\u2019 Computerized Med. Imag. Graph., vol. 77, Oct. 2019, Art. no. 101647. [43] Y. Chen, Y. Xie, Z. Zhou, F. Shi, A. G. Christodoulou, and D. Li, \u2018\u2018Brain MRI super resolution using 3D deep densely connected neural networks,\u2019\u2019 in Proc. IEEE 15th Int. Symp. Biomed. Imag. (ISBI), Apr. 2018, pp. 739\u2013742. [44] Y. Chen, A. G. Christodoulou, Z. Zhou, F. Shi, Y. Xie, and D. Li, \u2018\u2018MRI super-resolution with GAN and 3D multi-level DenseNet: Smaller, faster, and better,\u2019\u2019 2020, arXiv:2003.01217. [45] J. Wang, Y. Chen, Y. Wu, J. Shi, and J. Gee, \u2018\u2018Enhanced generative adversarial network for 3D brain MRI super-resolution,\u2019\u2019 in Proc. IEEE Winter Conf. Appl. Comput. Vis. (WACV), Mar. 2020, pp. 3627\u20133636. [46] D. C. Van Essen, D. C. V. Essen, S. M. Smith, D. M. Barch, T. E. Behrens, E. Yacoub, and K. Ugurbil, \u2018\u2018The WU-minn human connectome project: An overview,\u2019\u2019 NeuroImage, vol. 80, pp. 62\u201379, Oct. 2013.\n[47] J. K. Gahm, G. Kindlmann, and D. B. Ennis, \u2018\u2018The effects of noise over the complete space of diffusion tensor shape,\u2019\u2019 Med. Image Anal., vol. 18, no. 1, pp. 197\u2013210, Jan. 2014. [48] P. Getreuer, I. Garcia-Dorado, J. Isidoro, S. Choi, F. Ong, and P. Milanfar, \u2018\u2018BLADE: Filter learning for general purpose computational photography,\u2019\u2019 in Proc. IEEE Int. Conf. Comput. Photography (ICCP), May 2018, pp. 1\u201311. [49] F. Pedregosa, G. Varoquaux, A. Gramfort, V. Michel, B. Thirion, O. Grisel, M. Blondel, P. Prettenhofer, R. Weiss, and V. Dubourg, \u2018\u2018Scikitlearn: Machine learning in Python,\u2019\u2019 J. Mach. Learn. Res., vol. 12, pp. 2825\u20132830, Oct. 2011. [50] M. Abadi, P. Barham, J. Chen, Z. Chen, A. Davis, J. Dean, M. Devin, S. Ghemawat, G. Irving, and M. Isard, \u2018\u2018Tensorflow: A system for largescale machine learning,\u2019\u2019 in Proc. 12th USENIX Symp. Operating Syst. Design Implement., 2016, pp. 265\u2013283. [51] Z. Wang, A. C. Bovik, H. R. Sheikh, and E. P. Simoncelli, \u2018\u2018Image quality assessment: From error visibility to structural similarity,\u2019\u2019 IEEE Trans. Image Process., vol. 13, no. 4, pp. 600\u2013612, Apr. 2004. [52] A. M. Dale, B. Fischl, and M. I. Sereno, \u2018\u2018Cortical surface-based analysis: I. Segmentation and surface reconstruction,\u2019\u2019 NeuroImage, vol. 9, no. 2, pp. 179\u2013194, Feb. 1999.\nSEONGSU PARK received the B.S. degree in computer science and engineering from Pusan National University, Republic of Korea, in 2020, where he is currently pursuing the M.S. degree in artificial intelligence. His research interests include computer vision, medical image analysis and image synthetic, generative networks, and animating vision.\nJIN KYU GAHM received the B.S. degree in computer engineering from Seoul National University, Republic of Korea, in 2000, and the Ph.D. degree in computer science from the University of California at Los Angeles, Los Angeles, USA, in 2014. He was a Postdoctoral Associate with the Laboratory of Neuro Imaging, University of Southern California, USA, from 2014 to 2019. He is currently an Assistant Professor with the School of Computer Science and Engineering,\nPusan National University. His research interests include medical image processing, machine learning, and brain shape analysis.\n4968 VOLUME 10, 2022"
+        }
+    ],
+    "title": "Super-Resolution of 3D Brain MRI With Filter Learning Using Tensor Feature Clustering",
+    "year": 2022
+}

@@ -1,0 +1,767 @@
+{
+    "abstractText": "Background: The determination of HER2 expression status contributes significantly to HER2-targeted therapy in breast carcinoma. However, an economical, efficient, and non-invasive assessment of HER2 is lacking. We aimed to develop a clinicoradiomic nomogram based on radiomics scores extracted from multiparametric MRI (mpMRI, including ADC-map, T2W1, DCE-T1WI) and clinical risk factors to assess HER2 status. Methods: We retrospectively collected 214 patients with pathologically confirmed invasive ductal carcinoma between January 2018 to March 2021 from Fudan University Shanghai Cancer Center, and randomly divided this cohort into training set (n = 128, 42 HER2-positive and 86 HER2-negative cases) and validation set (n = 86, 28 HER2positive and 58 HER2-negative cases) at a ratio of 6:4. The original and transformed pretherapy mpMRI images were treated by semi-automated segmentation and manual modification on the DeepWise scientific research platform v1.6 (http:// keyan. deepw ise. com/), then radiomics feature extraction was implemented with PyRadiomics library. Recursive feature elimination (RFE) based on logistic regression (LR) and LASSO regression were adpoted to identify optimal features before modeling. LR, Linear Discriminant Analysis (LDA), support vector machine (SVM), random forest (RF), naive Bayesian (NB) and XGBoost (XGB) algorithms were used to construct the radiomics signatures. Independent clinical predictors were identified through univariate logistic analysis (age, tumor location, ki-67 index, histological grade, and lymph node metastasis). Then, the radiomics signature with the best diagnostic performance (Rad score) was further combined with significant clinical risk factors to develop a clinicoradiomic model (nomogram) using multivariate logistic regression. The discriminative power of the constructed models were evaluated by AUC, DeLong test, calibration curve, and decision curve analysis (DCA). Results: 70 (32.71%) of the enrolled 214 cases were HER2-positive, while 144 (67.29%) were HER2-negative. Eleven best radiomics features were retained to develop 6 radiomcis classifiers in which RF classifier showed the highest AUC of 0.887 (95%CI: 0.827\u20130.947) in the training set and acheived the AUC of 0.840 (95%CI: 0.758\u20130.922) in the validation set. A nomogram that incorporated the Rad score with two selected clinical factors (Ki-67 index and histological \u00a9 The Author(s) 2022. Open Access This article is licensed under a Creative Commons Attribution 4.0 International License, which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if changes were made. The images or other third party material in this article are included in the article\u2019s Creative Commons licence, unless indicated otherwise in a credit line to the material. If material is not included in the article\u2019s Creative Commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this licence, visit http:// creat iveco mmons. org/ licen ses/ by/4. 0/. The Creative Commons Public Domain Dedication waiver (http:// creat iveco mmons. org/ publi cdoma in/ zero/1. 0/) applies to the data made available in this article, unless otherwise stated in a credit line to the data. Open Access Aqiao Xu and Xiufeng Chu contributed equally to this work. *Correspondence: 737730@qq.com; 844008580@qq.com 1 Department of Radiology, The Central Hospital Affiliated to Shaoxing University (Shaoxing Central Hospital), Shaoxing 312030, China Full list of author information is available at the end of the article Page 2 of 13 Xu et al. BMC Cancer (2022) 22:872 Introduction Breast carcinoma is the most widespread and lethal tumor among women [1]. The most common histological type is invasive ductal carcinoma (IDC), which accounts for roughly 80% of all breast carcinomas, with 20% \u2013 30% expressing human epidermal growth factor receptor 2 (HER2) positivity [2]. Numerous studies substantiated the association of HER2 gene overexpression with the division, proliferation, and nourishment of new vasculature of breast carcinoma cells. Overexpression of HER2 is significantly correlated with high aggressiveness and poor prognosis in breast carcinoma patients [3\u20136]. Consequently, advancement in HER2-targeted therapy  was considered a prominent breakthrough in breast carcinoma treatment [7, 8]. Therefore, determining the HER2 expression status in  breast carcinoma patients is an essential precondition to identifying potential candidates for treatment decisions. The immunohistochemistry (IHC) method for testing HER-2 expression is a standard procedure in our laboratory and a part of our pathology reports in invasive breast carcinomas, and FISH is the subsequent and gold method in equivocal (2 +) IHC cases [9]. These two methods are more timeconsuming, and takes 5\u201312  days after specimens are provided. FISH is difficult to apply, and requires trained technicians.  It is more expensive since it requires test kits and a special microscope, and stained preparations cannot be archived [10].  Radiomics allows inference of tumoral molecular status from medical image-derived features, and it allows the study of the tumoral heterogeneity both spatially and over time; radiomics have the potential to enable spatio-longitudinal monitoring of tumor biology before and during treatment. Existing literature has recently documented a correlation between MRI image expression and breast carcinoma HER2 expression level [11\u201315]. Song et  al. [11] reported that texture features derived from kinetic parameter maps, calculated based on breast DCE-T1W1, can be used as imaging biomarkers to distinguish HER2positive and HER2-negative breast cancer. The best model with features extracted from the slope of signal intensity (SIslope) map yielded an AUC of 0.79 in the test set. Another radiomic study by Li et al. [12] selected ER status and radiomics features in DWI images to establish the nomogram, which yielded good discrimination (AUC: 0.883/0.848) and calibration. The radiomics nomogram showed favorable performance for evaluating HER2 status in breast cancer. To the best of our knowledge, the HER2 express status in breast carcinoma could be better predicted by radiomics signature established from the mpMRI compared with single-parametric signature. Zhou et al. found the prediction ability of the developed SVM model in HER2 status of breast carcinoma patients based on T2WI, DCE-T1W1, and a combination of the two sequences. The multiparameter-related model manifested the best efficiency in forecasting the HER2 status with an AUC of 0.86 and 0.81 in the learning and test cohorts, respectively [16]. However, no published study has discussed the MRI combining with clinical pathological risk factors, such as Ki-67 index, histological grade, and lymph node metastasis, in predicting HER2 expression, and no published study has applied clinicoradiomic models (nomogram) using multiple machine learning algorithms in predicting HER2 expression in invasive ductal carcinoma. This paper aims to investigate and compare the performance of radiomics features from different types of MR images (fat-suppressed T2-weighted images (T2WI), diffusion coefficient map (ADC-map), and dynamic contrast-enhanced T1-weighted images (DCE-T1WI)) and the performance of their fusions using different machine learning algorithms. In addition, a nomogram incorporating the mpMRI-based radiomics signature and clinical predictors was developed to improve the discriminative and interpretable ability of the classifier for HER2 status prediction. Materials and methods Study population The Fudan University Shanghai Cancer Center and Shaoxing Central Hospital Ethical Committee approved this study protocol, and the requirement for written informed consent was waived. Between January 2018 and March 2021, we retrospectively collected breast tumor cases confirmed by clinical examination and diagnosed by ultrasound examination in our center. Inclusion grade) was constructed and yielded better discrimination compared with Rad score (p = 0.374, Delong test), with an AUC of 0.945 (95%CI: 0.904\u20130.987) in the training set and 0.868 (95%CI: 0.789\u20130.948; p = 0.123) in the validation set. Moreover, calibration with the p-value of 0.732 using Hosmer\u2013Lemeshow test demonstrated good agreement, and the DCA verified the benefits of the nomogram. Conclusion: Post largescale validation, the clinicoradiomic nomogram may have the potential to be used as a noninvasive tool for determination of HER2 expression status in clinical HER2-targeted therapy prediction.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Aqiao Xu"
+        },
+        {
+            "affiliations": [],
+            "name": "Xiufeng Chu"
+        },
+        {
+            "affiliations": [],
+            "name": "Shengjian Zhang"
+        },
+        {
+            "affiliations": [],
+            "name": "Jing Zheng"
+        },
+        {
+            "affiliations": [],
+            "name": "Dabao Shi"
+        },
+        {
+            "affiliations": [],
+            "name": "Shasha Lv"
+        },
+        {
+            "affiliations": [],
+            "name": "Feng Li"
+        },
+        {
+            "affiliations": [],
+            "name": "Xiaobo Weng"
+        }
+    ],
+    "id": "SP:9c5b8649fed339ed67d592d3dfbdc2f26aa4f7c7",
+    "references": [
+        {
+            "authors": [
+                "H Sung",
+                "J Ferlay",
+                "RL Siegel",
+                "M Laversanne",
+                "I Soerjomataram",
+                "A Jemal"
+            ],
+            "title": "Global cancer statistics 2020: GLOBOCAN estimates of incidence and mortality worldwide for 36 cancers in 185 countries",
+            "venue": "CA Cancer J Clin. 2021;71:209\u201349",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M Casey",
+                "A Prakash",
+                "E Holian",
+                "A McGuire",
+                "O Kalinina",
+                "A Shalaby"
+            ],
+            "title": "Quantifying Argonaute 2 (Ago2) expression to stratify breast cancer",
+            "venue": "BMC Cancer",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "CR Pradeep",
+                "A Zeisel",
+                "WJ K\u00f6stler",
+                "M Lauriola",
+                "J Jacob-Hirsch"
+            ],
+            "title": "Modeling invasive breast cancer: growth factors propel progression of HER2-positive premalignant lesions",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "\u00c1 Molina Crespo",
+                "A Cadete",
+                "D Sarrio",
+                "M G\u00e1mez-Chiachio",
+                "L Martinez"
+            ],
+            "title": "Intracellular Delivery of an Antibody Targeting GasderminB Reduces HER2 Breast Cancer Aggressiveness",
+            "venue": "Clin Cancer Res",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A Bhattacharjee",
+                "J Rajendra",
+                "R Dikshit",
+                "S. Dutt"
+            ],
+            "title": "HER2 borderline is a negative prognostic factor for primary malignant breast cancer",
+            "venue": "Breast Cancer Res",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Waks AG",
+                "Winer EP"
+            ],
+            "title": "Breast cancer treatment: a review",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "H Wildiers",
+                "K Tryfonidis",
+                "L Dal Lago",
+                "P Vuylsteke",
+                "G Curigliano",
+                "S Waters"
+            ],
+            "title": "Pertuzumab and trastuzumab with or without metronomic chemotherapy for older patients with HER2-positive metastatic breast cancer (EORTC 75111\u201310114): an open-label, randomised, phase 2 trial from the Elderly Task Force/Breast Cancer Group",
+            "venue": "Lancet Oncol",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "D Cameron",
+                "MJ Piccart-Gebhart",
+                "RD Gelber",
+                "M Procter",
+                "A Goldhirsch",
+                "E de Azambuja"
+            ],
+            "title": "years\u2019 follow-up of trastuzumab after adjuvant chemotherapy in HER2-positive early breast cancer: final analysis of the HERceptin Adjuvant (HERA) trial",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "AK Hartman",
+                "BK Gorman",
+                "S Chakraborty",
+                "DR Mody",
+                "MR. Schwartz"
+            ],
+            "title": "Determination of HER2/neu status: a pilot study comparing HER2/neu dual in situ hybridization DNA probe cocktail assay performed on cell blocks to immunohistochemisty and fluorescence in situ hybridization performed on histologic specimens",
+            "venue": "Arch Pathol Lab Med",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "SS Murthy",
+                "DG Sandhya",
+                "F Ahmed"
+            ],
+            "title": "Assessment of HER2/Neu status by fluorescence in situ hybridization in immunohistochemistry-equivocal cases of invasive ductal carcinoma and aberrant signal patterns: a study at a tertiary cancer",
+            "venue": "center. Indian J Pathol Microbiol",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "L Song",
+                "C Li",
+                "J. Yin"
+            ],
+            "title": "Texture Analysis Using Semiquantitative Kinetic Parameter Maps from DCE-MRI: Preoperative Prediction of HER2 Status in Breast Cancer",
+            "venue": "Front Oncol",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C Li",
+                "J. Yin"
+            ],
+            "title": "Radiomics Nomogram Based on Radiomics Score from Multiregional Diffusion-Weighted MRI and Clinical Factors for Evaluating HER-2 2+ Status of Breast Cancer",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "K Nagasaka",
+                "H Satake",
+                "S Ishigaki",
+                "H Kawai",
+                "S. Naganawa"
+            ],
+            "title": "Histogram analysis of quantitative pharmacokinetic parameters on DCE-MRI: correlations with prognostic factors and molecular subtypes in breast cancer",
+            "venue": "Breast Cancer",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "H Wang",
+                "Y Hu",
+                "H Li",
+                "Y Xie",
+                "X Wang",
+                "W. Wan"
+            ],
+            "title": "Preliminary study on identification of estrogen receptor-positive breast cancer subtypes based on dynamic contrast-enhanced magnetic resonance imaging (DCE-MRI) texture analysis. Gland Surg. 2020;9:622\u20138",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D Leithner",
+                "B Bernard-Davila",
+                "DF Martinez"
+            ],
+            "title": "Radiomic Signatures Derived from Diffusion-Weighted Imaging for the Assessment of Breast Cancer Receptor Status and Molecular Subtypes",
+            "venue": "Mol Imaging Biol",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J Zhou",
+                "H Tan",
+                "W Li",
+                "Z Liu",
+                "Y Wu",
+                "Y Bai"
+            ],
+            "title": "Radiomics signatures based on multiparametric MRI for the preoperative prediction of the her2 status of patients with breast cancer",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S Li",
+                "D Zhang",
+                "S Zeng"
+            ],
+            "title": "Prognostic Value of Preoperative Albumin-to-Fibrinogen Ratio in Patients with Bladder Cancer",
+            "venue": "J Cancer",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "B Li",
+                "Y Cui",
+                "M Diehn",
+                "R. Li"
+            ],
+            "title": "Development and Validation of an Individualized Immune Prognostic Signature in Early-Stage Nonsquamous Non-Small Cell Lung Cancer",
+            "venue": "JAMA Oncol",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M Valli\u00e8res",
+                "CR Freeman",
+                "SR Skamene",
+                "I. El Naqa"
+            ],
+            "title": "A radiomics model from joint FDG-PET and MRI texture features for the prediction of lung metastases in soft-tissue sarcomas of the extremities",
+            "venue": "Phys Med Biol",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "A Carr\u00e9",
+                "G Klausner",
+                "M Edjlali"
+            ],
+            "title": "Standardization of brain MR images across machines and protocols: bridging the gap for MRI-based radiomics",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A Zwanenburg",
+                "M Valli\u00e8res",
+                "MA Abdalah",
+                "HJ Aerts",
+                "V Andrearczyk",
+                "A Apte"
+            ],
+            "title": "The Image Biomarker Standardization Initiative: Standardized Quantitative Radiomics for High-Throughput Image-based Phenotyping",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "L Duron",
+                "D Balvay",
+                "S Vande Perre"
+            ],
+            "title": "Gray-level discretization impacts reproducible MRI radiomics texture features",
+            "venue": "PLoS One",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "KV Hoebel",
+                "JB Patel",
+                "AL Beers",
+                "K Chang",
+                "P Singh",
+                "JM Brown"
+            ],
+            "title": "Radiomics repeatability pitfalls in a scan-rescan MRI study of glioblastoma",
+            "venue": "Radiol Artif Intell. 2020;3:e190199",
+            "year": 1901
+        },
+        {
+            "authors": [
+                "A Pfob",
+                "BJ Mehrara",
+                "JA Nelson",
+                "EG Wilkins",
+                "AL Pusic",
+                "C. Sidey-Gibbons"
+            ],
+            "title": "Machine learning to predict individual patient-reported outcomes at 2-year follow-up for women undergoing cancer-related mastectomy and breast reconstruction (INSPiRED-001)",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "GF Stark",
+                "GR Hart",
+                "BJ Nartowt"
+            ],
+            "title": "Predicting breast cancer risk using personal health data and machine learning models",
+            "venue": "PLoS ONE",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "C Chen",
+                "Y Qin",
+                "H Chen",
+                "D Zhu",
+                "F Gao",
+                "X. Zhou"
+            ],
+            "title": "A meta-analysis of the diagnostic performance of machine learning-based MRI in the prediction of axillary lymph node metastasis in breast cancer patients",
+            "venue": "Insights Imaging",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "AC Wolff",
+                "MEH Hammond",
+                "KH Allison",
+                "BE Harvey",
+                "PB Mangu",
+                "JM Bartlett"
+            ],
+            "title": "Human epidermal growth factor receptor 2 testing in breast cancer: American Society of Clinical Oncology/College of American Pathologists clinical practice guideline focused update",
+            "venue": "Arch Pathol Lab Med",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "WM Hanna",
+                "E Slodkowska",
+                "F-I Lu",
+                "H Nafisi",
+                "S. Nofech-Mozes"
+            ],
+            "title": "Comparative analysis of human epidermal growth factor receptor 2 testing in breast cancer",
+            "venue": "J Clin Oncol",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "C Liu",
+                "J Ding",
+                "K Spuhler",
+                "Y Gao",
+                "M Serrano Sosa",
+                "M Moriarty"
+            ],
+            "title": "Preoperative prediction of sentinel lymph node metastasis in breast cancer by radiomic signatures from dynamic contrast-enhanced MRI",
+            "venue": "J Magn Reson Imag. 2019;49:131\u201340",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "F Chamming\u2019s",
+                "Y Ueno",
+                "R Ferr\u00e9",
+                "E Kao",
+                "A-S Jannot",
+                "J Chong"
+            ],
+            "title": "Features from computerized texture analysis of breast cancers at pretreatment MR imaging are associated with response to neoadjuvant chemotherapy",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "H Tan",
+                "F Gan",
+                "Y Wu",
+                "J Zhou",
+                "J Tian",
+                "Y Lin"
+            ],
+            "title": "Preoperative prediction of axillary lymph node metastasis in breast carcinoma using radiomics features based on the fat-suppressed T2 sequence",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "L Han",
+                "Y Zhu",
+                "Z Liu",
+                "T Yu",
+                "C He",
+                "W Jiang"
+            ],
+            "title": "Radiomic nomogram for prediction of axillary lymph node metastasis in breast cancer",
+            "venue": "Eur Radiol. 2019;29:3820\u20139. Page 13 of 13 Xu et al. BMC Cancer",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M Fan",
+                "H Chen",
+                "C You",
+                "L Liu",
+                "Y Gu",
+                "W Peng"
+            ],
+            "title": "Radiomics of tumor heterogeneity during longitudinal dynamic contrast-enhanced magnetic resonance imaging for predicting response to neoadjuvant chemotherapy in breast cancer",
+            "venue": "Front Mol Biosci",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "EH Cain",
+                "A Saha",
+                "MR Harowicz",
+                "JR Marks",
+                "PK Marcom",
+                "MA. Mazurowski"
+            ],
+            "title": "Multivariate machine learning models for prediction of pathologic response to neoadjuvant therapy in breast cancer using MRI features: a study using an independent validation",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J Zhou",
+                "H Tan",
+                "Y Bai",
+                "J Li",
+                "Q Lu",
+                "R Chen"
+            ],
+            "title": "Evaluating the HER-2 status of breast cancer using mammography radiomics features",
+            "venue": "Eur J Radiol",
+            "year": 1016
+        },
+        {
+            "authors": [
+                "E Li",
+                "JL Guida",
+                "Y Tian",
+                "H Sung",
+                "H Koka",
+                "M Li"
+            ],
+            "title": "Associations between mammographic density and tumor characteristics in Chinese women with breast cancer",
+            "venue": "Breast Cancer Res",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "X Yang",
+                "L Wu",
+                "K Zhao",
+                "W Ye",
+                "W Liu",
+                "Y Wang"
+            ],
+            "title": "Evaluation of human epidermal growth factor receptor 2 status of breast cancer using preoperative multidetector computed tomography with deep learning and handcrafted radiomics features",
+            "venue": "Chin J Cancer Res",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "RF Chang",
+                "HH Chen",
+                "YC Chang",
+                "CS Huang",
+                "JH Chen",
+                "CM. Lo"
+            ],
+            "title": "Quantification of breast tumor heterogeneity for ER status, HER2 status, and TN molecular subtype evaluation on DCE-MRI",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "M Ni",
+                "X Zhou",
+                "J Liu",
+                "H Yu",
+                "Y Gao",
+                "X Zhang",
+                "Z. Li"
+            ],
+            "title": "Prediction of the clinicopathological subtypes of breast cancer using a fisher discriminant analysis model based on radiomic features of diffusion-weighted MRI",
+            "venue": "BMC Cancer",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Y Chen",
+                "Z Wang",
+                "G Yin",
+                "C Sui",
+                "Z Liu",
+                "X Li"
+            ],
+            "title": "Prediction of HER2 expression in breast cancer by combining PET/CT radiomic analysis and machine learning",
+            "venue": "Ann Nucl Med",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "D La Forgia",
+                "A Fanizzi",
+                "F Campobasso"
+            ],
+            "title": "Radiomic Analysis in ContrastEnhanced Spectral Mammography for Predicting Breast Cancer Histological Outcome",
+            "venue": "Diagnostics (Basel)",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "AGV Bitencourt",
+                "P Gibbs",
+                "C Rossi Saccarelli"
+            ],
+            "title": "MRI-based machine learning radiomics can predict HER2 expression level and pathologic response after neoadjuvant therapy in HER2 overexpressing breast cancer",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Y Huang",
+                "L Wei",
+                "Y Hu",
+                "N Shao",
+                "Y Lin",
+                "S He",
+                "H Shi",
+                "X Zhang",
+                "Y. Lin"
+            ],
+            "title": "Multi-Parametric MRI-Based Radiomics Models for Predicting Molecular Subtype and Androgen Receptor Expression in Breast Cancer",
+            "venue": "Front Oncol",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C Li",
+                "L Song",
+                "J. Yin"
+            ],
+            "title": "Intratumoral and Peritumoral Radiomics Based on Functional Parametric Maps from Breast DCE-MRI for Prediction of HER-2 and Ki-67 Status",
+            "venue": "J Magn Reson Imag. 2021;54:703\u201314",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Q Guo",
+                "K Chen",
+                "X Lin"
+            ],
+            "title": "A nomogram to predict HER2 status in breast cancer patients with HER2-borderline disease as determined via immunohistochemistry",
+            "venue": "Oncotarget",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Y Zhang",
+                "Y Zhu",
+                "K Zhang"
+            ],
+            "title": "Invasive ductal breast cancer: preoperative predict Ki-67 index based on radiomics of ADC maps",
+            "venue": "Radiol Med",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "W Ma",
+                "Y Ji",
+                "L Qi",
+                "X Guo",
+                "X Jian",
+                "P. Liu"
+            ],
+            "title": "Breast cancer Ki67 expression prediction by DCE-MRI radiomics features",
+            "venue": "Clin Radiol. 2018;73(10):909.e1-909",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "AS Tagliafico",
+                "M Piana",
+                "D Schenone",
+                "R Lai",
+                "AM Massone",
+                "N. Houssami"
+            ],
+            "title": "Overview of radiomics in breast cancer diagnosis and prognostication",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "TY Tang",
+                "X Li",
+                "Q Zhang",
+                "CX Guo",
+                "XZ Zhang",
+                "MY Lao"
+            ],
+            "title": "Development of a novel multiparametric MRI radiomic nomogram for preoperative evaluation of early recurrence in resectable pancreatic cancer",
+            "venue": "Imag JMR, editor. Wiley Online Library;",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P Nie",
+                "G Yang",
+                "Z Wang",
+                "L Yan",
+                "W Miao",
+                "D Hao"
+            ],
+            "title": "A CT-based radiomics nomogram for differentiation of renal angiomyolipoma without visible fat from homogeneous clear cell renal cell carcinoma",
+            "venue": "Eur Radiol",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "JH Chen",
+                "HM Baek",
+                "O Nalcioglu",
+                "MY. Su"
+            ],
+            "title": "Estrogen receptor and breast MR imaging features: a correlation study",
+            "venue": "J Magn Reson Imag. 2008;27:825\u201333",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "M Fan",
+                "H Li",
+                "S Wang",
+                "B Zheng",
+                "J Zhang",
+                "L. Li"
+            ],
+            "title": "Radiomic analysis reveals DCE-MRI features for prediction of molecular subtypes of breast cancer",
+            "venue": "PLoS ONE. 2017;12:e0171683. https:// doi. org/",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "TG Li",
+                "SP Wang",
+                "N. Zhao"
+            ],
+            "title": "Gray-scale edge detection for gastric tumor pathologic cell images by morphological analysis",
+            "venue": "Com-put Biol Med",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "B Weyn",
+                "W Jacob",
+                "VD da Silva"
+            ],
+            "title": "Data representation and reduction for chromatin texture in nuclei from premalig-nant prostatic, esophageal, and colonic lesions",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "S Waugh",
+                "C Purdie",
+                "L Jordan",
+                "S Vinnicombe",
+                "R Lerski",
+                "P Martin"
+            ],
+            "title": "Magnetic resonance imaging texture analysis classification of primary breast cancer",
+            "venue": "Eur Radiol",
+            "year": 2016
+        }
+    ],
+    "sections": [
+        {
+            "text": "Methods: We retrospectively collected 214 patients with pathologically confirmed invasive ductal carcinoma between January 2018 to March 2021 from Fudan University Shanghai Cancer Center, and randomly divided this cohort into training set (n = 128, 42 HER2-positive and 86 HER2-negative cases) and validation set (n = 86, 28 HER2positive and 58 HER2-negative cases) at a ratio of 6:4. The original and transformed pretherapy mpMRI images were treated by semi-automated segmentation and manual modification on the DeepWise scientific research platform v1.6 (http:// keyan. deepw ise. com/), then radiomics feature extraction was implemented with PyRadiomics library. Recursive feature elimination (RFE) based on logistic regression (LR) and LASSO regression were adpoted to identify optimal features before modeling. LR, Linear Discriminant Analysis (LDA), support vector machine (SVM), random forest (RF), naive Bayesian (NB) and XGBoost (XGB) algorithms were used to construct the radiomics signatures. Independent clinical predictors were identified through univariate logistic analysis (age, tumor location, ki-67 index, histological grade, and lymph node metastasis). Then, the radiomics signature with the best diagnostic performance (Rad score) was further combined with significant clinical risk factors to develop a clinicoradiomic model (nomogram) using multivariate logistic regression. The discriminative power of the constructed models were evaluated by AUC, DeLong test, calibration curve, and decision curve analysis (DCA).\nResults: 70 (32.71%) of the enrolled 214 cases were HER2-positive, while 144 (67.29%) were HER2-negative. Eleven best radiomics features were retained to develop 6 radiomcis classifiers in which RF classifier showed the highest AUC of 0.887 (95%CI: 0.827\u20130.947) in the training set and acheived the AUC of 0.840 (95%CI: 0.758\u20130.922) in the validation set. A nomogram that incorporated the Rad score with two selected clinical factors (Ki-67 index and histological\n\u00a9 The Author(s) 2022. Open Access This article is licensed under a Creative Commons Attribution 4.0 International License, which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if changes were made. The images or other third party material in this article are included in the article\u2019s Creative Commons licence, unless indicated otherwise in a credit line to the material. If material is not included in the article\u2019s Creative Commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this licence, visit http:// creat iveco mmons. org/ licen ses/ by/4. 0/. The Creative Commons Public Domain Dedication waiver (http:// creat iveco mmons. org/ publi cdoma in/ zero/1. 0/) applies to the data made available in this article, unless otherwise stated in a credit line to the data.\n\u2020Aqiao Xu and Xiufeng Chu contributed equally to this work.\n*Correspondence: 737730@qq.com; 844008580@qq.com\n1 Department of Radiology, The Central Hospital Affiliated to Shaoxing University (Shaoxing Central Hospital), Shaoxing 312030, China Full list of author information is available at the end of the article"
+        },
+        {
+            "heading": "Introduction",
+            "text": "Breast carcinoma is the most widespread and lethal tumor among women [1]. The most common histological type is invasive ductal carcinoma (IDC), which accounts for roughly 80% of all breast carcinomas, with 20% \u2013 30% expressing human epidermal growth factor receptor 2 (HER2) positivity [2]. Numerous studies substantiated the association of HER2 gene overexpression with the division, proliferation, and nourishment of new vasculature of breast carcinoma cells. Overexpression of HER2 is significantly correlated with high aggressiveness and poor prognosis in breast carcinoma patients [3\u20136]. Consequently, advancement in HER2-targeted therapy\u00a0 was considered a prominent breakthrough in breast carcinoma treatment [7, 8]. Therefore, determining the HER2 expression status in\u00a0 breast carcinoma patients\u00a0is an\u00a0essential precondition to identifying potential candidates for treatment decisions. The immunohistochemistry (IHC) method for testing HER-2 expression is a standard procedure in our laboratory and a part of our pathology reports in invasive breast carcinomas, and FISH is the subsequent and gold method in equivocal (2 +) IHC cases [9].\u00a0These two methods are more timeconsuming, and takes 5\u201312\u00a0 days after specimens are provided. FISH is difficult to apply, and requires trained technicians.\u00a0 It is more expensive since it requires test kits and a special microscope, and stained preparations cannot be archived [10].\u00a0 Radiomics allows inference of tumoral molecular status from medical image-derived features, and it allows the study of the tumoral heterogeneity both spatially and over time; radiomics have the potential to enable spatio-longitudinal monitoring of tumor biology before and during treatment.\nExisting literature has recently documented a correlation between MRI image expression and breast carcinoma HER2 expression level [11\u201315]. Song et\u00a0 al. [11] reported that texture features derived from kinetic parameter maps, calculated based on breast DCE-T1W1, can be used as imaging biomarkers to distinguish HER2positive and HER2-negative breast cancer. The best model with features extracted from the slope of signal intensity (SIslope) map yielded an AUC of 0.79 in the test set. Another radiomic study by Li et\u00a0al. [12] selected ER\nstatus and radiomics features in DWI images to establish the nomogram, which yielded good discrimination (AUC: 0.883/0.848) and calibration. The radiomics nomogram showed favorable performance for evaluating HER2 status in breast cancer. To the best of our knowledge, the HER2 express status in breast carcinoma could be better predicted by radiomics signature established from the mpMRI compared with single-parametric signature. Zhou et\u00a0al. found the prediction ability of the developed SVM model in HER2 status of breast carcinoma patients based on T2WI, DCE-T1W1, and a combination of the two sequences. The multiparameter-related model manifested the best efficiency in forecasting the HER2 status with an AUC of 0.86 and 0.81 in the learning and test cohorts, respectively [16]. However, no published study has discussed the MRI combining with clinical pathological risk factors, such as Ki-67 index, histological grade, and lymph node metastasis, in predicting HER2 expression, and no published study has applied clinicoradiomic models (nomogram) using multiple machine learning algorithms in predicting HER2 expression in invasive ductal carcinoma.\nThis paper aims to investigate and compare the performance of radiomics features from different types of MR images (fat-suppressed T2-weighted images (T2WI), diffusion coefficient map (ADC-map), and dynamic contrast-enhanced T1-weighted images (DCE-T1WI)) and the performance of their fusions using different machine learning algorithms. In addition, a nomogram incorporating the mpMRI-based radiomics signature and clinical predictors was developed to improve the discriminative and interpretable ability of the classifier for HER2 status prediction."
+        },
+        {
+            "heading": "Materials and\u00a0methods",
+            "text": ""
+        },
+        {
+            "heading": "Study population",
+            "text": "The Fudan University Shanghai Cancer Center and Shaoxing Central Hospital Ethical Committee approved this study protocol, and the requirement for written informed consent was waived. Between January 2018 and March 2021, we retrospectively collected breast tumor cases confirmed by clinical examination and diagnosed by ultrasound examination in our center. Inclusion\ngrade) was constructed and yielded better discrimination compared with Rad score (p = 0.374, Delong test), with an AUC of 0.945 (95%CI: 0.904\u20130.987) in the training set and 0.868 (95%CI: 0.789\u20130.948; p = 0.123) in the validation set. Moreover, calibration with the p-value of 0.732 using Hosmer\u2013Lemeshow test demonstrated good agreement, and the DCA verified the benefits of the nomogram.\nConclusion: Post largescale validation, the clinicoradiomic nomogram may have the potential to be used as a noninvasive tool for determination of HER2 expression status in clinical HER2-targeted therapy prediction.\nKeywords: Breast carcinoma, Multiparametric magnetic resonance imaging, Nomograms, HER2, Radiomics\ncriteria: (I) the patient had proven invasive breast ductal carcinoma of no special type (IDC-NST), as determined by histology; (II) complete breast mpMRI data and pathological data, HER2 2 + status verified by FISH; Exclusion criteria: (I) pregnant or lactating females, or a plan to get pregnant within six months; (II) prosthesis implantation; (III) history of breast surgery that might affect imaging diagnosis. A total of 302 consecutive patients from Fudan University Shanghai Cancer Center were eligible. However, poor image quality or incomplete lesion presentation in 25 cases, neoadjuvant therapy in 46 cases, and a history of breast carcinoma or bilateral breast carcinoma in 17 cases were excluded. In the case of multicentric lesions, the largest major lesion of them was selected to enter the group. Patient demographic data, including age, tumor location, menopause status, and a family history of breast carcinoma in first-degree relatives, were retrieved from the Electronic Medical Record System. Pathological data were tumor pathological type and histological grade, the expression status of HER2, Ki-67 index, and lymph node metastasis. The final cohort comprised of 214 patients and was randomly split with a ratio of 6:4 [17, 18], to create the training set (n = 128, 42 HER2positive and 86 HER2-negative cases) and validation set (n = 86, 28 HER2-positive and 58 HER2-negative cases), respectively for subsequent analyses. Figure\u00a01 illustrates the flowchart of this study."
+        },
+        {
+            "heading": "Imaging examination",
+            "text": "For all patients the breast MRI examination was performed on the Aurora Dedicated Breast MRI System and a dedicated phased-array coil. The patients were scanned in the prone position to allow both mammary glands in the concave hole of the phased-array coil with a natural overhanging effect. All these sequences were obtained back-to-back in one imaging session. Imaging protocols were as follows: (1) transverse T2WI with fat-suppression (FS-T2WI, TR 6680\u00a0 ms, TE 68\u00a0 ms), with the layer thickness and spacing of 3\u00a0mm and 1\u00a0mm, respectively; (2) transverse DWI (TR8 400\u00a0 ms, TE 84\u00a0 ms), DWI signal intensity at b = 0\u00a0 s/mm2 , b = 1,000\u00a0 s/mm2 , with the layer thickness and spacing of 4\u00a0mm, and 6\u00a0mm, respectively, and a DWI-derived ADC map; (3) 3D-DCE, transverse T1WI with fat and water suppression (TR 5\u00a0 ms, TE 29\u00a0ms) was selected, with a layer thickness of 1.1\u00a0mm and a layer spacing of 0, FOV 360\u00a0mm \u00d7 360\u00a0mm, matrix 360 \u00d7 360 \u00d7 128. The number of scanned layers in a single phase was 160. Phase I mask scan was done prior to the contrast enhancement scan. In the contrast scan, Gd-DTPA (Bayer Medical Care Ltd) was administered intravenously at a dose of 0.2\u00a0mmol/kg and a flow rate of 2.0\u00a0mL/s. After injection, contrast images were obtained in 5 phases in a row, with a scan time of 120\u00a0s per phase."
+        },
+        {
+            "heading": "Image analysis",
+            "text": "The breast MRI data of all sequences were imported as a DICOM file into the DeepWise scientific research platform v1.6 (http:// keyan. deepw ise. com/). Two radiologists with more than 10-year experience in breast imaging diagnosis semi-automatically segmented lesions layer-by-layer and analyzed after merging them into the three-dimensional region of interests (3D ROIs, VOIs). After carefully scrutinizing the tumor region, disagreements were resolved by consensus-based discussion or decided by superior physicians. The 3rd sequence during the dynamic enhancement course was selected after about 240\u00a0s of injecting contrast medium. At this point, malignant lesions generally show a peak enhancement to present a clear contrast with the surrounding normal breast parenchyma, which is conducive to more accurate VOI delineation and feature extraction. The selected VOI should conform to the following criteria: (1) Include cystic lesion, necrosis, and halo-sign; (2) Invasion of surrounding structures: areas connected to VOI and have the same enhancement pattern with the VOI; (3) The lesion VOI < 5 mm3 is waived. The VOIs of T1-DCE were registered and applied to the other two sequences, and the image slicers and orientation were precisely matched between T2WI and ADC-map. Supplemental Figure S1 provided the process of segmentation and VOI selection of two typical HER2-positive and HER2negative cases. Then, B-spline interpolation was carried out to standard the image into the same spatial resolution (1\u00a0 mm \u00d7 1\u00a0 mm \u00d7 1\u00a0 mm)[19\u201321] and followed by the absolute gray-level discretization with fixed bin size (FBS) set to 5 as previous studies suggested [20\u201323]. In particular, the processes of image interpolation and graylevel discretization were both aligned to IBSI [21]."
+        },
+        {
+            "heading": "Radiomics feature extraction and\u00a0screening",
+            "text": "To emphasize the imaging characteristics, image filters such as log (Laplacian of Gaussian), gradient, lbp-2d/3d, and four common point-level transforms were applied prior to feature extraction. In addition, wavelet decomposition was applied at each channel for images to obtain all possible combinations in highpass or low-pass filters (LLH, LHL, LHH, HLL, HLH, HHL, HHH, LLL). For original and other-transformed images, first-order, shape, and texture features were extracted, respectively, and implemented with the open-source PyRadiomics library (https:// github. com/ Radio mics/ pyrad iomics). Subsequently, Z-score transformation was used to normalize the feature distribution in the training set, and the data in the validation set were then standardized by the same calculated parameters to avoid data leakage. The implementation\nof feature extraction and standardization was compliant with Imaging Biomarker Standardization Initiative (IBSI) [21]. For each sequence, we initially extracted 1906 radiomics features from VOIs, including 396 first-order features, 14 shape features (including three 2D features), and 1496 texture features. A suffix was added for the different series (i.e., \u20181\u2019 represents ADCmap, \u20182\u2019 represents T2WI, \u20183\u2019 represents DCE-T1WI). Intra-class correlation coefficient (ICC) was calculated to evaluate the intra- and inter-observer reproducibility of radiomics features. Initially, reader 1 and reader 2 completed the VOI segmentation and radiomics feature extraction on 30 randomly selected patients\u2019 mpMRI data. Then, Reader 1 repeated the same procedure 1\u00a0month later. Intra- and inter-observer ICC variabilities were studied using the one-way random single measures ICC (ICC(1,1)) and two-way random single measures ICC (ICC(2,1)), respectively. And features with intra- or inter-observer ICC values lower than 0.75 were discarded before subsequent feature selection. Moreover, we applied Pearson\u2019s correlation with a threshold of 0.9 in training set to minimize the potential collinearity of variables."
+        },
+        {
+            "heading": "Model establishment and\u00a0evaluation",
+            "text": "Given the extracted high-throughput radiomics features, dimension reduction of the retained features was further performed with the algorithms of recursive feature elimination (RFE) and LASSO. These feature selection algorithms were used in this study because of efficiency and popularity. To achieve high and robust performance of the developed classifiers, six machine learning algorithms, Logistic Regression (LR), Linear Discriminant Analysis (LDA), Support Vector Machine (SVM), Random Forest (RF), Naive Bayesian (NB), XGBoost (XGB), were used to classifier construction. The reason for selecting and comparing these methods in this study was that they were common classifiers in the related study for breast in previous studies, such as undergoing mastectomy prediction [24], breast cancer prediction [25], axillary lymph node metastasis [26]. To avoid over-fitting in the modeling process, the hyper-parameter searching for optimal classifiers were completed by grid-search method using the tenfold cross-validation repeatedly. After the completion of radiomics classifiers, multivariate logistic regression analysis and backward stepwise regression analysis based on Akaike Information Criterion (AIC) were devised to establish a clinicoradiomic model (nomogram) incorporating significant clinical predictors and radiomics classifiers. Thus, we developed the visual nomogram of the clinicoradiomic model to calculate the probability of HER2-positive breast cancer."
+        },
+        {
+            "heading": "Pathological analysis",
+            "text": "Two pathologists with more than 15\u00a0 years of expertise identified the histological type, histological grading, and immunohistochemical analysis. The histological type of breast carcinoma was defined according to the World Health Organization classification. The Elston\u2013Ellis System was followed to estimate the tumor histological grade (Elston and Ellis 1991). IHC or FISH determined the HER2 status based on the clinical use instructions for HER2 experiment in breast carcinoma presented by the American Society of Clinical Oncology (ASCO)/College of American Pathologists (CAP) [27], IHC scores of 3 + and 0 or 1 + were considered positive, and negative, respectively, while an IHC score of 2 + of HER2 was regarded as indeterminate. To determine gene amplification, researchers used fluorescence in\u00a0 situ hybridization (FISH), and the ratio \u2265 2.0 was judged positive for HER2 [27, 28]."
+        },
+        {
+            "heading": "Statistical methods",
+            "text": "Statistical analysis was conducted on R statistical software v3.6.1 (http:// www. Rproj ect. org). Student\u2019s t-test and Chi-square test were, respectively, used for continuous and categorical data with normal distribution, and the Mann\u2013Whitney U test was applied for data with non-normal distribution. All tests were two-tailed, and p < 0.05 was considered statistically significant. The\u00a0 receiver operating characteristic (ROC) curve\u00a0 is defined for evaluating the performance of binary classifiers and is produced by calculating the\u00a0 true positive rate against the\u00a0 false positive rate\u00a0 for a binary classifier at a set of different\u00a0 thresholds. And we used Youden\u2019s index (YI) to calculate the optimal threshold, which gives equal weight to specificity and sensitivity. The R package \u201cglmnet\u201d statistical software (R Foundation) was used to perform the modeling process of classifiers. \u201cPROC\u201d R package was mainly used in the ROC curve analysis. In addition, DeLong test was used to compare the performance of two different models. Calibration curves of the nomogram and Hosmer\u2013Lemeshow test were used to validate the agreement between prediction and observation in validation set. Furthermore, we performed decision curve analysis (DCA) to visualize the net benefit for clinical decisions."
+        },
+        {
+            "heading": "Results",
+            "text": "Clinical data and\u00a0pathological diagnosis results The detailed clinical and histopathologic characteristics of patients with IDC were summarized in Table\u00a01. Of the 214 eligible cases, the age ranged from 16 to 86\u00a0 years, with an average age of 50.77 \u00b1 10.29\u00a0 years. This cohort encompassed HER2-positive in 70 (32.71%, 70/214) cases\nand HER2-negative in 144 (67.29%,144/214) cases. There was no significant difference between the two groups in all clinical features (p > 0.05)."
+        },
+        {
+            "heading": "Predictive efficiency of\u00a0the\u00a0radiomics signatures",
+            "text": "In total, 455 radiomics features were excluded through stability analysis (ICC \u2264 0.75). 345, 356, 449, and 1150 radiomic features selected from T2WI, ADC-map, DCE-T1WI, and mpMRI (including T2WI, ADCmap, DCE-T1WI) images with the |correlation coefficient|\u2264 0.9 were used for next dimension reduction. The top 100 ranking of RFE remained features were further selected based on LR. Finally, 11 radiomics features were retained from the mpMRI images, T2WI (n = 2), ADC-map (n = 3), DCE-T1WI (n = 6), to construct the radiomics signature using the LASSO regression (Fig.\u00a02). The relative importance of the 11 selected radiomics features for predicting HER2 expression status was shown in Fig.\u00a0 2C. Figure\u00a0 3 provided the qualitative visualizations of some of the top Radiomics features on the MRI sequences for a HER2-negative case and a HER2-positive case. We further verified that there was no statistically significant difference between the final selected radiomics features in the training and validation sets (Supplemental Table S1). For three sequences, the optimal performance was reported by the RF classifier (Rad score, Fig.\u00a0 4) with the AUCs of 0.927 (95%CI: 0.876\u20130.978) (accuracy 0.851; sensitivity 0.881; specificity 0.837) in the training set and 0.826 (95%CI: 0.738\u20130.914) (accuracy 0.744; sensitivity 0.857; specificity 0.689) in the validation set (Table\u00a0 2). The Rad score based on mpMRI images achieved higher AUC values than other single-parametric models (i.e., ADC-map, T2W1, and DCE-T1W1) in training (AUC: 0.816, 0.743 and 0.810) and validation sets (AUC: 0.719, 0.694 and 0.756) (Supplemental Figure S2)."
+        },
+        {
+            "heading": "Characteristics Train Cohort P value Validation Cohort",
+            "text": ""
+        },
+        {
+            "heading": "Nomogram establishment",
+            "text": "The Rad score (OR = 58.909, 95%CI: 7.693 to 451.094, p < 0.01), histological grade (OR = 4.971, 95%CI: 2.297 to 10.757, p < 0.01), and ki-67 (OR = 4.435, 95%CI: 1.991 to 9.883, p < 0.01) were determined as independent predictors using univariate logistic regression analysis and were used to develop the nomogram (Fig.\u00a05A, B) by multivariate logistic regression analysis (Table\u00a03). The nomogram_RF obtained the AUC of 0.945 (95%CI: 0.904 to 0.987) in the training and 0.868 (95%CI: 0.789 to 948) in the validation cohorts. As comparison, the nomograms based on the other radiomics classifiers were constructed in the same approach (Fig.\u00a0 5A). The nomogram_RF still produced the highest AUC though there was no significant added value between the radiomics classifiers and their corresponding nomograms in the training and validation sets (Supplemental Table S2). The calibration curves demonstrated that the nomogram_RF could provide an excellent calibration in the training cohort (Fig.\u00a05C), in which the Hosmer\u2013Lemeshow test showed a non-significant\u00a0 p-value of 0.732. The DCA curves claimed that the good application of the nomogram_RF in the clinical decisions, followed by considering the radiomics classifier alone (Fig.\u00a05D). The\nFig. 3 Qualitative visualizations of 4 top Radiomics features on the DCE-T1W1 sequence between HER2-positive (a-d) and HER2-negative cases (e\u2013h). a,e Original_gldm_LargeDependenceHighGrayLevel Emphasis (b,f) wavelet-LLH_glcm_Idmn (c,g) wavelet-HLH_glcm_Idn (d,h) lbp-3D-k_ gldm_DependenceEntropy"
+        },
+        {
+            "heading": "NB 0.755 0.786 0.741 0.527 0.788 (0.694\u20130.882)",
+            "text": ""
+        },
+        {
+            "heading": "RF 0.744 0.857 0.689 0.546 0.826 (0.738\u20130.914)",
+            "text": ""
+        },
+        {
+            "heading": "LR 0.750 0.893 0.621 0.514 0.810 (0.709\u20130.905)",
+            "text": "performances in the validation set were shown in Supplemental Figure S3."
+        },
+        {
+            "heading": "Discussion",
+            "text": "The present study nurtured the quantitative features from T2WI, ADC-map, and DCE-T1WI images to standardize radiomics models for the noninvasive evaluation of the HER2 status in breast carcinoma. The Rad score classifier based on the RF algorithm exhibited good efficiency in differentiating HER2-positive from HER2-negative disease, in which the AUCs, accuracy, true positive, and negative rates were 0.927 (95%CI: 0.876\u20130.978), 85.1%, 88.1% and 83.7% respectively, in the training cohort, and 0.826 (95%CI: 0.738\u20130.914), 74.4%, 85.7% and 68.9%, respectively, in the validation cohort. We then created a nomogram by combining the Rad score with the independent clinical predictors (histological grade and ki-67) with univariate and multivariate logistic regressions. The finding demonstrated that the nomogram could provide superior classification and recognition in HER2-positive patients (the AUCs of 0.945 and 0.868 in the training and validation sets). Thus, we concluded that applying radiomics features from mpMRI data incorporating machine learning algorithm contributed to the good discriminative performance in the HER2 status.\nRecently, there has been a growing interest in applying quantitative imaging data to delineate intrinsic biological characteristics [29\u201334]. Diverse research has dissected the dependence between radiomic signatures and HER2 expression status [35\u201340]. Zhou et\u00a0 al. [35]. noninvasively evaluated the efficacy of mammography radiomics signatures in diagnosing the patients\u2019 HER2 status with breast carcinoma, including mediolateral oblique (MLO) and cranial caudal (CC) views, with an AUC of 0.846 in the training set and an AUC of 0.74 in the testing set. Another similar study also highlighted the connection between radiomics signatures from multidetector computed breast mammography images with HER2 express status [36]. Daniele La Forgia et\u00a0 al. [41]. reported that radiomics combining contrast-enhanced spectral mammography performed well in predicting histological subtypes of breast cancer, with accuracies of 90.87%and 84.80% in discriminating HER2 + /HER2 \u2212 and Ki67 + / Ki67 \u2212 breast cancer, respectively. Those studies indicated that radiomics analysis was a useful analytical tool to predict HER2 status in breast cancer, which is consistent with the findings of this study.Another radiomic study by Bitencourt et\u00a0al. [42].developed machine learning models (including both clinical and radiomics MRI features) to predict HER2 expression levels and pathologic response (pCR) after neoadjuvant chemotherapy in HER2 over-expressing breast cancer patients. The model predicted HER2 heterogeneity and pCR with diagnostic\naccuracy of 97.4% and 83.9% in the test set, respectively. More specifically, the HER2 express status in breast carcinoma could be better predicted by a radiomics signature established from the mpMRI compared with a single-parametric signature. Huang et\u00a0 al. [43].showed that multi-parametric MRI-based radiomics combined with different machine learning approaches could be a promising method to predict the molecular subtype and AR expression of breast cancer non-invasively. In this study, the results verified the conclusion with the superior performance of prediction, in which the Rad score based on mpMRI images achieved higher AUC values of 0.927 and 0.826 than other single-parametric models (i.e., ADC-map, T2W1, and DCE-T1W1) in training (AUC: 0.816, 0.743 and 0.810) and validation sets (AUC: 0.719, 0.694 and 0.756), respectively.\nMany studies have reported the association between histological grade, Ki-67 index, and HER2 status; HER2-positive expression has a relationship with high nuclear grade and ki-67 index [44\u201346]. In contrast, our study showed that only the ki-67 index and histological grade could be used as an independent predictor of HER2 expression. The ki-67as proliferation marker has been successfully used as a tool for clinical decisionmaking, specifically how it can be used to select the optimal treatment for each individual patient [47]. Tumor histological grade has previously been linked to HER2 status. HER2 expression has previously been found to correlate with a higher nuclear grade but not with tumor stage [45]. However, none of these studies developed a predictive model that included these predictors. Our study is the first to develop a nomogram to perform this prediction. Recently, the added value of the nomogram model based on radiomics signature and clinical factors for pathological outcome prediction [48\u201350] has been investigated by some studies. Our results showed the highest performance compared with existing work, which is another clinical contribution of this work. In this study, 11 optimal features were finally retained for modeling, including morphological, first-order, GLCM, GLDM, and GLSZM characteristics, which are predominantly involved in tumor heterogeneity. Based on tumor size and morphology, a significant correlation existed between the characteristics of shape_Maximum 2D Diameter, shape_Maximum 3D Diameter, shape_Sphericity, and the HER2 expression of breast carcinoma. Consistent with the previous report [51], the morphology and size of lesions vary with the different expressions of hormone receptors (HR). Much irregular and larger lesions were reported in the cases of HR-negative plus HER2-positive compared with the hormone HR-positive plus HER2-negative. In the present study, high kurtosis was found in\nmost HER2-positive cases, which is consistent with the existing work. Fan et\u00a0al. [52] constructed a predictive model for four molecular subtypes classification of breast carcinoma based on the DCE-T1W1 images and two clinical risk factors, revealing the potential of kurtosis as an independent predictor for classifying molecular subtypes of breast carcinoma. Previous studies have shown that texture analysis can provide information on tumor cellular and histological components [53, 54]. The SizeZoneNonUniformityNormalized texture feature measures the variability of zone volumes throughout the image. A higher value indicates more inhomogeneity among zone volumes in the image; thus, we concluded the irregular volume distribution of the HER2-positive group, which may be caused by the unequal growth rate of tumors in various directions. The texture features of glcm_Idmn, glcm_Dmn, and gldm_Dependence from wavelet-transformed images can reflect the homogeneity and consistency of tumor texture characteristics, conducive to the better exploration of intra-tumor heterogeneity and subtle differences in grey and texture level feature [55]. The DependenceEntropy texture feature measures the intensity differences in the neighborhood; the higher value represents a more disordered internal density of the tumor; hence, we found the complex heterogeneity existed in the HER2-positive texture patterns.\nThe mpMRI facilitates a comprehensive analysis of radiomics features; the established nomogram can fully combine the characteristics of different sequences. Nonetheless, there are several limitations to this study. Firstly, the limited sample size and all the cases were from one center. Therefore, additional validation of the constructed models on multicentric studies with a large study population is required. Second, to avoid confounding influences associated with the pathological type, the study only enrolled patients with IDC-NST, the most common form of breast carcinoma. Thirdly, we only used the traditional machine learning classification algorithms to explore the predefined radiomics features instead of the more informative and abstract features extracted by deep learning algorithms from MR images."
+        },
+        {
+            "heading": "Conclusions",
+            "text": "This study showed that radiomics signature based on mpMRI could improve the discriminative performance of HER2 status prediction in patients with breast carcinoma. The nomogram with the radiomics signature and independent clinical risk factors is a key tool for noninvasive diagnosis.\nAbbreviations LASSO: Least absolute shrinkage and selection operator; RFE: Recursive feature elimination; Rad score: Radiomics score; ROC: Receiver operating characteristic; DCA: Decision curve analysis; IHC: Immunohistochemistry; FISH: Fluorescence in-situ hybridization; IDC: Invasive ductal carcinoma; T2WI: T2-weighted images; ADC-map: Apparent diffusion coefficient map; DCE-T1WI: Dynamic contrast-enhanced T1 weighted images; IDC-NST: Invasive breast ductal carcinoma of no special type; GLCM: Gray level co-occurrence matrix; GLRLM: Gray-level run-length matrix; GLSZM: Gray-level size zone matrix; GLDM: Graylevel dependence matrix; AUC : Area under the curve; ASCO: American Society of Clinical Oncology; CAP: College of American Pathologists; LR: Logistic regression; LDA: Linear discriminant analysis; SVM: Support vector machine; RF: Random forest; NB: Naive Bayesian; XGB: XGBoost.\nSupplementary Information The online version contains supplementary material available at https:// doi. org/ 10. 1186/ s12885- 022- 09967-6.\nAdditional file\u00a01: Table\u00a0S1. Statistically analysis of the final selected radiomics features based on mpMRI in the training and validation sets. Table\u00a0S2. Statistically analysis of the six radiomcis classifiers and their corresponding nomograms in the validation cohort. Figure S1. Two typical HER2-positive and HER2-negative cases. (a) Original DCE-T1WI image of the HER2-positive sample. (b) The semi-automated segmentation of lesion on Deepwise. (c) Manual modification. (d) Lesion segmentation in T2WI. (e) Lesion segmentation in ADC-map. (f ) The corresponding 3D ROI. (g-l) The corresponding images for the HER2-negative sample. Figure S2. ROC curves of T2WI model, ADC-map model, DCE-T1WI model, and Rad score in evaluating HER2 status of breast carcinoma. A. Training cohort; B. Validation cohort. Figure S3. Nomogram performances for predicting HER2 status of breast carcinoma in the Validation set. A. ROC curves of the six nomograms based on different radiomics classifiers. B. Calibration curve of the nomogram_RF. C. Decision curves of the nomogram_RF and Rad score.\nAcknowledgements Not applicable.\nAuthors\u2019 contributions AX and XW conceived and designed this study. XC carried out to collect the clinical data. JZ collected Pathological data.AX and XC drafted the manuscript. FL performed the statistical analysis.DS performed image processing.SZ and SL put forward many opinions on the manuscript. All authors contributed to the article and approved the submitted version. All authors read and approved the final manuscript.\nFunding This work was supported by the Medical and Health Research Project of Zhejiang Province (Grant Nos. 2021KY1161, 2022KY1316 and 2021KY1146); Zhejiang Province Chinese Medicine Science Research Fund Project (Grant No. 2021ZA138); and Institution from Key Laboratory of Functional Molecular Imaging of Tumor and Interventional Diagnosis and Treatment of Shaoxing City.\nAvailability of data and materials The datasets used and/or analyzed during the current study are available from the inside author on reasonable request. The study data can be made available publicly."
+        },
+        {
+            "heading": "Declarations",
+            "text": "Ethics approval and consent to participate The study was approved by the Institutional Review Board of the Fudan University Shanghai Cancer Center and Shaoxing Central Hospital (2020024). All methods were carried out in accordance with the Declaration of Helsinki guidelines and regulations. Multiple sequence MRI is a common, non-invasive and safe examination method, and it was a retrospective study. The requirement for written informed consent was waived by the Institutional Review\nBoard of the Fudan University Shanghai Cancer Center and Shaoxing Central Hospital.\nConsent for publication Written informed consent was obtained from the patients for publication of this study. Documentation of the written consent will be provided to the journal upon request.\nCompeting interests The authors declare that they have no competing interest.\nAuthor details 1 Department of Radiology, The Central Hospital Affiliated to Shaoxing University (Shaoxing Central Hospital), Shaoxing 312030, China. 2 Department of Surgical, The Central Hospital Affiliated to Shaoxing University (Shaoxing Central Hospital), Shaoxing 312030, China. 3 Department of Radiology, Fudan University Shanghai Cancer Center, Shanghai 200032, China. 4 Department of Research Collaboration, R&D center, Beijing Deepwise & League of PHD Technology Co., Ltd, Beijing 100080, P.R. China.\nReceived: 31 December 2021 Accepted: 26 July 2022\nReferences 1. Sung H, Ferlay J, Siegel RL, Laversanne M, Soerjomataram I, Jemal A, et al.\nGlobal cancer statistics 2020: GLOBOCAN estimates of incidence and mortality worldwide for 36 cancers in 185 countries. CA Cancer J Clin. 2021;71:209\u201349.\n2. Casey M, Prakash A, Holian E, McGuire A, Kalinina O, Shalaby A, et al. Quantifying Argonaute 2 (Ago2) expression to stratify breast cancer. BMC Cancer. 2019;19:1\u201312. 3. Pradeep CR, Zeisel A, K\u00f6stler WJ, Lauriola M, Jacob-Hirsch J, et al. Modeling invasive breast cancer: growth factors propel progression of HER2-positive premalignant lesions. Oncogene. 2012;31(31):3569\u201383. 4. Molina Crespo \u00c1, Cadete A, Sarrio D, G\u00e1mez-Chiachio M, Martinez L, et al. Intracellular Delivery of an Antibody Targeting GasderminB Reduces HER2 Breast Cancer Aggressiveness. Clin Cancer Res. 2019;25(15):4846\u201358. 5. Bhattacharjee A, Rajendra J, Dikshit R, Dutt S. HER2 borderline is a negative prognostic factor for primary malignant breast cancer. Breast Cancer Res Treat. 2020;181:225\u201331. 6. Waks AG, Winer EP. Breast cancer treatment: a review. JAMA. 2019;321:288\u2013300. 7. Wildiers H, Tryfonidis K, Dal Lago L, Vuylsteke P, Curigliano G, Waters S, et al. Pertuzumab and trastuzumab with or without metronomic chemotherapy for older patients with HER2-positive metastatic breast cancer (EORTC 75111\u201310114): an open-label, randomised, phase 2 trial from the Elderly Task Force/Breast Cancer Group. Lancet Oncol. 2018;19:323\u201336. 8. Cameron D, Piccart-Gebhart MJ, Gelber RD, Procter M, Goldhirsch A, de Azambuja E, et al. 11 years\u2019 follow-up of trastuzumab after adjuvant chemotherapy in HER2-positive early breast cancer: final analysis of the HERceptin Adjuvant (HERA) trial. Lancet. 2017;389:1195\u2013205. 9. Hartman AK, Gorman BK, Chakraborty S, Mody DR, Schwartz MR. Determination of HER2/neu status: a pilot study comparing HER2/neu dual in situ hybridization DNA probe cocktail assay performed on cell blocks to immunohistochemisty and fluorescence in situ hybridization performed on histologic specimens. Arch Pathol Lab Med. 2014;138(4):553\u20138. 10. Murthy SS, Sandhya DG, Ahmed F, et al. Assessment of HER2/Neu status by fluorescence in situ hybridization in immunohistochemistry-equivocal cases of invasive ductal carcinoma and aberrant signal patterns: a study at a tertiary cancer center. Indian J Pathol Microbiol. 2011;54(3):532\u20138. 11. Song L, Li C, Yin J. Texture Analysis Using Semiquantitative Kinetic Parameter Maps from DCE-MRI: Preoperative Prediction of HER2 Status in Breast Cancer. Front Oncol. 2021;8(11):675160. 12. Li C, Yin J. Radiomics Nomogram Based on Radiomics Score from Multiregional Diffusion-Weighted MRI and Clinical Factors for Evaluating HER-2 2+ Status of Breast Cancer. Diagnostics. 2021;11(8):1491. 13. Nagasaka K, Satake H, Ishigaki S, Kawai H, Naganawa S. Histogram analysis of quantitative pharmacokinetic parameters on DCE-MRI: correlations\nwith prognostic factors and molecular subtypes in breast cancer. Breast Cancer. 2019;26:113\u201324.\n14. Wang H, Hu Y, Li H, Xie Y, Wang X, Wan W. Preliminary study on identification of estrogen receptor-positive breast cancer subtypes based on dynamic contrast-enhanced magnetic resonance imaging (DCE-MRI) texture analysis. Gland Surg. 2020;9:622\u20138. 15. Leithner D, Bernard-Davila B, Martinez DF, et al. Radiomic Signatures Derived from Diffusion-Weighted Imaging for the Assessment of Breast Cancer Receptor Status and Molecular Subtypes. Mol Imaging Biol. 2020;22(2):453\u201361. 16. Zhou J, Tan H, Li W, Liu Z, Wu Y, Bai Y, et al. Radiomics signatures based on multiparametric MRI for the preoperative prediction of the her2 status of patients with breast cancer. Acad Radiol. 2021;28:1352\u201360. 17. Li S, Zhang D, Zeng S, et al. Prognostic Value of Preoperative Albumin-to-Fibrinogen Ratio in Patients with Bladder Cancer. J Cancer. 2021;12(19):5864\u201373. 18. Li B, Cui Y, Diehn M, Li R. Development and Validation of an Individualized Immune Prognostic Signature in Early-Stage Nonsquamous Non-Small Cell Lung Cancer. JAMA Oncol. 2017;3(11):1529\u201337. 19. Valli\u00e8res M, Freeman CR, Skamene SR, El Naqa I. A radiomics model from joint FDG-PET and MRI texture features for the prediction of lung metastases in soft-tissue sarcomas of the extremities. Phys Med Biol. 2015;60:5471\u20136. 20. Carr\u00e9 A, Klausner G, Edjlali M, et al. Standardization of brain MR images across machines and protocols: bridging the gap for MRI-based radiomics. Sci Rep. 2020;10:12340. 21. Zwanenburg A, Valli\u00e8res M, Abdalah MA, Aerts HJ, Andrearczyk V, Apte A, et al. The Image Biomarker Standardization Initiative: Standardized Quantitative Radiomics for High-Throughput Image-based Phenotyping. Radiology. 2020;295:328\u201338. 22. Duron L, Balvay D, Vande Perre S, et al. Gray-level discretization impacts reproducible MRI radiomics texture features. PLoS One. 2019;14:e0213459. 23. Hoebel KV, Patel JB, Beers AL, Chang K, Singh P, Brown JM, et al. Radiomics repeatability pitfalls in a scan-rescan MRI study of glioblastoma. Radiol Artif Intell. 2020;3:e190199. 24. Pfob A, Mehrara BJ, Nelson JA, Wilkins EG, Pusic AL, Sidey-Gibbons C. Machine learning to predict individual patient-reported outcomes at 2-year follow-up for women undergoing cancer-related mastectomy and breast reconstruction (INSPiRED-001). Breast. 2021;60:111\u201322. 25. Stark GF, Hart GR, Nartowt BJ, et al. Predicting breast cancer risk using personal health data and machine learning models. PLoS ONE. 2019;14(12):e226765. 26. Chen C, Qin Y, Chen H, Zhu D, Gao F, Zhou X. A meta-analysis of the diagnostic performance of machine learning-based MRI in the prediction of axillary lymph node metastasis in breast cancer patients. Insights Imaging. 2021;12(1):156. 27. Wolff AC, Hammond MEH, Allison KH, Harvey BE, Mangu PB, Bartlett JM, et al. Human epidermal growth factor receptor 2 testing in breast cancer: American Society of Clinical Oncology/College of American Pathologists clinical practice guideline focused update. Arch Pathol Lab Med. 2018;142:1364\u201382. 28. Hanna WM, Slodkowska E, Lu F-I, Nafisi H, Nofech-Mozes S. Comparative analysis of human epidermal growth factor receptor 2 testing in breast cancer according to 2007 and 2013 American Society of Clinical Oncology/College of American Pathologists guideline recommendations. J Clin Oncol. 2017;35:3039\u201345. 29. Liu C, Ding J, Spuhler K, Gao Y, Serrano Sosa M, Moriarty M, et al. Preoperative prediction of sentinel lymph node metastasis in breast cancer by radiomic signatures from dynamic contrast-enhanced MRI. J Magn Reson Imag. 2019;49:131\u201340. 30. Chamming\u2019s F, Ueno Y, Ferr\u00e9 R, Kao E, Jannot A-S, Chong J, et al. Features from computerized texture analysis of breast cancers at pretreatment MR imaging are associated with response to neoadjuvant chemotherapy. Radiology. 2018;286:412\u201320. 31. Tan H, Gan F, Wu Y, Zhou J, Tian J, Lin Y, et al. Preoperative prediction of axillary lymph node metastasis in breast carcinoma using radiomics features based on the fat-suppressed T2 sequence. Acad Radiol. 2020;27:1217\u201325. 32. Han L, Zhu Y, Liu Z, Yu T, He C, Jiang W, et al. Radiomic nomogram for prediction of axillary lymph node metastasis in breast cancer. Eur Radiol. 2019;29:3820\u20139.\n\u2022 fast, convenient online submission\n\u2022 thorough peer review by experienced researchers in your field\n\u2022 rapid publication on acceptance\n\u2022 support for research data, including large and complex data types\n\u2022 gold Open Access which fosters wider collaboration and increased citations\nmaximum visibility for your research: over 100M website views per year \u2022\nAt BMC, research is always in progress.\nLearn more biomedcentral.com/submissions\nReady to submit your research ? Choose BMC and benefit from:\n33. Fan M, Chen H, You C, Liu L, Gu Y, Peng W, et al. Radiomics of tumor heterogeneity during longitudinal dynamic contrast-enhanced magnetic resonance imaging for predicting response to neoadjuvant chemotherapy in breast cancer. Front Mol Biosci. 2021;8:119. https:// doi. org/ 10. 3389/ fmolb. 2021. 622219. 34. Cain EH, Saha A, Harowicz MR, Marks JR, Marcom PK, Mazurowski MA. Multivariate machine learning models for prediction of pathologic response to neoadjuvant therapy in breast cancer using MRI features: a study using an independent validation set. Breast Cancer Res Treat. 2019;173:455\u201363. 35. Zhou J, Tan H, Bai Y, Li J, Lu Q, Chen R, et al. Evaluating the HER-2 status of breast cancer using mammography radiomics features. Eur J Radiol. 2019;121: 108718. https:// doi. org/ 10. 1016/j. ejrad. 2019. 108718. 36. Li E, Guida JL, Tian Y, Sung H, Koka H, Li M, et al. Associations between mammographic density and tumor characteristics in Chinese women with breast cancer. Breast Cancer Res Treat. 2019;177:527\u201336. 37. Yang X, Wu L, Zhao K, Ye W, Liu W, Wang Y, et al. Evaluation of human epidermal growth factor receptor 2 status of breast cancer using preoperative multidetector computed tomography with deep learning and handcrafted radiomics features. Chin J Cancer Res. 2020;32:175\u201385. 38. Chang RF, Chen HH, Chang YC, Huang CS, Chen JH, Lo CM. Quantification of breast tumor heterogeneity for ER status, HER2 status, and TN molecular subtype evaluation on DCE-MRI. Magn Reson Imag. 2016;34:809\u201319. 39. Ni M, Zhou X, Liu J, Yu H, Gao Y, Zhang X, Li Z. Prediction of the clinicopathological subtypes of breast cancer using a fisher discriminant analysis model based on radiomic features of diffusion-weighted MRI. BMC Cancer. 2020;20(1):1073. 40. Chen Y, Wang Z, Yin G, Sui C, Liu Z, Li X, et al. Prediction of HER2 expression in breast cancer by combining PET/CT radiomic analysis and machine learning. Ann Nucl Med. 2021;36:172\u201382. 41. La Forgia D, Fanizzi A, Campobasso F, et al. Radiomic Analysis in ContrastEnhanced Spectral Mammography for Predicting Breast Cancer Histological Outcome. Diagnostics (Basel). 2020;10(9):708. 42. Bitencourt AGV, Gibbs P, Rossi Saccarelli C, et al. MRI-based machine learning radiomics can predict HER2 expression level and pathologic response after neoadjuvant therapy in HER2 overexpressing breast cancer. EBioMedicine. 2020;61:103042. 43. Huang Y, Wei L, Hu Y, Shao N, Lin Y, He S, Shi H, Zhang X, Lin Y. Multi-Parametric MRI-Based Radiomics Models for Predicting Molecular Subtype and Androgen Receptor Expression in Breast Cancer. Front Oncol. 2021;11:706733. 44. Li C, Song L, Yin J. Intratumoral and Peritumoral Radiomics Based on Functional Parametric Maps from Breast DCE-MRI for Prediction of HER-2 and Ki-67 Status. J Magn Reson Imag. 2021;54:703\u201314. 45. Guo Q, Chen K, Lin X, et al. A nomogram to predict HER2 status in breast cancer patients with HER2-borderline disease as determined via immunohistochemistry. Oncotarget. 2017;8(55):93492\u2013501. 46. Zhang Y, Zhu Y, Zhang K, et al. Invasive ductal breast cancer: preoperative predict Ki-67 index based on radiomics of ADC maps. Radiol Med. 2020;125(2):109\u201316. 47. Ma W, Ji Y, Qi L, Guo X, Jian X, Liu P. Breast cancer Ki67 expression prediction by DCE-MRI radiomics features. Clin Radiol. 2018;73(10):909.e1-909. e5. 48. Tagliafico AS, Piana M, Schenone D, Lai R, Massone AM, Houssami N. Overview of radiomics in breast cancer diagnosis and prognostication. Breast. 2020;49:74\u201380. 49. Tang TY, Li X, Zhang Q, Guo CX, Zhang XZ, Lao MY, et al. Development of a novel multiparametric MRI radiomic nomogram for preoperative evaluation of early recurrence in resectable pancreatic cancer. In: Imag JMR, editor. Wiley Online Library; 2020. p. 231\u201345. 50. Nie P, Yang G, Wang Z, Yan L, Miao W, Hao D, et al. A CT-based radiomics nomogram for differentiation of renal angiomyolipoma without visible fat from homogeneous clear cell renal cell carcinoma. Eur Radiol. 2020;30:1274\u201384. 51. Chen JH, Baek HM, Nalcioglu O, Su MY. Estrogen receptor and breast MR imaging features: a correlation study. J Magn Reson Imag. 2008;27:825\u201333. 52. Fan M, Li H, Wang S, Zheng B, Zhang J, Li L. Radiomic analysis reveals DCE-MRI features for prediction of molecular subtypes of breast cancer. PLoS ONE. 2017;12:e0171683. https:// doi. org/ 10. 1371/ journ al. pone. 01716 83.\n53. Li TG, Wang SP, Zhao N. Gray-scale edge detection for gastric tumor pathologic cell images by morphological analysis. Com-put Biol Med. 2009;39:947\u201352. 54. Weyn B, Jacob W, da Silva VD, et al. Data representation and reduction for chromatin texture in nuclei from premalig-nant prostatic, esophageal, and colonic lesions. Cytometry. 2000;41:133\u20138. 55. Waugh S, Purdie C, Jordan L, Vinnicombe S, Lerski R, Martin P, et al. Magnetic resonance imaging texture analysis classification of primary breast cancer. Eur Radiol. 2016;26:322\u201330."
+        },
+        {
+            "heading": "Publisher\u2019s Note",
+            "text": "Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations."
+        }
+    ],
+    "title": "Development and validation of a clinicoradiomic nomogram to assess the HER2 status of patients with invasive ductal carcinoma",
+    "year": 2022
+}

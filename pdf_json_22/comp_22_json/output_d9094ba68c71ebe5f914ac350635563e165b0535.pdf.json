@@ -1,0 +1,165 @@
+{
+    "abstractText": "Combinatorial optimizations are usually complex and inefficient, which limits their applications in large-scale networks with billions of links. We introduce a distributed computational method for solving a node-covering problem at the scale of factual scenarios. We first construct a genetic algorithm and then design a two-step strategy to initialize the candidate solutions. All the computational operations are designed and developed in a distributed form on Apache Spark enabling fast calculation for practical graphs. We apply our method to social advertising of recalling back churn users in online mobile games, which was previously only treated as a traditional item recommending or ranking problem.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Qiang Liu"
+        }
+    ],
+    "id": "SP:957203ba0140f54a636d52ddbf82b31faa609969",
+    "references": [
+        {
+            "authors": [
+                "Michalis Faloutsos",
+                "Petros Faloutsos",
+                "Christos Faloutsos"
+            ],
+            "title": "On power-law relationships of the internet topology",
+            "venue": "ACM SIGCOMM computer communication review,",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "Wayne W. Zachary"
+            ],
+            "title": "An information flow model for conflict and fission in small groups",
+            "venue": "Journal of Anthropological Research,",
+            "year": 1977
+        },
+        {
+            "authors": [
+                "Josefine Bohr Brask",
+                "Samuel Ellis",
+                "Darren P Croft"
+            ],
+            "title": "Animal social networks: an introduction for complex systems scientists",
+            "venue": "Journal of Complex Networks,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Shuai Zhang",
+                "Lina Yao",
+                "Aixin Sun",
+                "Yi Tay"
+            ],
+            "title": "Deep learning based recommender system: A survey and new perspectives",
+            "venue": "ACM Computing Surveys (CSUR),",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Ranran Bian",
+                "Yun Sing Koh",
+                "Gillian Dobbie",
+                "Anna Divoli"
+            ],
+            "title": "Identifying top-k nodes in social networks: a survey",
+            "venue": "ACM Computing Surveys (CSUR),",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Nicola Apollonio",
+                "Bruno Simeone"
+            ],
+            "title": "The maximum vertex coverage problem on bipartite graphs",
+            "venue": "Discrete Applied Mathematics,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Jianer Chen",
+                "Iyad A. Kanj"
+            ],
+            "title": "Constrained minimum vertex cover in bipartite graphs: complexity and parameterized algorithms",
+            "venue": "Journal of Computer and System Sciences,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "Irit Dinur",
+                "Samuel Safra"
+            ],
+            "title": "On the hardness of approximating minimum vertex cover",
+            "venue": "Annals of Mathematics,",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "P.S. Oliveto",
+                "J. He",
+                "X. Yao"
+            ],
+            "title": "Evolutionary algorithms and the vertex cover problem",
+            "venue": "IEEE Congress on Evolutionary Computation,",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "Matei Zaharia",
+                "Reynold S. Xin",
+                "PatrickWendell",
+                "Tathagata Das",
+                "Michael Armbrust",
+                "Ankur Dave",
+                "Xiangrui Meng",
+                "Josh Rosen",
+                "Shivaram Venkataraman",
+                "Michael J. Franklin",
+                "Ali Ghodsi",
+                "Joseph Gonzalez",
+                "Scott Shenker",
+                "Ion Stoica"
+            ],
+            "title": "Apache spark: A unified engine for big data processing",
+            "venue": "Commun. ACM,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Tianqi Chen",
+                "Carlos Guestrin"
+            ],
+            "title": "Xgboost: A scalable tree boosting system",
+            "venue": "In Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining, KDD",
+            "year": 2016
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1 INTRODUCTION",
+            "text": "Many large systems can be modelled as graphs, such as the Internet [1], brain [2], and human [3] (or animal [4]) social connectives. A graph consists of nodes and links. For a social structure, a node denotes a person while a link denotes the existence of a relationship between two nodes. The social system represented by a graph is usually called a social network 1. The social network in an online platform is straightforward: a node is a user while a link means that two nodes are connected in the platform, i.e., two users can present messages to each other.\nPeople use online social network services (SNS) to communicate. In the meantime, SNS becomes also a cheap (perhaps even free) advertising (AD) medium by promoting users spreading ADs. In this brief paper, we discuss a graph optimization problem from an actual application aiming to optimize the effectiveness of reaching churn users through SNS ADs for online mobile games."
+        },
+        {
+            "heading": "2 REACHING CHURN USERS THROUGH ACTIVE ONES",
+            "text": "Online games lose many users during the operation period. To maintain an instant number of daily active users, game companies usually advertise their game product through traditional media by directly presenting the game to the churn users. However, the expense for direct advertising is higher compared to reaching churn users through free-of-charge SNS channels among players of the game.\nA typical SNS AD to recall churn users of a mobile game is as follows. Users register the game through their SNS accounts, e.g. Instant Message (IM) APPs, and grant access to their IM contact list which contains the users\u2019 friends who are also the users of the game. In the game APP, an advertising module presents churn friends to active users and promotes them to recall their churn friends back.\n1In this paper, we mix using the terms graph and network.\nIn most cases, active users can easily click the icons of their friends and the game APP automatically sends a message through the IM API to the user who has been clicked. As shown in Fig. 1, active user Alice viewed the AD page presenting his churn friends of the game. Alice then clicked her friend Bob\u2019s icon and the system sent a message through Alice\u2019s IM to Bob. Bob received the message and can join the game as an active user through the link in the message.\nFor each active user, presenting the churn friends is treated as a traditional item recommending or ranking optimization problem [5]. Different strategies are applied for ranking, such as ranking more intimate friends higher, ranking users who are most likely to return higher, and ranking by machine learning models trained by user behaviors from past AD logs. However, those ranking methods may obtain an optimal result for each active user but cannot reach a global optimum of the total number of churn users being reached: churn users can be reached redundantly due to the overlapping of active friends in the social network. Fig. 2 shows the mapping between the IM social network where neighbors can message each other and the churn friend recommending lists on the AD pages for active users. Users 1, 4, and 7 can reach all 4 churn users and two active users are planned to receive ADs. There are only 3 churn users are presented if selecting users {1, 7} or {1, 4} but 4 churn users if selecting {4, 7}. The social network leverages the access of churns users through reachable active users if we can globally optimize the node covering, which is never considered before in the SNS AD. Furthermore, the problem to be solved in this paper is also different from other methods such as identifying the important/influential nodes or the key opinion leaders in networks ar X iv :2\n21 1.\n08 73\n8v 1\n[ cs\n.S I]\n1 6\nN ov\n2 02\n2\n[6], since those methods still achieve only local optima in the SNS AD problem.\nTo achieve optimal access to churn users, we need to find a subset of the active users whose churn neighbor node set is the largest, i.e. a maximum node covering. LetV\ud835\udc4e andV\ud835\udc50 denote the node sets of active users and churn users, respectively. Let E\ud835\udc4e\ud835\udc50 denote the link set and each link connects an active user and a churn user. Graph \ud835\udc3a = (V\ud835\udc4e,V\ud835\udc50 , E\ud835\udc4e\ud835\udc50 ) is thus a bipartite graph: there is no link within V\ud835\udc4e and V\ud835\udc50 , i.e. E\ud835\udc4e\ud835\udc50 \u2286 {(\ud835\udc63\ud835\udc4e, \ud835\udc63\ud835\udc50 ) |\ud835\udc63\ud835\udc4e \u2208 V\ud835\udc4e, \ud835\udc63\ud835\udc50 \u2208 V\ud835\udc50 }. The goal is to find the optimal solution\n\ud835\udc49 \u2217\ud835\udc4e \u225c argmax \ud835\udc49\ud835\udc4e\u2286V\ud835\udc4e, |\ud835\udc49\ud835\udc4e |=\ud835\udc41 |{\ud835\udc63\ud835\udc50 |\ud835\udc63\ud835\udc50 \u2208 \ud835\udc49\ud835\udc50 , \ud835\udc63\ud835\udc4e \u2208 \ud835\udc49\ud835\udc4e, (\ud835\udc63\ud835\udc4e, \ud835\udc63\ud835\udc50 ) \u2208 E\ud835\udc4e\ud835\udc50 }| (1)\nwhere \ud835\udc41 is the number of active users receiving the SNS AD related to the budget. The particular combinatorial problem (1) is similar to many other similar problems of vertex covering or matching in graphs [7, 8] with sometimes NP-Hard complexity [9]. Classical approximation algorithms are not feasible to be applied in real social networks. Although heuristic solutions are reported to produce better results with high efficiency to some node-covering problems compared to approximation algorithms [10], the studied graphs are still tiny pieces compared to those in practice. In one of our deployments, there are ~170 millions of nodes and ~1.7 billions of links. A distributed algorithm is needed to solve Eq. (1) at such a large scale."
+        },
+        {
+            "heading": "3 A GENETIC ALGORITHM FOR NODE COVERING",
+            "text": "A genetic algorithm (GA) [10] mimics the evolution of biological species and explores the solution space toward a pre-defined optimal goal. In a normal GA, there are four key terms: group, individual, gene, and fitness. A group is a set of individuals and an individual is a set of genes. The fitness of an individual is a metric that evaluates the quality of individuals, i.e., solutions to the defined problem. In addition, there are three operators that mimic the biological evolutionary dynamics: selection, crossover, and mutation. Selection applies to each candidate individual in the group by randomly keeping or discarding the individual at each iteration. Crossover applies to two individuals within the group by randomly exchanging part\nof their genes. Mutation randomly replaces a part of the genes in an individual by randomly selected genes from the whole gene set. Selection and crossover aim to produce better individuals while mutation is to keep the diversity of the individual and explore the solution space.\nFor our SNS ADs, we need to map the node-covering problem to GA terminologies. As shown in Fig. 3, we define nodes \ud835\udc63\ud835\udc4e \u2208 V\ud835\udc4e denoting the active users as genes and thus, an individual of GA is a subset \ud835\udc49\ud835\udc4e \u2286 V\ud835\udc4e of active user nodes. The group is just a candidate individual set \ud835\udc46 \u2286 {\ud835\udc49\ud835\udc4e |\ud835\udc49\ud835\udc4e \u2286 V\ud835\udc4e}. Our goal is to find the optimal individual \ud835\udc49 \u2217\ud835\udc4e \u2286 V\ud835\udc4e through the evolving group \ud835\udc46 as in Eq. (1), which is the target active users of the SNS AD. The quality of an individual is measured by fitness, which is a mapping F : {\ud835\udc49\ud835\udc4e |\ud835\udc49\ud835\udc4e \u2286 V\ud835\udc4e} \u2192 R. As a result of Eq. (1), the fitness can be defined as\n\ud835\udc53 (\ud835\udc49\ud835\udc4e) \u225c |{\ud835\udc63\ud835\udc50 | (\ud835\udc63\ud835\udc4e, \ud835\udc63\ud835\udc50 ) \u2208 E\ud835\udc4e\ud835\udc50 , \ud835\udc63\ud835\udc4e \u2208 \ud835\udc49\ud835\udc4e}|. (2) Definition (2) may not be optimal in real scenarios, because the churn user nodes in \ud835\udc49\ud835\udc50 are not equivalent due to their diverse user features. We will discuss another definition fitting in practice later in Sec. 6. As shown in Fig. 3, the individual {1, 4} has 3 neighbors {2, 3, 6} and thus fitness \ud835\udc53 ({1, 4}) = 3.\nAfter all the mapping from our problem to the GA framework, the GA procedure is straightforward by applying the genetic operators to the group \ud835\udc46 as described in Algo. 1. GA searches the optimal solution \ud835\udc49 \u2217\ud835\udc4e by producing possible candidate solutions through crossovers and exploring the solution space by mutations. At each iteration, individuals with higher fitness are more likely to be preserved by selection. In the mutation step of Algo. 1, the gene removal and adding rates are set to be\ud835\udc40 and \ud835\udc40\ud835\udc41|V\ud835\udc4e |\u2212\ud835\udc41 , respectively, to maintain a constant number of genes in each individual."
+        },
+        {
+            "heading": "4 A TWO-STEP STRATEGY FOR CONSTRUCTING THE INITIAL GROUP \ud835\udc46",
+            "text": "To ensure Algo. 1 has an efficient start, we design a two-step strategy to construct initial individuals. An ideal initial group \ud835\udc46 should have two features: 1) Individuals in \ud835\udc46 contain diverse genes to avoid GA ending up into local optima of the solution space; 2) The expected fitness of each individual is as high as possible for an efficient convergence to optima. We apply the following two-step procedure to construct the initial group:\nAlgorithm 1 GA to solve \ud835\udc49 \u2217\ud835\udc4e = argmax\ud835\udc49\ud835\udc4e \ud835\udc53 (\ud835\udc49\ud835\udc4e) Input: Graph\ud835\udc3a = (V\ud835\udc4e,V\ud835\udc50 , E\ud835\udc4e\ud835\udc50 ); Crossover probability of individ-\nuals\ud835\udc36 ; Mutation probability of genes\ud835\udc40 ; Number of genes in each individual \ud835\udc41 ; Number of individuals of the group \ud835\udc47 ; Number of iterations \ud835\udc3c . Output: \ud835\udc49 \u2217\ud835\udc4e Initialize: Construct the initial group containing \ud835\udc47 individuals \ud835\udc46 \u2286 {\ud835\udc49\ud835\udc4e |\ud835\udc49\ud835\udc4e \u2286 V\ud835\udc4e, |\ud835\udc49\ud835\udc4e | = \ud835\udc41 } and a next generation group \ud835\udc46 \u2032 = \u2205.\nfor \ud835\udc56 = 1; \ud835\udc56 \u2264 \ud835\udc3c ; \ud835\udc56 + + do for \ud835\udc57 = 1; \ud835\udc57 \u2264 \ud835\udc47 ; \ud835\udc57 + + do Calculate fitness: For each \ud835\udc49\ud835\udc4e \u2208 \ud835\udc46 , calculate individual fitness \ud835\udc53 (\ud835\udc49\ud835\udc4e) by Eq. (2). Selection: Select two individuals \ud835\udc49 \u2032\ud835\udc4e and \ud835\udc49 \u2032\u2032\ud835\udc4e from \ud835\udc46 with probability Pr(\ud835\udc49\ud835\udc4e) = \ud835\udc53 (\ud835\udc49\ud835\udc4e)\u2211\n\ud835\udc49 \u2032\ud835\udc4e\u2208\ud835\udc46 \ud835\udc53 (\ud835\udc49 \u2032 \ud835\udc4e) ;\nCrossover: Exchange genes of\ud835\udc49 \u2032\ud835\udc4e and\ud835\udc49 \u2032\u2032\ud835\udc4e with probability \ud835\udc36 and Boolean indicators of each gene are exchanged with probability \ud835\udc5d , where \ud835\udc5d \u223c \ud835\udc48 (0, 1); Mutation: Remove each gene \ud835\udc63 \u2032\ud835\udc4e \u2208 \ud835\udc49 \u2032\ud835\udc4e from\ud835\udc49 \u2032\ud835\udc4e with probability\ud835\udc40 and for each gene \ud835\udc63\ud835\udc4e \u2208 \ud835\udc49 \u2032\ud835\udc4e\\V\ud835\udc4e , add \ud835\udc63\ud835\udc4e into\ud835\udc49 \u2032\ud835\udc4e with probability \ud835\udc40\ud835\udc41( |V\ud835\udc4e |\u2212\ud835\udc40\ud835\udc41 ) . Let \ud835\udc46 \u2032 \u2190 \ud835\udc46 \u2032 \u222a {\ud835\udc49 \u2032\ud835\udc4e }.\nend for Let \ud835\udc46 \u2190 \ud835\udc46 \u2032 and \ud835\udc46 \u2032 \u2190 \u2205.\nend for Let \ud835\udc49 \u2217\ud835\udc4e = argmax\ud835\udc49\ud835\udc4e \u2208\ud835\udc46 \ud835\udc53 (\ud835\udc49\ud835\udc4e).\n(1) For each churn user node \ud835\udc63\ud835\udc50 \u2208 V\ud835\udc50 , one and only one of it active neighbor \ud835\udc63\ud835\udc4e \u2208 V\ud835\udc4e is preserved in set \ud835\udc49\ud835\udc56 ; (2) Select genes only from \ud835\udc49\ud835\udc56 to construct the initial individuals \ud835\udc49\ud835\udc4e \u2208 \ud835\udc46 .\nStep 1 ensures that the candidate genes in\ud835\udc49\ud835\udc56 cover all the churn user nodes in V\ud835\udc50 . In both steps 1 and 2, greedy and random selecting strategies are applied to preserve genes. For example in step 1, we can preserve the one neighbor \ud835\udc63\ud835\udc4e for each \ud835\udc63\ud835\udc50 \u2208 \ud835\udc49\ud835\udc50 with the largest fitnessmax\ud835\udc63\ud835\udc4e \u2208{\ud835\udc63\ud835\udc4e | (\ud835\udc63\ud835\udc4e,\ud835\udc63\ud835\udc50 ) \u2208E\ud835\udc4e\ud835\udc50 } \ud835\udc53 ({\ud835\udc63\ud835\udc4e}) to obtain excellent candidate genes. However, this greedy preserving strategy may result into local optima since a combination of nodes \ud835\udc63\ud835\udc4e with large fitness may redundantly connect overlapping \ud835\udc63\ud835\udc50 \u2208 V\ud835\udc50 . By selecting \ud835\udc63\ud835\udc4e \u2208 V\ud835\udc4e with smallest fitness \ud835\udc53 ({\ud835\udc63\ud835\udc4e}), the redundancy of common neighbors is reduced and more candidate genes can be obtained in \ud835\udc49\ud835\udc56 . Similar conclusions apply to step 2. The combination of three strategies of selecting \ud835\udc63\ud835\udc4e \u2208 V\ud835\udc4e in step 1 and 2: \u2022 selecting with probability proportional to \ud835\udc53 ({\ud835\udc63\ud835\udc4e}); \u2022 selecting with probability inversely proportional to \ud835\udc53 ({\ud835\udc63\ud835\udc4e}); \u2022 selecting randomly irrelevant to \ud835\udc53 ({\ud835\udc63\ud835\udc4e}),\nenables of constructing initial individuals with both high diversity of genes and relatively large fitness, which boosts the efficiency of our GA."
+        },
+        {
+            "heading": "5 A DISTRIBUTED GA REALIZATION",
+            "text": "Algorithm 1 cannot directly find the optimal active user sets \ud835\udc49 \u2217\ud835\udc4e for our applications because practical networks are at the scale of billions. To facilitate the optimization of our SNS ADS, we realize\nAlgo. 1 on Apache Spark [11] distributively. For each task on Spark, a large number of executors collaboratively schedule the calculation and each executor is only responsible for the computation task of a part of the whole dataset. The basic data object to be operated on Spark is the Resilient Distributed Dataset (RDD), which represents the actual data distributively stored. The structure of RDDs is similar to a table: each row represents a data sample and each column represents a field of the samples.\nFor our realization, the RDD structure is described in Table 1. There are in total 2\ud835\udc47 + 2 columns and |V\ud835\udc4e | rows in the table. Each row represents a gene of active user \ud835\udc63\ud835\udc4e \u2208 V\ud835\udc4e . The last 2\ud835\udc47 columns represent the \ud835\udc47 individuals in the group \ud835\udc46 (columns 1 to \ud835\udc47 ) and \ud835\udc46 \u2032 (columns \ud835\udc47 + 1 to 2\ud835\udc41 ); Each element in the first column is the active user node \ud835\udc63\ud835\udc4e \u2208 V\ud835\udc4e while the second column stores the neighbors \ud835\udc63\ud835\udc50 \u2208 V\ud835\udc50 of \ud835\udc63\ud835\udc4e . The elements of column Individual \ud835\udc3e indicate whether the nodes \ud835\udc63\ud835\udc4e of the first column are contained in individual \ud835\udc58 or not by a Boolean value.\nIn Spark, the RDD rows representing genes are stored in different executors and all the operators (selection, crossover, and mutation) can be applied independently, and thus distributively, on each row. Selection copies individual 1 \u2264 \ud835\udc58 \u2264 \ud835\udc47 columns into individual \ud835\udc47 + \ud835\udc58 columns, crossover exchanges elements between two individual columns, and mutation flips Boolean elements of individual columns.\nCalculation of fitness of each individual is realized first by Spark operator filter which preserves all the genes with Boolean indicators being 1 in the corresponding column. And then, count the number of different nodes \ud835\udc63\ud835\udc50 in the whole RDD, which is realized by applying Spark operator flatMap and reducedByKey on the second column. FlatMap splits each Array in the second column into elements and flattens the elements \ud835\udc63\ud835\udc50 into single rows. The operator reduceByKey merges duplicated rows of \ud835\udc63\ud835\udc50 into one row. Thus, we can just obtain the fitness of the calculated individual by counting the number of rows in the resultant RDD.\nFor the two-step strategy in Sec. 4, the input RDD is an edge list with each row being (\ud835\udc63\ud835\udc4e, \ud835\udc63\ud835\udc50 ). The first step is realized by applying Spark operator groupBy on each element \ud835\udc63\ud835\udc50 in the second column and the second step is by assigning a Boolean indicator for each selected gene.\nWith all the above-mentioned data structure and the operating procedure designs, we apply our distributed GA on a network with \u223c 170 million nodes and \u223c 1.7 billion links. The limiting number of genes in each individual is 9 million. Table 2 shows the GA performance compared to the degree (the number of churn-friend nodes) greedy and random selecting methods with the coverage increased by 10.15% and 15.90%, respectively."
+        },
+        {
+            "heading": "6 DESIGN OF THE FITNESS IN REAL ADS",
+            "text": "In real scenarios, nodes \ud835\udc63\ud835\udc50 \u2208 V\ud835\udc50 are not equivalent. Churn users re-login to the game with diverse probabilities after being reached by the SNS AD. Some churn users are lost forever and will never come back. Thus, each node \ud835\udc63\ud835\udc50 \u2208 V\ud835\udc50 should be measured by its return probabilities. Moreover, a node \ud835\udc63\ud835\udc50 is reached with variety of probabilities through active nodes inV\ud835\udc4e and some active users may never click the SNS AD. The fitness defined in Eq.(2) lacks measuring those user behavioral diversities.\nWe define a measure\ud835\udc5a(\u2022) for each link (\ud835\udc63\ud835\udc4e, \ud835\udc63\ud835\udc50 ) \u2208 E\ud835\udc4e\ud835\udc50 which incorporates the user behaviors by\n\ud835\udc5a(\ud835\udc63\ud835\udc4e, \ud835\udc63\ud835\udc50 ) \u225c Pr(\ud835\udc63\ud835\udc4e clicks \ud835\udc63\ud835\udc50 , \ud835\udc63\ud835\udc50 returns). (3)\nEq. (3) is not directly calculable but can be estimated with log data from previous AD sessions. With historical user behaviors and features, we train an XGBoost model [12] to predict the measure (3) of each node pair (\ud835\udc63\ud835\udc4e, \ud835\udc63\ud835\udc50 ) \u2208 E\ud835\udc4e\ud835\udc50 for new AD sessions.\nThe improved fitness of individuals\ud835\udc49\ud835\udc4e \u2282 V\ud835\udc4e is defined as follows\n\ud835\udc53 (\ud835\udc49\ud835\udc4e) = \u2211\ufe01\n\ud835\udc63\ud835\udc50 \u2208\ud835\udc46\ud835\udc50 (\ud835\udc49\ud835\udc4e)\n\u2211 \ud835\udc63\ud835\udc4e \u2208\ud835\udc46\ud835\udc49\ud835\udc4e (\ud835\udc63\ud835\udc50 )\ud835\udc5a(\ud835\udc63\ud835\udc4e, \ud835\udc63\ud835\udc50 ) |\ud835\udc46\ud835\udc49\ud835\udc4e (\ud835\udc63\ud835\udc50 ) |\n(4)\nwhere \ud835\udc46\ud835\udc50 (\ud835\udc49\ud835\udc4e) = {\ud835\udc63\ud835\udc50 | (\ud835\udc63\ud835\udc4e, \ud835\udc63\ud835\udc50 ) \u2208 E\ud835\udc4e\ud835\udc50 , \ud835\udc63\ud835\udc4e \u2208 \ud835\udc49\ud835\udc4e} is the set of churn nodes covered by \ud835\udc49\ud835\udc4e and \ud835\udc46\ud835\udc49\ud835\udc4e (\ud835\udc63\ud835\udc50 ) = {\ud835\udc63\ud835\udc4e | (\ud835\udc63\ud835\udc50 , \ud835\udc63\ud835\udc4e) \u2208 E\ud835\udc4e\ud835\udc50 , \ud835\udc63\ud835\udc4e \u2208 \ud835\udc49\ud835\udc4e} is the set of active nodes in\ud835\udc49\ud835\udc4e connected to the specified \ud835\udc63\ud835\udc50 . Compared to Eq. (2), Eq. (4) first calculate themeanmeasure of each churn node \ud835\udc5a(\ud835\udc63\ud835\udc4e, \ud835\udc63\ud835\udc50 ) over \ud835\udc46\ud835\udc49\ud835\udc4e (\ud835\udc63\ud835\udc50 ) and then do the similar fitness calculation as in (2) over \ud835\udc49\ud835\udc50 \u2286 V\ud835\udc50 that covered by \ud835\udc49\ud835\udc4e . If we set\ud835\udc5a(\ud835\udc63\ud835\udc4e, \ud835\udc63\ud835\udc50 ) = 1, then the right terms after the summations are 1 and Eq. (2) and Eq. (4) become equivalent.\nThe computation of fitness (4) is realized by simply passing a sum function and a counting into the reduceByKey operator when merging \ud835\udc63\ud835\udc50 , followed by a mean calculation mapped to each row of the flatten RDD. Finally, sum over the fitness of each \ud835\udc63\ud835\udc50 in the resultant RDD similar to that in Sec.5.\nSome miscellaneous improvements are also applied in practice to Algo. 1. At each iteration, we preserve the individual with the highest fitness to avoid losing the best solution during GA running. When calculating the probability of selecting individual Pr(\ud835\udc49\ud835\udc4e) in the selection step, we subtract a base number from each \ud835\udc53 (\ud835\udc49\ud835\udc4e) to avoid the small deviating fitness among individuals.\nAssisted by the above-mentioned improvements, GAhas achieved considerable large gains in conversion rate (# inactive-to-active over # exposes) compared to non-optimized scenarios. As one typical example, the conversion rate has increased by 10.13% for the outof-game channel and 65.70% for the in-game channel in one of our games."
+        },
+        {
+            "heading": "7 CONCLUSION",
+            "text": "In this brief report, we introduce a distributed computing scheme to solve a combinatorial optimization problem on large-scale networks. The problem is formulated from real scenarios in mobile-game ADs, where churn users are advertised through active users on social networks. This optimization problem was generally not feasible at billion-scale graphs in practice and the scene was only treated as a traditional item recommending/ranking problem before. Our distributed GA achieves a considerable large performance gain with high efficiency in our SNS AD scenes."
+        },
+        {
+            "heading": "ACKNOWLEDGMENTS",
+            "text": "We thank Dr. Shenggong Ji for helpful discussions during the realization of the project."
+        }
+    ],
+    "title": "Distributed Node Covering Optimization for Large Scale Networks and Its Application on Social Advertising",
+    "year": 2022
+}

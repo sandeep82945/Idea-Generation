@@ -1,0 +1,863 @@
+{
+    "abstractText": "We propose a novel data-augmentation technique for neural machine translation based on ROT-k ciphertexts. ROT-k is a simple letter substitution cipher that replaces a letter in the plaintext with the kth letter after it in the alphabet. We first generate multiple ROT-k ciphertexts using different values of k for the plaintext which is the source side of the parallel data. We then leverage this enciphered training data along with the original parallel data via multi-source training to improve neural machine translation. Our method, CipherDAug, uses a co-regularization-inspired training procedure, requires no external data sources other than the original training data, and uses a standard Transformer to outperform strong data augmentation techniques on several datasets by a significant margin. This technique combines easily with existing approaches to data augmentation, and yields particularly strong results in low-resource settings.1",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Nishant Kambhatla"
+        },
+        {
+            "affiliations": [],
+            "name": "Logan Born"
+        },
+        {
+            "affiliations": [],
+            "name": "Anoop Sarkar"
+        }
+    ],
+    "id": "SP:3f6a0074e548d22926e55577b31d781d230bcbb0",
+    "references": [
+        {
+            "authors": [
+                "Roee Aharoni",
+                "Melvin Johnson",
+                "Orhan Firat."
+            ],
+            "title": "Massively multilingual neural machine translation",
+            "venue": "Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technolo-",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Dzmitry Bahdanau",
+                "Kyunghyun Cho",
+                "Yoshua Bengio."
+            ],
+            "title": "Neural machine translation by jointly learning to align and translate",
+            "venue": "3rd International Conference on Learning Representations, ICLR 2015, San Diego, CA, USA, May 7-9, 2015,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Yonatan Belinkov",
+                "Yonatan Bisk."
+            ],
+            "title": "Synthetic and natural noise both break neural machine translation",
+            "venue": "International Conference on Learning Representations.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Avrim Blum",
+                "Tom Mitchell."
+            ],
+            "title": "Combining labeled and unlabeled data with co-training",
+            "venue": "Proceedings of the eleventh annual conference on Computational learning theory, pages 92\u2013100.",
+            "year": 1998
+        },
+        {
+            "authors": [
+                "Jonathan H Clark",
+                "Chris Dyer",
+                "Alon Lavie",
+                "Noah A Smith."
+            ],
+            "title": "Better hypothesis testing for statistical machine translation: Controlling for optimizer instability",
+            "venue": "Proceedings of the 49th Annual Meeting of the Association for Computational Linguistics: Hu-",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "Shuoyang Ding",
+                "Adithya Renduchintala",
+                "Kevin Duh."
+            ],
+            "title": "A call for prudent choice of subword merge operations in neural machine translation",
+            "venue": "Proceedings of Machine Translation Summit XVII: Research Track, pages 204\u2013213, Dublin, Ireland. Eu-",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Qing Dou",
+                "Kevin Knight."
+            ],
+            "title": "Large scale decipherment for out-of-domain machine translation",
+            "venue": "Proceedings of the 2012 Joint Conference on Empirical Methods in Natural Language Processing and Computational Natural Language Learning, pages",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Qing Dou",
+                "Ashish Vaswani",
+                "Kevin Knight."
+            ],
+            "title": "Beyond parallel data: Joint word alignment and decipherment improves machine translation",
+            "venue": "Proceedings of the 2014 Conference on Empirical Methods in Natural Language Processing (EMNLP), pages",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Sergey Edunov",
+                "Myle Ott",
+                "Michael Auli",
+                "David Grangier."
+            ],
+            "title": "Understanding back-translation at scale",
+            "venue": "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing, pages 489\u2013500.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Yang Fan",
+                "Shufang Xie",
+                "Yingce Xia",
+                "Lijun Wu",
+                "Tao Qin",
+                "Xiang-Yang Li",
+                "Tie-Yan Liu"
+            ],
+            "title": "Multibranch attentive transformer",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Yarin Gal",
+                "Zoubin Ghahramani."
+            ],
+            "title": "A theoretically grounded application of dropout in recurrent neural networks",
+            "venue": "Advances in neural information processing systems, 29:1019\u20131027.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Fei Gao",
+                "Jinhua Zhu",
+                "Lijun Wu",
+                "Yingce Xia",
+                "Tao Qin",
+                "Xueqi Cheng",
+                "Wengang Zhou",
+                "Tie-Yan Liu."
+            ],
+            "title": "Soft contextual data augmentation for neural machine translation",
+            "venue": "Proceedings of the 57th Annual Meeting of the Association for Computational",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Luyu Gao",
+                "Xinyi Wang",
+                "Graham Neubig."
+            ],
+            "title": "Improving target-side lexical transfer in multilingual neural machine translation",
+            "venue": "Findings of the Association for Computational Linguistics: EMNLP 2020, pages 3560\u20133566, Online. Association for",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Demi Guo",
+                "Yoon Kim",
+                "Alexander Rush."
+            ],
+            "title": "Sequence-level mixed sample data augmentation",
+            "venue": "Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP), pages 5547\u20135552, Online. Association for Computa-",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Demi Guo",
+                "Yoon Kim",
+                "Alexander M Rush."
+            ],
+            "title": "Sequence-level mixed sample data augmentation",
+            "venue": "Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP), pages 5547\u20135552.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "David R. Hardoon",
+                "Sandor Szedmak",
+                "John ShaweTaylor."
+            ],
+            "title": "Canonical Correlation Analysis: An Overview with Application to Learning Methods",
+            "venue": "Neural Computation, 16(12):2639\u20132664.",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "Geoffrey Hinton",
+                "Oriol Vinyals",
+                "Jeff Dean."
+            ],
+            "title": "Distilling the knowledge in a neural network",
+            "venue": "arXiv preprint arXiv:1503.02531.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Sarthak Jain",
+                "Byron C. Wallace."
+            ],
+            "title": "Attention is not Explanation",
+            "venue": "Proceedings of the 2019 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Pa-",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Melvin Johnson",
+                "Mike Schuster",
+                "Quoc V Le",
+                "Maxim Krikun",
+                "Yonghui Wu",
+                "Zhifeng Chen",
+                "Nikhil Thorat",
+                "Fernanda Vi\u00e9gas",
+                "Martin Wattenberg",
+                "Greg Corrado"
+            ],
+            "title": "Google\u2019s multilingual neural machine translation system: Enabling zero-shot translation",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Nishant Kambhatla",
+                "Anahita Mansouri Bigvand",
+                "Anoop Sarkar."
+            ],
+            "title": "Decipherment of substitution ciphers with neural language models",
+            "venue": "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing, pages 869\u2013874,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Vladimir Karpukhin",
+                "Omer Levy",
+                "Jacob Eisenstein",
+                "Marjan Ghazvininejad."
+            ],
+            "title": "Training on synthetic noise improves robustness to natural noise in machine translation",
+            "venue": "Proceedings of the 5th Workshop on Noisy User-generated Text (W-NUT 2019),",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Huda Khayrallah",
+                "Philipp Koehn."
+            ],
+            "title": "On the impact of various types of noise on neural machine translation",
+            "venue": "Proceedings of the 2nd Workshop on Neural Machine Translation and Generation, pages 74\u201383.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Taku Kudo",
+                "John Richardson."
+            ],
+            "title": "SentencePiece: A simple and language independent subword tokenizer and detokenizer for neural text processing",
+            "venue": "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing: System",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Sneha Kudugunta",
+                "Ankur Bapna",
+                "Isaac Caswell",
+                "Orhan Firat."
+            ],
+            "title": "Investigating multilingual nmt representations at scale",
+            "venue": "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Katherine Lee",
+                "Orhan Firat",
+                "Ashish Agarwal",
+                "Clara Fannjiang",
+                "David Sussillo."
+            ],
+            "title": "Hallucinations in neural machine translation",
+            "venue": "NIPS 2018 Interpretability and Robustness for Audio, Speech and Language Workshop.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Guanlin Li",
+                "Lemao Liu",
+                "Guoping Huang",
+                "Conghui Zhu",
+                "Tiejun Zhao."
+            ],
+            "title": "Understanding data augmentation in neural machine translation: Two perspectives towards generalization",
+            "venue": "Proceedings of the 2019 Conference on Empirical Methods in Nat-",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Xiaobo Liang",
+                "Lijun Wu",
+                "Juntao Li",
+                "Yue Wang",
+                "Qi Meng",
+                "Tao Qin",
+                "Wei Chen",
+                "Min Zhang",
+                "TieYan Liu"
+            ],
+            "title": "R-drop: Regularized dropout for neural networks",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Qi Liu",
+                "Matt Kusner",
+                "Phil Blunsom."
+            ],
+            "title": "Counterfactual data augmentation for neural machine translation",
+            "venue": "Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technolo-",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Yiping Lu",
+                "Zhuohan Li",
+                "Di He",
+                "Zhiqing Sun",
+                "Bin Dong",
+                "Tao Qin",
+                "Liwei Wang",
+                "Tie yan Liu"
+            ],
+            "title": "Understanding and improving transformer from a multi-particle dynamic system point of view",
+            "venue": "In ICLR 2020 Workshop on Integration of Deep Neural",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Tasnim Mohiuddin",
+                "M Saiful Bari",
+                "Shafiq Joty."
+            ],
+            "title": "AugVic: Exploiting BiText vicinity for lowresource NMT",
+            "venue": "Findings of the Association for Computational Linguistics: ACL-IJCNLP 2021, pages 3034\u20133045, Online. Association for Computa-",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Pooya Moradi",
+                "Nishant Kambhatla",
+                "Anoop Sarkar."
+            ],
+            "title": "Interrogating the explanatory power of attention in neural machine translation",
+            "venue": "Proceedings of the 3rd Workshop on Neural Generation and Translation, pages 221\u2013230, Hong Kong. Association for",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Pooya Moradi",
+                "Nishant Kambhatla",
+                "Anoop Sarkar."
+            ],
+            "title": "Measuring and improving faithfulness of attention in neural machine translation",
+            "venue": "Proceedings of the 16th Conference of the European Chapter of the Association for Computational Linguistics:",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Graham Neubig",
+                "Zi-Yi Dou",
+                "Junjie Hu",
+                "Paul Michel",
+                "Danish Pruthi",
+                "Xinyi Wang."
+            ],
+            "title": "compare-mt: A tool for holistic comparison of language generation systems",
+            "venue": "Proceedings of the 2019 Conference of the North American Chapter of the Asso-",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Graham Neubig",
+                "Junjie Hu."
+            ],
+            "title": "Rapid adaptation of neural machine translation to new languages",
+            "venue": "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing, pages 875\u2013880, Brussels, Belgium. Association for Com-",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Xuan-Phi Nguyen",
+                "Shafiq Joty",
+                "Wu Kui",
+                "Ai Ti Aw."
+            ],
+            "title": "Data diversification: A simple strategy for neural machine translation",
+            "venue": "Advances in Neural Information Processing Systems 32. Curran Associates, Inc.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Xuan-Phi Nguyen",
+                "Shafiq R. Joty",
+                "Wu Kui",
+                "Ai Ti Aw."
+            ],
+            "title": "Data diversification: An elegant strategy for neural machine translation",
+            "venue": "CoRR, abs/1911.01986.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Mohammad Norouzi",
+                "Samy Bengio",
+                "Z. Chen",
+                "Navdeep Jaitly",
+                "Mike Schuster",
+                "Yonghui Wu",
+                "Dale Schuurmans."
+            ],
+            "title": "Reward augmented maximum likelihood for neural structured prediction",
+            "venue": "NeurIPS.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Kishore Papineni",
+                "Salim Roukos",
+                "Todd Ward",
+                "WeiJing Zhu."
+            ],
+            "title": "Bleu: a method for automatic evaluation of machine translation",
+            "venue": "Proceedings of the 40th Annual Meeting of the Association for Computational Linguistics, pages 311\u2013318, Philadelphia,",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "Matt Post."
+            ],
+            "title": "A call for clarity in reporting BLEU scores",
+            "venue": "Proceedings of the Third Conference on",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Ivan Provilkov",
+                "Dmitrii Emelianenko",
+                "Elena Voita."
+            ],
+            "title": "Bpe-dropout: Simple and effective subword regularization",
+            "venue": "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics, pages 1882\u20131892.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Ye Qi",
+                "Devendra Sachan",
+                "Matthieu Felix",
+                "Sarguna Padmanabhan",
+                "Graham Neubig"
+            ],
+            "title": "When and why are pre-trained word embeddings useful for neural machine translation",
+            "venue": "In Proceedings of the 2018 Conference of the North American Chapter",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Alessandro Raganato",
+                "J\u00f6rg Tiedemann."
+            ],
+            "title": "An analysis of encoder representations in transformerbased machine translation",
+            "venue": "Proceedings of the 2018 EMNLP Workshop BlackboxNLP: Analyzing and Interpreting Neural Networks for NLP, pages",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Maithra Raghu",
+                "Justin Gilmer",
+                "Jason Yosinski",
+                "Jascha Sohl-Dickstein."
+            ],
+            "title": "Svcca: Singular vector canonical correlation analysis for deep learning dynamics and interpretability",
+            "venue": "I. Guyon, U. V. Luxburg, S. Bengio, H. Wallach, R. Fergus, S. Vish-",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Vikas Raunak",
+                "Arul Menezes",
+                "Marcin JunczysDowmunt."
+            ],
+            "title": "The curious case of hallucinations in neural machine translation",
+            "venue": "Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Hu-",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Rico Sennrich",
+                "Barry Haddow",
+                "Alexandra Birch."
+            ],
+            "title": "Edinburgh neural machine translation systems for WMT 16",
+            "venue": "Proceedings of the First Conference on Machine Translation: Volume 2, Shared Task Papers, pages 371\u2013376, Berlin, Germany. As-",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Rico Sennrich",
+                "Barry Haddow",
+                "Alexandra Birch."
+            ],
+            "title": "Improving neural machine translation models with monolingual data",
+            "venue": "Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Rico Sennrich",
+                "Barry Haddow",
+                "Alexandra Birch."
+            ],
+            "title": "Neural machine translation of rare words with subword units",
+            "venue": "Proceedings of the 54th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers), pages 1715\u2013",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Vikas Sindhwani",
+                "Partha Niyogi",
+                "Mikhail Belkin."
+            ],
+            "title": "A co-regularization approach to semisupervised learning with multiple views",
+            "venue": "Proceedings of ICML workshop on learning with multiple views, volume 2005, pages 74\u201379. Citeseer.",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "Sho Takase",
+                "Shun Kiyono."
+            ],
+            "title": "Rethinking perturbations in encoder-decoders for fast training",
+            "venue": "Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, pages",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Sho Takase",
+                "Sosuke Kobayashi."
+            ],
+            "title": "All word embeddings from one embedding",
+            "venue": "Advances in Neural Information Processing Systems, volume 33, pages 3775\u20133785. Curran Associates, Inc.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Ashish Vaswani",
+                "Noam Shazeer",
+                "Niki Parmar",
+                "Jakob Uszkoreit",
+                "Llion Jones",
+                "Aidan N Gomez",
+                "\u0141ukasz Kaiser",
+                "Illia Polosukhin."
+            ],
+            "title": "Attention is all you need",
+            "venue": "Advances in neural information processing systems, pages 5998\u20136008.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Elena Voita",
+                "David Talbot",
+                "Fedor Moiseev",
+                "Rico Sennrich",
+                "Ivan Titov."
+            ],
+            "title": "Analyzing multi-head self-attention: Specialized heads do the heavy lifting, the rest can be pruned",
+            "venue": "Proceedings of the 57th Annual Meeting of the Association for Compu-",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Xinyi Wang",
+                "Hieu Pham",
+                "Philip Arthur",
+                "Graham Neubig."
+            ],
+            "title": "Multilingual neural machine translation with soft decoupled encoding",
+            "venue": "International Conference on Learning Representations.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Xinyi Wang",
+                "Hieu Pham",
+                "Zihang Dai",
+                "Graham Neubig."
+            ],
+            "title": "SwitchOut: an efficient data augmentation algorithm for neural machine translation",
+            "venue": "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing, pages",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Xinyi Wang",
+                "Sebastian Ruder",
+                "Graham Neubig."
+            ],
+            "title": "Multi-view subword regularization",
+            "venue": "Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies, pages",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Warren Weaver."
+            ],
+            "title": "Translation",
+            "venue": "Machine Translation of Languages, pages 15\u201323, Cambridge, Massachusetts. MIT Press. Reproduction of a 1949 memorandum in a 1955 volume.",
+            "year": 1949
+        },
+        {
+            "authors": [
+                "Lijun Wu",
+                "Shufang Xie",
+                "Yingce Xia",
+                "Yang Fan",
+                "JianHuang Lai",
+                "Tao Qin",
+                "Tieyan Liu."
+            ],
+            "title": "Sequence generation with mixed representations",
+            "venue": "Proceedings of the 37th International Conference on Machine Learning, volume 119 of Proceedings",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Xueqing Wu",
+                "Yingce Xia",
+                "Jinhua Zhu",
+                "Lijun Wu",
+                "Shufang Xie",
+                "Yang Fan",
+                "Tao Qin."
+            ],
+            "title": "mixSeq: A simple data augmentation methodfor neural machine translation",
+            "venue": "Proceedings of the 18th International Conference on Spoken Language Transla-",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Zhen Wu",
+                "Lijun Wu",
+                "Qi Meng",
+                "Yingce Xia",
+                "Shufang Xie",
+                "Tao Qin",
+                "Xinyu Dai",
+                "Tie-Yan Liu."
+            ],
+            "title": "UniDrop: A simple yet effective technique to improve transformer without extra cost",
+            "venue": "Proceedings of the 2021 Conference of the North Ameri-",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Mengzhou Xia",
+                "Xiang Kong",
+                "Antonios Anastasopoulos",
+                "Graham Neubig."
+            ],
+            "title": "Generalized data augmentation for low-resource translation",
+            "venue": "Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics, pages 5786\u2013",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Mengzhou Xia",
+                "Xiang Kong",
+                "Antonios Anastasopoulos",
+                "Graham Neubig."
+            ],
+            "title": "Generalized data augmentation for low-resource translation",
+            "venue": "Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics, pages 5786\u2013",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Ziang Xie",
+                "Sida I. Wang",
+                "Jiwei Li",
+                "Daniel L\u00e9vy",
+                "Aiming Nie",
+                "Dan Jurafsky",
+                "Andrew Y. Ng."
+            ],
+            "title": "Data noising as smoothing in neural network language models",
+            "venue": "International Conference on Learning Representations (ICLR).",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Chang Xu",
+                "Dacheng Tao",
+                "Chao Xu."
+            ],
+            "title": "A survey on multi-view learning",
+            "venue": "arXiv preprint arXiv:1304.5634.",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Haoran Xu",
+                "Benjamin Van Durme",
+                "Kenton Murray"
+            ],
+            "title": "Bert, mbert, or bibert? a study on contextualized embeddings for neural machine translation",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Huaao Zhang",
+                "Shigui Qiu",
+                "Xiangyu Duan",
+                "Min Zhang."
+            ],
+            "title": "Token drop mechanism for neural machine translation",
+            "venue": "Proceedings of the 28th International Conference on Computational Linguistics, pages 4298\u20134303, Barcelona, Spain (Online). Inter-",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Jiajun Zhang",
+                "Chengqing Zong."
+            ],
+            "title": "Exploiting source-side monolingual data in neural machine translation",
+            "venue": "Proceedings of the 2016 Conference on Empirical Methods in Natural Language Processing, pages 1535\u20131545, Austin, Texas. Association",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Jinhua Zhu",
+                "Yingce Xia",
+                "Lijun Wu",
+                "Di He",
+                "Tao Qin",
+                "Wengang Zhou",
+                "Houqiang Li",
+                "Tieyan Liu"
+            ],
+            "title": "Incorporating bert into neural machine translation",
+            "year": 2020
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1 Introduction",
+            "text": "One naturally wonders if the problem of translation could conceivably be treated as a problem in cryptography. [...] frequencies of letters, letter combinations, [...] etc., [...] are to some significant degree independent of the language used (Weaver, 1949)\nIndeed, to a system which treats inputs as atomic identifiers, the alphabet behind these identifiers is irrelevant. Distributional properties are of sole importance, and changes in the underlying encoding should be transparent provided these properties are preserved. In light of this, a bijective cipher such as ROT-k (Figure 1) is in effect invisible to modern NLP techniques: distributional features are invariant under such a cipher, guaranteeing that the meaning of an enciphered text is the same as the un-enciphered text, given the key. This work exploits this fact to develop a novel approach to data\n1Our code is available at https://github.com/ protonish/cipherdaug-nmt\naugmentation which is completely orthogonal to previous approaches.\nData augmentation is a simple regularizationinspired technique to improve generalization in neural machine translation (NMT) models. These models (Bahdanau et al., 2015; Vaswani et al., 2017) learn powerful representational spaces (Raganato and Tiedemann, 2018; Voita et al., 2019; Kudugunta et al., 2019) which scale to large numbers of languages and massive datasets (Aharoni et al., 2019). However, in the absence of data augmentation, their complexity makes them susceptible to memorization and poor generalization.\nData augmentation for NMT requires producing new, high-quality parallel training data. This is not trivial as slight modifications to a sequence can have drastic syntactic or semantic effects, and changes to a source sentence generally require corresponding changes to its translation. Existing techniques suffer various limitations: back-translation (Sennrich et al., 2016b; Edunov et al., 2018; Xia\nar X\niv :2\n20 4.\n00 66\n5v 1\n[ cs\n.C L\n] 1\nA pr\n2 02\n2\net al., 2019a; Nguyen et al., 2019) can yield semantically poor results due to its use of trained models that are susceptible to errors (Edunov et al., 2018). Word replacement approaches (Gao et al., 2019; Liu et al., 2021; Takase and Kiyono, 2021; Belinkov and Bisk, 2018; Sennrich et al., 2016a; Guo et al., 2020a; Wu et al., 2021a) may ignore context cues or fracture alignments between sequences.\nThis paper overcomes these limitations by exploiting the invariance of distributional features under ROT-k ciphers. We contribute a novel data augmentation technique which creates enciphered copies of the source side of a parallel dataset. We then leverage this enciphered training data along with the original parallel data via multi-source training to improve neural machine translation. We also provide a co-regularization-inspired training procedure which exploits this enciphered data to outperform existing strong NMT data augmentation techniques across a wide range of experiments and analyses. Our technique can be flexibly combined with existing augmentation techniques, and does not rely on any external data."
+        },
+        {
+            "heading": "2 Ciphertexts for Data Augmentation",
+            "text": "A ROT-k cipher (Figure 1) produces a ciphertext by replacing each letter of its input (plaintext) with the kth letter after it in the alphabet. Past work (Dou and Knight, 2012; Dou et al., 2014) has explicitly used decipherment techniques (Kambhatla et al., 2018) to improve machine translation. We emphasize that decipherment itself is not the purpose of the present work: rather, we use ciphers simply to re-encode data while preserving its meaning. This is possible because ROT-k is a 1:1 cipher where each ciphertext symbol corresponds to a unique plaintext symbol; this means it will preserve distributional features from the plaintext. This makes ROT-k cryptographically weak, but suitable for use in data augmentation.\nConcretely, given a set of n training samples D = {(xi, yi)}ni=1 and a set of keys K, we use Algorithm 1 to generate |K|n new samples; giving (|K|+ 1)n samples when added to the training set."
+        },
+        {
+            "heading": "2.1 The Naive Approach",
+            "text": "The ciphertexts produced by Algorithm 1 are guaranteed to be lexically diverse, not only from the plaintext but also from one another. Given this fact, we can naively regard each Dk as a different language and formulate a multi-\nAlgorithm 1 Cipher-Augment Training Data Training data D = {xi, yi}ni=1 Set of cipher keys K = {k1, k2, .., km} procedure ENCIPHER(D, K)\nfor k in K do . encipher source sentences with ROT-k\nDk \u2190 {ROT-k(xi), yi}ni=1 . target sentences remain unchanged\nassert |D| = |Dk| return {Dk\u2200k \u2208 K}\nlingual training setting (Johnson et al., 2017). For a plaintext sample xi, ciphertext samples {ROT\u2212kj(xi), ...,ROT\u2212k|K|(xi)}, and target sequence yi, the multi-source model is trained by minimizing the cross-entropy\nLiNLL = \u2212log p\u0398(yi|xi)\u2212 |K|\u2211 j log p\u0398(yi|ROT-kj(xi))\n(1)\nwhere |K| is the number of distinct keys used to generate ciphertexts.\nWhile this yields a multilingual model, this formulation does not allow explicit interaction between a plaintext sample and the corresponding ciphertexts. To allow such interactions, we design another model that relies on inherent pivoting between sources and enciphered sources. We achieve this by adding ROT-k(source)\u2192 source as a translation direction; following Johnson et al. (2017) we prepend the appropriate target token to all source sentences and train to minimize the objective\nLiNLL = \u2212log p\u0398(yi|xi)\n\u2212 |K|\u2211 j [ log p\u0398(yi|ROT-kj(xi)) +log p\u0398(xi|ROT-kj(xi)) ]\n(2)\nWe refer to (2) as the naive model.\nDiscussion. In this setting the decoder must learn the distributions of both the true target language and the source language. This may lead to quicker saturation of the decoder and sub-optimal use of its capacity, which must now be shared between two languages; this is a notorious property of many-tomany multilingual NMT (Aharoni et al., 2019)."
+        },
+        {
+            "heading": "2.2 CipherDAug: A Better Approach",
+            "text": "To better leverage the equivalence between plainand ciphertext data, we take inspiration from multiview learning (Xu et al., 2013). We rethink enciphered samples as different views of the authentic source samples which can be exploited for co-\ntraining (Blum and Mitchell, 1998). This is motivated by the observation that plain and enciphered samples have identical sentence length, grammar, and (most importantly) sentential semantics.\nGiven an enciphered source cipher(xi) we model the loss for a plaintext sample (xi, yi) as\nLi = \u03b11 LiNLL( p\u0398( yi|xi) )\ufe38 \ufe37\ufe37 \ufe38 anchor source x-entropy\n+ \u03b12 LiNLL( p\u0398( yi| cipher(xi)) )\ufe38 \ufe37\ufe37 \ufe38 cipher source x-entropy + \u03b2 Lidist( p\u0398( yi|xi), p\u0398( yi|cipher(xi)) )\ufe38 \ufe37\ufe37 \ufe38 agreement loss, see (4) (3)\nwhere the original source language sentence xi is called the anchor here since it is always paired with each enciphered version. The first two terms are conventional negative log-likelihoods, to encourage the model to generate the appropriate target for both xi and cipher(xi).\nThe third term is the agreement loss, measured as the pairwise symmetric KL divergence2 between the output distributions for xi and cipher(xi):\nLidist( p\u0398( yi|xi), p\u0398( yi|cipher(xi)) )\n= 1\n2 [DiKL( p flat \u0398 ( yi|xi) || p\u0398(yi| cipher(xi)) )\n+ DiKL( p flat \u0398 (yi| cipher(xi)) || p\u0398(yi|xi)) ]\n(4)\nThis term allows explicit interactions between plain- and ciphertexts by way of co-regularization. Co-regularization relies on the assumption \u201cthat the target functions in each view agree on labels of most examples\u201d (Sindhwani et al., 2005) and constrains the model to consider only solutions which capture this agreement.\nIn cases where there are many output classes and the model predictions strongly favour certain of these classes, (4) may have an outsized influence on model behaviour. As a precautionary measure, we use a softmax temperature \u03c4 to flatten the model predictions, based on a similar technique in knowledge distillation (Hinton et al., 2015) and multi-view regularization (Wang et al., 2021). The flattened prediction for an (x, y) pair is given by\npflat\u0398 (x | y) = exp(zy)/\u03c4\u2211 yj exp(zyj )/\u03c4\n(5)\nwhere zy is the logit for the output label y. A higher value of \u03c4 produces a softer, more even distribution over output classes.\n2Other metrics such as regular (asymmetric) KL divergence or JS divergence can also be used in (4), but we find that symmetrized KL divergence yields the best results.\nThe overall training procedure, which we dub CipherDAug, is summarized in Algorithm 2.\nAlgorithm 2 CipherDAug Training Algorithm Training data D = {xi, yi}ni=1 Set of cipher keys K = {k1, k2, .., km} Randomly initialized NMT model \u0398\nprocedure MULTISOURCE TRAIN (\u0398, D, K) Danchor = D . plaintexts act as anchor dataset while \u0398 not converged do\nfor each Dcipher \u2208 ENCIPHER(D,K) do . Algo. 1 (cipher(xi), yi) \u223c Dcipher (xi, yi) \u223c Danchor . same index i\n. same target yi LiNLL\u2190P(yi|xi) LiNLL\u2190P(yi|cipher(xi)) Lidist\u2190P(yi|xi) || P(yi|cipher(xi)) . using eq (4) update \u0398 by minimizing Li . using eq (3)"
+        },
+        {
+            "heading": "3 Experiments and Results",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Experimental Setup",
+            "text": "Datasets We use the widely studied IWSLT14 De\u2194En and IWSLT17 Fr\u2194En language pairs as our small-sized datasets.3 For high-resource experiments, we evaluate on the standard WMT14 En\u2192De set of 4.5M sentence pairs.4 We also extend our experiments to the extremely low-resource pair Sk\u2194En from the multilingual TED dataset (Qi et al., 2018) with 61k training samples, and dev and test splits of size 2271 and 2245 respectively.\nCiphertext Generation and Vocabularies. We use a variant of ROT-k which preserves whitespace, numerals, special characters, and punctuation. As a result, these characters appear the same in both plain- and ciphertexts.\nFor our naive approach, we encipher the German side of the IWSLT14 dataset with up to 20 keys {1,2,3,4,5, . . . ,20}. For our main experiments, we encipher the source side of every translation direction5 with key {1} for WMT experiments and keys {1,2} for the rest.6\nWe use sentencepiece (Kudo and Richardson, 2018) to tokenize text into byte-pair encodings\n3The De\u2194En data has a train/dev/test split of about 170k/7k/7k. The Fr\u2194En data has a 236k/890/1210 split using dev2010 and tst2015.\n4Following Vaswani et al. (2017), we validate on newstest2013 and test on newstest2014\n5In all generated ciphertexts, the source alphabet is preserved, only the distribution of characters is changed. The target side is never altered.\n6The dictionaries for enciphered data are produced using only the training dataset, and then applied to the train/dev/test splits, in the same manner that BPE is learned and applied.\n(BPE; Sennrich et al. 2016c) by jointly learning subwords on the source, enciphered-source, and target sides. We tune the number of BPE merges as recommended by Ding et al. (2019); the resulting subword vocabulary sizes for each dataset are tabulated in Table 1.\nIn all experiments, we set the loss weight hyperparameters \u03b11, \u03b12 to 1, and \u03b2 to 5. Section 4.1 shows an ablation over \u03b2 to justify this setting. We find that softmax temperature \u03c4 = 1 works well for all experiments; \u03c4 = 2 results in more stable training for larger datasets. Evaluation We evaluate on BLEU scores7 (Papineni et al., 2002). Following previous work (Vaswani et al., 2017; Nguyen et al., 2019; Xu et al., 2021), we compute tokenized BLEU with multi_bleu.perl8 for IWSLT14 and TED datasets, additionally apply compound-splitting for WMT14 En-De9 and SacreBLEU10 (Post, 2018) for IWSLT17 datasets. For all experiments, we perform significance tests based on bootstrap resampling (Clark et al., 2011) using the compare-mt toolkit (Neubig et al., 2019). Baselines Our main baselines are strong and widely used data-augmentation techniques that do not use external data. We compare CipherDAug to back-translation-based data-diversification (Nguyen et al., 2019), word replacement techniques like SwitchOut (Wang et al., 2018), WordDrop (Sennrich et al., 2016a), and RAML (Norouzi et al., 2016), and the subword-regularization technique BPE-Dropout (Provilkov et al., 2020).\nSee supplemental sections A.1 and A.2 for further baseline and implementation details.\n7Decoder beam size 4 and length penalty 0.6 for WMT, and 5 and 1.0 for all other experiments.\n8mosesdecoder/scripts/generic/multi-bleu.perl 9tensorflow/tensor2tensor/utils/get_ende_bleu.sh\n10SacreBLEU signature: nrefs:1|case:mixed| eff:no|tok:13a|smooth:exp|version:2.0.0"
+        },
+        {
+            "heading": "3.2 Results from the Naive Approach",
+            "text": "Table 2 shows our results using the naive method on the IWSLT14 De\u2192En dev set. Simply using 2 enciphered sources gives a BLEU score of 35.45, which nearly matches the performance of the best baseline, RAML+SwitchOut, at 35.47. Adding the ROT-k(source)\u2192 source direction further improves the score to 35.85. Adding the ROTk(source) \u2192 source direction consistently yields better results than the vanilla multi-source model, but increasing the number of keys has a less consistent effect. We hypothesize that more keys are generally beneficial, but that the model becomes saturated when too many are used. Based on these observations, we limit later experiments to 2 keys.\nWe observe further gains by combining the naive method with the two best performing baselines. This emphasizes that ciphertext-based augmentation is orthogonal to other data-augmentation methods and can be seamlessly combined with these to yield greater improvements."
+        },
+        {
+            "heading": "Naive Multi-Source Equation (1) Equation (2)",
+            "text": ""
+        },
+        {
+            "heading": "3.3 Main Results",
+            "text": "We present our main results in Table 3. While using a single key improves significantly over the Transformer model, augmenting with 2 keys outperforms all baselines. Table 4 shows additional comparisons against approaches that introduce architectural improvements to the transformer (such as MAT; Fan et al. 2020) or that require large pretrained models, like BiBERT (Xu et al., 2021).\n11Section A.3.3 details a supplemental experiment combining CipherDAug with Data Diversification.\nOn the IWSLT14 and IWSLT17 language pairs, our method yields stronger improvements over the standard Transformer than any other data augmentation technique (Table 3). This includes strong methods such RAML+SwitchOut and data diversification, which report improvements as high as 1.8 and 1.9 BLEU points respectively. Data diversification involves training a total of 7 different models for forward and backward translation on the source and target data. By contrast, CipherDAug trains a single model, and improves the baseline transformer by 2.9 BLEU points on IWSLT14 De\u2192En and about 2.2 BLEU points on the smaller datasets."
+        },
+        {
+            "heading": "Model |\u0398| De\u2192 En",
+            "text": "On WMT14 En\u2192De, our method using 1 key improves by 0.6 BLEU over the baseline transformer and significantly outperforms word replacement methods like SwitchOut and WordDropout.\n12Wu et al. 2020 introduce a new model architecture for mixing subword representations that involves a two-stage training\nLow-resource setting The Sk\u2194En dataset is uniquely challenging as it has only 61k pairs of training samples. This dataset is generally paired with a related high-resource language pair such as Cs-En (Neubig and Hu, 2018), or trained in a massively multilingual setting (Aharoni et al., 2019) with 58 other languages from the multilingual TED dataset (Qi et al., 2018). Xia et al. (2019b) introduced a generalized data augmentation technique that works in this multilingual setting and leverages over 2M monolingual sentences for each language using back-translation. Applying CipherDAug to this dataset (Table 5) yields significant improvements over these methods, achieving 32.62 BLEU on Sk\u2192En and 24.61 on En\u2192Sk.\nprocess. CipherDAug, on the other hand, only uses a vanilla Transformer that is trained end-to-end.\nDiscussion On the relatively larger WMT14 dataset (4.5M), despite improving significantly over the baseline Transformer, the Base model (68M params) approaches saturation when \u223c9M enciphered sentences (2 keys) are added. Upgrading to Transformer Big (218M) may be viable, but would be an unfair comparison with other models. The model capacity becomes a bottleneck with larger datasets when the model is optimised to translate each of the source sentences (4.5M plain and 9M enciphered) individually (single-source) as well as together (multi-source) through the coregularization loss. The results indicate that our proposed approach works best in small and low resource data settings."
+        },
+        {
+            "heading": "4 Analysis",
+            "text": ""
+        },
+        {
+            "heading": "4.1 Ablations",
+            "text": "Number of Keys Figure 2 (left) shows the effect of adding different amounts of enciphered data. We obtain the best performance using just 2 different keys. Using more or fewer degrades performance, though both cases still outperform the baseline. As noted in Section 3.2, the model may become saturated when too many keys are used.\nAgreement Loss Figure 2 (right) shows an ablation analysis on the agreement loss. We find that CipherDAug is sensitive to the weight \u03b2 given to this term: increasing or decreasing it from our default setting \u03b2 = 5 incurs a performance drop of nearly 2 BLEU. Despite the performance gains attendant to this term, it is equally clear that agreement loss cannot fully account for CipherDAug\u2019s improvements over the baseline: in the naive setting where \u03b2 = 0, CipherDAug still outperforms the baseline by approximately 1 BLEU.\nLearning BPE vocabularies jointly vs. separately From Table 7, we see that there is no significant impact on BLEU if we learn BPE vocabularies separately for each language or enciphered language from IWSLT14 De\u2192En. This is consistent with results from Neubig and Hu (2018) in the context of mutilingual NMT.\nNote that it is preferable to learn the BPEs jointly as this allows us to limit the total vocabulary size. When learned separately, we cannot control the combined vocabulary size which may result in a larger or smaller vocabulary (and therefore, a different number of embedding parameters) than intended.\nDisentangling the effects of increased parameters in the embedding layer CipherDAug leverages the combined vocabularies of the original parallel bitext and enciphered copies of the source text. This necessarily increases in the number of parameters in the embedding layer even though the rest of the network remains identical.\nTo understand the effect of these extra parameters, we compare CipherDAug against the baseline Transformer model with different vocabulary and embedding sizes. Results from different settings are shown in Table 6. 13\nAs we reduce the embedding dimension of our best model (CipherDAug with 2 keys) from 512 to 256, we observe a small change of -0.6 BLEU in the final scores. With 1 cipher key, however, our model exhibits a slight (statistically insignificant) improvement of +0.06 BLEU. These results show that the few extra embedding parameters in CipherDAug do not have an outsized impact on model performance, but we emphasize that reducing the dimensionality of the embedding layer diminishes its expressivity and is therefore not a completely fair comparison."
+        },
+        {
+            "heading": "4.2 Hallucinations",
+            "text": "The attention mechanism of a model might not reflect a model\u2019s true inner reasoning (Jain and Wallace, 2019; Moradi et al., 2019, 2021). To better analyze NMT models, Lee et al. (2018) introduce the notion of hallucinations. A model hallucinates when small perturbations in its input cause drastic changes in the output, implying it is not actually attentive to this input.\nUsing Algorithm 2 of Raunak et al. (2021), Table 8 shows the number of hallucinations on the IWSLT14 De-En test set for the baseline and CipherDAug models. We use the 50 most common subwords as perturbations. CipherDAug sees a 40% reduction in hallucinations relative to the baseline, suggesting it is more resilient against perturbations and more attentive to the content of its input."
+        },
+        {
+            "heading": "4.3 Effect on Rare Subwords",
+            "text": "We argue that CipherDAug is effective in part because it reduces the impact of rare words. On average, the rarest subword in a ROT-k enciphered\n13Note that in Table 6, the BPE vocabularies from the original source and target remain approximately same across the baseline (12k) and CipherDAug (11.8k) even though the final vocabulary sizes of our models vary with the addition of the enciphered source(s)."
+        },
+        {
+            "heading": "Model Hallucinations",
+            "text": "sentence is significantly more frequent than the rarest subword in a plaintext sentence. This is apparent in an example like the following:\nhier ist es n\u00f6tig, das, was wir unter politically correctness verstehen, immer wieder anzubringen. (6)\nFigure 3 plots the frequency of each subword in this sentence and its ROT-k enciphered variants. In the plaintext, we observe a series of rare subwords ically, _correct, and ness coming from the English borrowing. After encipherment, however, these are replaced by a variety of more common subwords jd, bmm, _d, and so on. The result is that the enciphered sentences have fewer rare subwords; this allows them to share more information with other sentences, and allows the more common enciphered tokens to inform the model\u2019s encoding of less common plaintext tokens.\nWe reiterate that this trend holds across the whole corpus, and highlights the value of an augmentation scheme that allows a model to see many different segmentations of each input.\nThis is not the only mechanism by which CipherDAug improves performance: we find improvements for tokens in every frequency bucket, not simply those which are rare (Figure 4)."
+        },
+        {
+            "heading": "4.4 Multi-view Learning",
+            "text": "In Section 2.2, we argue that the agreement loss in (4) acts as a co-regularization term in a multiview learning setting. Multi-view learning works best when the different views capture distinct information. In CipherDAug, this is accomplished by\nallowing enciphered inputs to receive different segmentations than plaintext inputs. As evidence that the different views capture distinct information, we note that even after training with co-regularization the model remains sensitive to the choice of input encoding, as seen in cases such as Figure 6 where the model may produce any of three distinct outputs depending on whether it is given plain- or ciphertext as input. If all of the input views captured identical information we should expect no such variation, especially after training with an explicit co-regularization term."
+        },
+        {
+            "heading": "4.5 Canonical Correlation Analysis",
+            "text": "To further analyze CipherDAug, we turn to canonical correlation analysis (CCA; Hardoon et al. 2004; Raghu et al. 2017), which finds a linear transform to maximize correlation between values in two high dimensional datasets. As detailed in Raghu et al. 2017, it is useful for measuring correlations between activations from different networks.\nFor each IWSLT14 De-En test sentence, we save the activations from each layer of our baseline and CipherDAug models. For the CipherDAug model, we save activations on plaintext and enciphered inputs. For every pair of layers, we compute the projection weighted14 CCA (PWCCA) between activations from those layers. If this value is high (relative to a random baseline), this means that there is a linear transformation under which the activations from those layers are linearly correlated, implying that the layers capture similar information.\nFigure 5 plots the PWCCA between encoder states from the baseline and CipherDAug models, and between CipherDAug encoder states with dif-\n14See Raghu et al. 2017 for an explanation of CCA variants including PWCCA. We choose PWCCA as it has been found to be most robust against noise and because it does not require explicitly tuning the number of dimensions to analyze.\nferent input encodings. It is immediately clear that CipherDAug learns similar, but not identical, representations for plain- and ciphertext inputs: the state of a layer in the de\u2192en setting is generally predictive of the state of that same layer in the ROT-1(de)\u2192en and ROT-2(de)\u2192en settings.\nWe emphasize, however, that representations for plain- and ciphertexts are not identical, as can be seen by comparing against the baseline model. Here, some layers in one model show a moderate correlation to every layer of the other model; other layers show a strong correlation with a different layer from the other model. This implies that, while the two models extract some of the same information, they do so at different depths in the encoder. Moreover, CipherDAug states from enciphered inputs present an entirely different pattern of correlations than plaintext inputs. This implies that CipherDAug not only learns different information than the baseline, but that these differences are distinct for plaintexts and ciphertexts. These results strengthen Section 4.4\u2019s claim that plainand ciphertexts capture distinct information."
+        },
+        {
+            "heading": "5 Related Work",
+            "text": "Data-augmentation (Sennrich et al., 2016b) can be broadly categorized into back-translation based methods and those which perturb or change the input (Wang et al., 2018). Back-translation (Sennrich et al., 2016b) is arguably the de-facto data augmentation method for NMT. Besides back-translating\nexternal monolingual data (Edunov et al., 2018), Li et al. (2019) forward-translate the source (Zhang and Zong, 2016) and/or backward-translate the target side (Sennrich et al., 2016a) of the original (in-domain) parallel data. Our technique produces lexically diverse samples using only the original source data, rather than relying on model predictions which may be of limited quality. Belinkov and Bisk (2018) showed that NMT models can be sensitive to orthographic variation, and that training with noise improves their robustness (Khayrallah and Koehn, 2018). Common noising techniques include token dropping (Zhang et al., 2020), word replacement (Xie et al., 2017; Wu et al., 2021a), Word-Dropout (randomly zeroing out word embeddings; Sennrich et al. 2016a; Gal and Ghahramani 2016) and adding synthetic noise by swapping random characters or replacing words with common typos (Karpukhin et al., 2019). Adding enciphered data is distinct from noising as the ciphertexts are generated deterministically and follow the same distribution as the underlying natural language, simply using shifted letters of the same alphabet.15\nTo extend the support of the empirical data distribution, Norouzi et al. (2016) introduced RAML on the target side; Wang et al. (2018) proposed SwitchOut as a more general method which they applied to the source side. Special cases of SwitchOut include Word-Dropout and sequence-mixing (Guo et al., 2020a), which exchanges words between similar source sentences to encourage compositional behaviour. Such methods generate several different samples for each sentence because of the large vocabulary to choose replacements from; they often give poor coverage despite this. In contrast, CipherDAug guarantees lexically diverse examples with semantic equivalence to the source sentences without having to choose specific replacements.\nAdversarial techniques (Gao et al., 2019) perform soft perturbations of tokens or spans\n15CipherDAug can also apply to non-alphabetic scripts (e.g. Mandarin, Japanese) by incrementing Unicode codepoints modulo the size of the block containing the script in question.\n(Takase and Kiyono 2021, Karpukhin et al. 2019). An advantage of soft replacements over hard ones is that they take into account the context of the tokens being replaced (Liu et al., 2021; Mohiuddin et al., 2021). These methods require architectural changes to a model whereas CipherDAug does not.\nCiphertext-based augmentation is orthogonal to most other data-augmentation methods and can be seamlessly combined with these to jointly improve neural machine translation."
+        },
+        {
+            "heading": "6 Conclusion",
+            "text": "We introduce CipherDAug, a novel technique for augmenting translation data using ROT-k enciphered copies of the source corpus. This technique requires no external data, and significantly outperforms a variety of strong existing data augmentation techniques. We have shown that an agreement loss term, which minimizes divergence between representations of plain- and ciphertext inputs, is crucial to the performance of this model, and we have explained the function of this loss term with reference to co-regularization techniques from multi-view learning. We have also demonstrated other means by which enciphered data can improve model performance, such as by reducing the impact of rare words. Overall, CipherDAug shows promise as a simple, out-of-the-box approach to data augmentation which improves on and combines easily with existing techniques, and which yields particularly strong results in low-resource settings."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "We would like to thank the anonymous reviewers for their helpful comments and Kumar Abhishek for the numerous discussions that helped shape this paper. The research was partially supported by the Natural Sciences and Engineering Research Council of Canada grants NSERC RGPIN-2018-06437 and RGPAS-2018-522574 and a Department of National Defence (DND) and NSERC grant DGDND2018-00025 to the third author."
+        },
+        {
+            "heading": "A Appendix",
+            "text": ""
+        },
+        {
+            "heading": "A.1 Baselines",
+            "text": "To compare model performance on the small and mid-sized datasets, we re-implemented most baselines:\n\u2022 we used the pseudocode in appendix A6 along with proofs in appendices A1 and A2 of the SwitchOut paper (Wang et al., 2018) to implement SwitchOut, WordDrop (Sennrich et al., 2016a), RAML (Norouzi et al., 2016), RAML+SwitchOut and RAML+WordDrop as special cases of SwitchOut. The hyperparameter \u03c4 was tuned on the dev set for each language pair. The respective \u03c4 values are 0.9 and 0.95 for De-En and 0.85 and 0.95 for Fr-En.\n\u2022 we followed the instructions on the official open-sourced repository to reproduce BPE-Dropout (Provilkov et al., 2020) 16\nwith the recommended value of p=0.1 using the sentencepiece tokenizer. We trained models on our Fairseq codebase for IWSLT14 De\u2194En and WMT14 En\u2192De. We reported the SacreBLEU numbers for IWSLT17 Fr\u2194En from literature.\n\u2022 experiments on data-diversification (Nguyen et al., 2019) were reproduced using the official open-sourced implementation on top of the Fairseq toolkit. For WMT14 En-De, we use a Transformer Base ( 68M parameters) for a fair comparison across methods, whereas the original implementation employs a Transformer Big model ( 210M parameters). 17. Note that this method requires training 7 individual models and has a total effective data size 7 times the original size to produce best results.\nWe reported the performance of MixedRepresentation (Wu et al., 2020) baseline for IWSLT14 De\u2192En from the literature. However, to the best of our knowledge, we employ settings identical to Mixed-Repr. baseline for IWSLT14 De\u2192En in our model \u2013 the same tokenizer (SentencePiece), vocabulary size (12k), model size (transformer_iwslt_de_en),\n16https://github.com/VProv/BPE-Dropout 17https://github.com/nxphi47/data_\ndiversification\ndecoding hyper-parameters (beam 5, len-pen 1.0) and evaluation script (multi-bleu.perl)."
+        },
+        {
+            "heading": "A.2 CipherDAug: Models and Hyperparameters",
+            "text": "The smaller datasets (IWSLT14 De\u2194En 18, IWSLT17 Fr\u2194En19 and TED Sk\u2194En20) are trained with the transformer_iwslt_de_en config with 6 layers of encoder and decoder with 4 attention heads, embedding size of 512, feed-forward size of 1024, network dropout 0.3 and attention dropout 0.1. The peak learning rate is 6e \u2212 4 with 8000 warmup steps.\nFor training the on WMT14 En\u2192De dataset21, we use Transformer Base config, dubbed transformer_wmt_en_de in fairseq toolkit, with 6 layers of encoder and decoder with 8 attention heads, embedding size of 512, feed-forward size of 2048, dropout 0.1. The peak learning rate is 7e\u2212 4 with 4000 warmup steps.\nFollowing conventional training of Transformers, we use Adam optimizer with betas (0.9, 0.98) and = 10\u22129 and inverse_sqrt learning rate scheduler. Label smoothing is set to 0.1.\nWe also set an agreement_loss_warmup to 2000 steps. This signifies that until the specified number of steps, the model will train with regular cross-entropy loss without computing KL divergence. This is done to let the model gain some confidence before we start applying co-regularization. This does not improve or worsen model performance, but we find that this helps the model converge slightly faster.\nThe transformer_iwslt_de_en models (for IWSLT14, IWSLT17 and TED datasets) were run on 2 Titan RTX GPUs while the transformer_wmt_en_de model for WMT14 En-De was run on 8 A6000 GPUs. All models were run until convergence with an early stopping patience of 15 validation steps. While smaller models converged within 100k updates, the model on WMT14 dataset was force stopped at\n18https://github.com/pytorch/fairseq/ blob/main/examples/translation/ prepare-iwslt14.sh\n19The official IWSLT17 evaluation campaign: https:// wit3.fbk.eu/2017-01-c\n20https://github.com/neulab/ word-embeddings-for-nmt\n21https://github.com/pytorch/fairseq/ blob/main/examples/translation/ prepare-wmt14en2de.sh"
+        },
+        {
+            "heading": "Non-trainable O",
+            "text": "400k updates while the model was still improving (at a very slow rate).\nFor producing translations, the decoder beam size is set to 4 and length penalty 0.6 for WMT, and 5 and 1.0 for all other experiments. We evaluate on BLEU scores (Papineni et al., 2002). Following previous work (Vaswani et al., 2017; Nguyen et al., 2019; Xu et al., 2021), we compute tokenized BLEU with multi_bleu.perl22 for IWSLT14 and TED datasets, additionally apply compound-splitting for WMT14 En-De23 and SacreBLEU (Post, 2018) (Signature: nrefs:1|case:mixed| eff:no|tok:13a|smooth:exp|version :2.0.0 for IWSLT17 datasets.\nFinally, all results are reported on translations obtained after averaging the last 5 checkpoints."
+        },
+        {
+            "heading": "A.3 Additional Experiments",
+            "text": "A.3.1 Disentangling the effects of increased parameters in the embedding layer\nAdditional experiment based on results from Sec. 4.1 \u2013 Table 6. CipherDAug uses the combined vocabularies of the original parallel bitext and enciphered copies of the source text. This necessarily increases in the number of parameters in the embedding layer even though the rest of the network remains identical.\nUsing embeddings largely independent of the vocabulary size. To completely disambiguate the effects of the different sizes of vocabularies in the baseline and CipherDAug transformers, we\n22mosesdecoder/scripts/generic/multi-bleu.perl 23tensorflow/tensor2tensor/utils/get_ende_bleu.sh\nreplace the embedding layer with ALONE embeddings (Takase and Kobayashi, 2020).\nWhile the conventional embedding layer requires an embedding matrix E \u2208 RDemb xV where V is the vocabulary size, ALONE lets different words in the vocabulary share a vector element with each other. To concretely obtain a word representation for w, ALONE computes an elementwise product of the base embedding o \u2208 R1 xDO and a filter vector, and then applies a feed-forward network of dimension Dinter to increase its expressiveness.\nSee Takase and Kobayashi (2020) for more details on ALONE embeddings. We integrated the officially released code24 with our implementation. Table 10 compares parameter counts with and without ALONE, and Table 9 details the result of using ALONE embeddings with CipherDAug.\nA.3.2 Effect of different dropout probabilities\nTo further study the efficacy of our method in under-regularized scenarios, we compare the baseline transformer model with CipherDAug for the\n24https://github.com/takase/alone_ seq2seq\ndropout values of 0 (no regularization), 0.1, 0,2 and 0.3 in Table 11. Evidently, our method shows consistent gains over the baseline. While a dropout value of 0.3 is optimal for both models, CipherDAug records a BLEU of +4.5 against the base model with dropout set to 0 which removes regularization as well any stochasticity from the model. This suggests that the variation in input data introduced by CipherDAug can yield improvements for transformer models, with similar effects to adding dropout (albeit to a lesser degree).\nA.3.3 Complimenting data-diversification with CipherDAug\nTo further support our claim that our method can be combined with existing data-augmentation techniques, we extend CipherDAug into the datadiversification (Nguyen et al., 2019) framework.\nData-Diversification: This is a simple technique that employs the following steps to augment data without changing the model architecture:\nAlgorithm 3 Data-diversification 1: Train 3 randomly initialized forward (s\u2192t) models 2: Train 3 randomly initialized backward (t\u2192s) models 3: Translate original bitext with the forward models \u2192\nD1, D2, D3 4: Translate original bitext with the backward models \u2192\nD4, D5, D6 5: Combine all data D = D0\u222aD1\u222aD2\u222aD3\u222aD4\u222aD5\u222aD6\nwhere D0 = original bitext 6: Train final model on the augmented data D\nWe adapt Algo 3 to incorporate CipherDAug by modifying steps 1 and 2 \u2013 we replace the forward models with one CipherDAug model with 2 keys trained on IWSLT14 De\u2192En and the backward models with a CipherDAug model with 2 keys trained on IWSLT14 En\u2192De. We leverage the observation that CipherDAug often produces lexically diverse translations for the source and encipheredsource sentences (Figure 6; Figure 9 in Appendix ). Following Step 5 above, we finally combine the 3 forward translations and the 3 backward translations with the original parallel data, and train a final\nmodel on the resulting augmented data. The results in Table 12 demonstrate that the combination is more effective than data diversification on its own.\nA.4 Comparison with other methods We show a comparison of our method CipherDAug with a variety of data-augmentation methods as well as other methods that introduce architectural changes for better neural machine translation in Table 13."
+        },
+        {
+            "heading": "Model De\u2192 En",
+            "text": ""
+        },
+        {
+            "heading": "A.5 More Examples of Rare Subwords",
+            "text": "The examples in this section further illustrate how CipherDAug helps to eliminate rare subwords: de: hey, warum nicht? (Rarest subword _hey occurs 2 times.) ROT-1(de): ifz, xbsvn ojdiu? (Rarest subword _if occurs 26 times.) ROT-2(de): jg\u00df, yctwo pkejv? (Rarest subword _jg occurs 15 times.)\nde: wir alle lieben baseball, oder? (Rarest subword _baseball occurs 7 times.) ROT-1(de): xjs bmmf mjfcfo cbtfcbmm, pefs? (Rarest subword cbmm occurs 14 times.) ROT-2(de): ykt cnng nkgdgp dcugdcnn, qfgt? (Rarest subword dcnn occurs 14 times.)\nSo ur\nce :\nun d\nic h\nbe ha\nup te\n,d as\ns es\nhe ut\ne w\nah rs\nch ei\nnl ic\nhe ri\nst ,d\nas s\nw ir\nop fe\nre in\nes on\nlin e-\nve rb\nre ch\nen s\nw er\nde n,\nal s\nei ne\ns ve\nrb re\nch en\ns in\nde rr\nea le\nn w\nel t.\nR ef\ner en\nce :\nan d\ni\u2019 m\nsa yi\nng th\nat it\u2019\ns m\nor e\nlik el\ny to\nda y\nto be\na vi\nct im\nof an\non lin\ne cr\nim e\nth an\na cr\nim e\nin th\ne re\nal w\nor ld\n.\nB as\nel in\ne: an\nd i\u2019\nm sa\nyi ng\nth at\nit\u2019 s\nm or\ne lik\nel y\nto da\ny to\nbe a\nvi ct\nim of\nan on\nlin e\ncr im\ne th\nan a\ncr im\ne in\nth e\nre al\nw or\nld .\nde \u2192\nen :\nan d\niw ou\nld ar\ngu e\nth at\nto da\ny it\u2019\nsm or\ne lik\nel y\nth at\nw e\u2019\nre go\nin g\nto be\nvi ct\nim s\nof an\non lin\ne cr\nim e\nth an\na cr\nim e\nin th\ne re\nal w\nor ld . R O T1 ,2 (d e) \u2192 en : an d iw ou ld ar gu e to da y th at w e ar e m or e lik el y to be co m e vi ct im s of an on lin e cr im e th an a cr im e in th e re al w or ld .\nSo ur\nce :\nsi e\nis td\nas sy\nm bo\nla ll\nde ss\nen ,w\nas w\nir si\nnd un\nd w\noz u\nw ir\nal s\ner st\nau nl\nic h\nw is\nsb eg\nie ri\nge sp\nez ie\ns f\u00e4\nhi g\nsi nd . R ef er en ce : it\u2019 s th e sy m bo lo fa ll of w ha tw e ar e an d w ha tw e\u2019 re ca pa bl e of as an am az in gl y aw ar e sp ec ie s. B as el in e: it\u2019 s th e sy m bo lo fa ll of w ha tw e ar e an d w ha tw e ar e ca pa bl e of as an am az in gl y ar bi tr ar y sp ec ie s. de \u2192 en ,R O T1 (d e) \u2192 en it\u2019 s th e sy m bo lo fa ll of w ha tw e ar e an d w ha tw e\u2019 re ca pa bl e of as an am az in gl y aw ar e sp ec ie s. R O T2 (d e) \u2192 en it\u2019 s th e sy m bo lo fa ll of w ha tw e ar e an d w ha tw e ar e ca pa bl e of as an am az in gl y kn ow le dg ea bl e sp ec ie\ns.\nSo ur\nce :\nes is\nte in\nfo to\n,d as\nic h\ner st\nle tz\nte n\nap ri\nli m\nno rd\nw es\nte n\nde s\nam az\non as\nau fn\nah m . R ef er en ce : it\u2019 s a pi ct ur e it oo k ju st la st ap ri li n th e no rt hw es to ft he am az on . B as el in e: th is is a pi ct ur e it oo k ju st la st ap ri li n th e no rt hw es to ft he am az on . de \u2192 en ,R O T2 (d e) \u2192 en : it\u2019 s a pi ct ur e it oo k ju st la st ap ri li n th e no rt hw es to ft he am az on . R O T1 (d e) \u2192 en : it\u2019 s a ph ot og ra ph th at it oo k ju st la st ap ri li n th e no rt hw es to ft he am az on .\nSo ur\nce :\nal so\nha td\nie al\nlia nz\nf\u00fc rk\nlim at\nsc hu\ntz zw\nei ka\nm pa\ngn en\nin s\nle be\nn ge\nru fe n. R ef er en ce : so th e al lia nc e fo rc lim at e ch an ge ha s st ar te d tw o ca m pa ig ns . B as el in e: so th e al lia nc e fo rc lim at e ch an ge ha s st ar te d tw o ca m pa ig ns . de \u2192 en : so th e al lia nc e fo rc lim at e ch an ge st ar te d tw o ca m pa ig ns . R O T1 (d e) \u2192 en : so th e al lia nc e fo rc lim at e pr ot ec tio n ha sc re at ed tw o ca m pa ig ns . R O T2 (d e) \u2192 en : so th e al lia nc e fo rc lim at e pr ot ec tio n ha sl au nc he d tw o ca m pa ig ns .\nSo ur\nce nu\nn di\nes e\neb en\ne de\nri nt\nui tio\nn w\nir d\nse hr\nw ic\nht ig . R ef er en ce no w th is le ve lo fi nt ui tio n be co m es ve ry im po\nrt an\nt.\nB as\nel in\ne: no\nw th\nis le\nve lo\nfi nt\nui tio\nn be\nco m\nes ve\nry im\npo rt\nan t.\nde \u2192\nen ,R\nO T-\n2 (d\ne) \u2192\nen :\nno w\nth is\nle ve\nlo fi\nnt ui\ntio n\nbe co\nm es\nve ry\nim po\nrt an t. R O T1 (d e) \u2192 en : no w th is le ve lo fi nt ui tio n is go in g to be ve ry im po\nrt an\nt.\nSo ur\nce :\nnu n\nis te\nin e\nsp ra\nch e\nni ch\ntn ur\ndi e\nge sa\nm th\nei td\nes vo\nka bu\nla rs\nod er\nre ih\ne vo\nn gr\nam m\nat ik\nre ge\nln .\nR ef\ner en\nce :\nno w\n,a la\nng ua\nge is\nno tj\nus tt\nhe w\nho le\nna tu\nre of\nvo ca\nbu la\nry or\na se\nri es\nof gr\nam m\nar ru\nle s.\nB as\nel in\ne: no\nw ,a\nla ng\nua ge\nis no\ntj us\ntt he\nw ho\nle na\ntu re\nof vo\nca bu\nla ry\nor a\nse ri\nes of\ngr am\nm ar\nru le\ns.\nde \u2192\nen :\nno w\n,a la\nng ua\nge is\nno tj\nus tt\nhe su\nm of\nvo ca\nbu la\nry or\na se\nri es\nof gr\nam m\nar ru\nle s.\nR O\nT1 (d\ne) \u2192\nen :\nno w\n,a la\nng ua\nge is\nno tj\nus tt\nhe su\nm of\nth e\nvo ca\nbu la\nry or\na se\nri es\nof gr\nam m\nar ru\nle s.\nR O\nT2 (d\ne) \u2192\nen :\nno w\n,a la\nng ua\nge is\nno tj\nus tt\nhe su\nm of\nth e\nvo ca\nbu la\nry or\na se\nri es\nof gr\nam m\nar .\nFi gu\nre 9:\nA dd\niti on\nal ex\nam pl\nes w\nhe re\nth e\nch oi\nce of\nke y\nim pa\nct s\nm od\nel ou\ntp ut\n."
+        }
+    ],
+    "title": "CipherDAug: Ciphertext based Data Augmentation for Neural Machine Translation",
+    "year": 2022
+}

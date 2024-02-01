@@ -1,0 +1,566 @@
+{
+    "abstractText": "Multiplexed immunofluorescence imaging enables high-dimensional molecular profiling at subcellular resolution. However, learning disease-relevant cellular environments from these rich imaging data is an open challenge. We developed SPAtial CEllular Graphical Modeling (SPACE-GM), a geometric deep learning framework that flexibly models tumor microenvironments (TMEs) as cellular graphs. We applied SPACE-GM to 658 head-and-neck and colorectal human cancer samples assayed with 40-plex immunofluorescence imaging to identify spatial motifs associated with cancer recurrence and patient survival after immunotherapy. SPACE-GM is substantially more accurate in predicting patient outcomes than previous approaches for modeling spatial data using neighborhood cell-type compositions. Computational interpretation of the disease-relevant microenvironments identified by SPACE-GM generates insights into the effect of spatial dispersion of tumor cells and granulocytes on patient prognosis. Introduction Tumor microenvironments (TMEs) are complex niches characterized by cellular, molecular, and genetic heterogeneity. Current research and clinical practice have begun to reflect this complexity, with studies atlasing diseased cells in an unbiased fashion1,2 and novel therapies increasingly targeted to non-cancer cells, including immune and stromal compartments3. Just as the functions of healthy tissues depend on the spatial organization of cells, tumor pathology may depend on the spatial organization of the TME4. . CC-BY-NC-ND 4.0 International license available under a was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is made The copyright holder for this preprint (which this version posted May 13, 2022. ; https://doi.org/10.1101/2022.05.12.491707 doi: bioRxiv preprint",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Zhenqin Wu"
+        },
+        {
+            "affiliations": [],
+            "name": "Alexandro E. Trevino"
+        },
+        {
+            "affiliations": [],
+            "name": "Eric Wu"
+        },
+        {
+            "affiliations": [],
+            "name": "Kyle Swanson"
+        },
+        {
+            "affiliations": [],
+            "name": "Honesty J. Kim"
+        },
+        {
+            "affiliations": [],
+            "name": "H. Blaize D\u2019Angio"
+        },
+        {
+            "affiliations": [],
+            "name": "Ryan Preska"
+        },
+        {
+            "affiliations": [],
+            "name": "Gregory W. Charville"
+        },
+        {
+            "affiliations": [],
+            "name": "Piero D. Dalerba"
+        },
+        {
+            "affiliations": [],
+            "name": "Ann Marie Egloff"
+        },
+        {
+            "affiliations": [],
+            "name": "Ravindra Uppaluri"
+        },
+        {
+            "affiliations": [],
+            "name": "Umamaheswar Duvvuri"
+        },
+        {
+            "affiliations": [],
+            "name": "Aaron T. Mayer"
+        },
+        {
+            "affiliations": [],
+            "name": "James Zou"
+        }
+    ],
+    "id": "SP:b7fccd4e15284c933e4a2018813eaa40b3f3ed61",
+    "references": [
+        {
+            "authors": [
+                "Wu",
+                "S. Z"
+            ],
+            "title": "A single-cell and spatially resolved atlas of human breast cancers",
+            "venue": "Nat. Genet",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "L. Bejarano",
+                "M.J.C. Jord\u0101o",
+                "J.A. Joyce"
+            ],
+            "title": "Therapeutic Targeting of the Tumor MicroenvironmentTherapeutic Targeting of the Tumor Microenvironment",
+            "venue": "Cancer Discov",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A Lomakin"
+            ],
+            "title": "Spatial genomics maps the structure, character and evolution of cancer",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Rodriques",
+                "S.G. et al. Slide-seq"
+            ],
+            "title": "A scalable technology for measuring genome-wide expression at high spatial resolution",
+            "venue": "Science 363, 1463\u20131467",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "X Wang"
+            ],
+            "title": "Three-dimensional intact-tissue sequencing of single-cell transcriptional states",
+            "venue": "Science 361,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Moffitt",
+                "J. R"
+            ],
+            "title": "High-throughput single-cell gene-expression profiling with multiplexed error-robust fluorescence in situ hybridization",
+            "venue": "Proceedings of the National Academy of Sciences vol",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Y Goltsev"
+            ],
+            "title": "Deep Profiling of Mouse Splenic Architecture with CODEX Multiplexed Imaging",
+            "venue": "Cell 174,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M Angelo"
+            ],
+            "title": "Multiplexed ion beam imaging of human breast tumors",
+            "venue": "Nat. Med",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Lin",
+                "J.-R",
+                "M. Fallahi-Sichani",
+                "Chen",
+                "J.-Y",
+                "P.K. Sorger"
+            ],
+            "title": "Cyclic Immunofluorescence (CycIF), A Highly . CC-BY-NC-ND 4.0 International license available under a was not certified by peer review) is the author/funder, who has granted bioRxiv a license to display the preprint in perpetuity. It is made The copyright holder for this preprint (which this version posted May 13, 2022",
+            "venue": "Curr. Protoc. Chem. Biol",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Ali",
+                "H. R"
+            ],
+            "title": "Imaging mass cytometry and multiplatform genomics define the phenogenomic landscape of breast cancer",
+            "venue": "Nat Cancer",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Sch\u00fcrch",
+                "C. M"
+            ],
+            "title": "Coordinated Cellular Neighborhoods Orchestrate Antitumoral Immunity at the Colorectal Cancer",
+            "venue": "Invasive Front. Cell 183,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S.S. Bhate",
+                "G.L. Barlow",
+                "C.M. Sch\u00fcrch",
+                "G.P. Nolan"
+            ],
+            "title": "Tissue schematics map the specialization of immune tissue motifs and their appropriation by tumors",
+            "venue": "Cell Syst 13,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Zhou",
+                "Y. et al. Cgc-net"
+            ],
+            "title": "Cell graph convolutional network for grading of colorectal cancer histology images",
+            "venue": "in Proceedings of the IEEE/CVF International Conference on Computer Vision Workshops 0\u20130",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "W. Lu",
+                "S. Graham",
+                "M. Bilal",
+                "N. Rajpoot",
+                "F. Minhas"
+            ],
+            "title": "Capturing cellular topology in multi-gigapixel pathology",
+            "venue": "images. in Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshops",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D. Anand",
+                "S. Gadiya",
+                "Sethi",
+                "A. Histographs"
+            ],
+            "title": "graphs in histopathology",
+            "venue": "in Medical Imaging 2020: Digital Pathology vol. 11320 150\u2013155",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J. Gilmer",
+                "S.S. Schoenholz",
+                "P.F. Riley",
+                "O. Vinyals",
+                "G.E. Dahl"
+            ],
+            "title": "Neural Message Passing for Quantum Chemistry",
+            "venue": "Proceedings of the 34th International Conference on Machine Learning",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Z Wu"
+            ],
+            "title": "A Comprehensive Survey on Graph Neural Networks",
+            "venue": "IEEE Trans Neural Netw Learn Syst 32,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M Brbi\u0107"
+            ],
+            "title": "Annotation of Spatially Resolved Single-cell Data with STELLAR. doi:10.1101/2021.11.24.469947",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C Innocenti"
+            ],
+            "title": "An Unsupervised Graph Embeddings Approach to Multiplex Immunofluorescence Image Exploration",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "D.S. Fischer",
+                "A.C. Schaar",
+                "F.J. Theis"
+            ],
+            "title": "Learning cell communication from spatial graphs of cells",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J Kim"
+            ],
+            "title": "Unsupervised discovery of tissue architecture in multiplexed imaging. doi:10.1101/2022.03.15.484534",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "K. Xu",
+                "W. Hu",
+                "J. Leskovec",
+                "S. Jegelka"
+            ],
+            "title": "How Powerful are Graph Neural Networks",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "P Dalerba"
+            ],
+            "title": "CDX2 as a Prognostic Biomarker in Stage II and Stage III Colon Cancer",
+            "venue": "N. Engl. J. Med. 374,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "R Uppaluri"
+            ],
+            "title": "Neoadjuvant and Adjuvant Pembrolizumab in Resectable Locally Advanced",
+            "venue": "Clinical Cancer Research vol",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "K.E. Blise",
+                "S. Sivagnanam",
+                "G.L. Banik",
+                "L.M. Coussens",
+                "J. Goecks"
+            ],
+            "title": "Single-cell spatial architectures associated with clinical outcome in head and neck squamous cell carcinoma",
+            "venue": "NPJ Precis Oncol 6,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Jackson",
+                "H. W"
+            ],
+            "title": "The single-cell pathology landscape of breast cancer",
+            "venue": "Nature 578,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Trellakis",
+                "S. et al. Polymorphonuclear granulocytes in human head",
+                "neck cancer"
+            ],
+            "title": "enhanced inflammatory activity, modulation by cancer cells and expansion in advanced disease",
+            "venue": "Int. J. Cancer 129, 2183\u20132193",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "Lonardi",
+                "S. et al. Tumor-associated neutrophils (TANs) in human carcinoma-draining lymph nodes"
+            ],
+            "title": "a novel TAN compartment",
+            "venue": "Clin Transl Immunology 10, e1252",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S.B. Coffelt",
+                "M.D. Wellenstein",
+                "de Visser",
+                "K.E. Neutrophils in cancer"
+            ],
+            "title": "neutral no more",
+            "venue": "Nat. Rev. Cancer 16, 431\u2013446",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "F Shojaei"
+            ],
+            "title": "Bv8 regulates myeloid-cell-dependent tumour angiogenesis",
+            "venue": "Nature 450,",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "D Di Mitri"
+            ],
+            "title": "Tumour-infiltrating Gr-1+ myeloid cells antagonize senescence in cancer",
+            "venue": "Nature 515,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Coffelt",
+                "S. B"
+            ],
+            "title": "IL-17-producing \u03b3\u03b4 T cells and neutrophils conspire to promote breast cancer metastasis",
+            "venue": "Nature 522,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "S.K. Wculek",
+                "I. Malanchi"
+            ],
+            "title": "Neutrophils support lung colonization of metastasis-initiating breast cancer cells",
+            "venue": "Nature 528,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "A Regev"
+            ],
+            "title": "The Human Cell Atlas",
+            "venue": "Elife 6,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "HuBMAP Consortium. The human body at cellular resolution"
+            ],
+            "title": "the NIH Human Biomolecular Atlas Program",
+            "venue": "Nature 574, 187\u2013192",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Greenwald",
+                "N. F"
+            ],
+            "title": "Whole-cell segmentation of tissue images with human-level performance using large-scale data annotation and deep learning",
+            "venue": "Nat. Biotechnol",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J.W. Hickey",
+                "Y. Tan",
+                "G.P. Nolan",
+                "Y. Goltsev"
+            ],
+            "title": "Strategies for Accurate Cell Type Identification in CODEX Multiplexed Imaging Data",
+            "venue": "Front. Immunol",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "V.D. Blondel",
+                "Guillaume",
+                "J.-L",
+                "R. Lambiotte",
+                "E. Lefebvre"
+            ],
+            "title": "Fast unfolding of communities in large networks",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "H. Kvamme",
+                "\u00d8. Borgan",
+                "I. Scheel"
+            ],
+            "title": "Time-to-Event Prediction with Neural Networks and Cox Regression",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "D.P. Kingma",
+                "Ba",
+                "J. Adam"
+            ],
+            "title": "A Method for Stochastic Optimization",
+            "venue": "arXiv [cs.LG]",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Buitinck",
+                "L. et al. API design for machine learning software"
+            ],
+            "title": "experiences from the scikit-learn project",
+            "venue": "arXiv [cs.LG]",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Paszke",
+                "A. et al. PyTorch"
+            ],
+            "title": "An imperative style, high-performance deep learning library",
+            "venue": "Adv. Neural Inf. Process. Syst. 32,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M. Fey",
+                "J.E. Lenssen"
+            ],
+            "title": "Fast Graph Representation Learning with PyTorch Geometric",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "L. McInnes",
+                "J. Healy",
+                "Melville",
+                "J. UMAP"
+            ],
+            "title": "Uniform Manifold Approximation and Projection for Dimension Reduction",
+            "venue": "arXiv [stat.ML]",
+            "year": 2018
+        }
+    ],
+    "sections": [
+        {
+            "heading": "Introduction",
+            "text": "Tumor microenvironments (TMEs) are complex niches characterized by cellular, molecular, and genetic heterogeneity. Current research and clinical practice have begun to reflect this complexity, with studies atlasing diseased cells in an unbiased fashion1,2 and novel therapies increasingly targeted to non-cancer cells, including immune and stromal compartments3. Just as the functions of healthy tissues depend on the spatial organization of cells, tumor pathology may depend on the spatial organization of the TME4.\nIn situ molecular profiling techniques, including spatial transcriptomic5\u20137 and proteomic8\u201310 techniques, increasingly enable high-dimensional, high-resolution characterization of TMEs and other tissues. Co-detection by indexing8 (CODEX) is an in situ molecular profiling technique based on iterative hybridization and fluorescence imaging of DNA-barcoded antibodies, enabling multiplexed quantification of 40 or more antigens from histological specimens at subcellular resolution.\nWhile these new spatial technologies capture rich cellular and neighborhood information, analysis of the spatial data presents new challenges. In particular, how to identify biologically meaningful microenvironments from the rich spatial data and how to characterize the disease relevance of microenvironments are important open questions.\nPrevious works typically assign cells to cellular neighborhoods according to the cell-type compositions of their immediate neighbors8,11\u201313. However, these approaches may miss local spatial relationships between cells. Moreover, since the neighborhoods are generated in a purely unsupervised fashion, they have limited insight on which microenvironments are disease-relevant. We hypothesize that local spatial arrangements of cells beyond composition could encode rich disease-relevant information.\nHere, we present SPAtial CEllular Graphical Modeling (SPACE-GM), a geometric deep learning framework that employs a graph neural network (GNN) to flexibly model cellular niche structures, or microenvironments, as subgraphs. Each node of the subgraph corresponds to a cell represented by its multiplexed protein levels and the edges capture neighbor relations. We apply SPACE-GM to three clinically annotated CODEX datasets and show that it identifies disease-relevant microenvironments that accurately predict patient-level phenotypes. We show that SPACE-GM generalizes across studies and disease contexts. Moreover, by analyzing the network embeddings, we derive specific insights on how local structural dispersion explains patient prognosis and treatment response.\nThere has been increased interest in applying graph-based deep learning methods to spatial cellular structures in recent literature14\u201316. Graph neural networks17,18 (GNNs), a class of deep learning methods designed for graph structures, have been applied to a variety of analysis tasks, including cell type prediction19, representation learning20, cellular communication modeling21 and tissue structure detection22. As most of these methods are designed for cellular property modeling, there still exists a gap between cellular-level graph analysis and patient-level phenotypes. SPACE-GM bridges this gap by training models using microenvironments as inputs to predict patient phenotypes. Interpretation of SPACE-GM sheds light on how cellular spatial arrangements impact disease and treatment outcomes."
+        },
+        {
+            "heading": "Results",
+            "text": "Geometric deep learning models cellular microenvironments To model cellular communities, we first develop a pipeline to segment and classify individual cells from CODEX data (Methods). We then infer the 2D spatial structure of cells by constructing a Delauney triangulation and Voronoi diagram of cell centroid coordinates (Fig. 1A, middle panel). Lastly, we transform the data into a graph, defining cells as nodes and Delauney neighbors as edges (Fig. 1A, right panel).\nWith the graphical representation as input, we propose SPAtial CEllular Graphical Modeling (SPACE-GM), a geometric deep learning tool that reads spatial cellular community structures in\nTMEs. SPACE-GM employs a graph isomorphism network (GIN)23 as the backbone and multiple multilayer perceptrons (MLP) as prediction heads (Methods).\nSPACE-GM treats cellular graphs of TMEs as collections of local subgraphs: center nodes (cells) and their n-hop spatial neighbors (i.e., nodes within a graph distance of n edges from the center node). Empirically, we find that 3-hop neighborhoods\u2013corresponding to 40 cells on average\u2013is a suitable choice where the size of microenvironments and model performance is balanced (Supplementary Notes and Supplementary Fig. 4). We hereafter refer to these 3-hop local subgraphs as \u201cmicroenvironments\u201d (Fig. 1B). Correspondingly, a 3-layer GIN is employed in SPACE-GM, which constructs embeddings for center cells and microenvironments based on node features (e.g., one-hot encoded cell types) and edges (graph connectivity). Embeddings can then be passed through the prediction heads to generate estimates for cellular properties (e.g., center cell expression profile) and patient-level phenotypic properties (e.g., survival outcome of the patient).\nIn practice, we first pre-train SPACE-GM on cellular property prediction tasks, then finetune the backbone for patient phenotype predictions, both with microenvironment inputs (Fig. 1B, bottom row). In the text below, \u201cSPACE-GM\u201d and \u201cSPACE-GM no-pretraining\u201d represent models trained with or without the pre-training stage. During inference, we collect predictions from all individual microenvironments from test samples and perform mean-aggregation to derive patient-level predictions (Methods and Supplementary Notes).\nApplying SPACE-GM to head and neck cancer and colorectal cancer To demonstrate the ability of SPACE-GM to model biologically and clinically relevant signals, we generated three 40-plex CODEX datasets from primary human cancer biopsies. Tissues were collected at Stanford University, University of Pittsburgh Medical Center (UPMC) and Dana Farber Cancer Institute (DFCI). In total, 658 samples were imaged, representing 139 head and neck cancer24 (HNC) patients and 110 colorectal cancer25 (CRC) patients (Fig. 2A). We refer to these datasets as UPMC-HNC, Stanford-CRC, and DFCI-HNC. Samples were annotated with clinical data, including patient survival, disease recurrence, and response to therapy (Supplementary Table 1).\nCODEX samples were transformed into graphical representations following the pipeline described above. We extracted microenvironments by enumerating subgraphs of 3-hop neighbors within a distance threshold of 75 \u03bcm around each cell. The median microenvironment contains 38 cells, larger than previously proposed cellular neighborhoods8,12 (Fig. 2C). SPACE-GM is trained following the pre-training and/or finetuning approach, in which protein expression of the center cell is used as the pre-training task, and clinical annotations are used as phenotype prediction labels.\nSPACE-GM predicts patient phenotypes from cell microenvironments We apply SPACE-GM to predict survival and recurrence outcomes for UPMC-HNC (Table 1) and Stanford-CRC (Table 2) patients. For each prediction task, SPACE-GM is trained with around 70% of the samples and tested on the remaining unseen samples from different coverslips (Methods). SPACE-GM achieves good performance on both datasets, with area under the curve (ROC-AUC) above 0.85 on all binary classification tasks and concordance index (C-index) around 0.8 on the survival analysis task in UPMC-HNC. Stanford-CRC shows slightly worse performance, likely due to having fewer samples and cells.\nFor context, we compare SPACE-GM\u2019s clinical prediction performances against alternative composition-based methods, applied on either whole samples or subgraphs. As input to these baseline models, we use whole graphs or the same subgraphs of 3-hop neighborhoods (microenvironment), but featurized as cell-type composition vectors (Methods). Compared with graph representations, composition vectors collapse spatial structure, losing information about the relative spatial arrangement of cells within a subgraph. Both a linear model (logistic regression or proportional hazards regression) and a multilayer perceptron are trained and evaluated following the same pipeline (Methods).\nSPACE-GM consistently outperforms baseline methods on both classification and hazards modeling (time-to-event) tasks (Table 1 and Supplementary Table 2). Uncertainty of the\nperformance metrics is calculated by bootstrapping (Supplementary Table 3 and Supplementary Notes), which demonstrates consistent advantages from SPACE-GM. Model pre-training confers an additional advantage on all prediction tasks. On the most challenging dataset Stanford-CRC, where composition-based methods generate nearly random predictions, SPACE-GM demonstrates a robust test set performance (Table 2).\nOn a representative task - primary outcome of the UPMC-HNC dataset - we plot receiver operating characteristic (ROC) curves for one of the test folds and observe a substantial advantage for SPACE-GM predictions over baseline methods (Fig. 3A). It is also worth noting that MLP based on microenvironment compositions outperforms the same model using whole graph compositions, which is also reflected in most of the other prediction tasks.\nThe observation above indicates that the superiority of geometric deep learning stems in part from our microenvironment-aggregation strategy. Fig. 3B plots the histogram of individual microenvironment predictions before aggregation. In addition to the difference in distributions of prediction values between positive and negative samples, we also notice that the majority of\npredictions, regardless of label, are neutral. This suggests that most spatial cellular structures are shared among different patients, while only a small fraction of motifs are highly indicative of patient outcomes. Identifying and characterizing these disease-relevant microenvironments will be highly informative for better diagnostics and therapeutics.\nFig. 3C plots the survival curves of two patient cohorts in the test data, separated by median predicted risk from SPACE-GM (trained under the survival length task). We observe a significant difference (P < .001, log-rank test) in survival probability between the low-risk group and the high-risk group. The survival curves stratitifed by SPACE-GM risk scores show greater separation than curves stratified using cell-type composition risk scores (Supplementary Fig. 3), suggesting that SPACE-GM captures more granular spatial motifs predictive of patient mortality."
+        },
+        {
+            "heading": "Cross-study generalizability of SPACE-GM",
+            "text": "We next seek to evaluate the generalizability of SPACE-GM across datasets. The DFCI-HNC contains CODEX samples collected both before and after neoadjuvant therapy in 29 patients. Though patient survival outcomes in this cohort are not available, samples are annotated based on the degree of pathologic tumor response (PTR) in surgically resected tumors after neoadjuvant anti-PD1 therapy26, which serves as a proxy for primary outcome in this experiment.\nIn the experiment, we train models on primary outcome labels from the UPMC-HNC dataset with integrated cell types (Supplementary Notes) and directly apply them to pre-therapy DFCI-HNC samples to predict therapeutic response. Despite potential batch effects resulting from tissue handling, biopsy size (Fig. 2A), and independently-generated cell labels (Methods), we find that SPACE-GM generates robust estimations, with accuracy surpassing all baseline composition-based models (Table 1).\nTo examine this result in greater detail, we group SPACE-GM predictions by pathologist-annotated PTR categories (Fig. 3D) and find that, strikingly, model predictions align well with fine-grained PTR categories. A two-sample t-test suggests that there is significant differences in predictions between <10% and >10% responder samples (P < .001, two-sample t-test). These results demonstrate the robustness and generalizability of SPACE-GM.\nDefining disease-relevant cell microenvironments with SPACE-GM Motivated by the superior performance of SPACE-GM over composition-based baselines methods, we further investigate how characteristics of cellular community structures beyond composition are predictive of clinical outcomes. The prediction accuracy of SPACE-GM suggests that its embedding space, which learns to present each microenvironment by a numerical vector, is informative of the phenotypes of interest. Visualization with UMAP shows that patient phenotypes are well-separated in the embedding space (Fig. 1C and Supplementary Fig. 6).\nWe use the primary outcome task from UPMC-HNC as an example to demonstrate how to interpret SPACE-GM embeddings to generate biological hypotheses related to patient outcomes. We first cluster all the microenvironments based on SPACE-GM embeddings (Methods). Clusters show distinct cell type enrichment patterns and prediction values (Fig. 4A).\nFour clusters of interest are displayed in Fig. 4B, all of which show significant differences in frequency between positive (no evidence of disease, NED) and negative (non-NED) patient samples, indicating that they possess informative cellular motifs (Fig. 4B, P = .002 for lymphocyte-rich microenvironments, P < .001 for the rest, two-sample t-test).\nVoronoi diagrams and raw multiplexed fluorescence images are visualized for example microenvironments in each cluster (Fig. 4B middle and bottom row). We name the clusters based on their cell type compositions and spatial cellular structure patterns: a lymphocyte-rich cluster, indicating high immune activity (circle symbol); a mixed lymphocyte/tumor cell cluster (triangle); a heterogeneous tumor cluster characterized by various subtypes of tumor cells (square); and a tumor cell and myeloid cell (granulocytes and macrophages) cluster characterized by dispersed spatial distributions (star). The circle and triangle clusters appear more in positive outcome samples and are thus associated with better prognosis. In contrast, the square and star clusters are more enriched in negative outcome patients."
+        },
+        {
+            "heading": "In silico permutations suggest disease-relevant spatial motifs in microenvironments",
+            "text": "Clusters of disease-relevant microenvironments indicated correlations between microenvironment structures and clinical phenotypes, in which we are especially interested in structural characteristics beyond composition. For example, the formation of distinctly-shaped boundaries between immune and tumor cells could indicate distinct pathways and programs related to tumor progress or immune control.\nTo directly test how structural arrangements impact microenvironment function, we computationally permute nodes in microenvironments and measure SPACE-GM outcome predictions on the permuted graphs. Our permutations are designed to vary the amount of dispersion allowed in the final graph. Thus, a \u201cdispersed permutation\u201d in our scheme rearranges all cells amongst each other, resulting in highly mixed graphs. A \u201ccoherent permutation\" extracts target cell types, and places them into sectors around the center cell, resulting in cells of the same type appearing together (Methods). In this section, we pick two representative clusters discovered above and evaluate how permutations towards the two extremes of dispersion levels affect model predictions.\nIn the heterogeneous tumor cluster, we observe a group of microenvironments enriched in different tumor subtypes being highly indicative of non-NED outcomes. We compare its appearance in all samples against each of the individual tumor subtypes and stromal cells (Fig. 5A). Interestingly, no individual tumor subtype is differentially enriched between positive and negative samples.\nTo test whether the arrangement of tumor subtypes confers the prediction bias on these samples, we select regional patches (Methods) and perform the permutations described above. Fig. 5B illustrates an example patch (middle column) and the two permuted versions (left and right columns) that mix/separate Tumor 4 and Tumor 5 (Ki67+). No major change is observed after dispersed permutation as the original patch is highly mixed. In contrast, when subject to coherent permutation, mean-aggregated prediction increases. Moreover, we observe that the boundaries of different tumor subtypes (yellow and green boxes) overlap with the negative prediction regions, suggesting that the mixing of these tumor subtypes explains the negative prediction in this example.\nWe support this result on a diverse set of 50 heterogeneous tumor regional patches (Fig. 5C and Methods): SPACE-GM predictions on coherent permuted patches are significantly higher (P = .02, Wilcoxon signed-rank test). This trend could be even extended to the whole-sample level. On all of the 83 samples from the test set, we run coherent permutations and evaluate changes in predictions (Fig. 5D). Among the 29 samples that are predicted to have negative outcomes, 45% of them have predictions altered after coherent permutation, compared with 0% after dispersed permutation. These results suggest that the spatial mixing of tumor subtypes is a negative predictor of patient outcomes captured by SPACE-GM.\nopposite trends. (F) Cell type compositions of the two granulocyte-tumor microenvironments are similar. (G) A heuristic measure: count of non-granulocyte neighbors of granulocytes divided by count of granulocytes, is calculated for the two microenvironment groups, distributions show significant differences (P < .001, two-sample t-test). (H) Example microenvironments from the two groups undergoing permutation are displayed as Voronoi diagrams. Distributions (Kernel Density Estimate) of SPACE-GM predictions on selected microenvironments and their permuted versions are plotted in the right column, note the shift of distributions due to permutations.\nWe next evaluate the spatial organization of two SPACE-GM embedding clusters, termed dispersed and coherent granulocyte-tumor microenvironments, with similar cell-type compositions (Fig. 5F) but opposite outcome enrichment (Fig. 5E). Visualization of examples from the two clusters (Fig. 5H, left column) suggests that the difference could potentially be attributed to the dispersion of granulocytes, and we verified this by calculating the number of non-granulocyte neighbors for 10,000 granulocytes from these two clusters (Fig. 5G). The distribution shows a significant right shift (P < .001, two-sample t-test) for dispersed granulocyte/tumor cluster samples, indicating that granulocytes are indeed more dispersed in this cluster.\nTo further characterize the relations between the dispersion of granulocytes and predictions, we perform the two types of permutations (Methods) on corresponding microenvironments to reverse the spatial organization patterns of granulocytes (Fig. 5H, middle column and Supplementary Fig. 6). Strikingly, coherent permutation of granulocytes in dispersed clusters results in improved predicted prognoses. Conversely, dispersed permutation of coherent granulocyte clusters results in microenvironments with poorer prognoses (Fig. 5H, right column)."
+        },
+        {
+            "heading": "Discussion",
+            "text": "In this work, we present SPACE-GM, a graph neural network model that predicts clinical properties of patient tumor samples with multiplexed immunofluorescence inputs. We evaluate prediction performances on three independently collected patient cohorts and demonstrate the predictive superiority of SPACE-GM over composition-based methods, suggesting that spatial cellular arrangements beyond composition could encode phenotype-related information. We further conduct dimensionality reduction and clustering on the microenvironment embeddings from SPACE-GM to identify discrete groups of disease-relevant microenvironments. Permutation on two example clusters unveils the relations between spatial dispersion of certain cell types and patient outcomes.\nMore specifically, SPACE-GM learns that the dispersion of molecularly distinct tumor subtypes could have a negative impact on patient survival outcomes. Of note, similar correlations between cell type mixing (or tumor subtype mixing) and poorer outcomes have been observed in recent literature27,28. In another experiment, we verified that the dispersion level of granulocytes within the TME is relevant to SPACE-GM predictions of primary outcomes. Interestingly, similar trends have been reported in both head and neck cancer29,30 and other solid cancers31, in which multiple molecular pathways explaining how neutrophils promote tumor growth32,33 and metastasis34,35 are presented.\nResults discussed in this work demonstrate the value of modeling patient phenotypes with graph-based microenvironment inputs, from which connections between cellular community structures and patient-level phenotypes can be established and validated. However, we acknowledge that certain caveats still exist in our framework: Inference and analysis of unseen data are still complicated due to the limitations of cell segmentation and classification approaches. The lack of a unified image-cell type dictionary hinders the generalization of trained models on new datasets or unseen cell types. Comprehensive results from human cell consortia efforts36,37 as well as computational methods that accommodate unseen cell types19 could potentially be incorporated to overcome these limitations.\nAdditionally, dense per-cell predictions by SPACE-GM are mean-aggregated to maximize prediction performance in this work, based on the benchmarking results of basic aggregation methods. As illustrated in Fig. 1D and Fig. 3B, highly disease-relevant microenvironments are usually less prevalent, the spatial distribution of which in a sample could potentially contain information about tissue architecture at different spatial scales. We foresee that more sophisticated techniques (e.g., hierarchical aggregation on different spatial scales) could be employed at this step, revealing insights into the interplay between tissue-level architectures and patient-level phenotypic properties.\nSPACE-GM is a versatile framework to capture disease-relevant motifs from microenvironments. We applied SPACE-GM to analyze CODEX data in this work. The framework of using local graphs to characterize disease-relevant spatial motifs can be extended to other measurement modalities such as spatial transcriptomics, and this is an interesting direction of future work. Disease-relevant microenvironment embeddings and dense predictions of target phenotypes could be further coupled with downstream analysis (e.g., permutation) to reveal relationships between cellular community structure and patient-level phenotypes."
+        },
+        {
+            "heading": "Methods",
+            "text": ""
+        },
+        {
+            "heading": "CODEX Data Collection",
+            "text": "All samples are prepared, stained, and acquired following CODEX User Manual Rev C (https://www.akoyabio.com).\nCoverslip preparation: Coverslips are coated with 0.1% poly-L-lysine solution to enhance adherence of tissue sections prior to mounting. The prepared coverslips are washed and stored according to the guidelines in the CODEX User Manual.\nTissue sectioning: formaldehyde-fixed paraffin-embedded (FFPE) samples are sectioned at a thickness of 3-5 \u03bcm on the poly-L-lysine coated glass coverslips.\nAntibody conjugation: Custom conjugated antibodies are prepared using the CODEX Conjugation Kit, which include the following steps: (1) the antibody is partially reduced to expose thiol ends of the antibody heavy chains; (2) the reduced antibody is conjugated with a CODEX barcode; (3) the conjugated antibody is purified; (4) Antibody Storage Solution is added for antibody stabilization for long term storage. Post-conjugated antibodies are validated by SDS-polyacrylamide gel electrophoresis (SDS-PAGE) and quality control (QC) tissue testing, where immunofluorescence images are stained and acquired following standard CODEX protocols, then evaluated by immunologists.\nStaining: CODEX multiplexed immunofluorescence imaging was performed on FFPE patient biopsies using the Akoya Biosciences PhenoCycler platform (also known as CODEX). 5 \u03bcm thick sections were mounted onto poly-L-lysine-treated glass coverslips as tumor microarrays. Samples were pre-treated by heating on a 55 \u2103 hot plate for 25 minutes and cooled for 5 minutes. Each coverslip was hydrated using an ethanol series: two washes in HistoChoice Clearing Agent, two in 100% ethanol, one wash each in 90%, 70%, 50%, and 30% ethanol solutions, and two washes in deionized water (ddH2O). Next, antigen retrieval was performed by immersing coverslips in Tris-EDTA pH 9.0 and incubating in a pressure cooker for 20 minutes on the High setting, followed by 7 minutes to cool. Coverslips were washed twice for two minutes each in ddH2O, then washed in Hydration Buffer (Akoya Biosciences) twice for two minutes each. Next, coverslips were equilibrated in Staining Buffer (Akoya Biosciences) for 30 minutes. The conjugated antibody cocktail solution in Staining Buffer was added to coverslips in a humidity chamber and incubated for 3 hours at room temperature or 16 hours at 4 \u2103. After incubation, the sample coverslips are washed and fixed following the CODEX User Manual.\nData acquisition: Sample coverslips are mounted on a microscope stage. Images are acquired using a Keyence microscope that is configured to the PhenoCycler Instrument at a 20X objective. All of the sample collections were approved by institutional review boards."
+        },
+        {
+            "heading": "Cell segmentation and classification",
+            "text": "After image preprocessing, we applied a neural network-based cell segmentation tool DeepCell38 on DAPI image channels to identify nuclei, and these nuclear masks were dilated to obtain whole-cell segmented cells. Nuclear segmentation masks were stochastically dilated by flipping pixels with a probability equal to the fraction of positive neighboring pixels. This dilation was repeated for 9 cycles for all CODEX data.\nOn each CODEX sample, given the segmentation of individual cells, single cell expression was computed for biomarker with the following steps39:\ud835\udc57\n\u25cf Compute the mean expression value across pixels within the cell segmentation mask.\nDenote the mean expression value of cell as , and denote the array of all expression\ud835\udc56 \ud835\udc65 \ud835\udc56 (\ud835\udc57) values as .{\ud835\udc65 1 (\ud835\udc57), \ud835\udc65 2 (\ud835\udc57), ...} \ud835\udc4b(\ud835\udc57)\n\u25cf Normalize the expression value using quantile normalization and arcsinh transformation:\n\ud835\udc53(\ud835\udc65 \ud835\udc56 (\ud835\udc57)) = \ud835\udc4e\ud835\udc5f\ud835\udc50\ud835\udc60\ud835\udc56\ud835\udc5b\u210e(\n\ud835\udc65 \ud835\udc56 (\ud835\udc57)\n5\ud835\udc44(0.2;\ud835\udc4b(\ud835\udc57)) )\nin which represents the 20-th quantile of and is the inverse\ud835\udc44(0. 2; \ud835\udc4b(\ud835\udc57)) \ud835\udc4b(\ud835\udc57) \ud835\udc4e\ud835\udc5f\ud835\udc50\ud835\udc60\ud835\udc56\ud835\udc5b\u210e hyperbolic sine function. Denote the array of all normalized expression as .{\ud835\udc53(\ud835\udc65 1 (\ud835\udc57)), \ud835\udc53(\ud835\udc65 2 (\ud835\udc57)), ...} \ud835\udc53(\ud835\udc4b(\ud835\udc57))\n\u25cf Calculate z-score of normalized expression value:\n\ud835\udc67(\ud835\udc65 \ud835\udc56 (\ud835\udc57)) =\n\ud835\udc53(\ud835\udc65 \ud835\udc56 (\ud835\udc57)) \u2212 \ud835\udc40\ud835\udc38\ud835\udc34\ud835\udc41(\ud835\udc53(\ud835\udc4b(\ud835\udc57)))\n\ud835\udc46\ud835\udc37(\ud835\udc53(\ud835\udc4b(\ud835\udc57)))\nTo classify cells, we first obtained a cell-by-marker expression matrix filled with preprocessed expression values ( ), then a Principal Component Analysis (PCA) model was applied to\ud835\udc67(\ud835\udc65 \ud835\udc56 (\ud835\udc57)) extract the top 20 Principal Components (PCs). We constructed a k-nearest-neighbor graph (kNN, k = 30) on the top 20 PCs of the expression matrix, then performed Louvain graph clustering40 on the result. Clusters were manually annotated according to their cell biomarker expression patterns. This procedure was performed on a subset of 10,000 cells and subsequently used to train a KNN algorithm to predict cell type from the normalized expression vector. This algorithm was used to transfer labels to the entire dataset. The average expression of each cell type for all the three datasets used in this work is visualized in Supplementary Fig. 2.\nConstruction of spatial cellular graphs and microenvironments For each multiplexed fluorescence image, we identified individual cells by the segmentation and classification pipeline stated above. The set of cells will be represented by a set of discrete points located at cellular centroids. 2D coordinates of these cellular centroids were determined by the segmentation masks of the corresponding cell nuclei.\nTo capture the spatial neighborhood relations, we run a Delauney triangulation operation on all the cellular centroids. Corresponding Voronoi diagrams can be uniquely determined by connecting the centers of the circumcircles. We employed the function voronoi_regions_from_coords from package geovoronoi41 in this step.\nThe graphical representation of multiplexed fluorescence images can then be determined by defining cellular centroids as nodes and neighboring Voronoi polygons (or edges in the Delauney triangulation) as edges. We further defined two types of edges based on the distance between cellular centroids: edges shorter than 20 \u03bcm are treated as neighboring edges; edges longer than 20 \u03bcm are treated as distant edges. Edge types will be considered in the following neural network forward pass.\nMicroenvironment represents the local environment around a cell in the entire cellular community. Given the graphical representation derived above, we defined the microenvironment of a query cell as its n-hop neighborhood. Here the n-hop neighborhood includes all cells within a graph distance of n edges from the query cell. In this work, we applied n=3 in all datasets and added another constraint of physical distance: microenvironment of a query cell includes all cells that are in its 3-hop neighborhood and less than 75 \u03bcm away from the query cell.\nData split and evaluation metrics We evaluated SPACE-GM and other baseline methods on the UPMC-HNC and Stanford-CRC datasets. Samples were first split into training set and test set following the procedure below:\nUPMC-HNC (Table 1, coverslip split) \u25cf UPMC-HNC contains 308 samples collected from 7 batches/coverslips, class balance of\nclinical annotations are calculated for each coverslip. \u25cf We proposed two validation folds:\n\u25cb Fold 1 \u25a0 225 samples in the training set, 64% have positive primary outcomes; \u25a0 83 samples in the test set, 65% have positive primary outcomes; \u25cb Fold 2 \u25a0 217 samples in the training set, 65% have positive primary outcomes; \u25a0 91 samples in the test set, 62% have positive primary outcomes; \u25cb In each fold, samples from 5 coverslips are used for training, samples from the remaining 2 coverslips are used for testing. Class balance of clinical annotations are kept similar between training and test sets.\n\u25cb Two validation folds have no overlapping test samples. \u25cf Training / evaluation are run independently on the two validation folds, prediction\nperformances for each task are averaged.\nUPMC-HNC (Supplementary Table 2, patient cross validation) \u25cf UPMC-HNC contains 308 samples collected from 81 patients.\n\u25cf Patients are randomly split into four groups, samples are assigned to their corresponding patient groups. \u25cf Training/evaluation following cross-validation scheme: \u25cb In each of the four independent runs, models are trained on samples from 3\npatient groups and evaluated on samples from the remaining group. \u25cb Performances are averaged across the four runs.\nStanford-CRC (Table 2, coverslip split) \u25cf Stanford-CRC contains 292 samples from 4 batches/coverslips, class balance of clinical\nannotations are calculated for each coverslip. \u25cf We proposed two validation folds based on coverslip:\n\u25cb Fold 1 \u25a0 229 samples in the training set, 75% have positive primary outcomes; \u25a0 63 samples in the test set, 71% have positive primary outcomes; \u25cb Fold 2 \u25a0 220 samples in the training set, 78% have positive primary outcomes; \u25a0 72 samples in the test set, 64% have positive primary outcomes; \u25cb In each fold, samples from 3 coverslips are used for training, samples from the remaining coverslip are used for testing. \u25cb Two validation folds have no overlapping test samples or patients. Note that the two coverslips solely used for training are excluded from testing because of their different size/class balance.\n\u25cf Training/evaluation are run independently on the two validation folds, and prediction performances for each task are averaged.\nIn this work, we use clinical annotations as prediction tasks. Annotations are categorized into two forms (Supplementary Table 1): binary classification (e.g., primary outcome) and hazards modeling (e.g., survival length). On binary classification tasks, we evaluate model performances by calculating area under the curve (AUC) of receiver operating characteristics (ROC); on hazards modeling tasks, we evaluate performances by calculating concordance index (C-index) between predicted hazards and observed events (recurrence or death)."
+        },
+        {
+            "heading": "SPACE-GM and baseline methods",
+            "text": ""
+        },
+        {
+            "heading": "SPACE-GM",
+            "text": "SPACE-GM consists of a Graph Isomorphism Network (GIN)23 backbone and multiple multilayer perceptron (MLP) prediction heads.\nInputs of SPACE-GM contain the local spatial graphical structures of microenvironments derived above, as well as identity and size of each cell in the microenvironments. More specifically, GIN has the following inputs:\n\u25cf Node features\n\u25cb Cell type is formed as a one-hot vector of length , which is mapped to\ud835\udc41 \ud835\udc50\ud835\udc52\ud835\udc59\ud835\udc59 \ud835\udc61\ud835\udc66\ud835\udc5d\ud835\udc52\ntrainable embeddings of length 512 through a lookup table.\ud835\udc41 \ud835\udc50\ud835\udc52\ud835\udc59\ud835\udc59 \ud835\udc61\ud835\udc66\ud835\udc5d\ud835\udc52\n\u25cb Other features: Cell size (in pixel) log-transformed and scaled to 0-1 range, a flag indicating if the cell is the center taking value 0 (if no) or 1 (if yes), are concatenated and transformed to a vector of length 512 through a trainable linear layer. Note that we experimented with explicitly adding normalized expression to node features, but the resulting models have more severe overfitting and lower test set performances. Expression is hence excluded from node features. \u25cb The two embeddings above are summed and used as the initial node\nembeddings for GIN. We denote the initial embedding of node as .\ud835\udc63 \u210e \ud835\udc63 (0)\n\u25cf Edge features \u25cb Self-loop edges (connecting same nodes) are added to input graphs before\nforward pass. \u25cb Edges are divided into three classes: neighboring edge, distant edge, and\nself-loop edge. In each GIN layer, an edge is mapped to one of the three edge embeddings of length 512 through a lookup table. We denote the embedding of the edge between node and node in -th layer as , which is dependent on\ud835\udc63 \ud835\udc62 \ud835\udc58 \ud835\udc52 \ud835\udc63\ud835\udc62 (\ud835\udc58) the edge type between and . Note that .\ud835\udc63 \ud835\udc62 \ud835\udc52 \ud835\udc63\ud835\udc62 (\ud835\udc58) = \ud835\udc52 \ud835\udc62\ud835\udc63 (\ud835\udc58)\nSPACE-GM employed a 3-layer GIN, and in the -th graph convolutional layer:\ud835\udc58 \u25cf Messages are calculated on each edge as:\n\ud835\udc5a \ud835\udc63\ud835\udc62 (\ud835\udc58) = \u210e \ud835\udc62 (\ud835\udc58\u22121) + \ud835\udc52 \ud835\udc63\ud835\udc62 (\ud835\udc58)\nNote that edges in microenvironments are undirected, messages in both directions are calculated, though they will not necessarily be equal.\n\u25cf Embedding of node is updated based on all incoming messages to :\ud835\udc63 \ud835\udc63\n\u210e \ud835\udc63 (\ud835\udc58) = \ud835\udc40\ud835\udc3f\ud835\udc43(\ud835\udc58)(\n\ud835\udc62\u2208\ud835\udc41(\ud835\udc63) \u2211 \ud835\udc5a\n\ud835\udc63\ud835\udc62 (\ud835\udc58))\nin which is the set of neighboring nodes of , the self-loop edge guarantees\ud835\udc41(\ud835\udc63) \ud835\udc63 , and is the 2-layer MLP of the -th layer.\ud835\udc63 \u2208 \ud835\udc41(\ud835\udc63) \ud835\udc40\ud835\udc3f\ud835\udc43(\ud835\udc58) \ud835\udc58\nEmbeddings from the last graph convolutional layer are treated as node embeddings, in which the embedding of the center cell is used as input for expression prediction (pre-training of\u210e \ud835\udc50\ud835\udc52\ud835\udc5b\ud835\udc61\ud835\udc52\ud835\udc5f (3) SPACE-GM). We aggregated node embeddings to generate the microenvironment embedding:\n\u210e \ud835\udc3a = \ud835\udc40\ud835\udc34\ud835\udc4b\ud835\udc43\ud835\udc42\ud835\udc42\ud835\udc3f \ud835\udc63\u2208\ud835\udc3a (\u210e \ud835\udc63 (3))\nin which represents the microenvironment, is a channel-wise maximum operation\ud835\udc3a \ud835\udc40\ud835\udc34\ud835\udc4b\ud835\udc43\ud835\udc42\ud835\udc42\ud835\udc3f (torch.nn.global_max_pool). Microenvironment embeddings are used for sample phenotype predictions.\nFor expression and phenotype prediction tasks, we employed two separate 3-layer MLP with\nLeaky ReLU activation function, each with outputs, taking center cell embedding\ud835\udc41 \ud835\udc61\ud835\udc4e\ud835\udc60\ud835\udc58\ud835\udc60 \u210e \ud835\udc50\ud835\udc52\ud835\udc5b\ud835\udc61\ud835\udc52\ud835\udc5f (3) and microenvironment embedding as input respectively. For expression prediction tasks, we\u210e \ud835\udc3a minimize squared L2 norm loss between predictions and labels (torch.nn.MSELoss). For binary classification tasks, we minimize binary cross entropy between sigmoid logit: outputs of the 3-layer MLP and class labels (torch.nn.BCEWithLogitsLoss). For hazards modeling tasks, we adapted the Cox partial likelihood for SGD introduced by Kvamme et al.42."
+        },
+        {
+            "heading": "Baseline methods",
+            "text": "Baseline methods in this work are constructed based on composition vector inputs. Composition vectors are calculated on whole-sample graphs or microenvironments. In both cases, we count the number of each cell type appearing in the graph/subgraph. The count vector of length is then normalized to the frequency vector, denoted as the composition vector.\ud835\udc41 \ud835\udc50\ud835\udc52\ud835\udc59\ud835\udc59 \ud835\udc61\ud835\udc66\ud835\udc5d\ud835\udc52\nWe trained a linear model and a 3-layer MLP model on the composition vectors. Logistic regression and Cox regression are used for binary classification and hazards modeling tasks respectively as linear models. MLP used the same loss function as SPACE-GM introduced above."
+        },
+        {
+            "heading": "Model training and inference",
+            "text": "During training (of microenvironment-based methods), we randomly select microenvironments from all samples in the training set. Their labels came from center cells (expression prediction) or clinical annotations of the CODEX samples they belong to (phenotype prediction). Microenvironments are weighted based on their labels to balance loss of different classes. Adam optimizer43 is employed to minimize corresponding losses in different tasks.\nSPACE-GM is first trained on the expression prediction task. After convergence, we retain the GIN backbone and connect it with the phenotype prediction head (initialized from scratch), and both modules are finetuned on the phenotype task. SPACE-GM no-pretraining has the same model structure as SPACE-GM, but all initialized from scratch. It is directly trained on the phenotype task until convergence; microenvironment-based MLP models follow the same training pipeline.\nDuring inference, we run microenvironment-based models (SPACE-GM, MLP, etc.) on all microenvironments from the test set, generating dense per-node predictions for test samples. Predictions within the same CODEX sample are then mean-aggregated (microenvironment-aggregation, see Supplementary Notes and Supplementary Fig. 5 for discussion), the results of which are evaluated using corresponding metrics.\nAll models are implemented in Python with scikit-learn44, pytorch45, and pytorch geometric46. More details about the hyperparameters and implementations can be found in our github repository at https://gitlab.com/enable-medicine-public/space-gm."
+        },
+        {
+            "heading": "Clustering of microenvironment embeddings",
+            "text": "To identify clusters of disease-relevant microenvironments, we applied dimensionality reduction and clustering on microenvironment embeddings. Clusters discussed in the main text are generated following the procedure below:\n\u25cf 100,000 cells and their microenvironments from the training set are randomly sampled and extracted, denoted as the reference dataset; \u25cf SPACE-GM (trained on the UPMC-HNC primary outcome task) is applied to all microenvironments in the reference dataset, their microenvironment embeddings ( )\u210e\n\ud835\udc3a\nand predictions are collected, denoted as reference embeddings and reference predictions;\n\u25cf A Principal Component Analysis (PCA) model is initialized and fitted to the reference embeddings. We extracted the top 20 Principal Components (PCs), which captured >70% of total variance; \u25cf A UMAP dimensionality reduction model47 is fitted on the top 20 PCs of reference embeddings, generating 2D visualizations of microenvironment space; \u25cf A K-means clustering (K=20) is fitted on the top 20 PCs of reference embeddings to identify 20 clusters of microenvironments;\nWe then applied the PCA and K-means model to the test set: \u25cf All cells and microenvironments from test set samples are extracted; \u25cf SPACE-GM is applied to test set microenvironments to extract embeddings; \u25cf PCA and K-means models trained with the reference dataset are directly applied to test\nset microenvironment embeddings, their cluster assignments are collected and summarized.\nFor PCA and K-means, we used the Python implementations from scikit-learn44: sklearn.decomposition.PCA and sklearn.cluster.KMeans. For UMAP, we used the Python implementation from umap-learn48."
+        },
+        {
+            "heading": "In silico permutation of cells in microenvironments",
+            "text": "Analysis of SPACE-GM embeddings uncovered groups of microenvironments that are disease-relevant; we then applied permutation experiments on microenvironments-of-interest to discover and validate structural motifs that are indicative of phenotypes.\nTwo general forms of permutations are implemented: \u25cf Dispersed permutation:\n\u25cb A list of target cell types are provided; \u25cb On the microenvironment/patch/sample (jointly denoted as cellular graphs),\nidentify all cells whose cell type appears in the target list and record their spatial location and other cellular features;\n\u25cb Randomly permute the list of cells identified in the previous step, then assign the permuted cell types and cellular features back to the original cellular graph;\n\u25cb Run (trained) SPACE-GM on the permuted cellular graph and perform microenvironment-aggregation if needed;\n\u25cf Coherent permutation: \u25cb A list of target cell types and the center coordinate of cellular graph are provided; \u25cb On the cellular graph, identify all cells whose cell type appears in the target list\nand record their spatial location and other cellular features; \u25cb Sort the list of cells identified in the previous step by cell type; \u25cb Calculate polar coordinates for the list of cells using the cellular graph center as\nthe pole; \u25cb Assign cell types and cellular features back to the original cellular graph\nsequentially following the order of azimuthal angle. Resulting permuted cellular graphs should have cells of the same type appearing in the same sector around the graph center.\nIn the experiment on heterogeneous tumor microenvironments, we performed permutations on patches and whole samples. Patches are selected following the procedure below:\n\u25cf On each of the UPMC-HNC samples, we derive the cluster assignment of every individual cell following the dimensionality reduction and clustering pipeline introduced above; \u25cf We iterate through the list of all cells that are assigned to the heterogeneous tumor microenvironment until we find a cell that satisfies the following criterion. Note that up to one patch can be selected per sample.\n\u25cb Isolate all cells that are within a distance of 185 \u03bcm to the query cell (denoted as a patch); \u25cb More than 40% of the cells in the patch are assigned to heterogeneous tumor microenvironments;\n\u25cf Extract the query cell and its surrounding patch. For all cells in the patch that are within a distance of 110 \u03bcm to the center (to guarantee the completeness of the 3-hop neighborhood), extract their microenvironments and perform predictions. 61 patches are selected, from which we picked the 50 patches that have higher entropy (of cell type frequency vector). Permutations are performed on the following cell types: Tumor 2, Tumor 4, Tumor 5 (Ki67+), and Tumor 6, in which the interaction between Tumor 4 and Tumor 5 (Ki67+) has the biggest influence.\nIn the experiment on granulocyte-tumor microenvironments, we performed coherent and dispersed permutations on different microenvironment groups to reverse the organization pattern of granulocytes. We didn\u2019t perform patch-level permutation due to difficulty in finding regional patches rich in either microenvironment. All cell types are included in the target list and permuted in this experiment. Note that in the coherent permutation case, all cells except for tumor cells (Tumor 1 through Tumor 6) are aligned coherently according to the procedure above, tumor cells are first combined and randomly permuted before aligning to avoid confounding. See Supplementary Fig. 7 for example."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "J.Z. is supported by NSF CAREER 1942926. K.S. is supported by a Knight-Hennessy Fellowship."
+        },
+        {
+            "heading": "Data and Code Availability",
+            "text": "Codes are available at https://gitlab.com/enable-medicine-public/space-gm. Data (CODEX images and graphical representations) will be available upon request."
+        },
+        {
+            "heading": "Declaration of interests",
+            "text": "Several authors are affiliated with Enable Medicine as employees (A.E.T., H.J.K., H.B.D, R.P., and A.T.M.), consultants (Z.W., E.W.), or scientific advisor (J.Z.)."
+        },
+        {
+            "heading": "Supplementary Tables and Figures",
+            "text": "Supplementary Table 1 Details of datasets and phenotype annotations. Tasks \u201cPrimary Outcome\u201d, \u201cRecurrence\u201d and \u201cOther\u201d have binary labels and are used for binary classification. Tasks \u201cSurvival Length\u201d and \u201cRecurrence Interval\u201d provide time-to-event data and are used for hazards modeling.\nDataset \ud835\udc41\ud835\udc60\ud835\udc4e\ud835\udc5a\ud835\udc5d\ud835\udc59\ud835\udc52 \ud835\udc41\ud835\udc5d\ud835\udc4e\ud835\udc61\ud835\udc56\ud835\udc52\ud835\udc5b\ud835\udc61 \ud835\udc41\ud835\udc4f\ud835\udc4e\ud835\udc61\ud835\udc50\u210e \ud835\udc41\ud835\udc50\ud835\udc52\ud835\udc59\ud835\udc59\nPhenotype Annotations\nPrimary Outcome Survival Length Recurrence Recurrence Interval Other\nUPMCHNC 308 81 7 2061102\nno evidence of disease (NED): 197\nnon-NED: 111\nrecurred: 31 not recurred: 253 N/A\nHPV infected: 158\nnot HPV infected: 150\nStanfordCRC 292 161 4 632280\nalive after 60 months: 122\nrecurred/dead in 60 months: 74\nrecurred: 57 not recurred: 129 N/A\nDFCIHNC 58 29 1 131748\nLow primary tumor response to treatment (pTR), <10%: 33 High pTR, >10%: 25 N/A\nSupplementary Table 2 Prediction performances on UPMC tasks: four-fold patient cross-validation, average performances over all four folds are reported.\nModel Binary Classification (ROC-AUC) Hazards Model(C-index)\nHPV Infection Primary Outcome Recurrence Survival Length\nLinear on composition (sample) 0.830 0.739 0.702 0.694\nMLP on composition (sample) 0.757 0.711 0.672 0.669\nLinear on composition (microenvironment) 0.852 0.749 0.720 0.700\nMLP on composition (microenvironment) 0.863 0.743 0.706 0.693\nSPACE-GM no-pretraining 0.895 0.756 0.755 0.705\nSPACE-GM 0.900 0.760 0.766 0.722\nSupplementary Table 3 Prediction uncertainty on UPMC tasks: on each of the two cross-coverslip validation folds, we randomly select validation samples (with replacement) and evaluate model performances. Means and standard deviations of 10 independently bootstrapped runs are reported.\nModel ValidationFold Binary Classification (ROC-AUC) Hazards Model(C-index)\nHPV Infection Primary Outcome Recurrence Survival Length\nLinear on composition (sample)\n0 0.850 \u00b1 0.030 0.773 \u00b1 0.035 0.840 \u00b1 0.045 0.700 \u00b1 0.032\n1 0.873 \u00b1 0.022 0.768 \u00b1 0.031 0.826 \u00b1 0.040 0.684 \u00b1 0.026\nMLP on composition (sample)\n0 0.851 \u00b1 0.029 0.789 \u00b1 0.033 0.888 \u00b1 0.040 0.694 \u00b1 0.053\n1 0.848 \u00b1 0.033 0.760 \u00b1 0.028 0.794 \u00b1 0.040 0.704 \u00b1 0.030\nLinear on composition (microenvironment)\n0 0.854 \u00b1 0.029 0.775 \u00b1 0.041 0.816 \u00b1 0.053 0.706 \u00b1 0.057\n1 0.876 \u00b1 0.032 0.775 \u00b1 0.043 0.818 \u00b1 0.066 0.695 \u00b1 0.042\nMLP on composition (microenvironment)\n0 0.885 \u00b1 0.026 0.841 \u00b1 0.048 0.867 \u00b1 0.038 0.768 \u00b1 0.054\n1 0.903 \u00b1 0.023 0.790 \u00b1 0.048 0.827 \u00b1 0.043 0.734 \u00b1 0.021\nSPACE-GM no-pretraining\n0 0.912 \u00b1 0.017 0.885 \u00b1 0.025 0.906 \u00b1 0.057 0.798 \u00b1 0.033\n1 0.917 \u00b1 0.018 0.835 \u00b1 0.019 0.874 \u00b1 0.033 0.766 \u00b1 0.027\nSPACE-GM\n0 0.928 \u00b1 0.020 0.902 \u00b1 0.020 0.921 \u00b1 0.048 0.814 \u00b1 0.027\n1 0.928 \u00b1 0.017 0.845 \u00b1 0.022 0.876 \u00b1 0.028 0.788 \u00b1 0.022\nSupplementary Figure 1 DFCI-HNC cell characteristics. (A) Cell type composition of the DFCI-HNC dataset. We further match the cell type to the UPMC-HNC dataset. (B) Distribution of normalized cell sizes (Methods) in UPMC-HNC and DFCI-HNC samples. (C) Composition of integrated cell types in UPMC-HNC and DFCI-HNC samples. Note that all tumor subtypes (except for Ki67+ subtype) are combined into the \u201cTumor\u201d category; certain cell types (NK cell, mast cell) that are unique to one of the datasets are moved to the \u201cOther cell\u201d category.\nSupplementary Figure 2 Marker expression of different cell types. Heatmaps of average marker expression for each cell type in UPMC-HNC (top row), DFCI-HNC (middle row) and Stanford-CRC (bottom row) are visualized. Note that each dataset uses a different marker panel.\nSupplementary Figure 3 Survival curves of different cell type composition groups. In each of the 16 panels, we separate all test samples into two groups based on the composition of the corresponding cell type. The survival curves of the two groups are visualized. Note that the separation between groups is much weaker than the risk-based grouping in Figure 3C.\nSupplementary Figure 4 Performance on microenvironments of different sizes. We trained a series of SPACE-GM no-pretraining models with microenvironment inputs of different sizes (from 1-hop to 4-hop). Three-layer GINs are used in cases of 1-hop, 2-hop, and 3-hop inputs. Four-layer GIN is used for 4-hop inputs. Results show that performances increase monotonically before 3-hop and plateau around 3-hop and 4-hop.\nSupplementary Figure 5 Performance of different aggregation thresholds. Microenvironment-aggregation is a necessary step to calculate whole-sample predictions for SPACE-GM (and other microenvironment-based methods). On one of the validation folds of UPMC-HNC, we evaluate performances on predictions of different percentile thresholds. Dashed lines mark the performance of mean-aggregated predictions. We conclude that mean aggregation provides robust performances.\nSupplementary Figure 6 UMAP of composition vectors and microenvironment embeddings. Embeddings are extracted after each of the two training stages of SPACE-GM (pre-training on cellular expression and finetuning on primary outcome task). Embeddings from the pre-trained model show strong correlations with center cell type. Note that the clustering captured the similarity between cell types: lymphocytes appear together; tumor cells form a large cluster. Embeddings from the final finetuned SPACE-GM model correlate more with phenotype, as we see a clear blue-red color separation in the distribution.\nSupplementary Figure 7 In silico permutation of granulocyte-tumor microenvironments. On the two granulocyte-tumor rich microenvironments, we perform coherent and dispersed permutations that could change the local arrangement pattern of granulocytes (Methods). We observe significant shifts in the distribution of SPACE-GM predictions when applying coherent permutation on the dispersed group (and vice versa), indicating that the dispersion of granulocytes affects model predictions and can have potential correlations with patient outcomes.\nSupplementary Figure 8 Comparison of composition-based clusters and microenvironment clusters. (A) and (B) We generate composition-based clusters with cell type compositions of 3-hop subgraphs (microenvironments) following the same procedure. Note that the average predictions of microenvironment clusters are much more polarized. (C) The composition cluster highly enriched with granulocytes has neutral average predictions/labels, it could be further dissected into multiple sub-clusters that belong to different microenvironment clusters. We see a pair of granulocyte/tumor microenvironments that have opposite outcome labels, see (Results) for further discussion. (D) Similarly, the composition cluster enriched with vessel/lymph vessel cells could be dissected into multiple sub-clusters, from which we notice two microenvironment clusters that are both enriched with lymph vessel cells but have different composition and outcome predictions. (E) Comparison of the two microenvironments enriched in lymph vessel cells: the left column shows a microenvironment with more lymphocytes and has overall positive outcomes; the right column shows a contrasting group with more tumor cells and much worse outcome predictions. Observation of tumor cells in close vicinity of lymph vessels indicates potential lymphovascular invasion and will lead to worse prognosis, which aligns with model predictions."
+        },
+        {
+            "heading": "Supplementary Notes",
+            "text": ""
+        },
+        {
+            "heading": "Microenvironments of different sizes",
+            "text": "SPACE-GM constructs microenvironments based on n-hop neighborhoods. To balance prediction performance and microenvironment size (which is directly related to ease of interpretability), we benchmark microenvironments of different sizes in their prediction performances.\nWe define n-hop neighborhoods as all the nodes reachable from the query nodes within n edges: 1-hop neighborhoods only contain immediate neighbors, and 2-hop neighborhoods contain neighboring cells of the immediate neighbors. In this experiment, we train a series of SPACE-GM models with different sizes of inputs by enumerating neighborhood radius (n). For ease of computation, we only compare performances of SPACE-GM no-pretraining models. Supplementary Fig. 4 illustrates the phenotype prediction performance with regards to input microenvironment size, in which the same 3-layer GIN model structure is used for 1-hop, 2-hop, and 3-hop inputs, while a 4-layer GIN model is used for 4-hop inputs.\nWe notice that performances increase monotonically before 3-hop, suggesting that a larger microenvironment is indeed beneficial for modeling phenotypic properties. 4-hop models are slightly better on two out of the four tasks evaluated, but do not present a strong overall advantage. Given that microenvironment size grows quadratically with increasing neighborhood radius, using inputs larger than 3-hop might cause difficulties in the following structural and permutation analysis, so we choose to work with microenvironments defined as 3-hop neighborhoods."
+        },
+        {
+            "heading": "Microenvironment-aggregation methods",
+            "text": "SPACE-GM is trained on subgraphs/microenvironments. To evaluate final prediction performance, we need a post hoc procedure that aggregates predictions of all microenvironments from a single sample. For this step, we evaluate aggregation functions including mean, median, and a series of quantile functions at different thresholds (Supplementary Fig. 5). Plots show that different tasks have different preferences for quantile thresholds; survival length has the best performance when using the 80-th percentile, indicating that within each slice nodes with high risk predictions are more correlated with actual survival probabilities. While there are no clear clues on a universally suitable threshold for quantiles, averaging microenvironment predictions is usually as good as the best quantile thresholds. Therefore, mean-aggregation is used as the default method for microenvironment-aggregation."
+        },
+        {
+            "heading": "Cross-study application of SPACE-GM",
+            "text": "We test the generalizability of SPACE-GM by applying models trained with UPMC-HNC samples to DFCI-HNC. In this procedure, due to the independent preprocessing pipelines for both datasets, we need to integrate cellular features (node features) before deploying the model.\nSPACE-GM uses cellular features including cell type and cell size (Methods). While cell size is calculated based on the size of segmentation masks, cell type is derived through a per-dataset unsupervised PCA-kNN procedure (Methods). Supplementary Fig. 1A illustrates the cell classification results for DFCI-HNC, which shared many common cell type populations with UPMC-HNC; we further define integrated cell types between the two datasets to unify input features to SPACE-GM. Note that most tumor subpopulations are combined to avoid confusion, except that Tumor (Ki67+) is separated and treated as the proliferating tumor sub-population. It is worth noting that integrating cell types hurts SPACE-GM prediction performance due to the decrease in the heterogeneity of inputs.\nAfter integration, we compare the input features of UPMC-HNC and DFCI-HNC datasets. Supplementary Fig. 1B compares the distribution of normalized cell size (Methods), in which the difference is minimal. Supplementary Fig. 1C compares the distribution of integrated cell types, DFCI-HNC has more CD4 T cells and fewer B cells, but the overall balance between immune cells and tumor cells is similar to UPMC-HNC. Note that we assign minor cell populations (e.g., Mast cell) not present in both datasets to the \u201cOther cell\u201d group."
+        },
+        {
+            "heading": "Benchmark prediction uncertainty",
+            "text": "The main evaluation experiment of SPACE-GM compares its performance against baseline composition-based methods on a series of patient phenotype prediction tasks using two independent cross-coverslip validation folds. To study the uncertainty of model prediction performances, we calculate the standard deviations (SDs) of performance metrics by bootstrapping.\nIn Supplementary Table 3, we evaluate model prediction performances by bootstrapping validation samples (random resampling with replacement). 10 independent runs are conducted, from which means and SDs are calculated and reported. In most test cases, SPACE-GM performance exceeds the best-performing composition-based model by at least 2 SD, indicating a robust advantage over baseline methods.\nParallel composition-based clusters and microenvironment clusters In the main text, we discussed clustering using microenvironment embeddings derived from SPACE-GM models trained with phenotypic property prediction. The resulting clusters are intrinsically correlated with target phenotypes. To further validate this argument, we perform the same clustering analysis on composition inputs, excluding any phenotype-guided supervision.\nWe apply the same dimensionality reduction and clustering procedure as introduced in (Methods) on composition vectors of the same set of reference microenvironments. Instead of using the top 20 PCs, we used the top PCs (12) that capture 90% of the total variance in compositions. K-means clustering is adjusted accordingly (K = 15).\nSupplementary Fig. 8A plots the enrichment of cell types and average SPACE-GM predictions (very similar to labels) for each cluster. Compared with Supplementary Fig. 8B\n(microenvironment cluster characteristics), it is obvious that composition-based clusters are more coherent in terms of cell types: most of the clusters are highly enriched for one or two cell types while having fewer other cells. On the other hand, average predictions of microenvironment clusters are more polarized than composition-based ones, facilitating the discovery of disease-relevant clusters.\nWe further look at two concrete examples: Supplementary Fig. 8C shows a granulocyte-rich composition cluster that has overall neutral average predictions or labels. If we look at the microenvironment cluster assignments, this composition-based cluster can be dissected into multiple subgroups belonging to different microenvironment clusters. More specifically, we notice that it maps to two microenvironment clusters \u2463 and \u2464, which are exactly the pair we discussed with permutation experiments. They have similar composition but opposite phenotypic predictions, which can be partially attributed to the dispersion of granulocytes.\nMicroenvironments enriched in lymph vessel cells In the other example, we look at the composition-based cluster enriched in Vessel and Lymph vessel cells (Supplementary Fig. 8D). We similarly parallel it with microenvironment clusters and found a pair of contrasting groups that are both enriched in lymph vessel cells. They display different cell type compositions other than Lymph vessel (Supplementary Fig. 8E): cluster \u246b has more immune cells including B cell, CD4 T cell, etc., while cluster \u246c is more enriched in Tumor 1, Tumor 5 (Ki67+). We hypothesize that cluster\u246b represents normal lymph vessel structure, while cluster \u246c might indicate lymphovascular invasion, a known negative factor for prognosis.\nThough such differences can already be captured with composition vectors, their distinction will likely be overwhelmed by major variance such as the amount of dominating cell population (i.e., Lymph vessel cells) when applying unsupervised clustering. However, when clustering on phenotype-guided embeddings, key distinctions captured by the neural network will be enlarged in the embedding space and hence more easily perceived in the downstream analysis."
+        }
+    ],
+    "title": "SPACE-GM: geometric deep learning of disease-associated microenvironments from multiplex spatial protein profiles",
+    "year": 2024
+}

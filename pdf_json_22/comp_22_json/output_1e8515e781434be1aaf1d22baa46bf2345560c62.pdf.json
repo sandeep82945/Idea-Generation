@@ -1,0 +1,968 @@
+{
+    "abstractText": "Graphs are widely used to model the complex relationships among entities. As a powerful tool for graph analytics, graph neural networks (GNNs) have recently gained wide attention due to its end-to-end processing capabilities. With the proliferation of cloud computing, it is increasingly popular to deploy the services of complex and resource-intensive model training and inference in the cloud due to its prominent benefits. However, GNN training and inference services, if deployed in the cloud, will raise critical privacy concerns about the information-rich and proprietary graph data (and the resulting model). While there has been some work on secure neural network training and inference, they all focus on convolutional neural networks handling images and text rather than complex graph data with rich structural information. In this paper, we design, implement, and evaluate SecGNN, the first system supporting privacy-preserving GNN training and inference services in the cloud. SecGNN is built from a synergy of insights on lightweight cryptography and machine learning techniques. We deeply examine the procedure of GNN training and inference, and devise a series of corresponding secure customized protocols to support the holistic computation. Extensive experiments demonstrate that SecGNN achieves comparable plaintext training and inference accuracy, with promising performance.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Songlei Wang"
+        },
+        {
+            "affiliations": [],
+            "name": "Yifeng Zheng"
+        },
+        {
+            "affiliations": [],
+            "name": "Xiaohua Jia"
+        }
+    ],
+    "id": "SP:e5cbd83d64f2dd3799a3afd1f84de785244c878e",
+    "references": [
+        {
+            "authors": [
+                "S. Zhang",
+                "L. Yao",
+                "A. Sun",
+                "Y. Tay"
+            ],
+            "title": "Deep learning based recommender system: A survey and new perspectives",
+            "venue": "ACM Comput. Surv., vol. 52, no. 1, pp. 5:1\u20135:38, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J. Kim",
+                "M. Hastak"
+            ],
+            "title": "Social network analysis: Characteristics of online social networks after a disaster",
+            "venue": "Int. J. Inf. Manag., vol. 38, no. 1, pp. 86\u201396, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "F. Scarselli",
+                "M. Gori",
+                "A.C. Tsoi",
+                "M. Hagenbuchner",
+                "G. Monfardini"
+            ],
+            "title": "The graph neural network model",
+            "venue": "IEEE Trans. Neural Networks, vol. 20, no. 1, pp. 61\u201380, 2009.",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "M. Wu",
+                "S. Pan",
+                "L. Du",
+                "X. Zhu"
+            ],
+            "title": "Learning graph neural networks with positive and unlabeled nodes",
+            "venue": "ACM Trans. Knowl. Discov. Data, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Z. Wu",
+                "S. Pan",
+                "F. Chen",
+                "G. Long",
+                "C. Zhang",
+                "P.S. Yu"
+            ],
+            "title": "A comprehensive survey on graph neural networks",
+            "venue": "IEEE Trans. Neural Networks Learn. Syst., vol. 32, no. 1, pp. 4\u201324, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R. Ying",
+                "R. He",
+                "K. Chen",
+                "P. Eksombatchai",
+                "W.L. Hamilton",
+                "J. Leskovec"
+            ],
+            "title": "Graph convolutional neural networks for web-scale recommender systems",
+            "venue": "Proc. of ACM KDD, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J. Kim",
+                "T. Kim",
+                "S. Kim",
+                "C.D. Yoo"
+            ],
+            "title": "Edge-labeling graph neural network for few-shot learning",
+            "venue": "Proc. of IEEE CVPR, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M. Zhang",
+                "Y. Chen"
+            ],
+            "title": "Link prediction based on graph neural networks",
+            "venue": "Proc. of NeurIPS, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Z. Qin",
+                "J. Weng",
+                "Y. Cui",
+                "K. Ren"
+            ],
+            "title": "Privacy-preserving image processing in the cloud",
+            "venue": "IEEE Cloud Comput., vol. 5, no. 2, pp. 48\u201357, 2018. 15",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "P. Jiang",
+                "Q. Wang",
+                "M. Huang",
+                "C. Wang",
+                "Q. Li",
+                "C. Shen",
+                "K. Ren"
+            ],
+            "title": "Building in-the-cloud network functions: Security and privacy challenges",
+            "venue": "Proceedings of the IEEE, vol. 109, no. 12, pp. 1888\u20131919, 2021.",
+            "year": 1888
+        },
+        {
+            "authors": [
+                "R. Gilad-Bachrach",
+                "N. Dowlin",
+                "K. Laine",
+                "K. Lauter",
+                "M. Naehrig",
+                "J. Wernsing"
+            ],
+            "title": "Cryptonets: Applying neural networks to encrypted data with high throughput and accuracy",
+            "venue": "Proc. of ICML, 2016.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "J. Liu",
+                "M. Juuti",
+                "Y. Lu",
+                "N. Asokan"
+            ],
+            "title": "Oblivious neural network predictions via minionn transformations",
+            "venue": "Proc. of ACM CCS, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "C. Juvekar",
+                "V. Vaikuntanathan",
+                "A. Chandrakasan"
+            ],
+            "title": "GAZELLE: A low latency framework for secure neural network inference",
+            "venue": "Proc. of USENIX Security Symposium, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M.S. Riazi",
+                "M. Samragh",
+                "H. Chen",
+                "K. Laine",
+                "K.E. Lauter",
+                "F. Koushanfar"
+            ],
+            "title": "XONN: xnor-based oblivious deep neural network inference",
+            "venue": "Proc. of USENIX Security Symposium, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "H. Chaudhari",
+                "A. Choudhury",
+                "A. Patra",
+                "A. Suresh"
+            ],
+            "title": "Astra: high throughput 3pc over rings with application to secure prediction",
+            "venue": "Proc. of ACM CCS, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Patra",
+                "A. Suresh"
+            ],
+            "title": "BLAZE: blazing fast privacy-preserving machine learning",
+            "venue": "Proc. of NDSS, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P. Mishra",
+                "R. Lehmkuhl",
+                "A. Srinivasan",
+                "W. Zheng",
+                "R.A. Popa"
+            ],
+            "title": "Delphi: A cryptographic inference service for neural networks",
+            "venue": "Proc. of USENIX Security Symposium, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "N. Kumar",
+                "M. Rathee",
+                "N. Chandran",
+                "D. Gupta",
+                "A. Rastogi",
+                "R. Sharma"
+            ],
+            "title": "Cryptflow: Secure tensorflow inference",
+            "venue": "Proc. of IEEE S&P, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D. Rathee",
+                "M. Rathee",
+                "N. Kumar",
+                "N. Chandran",
+                "D. Gupta",
+                "A. Rastogi",
+                "R. Sharma"
+            ],
+            "title": "Cryptflow2: Practical 2-party secure inference",
+            "venue": "Proc. of ACM CCS, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P. Mohassel",
+                "Y. Zhang"
+            ],
+            "title": "Secureml: A system for scalable privacy-preserving machine learning",
+            "venue": "Proc. of IEEE S&P, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "P. Mohassel",
+                "P. Rindal"
+            ],
+            "title": "ABY3: A mixed protocol framework for machine learning",
+            "venue": "Proc. of ACM CCS, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "S. Wagh",
+                "D. Gupta",
+                "N. Chandran"
+            ],
+            "title": "Securenn: 3-party secure computation for neural network training",
+            "venue": "PoPETs, vol. 2019, no. 3, pp. 26\u201349, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Wagh",
+                "S. Tople",
+                "F. Benhamouda",
+                "E. Kushilevitz",
+                "P. Mittal",
+                "T. Rabin"
+            ],
+            "title": "Falcon: Honest-majority maliciously secure framework for private deep learning",
+            "venue": "PoPETs, vol. 2021, no. 1, pp. 188\u2013208, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Tan",
+                "B. Knott",
+                "Y. Tian",
+                "D.J. Wu"
+            ],
+            "title": "Cryptgpu: Fast privacypreserving machine learning on the gpu",
+            "venue": "Proc. of IEEE S&P, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P. Mohassel",
+                "P. Rindal",
+                "M. Rosulek"
+            ],
+            "title": "Fast database joins and PSI for secret shared data",
+            "venue": "Proc. of ACM CCS, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Apple",
+                "Google"
+            ],
+            "title": "Exposure Notification Privacypreserving Analytics (ENPA) White Paper",
+            "venue": "online at https://covid19-static.cdn-apple.com/applications/covid19/ current/static/contact-tracing/pdf/ENPA White Paper.pdf, 2021, [Online; Accessed 1-Nov-2022].",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y. Li",
+                "D. Tarlow",
+                "M. Brockschmidt",
+                "R.S. Zemel"
+            ],
+            "title": "Gated graph sequence neural networks",
+            "venue": "Proc. of ICLR, 2016.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "T.N. Kipf",
+                "M. Welling"
+            ],
+            "title": "Semi-supervised classification with graph convolutional networks",
+            "venue": "Proc. of ICLR, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "P. Velickovic",
+                "G. Cucurull",
+                "A. Casanova",
+                "A. Romero",
+                "P. Li\u00f2",
+                "Y. Bengio"
+            ],
+            "title": "Graph attention networks",
+            "venue": "Proc. of ICLR, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "H. Chen",
+                "O. Engkvist",
+                "Y. Wang",
+                "M. Olivecrona",
+                "T. Blaschke"
+            ],
+            "title": "The rise of deep learning in drug discovery",
+            "venue": "Drug discovery today, vol. 23, no. 6, pp. 1241\u20131250, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "H. Wang",
+                "F. Zhang",
+                "J. Wang",
+                "M. Zhao",
+                "W. Li",
+                "X. Xie",
+                "M. Guo"
+            ],
+            "title": "Exploring high-order user preference on the knowledge graph for recommender systems",
+            "venue": "ACM Trans. Inf. Syst., vol. 37, no. 3, pp. 32:1\u201332:26, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "C. Meng",
+                "S. Rambhatla",
+                "Y. Liu"
+            ],
+            "title": "Cross-node federated graph neural network for spatio-temporal data modeling",
+            "venue": "Proc. of ACM KDD, 2021, pp. 1202\u20131211.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Wu",
+                "F. Wu",
+                "Y. Cao",
+                "Y. Huang",
+                "X. Xie"
+            ],
+            "title": "FedGNN: Federated graph neural network for privacy-preserving recommendation",
+            "venue": "International Workshop on Federated Learning for User Privacy and Data Confidentiality, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "F. Chen",
+                "P. Li",
+                "T. Miyazaki",
+                "C. Wu"
+            ],
+            "title": "Fedgraph: Federated graph learning with intelligent sampling",
+            "venue": "IEEE Trans. Parallel Distributed Syst., vol. 33, no. 8, pp. 1775\u20131786, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Chen",
+                "J. Zhou",
+                "L. Zheng",
+                "H. Wu",
+                "L. Lyu",
+                "J. Wu",
+                "B. Wu",
+                "Z. Liu",
+                "L. Wang",
+                "X. Zheng"
+            ],
+            "title": "Vertically federated graph neural network for privacy-preserving node classification",
+            "venue": "Proc. of IJCAI, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Jiang",
+                "T. Jung",
+                "R. Karl",
+                "T. Zhao"
+            ],
+            "title": "Federated dynamic graph neural networks with secure aggregation for video-based distributed surveillance",
+            "venue": "ACM Trans. Intell. Syst. Technol., vol. 13, no. 4, pp. 1\u201323, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Y. Pei",
+                "R. Mao",
+                "Y. Liu",
+                "C. Chen",
+                "S. Xu",
+                "F. Qiang",
+                "B.E. Tech"
+            ],
+            "title": "Decentralized federated graph neural networks",
+            "venue": "International Workshop on Federated and Transfer Learning for Data Sparsity and Confidentiality in Conjunction with IJCAI, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "K. Bonawitz",
+                "V. Ivanov",
+                "B. Kreuter",
+                "A. Marcedone",
+                "H.B. McMahan",
+                "S. Patel",
+                "D. Ramage",
+                "A. Segal",
+                "K. Seth"
+            ],
+            "title": "Practical secure aggregation for privacy-preserving machine learning",
+            "venue": "Proc. of ACM CCS, 2017.",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "S. Sajadmanesh",
+                "D. Gatica-Perez"
+            ],
+            "title": "Locally private graph neural networks",
+            "venue": "Proc. of ACM CCS, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "X. Miao",
+                "W. Zhang",
+                "Y. Jiang",
+                "F. Fu",
+                "Y. Shao",
+                "L. Chen",
+                "Y. Tao",
+                "G. Cao",
+                "B. Cui"
+            ],
+            "title": "P2CG: a privacy preserving collaborative graph neural network training framework",
+            "venue": "The VLDB Journal, pp. 1\u201320, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C. Dwork"
+            ],
+            "title": "Differential privacy",
+            "venue": "Proc. of ICALP, 2006.",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "B. Wang",
+                "J. Guo",
+                "A. Li",
+                "Y. Chen",
+                "H. Li"
+            ],
+            "title": "Privacy-preserving representation learning on graphs: A mutual information perspective",
+            "venue": "Proc. of ACM KDD, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P. Rodr\u0131\u0301guez",
+                "M.\u00c1. Bautista",
+                "J. Gonz\u00e0lez",
+                "S. Escalera"
+            ],
+            "title": "Beyond one-hot encoding: Lower dimensional target embedding",
+            "venue": "Image Vis. Comput., vol. 75, pp. 21\u201331, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "V. Nair",
+                "G.E. Hinton"
+            ],
+            "title": "Rectified linear units improve restricted boltzmann machines",
+            "venue": "Proc. of ICML, 2010.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "W. Liu",
+                "Y. Wen",
+                "Z. Yu",
+                "M. Yang"
+            ],
+            "title": "Large-margin softmax loss for convolutional neural networks.",
+            "venue": "in Proc. of ICML,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Y. Zheng",
+                "H. Duan",
+                "C. Wang"
+            ],
+            "title": "Learning the truth privately and confidently: Encrypted confidence-aware truth discovery in mobile crowdsensing",
+            "venue": "IEEE Transactions on Information Forensics and Security, vol. 13, no. 10, pp. 2475\u20132489, 2018.",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "W. Chen",
+                "R.A. Popa"
+            ],
+            "title": "Metal: A metadata-hiding file-sharing system",
+            "venue": "Proc. of NDSS, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "E. Dauterman",
+                "E. Feng",
+                "E. Luo",
+                "R.A. Popa",
+                "I. Stoica"
+            ],
+            "title": "DORY: an encrypted search system with distributed trust",
+            "venue": "Proc. of OSDI, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "T. Araki",
+                "J. Furukawa",
+                "K. Ohara",
+                "B. Pinkas",
+                "H. Rosemarin",
+                "H. Tsuchida"
+            ],
+            "title": "Secure graph analysis at scale",
+            "venue": "Proc. of ACM CCS, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "D. Boneh",
+                "E. Boyle",
+                "H. Corrigan-Gibbs",
+                "N. Gilboa",
+                "Y. Ishai"
+            ],
+            "title": "Lightweight techniques for private heavy hitters",
+            "venue": "Proc. of IEEE S&P, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "E. Dauterman",
+                "M. Rathee",
+                "R.A. Popa",
+                "I. Stoica"
+            ],
+            "title": "Waldo: A private time-series database from function secret sharing",
+            "venue": "Proc. of IEEE S&P, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S. Wang",
+                "Y. Zheng",
+                "X. Jia",
+                "X. Yi"
+            ],
+            "title": "Privacy-preserving analytics on decentralized social graphs: The case of eigendecomposition",
+            "venue": "IEEE Trans. Knowl. Data Eng., 2022, 10.1109/TKDE.2022.3185079.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J. Bell",
+                "A. Gascon",
+                "B. Ghazi",
+                "R. Kumar",
+                "P. Manurangsi",
+                "M. Raykova",
+                "P. Schoppmann"
+            ],
+            "title": "Distributed, private, sparse histograms in the two-server model",
+            "venue": "Proc. of ACM CCS, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S. Wang",
+                "Y. Zheng",
+                "X. Jia",
+                "H. Huang",
+                "C. Wang"
+            ],
+            "title": "OblivGM: Oblivious attributed subgraph matching as a cloud service",
+            "venue": "IEEE Trans. Inf. Forensics Secur., vol. 17, pp. 3582\u20133596, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Y. Zheng",
+                "W. Wang",
+                "S. Wang",
+                "X. Jia",
+                "H. Huang",
+                "C. Wang"
+            ],
+            "title": "SecSkyline: Fast privacy-preserving skyline queries over encrypted cloud databases",
+            "venue": "IEEE Trans. Knowl. Data Eng., 2022, 10.1109/TKDE.2022.3220595.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S. Wang",
+                "Y. Zheng",
+                "X. Jia",
+                "X. Yi"
+            ],
+            "title": "PeGraph: A system for privacy-preserving and efficient search over encrypted social graphs",
+            "venue": "IEEE Trans. Inf. Forensics Secur., vol. 17, pp. 3179\u20133194, 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "Q. Wang",
+                "J. Wang",
+                "S. Hu",
+                "Q. Zou",
+                "K. Ren"
+            ],
+            "title": "Sechog: Privacypreserving outsourcing computation of histogram of oriented gradients in the cloud",
+            "venue": "Proc. of ACM AsiaCCS, 2016.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "H. Chun",
+                "Y. Elmehdwi",
+                "F. Li",
+                "P. Bhattacharya",
+                "W. Jiang"
+            ],
+            "title": "Outsourceable two-party privacy-preserving biometric authentication",
+            "venue": "Proc. of ACM AsiaCCS, 2014. 16",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Z. Qin",
+                "J. Yan",
+                "K. Ren",
+                "C.W. Chen",
+                "C. Wang"
+            ],
+            "title": "Towards efficient privacy-preserving image feature extraction in cloud computing",
+            "venue": "Proc. of ACM AsiaCCS, 2014.",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "X. Glorot",
+                "Y. Bengio"
+            ],
+            "title": "Understanding the difficulty of training deep feedforward neural networks",
+            "venue": "Proc. of AISTATS, 2010.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "B. Knott",
+                "S. Venkataraman",
+                "A. Hannun",
+                "S. Sengupta",
+                "M. Ibrahim",
+                "L. van der Maaten"
+            ],
+            "title": "Crypten: Secure multi-party computation meets machine learning",
+            "venue": "Proc. of NeurIPS, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Akram",
+                "Q.U. Ann"
+            ],
+            "title": "Newton raphson method",
+            "venue": "International Journal of Scientific & Engineering Research, vol. 6, no. 7, pp. 1748\u2013 1752, 2015.",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "M. Blanton",
+                "A. Kang",
+                "C. Yuan"
+            ],
+            "title": "Improved building blocks for secure multi-party computation based on secret sharing with honest majority",
+            "venue": "Proc. of ACNS, 2020.",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "T. Araki",
+                "J. Furukawa",
+                "Y. Lindell",
+                "A. Nof",
+                "K. Ohara"
+            ],
+            "title": "Highthroughput semi-honest secure three-party computation with an honest majority",
+            "venue": "Proc. of ACM CCS, 2016.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "X. Liu",
+                "Y. Zheng",
+                "X. Yuan",
+                "X. Yi"
+            ],
+            "title": "Medisc: Towards secure and lightweight deep learning as a medical diagnostic service",
+            "venue": "Proc. of ESORICS, 2021.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "D. Harris"
+            ],
+            "title": "A taxonomy of parallel prefix networks",
+            "venue": "Proc. of IEEE ACSSC, 2003.",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "W.M.P. van der Aalst",
+                "V.A. Rubin",
+                "H.M.W. Verbeek",
+                "B.F. van Dongen",
+                "E. Kindler",
+                "C.W. G\u00fcnther"
+            ],
+            "title": "Process mining: a twostep approach to balance between underfitting and overfitting",
+            "venue": "Softw. Syst. Model., vol. 9, no. 1, pp. 87\u2013111, 2010.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "J.-H. He",
+                "S. Elagan",
+                "Z. Li"
+            ],
+            "title": "Geometrical explanation of the fractional complex transform and derivative chain rule for fractional calculus",
+            "venue": "Physics letters A, vol. 376, no. 4, pp. 257\u2013259, 2012.",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "M. Curran",
+                "X. Liang",
+                "H. Gupta",
+                "O. Pandey",
+                "S.R. Das"
+            ],
+            "title": "Procsa: Protecting privacy in crowdsourced spectrum allocation",
+            "venue": "Proc. of ESORICS, 2019.",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Z. Zhang",
+                "Q. Liu",
+                "Z. Huang",
+                "H. Wang",
+                "C.-K. Lee",
+                "E. Chen"
+            ],
+            "title": "Model inversion attacks against graph neural networks",
+            "venue": "IEEE Trans. Knowl. Data Eng., 2022.",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S.P. Kasiviswanathan",
+                "H.K. Lee",
+                "K. Nissim",
+                "S. Raskhodnikova",
+                "A.D. Smith"
+            ],
+            "title": "What can we learn privately?",
+            "venue": "SIAM Journal on Computing,",
+            "year": 2011
+        }
+    ],
+    "sections": [
+        {
+            "text": "Index Terms\u2014Graph neural networks, cloud computing services, model training and inference services, privacy preservation\nF"
+        },
+        {
+            "heading": "1 INTRODUCTION",
+            "text": "G Raphs have been widely used to model and managedata in various real-world applications, including recommendation systems [1], social networks [2] and webpage networks [3]. Graph data, however, is highly complex and inherently sparse, making graph analytics challenging [4]. With the rapid advancements in deep learning, Graph Neural Networks (GNNs) [5] have recently gained a lot of traction as a powerful tool for graph analytics due to its endto-end processing capabilities. GNNs can empower a variety of graph-centric applications such as node classification [6], edge classification [7] and link prediction [8]. With the widespread adoption of cloud computing, it is increasingly popular to deploy machine learning training and inference services in the cloud [9], [10], due to the well-understood benefits [11], [12]. However, GNN training and inference, if deployed in the public cloud, will raise critical severe privacy concerns. Graph data is information-rich and can reveal a considerable amount of sensitive information. For example, in a social network graph, the connections between nodes represent users\u2019 circles of friends and each node\u2019s features represent each user\u2019s preferences. Meanwhile, the graph data as well as the trained GNN model are the proprietary to the data owner, so revealing them may easily harm\n\u2022 Songlei Wang and Yifeng Zheng are with the School of Computer Science and Technology, Harbin Institute of Technology, Shenzhen, Guangdong 518055, China (e-mail: songlei.wang@outlook.com; yifeng.zheng@hit.edu.cn). \u2022 Xiaohua Jia is with the School of Computer Science and Technology, Harbin Institute of Technology, Shenzhen, Guangdong 518055, China, and also with the Department of Computer Science, City University of Hong Kong, Hong Kong, China (e-mail: csjia@cityu.edu.hk) \u2022 Corresponding author: Yifeng Zheng.\nthe business model. Therefore, security must be embedded in outsourcing GNN training and inference to the cloud.\nIn the literature, privacy-preserving machine learning has received great attention in recent years, especially the design of secure protocols for neural network-based applications. A number of research efforts have been proposed for secure neural network inference and training. Most of existing works [13]\u2013[21] are focused on designing specialized protocols for secure inference, and only a few works [22]\u2013 [26] study secure training which is more sophisticated and resource-intensive. However, prior works are all focused on the support for Convolutional Neural Networks (CNNs) handling unstructured data like images and text. How to achieve secure in-the-cloud training and inference of GNNs that handle complex graph data remains unexplored.\nSupporting secure training and inference of GNNs in the cloud, however, faces unique challenges and require delicate treatments due to the complex structured nature of graphs. There are various kinds of structural information in graphs: 1) relationships between nodes (i.e., edges), 2) edge weights, and 3) number of neighboring nodes (i.e., degrees of nodes). Designing solutions for securing GNN training and inference thus demands protection for not only numerical information (e.g., the values of features associated with nodes) but also the rich structural information unique to different graphs.\nIn light of the above, in this paper, we present the first research endeavor towards privacy-preserving training and inference of GNNs in the cloud. We design, implement, and evaluate a new system SecGNN, which allows a data owner to send encrypted graph data to the cloud, which can then effectively train a GNN model without seeing the graph data as well as provide secure inference once\nar X\niv :2\n20 2.\n07 83\n5v 2\n[ cs\n.C R\n] 3\n1 Ja\nn 20\n23\n2 an encrypted GNN model is trained. Targeting privacy assurance as well as high efficiency, SecGNN builds on only lightweight cryptographic techniques (mainly additive secret sharing) for efficient graph data encryption at the data owner as well as secure training and inference at the cloud side. To be compatible with the working paradigm of additive secret sharing, SecGNN employs a multi-server and decentralized trust setting where the power of the cloud is split into three cloud servers that are hosted by independent cloud service providers. The adoption of such a multi-server model to facilitate security applications in various contexts has gained increasing traction in prior works [24], [26], [27] as well as in industry [28], [29]. SecGNN leverages the above trend and contributes a new design point of secure GNN training and inference in the cloud through highly customized cryptographic protocols.\nWe start with considering how to appropriately encrypt the graph data in SecGNN so that it can still be effectively used at the cloud for secure training and inference. As mentioned above, graphs contain not only numerical information (i.e., feature vectors associated with the nodes) but also structural information connecting the nodes, all demanding strong protection. The challenge here is to how to encrypt the structural information in an effective and efficient manner. One may try to directly encrypt the adjacency matrix of the graph of size O(N2), where N is the number of nodes, with additive secret sharing.\nSuch a simple method, however, is neither efficient nor necessary. Firstly, there can be tens of thousands or even millions of nodes in a graph for practical applications, leading to the adjacency matrix being of very large size. Directly encrypting the adjacency matrix would incur significant overheads. Secondly, graphs are usually sparse, leading to the adjacency matrix being sparse and filled with many zeros. Encrypting all the zeros in the adjacency matrix would result in unnecessary cost as well. To tackle this challenge, our insight is to devise a set of customized data structures to appropriately store and represent the structural information, and so the encryption is performed over these data structures rather than the original (big) adjacency matrix. With our customized data structures, the complexity of encryption significantly reduces to O(N \u00b7 dmax), where dmax is the maximum degree of nodes in the graph, and far less than the number of nodes (e.g., only 0.87% to 6.2% as practically observed in our experiments over several popular real-world graph datasets).\nSubsequently, we consider how to securely perform training and inference at the cloud over the delicatelyencrypted graph data in SecGNN. Through an in-depth examination on the computation required in GNN training and inference, we decompose the holistic computation into a series of functions and devise corresponding tailored secure constructions with the lightweight additive secret sharing technique. Specifically, we manage to decompose the whole procedure into secure feature normalization, secure neighboring states aggregation, secure activation functions, and secure model convergence evaluation.\nSecGNN supports secure feature normalization through realizing secure division with effective approximation mechanisms. For secure neighboring states aggregation in SecGNN, our insight is to transform the problem into secure\narray access over encrypted arrays and indexes. We design a secure array access protocol building on the state-of-theart yet achieving much improved efficiency, through customized mechanisms. To support the secure evaluation of activation functions (ReLU and Softmax), SecGNN mainly leverages insights from digital circuit design and provides tailored protocols in the secret sharing domain, rather than relying on expensive garbled circuits as in prior work [22].\nLast but not least, SecGNN provides the first mechanism for secure convergence evaluation, allowing fine-grained control on the secure training process. This is in substantial contrast to prior work on secure (CNN) training which simply sets a fixed number for the training epochs and thus may not necessarily meet convergence. The synergy of these customized secure and efficient components leads to SecGNN, the first system supporting secure GNN training and inference in the cloud. The security of SecGNN is formally analyzed. We implement SecGNN and conduct extensive experiments over multiple real-world graph datasets. The evaluation results demonstrate that SecGNN, while providing privacy protection in training and inference, achieves comparable plaintext accuracy, with promising performance.\nWe highlight our contributions below: \u2022 We present SecGNN, the first system supporting\nprivacy-preserving GNN training and inference as a cloud service, through a delicate synergy of lightweight cryptography and machine learning. \u2022 We devise customized data structures to facilitate efficient and effective graph data encryption, and thoroughly propose a series of customized secure protocols to support the essential components required by secure GNN training and inference. \u2022 Among others, notably SecGNN provides a secure array access protocol with much improved efficiency over the state-of-the-art as well as the first secure finegrained convergence evaluation protocol, which can be of independent interests. \u2022 We make a full-fledged implementation of SecGNN and conduct an extensive evaluation over a variety of real-world graph datasets. The experiment results demonstrate the performance efficiency of SecGNN.\nThe rest of this paper is organized as follows. Section 2 discusses the related work. Section 3 introduces preliminaries. Section 4 presents the problem statement. Section 5 gives the design of SecGNN. The security analysis is presented in Section 6, followed by the experiments in Section 7. Finally, we conclude this paper in Section 8."
+        },
+        {
+            "heading": "2 RELATED WORK",
+            "text": ""
+        },
+        {
+            "heading": "2.1 Graph Neural Networks in Plaintext Domain",
+            "text": "Graphs can characterize the complex inter-dependency among data and are widely used in many applications, such as citation networks, social media networks, webpage networks [4]. GNN models have the strong ability of capturing the dependence of graphs through message passing between the nodes of graphs, and have shown impressive performance in graph processing tasks. The first GNN model was proposed in the seminal work of Scarselli et al. [3]. Since then, many advanced GNN models targeting\n3 different applications and with varying capabilities have been put forward. In general, GNN models can be divided into three categories: Gated Graph Neural Networks (GGNN) [30], Graph Convolutional Networks(GCN) [31], and Graph ATtention networks (GAT) [32]. GGNN models are proposed to accommodate applications that require to output sequences about a graph such as drug discovery [33]. GCN models are variants of CNNs which operate directly on graphs, and it is typically used for graphs with relatively stable nodes such as recommendation systems [6]. GAT models introduce an attention-based architecture to calculate the weight of neighboring nodes, so that the whole network information can be obtained without knowing the structure of the whole graph, which is also commonly used in recommendation systems [34]. Although the above GNN models can achieve excellent performance on graphstructured data, they are trained and work in the plaintext domain without considering privacy protection."
+        },
+        {
+            "heading": "2.2 Secure Neural Network Training and Inference",
+            "text": "There has been a surge of interests on developing methods for secure neural network training and inference in recent years. Most of existing works [13]\u2013[21] are focused on secure inference, and operated under different settings. Some works [13]\u2013[16], [19], [21] consider a 2-party setting where a model owner and a client directly engage in tailored cryptographic protocols for secure inference. Their security goal is that through the interactions the model owner learns no information while the client only learns the inference result. In contrast, some works [17], [18], [20] consider an outsourced setting where a set of cloud servers are employed to perform secure inference over encrypted neural networks and inputs. Throughout the procedure, the cloud servers learn no information about the models, inputs, and inference results. The cryptographic techniques adopted by the above works in different settings usually include homomorphic encryption, garbled circuits, and secret sharing. In comparison with secret sharing, homomorphic encryption and garbled circuits are relatively expensive and usually incur large performance overheads.\nIn contrast with secure inference, secure training of neural networks is much more challenging because more complex operations would be required, and a large dataset needs to be processed in the ciphertext domain. In the literature, only a few works study the problem of secure neural network training. Mohassel et al. [22] propose the first secure training method for shallow neural networks under a two-server setting, based on secret sharing (for linear operations) and garbled circuits (for approximated activation functions). Subsequently, several works [23]\u2013[26] achieve better performance in accuracy and efficiency by devising customized secure training protocols in a threeserver setting. Despite being useful, existing works on secure neural network are focused on CNN models that do not support the processing of graph data. In light of this gap, in this paper we present the first research endeavor towards privacy-preserving training and inference of GNNs outsourced to the cloud, providing techniques for adequately encrypting graph data and securely supporting the essential operations required in GNN training and inference. Following the trend as in prior work, our design adopts a similar\nthree-server architecture, and only make use of lightweight cryptographic techniques in devising our secure protocol highly customized for secure GNN training and inference."
+        },
+        {
+            "heading": "2.3 Federated Learning-Based Private GNN Training",
+            "text": "There are some works [35]\u2013[40] focusing on privacypreserving training of GNNs under the federated learning paradigm, where GNNs are trained across multiple clients holding local graph datasets in such a way that the graph datasets stay local. Specifically, the work [35] focuses on GNNs over decentralized spatio-temporal data, and has the clients exchange model updates with the central server in plaintext. In contrast, the works [36], [37] focus on distributed graph datasets where each client only holds a subgraph and design privacy-preserving mechanisms to protect the individual model updates. Different from [36], [37], the work [38] focuses on vertically federated GNN, where all clients hold the same graph nodes, but different node features and edges. The work [39] considers federated dynamic GNN, which learns the representations of the objects at each timestamp by capturing the structural and patterns in the dynamic graph sequence. Pei et al. [40] focus on decentralized federated GNN, which allows multiple clients to train a GNN model without a centralized server and introduces the Diffie-Hellman key exchange method [41] to achieve secure model aggregation between clients. These federated learning-based works all target system models that are substantially different from ours. SecGNN targets an outsourced setting where the graph data owner can send its encrypted graph data to the cloud for secure training and can simply offline offline during the training process. In the meantime, SecGNN readily supports secure GNN inference over encrypted GNNs and inputs as well, while those works can only deal with private training."
+        },
+        {
+            "heading": "2.4 Other Related Work",
+            "text": "There are some other works [42], [43] focusing on making the node features and edges differentially private [44] when clients share their graph data to the central server or other clients during GNN models training. Specifically, the work [42] considers that a server holds a graph, whose nodes, which correspond to real users, have some private features that the server wishes to utilize for training a GNN model on the graph. The work [43] considers a distributed scenario where each client has all nodes but only partial private edges for a graph, and the clients wish to collaboratively train a GNN model on the distributed graph. These works [42], [43] protect graph data privacy at the cost of notable accuracy degradation and rely on delicate parameter tuning for balancing accuracy and privacy. In independent work, Wang et al. [45] propose a privacy-preserving representation learning framework on graphs from the mutual information perspective. The framework considers a centralized GNN training scenario and focuses on preventing the trained GNN models from leaking the training data by bounding the node features, node label, and link status during training GNN models.\n4 State aggregation Input layer\nHidden layer\nState aggregation\nx(1)vi x (1) nei,1 x (1) nei,di\nOutput layer\nx(2)vi\n: ReLU( ) : Softmax( )x (0) vi\nx(1)vi\nFnei,1 Fnei,di\nM(2)H,C\nM(2)H,1\nM(2)1,C\nM(2)1,1\nM(1)L,H M(1)L,H\u22121\nM(1)L,2\nM(1)L,1\nM(1)1,H\nM(1)1,H\u22121\nM(1)1,2\nM(1)1,1\nFvi\nFig. 1. Illustration of the two-layer GCN model."
+        },
+        {
+            "heading": "3 PRELIMINARIES",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Graph Neural Networks",
+            "text": "A graph G = (V, E) consists of nodes V and connections between nodes, i.e., edges E . Two nodes connected by an edge are neighboring nodes. The neighboring nodes of each node vi \u2208 V is denoted by {nei,j}j\u22081,di , where di is node vi\u2019s degree. GNNs deal with graph-structured data, where each node in the graph is associated with a feature vector and some of the nodes are labeled nodes, each of which carries a classification label. Formally, we define the graphstructured data in GNNs as D = {A,F,T}. Here, A is the adjacency matrix of the graph, where Ai,j is an element in A: If there exists an edge between node vi and node vj , then Ai,j = 1 (binary graph) or Ai,j = wi,j (weighted graph), and otherwise Ai,j = 0. In addition, Each row of F (denoted as Fvi ) is node vi\u2019s feature vector, and each row of T (denoted as Tvi ) is the classification label vector (onehot encoding [46]) of labeled node vi \u2208 T , where T is the set of labeled nodes.\nUtilizing the graph-structured data D, a GNN model can be trained to perform graph analytic tasks. In this paper, we focus on GCN as the first instantiation, which is well-established and the most representative GNN model [31]. With a trained GCN model, the classification labels of the unlabeled nodes can be inferred. At a high level, this proceeds as follows. Given an unlabeled node vi, the trained GCN model infers its state vector x(k)vi (row vector) in the kth-layer of the GCN. The dimension of the state vector decreases along with the layer propagation in the GCN. The last layer state vector x(K)vi is the inference result of node vi, which is usually a probability vector with length C and C is the number of possible classification labels. Finally, the node vi is labeled with the class having the maximum probability.\nWithout loss of generality and to facilitate the presentation, we elaborate on a representative two-layer GCN model [31] as follows, and will use it to illustrate the design of our SecGNN afterwards. The GCN\u2019s propagation model is:\nZ = Softmax(A\u0302ReLU(A\u0302FM(1))M(2)), (1)\nwhere M(1) and M(2) are two trainable weight matrices. A\u0302 is a symmetric normalized adjacency matrix A\u0302 = D\u0303\u2212 1 2 A\u0303D\u0303\u2212 1 2 where A\u0303 = A+I is the adjacency matrix of the graph with self-connection added (I is the identity matrix).\nD\u0303 is a diagonal matrix: D\u0303i,i = swvi = \u2211\nj\u2208[1,N ]\nA\u0303i,j = 1 + \u2211\nj\u2208[1,di]\nwi,j , (2)\nwhere N is the number of nodes in the graph, di is the degree of node vi and swvi is the sum of vi\u2019s edge weights. Namely, D\u0303i,i is the sum of node vi\u2019s edge weights with self-connection added (i.e, wi,i = 1). In particular, for a binary graph we have D\u0303i,i = di+1. The activation function ReLU(x) is defined as [47]:\nReLU(x) = { x if x \u2265 0, 0 if x < 0,\n(3)\nand the activation function Softmax(x) is defined as [48]:\nzi = exi\u2211\nj\u2208[1,C] e xj , i \u2208 [1, C], (4)\nwhere C is the number of possible classification labels.\nTo train the GCN model, the forward propagation (i.e., Eq. 1) is performed for each labeled node, and then the two trainable weight matrices M(1) and M(2) are updated based on the difference between each labeled node\u2019s inference result and label vector through backward propagation. Fig. 1 illustrates the process of performing the forward propagation for a node vi:\n1) The 0th-layer aggregate state x(0)vi of node vi is the weighted sum of the states of its neighbors and its own:\nx(0)vi = (A\u0302F)vi = A\u0302vi,viFvi + \u2211\nj\u2208[1,di]\nA\u0302vi,nei,jFnei,j ,\n(5) where (A\u0302F)vi is the vector in row vi of matrix A\u0302F, {Fnei,j}j\u2208[1,di] are the feature vectors of vi\u2019s neighbors and A\u0302vi,nei,j is the element in row vi and column nei,j of matrix A\u0302.\n2) The 1st-layer state x (1) vi of node vi is\nx(1)vi = ReLU(x (0) vi M (1)). (6)\n3) The 1st-layer aggregate state of node vi is\nx(1)vi = (A\u0302X (1))vi = A\u0302vi,vix (1) vi\n+ \u2211\nj\u2208[1,di]\nA\u0302vi,nei,jx (1) nei,j ,\n(7) where X(1) is all nodes\u2019 1st-layer states.\n4) The 2nd-layer state of node vi is\nZvi = x (2) vi = Softmax(x (1) vi M (2)) (8)\nwhich denotes the inference result of node vi.\nAfter producing all labeled nodes\u2019 inference results through forward propagation, the average cross-entropy loss can be calculated by using all labeled nodes\u2019 labels and inference results:\nL = \u2212 1 |T | \u2211 vi\u2208T \u2211 j\u2208[1,C] Tvi,j ln Zvi,j , (9)\nwhere T is the set of labeled nodes and Tvi,j is the classification label of node vi, class j. Finally, each weight\n5 Mi,j \u2208M(1) \u222aM(2) can be updated by its gradient:\nMi,j = Mi,j \u2212 \u03c1 \u2202L\n\u2202Mi,j ,\nwhere \u03c1 is the learning rate. After the GCN model is trained, the classification label of each unlabeled node can be inferred through the forward propagation process."
+        },
+        {
+            "heading": "3.2 Additive Secret Sharing",
+            "text": "The 2-out-of-2 additive secret sharing of a secret value x is denoted as JxK, which can have the following two types [22]: \u2022 Arithmetic sharing: JxKA = \u3008x\u30091 + \u3008x\u30092 where x, \u3008x\u30091, \u3008x\u30092 \u2208 Z2k , and \u3008x\u30091, \u3008x\u30092 held by two parties, respectively.\n\u2022 Binary sharing: JbKB = \u3008b\u30091 \u2295 \u3008b\u30092 where b, \u3008b\u30091, \u3008b\u30092 \u2208 Z2, and \u3008b\u30091, \u3008b\u30092 held by two parties, respectively.\nThe basic operations in the secret sharing domain under a two-party setting are as follows. (1) Linear operations. Linear operations on secret-shared values only require local computation. In arithmetic sharing, if \u03b1, \u03b2, \u03b3 are public constants and JxKA, JyKA are secret-shared values, then\nJ\u03b1x+ \u03b2y + \u03b3KA = (\u03b1\u3008x\u30091 + \u03b2\u3008y\u30091 + \u03b3, \u03b1\u3008x\u30092 + \u03b2\u3008y\u30092). Each party can compute their respective shares locally based on the secrets they hold. (2) Multiplication. Multiplication on secret-shared values requires one round of online communication. To multiply two secret-shared values: JzKA = JxKA \u00d7 JyKA, the two parties should first share a Beaver triple JwKA = JuKA\u00d7 JvKA in the offline phase. After that, the party Pi\u2208{0,1} locally computes \u3008e\u3009i = \u3008x\u3009i \u2212 \u3008u\u3009i and \u3008f\u3009i = \u3008y\u3009i \u2212 \u3008v\u3009i, and then opens e, f to each other. Finally, Pi holds \u3008z\u3009i = i\u00d7e\u00d7f +f \u00d7\u3008u\u3009i+e\u00d7\u3008v\u3009i+ \u3008w\u3009i.\nIn binary sharing, the operations are similar to arithmetic sharing. In particular, the addition operation is replaced by the XOR (\u2295) operation and multiplication is replaced by the AND (\u2297) operation."
+        },
+        {
+            "heading": "4 PROBLEM STATEMENT",
+            "text": ""
+        },
+        {
+            "heading": "4.1 System Architecture",
+            "text": "There are two kinds of entities in SecGNN: the data owner and the cloud. The data owner (e.g., an online shopping enterprise or a social media service provider) wants to leverage the power of cloud computing to train a GNN model over his proprietary graph data as well as provide ondemand inference services once the model is trained. Due to privacy concerns and that the graph data is proprietary, it is demanded that security must be embedded in the outsourced service, safeguarding the graph data, the trained model, as well as the inference results along the whole service flow. The cloud providing the secure GNN training and inference is split into three cloud servers P{1,2,3} which can be operated by independent cloud service providers (e.g., AWS, Google, and Microsoft) in practice. Such multiserver model has also gained increasing traction in prior works on building efficient secure systems for other application domains [26], [49]\u2013[59]. In addition to the adoption in academia, such multi-server model has also been deployed in industry. For example, Mozilla provides a service of lightweight private collection of telemetry data about Firefox under the non-colluding multi-server model [28]; Apple\nand Google cooperatively provide automated alerts about potential COVID-19 exposure to users, while providing strong privacy protections [29]. SecGNN also follows such trend and contributes a new design for enabling privacypreserving training and inference of GNNs in the cloud.\nFrom a high-level point of view, the data owner in SecGNN will encrypt the graph by adequately splitting the graph-structured data into secret shares under 2-out-of2 additive secret sharing, as per our design. The secret shares are sent to P1 and P2, respectively. Upon receiving the encrypted graph-structured data, P{1,2,3} perform our SecGNN to train the encrypted GNN model in the secret sharing domain. Once the encrypted GNN model is trained, the data owner can query the cloud service to obtain encrypted classification labels for unlabeled nodes for decryption. It is noted that the major computation in SecGNN is undertaken by the cloud servers P1 and P2 while P3 provides necessary assistance, so as to simplify the interactions (and so the system implementation and deployment) as much as possible."
+        },
+        {
+            "heading": "4.2 Threat Model",
+            "text": "Similar to prior security designs in the three-server setting [24], [26], [27], we consider a semi-honest adversary setting where each of the three cloud servers honestly follow our protocol, but may individually attempt to learn the private information of the data owner. The rationality of the noncollusion assumption is that the cloud service providers hosting the three cloud servers are normally business-driven and well-established parties, who are thus unwilling to risk their valuable commercial reputation by colluding with each other to intentionally breach data privacy [60]\u2013[62]. We consider that the data owner wishes to keep the following information private: (i) the features F and labels T of nodes, (ii) the adjacency matrix A encoding the structural information regarding the neighboring nodes of each node, the number of neighbors of each node, and the edge weight between each pair of connected nodes, (iii) the model weights M(1) and M(2), and (iv) the inference results for (unlabeled) nodes."
+        },
+        {
+            "heading": "5 SECURE GNN TRAINING AND INFERENCE",
+            "text": ""
+        },
+        {
+            "heading": "5.1 SecGNN Overview",
+            "text": "Without loss of generality, we will use the two-layer GCN in Eq. 1 to illustrate the design of secure training and inference in SecGNN. Fig. 2 provides an overview of the core components in SecGNN. We will start with designing a secure input preparation method, which allows the data owner to adequately encrypt its graph-structured data so that they can support secure training and inference at the cloud. Subsequently, we design the following essential components to support the secure training and inference procedure at the cloud: (i) secure initialization where the cloud normalizes the encrypted features for each node, (ii) secure neighboring states aggregation where the cloud computes the encrypted aggregate state (as shown in Eq. 5 and Eq. 7) for each node, (iii) secure activation functions where the cloud activates the encrypted aggregate state for each node, and (iv) secure model convergence evaluation where the cloud performs a secure and fine-grained protocol to evaluate the convergence of the training process. Finally, we will elaborate on how to\n6 Secure Input Preparation\nNode features and label Structured data\nNeighbors\u2019 IDs\nEdge weights Degree\nSecure Initialization\nSecret sharing\nArray access\nDivision\n: Operations in the secret sharing domain.\nSecure Activation Functions\nDivision\nInverse square root\nMSB Natural logarithm\nSecure Neighboring States Aggregation\nSoftmax\nMSB\nReLU\nExponentiation Cross-entropy loss\nFeatures normalization\nSecure Model Convergence Evaluation\nFig. 2. Overview of the core components in SecGNN.\nbridge the designed secure components to give the complete protocol for secure GCN training and inference."
+        },
+        {
+            "heading": "5.2 Secure Input Preparation",
+            "text": "Encrypting node features and labels. Given each node vi\u2019s initial feature vector with length L: Fvi \u2208 ZL2k , the data owner generates a random vector r \u2208 ZL2k . Then the arithmetic ciphertext of Fvi is the secret shares \u3008Fvi\u30091 = {(Fvi,s \u2212 rs) mod Z2k}Ls=1 and \u3008Fvi\u30092 = {rs}Ls=1 where \u3008Fvi\u3009j is sent to Pj , j \u2208 {1, 2}. Similarly, the data owner splits each labeled node\u2019s label vector Tvi into secret shares. Encrypting structural information. The structural information includes 1) each node\u2019s degree di; 2) the neighbors\u2019 IDs nei,j of all nodes; 3) edge weights wi,j between all connected nodes. To protect the structural information, a simple method is to split the adjacency matrix A into secret shares. However, this method is inefficient and unnecessary since the adjacency matrix A is usually sparse.\nInstead, our insight is to devise a set of data structures to properly store and represent the necessary structural information so that they can be encrypted efficiently as well as be used for GCN training and inference. In particular, we represent the structural information with an array-like data structure where each array element refers to a node\u2019s neighbor ID list and an edge weight list, and the array index is the node\u2019s ID.\nIt is noted that as the degrees of nodes are different, the length of nodes\u2019 neighbor ID lists varies. To protect each node\u2019s degree, the data owner pads several dummy neighbors\u2019 IDs to each node\u2019s neighbor ID list so that all nodes have the same number of neighbors. Namely, the secure neighbor ID list of vi is\nNevi = {nei,1, \u00b7 \u00b7 \u00b7 , nei,di} \u222a {ne\u2032i,1, \u00b7 \u00b7 \u00b7 , ne\u2032i,dmax\u2212di},\nwhere ne\u2032 are dummy neighbors\u2019 IDs, di is vi\u2019s degree and dmax is the maximum degree in the graph. However, if these dummy neighbors\u2019 IDs point to nodes that do not exist in the graph, the cloud servers will distinguish them from Nevi when accessing these dummy neighbors, while if the dummy neighbors\u2019 IDs point to real nodes in the\ngraph, the accuracy of the trained model will be degraded dramatically since dummy neighbors\u2019 states will change node vi\u2019s aggregate state.\nOur solution is based on the observation that in GCN or GNN, a node\u2019s aggregate state is the weighted sum of its neighboring states, where the weights are relevant with vi\u2019s edge weights wi,j . Therefore, we can set the edge weights between vi and its dummy neighbors to 0. Namely, vi\u2019s secure edge weight list is Wvi = {wi,1, \u00b7 \u00b7 \u00b7 , wi,di} \u222a {0j}dmax\u2212dij=1 . By this way, the effect of the dummy neighbors will be eliminated, which will be understood clearly in Section 5.4. After padding dummy neighbors, the data owner splits each node\u2019s secure neighbor ID list Nevi and secure edge weight list Wvi into secret shares:\nJNevi,jKA = \u3008Nevi,j\u30091 + \u3008Nevi,j\u30092, j \u2208 [1, dmax], JWvi,jKA = \u3008Wvi,j\u30091 + \u3008Wvi,j\u30092, j \u2208 [1, dmax],\nwhere i \u2208 [1, N ], j \u2208 [1, dmax]. Finally, the data owner sends all secret shares JFKA, JTKA, JNeKA and JWKA to P1 and P2, respectively. Assuming that the nodes in the graph are indexed from 1 to N , i.e., v1 = 1, \u00b7 \u00b7 \u00b7 , vN = N . The encrypted graph-structured data can be regarded as an array-like data structure where each array element is a node\u2019s encrypted data and the index is the node\u2019s ID vi."
+        },
+        {
+            "heading": "5.3 Secure Initialization",
+            "text": "Each node\u2019s initial features need to be normalized before model training [63]. Without loss of generality, we will work with a common feature normalization method:\nxi = xi\u2211\nj\u2208[1,L] xj , i \u2208 [1, L], (10)\nwhere L is the number of features. Obviously, the sum operation is directly supported in the secret sharing domain, but the division operation is hard to be directly supported and calls for a tailored protocol for secure division in the secret sharing domain.\nOur solution is to approximate the division operation using basic operations (i.e., +,\u00d7) supported in the secret sharing domain. We observe that the main challenge in computing division is to compute the reciprocal J 1xKA. Inspired by the recent work [64], we approximate the reciprocal by the iterative Newton-Raphson algorithm [65]:\nyn+1 = yn(2\u2212 xyn), (11)\nwhich will converge to yn \u2248 1x . Obviously, both subtraction and multiplication are naturally supported in the secret sharing domain. In addition, a faster convergence can be achieved by initializing y0 as:\ny0 = 3e 0.5\u2212x + 0.003. (12)\nHow to compute ex in the secret sharing domain will be introduced in Section 5.5.2. Subroutine 1 describes our protocol for secure feature normalization."
+        },
+        {
+            "heading": "5.4 Secure Neighboring States Aggregation",
+            "text": "During the state propagation process, the kth-layer aggregate state x(k)vi of node vi is computed by node vi\u2019s kth-layer state x(k)vi and its neighbors\u2019 kth-layer states x\n(k) Nevi,j\n, where node vi\u2019s 0th-layer state is its normalized feature vector Fvi . As shown in Eq. 5 and Eq. 7, the aggregate state is\n7 Subroutine 1 Secure Feature Normalization Input: Node vi\u2019s encrypted features {JFvi,jKA}j\u2208[1,L]. Output: Encrypted normalized features{JFvi,jKA}j\u2208[1,L].\n1: P{1,2} locally calculate JSKA = \u2211 l\u2208[1,L]JFvi,lKA.\n//P{1,2} calculate the approximate J 1S KA: 2: Jy0KA = 3\u00d7 Je0.5\u2212SKA + 0.003; 3: for n = 0 to N do 4: Jyn+1KA = JynKA \u00d7 (2\u2212 JSKA \u00d7 JynKA). 5: end for\n//P{1,2} calculate the normalized features: 6: for l = 1 to L do 7: JFvi,lKA = JFvi,lKA \u00d7 J 1S KA. 8: end for\nthe weighted sum of these states. However, since only the encrypted neighbors\u2019 IDs are uploaded to the cloud rather than the whole adjacency matrix A, it raises a challenge on how to compute A\u0302 and perform all subsequent operations.\nOur insight is to first transform the aggregation method in Eq. 5 and Eq. 7 to the other form that can be calculated in the secret sharing domain. The kth-layer aggregate state of node vi can be denoted as (D\u0303\u2212 1 2 A\u0303D\u0303\u2212 1 2X(k))i where ()i denotes the ith row of the matrix, and its equivalent form is \u2211N j=1\nA\u0303i,j\u221a D\u0303i,iD\u0303j,j X (k) j , where\n\u2211N k=1 D\u0303 \u2212 12 i,k = D\u0303 \u2212 12 i,i because\nD\u0303 is a diagonal matrix. Since A\u0303i,j = 0 if node vj is not vi\u2019s neighbors, wi,i = 1 and swvi = D\u0303vi,vi (i.e., Eq. 2), a more simper form of vi\u2019s kth-layer aggregate state is:\nx(k)vi = 1\nswvi x(k)vi + \u2211 j\u2208[1,dmax] Wvi,j\u221a swvi \u00b7 \u221a swNevi,j x (k) Nevi,j .\n(13) It is noted that since the edge weights between vi and its dummy neighbors are 0, the effect of these dummy neighbors can be eliminated using Eq. 13.\nWhen securely computing node vi\u2019s kth-layer aggregate state x(k)vi by Eq. 13, the cloud servers should first securely access the neighboring nodes\u2019 kth-layer states x\n(k) Nevi,j , j \u2208 [1, dmax], and then sum these states by securely multiplying its weight Wvi,j\u221aswvi \u00b7 \u221a swNevi,j . However, it is challenging to access the neighboring nodes\u2019 states since the neighbors\u2019 IDs are encrypted. Meanwhile, the square root is not naturally supported in the secret sharing domain.\nTo overcome the two obstacles, we design a protocol for secure neighboring states access which allows the cloud servers to securely access the neighboring nodes\u2019 states, and a protocol for secure neighboring states summation allowing the cloud servers to securely perform the square root calculation and the summation of the accessed neighboring states."
+        },
+        {
+            "heading": "5.4.1 Secure Neighboring States Access",
+            "text": "Neighboring states access is challenging in the secret sharing domain, because we need to access each neighbor\u2019s state with both the neighbor\u2019s ID Nevi,j and state x\n(k) Nevi,j\nbeing encrypted. Furthermore, the accessed result should still be encrypted. Our insight is to first transform it to the array access problem in the secret sharing domain, i.e., the state vector x(k)vi of each node in the graph is treated as an array element and node IDs (1 to N ) serve as array indexes. We\nthen consider how to securely access the encrypted element at the encrypted location from the encrypted array.\nFrom the literature, we identify the existence of the stateof-the-art secure array access protocol in the secret sharing domain by Blanton et al. [66], which works in a similar threeparty setting and uses 2-out-of-2 secret sharing. This method requires communicating 4m+ 4 elements in two rounds, where m is the length of the encrypted array. In the protocol of [66], the cloud needs to send random values to each other during accessing the encrypted array element. These shared random values will be used to hide the shares of each array element, and will be offset in the sum of shares.\nThrough careful inspection on the protocol, we manage to design a more efficient protocol which only requires communicating 2m+2 elements in one round. In particular, instead of letting the cloud servers send random values to each other, our idea is to enable them to locally generate correlated random values (i.e., c1 + c2 + c3 = 0) based on a technique from [67], which will be used to hide the shares of each array element, and will be offset in the sum of shares. More specifically, in the system initialization phase, the cloud server Pi, i \u2208 {1, 2, 3} samples a key ki and send ki to Pi+1 where P3+1=1. Then Pi\u2019s jth correlated random value is\nci[j] = F(ki, j)\u2212 F(ki\u22121, j),\nwhere k1\u22121=3 and F is a pseudorandom function (PRF). Meanwhile, an agreed random value r between each two cloud servers can also be generated by their shared key. The jth agreed random value between Pi and Pi+1 is rij = F(ki, j) mod m, where m is the length of the secret array.\nGiven a secret array JaKA = \u3008a\u30091+\u3008a\u30092 and a secret index JIKA = \u3008I\u30091 + \u3008I\u30092 held by P1 and P2, respectively, our protocol, as shown in Subroutine 2, for securely accessing the element Ja[I]KA is as follows:\n1) P1 first rotates its shares r1 locations:\n\u3008a[1]\u30091, \u00b7 \u00b7 \u00b7 , \u3008a[m]\u30091 H\n\u3008a[m\u2212r1]\u30091, \u00b7 \u00b7 \u00b7 , \u3008a[m]\u30091, \u3008a[1]\u30091, \u00b7 \u00b7 \u00b7 , \u3008a[m\u2212r1+1]\u30091.\nThen, P1 sets the new array as \u3008a\u2032[j]\u30091 = \u3008a[j]\u30091 + c1[j], j \u2208 [1,m], and rotates it r3 locations:\n\u3008a\u2032[1]\u30091, \u00b7 \u00b7 \u00b7 , \u3008a\u2032[m]\u30091 H\n\u3008a\u2032[m\u2212r3]\u30091, \u00b7 \u00b7 \u00b7 , \u3008a\u2032[m]\u30091, \u3008a\u2032[1]\u30091, \u00b7 \u00b7 \u00b7 , \u3008a\u2032[m\u2212r3+1]\u30091.\nThe new array is denoted as \u3008a\u2032\u2032\u30092. Finally, P1 sets \u3008h\u30091 = (\u3008I\u30091 + r1 + r3) mod m, then sends \u3008h\u30091 and \u3008a\u2032\u2032\u30092 to P2. 2) P2 sets h = (\u3008h\u30091 + \u3008I\u30092) mod m, then P2\u2019s share of the accessed element a[I] is \u3008a\u2032\u2032[h]\u30092. 3) P2 first rotates its shares of the raw array r1 locations:\n\u3008a[1]\u30092, \u00b7 \u00b7 \u00b7 , \u3008a[m]\u30092 H\n\u3008a[m\u2212r1]\u30092, \u00b7 \u00b7 \u00b7 , \u3008a[m]\u30092, \u3008a[1]\u30092, \u00b7 \u00b7 \u00b7 , \u3008a[m\u2212r1+1]\u30092.\nThen, P2 sets the new array as \u3008a\u2032[j]\u30092 = \u3008a[j]\u30092 + c2[j], j \u2208 [1,m], and sends \u3008a\u2032\u30092 and h to P3. 4) P3 first sets \u3008a\u2032\u2032[j]\u30093 = \u3008a\u2032[j]\u30092 + c3[j], j \u2208 [1,m], then\n8 Subroutine 2 Secure Array Access Input: P{1,2} hold the secret shares \u3008a\u3009{1,2} and \u3008I\u3009{1,2},\nrespectively; P{1,2,3} hold random value array c{1,2,3}, respectively; P{1,2} and P{1,3} hold the agreed random values r1 and r3, respectively.\nOutput: P{2,3} hold the accessed element Ja[I]KA. // P1 locally performs:\n1: \u3008a\u30091 = \u3008a\u30091 r1. \u3008a\u2032\u30091 = \u3008a\u30091 + c1. \u3008a\u2032\u2032\u30092 = \u3008a\u2032\u30091 r3. 2: \u3008h\u30091 = (\u3008I\u30091 + r1 + r3) mod m. 3: Sending \u3008h\u30091 and \u3008a\u2032\u2032\u30092 to P2.\n// P2 locally performs: 4: h = (\u3008h\u30091 + \u3008I\u30092) mod m. 5: P2 sets the secret share of a[I] as \u3008a\u2032\u2032[h]\u30092. 6: \u3008a\u30092 = \u3008a\u30092 r1. \u3008a\u2032\u30092 = \u3008a\u30092 + c2. 7: Sending h and \u3008a\u2032\u30092 to P3.\n// P3 locally performs: 8: \u3008a\u2032\u2032\u30093 = \u3008a\u2032\u30092 + c3. \u3008a\u2032\u2032\u30093 = \u3008a\u2032\u2032\u30093 r3. 9: P3 sets the secret share of a[I] as \u3008a\u2032\u2032[h]\u30093.\nrotates them r3 locations:\n\u3008a\u2032\u2032[1]\u30093, \u00b7 \u00b7 \u00b7 , \u3008a\u2032\u2032[m]\u30093 H\n\u3008a\u2032\u2032[m\u2212 r3]\u30093, \u00b7 \u00b7 \u00b7 , \u3008a\u2032\u2032[m]\u30093, (14) \u3008a\u2032\u2032[1]\u30093, \u00b7 \u00b7 \u00b7 , \u3008a\u2032\u2032[m\u2212 r3 + 1]\u30093.\nFinally, P3\u2019s share of a[I] is \u3008a\u2032\u2032[h]\u30093. It is noted that, the correlated random values c{1,2,3} and agreed random values r{1,3} all do not require online communication because they are generated by the PRF and shared keys. Therefore, our protocol only requires communicating 2m+ 2 elements in one round, i.e., in steps 1), 3). Correctness analysis. P2\u2019s shares \u3008a\u2032\u2032\u30092 are generated by \u3008a\u2032\u2032\u30092 = (\u3008a\u30091 r1 + c1) r3, where \u201d \u201d denotes \u201drotate\u201d. P3\u2019s shares \u3008a\u2032\u2032\u30093 are generated by \u3008a\u2032\u2032\u30093 = (\u3008a\u30092 r1 + c2 + c3) r3. Based on c1[j] + c2[j] + c3[j] = 0, we can obtain \u3008a\u2032\u2032\u30092 + \u3008a\u2032\u2032\u30093 = a r1 r3, namely, for j \u2208 [1,m], \u3008a\u2032\u2032[(j+r1+r3) mod m]\u30092+\u3008a\u2032\u2032[(j+r1+r3) mod m]\u30093 = a[j]. Since h = I + r1 + r3, the accessed element is exactly \u3008a\u2032\u2032[h]\u30092 + \u3008a\u2032\u2032[h]\u30093 = a[I].\nIt is noted that since P{1,2} perform main computations in our protocol but P3 holds the secret share of the accessed element, P3 should re-share its secret \u3008a\u2032\u2032[h]\u30093 to P1 and P2. More specifically, P3 generates a random value s, and then sends s, \u3008a\u2032\u2032[h]\u30093 \u2212 s to P1 and P2, respectively. Finally, the shares held by P1 and P2 are s and \u3008a\u2032\u2032[h]\u30092 + \u3008a\u2032\u2032[h]\u30093 \u2212 s, respectively."
+        },
+        {
+            "heading": "5.4.2 Secure Neighboring States Summation",
+            "text": "After performing the above secure neighboring states access protocol, P{1,2} hold all encrypted neighboring states x (k) Nevi,j\nof node vi. In addition, as shown in Eq. 13, the sum of vi\u2019s each neighbor\u2019s own edge weights swNevi,j (i.e., Eq. 2) are used in calculating the aggregate state x(k)vi . Since each neighbor\u2019s own edge weights are attached with its ID like its state, similar to accessing neighboring states, the cloud servers should access each neighbor\u2019s edge weights using the above secure array access protocol. After that, the cloud servers can obtain node vi\u2019s each neighbor\u2019s encrypted state\nSubroutine 3 Secure Neighboring States Summation\nInput: Node vi\u2019s kth-layer state and edge weights: Jx(k)vi KA and JWvi,jKA, j \u2208 [1, dmax], and vi\u2019s neighboring kthlayer states and their edge weight sum: Jx(k)Nevi,j K\nA and JswNevi,j K\nA, j \u2208 [1, dmax]. Output: vi\u2019s kth-layer encrypted aggregate state Jx(k)vi KA.\n1: P{1,2} first calculate the approximate J 1swvi K A by Eq. 11.\n//P{1,2} calculate each approximate J 1\u221aswid K A:\n2: for each id \u2208 {vi} \u222a {Nevi,j}j\u2208[1,dmax] do 3: Jy0KA = 3\u00d7 Je0.5\u2212swidKA + 0.003. 4: for n = 0 to N do 5: Jyn+1KA = 12\u00d7JynKA\u00d7(3\u2212JswidKA\u00d7JynKA\u00d7JynKA). 6: end for 7: end for\n//P{1,2} calculate the aggregate state: 8: Jx(k)vi KA = J 1swvi K\nA \u00d7 Jx(k)vi KA. 9: for j = 1 to dmax do\n10: Jx(k)vi KA = Jx(k)vi KA + JWvi,jKA \u00d7 J 1\u221aswvi K A \u00d7\nJ 1\u221aswNevi,j KA \u00d7 Jx(k)Nevi,j K A.\n11: end for\nx (k) Nevi,j\nand the encrypted sum of edge weights swNevi,j using each encrypted neighbor\u2019s ID. Then the cloud uses Eq. 13 to calculate node vi\u2019s aggregate state x(k)vi . However, the square root is not naturally supported in secret sharing.\nInspired by the very recent work [64], we resort to the approach of approximating the inverse square root by iterative Newton-Raphson algorithm [65]:\nyn+1 = 1\n2 yn(3\u2212 xy2n), (15)\nwhich will converge to yn \u2248 1\u221ax . Obviously, both subtraction and multiplication are naturally supported in the secret sharing domain. The initialization y0 can be set as y0 = 3e\n0.5\u2212x + 0.003. After securely accessing each neighboring node\u2019s state Jx(k)Nevi,j K A for node vi, the cloud servers utilize the above secure inverse square root protocol to perform the secure neighboring states summation, as shown in Subroutine 3."
+        },
+        {
+            "heading": "5.5 Secure Activation Functions",
+            "text": "After a node vi\u2019s kth-layer aggregate state x(k)vi is calculated and multiplied with the trainable weight matrix M(k+1), i.e., x(k)vi M\n(k+1), an activation functions needs to be applied over x\u0302(k)vi = x (k) vi M\n(k+1) to calculate vi\u2019s (k + 1)th-layer state x(k+1)vi , according to Eq. 6 and Eq. 8 respectively. In this section, we will introduce how to securely compute the activation functions in the secret sharing domain."
+        },
+        {
+            "heading": "5.5.1 Secure ReLU Function",
+            "text": "The function ReLU := max(x, 0) is a popular activation function in neural network, whose core is to test whether x > 0 or not. However, the comparison operation is not naturally supported in the secret sharing domain. We note that given the computation is in Z2k , it suffices to tailor a protocol for testing whether the Most Significant Bit (MSB) of JxKA is 0 or not [23], [68]. Mohassel et al. [23] propose\n9 A8 A4 B4A5 B5A7 B7 A6 B6B8 A2 B2 A1 B1\n0\nA3 B3\nMost significant bit\n= i1 i2 i3 i4\no1 o2 =\ni1 i2 i3 i4\no1 o2\ni1 i2 i3\no1\ni1 i2 i3\no1\nFig. 3. An 8-bit tailored PPA.\nto compute the MSB using secure bit decomposition (only directions briefly mentioned without a concrete construction though). It is noted that different from our system, their security design uses replicated secret sharing, which runs among three cloud servers and needs them to interact with each other throughout the process. Inspired by their work, we provide an alternative design to evaluate the MSB under additive secret sharing that suits our system, in which the computation is mainly conducted by P1 and P2 while P3 just provides necessary triples in advance. The details of our design are as follows.\nGiven two fixed point numbers\u2019 complement A and B, which can represent the shares of a secret value, the MSB of A + B can be computed by a tailored Parallel Prefix Adder (PPA) [69]. Fig. 3 illustrates an 8-bit tailored PPA. We can apply the tailored PPA to the secret shares. In particular, given the k-bit secret sharing JxKA = \u3008x\u30091 + \u3008x\u30092 held by P1 and P2, they first locally decompose the complement of \u3008x\u3009i into bits: \u3008x\u3009i = xi[1], \u00b7 \u00b7 \u00b7 , xi[k], i \u2208 {1, 2}. After that, they input the bits into a k-bit tailored PPA to perform secure AND and XOR calculations. Given a k-bit number, the tailored PPA can calculate its MSB in log k rounds. In addition, as shown in Section 3.2, in additive secret sharing, a AND gate requires online communication 4 bits in one round, while an XOR gate does not require communication. Therefore, to calculate the MSB of a k-bit number in additive secret sharing, our alternative design requires the two cloud servers to online communicate 12k \u2212 12 \u2212 4log k bits in log k rounds. It is noted that, using the above method, msb(x) = 1 if x < 0, and msb(x) = 0 if x >= 0. To be compatible with the subsequent operation, one of P1 and P2 flips its share \u3008msb(x)\u30091 or \u3008msb(x)\u30092 so that msb(x)\u2032 = 0 if x < 0, and msb(x)\u2032 = 1 if x >= 0.\nHowever, using the above method, the cloud servers only obtain Jmsb(x)\u2032KB , not ReLU(x), and the cloud servers also need to calculate Jmsb(x)\u2032KB \u00d7 JxKA when P1 and P2 hold \u3008msb(x)\u2032\u30091, \u3008x\u30091 and \u3008msb(x)\u2032\u30092, \u3008x\u30092, respectively. Inspired by [23], we design a tailored protocol for securely evaluating JReLU(x)KA in additive secret sharing:\n1) P1 randomly generates r \u2208 Z2k and definesmb\u2208{0,1} := (b\u2295 \u3008msb(x)\u2032\u30091)\u00d7 \u3008x\u30091 \u2212 r, and sends them to P2. 2) P2 choosesmb based on \u3008msb(x)\u2032\u30092, namely, P2 chooses m0 if \u3008msb(x)\u2032\u30092 = 0, and otherwise P2 chooses m1. Therefore, the secret share held by P2 is m\u3008msb(x)\u2032\u30092 = msb(x)\u2032\u00d7\u3008x\u30091\u2212 r, and the secret share held by P1 is r. 3) For the other secret share \u3008x\u30092, P2 acts as the sender and P1 acts as the receiver to perform step 1) and 2) again.\nSubroutine 4 Secure ReLU Function Input: P{1,2} hold node vi\u2019s 0th-layer encrypted state : {Jx\u0302(0)vi,1KA, \u00b7 \u00b7 \u00b7 , Jx\u0302 (0) vi,H\nKA}, where x\u0302(0)vi = x(0)vi M(1). Output: P{1,2} hold node vi\u2019s 1st-layer encrypted state: {Jx(1)vi,1KA, \u00b7 \u00b7 \u00b7 , Jx (1) vi,H\nKA}. 1: for j = 1 to H do 2: Securely calculating Jmsb(x\u0302(0)vi,j)KB by tailored PPA. 3: One of P{1,2} flips its share, and then P{1,2}\u2019s shares\nare \u3008msb(x\u0302(0)vi,j) \u2032\u30091 and \u3008msb(x\u0302(0)vi,j) \u2032\u30092, respectively. 4: P1 randomly generates r \u2208 Z2k , and sends mb :=\n(b\u2295 \u3008msb(x\u0302(0)vi,j) \u2032\u30091)\u00d7 \u3008x\u0302(0)vi,j\u30091 \u2212 r, b \u2208 {0, 1} to P2.\n5: P2 chooses mb based on \u3008msb(x\u0302(0)vi,j) \u2032\u30092. 6: P2 randomly generates r\u2032 \u2208 Z2k , and sends m\u2032b := (b\u2295 \u3008msb(x\u0302(0)vi,j) \u2032\u30092)\u00d7 \u3008x\u0302(0)vi,j\u30092 \u2212 r \u2032, b \u2208 {0, 1} to P1. 7: P1 chooses m\u2032b based on \u3008msb(x\u0302 (0) vi,j\n)\u2032\u30091. 8: Finally, P1 holds msb(x\u0302 (0) vi,j )\u2032\u00d7\u3008x\u0302(0)vi,j\u30092\u2212r \u2032+r and P2\nholds msb(x\u0302(0)vi,j) \u2032 \u00d7 \u3008x\u0302(0)vi,j\u30091 \u2212 r + r \u2032. 9: end for\nFinally, P{1,2} hold the secret shares \u3008msb(x)\u2032 \u00d7 x\u3009{1,2}. It is noted that, in [23], P{1,2} should re-share their shares to P3 since they work on replicated secret sharing. Subroutine 4 describes our protocol for secure ReLU function."
+        },
+        {
+            "heading": "5.5.2 Secure Softmax Function",
+            "text": "GCN usually considers a multi-classification task, which requires the Softmax function (i.e., Eq. 4) to normalize the probabilities of inference results. Therefore, we need a protocol to securely compute the Softmax function.\nFirst, to avoid error from calculating the exponential function on very large or very small values, a frequentlyused method is to calculate the Softmax function on x \u2212 max(x). When calculating max(x) in the secret sharing domain, to reduce the overhead, we can use the binary-tree form, e.g., max(max(Jx1KA, Jx2KA),max(Jx3KA, Jx4KA)), which requires logC rounds comparison and C is the number of classifications. We can directly use the secure ReLU function introduced above to perform max():\nmax(Jx1KA, Jx2KA) = ReLU(Jx1KA \u2212 Jx2KA) + Jx2KA.\nAfter that, the cloud servers should compute JexKA. Since JexKA is not naturally supported in the secret sharing domain, we first approximate ex using its limit characterization [64]:\nex \u2248 (1 + x 2n )2 n . (16)\nHowever, the approximation is inefficient if the cloud servers serially calculate the multiplication, which will require to calculate 2n multiplications in 2n rounds communication. Our solution is to calculate the approximation by the binary-tree form. More specifically, the core of Eq. 16 is to calculate (JxKA)2n , thus P{1,2} first calculate (JxKA)2 in one round, and then set JyKA = (JxKA)2 followed by calculating (JyKA)2 in one round. Therefore, P{1,2} can calculate (JxKA)2n in log 2n = n rounds. Subroutine 5 describes our protocol for secure Softmax function.\n10\nSubroutine 5 Secure Softmax Function Input: P{1,2} hold node vi\u2019s 1th-layer encrypted state : {Jx\u0302(1)vi,1KA, \u00b7 \u00b7 \u00b7 , Jx\u0302 (1) vi,C\nKA}, where x\u0302(1)vi = x(1)vi M(2). Output: P{1,2} hold node vi\u2019s 2nd-layer encrypted state: {Jx(2)vi,1KA, \u00b7 \u00b7 \u00b7 , Jx (2) vi,C\nKA}. 1: Calculate JQKA = max{Jx\u0302(1)vi,jKA}j\u2208[1,C] by ReLU(). 2: Locally calculate Jx\u0302\u2032(1)vi,jKA = Jx\u0302 (1) vi,j\nKA \u2212 JQKA, j \u2208 [1, C]. //P{1,2} calculate the approximate Jex\u0302 \u2032(1) vi,j KA:\n3: for j = 1 to C do 4: Jy0KA = 1 + Jx\u0302\u2032(1)vi,jK A\n2N . 5: for n = 0 to N do 6: Jyn+1KA = JynKA \u00d7 JynKA. 7: end for 8: end for 9: P{1,2} first locally calculate JSKA = \u2211 j\u2208[1,C]Je x\u0302 \u2032(1) vi,j KA,\nand then calculate the approximate J 1S KA by Eq. 11. //P{1,2} calculate the 2nd-layer encrypted state:\n10: for j = 1 to C do 11: Jx(2)vi,jKA = Je x \u2032(1) vi,j KA \u00d7 J 1S KA. 12: end for"
+        },
+        {
+            "heading": "5.6 Secure Model Convergence Evaluation",
+            "text": "So far we have presented our solution for securely realizing the forward propagation process as given in Eq. 1 in the secret sharing domain. We now show how to securely evaluate the convergence of the model training process.\nWe note that prior works (e.g., [23], [25], [26]) on secure CNN training generally terminate the training process at a specified number of epochs. However, the convergence of the training process is unpredictable, which can depend on various factors such as the training data set, the learning parameter setting, and random factors in the nature of model training. A fixed number of epochs without considering the property of models may easily lead to overfitting or underfitting [70]. Therefore, instead of specifying a certain number of epochs, it is much more desirable to directly evaluate the model convergence in a secure manner.\nOur solution is to calculate the encrypted cross-entropy loss and then calculate the difference in the encrypted crossentropy loss between two adjacency epochs. If the difference is smaller than a public threshold \u03b1 and lasts for a window size, the cloud servers P{1,2} will conclude that the model is convergent and will terminate the training. From the computation, P{1,2} know nothing except the necessary fact about whether the difference in the cross-entropy loss between two adjacency epochs is less than \u03b1.\nA new challenge arises, namely, how to calculate the cross-entropy loss in the secret sharing domain. In Eq. 9, the natural logarithm is not naturally supported in the secret sharing domain, and requires a tailored protocol. Inspired by [64], we approximate ln x by:\nyn+1 = yn \u2212 \u2211\nk\u2208[1,K]\n1 k (1\u2212 xe\u2212yn)k, (17)\nwhich will converge to yn \u2248 ln x. The initial value can be set as y0 = x120\u221220e\n\u22122x\u22121+3 [64]. Obviously, both subtraction and multiplication are naturally supported in secret sharing\nSubroutine 6 Secure Model Convergence Evaluation Input: P{1,2} hold all labeled nodes\u2019 encrypted inference re-\nsults {JZviKA}vi\u2208T and encrypted labels {JTviKA}vi\u2208T , the public threshold \u03b1, the public window size \u03b2 and the public maximum number of epochs \u03b3.\nOutput: Nothing. 1: for e = 1 to \u03b3 do 2: JLeKA = 0.\n// P{1,2} calculate the approximate Jln Zvi,jKA: 3: for each vi \u2208 T , j \u2208 [1, C] do 4: Jy0KA = JZvi,jK A\n120 \u2212 20\u00d7 Je\u22122\u00d7Zvi,j\u22121KA + 3. 5: for n = 0 to N do 6: Jyn+1KA = JynKA \u2212 \u2211K k=1 1 k \u00d7 (1 \u2212 JZvi,jKA \u00d7 Je\u2212ynKA)k. 7: end for 8: end for // P{1,2} calculate the cross-entropy loss JLeKA: 9: for each vi \u2208 T , j \u2208 [1, C] do\n10: JLeKA\u2212 = JTvi,jKA \u00d7 Jln Zvi,jKA. 11: end for // P{1,2} determine whether to stop the training: 12: |JLeKA \u2212 JLe\u22121KA| = ReLU(JLeKA \u2212 JLe\u22121KA) + ReLU(JLe\u22121KA \u2212 JLeKA). 13: flag=Jmsb(\u03b1\u2212 |JLjKA \u2212 JLj+1KA|)KB . 14: stop = (flag == 1) ? 0 : (stop + 1). 15: if (stop > \u03b2) then terminating the training process. 16: end for\ndomain, and Je\u22122x\u22121KA can be calculated by Eq. 16. After obtaining the encrypted loss JLjKA and JLj+1KA of two adjacent epochs, P{1,2} first calculate the absolute value of their difference:\n|JLj+1KA \u2212 JLjKA| =ReLU(JLj+1KA \u2212 JLjKA) +ReLU(JLjKA \u2212 JLj+1KA).\nThen, the model convergence flag is calculated by Jmsb(\u03b1\u2212 |JLjKA \u2212 JLj+1KA|)KB . P{1,2} open the flag to each other, and then decide whether to terminate the training. Subroutine 6 describes our protocol for secure model convergence evaluation."
+        },
+        {
+            "heading": "5.7 Putting Things Together",
+            "text": "Secure training. When training the GCN model, the cloud servers first securely normalize all nodes\u2019 initial features through secure feature normalization. After that, the cloud servers securely perform the forward propagation (Eq. 1) through secure neighboring states aggregation, and secure activation functions for each labeled node vi \u2208 T to obtain the inference results Zvi,j , j \u2208 [1, C]. Subsequently, the cloud servers securely calculate the average cross-entropy loss L between each labeled node\u2019s inference result Zvi and its true label Tvi and then securely evaluate the model convergence.\nIf convergence is not yet achieved, the cloud servers perform backward propagation to calculate each trainable weight\u2019s gradient \u2202L\u2202Mi,j followed by updating each weight using its gradients. Based on the chain rule [71], if the cloud servers can calculate the derivatives of all non-linear functions, they can calculate the complete derivative of Eq.\n11\n1. In Eq. 1, the first non-linear function is the cross-entropy loss function, and its derivative is:\n\u2202L \u2202Zvi,j = \u2212Tvi,j Zvi,j , vi \u2208 T , j \u2208 [1, C],\nwhere the division can be securely calculated by using the design in Section 5.3. The second non-linear function is the Softmax function, and its derivative is:\n\u2202zj \u2202xi = { zj(1\u2212 zj) if i = j, \u2212zjzi if i 6= j,\nwhere zj = Softmax(xj), which can be securely calculated by using Subroutine 5 in Section 5.5. The third non-linear function is the ReLU function, and its derivative is:\n\u2202ReLU(x)\n\u2202x = { 0 if x < 0, 1 if x > 0,\nwhich can be securely calculated by using the tailored PPA in Section 5.5.1. So this is the whole process of secure training in our system. Secure inference. Secure inference for an unlabeled node corresponds to a forward propagation through the trained GCN model in the secret sharing domain. In particular, the data owner provides the cloud servers with the ID of the unlabeled node. Upon receiving the ID, the cloud servers securely conduct the forward propagation process (i.e., Eq. 1) in the secret sharing domain, and output the encrypted inference result about its label, which is then sent to the data owner for reconstruction."
+        },
+        {
+            "heading": "6 SECURITY ANALYSIS",
+            "text": "We follow the standard ideal/real world paradigm to analyze the security of SecGNN. In the ideal/real world paradigm, a protocol is secure if the view of the corrupted party during the real execution of a protocol can be generated by a simulator given only the party\u2019s input and legitimate output, which can be defined as follows:\nDefinition 1. Let P{1,2,3} engage in a protocol \u03c0 which computes function f : ({0, 1}\u2217)3 \u2192 ({0, 1}\u2217)3. Pi\u2019s view during the execution of protocol \u03c0 on inputs x, denoted as View\u03c0i (x), consists of its input ini, its internal random values ri and the messages mi received during the execution. We say that \u03c0 computes f with security in the semi-honest and non-colluding setting, if there exists a probabilistic polynomial time simulator Sim such that for each Pi: Sim(ini, fi(x))\u2248View\u03c0i (x).\nRecall that SecGNN consists of several secure subprotocols: 1) secure division secDIV; 2) secure array access secACCESS; 3) secure square root secROOT; 4) secure ReLU function secRELU; 5) secure Softmax function secSoftmax; 6) secure natural logarithm secLOG. We use SimPiX to denote the simulator which can generate Pi\u2019s view in sub-protocol X on corresponding input and output.\nTheorem 1. Our SecGNN is secure according to Definition 1.\nProof. It is noted that the inputs and outputs of each subprotocol are secret shares, with each sub-protocol being invoked in order as per the processing pipeline. If the simulator for each sub-protocol exists, then our complete protocol is secure [72]. It is easy to see that the simulators\nSim Pi\u2208{1,2,3} X (X \u2208 {secDIV, secROOT, secSoftmax, secLOG) must exist, because they are all calculated through approximations which are realized via basic operations (i.e., addition and multiplication) in the secret sharing domain. Therefore, SecGNN is secure if the simulators for the remaining sub-protocols exist, i.e., secACCESS in Section 5.4.1 and secRELU in Section 5.5.1. The existence of these simulators is given in Theorem 2 and Theorem 3.\nTheorem 2. The protocol secACCESS for secure neighboring states access is secure according to Definition 1.\nProof. We consider the simulator of P1, P2 and P3 in turn. \u2022 SimP1secACCESS: The simulator is simple since P1 receives\nnothing in the real execution. Therefore, it is clear that the simulated view is identical to the real view. \u2022 SimP2secACCESS: To analyze P2\u2019s view, we see that P2 has k1, k2, and shares \u3008I\u30092, \u3008a\u30092 at the beginning, and later receives new shares \u3008a\u2032\u2032\u30092 and \u3008h\u30091 in step 1). In the simulated view, P2 receives random values in step 1). Therefore, we need to prove that \u3008a\u2032\u2032\u30092 and \u3008h\u30091 are uniformly random in the view of P2. \u2013 \u3008a\u2032\u2032\u30092 are uniformly random in P2\u2019s view: Firstly, \u3008a\u2032\u2032\u30092 = (\u3008a\u30091 r1 + c1) r3 and c1[j] = F(k1, j) \u2212 F(k3, j), j \u2208 [1,m]. Though P2 has k1, it does not have k3, thus F(k3, j) is uniformly random in P2\u2019s view. It implies that c1[j] is also uniformly random in P2\u2019s view since F(k3, j) is independent of F(k1, j) used in the generation of c1[j] [67]. Similarly, the array \u3008a\u2032\u2032\u30092 is uniformly random in P2\u2019s view since c1 is independent of \u3008a\u30091 used in the generation of \u3008a\u2032\u2032\u30092. Therefore, the distribution over the real \u3008a\u2032\u2032\u30092 received by P2 in the protocol execution and over the simulated \u3008a\u2032\u2032\u30092 generated by the simulator is identically distributed.\n\u2013 \u3008h\u30091 is uniformly random in P2\u2019s view: In a similar way, \u3008h\u30091 = \u3008I\u30091 + r1 + r3, where r1 = F(k1, j) and r3 = F(k3, j). Though P2 has k1, it does not have k3, thus r3 is uniformly random in P2\u2019s view, furthermore, \u3008h\u30091 is uniformly random in P2\u2019s view. Therefore, the distribution over \u3008h\u30091 received by P2 in the protocol execution and over the \u3008h\u30091 generated by the simulator is identically distributed. \u2022 SimP3secACCESS: To analyze P3\u2019s view, we see that P3 has k2, k3 at the beginning, and later receives share \u3008a\u2032\u30092 and h in step 3). It is noted that the proof of SimP3secACCESS is similar to the proof of SimP2secACCESS since P3 and P2 receive similar messages during the protocol execution, thus we omit the proof of SimP3secACCESS.\nTheorem 3. The protocol secRELU for the ReLU function is secure according to Definition 1.\nProof. Obviously, the Jmsb(JxKA)KB function is secure since the tailored PPA consists of basic AND and XOR gates, so we only prove that Jmsb(x)KB \u00d7 JxKA function is secure. In the case of P1 acting as the sender and P2 acting as the receiver, we consider the simulator of P1, P2 and P3 in turn. \u2022 SimP1secRELU: The simulator is simple since P1 receives\nnothing in the real execution. Therefore, it is clear that the simulated view is identical to the real view.\n12\n\u2022 SimP2secRELU: To analyze P2\u2019s view, we see that P2 has \u3008msb(x)\u2032\u30092 and \u3008x\u30092 at the beginning, and later receives messages mb := (b\u2295 \u3008msb(x)\u2032\u30091)\u00d7 \u3008x\u30091\u2212 r, b \u2208 {0, 1}. In the simulated view, P2 receives two random values. Therefore, we need to prove that m{1,2} are uniformly random in the view of P2. Obviously, the above claim is valid, because r is uniformly random in P2\u2019s view, which implies that m{1,2} are also uniformly random in P2\u2019s view since r is independent of other values used in the generation of m{1,2}. Therefore, the distribution over the real m{1,2} received by P2 in the protocol execution and over the simulated m{1,2} generated by the simulator is identically distributed. \u2022 SimP3secRELU: The simulator is simple since P3 does not participate in the protocol and receives nothing in the real execution. Therefore, it is clear that the simulated view is identical to the real view.\nSimilarly, in the case of P2 acting as the sender and P1 acting as the receiver, the protocol is also secure.\nDiscussion. As the first research endeavor towards privacypreserving training and inference of GNNs outsourced to the cloud, the current design of SecGNN only considers the commonly assumed non-colluding and semi-honest threat model, where the three cloud servers P{1,2,3} will not collaboratively launch inference attacks, e.g., model inversion attack [73]. On another hand, we are aware that there exist effective mechanisms for bounding information leakage even if P{1,2,3} collude with each other, which can also be smoothly integrated into SecGNN for security enhancement. Specifically, we observe that local differential privacy (LDP) [74] and dummy edges padding are promising techniques, of which the blueprint is as follows. It is noted that the private information in the graph-structured data that needs to be protected is the node features and labels and the edges between nodes. Firstly, before encrypting the graphstructured data, the data owner perturbs the node features and labels by the LDP-based obfuscation mechanism [42], which is specifically designed for GNNs. Secondly, the data owner adds dummy edges with random weights between some pairs of unconnected nodes in the graph-structured data to obfuscate the existence and weights of edges. Finally, the data owner encrypts the graph-structured data after obfuscation by the encryption method introduced in Section 5.2. Since the node features and labels and the edges between nodes in the graph-structured data are obfuscated, P{1,2,3} cannot learn the accurate original graph-structured data even if they collude with each other. So the above is the blueprint for prevent P{1,2,3} from colluding with each other to launch inference attacks in SecGNN, for which it is important to explore how to make the decreased accuracy of the trained GNN model (a natural trade-off) as small as possible upon concrete realizations."
+        },
+        {
+            "heading": "7 EXPERIMENTS",
+            "text": ""
+        },
+        {
+            "heading": "7.1 Setup",
+            "text": "The implementation is written in C++ using the standard library. All experiments are performed on a workstation with Intel Core i7-10700K and 64GB RAM running Ubuntu\n20.04.2 LTS. Consistent with prior art [16], [26], we consider a Local Area Network (LAN) environment with a network bandwidth of 625MB/s and an average latency of 0.22 ms. For all experiments, we split our computation and communication into data-dependent online phase and data-independent offline phase, and report the end-to-end protocol execution time and the total communication traffic. Our implementation is available at https://github.com/ songleiW/SecGNN. Graph datasets. We use three graph datasets commonly used in GCN: Citeseer1, Cora2 and Pubmed3 in our experiments. Their statistics are summarized in Table 1. Model hyperparameters. Similar to [31], we use the twolayer GCN described in Eq. 1. For training, we use 40 labeled samples per class but use feature vectors of all nodes. We perform batch gradient descent using the full training set for each epoch. The learning rate is 0.2 and the size of the hidden layer is 16. Early stopping with a window size 5 and public threshold 0.02. We randomly initialize model parameters by the uniform distribution M(0) \u223c ( \u22121\u221a\nE , 1\u221a E ),\nwhere E is the number of neurons. We use the same hyperparameters in plaintext and SecGNN. Protocol instantiation. We instantiate the sub-protocols in Section 5 using the following parameter settings. Machine learning algorithms usually perform on real numbers, while the additive secret sharing is restricted to computations over integers. Following previous works [23], [26], we use a fixedpoint encoding of real numbers in our secure protocols. Specifically, for a real number x, we consider a fixed-point encoding with t bits of precision: bx \u00b7 2te. Note that when multiplying two fixed-point encoding numbers, since both of them are multiplied by 2t, the two parties additionally need to rescale the product scaled by 22t, where we use the truncation technique from [22]. In our experiments, we consider the ring Z264 with t = 15 bits of precision. The number of iterations of Eq. 11 is set to 13, Eq. 16 is set to 8, Eq. 15 is set to 18, Eq. 17 is set to 3 and k is set to 8."
+        },
+        {
+            "heading": "7.2 Evaluation on Secure GNN Training",
+            "text": "Cross-entropy loss. We first compare the cross-entropy loss between SecGNN and plaintext training. The results are summarized in Fig. 4. It is observed that the cross-entropy loss of SecGNN is slightly higher than that of plaintext, but they exhibit consistent behavior. Meanwhile, it is revealed that the training processes of SecGNN and plaintext terminate at the same number of epochs, which demonstrates that SecGNN, with security assurance, does not adversely affect the convergence of the training process. This, in turn, also\n1. https://linqs-data.soe.ucsc.edu/public/lbc/citeseer.tgz 2. https://linqs-data.soe.ucsc.edu/public/lbc/cora.tgz 3. https://linqs-data.soe.ucsc.edu/public/Pubmed-Diabetes.tgz\n13\nvalidates the effectiveness of our secure model convergence evaluation protocol in Section 5.6. Validation set accuracy. In addition to comparing the evolution of the cross-entropy loss, we first evaluate and compare the validation set (500 samples excluding the training samples) accuracy between SecGNN and plaintext. The results are summarized in Fig. 5. It can be seen that although the difference in the validation set accuracy between SecGNN and plaintext is obvious at the very beginning, the difference rapidly decreases as the number of epochs grows and eventually vanishes. Computation and communication performance. We now report SecGNN\u2019s computation and communication performance in secure training. The results are given in Table 2, where the number of training epochs on the three datasets is as follows: Citeseer: 30, Cora: 30, and Pubmed: 25 (as shown in Fig. 4). Over the three tested datasets, the online communication traffic in SecGNN ranges from 3.6 GB to 9.1 GB, and the online end-to-end training time varies from 31.2 minutes to 94 minutes. It is noted that the secure training procedure in SecGNN is full conducted on the cloud and the cost is one-off."
+        },
+        {
+            "heading": "7.3 Evaluation on Secure GNN Inference",
+            "text": "Inference accuracy. We evaluate the Top-1 inference accuracy in SecGNN which performs inference with models trained in the ciphertext domain via our protocols, and compare it against with plaintext inference which is based on models trained over plaintext graphs. In addition, we compare the average relative error in inference results between SecGNN and plaintext. Table 3 summarizes the results, from which we can observe that the Top-1 accuracy of SecGNN exactly matches that of plaintext. Computation and communication performance. We examine the computation and communication performance of secure inference in SecGNN. Table 2 shows the cost of inference for a single unlabeled node. Over the three tested datasets, the online end-to-end runtime of the sophisticated secure GNN inference for a single unlabeled node in SecGNN varies from 25.3 seconds to 69.6 seconds, with the online communication traffic ranging from 0.4 GB to 1 GB.\nIt is worth noting that the average cost of inferring a node\u2019s label decreases as the number of test nodes in-\ncreases. That is because in secure inference, to calculate the encrypted 1st-layer aggregate state (i.e., Eq. 5) for a single unlabeled node, the cloud servers must calculate the encrypted 1st-layer state for all nodes since the cloud servers do not hold the IDs of the unlabeled node\u2019s neighboring nodes in plaintext. Therefore, if the cloud servers infer labels for a number of unlabeled nodes in a single batch, the cost can be amortized, so the average cost of individual node inference will go down. Fig. 6 and Fig. 7 show the average time and communication cost with varying number of test nodes for inference."
+        },
+        {
+            "heading": "7.4 Performance Benchmarks on Sub-Protocols",
+            "text": "In this section, we will first demonstrate the performance advantage of our proposed secure array access protocol over the state-of-the-art [66] (referred to as the BYK20 protocol hereafter). After that, we evaluate the performance of secure MSB extraction which is used in secure activation functions. Secure array access. To demonstrate the performance advantage of our secure array access protocol over the BYK20 protocol, we evaluate the cost of securely accessing a node\u2019s feature vector from an encrypted array, where each array element is a graph node\u2019s feature vector. The size of the encrypted array is N \u00d7 L, where N is the number of graph nodes and L is the length of each node\u2019s feature vector. The runtime costs are provided in Table 4. In addition, we further compare the runtime costs of our protocol and the BYK20 protocol, with varying array sizes. The results are given plotted in Fig. 8. It is observed that the efficiency gain of our protocol over the BYK20 protocol increases as the array size grows. Secure MSB extraction. We evaluate and compare the performance of secure MSB extraction with ABY3 [23]. Table 5 gives a comparison on the theoretical communication complexity of secure MSB extraction between SecGNN and ABY3. The protocol in SecGNN consumes one less round, at the cost of more communication bits. Furthermore, we conduct experiments to compare the practical efficiency under different h\u00d7 k settings: number of values \u00d7 bit-length. The results are given in Table 6. It is observed that our protocol\n14\nhas comparable performance to ABY3 [23], and is a bit more efficient with a small size setting (16 \u00d7 64). However, it is noted that different from our system, ABY3\u2019s security design uses replicated secret sharing, which runs among three cloud servers and needs them to interact with each other throughout the process. In contrast, we provide an alternative design to evaluate the MSB under additive secret sharing, which requires only two cloud servers P{1,2} to interact online, while the third cloud server P3 just provides necessary triples in offline phase."
+        },
+        {
+            "heading": "8 CONCLUSION",
+            "text": "In this paper, we design, implement, and evaluate SecGNN, the first system supporting privacy-preserving GNN training and inference as a cloud service. Building on lightweight cryptographic techniques and a multi-server decentralizedtrust setting, SecGNN can effectively allow the cloud servers to train a GNN model without seeing the graph data as well as provide secure inference service once the encrypted GNN model is trained. Extensive experiments on real-world datasets demonstrate that SecGNN achieves comparable plaintext training as well as inference accuracy, with practically affordable performance on the cloud. For future work, it would be interesting to explore how to extend our initial research effort to support secure GNN training and inference under a stronger active adversary model, as well as the possibility of leveraging the recent advances in trusted hardware for performance speedup."
+        },
+        {
+            "heading": "ACKNOWLEDGEMENT",
+            "text": "This work was supported in part by the Guangdong Basic and Applied Basic Research Foundation under Grant No. 2021A1515110027, and in part by the Shenzhen Science and Technology Program under Grants No. RCBS20210609103056041 and No. JCYJ20220531095416037."
+        }
+    ],
+    "title": "SecGNN: Privacy-Preserving Graph Neural Network Training and Inference as a Cloud Service",
+    "year": 2023
+}

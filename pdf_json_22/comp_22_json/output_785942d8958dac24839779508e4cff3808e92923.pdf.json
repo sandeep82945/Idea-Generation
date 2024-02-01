@@ -1,0 +1,173 @@
+{
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Sarmed A Rahman"
+        },
+        {
+            "affiliations": [],
+            "name": "Randy Lewis"
+        },
+        {
+            "affiliations": [],
+            "name": "Sarah Powell"
+        }
+    ],
+    "id": "SP:f20369950284962670f53793e92f26a6308886e1",
+    "references": [
+        {
+            "authors": [
+                "D. Aharonov",
+                "M. Ben-Or"
+            ],
+            "title": "Fault-tolerant quantum computation with constant error rate",
+            "venue": "SIAM Journal on Computing",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "Z.-X. Li",
+                "H. Yao"
+            ],
+            "title": "Sign-Problem-Free fermionic quantum Monte Carlo: Developments and applications",
+            "venue": "Annual Review of Condensed Matter Physics",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "C. Gattringer",
+                "K. Langfeld"
+            ],
+            "title": "Approaches to the sign problem in lattice field theory, Int",
+            "venue": "J. Mod. Phys. A",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "T. Byrnes",
+                "Y. Yamamoto"
+            ],
+            "title": "Simulating lattice gauge theories on a quantum computer",
+            "venue": "Phys. Rev. A",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "S. A Rahman",
+                "R. Lewis",
+                "E. Mendicelli",
+                "S. Powell"
+            ],
+            "title": "SU(2) lattice gauge theory on a quantum annealer",
+            "venue": "Phys. Rev. D",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "N. Klco",
+                "J.R.M.J. Savage"
+            ],
+            "title": "Stryker, SU(2) non-Abelian gauge field theory in one dimension on digital quantum computers",
+            "venue": "Phys. Rev. D",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "N. Hatano",
+                "M. Suzuki"
+            ],
+            "title": "Finding exponential product formulas of higher orders, in Quantum Annealing and Other Optimization",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "S. Bravyi",
+                "S. Sheldon",
+                "A. Kandala",
+                "D.C. Mckay",
+                "J.M. Gambetta"
+            ],
+            "title": "Mitigating measurement errors in multiqubit experiments",
+            "venue": "Phys. Rev. A",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J.J. Wallman",
+                "J. Emerson"
+            ],
+            "title": "Noise tailoring for scalable quantum computation via randomized compiling",
+            "venue": "Physical Review A",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Y. Li",
+                "S.C. Benjamin"
+            ],
+            "title": "Efficient variational quantum simulator incorporating active error minimization",
+            "venue": "Phys. Rev. X",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "A. Ciavarella",
+                "N. Klco",
+                "M.J. Savage"
+            ],
+            "title": "Trailhead for quantum simulation of SU(3) Yang-Mills lattice gauge theory in the local multiplet basis",
+            "venue": "Phys. Rev. D",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S.A. Rahman",
+                "R. Lewis",
+                "E. Mendicelli",
+                "S. Powell"
+            ],
+            "title": "Self-mitigating Trotter circuits for SU(2) lattice gauge theory on a quantum computer",
+            "venue": "Phys. Rev. D",
+            "year": 2022
+        }
+    ],
+    "sections": [
+        {
+            "text": "P o S ( L A T T I C E 2 0 2 2 ) 0 2 5 P o S ( L A T T I C E 2 0 2 2 ) 0 2 5 Real time evolution and a traveling excitation in SU(2) pure gauge theory on a quantum computer Sarmed A Rahman, Randy Lewis, E. Mendicelli\u2217 and Sarah Powell Department of Physics and Astronomy, York University, Toronto, ON, M3J 1P3, Canada E-mail: emanuelemendicelli@hotmail.it The Hamiltonian approach can be used successfully to study the real time evolution of a non-Abelian lattice gauge theory on the available noisy quantum computers. In this work, results from the real-time evolution of SU(2) pure gauge theory on IBM hardware are presented. The long real-time evolution spanning dozens of Trotter steps with hundreds of CNOT gates and the observation of a traveling excitation on the lattice were made possible by using a collection of error mitigation techniques. Self-mitigation is our novel tool, which consists of using the same physics circuit as a noise-mitigation circuit.\nThe 39th International Symposium on Lattice Field Theory, 8th-13th August, 2022, Rheinische Friedrich-Wilhelms-Universit\u00e4t Bonn, Bonn, Germany\n\u2217Speaker\n\u00a9 Copyright owned by the author(s) under the terms of the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License (CC BY-NC-ND 4.0). https://pos.sissa.it/\nP o S ( L A T T I C E 2 0 2 2 ) 0 2 5 P o S ( L A T T I C E 2 0 2 2 ) 0 2 5"
+        },
+        {
+            "heading": "1. Introduction and motivations",
+            "text": "The quantum computers available in the current noisy intermediate-scale quantum (NISQ) era [1] represent a prototype of the future in which the quantum computer will be as fault-tolerant as the classical computer [2]. Conceptually the quantum computer offers interesting possibilities for the computation of lattice gauge theories as explained by the authors of [3]. Compared to a classical computer where the storage of the state vectors scales exponentially, the scaling on a quantum computer can be polynomial. Polynomial scaling makes it computationally feasible to use the Hamiltonian formulation in place of the common Lagrangian formulation, which requires the use of a Monte Carlo method. Furthermore, the Hamiltonian formalism gives direct access to the real-time dynamics of the theory, and it is completely free of the infamous sign problem [4, 5] that affects the Monte Carlo method, opening the possibility of a rigorous study of theories with non-zero baryon density.\nHowever the use of the current quantum hardware is not free from challenges. In fact, the quantum resources are limited in terms of number of qubits and their connectivity with each other. The available gates, in particular the CNOT gate, are noisy due to their imperfect realization leading to errors in the measurements. Furthermore, the hardware makes mistakes in reading the state of the qubits, and finally there is a general shortage of computational quantum resources.\nThese opportunities and the challenges of the available quantum hardware forced us to set two main goals at the base of this work. The first goal is to use a gate-based quantum hardware to study the real-time dynamics of an SU(2) pure gauge theory on a small lattice in its Hamiltonian formulation. Secondly, to explore the available error mitigation techniques to mitigate the hardware error and extract a signal from noisy data."
+        },
+        {
+            "heading": "2. SU(2) pure gauge lattice theory",
+            "text": "Our interest in the study of the SU(2) model resides in the fact that it is the smallest and simplest nonAbelian gauge theory. Of equal importance, it is also conceptually close to the Quantum Chromodynamics theory that is based on SU(3). The SU(2) Hamiltonian in the common notation by Byrnes and Yamamoto [6] reads:\n?\u0302? = \ud835\udc542 2 \u00a9\u00ab \u2211\ufe01 \ud835\udc56=links ?\u0302?2\ud835\udc56 \u2212 2\ud835\udc65 \u2211\ufe01 \ud835\udc56=plaquettes \u25a1\u0302\ud835\udc56 \u00aa\u00ae\u00ac , (1)\nwhere the only free parameter is the gauge coupling \ud835\udc54, or the more convenient parameter \ud835\udc65 \u2261 2/\ud835\udc544. The first term in ?\u0302? is the chromoelectric field operator representing the stored chromoelectric energy on the lattice equal to \ud835\udc57 ( \ud835\udc57 + 1) per each link. The second term is the chromomagnetic term that contains the plaquette operator \u25a1\u0302\ud835\udc56 made by the trace of the product of the 4 gauge links of the \ud835\udc56th plaquette, and can add or subtract fluxes of energy on the lattice plaquettes.\nOnly two lattices are considered in this work, both a single row with closed boundary conditions, but one with 2 plaquettes and the other with 5. The energy spectrum of the theory is infinite, but considering the limitations of the current quantum hardware a truncation is necessary. Therefore we truncated the Hamiltonian allowing only the two lowest eigenstates for \ud835\udc57 = 0 and \ud835\udc57 = 1/2, so only four states are present, as shown in Fig. 1.\nP o S ( L A T T I C E 2 0 2 2 ) 0 2 5 P o S ( L A T T I C E 2 0 2 2 ) 0 2 5\nThese four states are obtained by applying the plaquette operators to the vacuum state and obeying the SU(2) Gauss law. The interested reader can find the detailed formal derivation in previous work [7, 8]. The truncated theory can be encoded on the quantum hardware using one qubit for each plaquette. Therefore the 4 states in Fig. 1 can be represented with the following choice of qubits:\n1) \u2212\u2192 |0\u27e9|0\u27e9, 2) \u2212\u2192 |0\u27e9|1\u27e9, 3) \u2212\u2192 |1\u27e9|0\u27e9, 4) \u2212\u2192 |1\u27e9|1\u27e9 (2)\nThe truncated 2-plaquette Hamiltonian representation can be rewritten in gates as follows:\n2 \ud835\udc542 \ud835\udc3b = \u00a9\u00ab 0 \u22122\ud835\udc65 \u22122\ud835\udc65 0 \u22122\ud835\udc65 3 0 \u2212\ud835\udc65 \u22122\ud835\udc65 0 3 \u2212\ud835\udc65 0 \u2212\ud835\udc65 \u2212\ud835\udc65 92 \u00aa\u00ae\u00ae\u00ae\u00ae\u00ac = 3 8 (7 \u2212 3\ud835\udc4d0 \u2212 \ud835\udc4d0\ud835\udc4d1 \u2212 3\ud835\udc4d1) \u2212 \ud835\udc65 2 (3 + \ud835\udc4d1)\ud835\udc4b0 \u2212 \ud835\udc65 2 (3 + \ud835\udc4d0)\ud835\udc4b1\nThe Hamiltonian has two regimes, one for large \ud835\udc65 and one for small \ud835\udc65. For \ud835\udc65 < 1 the Hamiltonian off-diagonal elements whose presence is due to the chromomagnetic operator are small. Therefore the dominant states are weakly coupled chromoelectric eigenstates. In this regime, the single-plaquette states will move across the lattice as shown in Fig. 2.\n0 100 200 300 400 0.0\n0.2\n0.4\n0.6\n0.8\n1.0\ntime (in units of 2/g2)\npr ob ab ili ty\n0 5 10 15 20 0.0\n0.2\n0.4\n0.6\n0.8\n1.0\ntime (in units of 2/g2)\npr ob ab ili ty\nFigure 2: Exact calculation of the time evolution for the 2-plaquette lattice for \ud835\udc65 < 1. The left panel is at \ud835\udc65 = 0.1 while the right panel at \ud835\udc65 = 0.6. The red (blue) solid curve is the exact probability of the left (right) plaquette having an energy flux of \ud835\udc57 = 1/2 over time. In both panels the small diagrams using the notation of Fig. 1 indicate the system state.\nA traveling exitation is the interpretation of the phenomena present in the left panel of Fig. 2 where for \ud835\udc65 < 1 the probability of having an energy flux in the left plaquette (red curve) drops from 100% at time \ud835\udc61 = 0 to close to 0% at time \ud835\udc61 = 240 while the probability of right plaquette (blue curve) does the opposite. Similarly in the right panel, the now larger value of \ud835\udc65 superimposes some high frequencies. That the excitation propagation time is shorter for larger \ud835\udc65 is clearly visible by comparing the pseudo-period of the left panel at \ud835\udc65 = 0.1 with the one present in the right panel at \ud835\udc65 = 0.6.\nFor \ud835\udc65 > 1 the chromomagnetic contribution dominates mixing of the single-plaquette states. This is evident by the presence of many higher frequencies superimposed to the single-plaquettes transitions in Fig. 3.\no S ( L A T T I C E 2 0 2 2 ) 0 2 5 o S ( L A T T I C E 2 0 2 2 ) 0 2 5\nAt larger values of \ud835\udc65, higher frequencies are present as can be seen moving from the left panel at \ud835\udc65 = 1.5 to the right panel at \ud835\udc65 = 5.0 in Fig. 3.\nA python code running inside the IBMQ quantum lab [9] accesses the quantum resources and implements the time evolution operator and the needed error mitigation techniques. These are both described in the following sections."
+        },
+        {
+            "heading": "3. Time evolution on the quantum hardware",
+            "text": "The time evolution of the SU(2) theory can be studied using a quantum computer once the time evolution operator \ud835\udc52\u2212\ud835\udc56\ud835\udc3b\ud835\udc61 has been written in gates. This can be done by approximating the time evolution operator:\n\ud835\udc52\u2212\ud835\udc56( 38 (7\u22123\ud835\udc4d0\u2212\ud835\udc4d0\ud835\udc4d1\u22123\ud835\udc4d1 )\u2212 \ud835\udc652 (3+\ud835\udc4d1 )\ud835\udc4b0\u2212 \ud835\udc652 (3+\ud835\udc4d0 )\ud835\udc4b1)\ud835\udc61 (3)\nfor small time step \ud835\udc51\ud835\udc61 through the use of the second order Suzuki-Trotter expansion [10]:\n\ud835\udc52\u2212\ud835\udc56\ud835\udc3b\ud835\udc61 = \ud835\udc52\u2212\ud835\udc56 \u2211\ud835\udc5a \ud835\udc57=1 \ud835\udc3b \ud835\udc57 \ud835\udc61 = \u00a9\u00ab \ud835\udc5a\u220f \ud835\udc57=1 \ud835\udc52\u2212\ud835\udc56\ud835\udc3b \ud835\udc57 \ud835\udc51\ud835\udc61/2 1\u220f \ud835\udc57=\ud835\udc5a \ud835\udc52\u2212\ud835\udc56\ud835\udc3b \ud835\udc57 \ud835\udc51\ud835\udc61/2 \u00aa\u00ae\u00ac \ud835\udc41\ud835\udc61 +\ud835\udc42 ( \ud835\udc5a2\ud835\udc61 \ud835\udc51\ud835\udc61 ) A single second-order Suzuki-Trotter step written in gates requires 6 CNOT gates as shown in Fig. 4 that\nare further reduced to 4 in view of cancellations after combination with neighbouring time steps.\nThe cancellations of the edge CNOT gates from neighbouring time steps and the combination of the edge rotation gates is done at code level to minimize the total number of gates. The time evolution circuit can be submitted to the quantum hardware to study how a chosen initial state evolves in real time as shown in Fig. 5.\nP o S ( L A T T I C E 2 0 2 2 ) 0 2 5 P o S ( L A T T I C E 2 0 2 2 ) 0 2 5\n2 52 102 152 202 252 302 352 402 number of CNOT gates\n0.2\n0.4\n0.6\n0.8\n1.0\npr ob\nab ili\nty\n0 1 2 3 4 5 6 7 8 time (in units of 2/g2)\n0.0\n0.2\n0.4\n0.6\n0.8\npr ob\nab ili\nty\nFigure 5: Real-time evolution of the state with only a \ud835\udc57 = 1/2 flux of energy in the left plaquette for the 2-plaquette lattice case at gauge coupling \ud835\udc65 = 2.0 and time step \ud835\udc51\ud835\udc61 = 0.08. The red solid (blue dashed) curve is the exact probability of the left (right) plaquette having an energy flux of \ud835\udc57 = 1/2 over time. In the upper panel: The red left-pointing (blue right-pointing) triangles are the physics data from runs on the quantum hardware ibm_lagos. The red (blue) error bars without symbols are the error mitigation data from runs on ibm_lagos. In the lower panel the triangles are the final results of our error mitigation method that processes the upper panel data through the self-mitigation equation Eq. (4).\nThe graph in Fig. 5 presents the result from studying the real-time evolution of the 2-plaquette system starting in the state with only a \ud835\udc57 = 1/2 flux of energy in the left plaquette. In the upper panel the data represented by triangles are obtained by running the time evolution circuits together with two error mitigation techniques, the mitigation of measurement error and randomized compiling. The error bars without symbol are the results of the error-estimation circuits needed for our self-mitigation method. In the lower panel the final result is obtained by processing the upper panel data with self-mitigation.\nThe two main features are: the long-time range that spans dozens of time steps with up to 400 CNOT gates, and the ability of our error mitigation method to extract a signal from noisy data as shown in the lower panel. For \ud835\udc61 > 4 the signal in the upper panel appears to be dominated by noise but in the corresponding lower panel, where the points have been error mitigated with self-mitigation, they are corrected and close to the exact result. The final agreement with the exact curve is not perfect, but only a small discrepancy remains.\nIn the following sections all the error mitigation techniques and the measurement protocol used in this work are described."
+        },
+        {
+            "heading": "4. Error mitigation techniques",
+            "text": "The common available quantum computers are noisy. The imperfect realization gives rise to results littered with errors limiting their usefulness. To extend the usability and extract value from the existing NISQ hardware, researchers are developing and using methods to reduce the hardware error. Even if the time evolution study is a conceptual, simple process its circuit realization requires the use of many gates, in particular many CNOT gates that are the noisiest, therefore a comprehensive set of error mitigation techniques is needed:\nP o S ( L A T T I C E 2 0 2 2 ) 0 2 5 P o S ( L A T T I C E 2 0 2 2 ) 0 2 5\n1. Mitigation of measurement error [11]: This is a procedure used to correct the errors that the hardware makes in measuring the qubit\u2019s state. If we are working with \ud835\udc5b qubits, there are 2\ud835\udc5b possible pure states in which the result of the measurement of the system can be found. Each of these 2\ud835\udc5b states have to be recreated on the hardware with a dedicated circuit and measured to construct the 2\ud835\udc5b \u00d7 2\ud835\udc5b calibration matrix, whose entries are the probabilities that a particular state, once measured, has a superposition with another state. In case of no hardware errors, for example on the simulator, the calibration matrix is diagonal, meaning that the states have no superposition with each other. In the case of a 2-plaquette lattice we use 2 qubits, therefore there are 4 mitigation circuits as shown in Fig. 6.\nFigure 6: The four circuits needed by the mitigation of measurement error for the 2-plaquette case.\nFinally the calibration matrix is then applied through a fitting procedure called sequential least squares programming to mitigate the measurement error present in the physical circuit.\n2. Randomized compiling [12] (Pauli-twirling): This is a technique used to transform the CNOT coherent noise into incoherent noise. This is done by creating new physics circuits in which each original CNOT gate is equivalently substituted by a CNOT gate \u201csurrounded\u201d by Pauli or identity gates. It can be shown that there are 16 possible ways to rewrite a CNOT gate as shown in Fig. 7:\nX X\nX\nY Y\nX\nZ Z\nX X\nX X\nX\nY Y\nX\nZ Z\nX X\nZ\nY Y\nX Y\nY Z\nY X\nY Z\nZ\nY Y\nZ\nZ Z\nX Y\nZ Y\nY X\nZ Y\nZ\nZ Z\nFigure 7: The 16 possible ways to rewrite a CNOT gate using combinations of Pauli gates and the identity.\nTherefore, the physics circuit has to be run a sufficient number of times to randomly access many possible combinations for the surrounding gate of each CNOT gate in the original physics circuit. The final physics measurement is obtained by averaging the measurement of these runs.\n3. Zero-noise extrapolation [13]: The method consists to study the circuit noise by creating copies of the original circuits where the noise is artificially increased by replacing each CNOT gate by odd multiples (triplet, quintet etc.) as shown in Fig. 8.\nThe zero-noise limit is extracted by fitting the circuit\u2019s measurements with a function of the CNOT multiples, as the intercept of the curve with the y-axis.\nP o S ( L A T T I C E 2 0 2 2 ) 0 2 5 P o S ( L A T T I C E 2 0 2 2 ) 0 2 5\n4. Self-mitigation: This method belongs to a class of error mitigation techniques in which an extra circuit is used to estimate the hardware errors. The error estimation circuit should be as similar as possible to the gate structure of the physics circuit and should have a known exact result. The estimation of the hardware error from the error estimation circuits is used to mitigate the hardware error on the physics circuit.\nWith the self-mitigation method, the error estimation circuit is identical to the physics circuit.\nFigure 9: Schematic representation of how the time evolution steps are organized in the error mitigation circuits versus the physics circuit.\nAs shown in Fig. 9 the physics circuit does \ud835\udc41 time steps forward in time. In comparison the error estimation circuit does half time steps forward and half backward, returning to the initial state. Therefore, the error estimation circuit has the same gates in the same order and the identical or opposite variable inside the rotation gates, and accordingly it closely reproduces the physics circuit noise. The hardware error can be estimated in the disparity between the final state of the error estimation circuit and the initial state. Due to the variability of the hardware the two circuits have to run back-to-back to ensure the hardware noise affecting them is similar (if not identical). Therefore the error mitigated final result for the physics circuit is obtained through the self-mitigation equation:\n\ud835\udc43true \u2212 12 \ud835\udc43computed \u2212 12\nphysics run\n= \ud835\udc43true \u2212 12\n\ud835\udc43computed \u2212 12\nmitigation run\n(4)"
+        },
+        {
+            "heading": "5. Measurement protocol",
+            "text": "Using the 7 qubits quantum hardware ibm_lagos allows one to run a sequence of 300 circuits back to back we chose 104 hits. To further clarify our approach, the protocol used is as follows:\n1. Submit the 2\ud835\udc5b circuits for the mitigation of measurement error. (4 circuits for the 2-plaquette and 32 circuits for the 5-plaquette case.)\n2. Submit the randomized compiling circuits for the error estimation circuit and the physics circuit. (148 circuits for the error estimation circuits and 148 for the physics circuits for the 2-plaquette case. 134 error estimation circuits and 134 physics circuits for the 5-plaquette case.)\n3. Collect all the measurements.\n4. Apply the measurement-error calibration matrix to the error estimation circuit and the physics circuit results.\nP o S ( L A T T I C E 2 0 2 2 ) 0 2 5 P o S ( L A T T I C E 2 0 2 2 ) 0 2 5\n5. Use the self-mitigation equation to mitigate the hardware error and extract the mitigated value of the measurements.\n6. Calculate the final error for the error estimation and the physics results as the sum in quadrature of the statistical error from the 104 hits and the error from the bootstrap samples."
+        },
+        {
+            "heading": "6. Numerical Results",
+            "text": "The developed method can be used to study interesting features of the theory, for example the traveling excitation across the 2-plaquette lattice. As we already described in Sec. 2 to observe traveling excitation we need to consider a value of the gauge coupling \ud835\udc65 < 1, where the chromoelectric part dominates and therefore the single-plaquette states are the main contributor.\nFigure 10: Real-time excitation obtained as an evolution of the state with only a \ud835\udc57 = 1/2 flux of energy in the left plaquette for the 2-plaquette lattice case at gauge coupling \ud835\udc65 = 0.8 and 2 time steps per point with \ud835\udc51\ud835\udc61 = 0.12. The red solid (blue dashed) curve is the exact probability of the left (right) plaquette having an energy flux of j=1/2 over time. The red left-pointing (blue right-pointing) triangles are the physics data from calculations done on the quantum hardware ibm_lagos and processed by self-mitigation.\nThe physical interpretation of the phenomenon can be clearer if we interpret the closed loop with \ud835\udc57 = 1/2 that is a gauge invariant excitation as an approximation of a SU(2) glueball. Therefore, the traveling excitation is like a particle moving across the lattice from left to right.\nThe analytical method and measurement protocol can be extended to a larger lattice. On the 7 qubits hardware ibm_lagos, the longest qubit chain with nearest-neighbour connectivity has 5 qubits, therefore avoiding the use of swap gates and using 1 qubit for each plaquette, the largest implementable lattice has 5 plaquettes.\nP o S ( L A T T I C E 2 0 2 2 ) 0 2 5 P o S ( L A T T I C E 2 0 2 2 ) 0 2 5\nFigure 11: Real-time evolution of the state with only a \ud835\udc57 = 1/2 flux of energy in the left plaquette for the 5-plaquette lattice case at gauge coupling \ud835\udc65 = 2.0 and 4 Trotter steps per point at different values of \ud835\udc51\ud835\udc61. The black solid, blue dashed, and the red dotted curves are respectively the exact probability that the flux of energy \ud835\udc57 = 1/2 is in the centre plaquette, the two edge plaquettes and the two neighbours to the centre plaquette. The solid black circle, blue triangle, and red square are the corresponding data from the quantum hardware ibm_lagos after self-mitigation. The open circle, triangle, and square are quantum data from ibm_lagos after using both self-mitigation and zero-noise extrapolation.\nThe results in Fig. 11 are obtained from 4 jobs each with 134 runs using 4 second-order Trotter steps with different step size and totalling 94 CNOT gates for each point. The agreement is reasonable but not perfect as can be seen from the comparison of the filled data points with the exact curves, and can be improved as shown by the empty symbols using the zero-noise extrapolation using up to a CNOT triplet. In contrast to Fig. 10, the curves cannot be interpreted as a traveling excitation because at the value used for the gauge coupling x=2.0, the chromomagnetic contribution dominates."
+        },
+        {
+            "heading": "7. Summary",
+            "text": "This work demonstrates that an IBM gate-based quantum computer can be successfully used to study the real-time evolution of a non-Abelian lattice gauge theory on a small lattice. As shown in Fig. 5 the real-time evolution study of a SU(2) theory was extended to a time range much larger than previous studies on non-Abelian gauge theories [7, 8, 14, 15]. Furthermore, in Fig. 10 we reported the observation of an example of a real-time dynamical process: a SU(2) local excitation moving across the lattice. To obtain these results we used well-known error mitigation techniques such as measurement mitigation and randomized compiling. By themselves, these error mitigation techniques are not sufficient. To extract signal at large-time, we introduced a new approach called self-mitigation, which uses the same physics circuit as its own noise-mitigation circuit. In Fig. 11 we not only show that the current quantum hardware can be used for the time evolution study of a larger lattice, but that self-mitigation can be successfully combined with the mitigation method called zero-noise extrapolation to increase the error mitigation. Self-mitigation was introduced in [16] and was used in [17]. A similar approach was used in [18].\nAn interested reader may find the article by the same authors useful [16], as the original Lattice 2022 talk was based on it.\nP o S ( L A T T I C E 2 0 2 2 ) 0 2 5 P o S ( L A T T I C E 2 0 2 2 ) 0 2 5"
+        },
+        {
+            "heading": "8. Acknowledgements",
+            "text": "The present work was supported in part by a Discovery Grant from the Natural Sciences and Engineering Research Council (NSERC) of Canada and by an NSERC Undergraduate Student Research Award. The authors acknowledge the use of IBM Quantum services for this work. The views expressed are those of the authors, and do not reflect the official policy or position of IBM or the IBM Quantum team."
+        }
+    ],
+    "title": "Real time evolution and a traveling excitation in SU(2) pure gauge theory on a quantum computer",
+    "year": 2022
+}

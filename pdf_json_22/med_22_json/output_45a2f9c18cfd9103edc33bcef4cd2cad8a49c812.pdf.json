@@ -1,0 +1,171 @@
+{
+    "abstractText": "In February 2020, as covid-19 infections spread to more than fifty countries, public health officials needed to recommend how the public could protect themselves, balancing safety and urgency. But there was very little data since this novel virus had only been identified three  months prior. How could public health officials decide with insufficient data? The multi-armed bandit problem of computer science offers adaptive decision-making procedures that can achieve both safety and urgency. These adaptive methods balance learning information (exploring) with using information (exploiting), adjusting the balance toward learning when uncertainty is high (March 1991; Kaelbling et  al. 1996). Related methods are already used in adaptive clinical trials for pharmaceuticals (Pallmann et al. 2018). But we still need to develop these methods for non-pharmaceutical interventions, as I will illustrate with a case study of public mask-wearing to reduce the spread of covid-19. Public health pronouncements impact future learning.",
+    "authors": [],
+    "id": "SP:39fdf4abd27e6882624d5fa1cb972c8fbe29ee24",
+    "references": [
+        {
+            "authors": [
+                "J Abaluck",
+                "LH Kwong",
+                "A Styczynski"
+            ],
+            "title": "Impact of community masking on COVID-19: a cluster-randomized trial in Bangladesh",
+            "venue": "Science 375:eabi9069. https:// doi. org/",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P Aliu",
+                "S Sarp",
+                "P Fitzsimmons"
+            ],
+            "title": "Increasing use of compassionate use/managed access channels to obtain medicines for use in COVID-19",
+            "venue": "Clin Pharmacol Ther 110:26\u201328. https:// doi. org/",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "T Greenhalgh",
+                "MB Schmid",
+                "T Czypionka"
+            ],
+            "title": "Face masks for the public during the covid-19",
+            "venue": "doi. org/",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J Grein",
+                "N Ohmagari",
+                "D Shin"
+            ],
+            "title": "Compassionate use of remdesivir for patients",
+            "venue": "crisis. BMJ 369. https:// doi. org/",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "edn. BioPlan Associates",
+                "Inc",
+                "Rockville",
+                "pp 29\u201362 Kaelbling LP",
+                "Littman ML",
+                "Moore AW"
+            ],
+            "title": "Reinforcement learning: a survey",
+            "venue": "J Artif Intell Res",
+            "year": 1996
+        },
+        {
+            "authors": [
+                "T Mitze",
+                "R Kosfeld",
+                "J Rode",
+                "K W\u00e4lde"
+            ],
+            "title": "Unmasked! The effect of face masks on the spread of COVID-19",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P Pallmann",
+                "AW Bedding",
+                "B Choodari-Oskooei"
+            ],
+            "title": "Adaptive designs in clinical trials: why use them, and how to run and report",
+            "venue": "them. BMC Med 16:29",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "N Vargesson"
+            ],
+            "title": "Thalidomide-induced teratogenesis: History and mechanisms",
+            "venue": "Birth Defects Res Part C Embryo Today Rev 105:140\u2013156",
+            "year": 2015
+        }
+    ],
+    "sections": [
+        {
+            "text": "Vol.:(0123456789)\n1\nKeywords Covid-19\u00a0\u00b7 Decision-making\u00a0\u00b7 Public health policy\u00a0\u00b7 Reinforcement learning\u00a0\u00b7 Uncertainty\u00a0\u00b7 Risk"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "On February 28, 2020, as covid-19 infections spread to more than fifty countries, the World Health Organization (WHO) increased the global risk level of covid-19 to \u201cvery high\u201d (World Health Organization 2020). Public health officials needed to recommend how the public could protect themselves, balancing safety and urgency. But there was very little data since this novel virus had only been identified three months prior. How could public health officials decide with insufficient data?\nThe multi-armed bandit problem of computer science offers adaptive decision-making procedures that can achieve both safety and urgency. These adaptive\n* Jean Czerlinski Whitmore Ortega jeanimal@gmail.com\n1 Chicago, IL\u00a060607, USA\n184 J.\u00a0C.\u00a0W.\u00a0Ortega\n1 3\nmethods balance learning information (exploring) with using information (exploiting), adjusting the balance toward learning when uncertainty is high (March 1991; Kaelbling et\u00a0al. 1996). Related methods are already used in adaptive clinical trials for pharmaceuticals (Pallmann et\u00a0al. 2018).\nBut we still need to develop these methods for non-pharmaceutical interventions, as I will illustrate with a case study of public mask-wearing to reduce the spread of covid-19. Public health officials recommended against face masks in February of 2020, which should have halted learning aside from randomized controlled trials. But rogue mask mandates in cities like Jena, Germany, enabled learning about the safety and efficacy of masks, leading officials to reverse course in support of face masks in June 2020. There was a randomized controlled trial of face masks, but it did not complete until September of 2021, fifteen\u00a0months later. We need better methods of addressing public health emergencies than relying on rogue experiments like the one in Jena, Germany.\nLet me begin by reviewing public health\u2019s historical tension between safety and urgency and then explain how adaptive methods help resolve this tension."
+        },
+        {
+            "heading": "2 The evolution of\u00a0safety vs. urgency",
+            "text": "Public health officials have wrestled with balancing safety and urgency for decades. The thalidomide disaster of the 1950s spurred the requirement for randomized controlled trials, the gold standard of safety. But the AIDS crisis of the 1980s led to increasing use of exceptions to randomized clinical trials for desperately ill patients needing more urgent solutions."
+        },
+        {
+            "heading": "2.1 Safety",
+            "text": "Pharmaceutical safety grew in importance in public health. The essential rules of randomized controlled trials (RCTs) were established in the 1950\u2019s (Junod 2016). The rules included having both treatment and control groups, randomly assigning patients to groups, and assigning double blind (meaning neither patient nor physician knew whether the patient was in the treatment or control group). The ethics of randomized controlled trials are complicated but include a requirement of \u201cclinical equipoise,\u201d defined as a state of genuine uncertainty in the medical community regarding the therapeutic merits of a proposed treatment (Freedman 1987).\nDespite this gold standard quality, randomized controlled trials were rarely used because they were expensive and time-consuming (Junod 2016). The thalidomide disaster\u2014which\u00a0 has been called the largest human-made medical disaster in history (Vargesson 2015)\u2014changed that attitude. In the 1950\u2019s, pregnant women with morning sickness were prescribed the drug thalidomide for its antiemetic effects. Unfortunately, within a few years, doctors noticed that thalidomide was associated with a high rate of birth defects. After the dangerous side-effects of thalidomide were recognized, resistance to randomized controlled trials \u201csuddenly melted away,\u201d\n185\n1 3\nLearning with\u00a0insufficient data: a\u00a0multi\u2011armed bandit\u2026\n(Junod 2016). The U.S. passed regulations requiring randomized controlled trials for pharmaceuticals in 1962."
+        },
+        {
+            "heading": "2.2 Urgency",
+            "text": "Then the AIDS epidemic of the 1980s presented a new problem: urgency. Young and healthy people suddenly fell ill and died. These patients demanded access to potentially life-saving new treatments now. They did not have years to wait for the results of randomized controlled trials (Jansen and Stryker 1993).\nThere was in fact a precedent for quicker access: If a patient had a life-threatening disease and had exhausted all licensed therapeutic options, the patient\u2019s doctor could request a \u201ccompassionate use\u201d exception to treat the patient with a therapeutic agent that was already under investigation. But obtaining authorization for compassionate use was a slow, ad hoc, per-patient process. AIDS activists successfully pushed the U.S. Food and Drug Administration (FDA) to streamline the process with the 1987 \u201cinvestigational new drug\u201d (IND) regulations (Jansen and Stryker 1993). These regulations sped up AIDS patients\u2019 access to drugs. However, many AIDS activists wanted more and faster approval of drugs, so the tension between safety and urgency was not settled.\nIn the 2020s, the covid-19 pandemic also created urgency, and compassionate use regulations were often invoked to speed access to new treatments. For example, as early as the spring of 2020, the anti-viral remdesivir was administered to patients with severe covid-19 under the U.S. IND compassionate use regulations (Grein et\u00a0al. 2020). Different countries leveraged a variety of compassionate use regulations during the covid-19 pandemic, and internationally standardized \u201cmanaged access programs\u201d have been proposed (Aliu et\u00a0al. 2021)."
+        },
+        {
+            "heading": "2.3 Controversy",
+            "text": "However, a 2020 editorial in the Journal of the American Medical Association argued that such widespread \u201ccompassionate use\u201d risks patient safety and has many societal downsides (Kalil 2020). In particular, compassionate use harms learning: \u201cThe administration of off-label drug use, compassionate drug use, and uncontrolled studies during a pandemic also could discourage patients and clinicians from participating in RCTs, hampering any knowledge that could be gained\u201d (Kalil 2020). That is, a desperate patient may prefer to receive a new drug under compassionate use rather than enroll in a randomized controlled trial, since a trial provides only a 50/50 chance of actually receiving the new drug rather than a placebo. (Note that urgency does not justify unscientific treatments for covid-19, like drinking bleach.)\nIn summary, public health historically had two extremes of decision-making procedures: the safety of randomized controlled trials or the urgency of exceptions made for compassionate use.\n186 J.\u00a0C.\u00a0W.\u00a0Ortega\n1 3"
+        },
+        {
+            "heading": "3 Balancing learning and\u00a0using information",
+            "text": "Computer science can shed some light on these decision-making procedures. Randomized controlled trials and compassionate use are algorithms in the \u201clearnby-doing\u201d or \u201creinforcement learning\u201d paradigm because we do not have the full data set up-front\u2014we must also decide how to gather more data. In reinforcement learning, the core tradeoff is between learning information and using information, or \u201cexploration\u201d and \u201cexploitation\u201d (March 1991; Kaelbling et\u00a0al. 1996). Randomized controlled trials can be seen as first focusing 100% on learning (exploring), and then, when the study is complete, focusing 100% on using (exploiting) the statistically validated treatment. In contrast, in reinforcement learning, an optimal algorithm would adaptively adjust the balance between learning information and using information based on uncertainty and trials remaining. And when there are no trials remaining, compassionate use would be optimal\u2014doing no learning, just using (exploiting) the treatment that currently seems most promising.\nOf course, public health is concerned with more than just optimality. But the tradeoff between learning and using information has already motivated the use of adaptive clinical trials of pharmaceuticals, so it is useful to understand this perspective to help us apply it to the non-pharmaceutical realm."
+        },
+        {
+            "heading": "3.1 The two\u2011armed bandit problem",
+            "text": "Let me illustrate the tradeoff between learning and using information with a generic reinforcement learning problem. A \u201ctwo-armed bandit\u201d has two options that must be tried to assess success. An algorithm sequentially selects which option to try, based on past successes and failures. The goal is to design an algorithm that maximizes the total reward over time. This paper will sketch only a simple bandit algorithm. For a recent survey of the huge variety of bandit algorithms, including using\u00a0multiple arms, adjusting for context, and\u00a0applying behavioral or ethical constraints, see (Bouneffouf and Rish 2019).\nSuppose the options are two advertisements for a video camera, one with a cat and one with a dog, and we want to know which ad garners more clicks. The advertiser assesses success by showing users an ad and measuring how many users click on the ad.\nSuppose the dog ad has been shown to 500 users and garnered 5 clicks, which is a click-through rate of 5/500 = 1%. Meanwhile, the cat ad is new and has been shown to only 10 users and garnered zero clicks, which is a 0% click-through rate. If you had to recommend an ad at this point, which would it be? The dog ad has been more successful, so that seems to be the obvious choice. In computer science parlance, choosing the current front-runner is called the \u201cgreedy\u201d algorithm. The dog ad is indeed optimal when there is only one more user to show an ad to. But what if there were one million more users? We are still uncertain about the click-through rate of the cat ad. Then showing the dog ad for the next million users foregoes the opportunity to learn about the true success of the cat ad.\n187\n1 3\nLearning with\u00a0insufficient data: a\u00a0multi\u2011armed bandit\u2026\nThe core insight of the bandit approach is that the \u201cgreedy\u201d algorithm of selecting the currently best option, the \u201cfront-runner\u201d, loses the opportunity to learn about other options. The algorithm that maximizes long-run success instead allocates some trials to learning\u2014if there is uncertainty and enough future trials to enjoy the fruits of learning.\nFor example, the advertiser might show the dog ad to 80% of users and the cat ad to the other 20%. As data is gathered on click-through rates, the proportion seeing each ad shifts to favor the ad garnering more success. If the click-through rate on the dog ad continues to be higher, its proportion would climb to 90% and eventually 100%. But if the cat advertisement started getting a higher click-through rate, then the dog ad\u2019s proportion would drop to 70, 60, 50, and eventually to 0%, which means showing only cat ads.\nShowing one ad 100% of the time of course means learning has ceased. The bandit algorithms find the optimal moment to stop learning and use the fruits of learning. But before that moment, the algorithms maintain a diversity of viable options, converging on a best option only as uncertainty decreases."
+        },
+        {
+            "heading": "3.2 A bandit perspective on\u00a0RCTs and\u00a0compassionate use",
+            "text": "Now let\u2019s apply the bandit perspective to the algorithms of randomized controlled trials and compassionate use. Randomized controlled trials use both the options equally during the entire trial\u201450% placebo, 50% new treatment\u2014until the required sample size is achieved. From the bandit perspective, this would imply equal uncertainty about both treatments throughout the trial. At the end of the trial, investigators assess whether the treatment had a significant difference from the placebo: if yes, then use the treatment 100% of the time, and if not, revert to the standard of care 100% of the time. From the bandit perspective, all the exploitation of the learning takes place only after the end of the trial.\nCompassionate use would be akin to an allocation of 100% new treatment, a form of greedy algorithm. Recall that the greedy algorithm is optimal if there is only one trial left, and from the perspective of a dying patient, there is only one trial left\u2014their own life! But at the societal level, there are many trials left, so society would prefer to learn. This example illustrates a tension between what is optimal for a dying patient (who has one trial) and what is optimal for society (which has many trials). This tension dissipates if the patient is not deathly ill because the patient has a long life ahead, many future trials. Then the patient has time to benefit from the fruits of learning, too.\nFrom the point of view of bandit algorithms, an optimal algorithm uses an adaptive allocation that varies based on uncertainty and trials remaining. And there actually is a form of clinical trial that leverages this idea."
+        },
+        {
+            "heading": "3.3 Adaptive clinical trials for\u00a0pharmaceuticals",
+            "text": "Health care already has an established technique for adaptive allocation for pharmaceuticals: adaptive clinical trials. Adaptive clinical trials were allowed\u2014but not\n188 J.\u00a0C.\u00a0W.\u00a0Ortega\n1 3\nrequired\u2014by the U.S. FDA in 2010 (Pallmann et\u00a0al. 2018). Adaptive clinical trials are similar to bandit algorithms but with full statistical rigor to ensure patient safety. Adaptive trials allow investigators to review the data mid-trial to make certain types of changes to the treatment protocol. A typical change is assigning more patients to the currently more successful \u201carm\u201d of the trial, similar to what bandit algorithms do. However, the adaptations are not ad-hoc: they must be carefully designed upfront by statisticians so that statistically valid conclusions can still be drawn.\nWith such statistical rigor, adaptive trials greatly reduce the safety versus urgency trade-off. They are just as safe as standard trials yet converge to the best treatment faster. As a recent tutorial on the topic explained: \u201cTrials with an adaptive design are often more efficient, informative and ethical than trials with a traditional fixed design since they often make better use of resources such as time and money, and might require fewer participants\u201d (Pallmann et\u00a0al. 2018). That said, the relative merits and ethics of randomized controlled trials and adaptive clinical trials are still debated (Fillion 2019).\nIn any case, the urgency of the covid-19 pandemic spurred not only more compassionate use but also more adaptive clinical trials that came to conclusions more quickly than traditional randomized controlled trials. For example, an adaptive clinical trial to treat severely ill covid-19 patients with the antiviral drug remdesivir began on February 21, 2020. By April 29, 2020, just three months later, preliminary results were shared: patients who received remdesivir had a 31% faster time to recovery than those who received placebo (Beigel et\u00a0 al. 2020). Based on such results, the US Food and Drug Administration issued an Emergency Use Authorization for remdesivir in the treatment of covid-19 in May 2020 (Beigel et\u00a0al. 2020). Adaptive clinical trials helped the world find treatments for covid-19 safely and more quickly than with traditional randomized controlled trials."
+        },
+        {
+            "heading": "4 Challenges of\u00a0non\u2011pharmaceutical interventions",
+            "text": "Pharmaceuticals are highly controlled. Unfortunately, making recommendations for non-pharmaceutical interventions is more challenging, both for covid-19 and other public health issues. For example, when the US Surgeon General declared in 1964 that smoking caused lung cancer, the conclusion was based on\u00a0more than 7,000 studies, but none was a randomized controlled trial. Why not? Randomized controlled trials for non-pharmaceuticals tend to be logistically and ethically challenging. And when trials can be undertaken, they tend to require years. For example, the randomized controlled trial of mask-wearing for covid-19 took more than a year to organize, and results were not available until September of 2021 (Abaluck et\u00a0al. 2021)."
+        },
+        {
+            "heading": "4.1 Randomized controlled trial for\u00a0public mask\u2011wearing",
+            "text": "Why did the clinical trial for face masks take so long? For mask-wearing, the outcome measure is the infection rate of a community, which inherently requires months to measure. Investigators had to find a location with similar communities\n189\n1 3\nLearning with\u00a0insufficient data: a\u00a0multi\u2011armed bandit\u2026\nthat could participate, ultimately identifying 600 villages in rural Bangladesh. The investigators also could not mandate mask usage, so instead villages in the intervention arm were provided free masks along with encouragement and incentives to wear masks in public. It takes time to distribute masks and to broadcast public health announcements and incentives appropriate for local conditions. Because compliance was far from guaranteed, the investigators also had to measure actual mask usage. Finally, because mask-wearing is tested on healthy people, investigators had to track infection rates over five months to allow time for natural covid-19 outbreaks to develop. In the end, the first results (a preprint) were only available in September 2021. The conclusion was that a 30-percent increase in mask-wearing led to a 10 percent drop in covid-19 infection rates (Abaluck et\u00a0al. 2021).\nThe mask-wearing trial could not easily be made into an adaptive trial because adaptive trials do not work well \u201cif the outcome measure of interest takes so long to record that there is basically no time for the adaptive changes to come into effect before the trial end\u201d (Pallmann et\u00a0al. 2018).\nThe randomized controlled trial assured us of the safety of public mask-wearing\u2014masks did not increase infection rates or have dangerous side-effects. Furthermore, masks were effective in reducing covid-19 transmission. But the first conclusions were published in September of 2021."
+        },
+        {
+            "heading": "4.2 Uncertainty before\u00a0the\u00a0mask\u2011wearing RCT",
+            "text": "In February of 2020, public health officials were under pressure to provide recommendations to the public on protecting themselves from covid-19. At that time, using expert best judgment, several major public health agencies\u2014the WHO, U.S. Centers for Disease Control, and European Center for Disease Prevention and Control\u2014recommended against the public wearing face masks (Jingnan 2020). From the bandit point of view, using a single option halts valuable learning if uncertainty was high. So how much uncertainty was there?\nEpidemiologists debated the merits of public mask-wearing in medical journals in February 2020. Some epidemiologists argued in favor of public mask-wearing as the safer option (Greenhalgh et\u00a0al. 2020). Meanwhile, other epidemiologists (Martin et\u00a0 al. 2020) argued that masks could be harmful in several ways. First, if the public re-used dirty masks, pathogens could accumulate and increase infection risk. Second, there were possible bad behavioral side-effects. People who wore masks might not bother to use other, more effective means of reducing transmission, such as avoiding social gatherings. And even worse, these people might feel so protected by masks that they took additional risks, like visiting covid-positive people (\u201cmoral hazard\u201d). And finally, the public might buy so many masks that healthcare professionals could not obtain an adequate supply (Martin et\u00a0al. 2020).\nThis debate demonstrated great uncertainty and therefore a need for learning about public mask-wearing. And\u00a0 there was time to learn and reap the benefits of learning. Even in February 2020, we could anticipate at least a few more months of the pandemic, during which time we could be gathering data about face masks. In that case, putting 100% focus on one recommendation\u2014in this case recommending\n190 J.\u00a0C.\u00a0W.\u00a0Ortega\n1 3\nagainst masks\u2014came at the cost of learning about the true success of wearing masks. The recommendation halted learning\u00a0outside of\u00a0randomized controlled trials."
+        },
+        {
+            "heading": "4.3 Learning anyway: rogue locales and\u00a0synthetic control",
+            "text": "Or rather, the recommendation should have halted learning. It should have made the public wait until the randomized controlled trial was completed in September of 2021. However, some locales, such as Jena, Germany, went against the public health recommendations and required face masks in the spring of 2020 anyway. As a sideeffect, these locales enabled learning about the safety and effectiveness of wearing face masks. Analyses of data from European regions (Mitze et\u00a0al. 2020) and, later, US counties (Lyu and Wehby 2020) provided strong evidence that, to the surprise of health officials, wearing masks reduced covid-19 transmission. The European study summarized the effect size in lay terms:\nConsider a region in which the number of COVID-19 cases increased by 10% from one day to another. This increase would have been only 6% if there had been an obligation to wear face masks. With a 10% daily increase in COVID19, cases double within 7 days; in contrast, a 6% daily increase means cases double only within 12 days (Mitze et\u00a0al. 2020).\nThese researchers did not have randomized controlled trials. Instead, they used a method known as \u201csynthetic control,\u201d which relies on existing variation\u2013 such as before and after a locale mandates masks\u2014to make a statistically-weighted combination of groups to act as a control (Bouttell et\u00a0al. 2018).\nWhile not a gold standard, the findings of the synthetic control studies tilted the weight of evidence toward face masks. By June of 2020, public health authorities reversed course and recommended wearing face masks (Yan 2020). The randomized controlled trial for face masks continued, publishing a preprint in September 2021 (Abaluck et\u00a0al. 2021), 15\u00a0months later, and confirming that the best recommendation was indeed to wear masks. Thus, the learning enabled by cities like Jena brought public mask wearing 15\u00a0months earlier than the\u00a0randomized controlled trial, saving countless lives."
+        },
+        {
+            "heading": "5 Public health communication",
+            "text": "Ideally, public health policy would not rely on rogue experiments. So how could public health recommendations better balance using known information and learning additional information, doing so safely and ethically? Designing a new public health policy is beyond the scope of this essay, but I do want to leverage the bandit perspective for some potential leads in health communications, specifically not discouraging scientifically viable options and communicating uncertainty.\n191\n1 3\nLearning with\u00a0insufficient data: a\u00a0multi\u2011armed bandit\u2026"
+        },
+        {
+            "heading": "5.1 Not discouraging scientifically viable options",
+            "text": "The bandit perspective emphasizes the learning opportunity cost of discouraging a scientifically viable option when uncertainty is high. While it was perfectly appropriate to declare that the balance of evidence leaned against public mask wearing in February 2020, the US Surgeon general actively discouraged and even disparaged mask-wearing. His tweet on February 29, 2020, stated: \u201cSeriously peopleSTOP BUYING MASKS! They are NOT effective in preventing general public from catching #Coronavirus\u2026\u201d (Jingnan 2020). The tone scolds people who bought masks, even though there were well-respected epidemiologists who advocated wearing masks.\nIn contrast, drinking bleach to prevent or treat covid-19 was never scientifically viable and should always be discouraged. Scientists had no uncertainty about drinking bleach to cure covid-19. There was no learning cost to discouraging bleach because we had no need to learn more about bleach. Ideally, public health officials would focus discouragement where it matters most, such as not drinking bleach."
+        },
+        {
+            "heading": "5.2 Communicating uncertainty",
+            "text": "A more lofty communication goal would be to help the public understand all the scientifically viable options, the evidence for and against each option, and the uncertainty about each option. These are the essential inputs to a bandit algorithm and could enable people to choose options that, in aggregate, balance using information with learning new information. From a related perspective, economist Charles F. Manski has argued for \u201cforthright communication of uncertainty in reporting of official statistics and in research that aims to inform policy\u201d (Manski 2020). While the lay public may often seem too unsophisticated to understand uncertainties in science, there is active research on methods to successfully communicate scientific uncertainties, both verbally and visually (Hullman 2022).\nManski goes even further, arguing for actively incentivizing a diversity of policies among the scientifically plausible options when uncertainty is high. For the case of covid-19 interventions in the United States, Manski suggested, \u201cThe federal government can provide incentives to the states to encourage them to enact desirable portfolios of policies\u2026 modifying the incentives as knowledge accumulates\u201d (Manski 2020). The intersection of incentives and diversity with safety and urgency are a topic for future research."
+        },
+        {
+            "heading": "5.3 Adaptive methods",
+            "text": "In summary, adaptive methods have successfully attained both safety and urgency in decision-making for pharmaceuticals under insufficient information. Non-pharmaceutical interventions are more complicated. But the covid-19 pandemic has shown the importance of urgent recommendations for these interventions. We need adaptive decision-making methods that are appropriate for issues such as mask-wearing during a pandemic while keeping a close eye on safety.\n192 J.\u00a0C.\u00a0W.\u00a0Ortega\n1 3"
+        },
+        {
+            "heading": "6 Changes in\u00a0uncertainty",
+            "text": "As the covid-19 pandemic has continued, our uncertainty has mostly decreased, and we have converged on a set of treatments and interventions. But as new covid-19 variants evolve, uncertainty increases, and we have to shift the balance more toward learning again. For example, in January of 2022, the CDC declared that the public needed better face masks to protect themselves from the new omicron variant (2022). This masking change is unlikely to be the last change in recommendations due to a change in the virus. We need to be ready to learn again whenever uncertainty increases again."
+        },
+        {
+            "heading": "7 Summary",
+            "text": "Historically, public health decision-making has had to choose between the safety of randomized controlled trials and the urgency of compassionate use\u00a0that allows dying patients to try experimental treatments. But adaptive algorithms, such as those used in multi-armed bandit problems, show that public health can maintain safety while converging faster to the best option. Adaptive algorithms work by balancing learning information (\u201cexploration\u201d) with using information (\u201cexploitation\u201d), adjusting the allocation as data is gathered and uncertainty decreases. Adaptive clinical trials are already in use for pharmaceuticals and helped more quickly identify safe and effective treatments during the covid-19 pandemic. But we do not yet have adaptive decisionmaking for non-pharmaceuticals, such as whether the public should wear face masks. I hope the bandit algorithms\u2019 perspective will spur the design of better public health decision-making and communication methods so we do not have to rely on rogue experiments by cities like Jena, Germany.\u00a0Let us keep in mind that public health\u00a0pronouncements\u00a0impact future learning.\nAcknowledgements I would like to thank Heather Adkins, Guido Fioretti, Dan Goldstein, Marc Harper, Jake Hofman, Donald MacKenzie, Jesus M. Ortega, Andreas Ortmann, Riccardo Rebonato, Joshua Safyan, Damian Sullivan, Oscar Wijsman, and two anonymous reviewers.\nAuthor\u2019s Note\nAny views or opinions expressed in this piece are solely those of the author."
+        }
+    ],
+    "title": "Learning with insufficient data: a multi\u2010armed bandit perspective on covid\u201019 interventions",
+    "year": 2022
+}

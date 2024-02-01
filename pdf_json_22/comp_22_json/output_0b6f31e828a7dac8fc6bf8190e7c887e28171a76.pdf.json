@@ -1,0 +1,133 @@
+{
+    "abstractText": "LSTMs trained on next word prediction can accurately perform linguistic tasks that require tracking long-distance syntactic dependencies. Notably, model accuracy approaches human performance on number agreement tasks (Gulordava et al., 2018). However, we do not have a mechanistic understanding of how LSTMs perform such linguistic tasks. Do LSTMs learn abstract grammatical rules, or do they rely on simple heuristics? Here, we test gender agreement in French which requires tracking both hierarchical syntactic structures and the inherent gender of lexical units. Our model is able to reliably predict long-distance gender agreement in two subject-predicate contexts: noun-adjective and noun-passive-verb agreement. The model showed more inaccuracies on plural noun phrases with gender attractors compared to singular cases, suggesting a reliance on clues from gendered articles for agreement. Overall, our study highlights key ways in which LSTMs deviate from human behaviour and questions whether LSTMs genuinely learn abstract syntactic rules and categories. We propose using gender agreement as a useful probe to investigate the underlying mechanisms, internal representations, and linguistic capabilities of LSTM language models.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Priyanka Sukumaran"
+        },
+        {
+            "affiliations": [],
+            "name": "Conor Houghton"
+        },
+        {
+            "affiliations": [],
+            "name": "Nina Kazanina"
+        }
+    ],
+    "id": "SP:caa2e654c1534d43b0910bff886c1660b0130cca",
+    "references": [
+        {
+            "authors": [
+                "Jorge Gonzalez Alonso",
+                "Ian Cunnings",
+                "Hirkoki Fujita",
+                "David Miller",
+                "Jason Rothman."
+            ],
+            "title": "Gender attraction in sentence comprehension",
+            "venue": "Glossa, 6(1).",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Mario Giulianelli",
+                "Jack Harding",
+                "Florian Mohnert",
+                "Dieuwke Hupkes",
+                "Willem Zuidema."
+            ],
+            "title": "Under the hood: Using diagnostic classifiers to investigate and improve how language models track agreement information",
+            "venue": "In Proceedings of the 2018",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Kristina Gulordava",
+                "Piotr Bojanowski",
+                "Edouard Grave",
+                "Tal Linzen",
+                "Marco Baroni."
+            ],
+            "title": "Colorless green recurrent networks dream hierarchically",
+            "venue": "In Proceedings of the 2018 Conference of the North American Chapter of the Association for Computa-",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Yair Lakretz",
+                "Dieuwke Hupkes",
+                "Alessandra Vergallito",
+                "Marco Marelli",
+                "Marco Baroni",
+                "Stanislas Dehaene."
+            ],
+            "title": "Mechanisms for handling nested dependencies in neural-network language models and humans",
+            "venue": "Cognition, 213.",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Yair Lakretz",
+                "German Kruszewski",
+                "Theo Desbordes",
+                "Dieuwke Hupkes",
+                "Stanislas Dehaene",
+                "Marco Baroni."
+            ],
+            "title": "The emergence of number and syntax units in LSTM language models",
+            "venue": "In Proceedings of the 2019 Conference of the North American Chap-",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Tal Linzen",
+                "Emmanuel Dupoux",
+                "Yoav Goldberg."
+            ],
+            "title": "Assessing the ability of LSTMs to learn syntax-sensitive dependencies",
+            "venue": "Transactions of the Association for Computational Linguistics, 4.",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Jeff Mitchell",
+                "Nina Kazanina",
+                "Conor Houghton",
+                "Jeff Bowers"
+            ],
+            "title": "Do LSTMs know about Principle C",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Aaron Mueller",
+                "Garrett Nicolai",
+                "Panayiota PetrouZeniou",
+                "Natalia Talmina",
+                "Tal Linzen"
+            ],
+            "title": "Cross-linguistic syntactic evaluation of word prediction models",
+            "year": 2020
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1 Introduction",
+            "text": "Recurrent neural networks such as Long ShortTerm Memory networks (LSTMs) have had remarkable success in linguistic tasks requiring grammatical competence. However, there is a lack of mechanistic understanding of LSTMs\u2019 linguistic success, which may mimic or inform human language processing. Long-distance number agreement tasks have been used in various languages to test if LSTMs process hierarchical syntactic structures as humans do (Linzen et al., 2016; Gulordava et al., 2018; Giulianelli et al., 2018); we extend this finding to gender agreement in French. Gender differs from number in that it is an inherent property\nof a word, whereas the number of a word is chosen based on a speaker\u2019s message. Gender agreement takes place in multiple contexts, including subjectpredicate agreement, both for singular and plural nouns (Table 1). We aim to investigate how gender agreement is represented and generalised across contexts by language models. Here, we first focus on noun-adjective (NA) and noun-passive-verb agreement (NP) with varying number of distractor words. \u2018la robe que j\u2019aime est tr\u00e8s bleue/bleu\u2019 (the dress that I like is very blue) is an example where the feminine noun \u2018robe\u2019 agrees with the feminine adjective \u2018bleue\u2019 separated by five gender neutral distractors, see Table 2 for more examples. Secondly, we test performance on phrases which include attractor nouns of opposing gender and number to the main noun. For all test cases, we compare performance on singular noun phrases which have informative gendered articles \u2018le/la\u2019, to plural noun phrases for which the masculine and feminine articles are the same \u2018les\u2019; thus forcing the LSTM to rely solely on the gender of the plural noun itself.\nWe show that LSTMs can perform robust longdistance gender agreement, but suffer more variation in performance on shorter phrases. We also find that models may be relying on other gender clues such as articles for agreement. Both findings deviate from how humans are believed to process agreement, and also lead us to question, as in (Mitchell et al., 2019), how abstract the syntactic rules learnt by the LSTM really are."
+        },
+        {
+            "heading": "2 Language Model",
+            "text": "The LSTM language model1 from Gulordava et al. (2018) was adopted and retrained on the French corpus from Mueller et al. (2020). The LSTM had two layers of 650 units, and was trained with a batch size of 128, dropout of 0.2, and initial learning rate\n1The LSTM was implemented in Python 3.7 with Pytorch 1.2.0 and CUDA 10.2.\nar X\niv :2\n21 1.\n00 15\n3v 1\n[ cs\n.C L\n] 3\n1 O\nct 2\n02 2\nAccepted at EMNLP 2022 Workshop BlackboxNLP\nof 20. The French corpus had 80 million tokens for training and 10 million tokens each for validation and testing. We cleaned the vocabulary of 50,000 most common tokens by removing capitalisation, punctuation and repeated tokens due to errors in accents, resulting in 42,000 tokens2. The remaining tokens in the corpus were tagged as unknown with <unk>. The LSTM was trained on next-word prediction. In our grammatical tests, we counted success when the LSTM assigned a higher probability to the target word of the correct gender or number, rather than the ungrammatical alternative (Table 1)."
+        },
+        {
+            "heading": "3 Results",
+            "text": "Validation perplexity averaged over five best model initialisations was 43.57 \u00b1 0.18. To verify our model\u2019s robustness, we first tested subject-verb number agreement in French (Mueller et al., 2020). Our model had an overall accuracy of 95%\u00b1 0.08, outperforming the model reported in Mueller et al. (2020), 83%\u00b1 0.18, likely because we used a version of the corpus that was improved by removing duplicates. Our model performance follows the patterns in (Mueller et al., 2020): high performance on simple number agreement without distractors, 100%\u00b10.03, e.g. \u2018les pilotes retournent/retourne\u2019, and lowest performance on the across object relative clause condition, 71%\u00b10.11, e.g. \u2018les auteurs que les gardes aiment retournent/retourne\u2019.\nNext, we tested gender agreement in phrases with an increasing number of distractor words between the noun and target word, which did not degrade agreement accuracy. Model performance had more variation on shorter phrases with 0-2 distractor words (Figure 1A). Average accuracy on shorter phrases was very high for simple gender agreement without attractors, NA: 98% for singular and 99% for plural phrases, and NP: 100% on both singular and plural conditions (Figure 1B). On phrases with gender attractors of the same number (NANS and NPNS), performance was 91% and 97% on singular phrases but drops to 86% and 92% in plural noun phrases which may be due to the absence of gendered articles. Finally, accuracy was above 95% and similar between singular/plural phrases phrases in the NANO and NPNO conditions, and higher than in NANS and NPNS, possibly due to a lack of gender interference from articles.\n2Our data-sets and code: https://github.com/ prisukumaran23/lstm_fr/tree/main"
+        },
+        {
+            "heading": "4 Discussion",
+            "text": "We find that LSTM language models produce robust gender agreement even with long distractor phrases and interfering attractors in French. Our LSTM struggled more on short phrases with attractors, deviating from human behaviour where longer phrases are found to incur more errors due to memory retrieval effects (Alonso et al., 2021). We also find that the LSTM\u2019s performance on gender agreement differed for singular and plural gender associations; lesion studies could help identify specific gender units to confirm this (Lakretz et al., 2019, 2021).\nMore work needs to be done to characterise the role of articles and other gender indicators in agreement. More broadly, we aim to explore contexts beyond noun-predicate agreement and whether learnt gender rules generalise across contexts and to novel nouns. Overall, gender agreement can be used to probe LSTMs\u2019 abilities to capture inherent grammatical categories and rules, in turn providing insight into the extent to which LSTMs inform us on the principles of language processing."
+        }
+    ],
+    "title": "Do LSTMs See Gender? Probing the Ability of LSTMs to Learn Abstract Syntactic Rules",
+    "year": 2022
+}

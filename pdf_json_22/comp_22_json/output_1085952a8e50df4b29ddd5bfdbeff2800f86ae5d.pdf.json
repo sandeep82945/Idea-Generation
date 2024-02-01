@@ -1,0 +1,157 @@
+{
+    "abstractText": "Hardware implementations of complex functions regularly deploy piecewise polynomial approximations. This work determines the complete design space of piecewise polynomial approximations meeting a given accuracy specification. Knowledge of this design space determines the minimum number of regions required to approximate the function accurately enough and facilitates the generation of optimized hardware which is competitive against the state of the art. Targeting alternative hardware technologies simply requires a modified decision procedure to explore the space.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Bryce Orloski"
+        },
+        {
+            "affiliations": [],
+            "name": "Samuel Coward"
+        },
+        {
+            "affiliations": [],
+            "name": "Theo Drane"
+        }
+    ],
+    "id": "SP:58d8fee589d180525489801dd2db1b9c65f4cdcf",
+    "references": [
+        {
+            "authors": [
+                "J.M. Muller"
+            ],
+            "title": "Bkm:A New Hardware Algorithm for Complex Elementary Functions",
+            "venue": "IEEE Transactions on Computers, vol. 43, no. 8, 1994.",
+            "year": 1994
+        },
+        {
+            "authors": [
+                "J.E. Volder"
+            ],
+            "title": "The CORDIC Trigonometric Computing Technique",
+            "venue": "IRE Transactions on Electronic Computers, vol. EC-8, no. 3, 1959.",
+            "year": 1959
+        },
+        {
+            "authors": [
+                "P.T.P. Tang"
+            ],
+            "title": "Table-lookup algorithms for elementary functions and their error analysis",
+            "venue": "Proceedings - Symposium on Computer Arithmetic, 1991.",
+            "year": 1991
+        },
+        {
+            "authors": [
+                "T. Drane",
+                "W.C. Cheung",
+                "G. Constantinides"
+            ],
+            "title": "Correctly rounded constant integer division via multiply-add",
+            "venue": "IEEE International Symposium on Circuits and Systems, 2012.",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "D.U. Lee",
+                "A.A. Gaffar",
+                "O. Mencer",
+                "W. Luk"
+            ],
+            "title": "Optimizing hardware function evaluation",
+            "venue": "IEEE Transactions on Computers, vol. 54, no. 12, 2005.",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "J. Detrey",
+                "F. De Dinechin"
+            ],
+            "title": "Table-based polynomials for fast hardware function evaluation",
+            "venue": "Proceedings - International Conference on Application-Specific Systems, Architectures and Processors, 2005.",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "A.G.M. Strollo",
+                "D. De Caro",
+                "N. Petra"
+            ],
+            "title": "Elementary functions hardware implementation using constrained piecewise-polynomial approximations",
+            "venue": "IEEE Transactions on Computers, vol. 60, no. 3, 2011.",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "F. de Dinechin",
+                "B. Pasca"
+            ],
+            "title": "Custom Arithmetic Datapath Design for FPGAs using the FloPoCo Core Generator",
+            "venue": "Design & Test of Computers, IEEE, vol. PP, no. 99, 2011.",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "F. De Dinechin",
+                "M. Joldes",
+                "B. Pasca"
+            ],
+            "title": "Automatic generation of polynomial-based hardware architectures for function evaluation",
+            "venue": "Proceedings - International Conference on Application-Specific Systems, Architectures and Processors, 2010.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "S. Chevillard",
+                "M. Jolde\u015f",
+                "C. Lauter"
+            ],
+            "title": "Sollya: An environment for the development of numerical codes",
+            "venue": "Lecture Notes in Computer Science, vol. 6327 LNCS, 2010.",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "N. Brisebarre",
+                "S. Chevillard"
+            ],
+            "title": "Efficient polynomial Lapproximations",
+            "venue": "Proceedings - Symposium on Computer Arithmetic, 2007.",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "Synopsys"
+            ],
+            "title": "Design Compiler User Guide S-2021.06-SP2",
+            "venue": "Synopsys, Mountain View, Tech. Rep., 6 2021. This figure \"single_recip_area_delay.png\" is available in \"png\" format from: http://arxiv.org/ps/2205.09504v1",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "ar X\niv :2\n20 5.\n09 50\n4v 1\n[ cs\n.A R\n] 1\n9 M\nay 2\n02 2\nIndex Terms\u2014datapath, elementary function, interpolation\nI. INTRODUCTION\nA common challenge in hardware design is how best to compute complex functions such as the reciprocal, sine, cosine etc. Hardware algorithms to compute elementary functions generally use one of the following techniques: digitrecurrence [1], CORDIC (COordinate Rotation Digital Computer) [2] or piecewise polynomials [3]. In this paper we focus on piecewise quadratic or linear implementations. The degree and number of polynomials used to approximate a function depends on the required precision and target error bound. For binary32 interpolation, quadratic is usually sufficient.\nWe study the following question. Given a fixed-point function to approximate to within some error bound, what is the complete design space of all feasible piecewise quadratic/linear approximations, constrained only by the underlying architecture, described in Figure 1. Knowledge of the complete design space allows us to tailor the design space exploration for different hardware targets, without needing to re-generate the design space. Interpreting mathematical bounds as polynomial design space constraints is not a novel concept [4] but is extended and generalised in this work.\nAutomatic tools for generating efficient piecewise polynomial hardware already exist [5]\u2013[7], one example being FloPoCo [8], [9] which uses Sollya [10] to generate its polynomial approximations. Sollya uses a modified Remez algorithm [11], which computes minmax polynomial approximations subject to the constraints of finite precision coefficients. Such an approach explores a constrained design space, allowing it to quickly generate high precision approximations.\nWe present the mathematics to generate the complete design space of piecewise polynomial approximations to a given function. An example decision procedure is presented along with the resulting hardware."
+        },
+        {
+            "heading": "II. DESIGN SPACE GENERATION",
+            "text": "The target function, f , and accuracy are specified via input and output precisions along with upper and lower bounds across all inputs. Using upper and lower bounds provides maximal flexibility and can even accommodate asymmetric error bounds on a function. Determining the space of feasible quadratic interpolations is reduced to a series of inequalities.\nWe use fixed-point notation n.m to denote a format with n integral bits and m fractional bits. Given f : n.m \u2192 p.q and integer upper and lower bound functions u, l : n+m \u2192 p+q. For a fixed number of lookup bits, R, define the following.\nZ = zn\u22121...z0.z\u22121...z\u2212m (input fixed-point value)\nr = zn\u22121...zn\u2212R (unsigned integer)\nx = zn\u2212R\u22121...z\u2212m (unsigned integer)\nLet lR(r, x) = l({r, x}) and uR(r, x) = u({r, x}), where {, } denotes concatenation. Under these definitions the bounds satisfy 2\u2212qlR(r, x) \u2264 f(Z) \u2264 2\n\u2212quR(r, x). Fixing an R also fixes an interval for x \u2208 I = [0, 2n+m\u2212R \u2212 1], so for a given value of r < 2R, a feasible quadratic is defined by the quad (a, b, c, k), where k is the difference between the polynomial evaluation precision and output precision, which satisfies:\n\u2200x \u2208 I, lR(r, x) \u2264\n\u230a\nax2 + bx+ c\n2k\n\u230b\n\u2264 uR(r, x)\nor equivalently (the x \u2208 I being implied in the remainder)\n\u2200x lR(r, x) \u2264 ax2 + bx+ c\n2k < uR(r, x) + 1.\nRearranging gives necessary and sufficient existence conditions for c.\n2klR(r, x)\u2212ax 2\u2212bx \u2264 c < 2k(uR(r, x)+1)\u2212ax 2\u2212bx (1)\nIf a feasible c exists then \u2200x, y:\n2klR(r, x)\u2212 ax 2 \u2212 bx < 2k(uR(r, y) + 1)\u2212 ay 2 \u2212 by. (2)\nIntroducing,\nd(r, x, y) = uR(r, y) + 1\u2212 lR(r, x)\ny \u2212 x ,\nreminiscent of a numerical derivative, we can bound b, under some assumptions. Eqn. 2 is trivially true for x = y.\nx < y \u21d2 b < 2kd(r, x, y)\u2212 a(x+ y) (3)\nx > y \u21d2 b > 2kd(r, x, y)\u2212 a(x+ y) (4)\nIf a feasible b exists then \u2200x < y and w < z:\n2kd(r, y, x)\u2212 a(x+ y) < 2kd(r, w, z)\u2212 a(z + w). (5)\nEqns. 2 & 5 are necessary and sufficient conditions on existence since k can be increased until the intervals contain an integer. Finally we bound a, using expressions that are closely related to numerical second derivatives.\nx+ y = w + z : d(r, y, x) < d(r, w, z) (6)\nx+ y < w + z : a\n2k <\nd(r, w, z)\u2212 d(r, y, x)\nw + z \u2212 x\u2212 y (7)\nx+ y > w + z : a\n2k >\nd(r, y, x)\u2212 d(r, w, z)\nx+ y \u2212 w \u2212 z (8)\nIntroducing further definitions,\nM(r, t) = max x<y\nx+y=t\nd(r, y, x), m(r, t) = min w<z\nw+z=t\nd(r, w, z).\nThe necessary and sufficient conditions for the existence of a feasible polynomial over a given region specified by r are:\n\u2200tM(r, t) < m(r, t) and (9)\nmax t<s\nM(r, s)\u2212m(r, t)\ns\u2212 t < min t<s\nm(r, s)\u2212M(r, t)\ns\u2212 t . (10)\nThese bounds are intuitive because we bound the b coefficient by something resembling a first derivative and a by a second derivative term.\nTo generate the design space for a value of R, we test whether Eqns. 9 & 10 hold for all r \u2208 [0, 2R\u22121]. Satisfiability implies existence of at least one feasible quadratic in each region, and we proceed to establish a dictionary of coefficients. Eqns. 7 & 8 determine an interval [a0, a1] of valid a values for k = 0. Then \u2200a \u2208 [a0, a1], we solve Eqns. 3 & 4 to generate the interval [b0, b1] of valid b values, increasing k if necessary to ensure we obtain at least one valid b in each region. Lastly, for each valid (a, b) pair we solve Eqn. 1,\nyielding an interval of valid c values. Across all regions k is constant. The result of this process is a nested dictionary of valid polynomial coefficients for fixed k and R values.\nThis dictionary represents the complete design space of feasible quadratic polynomials that satisfy the given upper and lower bound functions across the complete input space. If \u2200r \u2208 [0, 2R \u2212 1], 0 \u2208 [a0, a1] then a piecewise linear approximation will suffice, resulting in smaller and faster hardware."
+        },
+        {
+            "heading": "A. Performance",
+            "text": "Design space generation involves many 2-D searches across a potentially large search space, evaluating expressions of the form maxx<y D(x, y), where D(x, y) = g(y)\u2212h(x)\ny\u2212x , for some\ng and h, or the minimum of such expressions. To improve scalability we optimise these searches. A naive implementation would iterate across the complete 2-D space. In practice, we skip iterations of this search due to claim II.1.\nClaim II.1. Let (x\u2032, y\u2032) be the arguments which maximise D(x, y) across all x < x\u2032. Then for x > x\u2032,\nD(x\u2032, y\u2032) \u2264 h(x)\u2212 h(x\u2032)\nx\u2212 x\u2032 \u21d2 \u2204y s.t. D(x, y) > D(x\u2032, y\u2032).\nProof. Suppose \u2203x > x\u2032 and y > x s.t. D(x, y) > D(x\u2032, y\u2032), it follows that D(x, y) > D(x\u2032, y), since D(x\u2032, y\u2032) maximal. Expanding the definition of D and re-arranging,\n(x\u2212 x\u2032)g(y) + x\u2032h(x) > y(h(x)\u2212 h(x\u2032)) + xh(x\u2032).\nSubtracting x\u2032h(x\u2032) from both sides and re-arranging,\nD(x\u2032, y) > h(x)\u2212 h(x\u2032)\nx\u2212 x\u2032 .\nSince D(x\u2032, y\u2032) \u2265 D(x\u2032, y), we have exactly the converse of the condition in our claim.\nUsing this optimization the runtime of the design space generation is five times faster for a 16 bit reciprocal approximation running single threaded on an Intel Xeon E3-1270 CPU.\nThere is a computational tradeoff between the number of regions the input interval is sub-divided into (R), versus the input range that each polynomial must span, corresponding to the number of inputs to check for each polynomial. Empirical results for a 16 bit design suggest the runtime is O(R\u22123). The design space generation algorithm scales exponentially in the number of bits of precision so these speedup techniques can improve runtimes in practical cases but do not substantially expand the space of computationally feasible designs."
+        },
+        {
+            "heading": "III. DESIGN SPACE EXPLORATION",
+            "text": "Having generated the design space, we must now derive efficient methods to explore this space. The exploration procedure can be tailored to the target hardware technology, one of the major advantages of generating the complete design space. In the procedures presented here we will have a target number of lookup bits to be used, as the optimal lookup table (LUT) size is non-obvious as we shall see in \u00a7IV.\nThere are two distinct paths through the hardware design presented in Figure 1, one through the square operation and one through the LUT, since these two execute in parallel. In this work we will assume that the square path is critical and target optimized ASIC designs. Optimisations performed on one part of the design restrict the available optimisations in other parts of the design, so decision procedure tuning is important. The decision procedure used in this work is the following.\n1) Minimize k - minimize polynomial evaluation precision 2) Maximize square input truncation 3) Maximize linear input truncation 4) Minimize a, then b, then c bitwidths\nThe procedure begins by minimizing k, which is found via Eqns. 2 & 5. We then maximise the square truncation, asking what is the maximum integer i, such that a valid a(x[m \u2212 1 : i])2 + bx + c exists in all regions, where m is the bitwidth of x. Intuitively, we often think of higher order terms as correction terms, so we can tolerate some error in them, to gain performance. Such truncation is found in other approaches [6]. Only a subset of the polynomials (a, b, c) for each region can tolerate the error induced by the maximal square truncation, so we discard those that cannot. We then similarly calculate maximal j, such that a(x[m\u2212 1 : i])2 + bx[m \u2212 1 : j] + c is still valid, introducing further error and hence further candidates are discarded. Lastly, we minimise the precision required to represent the coefficients, a then b and finally c. For each coefficient, we have a set of valid integer values per region, which we separate into positive and negative sets (and take absolute values), then run Algorithm 1 on each set and take the minimum of the two returned precisions. With the precision of the coefficient defined we then prune the dictionary, removing any candidates that require a higher precision. From the remaining feasible polynomials we pick the first polynomial for each region.\nAlgorithm 1 Precision Minimization Algorithm\nRequire: S = {Sr \u2286 N | r = 0...2R \u2212 1} // Number of trailing zeros for each element\nfor r = 0...2R \u2212 1, s \u2208 Sr do Tr,s = maxi ((s >> i) << i == s) \u22b2 trailing zeros end for T = minr<2R maxs\u2208Sr Tr,s \u22b2 max valid truncation // Calculate the optimal number of zeros to truncate for t = 0...T , r = 0...2R \u2212 1 do St,r = {s | s \u2208 Sr and Tr,s \u2265 t} \u22b2 prune each set Pt,r = mins\u2208St,r(\u2308log2(s+ 1)\u2309 \u2212 t) \u22b2 num bits for s end for P = mint\u2264T maxr<2R Pt,r \u22b2 min precision\nAlternative decision procedures were explored, such as prioritizing LUT optimsization, but this yielded inferior areadelay profiles for the generated hardware. Further optimizations such as sum of product truncation were also explored but again yielded worse hardware."
+        },
+        {
+            "heading": "IV. RESULTS",
+            "text": "We implemented a piecewise polynomial generating tool using PyPy 3.7. Upper and lower bounding functions are produced using Python\u2019s math library or standard integer computations. We automatically generated Register Transfer Level (RTL) implementations of three complex functions: reciprocal, base two logarithm and base two exponential, at relevant precisions and all possible LUT height targets with an accuracy of one unit in the last place (ULP), which matches the default accuracy of FloPoCo [8] and DesignWare [12]. Hardware was generated on an Intel Xeon E3-1270 CPU and synthesised using Synopsys Design Compiler for a TSMC 7nm cell library.\nFor the reciprocal function, behavioural RTL producing both Round to Zero and Round to +\u221e can be written using only integer operations. The generated reciprocal is verified against this behavioural using Synopsys HECTOR technology, a formal equivalence checking tool. For logarithm and exponential, we verified that the hardware generated a result between our Python generated bounds using HECTOR.\nTable I presents logic synthesis results for a number of fixed-point designs and compares them against the industrial state of the art, Synopsys DesignWare [12]. On average the proposed implementations improve the area-delay product by 7%. In floating point implementations of functions such as reciprocal and logarithm, the piecewise polynomial approximation is the resource intensive computation since exponent handling is comparatively cheap. These designs could easily be combined with parameterised exponent handling code to generate complete floating point architectures.\nFigure 2 presents complete area-delay profiles for the competing 23 bit implementations of the reciprocal function. We note that the proposed hardware is competitive across the delay spectrum offering area improvements at several delay targets. This is respectable since Designware is not static as the architecture selected by logic synthesis varies with delay.\nTABLE I LOGIC SYNTHESIS RESULTS FOR MINIMUM OBTAINABLE DELAY TARGET COMPARING AGAINST EQUIVALENT DESIGNWARE COMPONENTS. WE SELECT THE NUMBER OF LOOKUP BITS (LUB) FOR THE PROPOSED RTL BASED ON THE BEST AREA-DELAY PRODUCT.\nFunction x \u2192 y Proposed DesignWare\nNum Bits Runtime LUB Delay (ns) Area (\u00b5m2) Area \u00d7 Delay Delay (ns) Area (\u00b5m2) Area \u00d7 Delay\n0.1y = 1 1.x\n10 \u2192 10 0.5 sec 6 (lin) 0.125 43 5.4 0.143 79 11.3 16 \u2192 16 8.6 sec 8 (lin) 0.197 290 57.2 0.189 204 38.6 23 \u2192 23 39 hrs 7 (quad) 0.278 689 191.5 0.275 641 176\n0.y = log2(1.x) 10 \u2192 11 0.4 sec 6 (lin) 0.112 55 6.2 0.134 80 10.8 16 \u2192 17 22 sec 8 (lin) 0.194 301 58.4 0.226 340 75.7 23 \u2192 24 78 hrs 7 (quad) 0.274 703 193 0.281 582 164 1.y = 20.x 10 \u2192 10 0.4 sec 5 (lin) 0.115 48 5.5 0.117 52 6.2 16 \u2192 16 24 sec 7 (lin) 0.190 201 38.1 0.169 182 30.7\nThe exponential runtime scaling discussed in \u00a7II is apparent in these results with the 23 bit reciprocal approaching the computational limit. In practice, this is not concerning as piecewise polynomial methods are rarely used for high precision approximations.\nOne advantage is the ability to easily explore different LUT height architectures. Figure 3 highlights the challenge of optimising LUT height according to different metrics.\nTo compare against the Remez algorithm, we generated equivalent implementations using FloPoCo [8], with the results presented in Table II. FloPoCo generates narrower tables for the larger bitwidth at the expense of wider a values than produced here, resulting in larger a\u00d7x2 multiplication arrays. FloPoCo runs in seconds for all testcases. FloPoCo targets FPGAs, so it is not a relevant logic synthesis comparison point."
+        },
+        {
+            "heading": "V. CONCLUSION",
+            "text": "This paper demonstrates a method to generate the complete design space of piecewise polynomial approximations to a complex function for arbitrary accuracy specifications using the given architecture. We generated RTL approximations to the reciprocal, base two logarithm and base two exponential functions and showed that they were competitive with state of the art implementations. Knowledge of the complete design space facilitates easy re-targeting. Generating the complete design space is computationally expensive and therefore only suitable up to binary32 implementations.\nFuture work will investigate a decision procedure to choose the optimal number of lookup bits. Integration with MPFR would provide arbitrary precision and trusted bounds. Scalability concerns could be addressed by introducing parallelism."
+        }
+    ],
+    "title": "Automatic Generation of Complete Polynomial Interpolation Hardware Design Space",
+    "year": 2022
+}

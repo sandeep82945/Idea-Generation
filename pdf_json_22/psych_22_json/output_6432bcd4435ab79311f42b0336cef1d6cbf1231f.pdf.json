@@ -1,0 +1,843 @@
+{
+    "abstractText": "Advances in artificial intelligence (AI) are enabling systems that augment and collaborate with humans to perform simple, mechanistic tasks like scheduling meetings and grammar-checking text. However, such Human-AI collaboration poses challenges for more complex, creative tasks, such as carrying out empathic conversations, due to difficulties of AI systems in understanding complex human emotions and the open-ended nature of these tasks. Here, we focus on peer-to-peer mental health support, a setting in which empathy is critical for success, and examine how AI can collaborate with humans to facilitate peer empathy during textual, online supportive conversations. We develop HAILEY, an AI-in-the-loop agent that provides just-in-time feedback to help participants who provide support (peer supporters) respond more empathically to those seeking help (support seekers). We evaluate HAILEY in a non-clinical randomized controlled trial with real-world peer supporters on TalkLife (N=300), a large online peer-topeer support platform. We show that our Human-AI collaboration approach leads to a 19.60% increase in conversational empathy between peers overall. Furthermore, we find a larger 38.88% increase in empathy within the subsample of peer supporters who self-identify as experiencing difficulty providing support. We systematically analyze the Human-AI collaboration patterns and find that peer supporters are able to use the AI feedback both directly and indirectly without becoming overly reliant on AI while reporting improved self-efficacy post-feedback. Our findings demonstrate the potential of feedback-driven, AI-in-the-loop writing systems to empower humans in open-ended, social, creative tasks such as empathic conversations. Introduction As artificial intelligence (AI) technologies continue to advance, AI systems have started to augment and collaborate with humans in application domains ranging from e-commerce to healthcare1\u20139. In many and especially in high-risk settings, such Human-AI collaboration has proven more robust and effective than totally replacing humans with AI10, 11. However, the collaboration faces dual challenges of developing human-centered AI models to assist humans and designing human-facing interfaces for humans to interact with the AI12\u201317. For AI-assisted writing, for instance, we must build AI models that generate actionable writing suggestions and simultaneously design human-facing systems that help people see, understand and act on those suggestions just-in-time17\u201323. Therefore, current Human-AI collaboration systems have been restricted to simple, mechanistic tasks, like scheduling meetings, checking spelling and grammar, and 1 ar X iv :2 20 3. 15 14 4v 1 [ cs .C L ] 2 8 M ar 2 02 2 booking flights and restaurants. Though initial systems have been proposed for tasks like story writing18 and graphic designing24, it remains challenging to develop Human-AI collaboration for a wide range of complex, creative, open-ended, and high-risk tasks. In this paper, we focus on text-based, peer-to-peer mental health support and investigate how AI systems can collaborate with humans to help facilitate the expression of empathy in textual supportive conversations \u2013 in this case by intervening on people in the conversations who provide support (peer supporters) as against those who seek support (support seekers). Empathy is the ability to understand and relate to the emotions and experiences of others and to effectively communicate that understanding25. Empathic support is one of the critical factors (along with ability to listen, concrete problem solving, motivational interviewing, etc.) that contributes to successful conversations in mental health support, showing strong correlations with symptom improvement26 and the formation of alliance and rapport25, 27\u201329. While online peer-to-peer platforms like TalkLife (talklife.com) and Reddit (reddit.com) enable such supportive conversations in non-clinical contexts, highly empathic conversations are rare on these platforms29; peer supporters are typically untrained in expressing complex, creative, and open-ended skills like empathy30\u201333 and may lack the required expertise. With an estimated 400 million people suffering from mental health disorders worldwide34, combined with a pervasive labor shortage35, 36, these platforms have pioneered avenues for seeking social support and discussing mental health issues for millions of people37. However, the challenge lies in improving conversational quality by encouraging untrained peer supporters to adopt complicated and nuanced skills like empathy. As shown in prior work38, 39, untrained peer supporters report difficulties in writing supportive, empathic responses to support seekers. Without deliberate training or specific feedback, the difficulty persists over time29, 40, 41 and may even lead to a gradual decrease in supporters\u2019 effectiveness due to factors such as empathy fatigue42\u201344. Furthermore, current efforts to improve empathy (e.g., in-person empathy training) do not scale to the millions of peer supporters providing support online. Thus, empowering peer supporters with automated, actionable, just-in-time feedback and training, such as through Human-AI collaboration systems, can help them express higher levels of empathy and, as a result, improve the overall effectiveness of these platforms29, 45\u201347. To this end, we develop and evaluate a Human-AI collaboration approach for helping untrained peer supporters write more empathic responses in online, text-based peer-to-peer support. We propose HAILEY (Human-AI coLlaboration approach for EmpathY), an AI-in-the-loop agent that offers justin-time suggestions to express empathy more effectively in conversations (Figure 1b, 1c). We design HAILEY to be collaborative, actionable and mobile friendly (Methods). Unlike the AI-only task of empathic dialogue generation (generating empathic responses from scratch)48\u201350, we adopt a collaborative design that edits existing human responses to make them more empathic47. This design reflects the high-risk setting of mental health, where AI is likely best used to augment, rather than replace, human skills46, 51. Furthermore, while current AI-in-the-loop systems are often restricted in the extent to which they can guide humans (e.g., simple classification methods that tell users to be empathic when they are not)52\u201355, we ensure actionability by guiding peer supporters with concrete steps they may take to respond with more empathy, e.g., through the insertion of new empathic sentences or replacement of existing low-empathy sentences with their more empathic counterparts (Figure 1c). For complex, hard-to-learn skills like empathy, this enables just-in-time suggestions on not just \u201cwhat\u201d to improve but on \u201chow\u201d to improve it. We consider the general setting of text-based, asynchronous conversations between a support seeker and a peer supporter (Figure 1). In these conversations, the support seeker authors a post for seeking mental health support (e.g., \u201cMy job is becoming more and more stressful with each passing day.\u201d) to which the peer supporter writes a supportive response (e.g., \u201cDon\u2019t worry! I\u2019m there for you.\u201d). In this",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Ashish Sharma"
+        },
+        {
+            "affiliations": [],
+            "name": "Inna W. Lin"
+        },
+        {
+            "affiliations": [],
+            "name": "Adam S. Miner"
+        },
+        {
+            "affiliations": [],
+            "name": "David C. Atkins"
+        },
+        {
+            "affiliations": [],
+            "name": "Tim Althoff"
+        }
+    ],
+    "id": "SP:4ff878b816c7b1cc0c61212f6e0c8a43ccc32a86",
+    "references": [
+        {
+            "authors": [
+                "A. Hosny",
+                "H.J. Aerts"
+            ],
+            "title": "Artificial intelligence for global health",
+            "venue": "Science 366,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Patel",
+                "B. N"
+            ],
+            "title": "Human-machine partnership with artificial intelligence for chest radiograph diagnosis",
+            "venue": "NPJ Digit. Med 2,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "P Tschandl"
+            ],
+            "title": "Human-computer collaboration for skin cancer",
+            "venue": "recognition. Nat. Med",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "C.J. Cai",
+                "S. Winter",
+                "D. Steiner",
+                "L. Wilcox",
+                "Terry",
+                "M. \u201chello AI\u201d"
+            ],
+            "title": "Uncovering the onboarding needs of medical practitioners for Human-AI collaborative Decision-Making",
+            "venue": "Proc. ACM Hum.-Comput. Interact. 3",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Suh",
+                "M. m.",
+                "E. Youngblom",
+                "M. Terry",
+                "Cai",
+                "C.J. AI as social glue"
+            ],
+            "title": "Uncovering the roles of deep generative AI during social music composition",
+            "venue": "In CHI",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Wen",
+                "T.-H"
+            ],
+            "title": "A network-based End-to-End trainable task-oriented dialogue system",
+            "venue": "EACL",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M Baek"
+            ],
+            "title": "Accurate prediction of protein structures and interactions using a three-track neural network",
+            "venue": "Science 373,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J Jumper"
+            ],
+            "title": "Highly accurate protein structure prediction with alphafold",
+            "venue": "Nature 596,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A. Verghese",
+                "N.H. Shah",
+                "Harrington",
+                "R.A. What this computer needs is a physician"
+            ],
+            "title": "Humanism and artificial intelligence",
+            "venue": "JAMA 319, 19\u201320",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "G Bansal"
+            ],
+            "title": "Does the whole exceed its parts? The effect of AI explanations on complementary team performance",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Q. Yang",
+                "A. Steinfeld",
+                "C. Ros\u00e9",
+                "J. Zimmerman"
+            ],
+            "title": "Re-examining whether, why, and how Human-AI interaction is uniquely difficult to design",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "R.C. Li",
+                "S.M. Asch",
+                "N.H. Shah"
+            ],
+            "title": "Developing a delivery science for artificial intelligence in healthcare",
+            "venue": "NPJ Digit. Med 3,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "M Gillies"
+            ],
+            "title": "Human-Centred Machine Learning",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "S Amershi"
+            ],
+            "title": "Guidelines for Human-AI interaction",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "D.A. Norman"
+            ],
+            "title": "How might people interact with agents",
+            "venue": "Commun. ACM 37,",
+            "year": 1994
+        },
+        {
+            "authors": [
+                "T. Hirsch",
+                "K. Merced",
+                "S. Narayanan",
+                "Z.E. Imel",
+                "Atkins",
+                "D.C. Designing contestability"
+            ],
+            "title": "Interaction design, machine learning, and mental health",
+            "venue": "DIS (Des Interact Syst Conf) 2017, 95\u201399",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "E. Clark",
+                "A.S. Ross",
+                "C. Tan",
+                "Y. Ji",
+                "Smith",
+                "N.A. Creative writing with a machine in the loop"
+            ],
+            "title": "Case studies on slogans and stories",
+            "venue": "In IUI",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Roemmele",
+                "A.S. Gordon"
+            ],
+            "title": "Automated assistance for creative writing with an RNN language model",
+            "venue": "In IUI Companion",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Lee",
+                "P. Liang",
+                "Yang",
+                "Q. Coauthor"
+            ],
+            "title": "Designing a human-ai collaborative writing dataset for exploring language model capabilities",
+            "venue": "In CHI",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "D. Buschek",
+                "M. Z\u00fcrn",
+                "M. Eiband"
+            ],
+            "title": "The impact of multiple parallel phrase suggestions on email input and composition behaviour of native and non-native english writers",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "K.I. Gero",
+                "V. Liu",
+                "Chilton",
+                "L.B. Sparks"
+            ],
+            "title": "Inspiration for science writing using language models",
+            "venue": "arXiv preprint arXiv:2110.07640",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "L.B. Chilton",
+                "S. Petridis",
+                "Agrawala",
+                "M. VisiBlends"
+            ],
+            "title": "A flexible workflow for visual blends",
+            "venue": "In CHI",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "R. Elliott",
+                "A.C. Bohart",
+                "J.C. Watson",
+                "Murphy",
+                "D. Therapist empathy",
+                "client outcome"
+            ],
+            "title": "An updated meta-analysis",
+            "venue": "Psychotherapy 55, 399\u2013410",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "A.C. Bohart",
+                "R. Elliott",
+                "L.S. Greenberg",
+                "Watson",
+                "J.C. Empathy. In Norcross",
+                "J.C. (ed.) Psychotherapy relationships that work"
+            ],
+            "title": "Therapist contributions and responsiveness to patients , (pp, vol",
+            "venue": "452, 89\u2013108",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "J.C. Watson",
+                "R.N. Goldman",
+                "M.S. Warner"
+            ],
+            "title": "Client-centered and Experiential Psychotherapy in the 21st Century: Advances in Theory, Research, and Practice",
+            "venue": "(PCCS Books,",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "A. Sharma",
+                "A.S. Miner",
+                "D.C. Atkins",
+                "T. Althoff"
+            ],
+            "title": "A computational approach to understanding empathy expressed in text-based mental health support",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Davis",
+                "M.H. A"
+            ],
+            "title": "A multidimensional approach to individual differences in empathy",
+            "venue": "J. Pers. Soc. Psychol",
+            "year": 1980
+        },
+        {
+            "authors": [
+                "C. Blease",
+                "C. Locher",
+                "M. Leon-Carlyle",
+                "Doraiswamy",
+                "M. Artificial intelligence",
+                "the future of psychiatry"
+            ],
+            "title": "Qualitative findings from a global physician survey",
+            "venue": "Digit. Heal. 6, 2055207620968355",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P.M. Doraiswamy",
+                "C. Blease",
+                "Bodner",
+                "K. Artificial intelligence",
+                "the future of psychiatry"
+            ],
+            "title": "Insights from a global physician survey",
+            "venue": "Artif. Intell. Med. 102, 101753",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "H. Riess"
+            ],
+            "title": "The science of empathy",
+            "venue": "J Patient Exp",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "A.E. Kazdin",
+                "S.L. Blase"
+            ],
+            "title": "Rebooting psychotherapy research and practice to reduce the burden of mental illness",
+            "venue": "Perspect. Psychol. Sci",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "M. Olfson"
+            ],
+            "title": "Building the mental health workforce capacity needed to treat adults with serious mental illnesses",
+            "venue": "Heal. Aff",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "J.A. Naslund",
+                "K.A. Aschbrenner",
+                "L.A. Marsch",
+                "Bartels",
+                "S.J. The future of mental health care"
+            ],
+            "title": "peer-to-peer support and social media",
+            "venue": "Epidemiol. Psychiatr. Sci. 25, 113\u2013122",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "V. Kemp",
+                "Henderson",
+                "A.R. Challenges faced by mental health peer support workers"
+            ],
+            "title": "peer support from the peer supporter\u2019s point of view",
+            "venue": "Psychiatr. rehabilitation journal 35, 337",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "C.I. Mahlke",
+                "U.M. Kr\u00e4mer",
+                "T. Becker",
+                "T. Bock"
+            ],
+            "title": "Peer support in mental health services",
+            "venue": "Curr. opinion psychiatry 27,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "C.S. Schwalbe",
+                "H.Y. Oh",
+                "Zweben",
+                "A. Sustaining motivational interviewing"
+            ],
+            "title": "a meta-analysis of training studies",
+            "venue": "Addiction 109, 1287\u20131294",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Goldberg",
+                "S. B"
+            ],
+            "title": "Do psychotherapists improve with time and experience? a longitudinal analysis of outcomes in a clinical setting",
+            "venue": "J. Couns. Psychol. 63,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "P. Nunes",
+                "S. Williams",
+                "B. Sa",
+                "K. Stevenson"
+            ],
+            "title": "A study of empathy decline in students from five health disciplines during their first year of training",
+            "venue": "J. Int. Assoc. Med. Sci. Educ",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "Hojat",
+                "M. et al. The devil is in the third year"
+            ],
+            "title": "a longitudinal study of erosion of empathy in medical school",
+            "venue": "Acad. Med. 84, 1182\u20131191",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "Stebnicki",
+                "M.A. Empathy fatigue"
+            ],
+            "title": "Healing the mind, body, and spirit of professional counselors",
+            "venue": "Am. J. Psychiatr. Rehabil. 10, 317\u2013338",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "Z.E. Imel",
+                "M. Steyvers",
+                "Atkins",
+                "D.C. Computational psychotherapy research"
+            ],
+            "title": "scaling up the evaluation of patient-provider interactions",
+            "venue": "Psychotherapy 52, 19\u201330",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Miner",
+                "A. S"
+            ],
+            "title": "Key considerations for incorporating conversational AI in psychotherapy",
+            "venue": "Front. Psychiatry 10,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Sharma",
+                "I.W. Lin",
+                "A.S. Miner",
+                "D.C. Atkins",
+                "Althoff",
+                "T. Towards facilitating empathic conversations in online mental health support"
+            ],
+            "title": "A reinforcement learning approach",
+            "venue": "In WWW/TheWebConf",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Z. Lin",
+                "A. Madotto",
+                "J. Shin",
+                "P. Xu",
+                "Fung",
+                "P. MoEL"
+            ],
+            "title": "Mixture of empathetic listeners",
+            "venue": "In EMNLP",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Majumder",
+                "N. et al. Mime"
+            ],
+            "title": "Mimicking emotions for empathetic response generation",
+            "venue": "In EMNLP",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "H. Rashkin",
+                "E.M. Smith",
+                "M. Li",
+                "Boureau",
+                "Y.-L. Towards empathetic open-domain conversation models"
+            ],
+            "title": "A new benchmark and dataset",
+            "venue": "In ACL",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J.H. Chen",
+                "S.M. Asch"
+            ],
+            "title": "Machine learning and prediction in medicine - beyond the peak of inflated expectations",
+            "venue": "N. Engl. J. Med",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M.J. Tanana",
+                "C.S. Soma",
+                "V. Srikumar",
+                "D.C. Atkins",
+                "Imel",
+                "Z.E. Development",
+                "evaluation of ClientBot"
+            ],
+            "title": "Patient-Like conversational agent to train basic counseling skills",
+            "venue": "J. Med. Internet Res. 21, e12529",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Z. Peng",
+                "Q. Guo",
+                "K.W. Tsang",
+                "X. Ma"
+            ],
+            "title": "Exploring the effects of technological writing assistance for support providers in online mental health community",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J.S. Hui",
+                "D. Gergle",
+                "Gerber",
+                "E.M. IntroAssist"
+            ],
+            "title": "A tool to support writing introductory help requests",
+            "venue": "In CHI",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "R. Kelly",
+                "D. Gooch",
+                "Watts",
+                "L. \u2019it\u2019s more like a letter\u2019"
+            ],
+            "title": "An exploration of mediated conversational effort in message builder",
+            "venue": "Proc. ACM Hum.-Comput. Interact. 2",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Barrett-Lennard",
+                "G.T. The empathy cycle"
+            ],
+            "title": "Refinement of a nuclear concept",
+            "venue": "J. Couns. Psychol. 28, 91\u2013100",
+            "year": 1981
+        },
+        {
+            "authors": [
+                "Collins",
+                "P. Y"
+            ],
+            "title": "Grand challenges in global mental health",
+            "venue": "Nature 475,",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "B.H. Kaplan",
+                "J.C. Cassel",
+                "S. Gore"
+            ],
+            "title": "Social support and health",
+            "venue": "Med. Care 15,",
+            "year": 1977
+        },
+        {
+            "authors": [
+                "S Rathod"
+            ],
+            "title": "Mental health service provision in low- and Middle-Income countries",
+            "venue": "Heal. Serv Insights 10,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Lee",
+                "E.E. et al. Artificial intelligence for mental health care"
+            ],
+            "title": "Clinical applications, barriers, facilitators, and artificial wisdom",
+            "venue": "Biol Psychiatry Cogn Neurosci Neuroimaging 6, 856\u2013864",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A.N. Vaidyam",
+                "D. Linggonegoro",
+                "Torous",
+                "J. Changes to the psychiatric chatbot landscape"
+            ],
+            "title": "A systematic review of conversational agents in serious mental illness: Changements du paysage psychiatrique des chatbots: une revue syst\u00e9matique des agents conversationnels dans la maladie mentale s\u00e9rieuse",
+            "venue": "Can. J. Psychiatry 66, 339\u2013348",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Richardson",
+                "J. P"
+            ],
+            "title": "Patient apprehensions about the use of artificial intelligence in healthcare",
+            "venue": "NPJ Digit. Med 4,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S. Collings",
+                "Niederkrotenthaler",
+                "T. Suicide prevention",
+                "emergent media"
+            ],
+            "title": "surfing the opportunity",
+            "venue": "Crisis 33, 1\u20134",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "D.D. Luxton",
+                "J.D. June",
+                "Fairall",
+                "J.M. Social media",
+                "suicide"
+            ],
+            "title": "a public health perspective",
+            "venue": "Am. J. Public Heal. 102 Suppl 2, S195\u2013200",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "N. Martinez-Martin",
+                "Kreitmair",
+                "K. Ethical issues for Direct-to-Consumer digital psychotherapy apps"
+            ],
+            "title": "Addressing accountability, data protection, and consent",
+            "venue": "JMIR Ment Heal. 5, e32",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Tanana",
+                "K.A. Hallgren",
+                "Z.E. Imel",
+                "D.C. Atkins",
+                "V. Srikumar"
+            ],
+            "title": "A comparison of natural language processing methods for automated coding of motivational interviewing",
+            "venue": "J. Subst. Abus. Treat",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "M. De Choudhury",
+                "S.S. Sharma",
+                "T. Logar",
+                "W. Eekhout",
+                "R.C. Nielsen"
+            ],
+            "title": "Gender and cross-cultural differences in social media disclosures of mental illness",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Cauce",
+                "A.M. et al. Cultural",
+                "contextual influences in mental health help seeking"
+            ],
+            "title": "a focus on ethnic minority youth",
+            "venue": "J. consulting clinical psychology 70, 44",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "D. Satcher"
+            ],
+            "title": "Mental health: Culture, race, and ethnicity\u2014A supplement to mental health: A report of the surgeon general (US",
+            "venue": "Department of Health and Human Services,",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "M.J. Wolf",
+                "K. Miller",
+                "Grodzinsky",
+                "F.S. Why we should have seen that coming"
+            ],
+            "title": "comments on microsoft\u2019s tay \u201cexperiment,\u201d and wider implications",
+            "venue": "ACM SIGCAS Comput. Soc. 47, 54\u201364",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "T. Bolukbasi",
+                "Chang",
+                "K.-W",
+                "J.Y. Zou",
+                "V. Saligrama",
+                "A.T. Kalai"
+            ],
+            "title": "Man is to computer programmer as woman is to homemaker? debiasing word embeddings",
+            "venue": "Adv. neural information processing systems",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "R. Daws"
+            ],
+            "title": "Medical chatbot using OpenAI\u2019s GPT-3 told a fake patient to kill themselves",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A Radford"
+            ],
+            "title": "Language models are unsupervised multitask learners",
+            "venue": "https://d4mucfpksywv. cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "C. Zheng",
+                "Y. Liu",
+                "W. Chen",
+                "Y. Leng",
+                "Huang",
+                "M. Comae"
+            ],
+            "title": "A multi-factor hierarchical framework for empathetic response generation",
+            "venue": "In ACL Findings",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "T. Wambsganss",
+                "C. Niklaus",
+                "M. S\u00f6llner",
+                "S. Handschuh",
+                "J.M. Leimeister"
+            ],
+            "title": "Supporting cognitive and emotional empathic writing of students",
+            "venue": "ACL-IJCNLP",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "N Majumder"
+            ],
+            "title": "Exemplars-guided empathetic response generation controlled by the elements of human communication",
+            "venue": "arXiv preprint",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Devlin",
+                "Chang",
+                "M.-W.",
+                "K. Lee",
+                "Toutanova",
+                "K. Bert"
+            ],
+            "title": "Pre-training of deep bidirectional transformers for language understanding",
+            "venue": "In NAACL-HLT",
+            "year": 2019
+        }
+    ],
+    "sections": [
+        {
+            "heading": "Introduction",
+            "text": "As artificial intelligence (AI) technologies continue to advance, AI systems have started to augment and collaborate with humans in application domains ranging from e-commerce to healthcare1\u20139. In many and especially in high-risk settings, such Human-AI collaboration has proven more robust and effective than totally replacing humans with AI10, 11. However, the collaboration faces dual challenges of developing human-centered AI models to assist humans and designing human-facing interfaces for humans to interact with the AI12\u201317. For AI-assisted writing, for instance, we must build AI models that generate actionable writing suggestions and simultaneously design human-facing systems that help people see, understand and act on those suggestions just-in-time17\u201323. Therefore, current Human-AI collaboration systems have been restricted to simple, mechanistic tasks, like scheduling meetings, checking spelling and grammar, and\n1\nar X\niv :2\n20 3.\n15 14\n4v 1\n[ cs\n.C L\n] 2\n8 M\nbooking flights and restaurants. Though initial systems have been proposed for tasks like story writing18 and graphic designing24, it remains challenging to develop Human-AI collaboration for a wide range of complex, creative, open-ended, and high-risk tasks.\nIn this paper, we focus on text-based, peer-to-peer mental health support and investigate how AI systems can collaborate with humans to help facilitate the expression of empathy in textual supportive conversations \u2013 in this case by intervening on people in the conversations who provide support (peer supporters) as against those who seek support (support seekers). Empathy is the ability to understand and relate to the emotions and experiences of others and to effectively communicate that understanding25. Empathic support is one of the critical factors (along with ability to listen, concrete problem solving, motivational interviewing, etc.) that contributes to successful conversations in mental health support, showing strong correlations with symptom improvement26 and the formation of alliance and rapport25, 27\u201329. While online peer-to-peer platforms like TalkLife (talklife.com) and Reddit (reddit.com) enable such supportive conversations in non-clinical contexts, highly empathic conversations are rare on these platforms29; peer supporters are typically untrained in expressing complex, creative, and open-ended skills like empathy30\u201333 and may lack the required expertise. With an estimated 400 million people suffering from mental health disorders worldwide34, combined with a pervasive labor shortage35, 36, these platforms have pioneered avenues for seeking social support and discussing mental health issues for millions of people37. However, the challenge lies in improving conversational quality by encouraging untrained peer supporters to adopt complicated and nuanced skills like empathy.\nAs shown in prior work38, 39, untrained peer supporters report difficulties in writing supportive, empathic responses to support seekers. Without deliberate training or specific feedback, the difficulty persists over time29, 40, 41 and may even lead to a gradual decrease in supporters\u2019 effectiveness due to factors such as empathy fatigue42\u201344. Furthermore, current efforts to improve empathy (e.g., in-person empathy training) do not scale to the millions of peer supporters providing support online. Thus, empowering peer supporters with automated, actionable, just-in-time feedback and training, such as through Human-AI collaboration systems, can help them express higher levels of empathy and, as a result, improve the overall effectiveness of these platforms29, 45\u201347.\nTo this end, we develop and evaluate a Human-AI collaboration approach for helping untrained peer supporters write more empathic responses in online, text-based peer-to-peer support. We propose HAILEY (Human-AI coLlaboration approach for EmpathY), an AI-in-the-loop agent that offers justin-time suggestions to express empathy more effectively in conversations (Figure 1b, 1c). We design HAILEY to be collaborative, actionable and mobile friendly (Methods).\nUnlike the AI-only task of empathic dialogue generation (generating empathic responses from scratch)48\u201350, we adopt a collaborative design that edits existing human responses to make them more empathic47. This design reflects the high-risk setting of mental health, where AI is likely best used to augment, rather than replace, human skills46, 51. Furthermore, while current AI-in-the-loop systems are often restricted in the extent to which they can guide humans (e.g., simple classification methods that tell users to be empathic when they are not)52\u201355, we ensure actionability by guiding peer supporters with concrete steps they may take to respond with more empathy, e.g., through the insertion of new empathic sentences or replacement of existing low-empathy sentences with their more empathic counterparts (Figure 1c). For complex, hard-to-learn skills like empathy, this enables just-in-time suggestions on not just \u201cwhat\u201d to improve but on \u201chow\u201d to improve it.\nWe consider the general setting of text-based, asynchronous conversations between a support seeker and a peer supporter (Figure 1). In these conversations, the support seeker authors a post for seeking mental health support (e.g., \u201cMy job is becoming more and more stressful with each passing day.\u201d) to which the peer supporter writes a supportive response (e.g., \u201cDon\u2019t worry! I\u2019m there for you.\u201d). In this\n2/61\ncontext, we support the peer supporters by providing just-in-time AI feedback to improve the empathy of their responses. To do so, HAILEY prompts the peer supporter through a pop-up (\u201cWould you like some help with your response?\u201d) placed above the response text box. On clicking this prompt, HAILEY shows just-in-time AI feedback consisting of Insert (e.g., Insert \u201cHave you tried talking to your boss?\u201d at the end of the response) and Replace (e.g., Replace \u201cDon\u2019t worry!\u201d with \u201cIt must be a real struggle!\u201d) suggestions based on the original seeker post and the current peer supporter response. The peer supporter can incorporate these suggestions by directly clicking on the appropriate Insert or Replace buttons, by further editing them, and/or by deriving ideas from the suggestions to indirectly use in their response.\nTo evaluate HAILEY, we conducted a randomized controlled trial in a non-clinical, ecologically valid setting with peer supporters from a large peer-to-peer support platform, TalkLife (talklife.com) as participants (N=300; Supplementary Table S1). Our study was performed outside the TalkLife platform to ensure platform users\u2019 safety but adopted an interface similar to TalkLife\u2019s chat feature (Figure 1; Methods). We employed a between-subjects study design, where each participant was randomly assigned to one of two conditions: Human + AI (treatment; with feedback) or Human Only (control; without feedback). Before the main study procedure of writing supportive, empathic responses (Methods), participants in both groups received basic training on empathy, which included empathy definitions, frameworks, and examples (Supplementary Figure S1).\nWhile peer supporters on these platforms do not typically receive empathy training, we trained both Human + AI (treatment) and Human Only (control) groups just before the main study procedure of writing supportive, empathic responses; this let us conservatively estimate the effect of just-in-time feedback beyond traditional, offline feedback or training (Discussion). During the study, each participant was asked to write supportive, empathic responses to a unique set of 10 existing seeker posts (one at a time) that were sourced at random from a subset of TalkLife posts; we filtered out posts related to critical settings of suicidal ideation and self-harm to ensure participant safety (Methods; Discussion). While writing responses, participants in the Human + AI (treatment) group received feedback via HAILEY (Figure 1b, 1c). Participants in the Human Only (control) group, on the other hand, wrote responses but received no feedback, reflecting the current status quo on online peer-to-peer support platforms (Figure 1a). After completing responses to the 10 posts, participants were asked to assess HAILEY by answering questions about the challenges they experienced while writing responses and the effectiveness of our approach.\nOur primary hypothesis was that Human-AI collaboration would lead to more empathic responses, i.e., responses in the Human + AI (treatment) group would show higher empathy than the Human Only (control) group responses. We evaluated this hypothesis using both human and automatic evaluation, which helped us capture platform users\u2019 perceptions and provided a theory-based assessment of empathy in the collected responses respectively (Methods). Note that due to the sensitive mental health context and for reasons of safety, our evaluation of empathy was only based on empathy that was expressed in responses and not the empathy that might have been perceived by the support seeker of the original seeker post56. Psychotherapy research indicates a strong correlation between expressed empathy and positive therapeutic outcomes and commonly uses it as a credible alternative25 (Methods; Discussion).\nFurthermore, we conducted multiple post hoc evaluations to assess whether the participants who self-reported challenges in writing supportive responses could benefit more from our system, to investigate the differences in how participants collaborated with the AI, and to assess the participants\u2019 perceptions of our approach.\n4/61"
+        },
+        {
+            "heading": "Results",
+            "text": "Increase in expressed empathy due to the Human-AI collaboration Our primary finding is that providing just-in-time AI feedback to participants leads to more empathic responses (Figure 2). Specifically, through human evaluation from an independent set of TalkLife users (Methods), we found that the Human + AI responses were rated as being more empathic than the Human Only responses 46.87% of the time and were rated equivalent in empathy to Human Only responses 15.73% of the time, whereas the Human Only responses were preferred only 37.40% of the time (p < 0.01; Two-sided Student\u2019s t-test; Figure 2a). In addition, by automatically estimating empathy levels of responses using a previously validated empathy classification model on a scale from 0 to 6 (Methods), we found that the Human + AI approach led to 19.60% higher empathic responses compared to the Human Only approach (1.77 vs. 1.48; p < 10\u22125; Two-sided Student\u2019s t-test; Figure 2b).\nSignificantly higher gains for participants who reported challenges in writing responses and participants with little to no experience with peer support Prior work has shown that online peer supporters find it extremely challenging to write supportive and empathic responses29, 38, 39. Some participants have little to no prior experience with peer support (e.g., if they are new to the platform; N=95/300; Methods). Even as the participants gain more experience, in the absence of explicit training or feedback, the challenge of writing supportive responses persists over time and may even lead to a gradual decrease in empathy levels due to factors such as empathy fatigue40\u201344, as also observed during the course of our 30-minute study (Supplementary Figure S6). Therefore, it is particularly important to better assist the many participants who struggle with writing responses.\nFor the subsample of participants who self-reported challenges in writing responses at the end of our study (N=91/300; Methods), a post hoc analysis revealed significantly higher empathy gains using the Human-AI collaboration approach. For such participants, we found a 4.50% stronger preference for the Human + AI responses (49.12% vs. 44.62%; p < 0.01; Two-sided Student\u2019s t-test; Figure 2c) and a 27.01% higher increase in expressed empathy using the Human + AI approach (38.88% vs. 11.87%; p < 10\u22125; Two-sided Student\u2019s t-test; Figure 2d) compared to participants who did not report any challenges. For the subsample of participants who self-reported no previous experience with online peer support at the start of our study (N=95/300; 37 of these participants also self-reported challenges), we found a 8.14% stronger preference for the Human + AI responses (51.82% vs. 43.68%; p < 0.01; Two-sided Student\u2019s t-test;) and a 21.15% higher increase in expressed empathy using the Human + AI approach (33.68% vs. 12.53%; p < 10\u22125; Two-sided Student\u2019s t-test; Supplementary Figure S11d) compared to participants who reported experience with online peer support.\nHierarchical taxonomy of Human-AI collaboration strategies reveals key AI consultation and usage patterns The collaboration between humans and AI can take many forms since humans can apply AI feedback in a variety of ways depending on their trust in the shown feedback11. Investigating how humans collaborate with our AI can help us better understand the system\u2019s use-cases and inform better design decisions. Here, we analyzed collaboration patterns of participants both over the course of the study as well as during a single response instance. We leveraged this analysis to derive a hierarchical taxonomy of Human-AI collaboration patterns based on how often the AI was consulted during the study and how AI suggestions were used (Figure 3a; Methods).\nOur analysis revealed several categories of collaboration. For example, some participants chose to always rely on the AI feedback, whereas others only utilized it as a source of inspiration and rewrote it in their own style. Based on the number of posts in the study for which AI was consulted (out of the 10 posts\n5/61\nfor each participant), we found that participants consulted AI either always (15.52%), often (56.03%), once (6.03%), or never (22.41%). Very few participants always consulted and used the AI (2.59%), indicating that they did not rely excessively on AI feedback. A substantial number of participants also chose to never consult the AI (22.41%). Such participants, however, also expressed the least empathy in their responses (1.13 on average out of 6; Figure 3b), suggesting that consulting the AI could have been beneficial.\nFurthermore, based on how AI suggestions were used, we found that participants used the suggestions either directly (64.62%), indirectly (18.46%), or not at all (16.92%). As expected given our system\u2019s design, the most common way of usage was direct, which entailed clicking on the suggested actions to incorporate them in the response. In contrast, participants who indirectly used AI (Methods) drew ideas from the suggested feedback and rewrote it in their own words in the final response. Some participants, however, chose not to use suggestions at all (16.92%); a review of these instances by the researchers, as well as the subjective feedback from participants, suggested that reasons included the feedback not being helpful, the feedback not being personalized, or their response already being empathic and leaving little room for improvement. Finally, multiple types of feedback are possible for the same combination of seeker post and original response, and some participants (16.92%) used our reload functionality (Methods) to read through these multiple suggestions before they found something they preferred.\nIn general, participants who consulted and used AI more often expressed higher empathy as evaluated through our automatic expressed empathy score (Figure 3b). This trend of increased empathy with increased AI consultation or usage was similar but less pronounced in our human evaluation (Supplementary Figure S9)."
+        },
+        {
+            "heading": "Positive perceptions of participants",
+            "text": "At the end of our study, we collected study participants\u2019 perceptions about the usefulness and actionability of the feedback and their intention to adopt the system. We observed that 63.31% of participants found the feedback they received helpful, 60.43% found it actionable, and 77.70% of participants wanted this type of feedback system to be deployed on TalkLife or other similar peer-to-peer support platforms (Supplementary Figure S3), indicating the overall effectiveness of our approach. We also found that 69.78% of participants self-reported feeling more confident at providing support after our study; this indicates the potential value of our system for training and increased self-efficacy (Supplementary Figure S3)."
+        },
+        {
+            "heading": "Discussion",
+            "text": "Our work demonstrates how humans and AI might collaborate on open-ended, social, creative tasks such as conducting empathic conversations. Empathy is complex and nuanced30\u201333 and is thus more challenging for AI than many other Human-AI collaboration tasks, such as scheduling meetings, therapy appointments and checking grammar in text. We show how the joint effects of humans and AI can be leveraged to help peer supporters, especially those who have difficulty providing support, converse more empathically with those seeking mental health support.\nOur study has implications for addressing barriers to mental health care, where existing resources and interventions are insufficient to meet the current and emerging need. According to a WHO report, over 400 million people globally suffer from a mental health disorder, with approximately 300 million suffering from depression34. Overall, mental illness and related behavioral health problems contribute 13% to the global burden of disease, more than both cardiovascular diseases and cancer57. Although psychotherapy and social support58 can be effective treatments, many vulnerable individuals have limited access to therapy and counseling35, 36. For example, most countries have less than one psychiatrist per 100,000 individuals, indicating widespread shortages of workforce and inadequate in-person treatment\n7/61\noptions59. One way to scale up support is by connecting millions of peer supporters online on platforms like TalkLife (talklife.com), YourDost (yourdost.com) or Mental Health Subreddits (reddit.com)37 to those with mental health issues. However, a key challenge in doing so lies in enabling effective and high-quality conversations between untrained peer supporters and those in need at scale. We show that Human-AI collaboration can considerably increase empathy in peer supporter responses, a core component of effective and quality support that ensures improved feelings of understanding and acceptance25, 27\u201329. While fully replacing humans with AI for empathic care has previously drawn skepticism from psychotherapists31, 32, our results suggest that it is feasible to empower untrained peer supporters with appropriate AI-assisted technologies in relatively lower-risk settings, such as peer-to-peer support35, 45, 46, 60, 61.\nOur findings also point to potential secondary gain for peer supporters in terms of (1) increased selfefficacy, as indicated by 69.78% of participants feeling more confident in providing support after the study, and (2) gained experience and expertise by multiple example learning when using reload functionality to scroll through multiple types of responses for the same seeker post. This has implications for helping untrained peer supporters beyond providing them just-in-time feedback. One criticism of AI is that it may steal or dampen opportunities for training more clinicians and workforce31, 32. We show that Human-AI collaboration can actually enhance, rather than diminish, these training opportunities. This is also reflected in the subjective feedback from participants (Methods), with several participants reporting different types of learning after interacting with the AI (e.g., one participant wrote, \u201cI realized that sometimes I directly jump on to suggestions rather than being empathic first. I will have to work on it.\u201d, while another wrote, \u201cFeedback in general is helpful. It promotes improvement and growth.\u201d).\nFurther, we find that participants not only directly accept suggestions but also draw higher-level inspiration from the suggested feedback (e.g., a participant wrote \u201cSometimes it just gave me direction on what [should] be said and I was able to word it my way. Other times it helped add things that made it sound more empathic...\u201d), akin to having access to a therapist\u2019s internal brainstorming, which participants can use to rewrite responses in their own style.\nIn our study, many participants (N=91) reported challenges in writing responses (e.g., several participants reported not knowing what to say: \u201cI sometimes have a hard time knowing what to say.\u201d), which is characteristic of the average user on online peer-to-peer support platforms29, 38, 39. We demonstrate a significantly larger improvement in empathy for these users, suggesting that we can provide significant assistance in writing more empathic responses, thereby improving empathy awareness and expression of the typical platform user29, 47. Through qualitative analysis of such participants\u2019 subjective feedback on our study, we find that HAILEY can guide someone who is unsure about what to say (e.g., a participant wrote, \u201cFeedback gave me a point to start my own response when I didn\u2019t know how to start.\u201d) and can help them frame better responses (e.g., one participant wrote, \u201cSometimes I didn\u2019t really knew [sic] how to form the sentence but the feedback helped me out with how I should incorporate the words.\u201d, while another wrote, \u201cSometimes I do not sound how I want to and so this feedback has helped me on sounding more friendly...\u201d; Methods). One concern is that AI, if used in practice, may harm everyone in healthcare, from support seekers to care providers and peer supporters31, 32, 62. According to our findings, however, the individuals struggling to do a good job are the ones who benefit the most, which forms an important use case of AI in healthcare.\nThe reported differences in empathy between treatment and control groups conservatively estimates the impact of our AI-in-the-loop feedback system due to (1) additional initial empathy training to both Human + AI and Human Only groups (Supplementary Figure S1), and (2) a potential selection effect that may have attracted TalkLife users who care more about supporting others (Supplementary Figure S7). In practice, training of peer supporters is very rare, and the effect of training typically diminishes over\n9/61\ntime42, 43. We included this training to understand whether just-in-time AI feedback is helpful beyond traditional training methods. Moreover, the Human Only responses in our study had 34.52% higher expressed empathy than existing Human Only responses to the corresponding seeker posts on the TalkLife platform (1.11 vs. 1.48; p 10\u22125; Two-sided Student\u2019s t-test; Supplementary Figure S7), reflecting the effects of additional training as well as a potential selection effect. We show here that Human-AI collaboration improves empathy expression even for participants who already express empathy more often; practical gains for the average user of the TalkLife platform could be even higher than the intentionally conservative estimates presented here."
+        },
+        {
+            "heading": "Safety, Privacy, and Ethics",
+            "text": "Developing computational methods for intervention in high-risk settings such as mental health care involves ethical considerations related to safety, privacy, and bias13, 63\u201365. There is a risk that in attempting to help, AI may have the opposite effect on the potentially vulnerable support seeker or peer supporter62. The present study included several measures to reduce such risks and unintended consequences. First, our collaborative, AI-in-the-loop writing approach ensured that the primary conversation remains between two humans, with AI offering feedback only when it appears useful, and allowing the human supporter to accept or reject it. Providing such human agency is safer than relying solely on AI, especially in a high-risk mental health context46. Moreover, using only AI results in loss of authenticity in responses; hence, our Human-AI collaboration approach leads to responses with high empathy as well as high authenticity (Supplementary Figure S2).\nSecond, our approach intentionally assists only peer supporters, not support seekers in crisis, since they are likely to be at a lower risk and more receptive to the feedback. Third, we filtered posts related to suicidal ideation and self-harm by using pre-defined unsafe regular expressions (e.g., \u201c.*(commit suicide).*\u201d, \u201c.*(cut).*\u201d). Such posts did not enter our feedback pipeline, but instead we recommended escalating them to therapists. We applied the same filtering to every generated feedback, as well, to try and ensure that HAILEY did not suggest unsafe text as responses. Fourth, such automated filtering may not be perfect; therefore, we included a mechanism to flag inappropriate/unsafe posts and feedback by providing our participants with an explicit \u201cFlag Button\u201d (Supplementary Figure S32). In our study, 1.58% posts (out of 1390 in the treatment group) and 2.88% feedback instances (out of 1939 requests) were flagged as inappropriate or unsafe. While the majority of them were concerned with unclear seeker posts or irrelevant feedback, we found six cases (0.18%) that warranted further attention. One of these cases involved the post containing intentionally misspelled self-harm content (e.g., \u201cc u t\u201d with spaces between letters in order to circumvent safety filters); another related to feedback containing a self-harm related term; three addressed the post or feedback containing a swear word that may not directly be a safety concern (e.g., \u201cYou are so f**king adorable\u201d); and one contained toxic/offensive feedback (\u201cIt\u2019s a bad face\u201d).\nFuture iterations of our system could address these issues by leveraging more robust filtering methods and toxicity/hate speech classifiers (e.g., Perspective API (perspectiveapi.com)). Several platforms, including TalkLife, already have systems in place to prevent triggering content from being shown, which can be integrated into our system on deployment. Finally, we removed all personally identifiable information (user and platform identifiers) from the TalkLife dataset prior to training the AI model."
+        },
+        {
+            "heading": "Limitations",
+            "text": "While our study results reveal the promise of Human-AI collaboration in open-ended and even high-risk settings, the study is not without limitations. Some of our participants indicated that empathy may not always be the most helpful way to respond (e.g., when support seekers are looking for concrete actions). However, as demonstrated repeatedly in the clinical psychology literature25, 27\u201329, empathy is a critical,\n10/61\nfoundational approach to all evidence-based mental health support, plays an important role in building alliance and relationship between people, and is highly correlated with symptom improvement. It has consistently proven to be an important aspect of responding, but support seekers may sometimes benefit from additional responses involving different interventions (e.g., concrete problem solving, motivational interviewing66). Future work should investigate when such additional responses are helpful or necessary.\nSome participants may have been apprehensive about using our system, as indicated by the fact that many participants did not consult or use it (N=37). Qualitatively analyzing the subjective feedback from these participants suggested that this might be due to feedback communicating incorrect assumptions about the preferences, experience, and background of participants (e.g., assuming that a participant is dealing with the same issues as the support seeker: \u201cNot sure this can be avoided, but the feedback would consistently assume I\u2019ve been through the same thing.\u201d). Future work should personalize prompts and feedback to individual participants. This could include personalizing the content and the frequency of the prompt as well as personalizing the type of feedback that is shown from multiple possible feedback options.\nOur assessment includes validated yet automated and imperfect measures. Specifically, our evaluation of empathy is based only on empathy that was expressed in responses, not empathy that might have been perceived by the support seeker56. In sensitive contexts like ours, however, obtaining perceived empathy ratings from support seekers is challenging and involves ethical risks. We attempted to reduce the gap between expressed and perceived empathy in our human evaluation by recruiting participants from TalkLife who may be seeking support on the platform (Methods). Nevertheless, studying the effects of Human-AI collaboration on perceived empathy in conversations is a vital future research direction. However, note that psychotherapy research indicates a strong correlation between expressed empathy and positive therapeutic outcomes and commonly uses it as a credible alternative25.\nFurthermore, we acknowledge that a variety of social and cultural factors might affect the dynamics of the support and the expression of empathy67\u201369. As such, our Human-AI collaboration approach must be adapted and evaluated in various socio-cultural contexts, including underrepresented communities and minorities. While conducting randomized controlled trials on specific communities and investigating heterogeneous treatment effects across demographic groups is beyond the scope of our work, our study was deployed globally and included participants of various gender identities, ethnicities, ages, and countries (Methods; Supplementary Figure S10, S11). However, this is a critical area of research, and ensuring equitable access and support requires further investigation.\nOur study evaluated a single Human-AI collaboration interface design, and there could have been other potential interface designs, as well. Additionally, as a secondary exploration, we analyzed a classificationbased interface design, which provided participants with the option to request automatic expressed empathy scores29 for their responses (Supplementary Figure S5). We assigned this secondary classification-based AI treatment to 10% of the incoming participants at random (N=30). Due to conflicting human and automatic evaluation results, we observed that the effects of this secondary treatment on empathy of participants were ambiguous (Supplementary Figure S4a, S4b); however, the design was perceived as being less actionable than our primary rewriting-based interface (Supplementary Figure S4c). This poses questions on what types of design are optimal and how best to provide feedback.\nFinally, we recruited participants from a single platform (TalkLife) and only for providing empathic support in the English language. We further note that this study focuses on empathy expression in peer support and does not investigate long-term clinical outcomes.\n11/61"
+        },
+        {
+            "heading": "Conclusion",
+            "text": "We developed and evaluated HAILEY, a Human-AI collaboration system that led to a 19.60% increase in empathy in peer-to-peer conversations overall and a 38.88% increase in empathy for mental health supporters who experience difficulty in writing responses in a randomized controlled trial on a large peerto-peer mental health platform. Our findings demonstrate the potential of feedback-driven, AI-in-the-loop writing systems to empower online peer supporters to improve the quality of their responses without increasing the risk of harmful responses."
+        },
+        {
+            "heading": "Methods",
+            "text": ""
+        },
+        {
+            "heading": "Study Design",
+            "text": "We employed a between-subjects study design in which each participant was randomly assigned to one of Human + AI (treatment; N=139) or Human Only (control; N=161) conditions. Participants in both groups were asked to write supportive, empathic responses to a unique set of 10 existing seeker posts (one at a time), sourced at random from a subset of TalkLife posts. The Human + AI (treatment) group participants were given the option of receiving feedback through prompts as they typed their responses. Participants in the Human Only (control) group, in contrast, wrote responses with no option for feedback.\nParticipant Recruitment. We worked with a large peer-to-peer support platform, TalkLife, to recruit participants directly from their platform. Because users on such platforms are typically untrained in best-practices of providing mental health support, their work offers a natural place to deploy feedback systems like ours. To recruit participants, we advertised our study on TalkLife (Supplementary Figure S18). Recruitment started in Apr 2021 and continued until Sep 2021. The study was approved by the University of Washington\u2019s Institutional Review Board (determined to be exempt; IRB ID STUDY00012706).\nPower Analysis. We used a power analysis to estimate the number of participants required for our study. For an effect size of 0.1 difference in empathy, a power analysis with a significance level of 0.05, powered at 80%, indicated that we required 1,500 samples of (seeker post, response post) pairs each for treatment and control groups. To meet the required sample size, we collected 10 samples per participant and therefore recruited from 300 participants in total (with the goal of 150 participants per condition), for a total of 1,500 samples each.\nDataset of Seeker Posts. We obtained a unique set of 1500 seeker posts, sampled at random with consent from the TalkLife platform, in the observation period from May 2012 to June 2020. Prior to sampling, we filtered posts related to (1) critical settings of suicidal ideation and self-harm to ensure participant safety (Discussion), and (2) common social media interactions not related to mental health (e.g., \u201cHappy mother\u2019s day\u201d)47. We randomly divided these 1500 posts into 150 subsets of 10 posts each. We used the same 150 subsets for both treatment and control conditions for consistent context for both groups of participants.\nParticipant Demographics. In our study, 54.33% of the participants identified as female, 36.67% as male, 7.33% as non-binary, and the remaining 1.67% preferred not to report their gender. The average age of participants was 26.34 years (std = 9.50). 45.67% of the participants identified as White, 20.33% as Asians, 10.67% as Hispanic or Latino, 10.33% as Black or African American, 0.67% as Pacific Islander or Hawaiian, 0.33% as American Indian or Alaska Native, and the remaining 12.00% preferred not to report their race/ethnicity. 62.33% of the participants were from the United States, 13.67% were from India, 2.33% were from United Kingdom, 2.33% were from Germany, and the remaining 19.33% were from 36 different countries (spanning six of seven continents excluding Antarctica). Moreover, 31.67% of the participants reported having no experience with peer-to-peer support despite having been recruited from\n12/61\nthe TalkLife platform, 26.33% as having less than one year of experience, and 42.00% reported having greater than or equal to one year of experience with peer-to-peer support.\nRCT Group Assignment. On clicking the advertised pop-up used for recruitment, a TalkLife user was randomly assigned to one of the Human + AI (treatment) or Human Only (control) conditions for the study duration.\nStudy Workflow. We divided our study into four phases:\n\u2022 Phase I: Pre-Intervention Survey. First, both control and treatment group participants were asked the same set of survey questions describing their demographics, background and experience with peer-to-peer support (Supplementary Figure S20, S21).\n\u2022 Phase II: Empathy Training and Instructions. Next, to address whether participants held similar understandings of empathy, both groups received the same initial empathy training, which included empathy definitions, frameworks, and examples based on psychology theory, before starting the main study procedure of writing empathic responses (Supplementary Figure S1). Participants were also shown instructions on using our study interface in this phase (Supplementary Figure S22, S23, S24, S25, S26, S27, S28, S29).\n\u2022 Phase III: Write Supportive, Empathic Responses. Participants then started the main study procedure and wrote responses to one of the 150 subsets of 10 existing seeker posts (one post at a time). For each post, participants in both the groups were prompted \u201cWrite a supportive, empathic response here\u201d. The Human + AI (treatment) group participants were given the option of receiving feedback through prompts as they typed their responses (Supplementary Figure S31). Participants in the Human Only (control) group wrote responses without any option for feedback (Supplementary Figure S30).\n\u2022 Phase IV: Post-Intervention Survey. After completing the 10 posts, participants in both groups were asked to assess the study by answering questions about the difficulty they faced while writing responses, the helpfulness and actionability of the feedback, their self-efficacy after the study, and the intent to adopt the system (Supplementary Figure S33, S34, S35).\nIf participants dropped out of the study before completing it, their data was removed from our analyses. Participants took 20.62 minutes on average to complete the study. US citizens and permanent US residents were compensated with a 5 USD Amazon gift card. Furthermore, the top-2 participants in the human evaluation (Evaluation) received an additional 25 USD Amazon gift card. Based on local regulations, we were unable to pay non-US participants. This was explicitly highlighted in the participant consent form on the first landing page of our study (Supplementary Figure S19, S36)."
+        },
+        {
+            "heading": "Design Goals",
+            "text": "HAILEY is designed (1) with a collaborative \u201cAI-in-the-loop\u201d approach, (2) to provide actionable feedback, and (3) to be mobile friendly.\nCollaborative AI-in-the-loop Design. In the high-risk setting of mental health support, AI is best used to augment, rather than replace, human skill and knowledge46, 51. Current natural language processing technology \u2013 including language models, conversational AI methods, and chatbots \u2013 continue to pose risks related to toxicity, safety, and bias, which can be life-threatening in contexts of suicidal ideation and self-harm62, 70\u201372. To mitigate these risks, researchers have called for Human-AI collaboration methods, where primary communication remains between two humans with an AI system \u201cin-the-loop\u201d to assist\n13/61\nhumans in improving their conversation46, 51. In HAILEY, humans remain at the center of the interaction, receive suggestions from our AI \u201cin-the-loop,\u201d and retain full control over which suggestions to use in their responses (e.g., by selectively choosing the most appropriate Insert or Replace suggestions and editing them as needed).\nActionable Feedback. Current AI-in-the-loop systems are often limited to addressing \u201cwhat\u201d (rather than \"how\") participants should improve52\u201355. For such a goal, it is generally acceptable to design simple interfaces that prompt participants to leverage strategies for successful supportive conversations (e.g., prompting \u201cyou may want to empathize with the user\u201d) without any instructions on how to concretely apply those strategies. However, for complex, hard-to-learn constructs such as empathy25, 30, there is a need to address the more actionable goal of steps to take for participants to improve. HAILEY, designed to be actionable, suggests concrete actions (e.g., sentences to insert or replace) that participants may take to make their current response more empathic.\nMobile Friendly Design. Online conversations and communication are increasingly mobile based. This is also true for peer-to-peer support platforms, which generally provide their services through a smartphone application. Therefore, a mobile friendliness design is critical for the adoption of conversational assistive agents like ours. However, the challenge here relates to the complex nature of the feedback and the smaller, lower-resolution screen on a mobile device as compared to a desktop. We therefore designed a compact, minimal interface that works equally well on desktop and mobile platforms. We created a conversational experience based on the mobile interface of peer-to-peer support platforms that was design minimal, used responsive prompts that adjusted in form based on screen sizes, placed AI feedback compactly above the response text box for easy access, and provided action buttons that were easy for mobile users to click on."
+        },
+        {
+            "heading": "Feedback Workflow",
+            "text": "Through HAILEY, we showed prompts to participants that they could click on to receive feedback. Our feedback, driven by a previously validated Empathic Rewriting model, consists of actions that users can take to improve the empathy of their responses (Supplementary Figure S31).\nPrompts to Trigger Feedback. We showed the prompt \u201cWould you like some help with your response?\u201d to participants, which was placed above the response text box (Figure 1b). Participants could at any point click on the prompt to receive feedback on their current response (including when it is still empty). When this prompt is clicked, HAILEY acts on the seeker post and the current response to suggest changes that will make the response more empathic. Our suggestions consisted of Insert and Replace operations generated through empathic rewriting of the response.\nGenerating Feedback through Empathic Rewriting. The goal of empathic rewriting, originally proposed in Sharma et al.47, is to transform low empathy text to higher empathy. The authors proposed PARTNER, a deep reinforcement learning model that learns to take sentence-level edits as actions in order to increase the expressed level of empathy while maintaining conversational quality. PARTNER\u2019s learning policy is based on a transformer language model (adapted from GPT-273), which performs the dual task of generating candidate empathic sentences and adding those sentences at appropriate positions. Here, we build on PARTNER by further improving training data quality through additional filtering, supporting multiple generations for the real-world use-case of multiple types of feedback for the same post, and evaluating a broader range of hyperparameter choices.\nShowing Feedback as Actions. We map the rewritings generated by our optimized version of PARTNER to suggestions to Insert and Replace sentences. These suggestions are then shown as actions to edit the response. To incorporate the suggested changes, the participant clicks on the respective Insert or Replace\n14/61\nbuttons. Continuing our example from Figure 1, given the seeker post \u201cMy job is becoming more and more stressful with each passing day.\u201d and the original response \u201cDon\u2019t worry! I\u2019m there for you.\u201d, PARTNER takes two insert actions \u2013 Replace \u201cDon\u2019t worry!\u201d with \u201cIt must be a real struggle!\u201d and Insert \u201cHave you tried talking to your boss?\u201d at the end of the response. These actions are shown as feedback to the participant. See Supplementary Figure S8 for more qualitative examples.\nReload Feedback If Required. For the same combination of seeker post and original response, multiple feedback suggestions are possible. In the Figure 1 example, instead of suggesting the insert \u201cHave you tried talking to your boss?\u201d, we could also propose inserting \u201cI know how difficult things can be at work\u201d. These feedback variations can be sampled from our model and, if the initial sampled feedback does not meet participant needs, iterated upon to help participants find better-suited feedback. HAILEY provides an option to reload feedback, allowing participants to navigate through different feedback and suggestions if necessary."
+        },
+        {
+            "heading": "Evaluation",
+            "text": "Empathy Measurement. We evaluated empathy using both human and automated methods. For our human evaluation, we recruited an independent set of participants from the TalkLife platform and asked them to compare responses written with feedback to those written without feedback given the same seeker post (Supplementary Figure S36, S37, S38). When analyzing strata of participants based on challenges in writing responses (Figure 1c), we considered only those seeker post instances for which the respective Human Only and Human + AI participants both indicated writing as challenging or not challenging. Since our human evaluation involves comparing Human Only and Human + AI responses, this ensures that participants in each strata belong to only one of challenging or not challenging categories.\nThough our human evaluation captures platform users\u2019 perceptions of empathy in responses, it is unlikely to measure empathy from the perspective of psychology theory given the limited training of TalkLife users. Therefore, we conducted a second complementary evaluation by applying the theory-based empathy classification model proposed by Sharma et al.29, which assigns a score between 0 and 6 to each response and has been validated and used in prior work47, 74\u201376. Note that this approach evaluates empathy expressed in responses and not the empathy perceived by support seekers of the original seeker post (Discussion)."
+        },
+        {
+            "heading": "Deriving a Hierarchical Taxonomy of Human-AI Collaboration Patterns",
+            "text": "We wanted to understand how different participants collaborated with HAILEY. To derive collaboration patterns at the participant level, we aggregated and clustered post-level interactions for each participant over the 10 posts in our study. First, we identified three dimensions of interest that were based on the design and features of HAILEY as well as by qualitatively analyzing the interaction data: (1) the number of posts in the study for which the AI was consulted, (2) the way in which AI suggestions were used (direct vs. indirect vs. not at all), and (3) whether the participant looked for additional suggestions for a single post (using the reload functionality).\nDirect use of AI was defined as directly accepting the AI\u2019s suggestions by clicking on the respective Insert or Replace buttons. Indirect use of AI, in contrast, was defined as making changes to the response by drawing ideas from the suggested edits. We operationalized indirect use as a cosine similarity of more than 95% between the BERT-based embeddings77 of the final changes to the response by the participant and the edits suggested by the AI. Next, we used k-means to cluster the interaction data of all participants on the above dimensions (k=20 based on the Elbow method78). We manually analyzed the distribution of the 20 inferred clusters, merged similar clusters, discarded the clusters that were noisy (e.g., too small or\n15/61\nhaving no consistent interaction behavior), and organized the remaining 8 clusters in a top-down approach to derive the hierarchical taxonomy of Human-AI collaboration patterns (Figure 3a; Results). Finally, for the collaboration patterns with simple rule-based definitions (e.g., participants who never consulted AI), we manually corrected the automatically inferred cluster boundaries to make the patterns more precise, e.g., by keeping only the participants who had never consulted AI in that cluster."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "We would like to thank TalkLife and Jamie Druitt for supporting this work, for advertising the study on their platform, and for providing us access to a TalkLife dataset. We also thank members of the UW Behavioral Data Science Group, Microsoft AI for Accessibility team, and Daniel S. Weld for their suggestions and feedback. T.A., A.S, and I.W.L were supported in part by NSF grant IIS-1901386, NSF grant CNS-2025022, NIH grant R01MH125179, Bill & Melinda Gates Foundation (INV-004841), the Office of Naval Research (#N00014-21-1-2154), a Microsoft AI for Accessibility grant, and a Garvey Institute Innovation grant. A.S.M. was supported by grants from the National Institutes of Health, National Center for Advancing Translational Science, Clinical and Translational Science Award (KL2TR001083 and UL1TR001085) and the Stanford Human-Centered AI Institute.\nConflict of Interest Disclosure. D.C.A. is a co-founder with equity stake in a technology company, Lyssn.io, focused on tools to support training, supervision, and quality assurance of psychotherapy and counseling."
+        },
+        {
+            "heading": "Supplementary Materials",
+            "text": ""
+        },
+        {
+            "heading": "List of supplementary materials",
+            "text": "Table S1 Figures S1 to S39\n21/61\nTable S1. Description of our randomized controlled trial (RCT) study population, setting and model, following reporting standards for artificial intelligence in health care from Hernandez-Boussard et al.79\nFeature Description\nStudy population and setting - Population: 300 TalkLife users; 161 in Human Only (control); 139 in Human + AI (treatment). - Study setting: Non-clinical, online platform outside of TalkLife to ensure platform users\u2019 safety, through an interface similar to TalkLife\u2019s chat feature. - Data collected in RCT:\nParticipants responded to 10*300=3000 seeker posts (1500 unique seeker posts duplicated across control and treatment), generating 3000 responses (1610 in control, 1390 in treatment). An independent set of 50 participants rated 1390 pairs of control and treatment responses on empathy preference.\n- Cohort selection: Participants were sent a recruitment request after they submitted a response on the TalkLife platform, with an aim of targeting active peer supporters. Participants were excluded if they dropped out of the study before completion. - Registration: We did not pre-register on ClinicalTrials.gov because our study was conducted in a non-clinical setting.\nParticipant demographic characteristics - Age: Mean=26.34 years; Std=9.50 years - Gender: Female: 54.33%; Male: 36.67%; Non-binary: 7.33%; Preferred not to say: 1.67% - Race/Ethnicity: White: 45.67%; Asian: 20.33%; Hispanic or Latino: 10.67%; Black or African\nAmerican: 10.33%; Pacific Islander or Hawaiian: 0.67%; American Indian or Alaska Native: 0.33%; Preferred not to say: 12.00%\nHAILEY\u2019s modeling components - Model output: Empathic rewriting of the response post - Target user: Peer supporter (users who provide peer-to-peer support to the support seeker) - Data splitting: Training: 3.2M; Test: 0.1M; Validation: 0.1M (seeker post, response post) pairs - Gold standard: 180 empathic rewritings from human therapy experts used for evaluation of the original PARTNER model47. - Model task: Text generation - Model architecture: Deep reinforcement learning with a transformer based language model as its policy. - Optimization: Based on reward functions to increase empathy in posts and maintain text fluency, sentence coherence, context specificity, and diversity. - Internal validation: Automatic and human evaluation on hold-out test set. - External validation: The empathy scale used in HAILEY and PARTNER47 has previously been shown\nto correlate with \u201clikes\u201d from the support seeker and the forming of relationships b/w support seekers and peer supporters29, consistent with empathy theory25, 27, 28. Our present randomized controlled trial represents an external evaluation of the rewriting modeling components of HAILEY and PARTNER47.\n- Transparency: Data is available from TalkLife through a Data License Agreement; code is available via GitHub (github.com/behavioral-data/PARTNER).\n22/61\nFigure S1. Empathy training used in our study. Participants in both the Human + AI (treatment) and Human Only (control) groups received the same training. The training included the empathy definition, a framework of common ways of expressing empathy in responses, and examples of empathic responses. This ensures that participants were working under similar understandings of empathy. In practice, such training is very rare and the effect of training typically diminishes over time. The identified difference in empathy between treatment and control groups in our study therefore conservatively estimates the impact of our AI-in-the-loop feedback system, and not baseline differences in empathy definitions. The effect in practice may be larger than the intentionally conservative estimates produced here, as such training is uncommon on current mental health platforms.\nExpressing empathy in responses\nA key component of your responses should be empathy -- You should try and express empathy towards the seeker in your responses.\nEmpathy\nEmpathy is the ability to understand or feel the emotions and experiences of others and express that understanding in responses.\nWe adopt the widely-popular Roger's (1980) definition of empathy which highlights both perspective-taking processes and the bodily-based emotional simulation processes of empathy:\n\"[Empathy is] the therapist\u02bcs sensitive ability and willingness to understand the client\u02bcs thoughts, feelings and struggles from the client\u02bcs point of view (p. 85).... \"It means entering the private perceptual world of the other...being sensitive, moment by moment, to the changing felt meanings which flow in this other person... It means sensing meanings of which he or she is scarcely aware.\" (Elliot et al.)\nEmpathic Responses\nSince the focus here is on writing empathic responses, expressing empathy in responses is key. Empathic responses typically involve:\nReacting with emotions felt after reading a post (e.g., I feel sorry for you) Communicating an understanding of feelings and experiences (e.g., This must be terrifying) Improving understanding by exploring feelings and experiences (e.g., Are you feeling alone right now?)\nExamples of empathic responses\nSeeker Post: My whole family hates me. Response Post: I'm sorry to hear about your situation. If that happened to me, I would feel really isolated.\nSeeker Post: I feel like nobody cares about my existence. Response Post: It s\u0313 hard to find others who can relate. I feel the same.\nSeeker Post: I can\u02bct deal with this part of my bipolar. I need help. Response Post: Being manic is no fun. It's scary! I\u02bcm sorry to hear this is troubling you. Try to relax. Anyone you can talk to?\nWe will now start the study!\nStart\n23/61\nFigure S2. Comparison of Human Only (control) and Human + AI (treatment) responses with AI Only responses (generated directly from PARTNER47, the deep reinforcement learning model for empathic rewriting, used as a foundation for HAILEY (Methods)). (a) Through human evaluation from an independent set of TalkLife users, we found that AI Only responses have a similar preference as the Human + AI responses (48.20% vs. 46.87%; p=0.23; Two-sided Student\u2019s t-test) but a higher preference than the Human Only responses (48.20% vs. 37.40%; p < 10\u22125; Two-sided Student\u2019s t-test). (b) Automatic estimation of empathy, on the contrary, suggested that AI Only responses have a higher expressed empathy score compared to Human + AI responses (2.10 vs. 1.77; p < 10\u22125; Two-sided Student\u2019s t-test). Importantly however, note that the AI Only responses were optimized on the same scoring function that we use to automatically estimate empathy, which likely explains the high scores of the AI Only approach. (c) However, while the authenticity of Human Only and Human + AI responses was comparable (69.55% vs. 65.38%; p=0.01; Two-sided Student\u2019s t-test), the authenticity of AI Only responses was significantly lower (36.49% vs. 65.38%; p < 10\u22125; Two-sided Student\u2019s t-test). This highlights the key issue of authenticity with using AI Only, alongside safety, privacy, bias and other unintended consequences in the high-risk setting of mental health. To summarize, we find that Human + AI is the only approach that leads to both high empathy and high authenticity. Error bars indicate bootstrapped 95% confidence intervals.\n(a) Human Evaluation: Which response is more empathic?\nHuman Only Human + AI AI Only 30%\n35%\n40%\n45%\n50%\n55%\nPr ef\ner en\nce (%\n)\n(b) Automatic/AI-based Evaluation: Expressed empathy score\nHuman Only Human + AI AI Only 1.25\n1.50\n1.75\n2.00 2.25 Ex pr es se d Em pa th y Sc or e\n(c) Authenticity: Is the response human-written or computer-generated?\nHuman only Human + AI AI Only 30%\n40%\n50%\n60%\n70%\nId en\ntif ie\nd as\nH um\nan -W\nrit te\nn (%\n)\n24/61\nFigure S3. Perceptions of Human + AI (treatment) group participants as reported in phase IV (post-intervention survey). We observed that more than 63.31% of participants found the current feedback helpful, 60.43% found it actionable and 69.78% of participants self-reported feeling more confident at providing support after our study. Also, 77.70% of participants wanted this type of feedback system to be deployed on TalkLife or other similar peer-to-peer support platforms, indicating potential opportunities for deployment in real-world.\n0% 20% 40% 60% 80% 100% % of Participants\nI would like to see this type of feedback system deployed on TalkLife or other similar platforms\nI feel more confident at writing supportive responses\nafter this study\nFeedback shown to me was easy to act upon\nFeedback shown to me was helpful in improving my responses\n51.1%\n43.2%\n26.6%\n34.5%\n26.6%\n26.6%\n33.8%\n28.8%\n10.8%\n18.0%\n27.3%\n20.1%\n7.9%\n8.6%\n13.7%\nStrongly agree Agree Neutral Disagree Strongly disagree\n25/61\nFigure S4. Comparison of our rewriting-based AI treatment with a secondary classification-based AI treatment. A classification-based AI treatment provided participants with an option to request empathy classification scores for their responses, as opposed to the more granular feedback consisting of concrete suggestions to edit responses in our primary rewriting-based approach (Supplementary Figure S5). Our hypothesis was that such a treatment should be less actionable and is likely to lead to less empathic responses than the rewriting-based treatment. In our study, we assigned a secondary classification-based treatment to 10% of the incoming participants at random (N=30). (a) Through human evaluation from an independent set of TalkLife users, we found that the Human + Classification responses have a significantly lower preference than the Human + Rewriting responses (37.94% vs. 47.84%; p < 0.01; Two-sided Student\u2019s t-test). (b) Automatic estimation of empathy, on the contrary, suggested that the Human + Classification responses have a higher expressed empathy score compared to Human + Rewriting responses (2.24 vs. 1.77; p < 10\u22125; Two-sided Student\u2019s t-test). As the same score is also exposed to participants just-in-time in the classification-based treatment, it may have led participants to be put particular emphasis on a high expressed empathy score, which participants in the rewriting-based treatment feedback didn\u2019t have direct access to. (c) We found that less participants in the classification-based treatment group agree on deploying the system on TalkLife than the rewriting-based treatment (63.33% vs. 77.70%; p=0.0998; Two-sided Student\u2019s t-test; Supplementary Figure S3). Also, we observed that more participants in the classification-based treatment disagree on its actionability than participants in the rewriting-based treatment, but the difference may not be statistically significant due to the limited power (23.33% vs. 12.23%; p=0.1154; Two-sided Student\u2019s t-test). The area of the points in the plots is proportional to the number of participants in the respective control/treatment conditions. Error bars indicate bootstrapped 95% confidence intervals.\n(a) Human Evaluation: Which response is more empathic?\nHuman Only\nHuman+ Rewriting Human+ Classification\n35%\n40%\n45%\n50%\n55%\nPr ef\ner en\nce (%\n)\n(b) Automatic/AI-based Evaluation: Expressed empathy score\nHuman Only\nHuman+ Rewriting Human+ Classification\n1.25\n1.50\n1.75\n2.00\n2.25\n2.50\nEx pr\nes se\nd Em\npa th\ny Sc\nor e\n(c) Study participants\u2019 perceptions (classification-based treatment group)\n0% 20% 40% 60% 80% 100% % of Participants\nI would like to see this type of feedback system deployed on TalkLife or other similar platforms\nI feel more confident at writing supportive responses\nafter this study\nFeedback shown to me was easy to act upon\nFeedback shown to me was helpful in improving my responses\n53.3%\n36.7%\n33.3%\n26.7%\n10.0%\n16.7%\n23.3%\n33.3%\n23.3%\n30.0%\n20.0%\n26.7%\n10.0%\n13.3%\n20.0%\nStrongly agree Agree Neutral Disagree Strongly disagree\n26/61\nFigure S5. Interface of our classification-based AI treatment (Supplementary Figure S4). (a) Participant is asked to write a supportive, empathic response and given an option to receive feedback. (b) Participant starts writing the response. (c) Participant clicks on the \u201cGet Feedback\u201d button to request classification-based feedback. The feedback consists of classification scores on three empathy communication mechanisms \u2013 Emotional Reactions, Interpretations, and Explorations29. (d) Participant edits the response based on the classification scores, often improving on the communication mechanisms with low scores and requests \u201cMore Feedback\u201d if needed.\n(a) (b) (c)\n(d)\n27/61\nFigure S6. Both Human Only (control) and Human + AI (treatment) group participants showed a significant drop in empathy levels in the last 5 responses of our study. With Human + AI, however, we observed a significantly lower drop in empathy (5.34% vs. 25.99%; p=0.0062; Two-sided Student\u2019s t-test). This indicates the effectiveness of just-in-time AI feedback in alleviating challenges like empathy fatigue, associated with providing mental health support. The empathy differences between Human Only and Human + AI responses are statistically significant for both first 5 and last 5 responses (p < 10\u22125; Two-sided Student\u2019s t-test). Error bars indicate bootstrapped 95% confidence intervals.\nFirst 5 responses\nLast 5 responses\n1.25\n1.50\n1.75\n2.00\nEx pr\nes se\nd Em\npa th\ny Sc\nor e\nHuman Only Human + AI\n28/61\nFigure S7. Comparison of existing Human Only responses on TalkLife with Human Only and Human + AI responses in our study. Human Only responses on TalkLife had significantly lower preference for empathy (18.42% vs. 37.40% vs. 46.87%; p < 10\u22125) and significantly lower expressed empathy score (1.11 vs. 1.48 vs. 1.77; p 10\u22125). This difference might be attributed to the additional initial empathy training provided to participants, as well as a potential selection effect in our study that may have attracted Talklife users who particularly care about expressing empathy in supporting others. As our study shows that Human-AI collaboration improves empathy expression even for those participants who already express empathy more often, practical gains for the average user of the Talklife platform could be even higher. Error bars indicate bootstrapped 95% confidence intervals.\n(a) Human Evaluation: Which response is more empathic?\nHuman Only (TalkLife) Human Only (Our Study) Human + AI (Our Study)\n15%\n25%\n35%\n45%\n55%\nPr ef\ner en\nce (%\n)\n(b) Automatic/AI-based Evaluation: Expressed empathy score\nHuman Only (TalkLife) Human Only (Our Study) Human + AI (Our Study)\n1.00\n1.25\n1.50\n1.75\n2.00\nEx pr\nes se\nd Em\npa th\ny Sc\nor e\n29/61\nFigure S8. Qualitative examples of just-in-time AI feedback provided to participants by HAILEY. In (b) and (c), the original peer supporter response was empty. Seeker posts in these examples have been paraphrased for anonymization.\n(a) (b) (c)\n(d) (e) (f)\n30/61\nFigure S9. Human evaluation of empathy of participants with different human-AI collaboration categories. Responses from participants who consulted or used AI more, broadly, had a higher empathy preference compared to those who rarely, if ever, expressed it (confirming the findings from the automatic evaluation in Figure 3b). The area of the points is proportional to the number of participants in the respective human-AI collaboration categories. Error bars indicate bootstrapped 95% confidence intervals.\nDi d\nNo t\nC on\nsu lt\nAI\nCo ns\nul te\nd AI\nO\nnl y\nOn ce\nDi d\nNo t U\nse\nA I S\nug ge\nst io\nns\nDi re\nct ly\nU se d Fi rs t A I S ug ge st\nio n\nDi re\nct ly\nU se\nd AI\nS\nug ge\nst io\nns A\nfte r\nM ul\ntip le\nR el\noa ds\nUs ed\nA I S\nug ge\nst io\nns\nF or\nG ui\ndi ng\nR es\npo ns\nes\nAl wa\nys C\non su\nlte d\nAI\nB ut\nN ot\nA lw\nay s U\nse d\nAl wa\nys C\non su\nlte d\nAn d\nA lw\nay s U\nse d\nAI 30%\n40%\n50%\n60%\n70%\nPr ef\ner en\nce (%\n)\n31/61\nFigure S10. Background and demographics of participants in Human Only (control) and Human + AI (treatment) groups, as reported in phase I (pre-intervention survey).\n(a) Gender\nM al\ne\nFe m\nal e\nNo n bi na\nry\nPr ef er no t t o\nsa y\nGender\n0.0\n0.1\n0.2\n0.3\n0.4\n0.5\nFr ac\ntio n\nof p\nar tic\nip an\nts\nHuman Only Human + AI\n(b) Age\n20 30 40 50 60 Age\n0.00\n0.01\n0.02\n0.03\n0.04\n0.05\n0.06\n0.07\nFr ac\ntio n\nof p\nar tic\nip an\nts\nHuman Only Human + AI\n(c) Race/Ethnicity\nW hi\nte\nAs ia\nn\nBl ac\nk or\nAf ric\nan A\nm er\nica n\nHi sp\nan ic or La tin o\nAm er\nica n\nIn di\nan o r Al as ka N at iv e\nPa cif\nic Isl\nan de\nr o r\nHa wa\niia n\nPr ef\ner n ot to sa y\nRace/Ethnicity\n0.0\n0.1\n0.2\n0.3\n0.4\n0.5\nFr ac\ntio n\nof p\nar tic\nip an\nts\nHuman Only Human + AI\n(d) Experience with online peer support\nNo experience\n< 1 year 1 year\nExperience with online peer support\n0.0\n0.1\n0.2\n0.3\n0.4\nFr ac\ntio n\nof p\nar tic\nip an\nts\nHuman Only Human + AI\n32/61\nFigure S11. Differences between expressed empathy scores of participants in Human Only (control) and Human + AI (treatment) groups, stratified by demographics of participants and their prior experience with online peer support. The area of the points is proportional to the number of participants in the respective human-AI collaboration categories. Error bars indicate bootstrapped 95% confidence intervals.\n(a) Gender\nM al\ne\nFe m\nal e\nNo n bi na\nry\nPr ef er no t t o\nsa y\nGender\n1.0\n1.5\n2.0\n2.5\n3.0\nEx pr\nes se\nd Em\npa th\ny Sc\nor e\nHuman Only Human + AI\n(b) Age\n<2 0\n[2 0,\n30 )\n[3 0,\n40 )\n[4 0,\n50 )\n[5 0,\n60 )\n>= 60\nAge\n0.5\n1.0\n1.5\n2.0\n2.5\nEx pr\nes se\nd Em\npa th\ny Sc\nor e\nHuman Only Human + AI\n(c) Race/Ethnicity\nW hi\nte\nAs ia\nn\nBl ac\nk or\nAf ric\nan A\nm er\nica n\nHi sp\nan ic or La tin o\nAm er\nica n\nIn di\nan o r Al as ka N at iv e\nPa cif\nic Isl\nan de\nr o r\nHa wa\niia n\nPr ef\ner n ot to sa y\nRace/Ethnicity\n1.0\n1.5\n2.0\n2.5\n3.0\nEx pr\nes se\nd Em\npa th\ny Sc\nor e\nHuman Only Human + AI\n(d) Prior experience with online peer support\nNo experience\n< 1 year 1 year\nExperience with online peer support\n1.00\n1.25\n1.50\n1.75\n2.00\nEx pr\nes se\nd Em\npa th\ny Sc\nor e\nHuman Only Human + AI\n33/61\nFigure S12. Perceptions of participants in Human Only (control) and Human + AI (treatment) groups, as reported in phase I (pre-intervention survey).\n(a) Self-efficacy in writing good, effective, or helpful responses\nSt ro\nng ly\nA\ngr ee\nSo m\new ha t A gr ee\nNe ut\nra l\nSo m\new ha t D isa gr ee\nSt ro\nng ly\nD\nisa gr\nee\nI'm confident I can write good, effective, or helpful responses to support seeking posts from users\n0.0\n0.2\n0.4\nFr ac\ntio n\nof p\nar tic\nip an\nts Human Only Human + AI\n(b) Self-efficacy in writing empathic responses\nSt ro\nng ly\nA\ngr ee\nSo m\new ha t A gr ee\nNe ut\nra l\nSo m\new ha t D isa gr ee\nSt ro\nng ly\nD\nisa gr\nee\nI'm confident I can write empathic responses to support seeking posts from users\n0.0\n0.1\n0.2\n0.3\n0.4\n0.5\nFr ac\ntio n\nof p\nar tic\nip an\nts Human Only Human + AI\n(c) Could feedback be helpful?\nSt ro\nng ly\nA\ngr ee\nSo m\new ha t A gr ee\nNe ut\nra l\nSo m\new ha t D isa gr ee\nSt ro\nng ly\nD\nisa gr\nee\nReal-time feedback could be helpful in improving my responses\n0.0\n0.2\n0.4\n0.6\nFr ac\ntio n\nof p\nar tic\nip an\nts Human Only Human + AI\n34/61\nFigure S13. Distribution of participants in Human Only (control) and Human + AI (treatment) groups who report writing responses as challenging or stressful, as reported in phase IV (post-intervention survey).\nSt ro\nng ly\nA\ngr ee\nSo m\new ha t A gr ee\nNe ut\nra l\nSo m\new ha t D isa gr ee\nSt ro\nng ly\nD\nisa gr\nee\nIt was challenging or stressful to write responses to posts\n0.0\n0.1\n0.2\nFr ac\ntio n\nof p\nar tic\nip an\nts\nHuman Only Human + AI\n35/61\nFigure S14. Distribution of participants in the Human Only (control) group who indicate that feedback could have improved responses, as reported in phase IV (post-intervention survey).\nSt ro\nng ly\nA\ngr ee\nSo m\new ha t A gr ee\nNe ut\nra l\nSo m\new ha t D isa gr ee\nSt ro\nng ly\nD\nisa gr\nee\nFeedback and Suggestions on how to improve my responses would\nhave helped me write better responses\n0.0\n0.1\n0.2\n0.3\nFr ac\ntio n\nof p\nar tic\nip an\nts Human Only\n36/61\nFigure S15. Perceptions of participants in the Human + AI (treatment) group, as reported in phase IV (post-intervention survey).\n(a) Overall helpfulness St ro ng ly A gr ee\nSo m\new ha t A gr ee\nNe ut\nra l\nSo m\new ha t D isa gr ee\nSt ro\nng ly\nD\nisa gr\nee\nThe feedback shown to me was helpful in improving my responses\n0.0\n0.1\n0.2\n0.3\nFr ac\ntio n\nof p\nar tic\nip an\nts Human + AI\n(b) Helpfulness for empathy\nSt ro\nng ly\nA\ngr ee\nSo m\new ha t A gr ee\nNe ut\nra l\nSo m\new ha t D isa gr ee\nSt ro\nng ly\nD\nisa gr\nee\nThe feedback shown to me was helpful in making my responses more empathic\n0.0\n0.1\n0.2\n0.3\nFr ac\ntio n\nof p\nar tic\nip an\nts Human + AI\n(c) Actionability\nSt ro\nng ly\nA\ngr ee\nSo m\new ha t A gr ee\nNe ut\nra l\nSo m\new ha t D isa gr ee\nSt ro\nng ly\nD\nisa gr\nee\nThe feedback shown to me was easy to incorporate into the final response\n0.0\n0.1\n0.2\n0.3\nFr ac\ntio n\nof p\nar tic\nip an\nts Human + AI\n(d) Self-efficacy\nSt ro\nng ly\nA\ngr ee\nSo m\new ha t A gr ee\nNe ut\nra l\nSo m\new ha t D isa gr ee\nSt ro\nng ly\nD\nisa gr\nee\nI feel more confident at writing supportive responses after this study\n0.0\n0.1\n0.2\n0.3 0.4 Fr ac tio n of p ar tic ip\nan ts Human + AI\n(e) Intention to adopt\nSt ro\nng ly\nA\ngr ee\nSo m\new ha t A gr ee\nNe ut\nra l\nSo m\new ha t D isa gr ee\nSt ro\nng ly\nD\nisa gr\nee\nI would like to see this type of feedback system deployed on TalkLife or other similar platforms\n0.0\n0.1\n0.2\n0.3\n0.4\n0.5\nFr ac\ntio n\nof p\nar tic\nip an\nts Human + AI\n37/61\nFigure S16. Expressed empathy levels of responses with perceptions of Human + AI (treatment) group participants, as reported in phase IV (post-intervention survey). The area of the points is proportional to the number of participants with respective perceptions. Error bars indicate bootstrapped 95% confidence intervals.\n(a) Overall helpfulness\nAgree Neutral Disagree The feedback shown to me was\nhelpful in improving my responses\n1.25\n1.50\n1.75\n2.00\n2.25\nEx pr\nes se\nd Em\npa th\ny Sc\nor e Human + AI\n(b) Helpfulness for empathy\nAgree Neutral Disagree The feedback shown to me was helpful in making my responses more empathic\n1.25\n1.50\n1.75\n2.00\n2.25\nEx pr\nes se\nd Em\npa th\ny Sc\nor e Human + AI\n(c) Actionability\nAgree Neutral Disagree The feedback shown to me was easy to incorporate into the final response\n1.25\n1.50\n1.75\n2.00\n2.25\nEx pr\nes se\nd Em\npa th\ny Sc\nor e Human + AI\n(d) Self-efficacy\nAgree Neutral Disagree I feel more confident at writing\nsupportive responses after this study\n1.25\n1.50\n1.75\n2.00 2.25 Ex pr es se d Em pa th y Sc or\ne Human + AI\n(e) Intention to adopt\nAgree Neutral Disagree I would like to see this type\nof feedback system deployed on TalkLife or other similar platforms\n1.25\n1.50\n1.75\n2.00\n2.25\nEx pr\nes se\nd Em\npa th\ny Sc\nor e Human + AI\n38/61\nFigure S17. Participant perceptions, as reported in phase IV (post-intervention survey), with different human-AI collaboration categories.\n(a) Challenges: Feedback and Suggestions on how to improve my responses would have helped me write better responses\n0% 20% 40% 60% 80% 100% % of Participants\nDid Not Consult AI\nConsulted AI Only Once\nDid Not Use AI Suggestions\nDirectly Used First AI Suggestion\nDirectly Used AI Suggestions After\nMultiple Reloads\nUsed AI Suggestions For Guiding Responses\nAlways Consulted AI But Not Always Used\nAlways Consulted And Always Used AI\n7.7%\n9.1%\n9.7%\n11.1%\n8.3%\n13.3%\n26.9%\n42.9%\n27.3%\n19.4%\n33.3%\n25.0%\n33.3%\n33.3%\n26.9%\n28.6%\n18.2%\n25.8%\n22.2%\n33.3%\n20.0%\n15.4%\n14.3%\n36.4%\n19.4%\n25.0%\n26.7%\n23.1%\n14.3%\n9.1%\n25.8%\n33.3%\n8.3%\n66.7%\nStrongly agree Agree Neutral Disagree Strongly disagree\n(b) Overall helpfulness: The feedback shown to me was helpful in improving my responses\n0% 20% 40% 60% 80% 100% % of Participants\nDid Not Consult AI\nConsulted AI Only Once\nDid Not Use AI Suggestions\nDirectly Used First AI Suggestion\nDirectly Used AI Suggestions After\nMultiple Reloads\nUsed AI Suggestions For Guiding Responses\nAlways Consulted AI But Not Always Used\nAlways Consulted And Always Used AI\n46.2%\n28.6%\n9.1%\n35.5%\n33.3%\n33.3%\n26.7%\n66.7%\n30.8%\n28.6%\n27.3%\n29.0%\n22.2%\n33.3%\n33.3%\n33.3%\n19.2%\n14.3%\n36.4%\n19.4%\n11.1%\n28.6%\n18.2%\n16.1%\n22.2%\n33.3%\n33.3%\n9.1%\n11.1%\nStrongly agree Agree Neutral Disagree Strongly disagree\n(c) Helpfulness for empathy: The feedback shown to me was helpful in making my responses more empathic\n0% 20% 40% 60% 80% 100% % of Participants\nDid Not Consult AI\nConsulted AI Only Once\nDid Not Use AI Suggestions\nDirectly Used First AI Suggestion\nDirectly Used AI Suggestions After\nMultiple Reloads\nUsed AI Suggestions For Guiding Responses\nAlways Consulted AI But Not Always Used\nAlways Consulted And Always Used AI\n38.5%\n57.1%\n9.1%\n22.6%\n44.4%\n8.3%\n40.0%\n66.7%\n26.9%\n14.3%\n18.2%\n32.3%\n22.2%\n25.0%\n26.7%\n33.3%\n30.8%\n28.6%\n54.5%\n29.0%\n11.1%\n41.7%\n13.3%\n9.1%\n9.7%\n11.1%\n25.0%\n20.0%\n9.1%\n11.1%\nStrongly agree Agree Neutral Disagree Strongly disagree\n(d) Actionability: The feedback shown to me was easy to incorporate into the final response\n0% 20% 40% 60% 80% 100% % of Participants\nDid Not Consult AI\nConsulted AI Only Once\nDid Not Use AI Suggestions\nDirectly Used First AI Suggestion\nDirectly Used AI Suggestions After\nMultiple Reloads\nUsed AI Suggestions For Guiding Responses\nAlways Consulted AI But Not Always Used\nAlways Consulted And Always Used AI\n34.6%\n25.8%\n44.4%\n16.7%\n20.0%\n66.7%\n19.2%\n71.4%\n45.5%\n32.3%\n22.2%\n41.7%\n26.7%\n33.3%\n38.5%\n14.3%\n36.4%\n32.3%\n22.2%\n16.7%\n26.7%\n14.3%\n9.1%\n16.7%\n26.7%\n9.1%\n11.1%\n8.3%\nStrongly agree Agree Neutral Disagree Strongly disagree\n(e) Self-efficacy: I feel more confident at writing supportive responses after this study\n0% 20% 40% 60% 80% 100% % of Participants\nDid Not Consult AI\nConsulted AI Only Once\nDid Not Use AI Suggestions\nDirectly Used First AI Suggestion\nDirectly Used AI Suggestions After\nMultiple Reloads\nUsed AI Suggestions For Guiding Responses\nAlways Consulted AI But Not Always Used\nAlways Consulted And Always Used AI\n42.3%\n57.1%\n45.5%\n45.2%\n55.6%\n41.7%\n33.3%\n66.7%\n26.9%\n42.9%\n9.1%\n19.4%\n11.1%\n33.3%\n60.0%\n33.3%\n19.2%\n18.2%\n16.1%\n25.0%\n7.7%\n19.4%\n22.2%\n27.3%\n11.1%\nStrongly agree Agree Neutral Disagree Strongly disagree\n(f) Intention to adopt: I would like to see this type of feedback system deployed on TalkLife or other similar platforms\n0% 20% 40% 60% 80% 100% % of Participants\nDid Not Consult AI\nConsulted AI Only Once\nDid Not Use AI Suggestions\nDirectly Used First AI Suggestion\nDirectly Used AI Suggestions After\nMultiple Reloads\nUsed AI Suggestions For Guiding Responses\nAlways Consulted AI But Not Always Used\nAlways Consulted And Always Used AI\n65.4%\n85.7%\n45.5%\n45.2%\n66.7%\n16.7%\n40.0%\n66.7%\n19.2%\n14.3%\n9.1%\n35.5%\n50.0%\n33.3%\n33.3%\n7.7%\n18.2%\n12.9%\n16.7%\n7.7%\n22.2%\n8.3%\n27.3%\n11.1%\n8.3%\n13.3%\nStrongly agree Agree Neutral Disagree Strongly disagree\n39/61\nFigure S18. Pop-up used to advertise our study on TalkLife. This pop-up is shown to TalkLife users after they submit a response on the TalkLife platform, with an aim of targeting active peer supporters.\n40/61\nFigure S19. Consent form used in our study.\nDisclaimer\nThank you for your interest in our study!\nWe are researchers at the University of Washington, studying peer-to-peer support platforms.\nThis study is not being conducted by TalkLife. TalkLife is not responsible for any risks/benefits associated with this study.\nAs part of this study, we will be collecting (a) textual responses to support seeking posts, and (b) answers to survey questions describing your background and your assessment of our study. The data from this study will be uploaded to a secure platform accessible only to the research team. All collected data will be exclusively used for research purposes. Also, data will only be analyzed in aggregate.\nThis study has been determined to be exempt from IRB approval under University of Washington IRB ID STUDY00012706. For concerns or questions, please contact ashshar@cs.washington.edu.\nThis is not a live conversation with users. Your responses will not be posted on TalkLife or any other online platform.\nYour participation in this study is completely voluntary. You are free to release/quit the study at any time. Refusing to be in the experiment or stopping participation will involve no penalty or loss of benefits to which you are otherwise entitled.\nPoor-quality data (e.g., same response to all posts) may be removed without compensation.\nIf you are a US citizen or a permanent US resident, you will receive an Amazon gift card worth 5 USD after completing this study.\nConsent\n\u00a0I agree to participate in this study. I also understand that only US citizens or permanent US residents can be compensated.\nYes, I'm a US citizen or a permanent US resident. No, I'm neither a US citizen nor a permanent US resident. Prefer not to say.\nAccept and Continue\n41/61\nFigure S20. Form used for collecting demographics and background of participants [phase I: pre-intervention survey].\nTell us about yourself\nEmail is only collected for sending gift cards and will neither be used for analysis nor be stored by us after the study.\nName\nEmail\nAge\nGender\nSelect\nCountry\nRace/Ethnicity\nSelect\nPrevious experience with online peer support\nSelect\nNext\n42/61\nFigure S21. Onboarding survey used for collecting perceptions of participants [phase I: pre-intervention survey].\nOnboarding Survey\n1) I'm confident I can write good, effective, or helpful responses to support seeking posts from users.\nStrongly Agree Somewhat Agree Neutral Somewhat Disagree Strongly Disagree\n2) I'm confident I can write empathic responses to support seeking posts from users.\nStrongly Agree Somewhat Agree Neutral Somewhat Disagree Strongly Disagree\n3) Real-time feedback could be helpful in improving my responses.\nStrongly Agree Somewhat Agree Neutral Somewhat Disagree Strongly Disagree\nNext\n43/61\nFigure S22. Instructions shown to the control group participants [phase II: empathy training and instructions]. Continued on the next page (1/2).\nInstructions The study will involve writing textual responses to support seeking posts and answering survey questions. The entire study is expected to take ~30 minutes.\nContent Warning The study contains posts including but not limited to self-harm and suicidal ideation, which may be disturbing to you. If you have concerns or questions, please send us an email (ashshar@cs.washington.edu). If you have strong negative reactions to some of the content, please reach out at crisis text line.\nWhat will you do? During the main part of the study, you will be shown online mental health posts through which people seek support. We call them \u201cSeeker Posts\u201d (writers of these posts are called \u201dSeekers\u201d). For each seeker post, you will be asked to write a supportive, empathic response.\nAlso, at various steps, you will be asked survey questions describing your background and your assessment of our study.\nExpressing empathy in responses\nA key component of your responses should be empathy -- You should try and express empathy towards the seeker in your responses.\nEmpathy\nEmpathy is the ability to understand or feel the emotions and experiences of others. Empathic responses typically involve:\nReacting with emotions felt after reading a post (e.g., I feel sorry for you) Communicating an understanding of feelings and experiences (e.g., This must be terrifying) Improving understanding by exploring feelings and experiences (e.g., Are you feeling alone right now?)\nExamples of empathic responses\nSeeker Post: My whole family hates me. Empathic Response: I'm sorry to hear about your situation. If that happened to me, I would feel really isolated.\nSeeker Post: I feel like nobody cares about my existence. Empathic Response: It s\u0313 hard to find others who can relate. I feel the same.\nSeeker Post: I can\u02bct deal with this part of my bipolar. I need help. Empathic Response: Being manic is no fun. It's scary! I\u02bcm sorry to hear this is troubling you. Try to relax. Anyone you can talk to?\nNext\n44/61\nFigure S23. Instructions shown to the control group participants [phase II: empathy training and instructions] (2/2).\nThank you for filling out the survey!\nNext, you will write responses to 10 support seeking posts. Here, we will give you an overview of our interface.\nThe Interface This is how the main interface will look:\nYou will read the seeker post and write a supportive, empathic response in the space provided.\nStart Study\n45/61\nFigure S24. Instructions shown to the treatment group participants [phase II: empathy training and instructions]. Continued on the next page (1/6).\nInstructions The study will involve writing textual responses to support seeking posts and answering survey questions. You will receive real-time feedback with suggestions on how to improve your response. The entire study is expected to take ~30 minutes.\nContent Warning The study contains posts including but not limited to self-harm and suicidal ideation, which may be disturbing to you. If you have concerns or questions, please send us an email (ashshar@cs.washington.edu). If you have strong negative reactions to some of the content, please reach out at crisis text line.\nWhat will you do? During the main part of the study, you will be shown online mental health posts through which people seek support. We call them \u201cSeeker Posts\u201d (writers of these posts are called \u201dSeekers\u201d). For each seeker post, you will be asked to write a supportive, empathic response. You will get opportunities to receive \"help\" on your responses. We will suggest you ways in which you can improve your responses. You are strongly recommended to always check these suggestions and use them if they make your response more supportive and empathic.\nAlso, at various steps, you will be asked survey questions describing your background and your assessment of our study.\nExpressing empathy in responses\nA key component of your responses should be empathy -- You should try and express empathy towards the seeker in your responses.\nEmpathy\nEmpathy is the ability to understand or feel the emotions and experiences of others. Empathic responses typically involve:\nReacting with emotions felt after reading a post (e.g., I feel sorry for you) Communicating an understanding of feelings and experiences (e.g., This must be terrifying) Improving understanding by exploring feelings and experiences (e.g., Are you feeling alone right now?)\nExamples of empathic responses\nSeeker Post: My whole family hates me. Empathic Response: I'm sorry to hear about your situation. If that happened to me, I would feel really isolated.\nSeeker Post: I feel like nobody cares about my existence. Empathic Response: It s\u0313 hard to find others who can relate. I feel the same.\nSeeker Post: I can\u02bct deal with this part of my bipolar. I need help. Empathic Response: Being manic is no fun. It's scary! I\u02bcm sorry to hear this is troubling you. Try to relax. Anyone you can talk to?\nNext 46/61\nFigure S25. Instructions shown to the treatment group participants [phase II: empathy training and instructions]. Continued on the next page (2/6).\nThank you for filling out the survey!\nNext, you will write responses to 10 support seeking posts while receiving feedback. We will first give you an overview of our interface.\nThe Interface This is how the main interface will look:\nYou will read the seeker post and write a supportive, empathic response in the space provided.\nNext (1/4)\n47/61\nFigure S26. Instructions shown to the treatment group participants [phase II: empathy training and instructions]. Continued on the next page (3/6).\nInterface - Receiving feedback via prompts\nYou will see prompts to receive real-time feedback (as shown below). You can click on the prompts to get help with your responses.\nYou are strongly recommended to always check these suggestions and use them if they make your response more supportive and empathic.\nNext (2/4)\n48/61\nFigure S27. Instructions shown to the treatment group participants [phase II: empathy training and instructions]. Continued on the next page (4/6).\nInterface - Insert and Replace Operations\nIn our feedback, we will suggest text that you can insert or replace in your current response to make it more supportive and empathic.\nInserting suggested text\n49/61\nFigure S28. Instructions shown to the treatment group participants [phase II: empathy training and instructions]. Continued on the next page (5/6).\nReplacing with suggested text\nYou can directly incorporate the changes by clicking on Insert and Replace buttons.\nNext (3/4)\n50/61\nFigure S29. Instructions shown to the treatment group participants [phase II: empathy training and instructions] (6/6).\nInterface - Bad feedback\nOur feedback will not always be perfect. If the feedback is bad or inappropriate, you may refine, reload, or report the feedback.\nRefine\nYou may need to refine the feedback to correct grammar or content. You should make relevant changes such that the feebdack can be appropriately integrated in your final response.\nReload\nAlso, whenever the feedback is bad, you can use the  button (see below) to reload and get new feedback.\nYou can reload multiple times till you see feedback that is helpful.\nReport\nIf you see feedback that is inappropriate or toxic, you can report it using the \u00a0Flag button.\nWe will now start the study!\nStart (4/4) 51/61\nFigure S30. An example workflow for Human Only (control) participants [phase III: write supportive, empathic responses]. (a) Participant is asked to write a supportive, empathic response. (b) Participant starts writing the response.\n(a) (b)\n52/61\nFigure S31. An example workflow for Human + AI (treatment) participants [phase III: write supportive, empathic responses]. (a) Participant is asked to write a supportive, empathic response and given an option to receive feedback. (b) Participant starts writing the response. (c) Participant clicks on the prompt to request feedback from HAILEY. (d) Participant accepts the suggested changes and gets an option to request more feedback. (e) Participant continues editing the response and requests more feedback as needed. (f) When the response is already highly empathic, the participant simply receives a positive feedback.\n(a) (b) (c)\n(d) (e) (f)\n53/61\nFigure S32. Interface for flagging feedback [phase III: write supportive, empathic responses].\n54/61\nFigure S33. Exit survey used for collecting perceptions of control group participants [phase IV: post-intervention survey].\nEnd-of-study Survey\n1) It was challenging or stressful to write responses to posts.\nStrongly Agree Somewhat Agree Neutral Somewhat Disagree Strongly Disagree\n2) Feedback and Suggestions on how to improve my responses would have helped me write better responses.\nStrongly Agree Somewhat Agree Neutral Somewhat Disagree Strongly Disagree\n3) Describe the challenges faced while writing responses?\nSubmit\n55/61\nFigure S34. Exit survey used for collecting perceptions of treatment group participants [phase IV: post-intervention survey]. Continued on the next page (1/2).\nEnd-of-study Survey\n1) It was challenging or stressful to write responses to posts.\nStrongly Agree Somewhat Agree Neutral Somewhat Disagree Strongly Disagree\n2) The feedback shown to me was helpful in improving my responses.\nStrongly Agree Somewhat Agree Neutral Somewhat Disagree Strongly Disagree\n3) The feedback shown to me was helpful in making my responses more empathic.\nStrongly Agree Somewhat Agree Neutral Somewhat Disagree Strongly Disagree\n4) The feedback shown to me was easy to incorporate into the final response.\nStrongly Agree Somewhat Agree Neutral Somewhat Disagree Strongly Disagree\n5) I feel more confident at writing supportive responses after this study.\nStrongly Agree Somewhat Agree Neutral Somewhat Disagree Strongly Disagree\n6) I would like to see this type of feedback system deployed on TalkLife or other similar platforms.\nStrongly Agree Somewhat Agree Neutral Somewhat Disagree Strongly Disagree\n7) Describe the challenges faced while writing responses?\n8) D ib i h f db k h l f l?\n56/61\nFigure S35. Exit survey used for collecting perceptions of treatment group participants [phase IV: post-intervention survey] (2/2).\n8) Describe instances where feedback was helpful? Why?\n9) Describe instances where feedback was not helpful? How could they have been more helpful?\nSubmit\n57/61\nFigure S36. Consent form used for human evaluation of responses.\nDisclaimer\nThank you for your interest in our study!\nWe are researchers at the University of Washington, studying peer-to-peer support platforms.\nThis study is not being conducted by TalkLife. TalkLife is not responsible for any risks/benefits associated with this study.\nAs part of this study, we will be collecting ratings to online mental health support interactions. The data from this study will be uploaded to a secure platform accessible only to the research team. All collected data will be exclusively used for research purposes. Also, data will only be analyzed in aggregate.\nThis study has been determined to be exempt from IRB approval under University of Washington IRB ID STUDY00012706. For concerns or questions, please contact ashshar@cs.washington.edu.\nYour participation in this study is completely voluntary. You are free to release/quit the study at any time. Refusing to be in the experiment or stopping participation will involve no penalty or loss of benefits to which you are otherwise entitled.\nPoor-quality data (e.g., same answers to all posts) may be removed without compensation.\nIf you are a US citizen or a permanent US resident, you will receive an Amazon gift card worth 5 USD after completing this study.\nNote: Top-2 participants (based on inter-rater agreement) will receive an additional gift card worth 25 USD.\nConsent\n\u00a0I agree to participate in this study. I also understand that only US citizens or permanent US residents can be compensated.\nYes, I'm a US citizen or a permanent US resident. No, I'm neither a US citizen nor a permanent US resident. Prefer not to say.\nAccept and Continue\n58/61\nFigure S37. Instructions for human evaluation of responses.\nInstructions Read and evaluate online mental health support interactions.\nContent Warning The study contains posts including but not limited to self-harm and suicidal ideation, which may be disturbing to you. If you have concerns or questions, please send us an email (ashshar@cs.washington.edu). If you have strong negative reactions to some of the content, please reach out at crisis text line.\nWhat will you read?\nYou will be shown three posts to read - a seeker post and two response posts. Details below:\nSeeker Post: This would be typically a mental health support seeking post, posted online by a user in distress. The writer of this post is called Seeker. Response Post A: This is a response/reply posted in response to the seeker post, usually in an attempt to provide mental health support to the seeker. Response Post B: This is another response/reply posted in response to the same seeker post, usually in an attempt to provide mental health support to the seeker.\nWhat will you do?\nYour task will be to evaluate the two response posts A and B. In particular, for each set of posts, you will answer the following questions:\nWhich response is more empathic (regardless of appropriateness)?\nResponse A Both are similar Response B\nWhich response is more appropriate/relevant to the seeker post (regardless of empathy)?\nResponse A Both are similar Response B\nResponse A is...\nWritten by a human Generated by a computer Combination of both\nResponse B is...\nWritten by a human Generated by a computer Combination of both\nYou will read 30 such posts and answer the associated questions. We discourage the use of the \"Both are similar\" option. Only use it when the posts are actually similar and there is nothing to distinguish the two.\nNext\n59/61\nFigure S38. Interface for human evaluation of responses.\nSeeker Post\n{{seeker_post}}\nResponse Post A\n{{response_post_A}}\nResponse Post B\n{{response_post_B}}\nWhich response is more empathic (regardless of appropriateness)?\nResponse A Both are similar Response B\nWhich response is more appropriate/relevant to the seeker post (regardless of empathy)?\nResponse A Both are similar Response B\nResponse A is...\nWritten by a human Generated by a computer Combination of both\nResponse B is...\nWritten by a human Generated by a computer Combination of both\nNext (1/30)\n60/61\nFigure S39. An overview of PARTNER, the deep reinforcement learning model that HAILEY uses. Figure adapted from Sharma et al.47\nSeeker post (Si)\nMy job is becoming more and more stressful\nwith each passing day\nResponse post (Ri,j:j+k)\nDon\u2019t worry! I\u2019m there for you\nT ra\nn sf\no rm\ner b\nlo ck\n1 Position classifier\nSentence generatorT\nra n\nsf o\nrm er\nb lo\nck L\nIt must be a real struggle.\nChange in empathy (\ud835\udc93\ud835\udc86)\nText fluency (\ud835\udc93\ud835\udc87)\nSentence coherence (\ud835\udc93\ud835\udc84)\nAction a1\nAction a2\nIt must be a real struggle. Don\u2019t\nworry! I\u2019m there for you\nInsert at \ud835\udc5d\ud835\udc56 = 1\nCandidate sentence (Ci,j)\nRewritten response (#\ud835\udc79i,j:j+k)\nMutual information (\ud835\udc93\ud835\udc8e)\n\ud835\udc5f = \ud835\udc64\ud835\udc52 \u2217 \ud835\udc5f\ud835\udc52 + \ud835\udc64\ud835\udc53 \u2217 \ud835\udc5f\ud835\udc53 +\ud835\udc64\ud835\udc50 \u2217 \ud835\udc5f\ud835\udc50 + \ud835\udc64\ud835\udc5a \u2217 \ud835\udc5f\ud835\udc5a\nPosition to insert/replace (\ud835\udc29\ud835\udc22)\nRewards\n61/61"
+        }
+    ],
+    "title": "Human-AI Collaboration Enables More Empathic Conversations in Text-based Peer-to-Peer Mental Health Support",
+    "year": 2022
+}

@@ -1,0 +1,186 @@
+{
+    "abstractText": "In this paper, we describe a new algorithm for recovering WH-trace empty nodes. Our approach combines a set of hand-written patterns together with a probabilistic model. Because the patterns heavily utilize regular expressions, the pertinent tree structures are covered using a limited number of patterns. The probabilistic model is essentially a probabilistic context-free grammar (PCFG) approach with the patterns acting as the terminals in production rules. We evaluate the algorithm\u2019s performance on gold trees and parser output using three different metrics. Our method compares favorably with state-of-the-art algorithms that recover WH-traces.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Denis Filimonov"
+        },
+        {
+            "affiliations": [],
+            "name": "Mary P. Harper"
+        }
+    ],
+    "id": "SP:c0dc17c077b72859eabc082ad8df1c3140440f37",
+    "references": [
+        {
+            "authors": [
+                "A. Bies",
+                "M. Ferguson",
+                "K. Katz",
+                "R. MacIntyre."
+            ],
+            "title": "Bracketing guidelines for treebank II style Penn Treebank project",
+            "venue": "Technical report.",
+            "year": 1995
+        },
+        {
+            "authors": [
+                "D.M. Bikel"
+            ],
+            "title": "On the Parameter Space of Gen628",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "D. Blaheta."
+            ],
+            "title": "Function Tagging",
+            "venue": "Ph.D. thesis, Brown University.",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "R. Campbell."
+            ],
+            "title": "Using linguistic principles to recover empty categories",
+            "venue": "In",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "E. Charniak."
+            ],
+            "title": "A maximum-entropy-inspired parser",
+            "venue": "Proceedings of the North American Chapter of the Association for Computational Linguistics",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "M. Collins"
+            ],
+            "title": "Head-driven Statistical Models for",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "P. Dienes",
+                "A. Dubey."
+            ],
+            "title": "Antecedent recovery: Experiments with a trace tagger",
+            "venue": "In",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "D. Higgins."
+            ],
+            "title": "A machine-learning approach to the identification of WH gaps",
+            "venue": "InProceedings of the Annual Meeting of the European Chapter of the Association for Computational Linguistics",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "M. Johnson."
+            ],
+            "title": "A simple pattern-matching algorithm for recovering empty nodes and their antecedents",
+            "venue": "Proceedings of the Annual Meeting of the Association for Computational Linguistics",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "R. Levy",
+                "G Andrew."
+            ],
+            "title": "Tregex and Tsurgeon: Tools for querying and manipulating tree data structures",
+            "venue": "InProceedings of LREC",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "R. Levy",
+                "C. Manning."
+            ],
+            "title": "Deep dependencies from context-free statistical parsers: Correcting the surface dependency approximation",
+            "venue": "In",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "W. Wang",
+                "M.P. Harper."
+            ],
+            "title": "The SuperARV language model: Investigating the effectiveness of tightly integrating multiple knowledge sources in language modeling",
+            "venue": "InProceedings of the Empirical Methods in Natural Language Processing",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "W. Wang",
+                "M.P. Harper",
+                "A. Stolcke"
+            ],
+            "title": "The robustness of an almost-parsing language model given errorful training data",
+            "venue": "InProceedings of the IEEE International Conference on Acoustics,",
+            "year": 2003
+        }
+    ],
+    "sections": [
+        {
+            "text": "Proceedings of the 2007 Joint Conference on Empirical Methods in Natural Language Processing and Computational Natural Language Learning, pp. 620\u2013629, Prague, June 2007. c\u00a92007 Association for Computational Linguistics\nIn this paper, we describe a new algorithm for recovering WH-trace empty nodes. Our approach combines a set of hand-written patterns together with a probabilistic model. Because the patterns heavily utilize regular expressions, the pertinent tree structures are covered using a limited number of patterns. The probabilistic model is essentially a probabilistic context-free grammar (PCFG) approach with the patterns acting as the terminals in production rules. We evaluate the algorithm\u2019s performance on gold trees and parser output using three different metrics. Our method compares favorably with state-of-the-art algorithms that recover WH-traces."
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "In this paper, we describe a new algorithm for recovering WH-trace empty nodes in gold parse trees in the Penn Treebank and, more importantly, in automatically generated parses. This problem has only been investigated by a handful of researchers and yet it is important for a variety of applications, e.g., mapping parse trees to logical representations and structured representations for language modeling. For example, SuperARV language models (LMs) (Wang and Harper, 2002; Wang et al., 2003), which tightly integrate lexical features and syntactic constraints, have been found to significantly reduce word error in English speech recognition tasks. In order to generate SuperARV LM training, a state-ofthe-art parser is used to parse training material and then a rule-based transformer converts the parses to\nthe SuperARV representation. The transformer is quite accurate when operating on treebank parses; however, trees produced by the parser lack one important type of information \u2013 gaps, particularly WHtraces, which are important for more accurate extraction of the SuperARVs.\nApproaches applied to the problem of empty node recovery fall into three categories. Dienes and Dubey (2003) recover empty nodes as a preprocessing step and pass strings with gaps to their parser. Their performance was comparable to (Johnson, 2002); however, they did not evaluate the impact of the gaps on parser performance. Collins (1999) directly incorporated wh-traces into his Model 3 parser, but he did not evaluate gap insertion accuracy directly. Most of the research belongs to the third category, i.e., post-processing of parser output. Johnson (2002) used corpus-induced patterns to insert gaps into both gold standard trees and parser output. Campbell (2004) developed a set of linguistically motivated hand-written rules for gap insertion. Machine learning methods were employed by (Higgins, 2003; Levy and Manning, 2004; Gabbard et al., 2006).\nIn this paper, we develop a probabilistic model that uses a set of patterns and tree matching to guide the insertion of WH-traces. We only insert traces of non-null WH-phrases, as they are most relevant for our goals. Our effort differs from the previous approaches in that we have developed an algorithm for the insertion of gaps that combines a small set of expressive patterns with a probabilistic grammar-based model.\n620"
+        },
+        {
+            "heading": "2 The Model",
+            "text": "We have developed a set of tree-matching patterns that are applied to propagate a gap down a path in a parse tree. Pattern examples appear in Figure 1. Each pattern is designed to match a subtree (a root and one or more levels below that root) and used to guide the propagation of the trace into one or more nodes at the terminal level of the pattern (indicated using directed edges). Since tree-matching patterns are applied in a top-down fashion, multiple patterns can match the same subtree and allow alternative ways to propagate a gap. Hence, we have developed a probabilistic model to select among the alternative paths. We have created 24 patterns for WHNP traces, 16 for WHADVP, 18 for WHPP, and 11 for WHADJP.\nBefore describing our model, we first introduce some notation. \u2022 TNij is a tree dominating the string of words be-\ntween positionsi andj with N being the label of the root. We assume there are no unary chains like N\u2212X\u2212 ...\u2212Y \u2212N (which could be collapsed to a single nodeN ) in the tree, so thatTNij uniquely describes the subtree.\n\u2022 A gap locationgab,Ncd is represented as a tuple (gaptype, ancstr(a, b,N), c, d), wheregaptype is the type of the gap, (e.g.,whnp for a WHNP trace),ancstr(a, b,N) is the gap\u2019s nearest ancestor, with a andb being its span andN being its label, andc andd indicating where the gap can be inserted. Note that a gap\u2019s location is specified precisely whenc = d. If the gap is yet to be inserted into its final location but will be inserted somewhere insideancstr(a, b,N), then we set c = a andd = b. \u2022 ancstr(a, b,N) in the tuple forgab,Nxy is the tree TNab . \u2022 p(gab,Nxy |gaptype, TNij ) is the probability that a gap ofgaptype is located betweenx andy, with a\nandb being the span of its ancestor, andi \u2264 a \u2264 x \u2264 y \u2264 b \u2264 j.\nGiven this notation, our model is tasked to identify the best location for the gap in a parse tree among the alternatives, i.e.,\nargmax x,a,b,N\nPr(gab,Nxx |T, gaptype)\nwheregab,Nxx represents a gap location in a tree, and T = TNij is the subtree of the parse tree whose root node is the nearest ancestor node dominating the WH-phrase, excluding the WH-node itself, and gaptype is the type of the gap. In order to simplify the notation, we will omit the root labelsN in TNij andgab,Nxy , implying that they match where appropriate.\nTo guide this model, we utilize tree-matching patterns (see Figure 1), which are formally defined as functions:\nptrn : T \u00d7 G \u2192 \u0393 \u222a {none}\nwhereT is the space of parse trees,G is the space of gap types, and\u0393 is the space of gapsgabcd , andnone is a special value representing failure to match1. The application of a pattern is defined as: app(ptrn, \u03c4, gaptype) = ptrn(\u03c4, gaptype), where \u03c4 \u2208 T andgaptype \u2208 G. We define application of patterns as follows:\napp(ptrn, Tij , gaptype) \u2192 gabxy : i \u2264 a \u2264 x < y \u2264 b \u2264 j app(ptrn, Tij , gaptype) \u2192 gabxx : i \u2264 a \u2264 x \u2264 b \u2264 j app(ptrn, Tij , gaptype) \u2192 none\nBecause patterns are uniquely associated with specific gap types, we will omitgaptype to simplify the notation. Application is a function defined for every pair (ptrn, Tij) with fixedgaptype. Patterns are applied to the root ofTij , not to an arbitrary subtree.\nConsider an example of pattern application shown in Figure 2. The tree contains a relative clause such that the WHNP-phrasethat was moved from some location inside the subtree of its sister nodeS.\n2 viewers 3 will 4 tune 5 in 6 to 7 see 8\n1Modeling conjunction requires an alternative definition for patterns:ptrn : T \u00d7 G \u2192 Powerset(\u0393) \u222a {none}. For the sake of simplicity, we ignore conjunctions in the following discussion, except for in the few places where it matters, since this has little impact on the development of our model.\nNow suppose there is a patternP1 that matches the tree T28 indicating that the gap is somewhere in its subtreeT38 (will tune in to see), i.e., app(P1, T28) \u2192 g3838. The process of applying patterns continues until the patternP4 proposes an exact location for the gap:app(P4, T78) = g7888.\nSuppose that, in addition to the pattern applications shown in Figure 2, there is one more, namely: app(P5, T48) \u2192 g4866. The sequence of patterns P1, P2, P5 proposes an alternative grammatically plausible location for the gap, as shown in Figure 3. Notice that the combination of the two sequences produces a tree of patterns, as shown in Figure 4, and this pattern tree covers much of the structure of theT28 subtree."
+        },
+        {
+            "heading": "2.1 Tree Classes",
+            "text": "The number of unique subtrees that contain WHphrases is essentially infinite; hence, modeling them directly is infeasible. However, trees with varying details, e.g., optional adverbials, often can be char-\nacterized by the same tree of patterns. Hence, we can represent the space of trees by utilizing a relatively small set of classes of trees that are determined by their tree of pattern applications.\nLet \u03a0 be the set of all patterns. We define the set of patterns matching treeTij as follows:\nM(Tij) = {P | P \u2208 \u03a0 \u2227 app(P, Tij) 6= none}\nTo enable recursive application:\napp(ptrn, gabxy) = { app(ptrn, Tab) if x < y none if x = y\nA Pattern ChainPC is a sequence of pairs of patterns and sets of pattern sets, terminated by $, i.e., ( p1M1 , p2 M2 , ... pnMn ,$), where\u2200i pi \u2208 Mi \u2282 \u03a0. Mi = M(Tab), where Tab is the result of consequent application of the firsti \u2212 1 patterns: app(pi\u22121, app(pi\u22122, ..., app(p1, T\u03b1\u03b2))) = gabxy, and whereT\u03b1\u03b2 is the subtree we started with, (T28 in the example above). We definethe application of a pattern chainPC = ( p1M1 , p2 M2 , ... pnMn ,$) to a treeTij as:\napp(PC, Tij) = app(pn, ...app(p2, app(p1, Tij)))\nIt is important to also define a function to map a tree to the set of pattern chains applicable to a particular tree. The pseudocode for this function called FindPCs appears in Figure 52. When applied toTij , this function returns the set of all pattern chains, applications of which would result in concrete gap locations. The algorithm is guaranteed to terminate as long as trees are of finite depth and each pattern moves the gap location down at least one level in the tree at each iteration. Using this function, we defineTree Class(TC) of a treeTij asTC(Tij) = FindPCs(Tij).\n2list \u25e6 element means \u201cappendelement to list\u201d.\nIn the case of a conjunction, the function FindPCs is slightly more complex. Recall that in this caseapp(P, Tij) produces a set of gaps ornone. The pseudocode for this case appears in Figure 6."
+        },
+        {
+            "heading": "2.2 A Gap Automaton",
+            "text": "The set of pattern chains constructed by the function\nFindPCs can be represented as apattern treewith\npatterns being the edges. For example, the pattern\ntree in Figure 4 corresponds to the tree displayed in Figures 2 and 3.\nThis pattern tree captures the history of gap propagations beginning atA. Assuming at that point only patternP1 is applicable, subtreeB is produced. IfP2 yields subtreeC, and at that point patternsP3 and P5 can be applied, this yields subtreeD and exact locationF (which is expressed by the termination symbol $), respectively. Finally, patternP4 matches subtreeD and proposes exact gap locationE. It is important to note that this pattern tree can be thought of as an automaton, withA,B,C,D,E,andF being the states and the pattern applications being the transitions.\nNow, let us assign meaning of the states A,B,C,andD to be the set of matching patterns, i.e.,A = {P1}, B = {P2}, C = {P3, P5}, D = {P4}, and E = F = \u2205. Given this representation, the pattern chains for the insertion of the gaps in our example would be as follows:\n({P1}) P1\u2192 ({P2}) P2\u2192 ({P3, P5}) P3\u2192 ({P4}) P4,$\u2212\u2192 (\u2205)\n({P1}) P1\u2192 ({P2}) P2\u2192 ({P3, P5}) P5,$\u2212\u2192 (\u2205)\nWith this representation, we can create a regular grammar using patterns as the terminals and their\nfunction CrossProd(PC1, PC2) { prod\u2190 \u2205 forall pci \u2208 PC1\nforall pcj \u2208 PC2 : prod\u2190 prod\u222a{pci\u25e6pcj} returnprod }\nfunction FindPCs(Tij) { Mij \u2190 {P | P \u2208 \u03a0 \u2227 app(P, Tij) 6= none} newPCs\u2190 \u2205 forall P \u2208Mij\nPCs\u2190 {[ ]} forall gabxy \u2208 app(P, Tij)\nif x = y then\nforall pc \u2208 PCs : pc\u2190 pc \u25e6 $ else\nPCs\u2190 CrossProd(PCs,FindPCs(Tab)) forall pc \u2208 PCs : pc\u2190 P\nMij \u25e6 pc\nnewPCs\u2190 newPCs \u222a PCs returnnewPCs } The set app(P, Tij) must be ordered, so that\nbranches of conjunction are concatenated in a well defined order.\nFigure 6: Pseudocode for FindPCs in the case of conjunction\npowerset as the non-terminals (adding a few more details like the start symbol) and production rules such as{P2} \u2192 P2 {P3, P5}. However, for our example the chain of patterns appliedP1, P2, P3, P4, $ could generate a pattern tree that is incompatible with the original tree. For example:\n({P1}) P1\u2192 ({P2}) P2\u2192 ({P3, P5}) P3\u2192 ({P3, P4}) P4,$\u2212\u2192 (\u2205)\nwhich might correspond to something like\u201cthat viewers will tune in to expect to see.\u201dNote that this pattern chain belongs to a differenttree class, which incidentally would have inserted the gap at a different location (VP see gap).\nTo overcome this problem we add additional constraints to the grammar to ensure that all parses the grammar generates belong to the same tree class. One way to do this is to include the start state of a transition as an element of the terminal, e.g.,P2{P2} ,\nP3 {P3,P5} . That is, we extend the terminals to include the left-hand side of the productions they are emitted from, e.g.,\n{P2} \u2192 P2{P2} {P3, P5}\n{P3, P5} \u2192 P3{P3, P5} {P4}\nand the sequence of terminals becomes: P1 {P1} P2 {P2} P3 {P3,P5} P4 {P4} $.\nNote that the grammar is unambiguous. For such a grammar, the question \u201cwhat is the probability of a parse tree given a string and grammar\u201d doesn\u2019t make sense; however, the question \u201cwhat is the probability of a string given the grammar\u201d is still valid, and this is essentially what we require to develop a generative model for gap insertion."
+        },
+        {
+            "heading": "2.3 The Pattern Grammar",
+            "text": "Let us define the pattern grammar more rigorously. Let \u03a0 be the set of patterns, and\u0303\u03a0 \u2282 \u03a0 be the set of terminal patterns3. Let pset(P ) be the set of all subsets of patterns which include the patternP , i.e., pset(P ) = {\u03bd \u222a {P} | \u03bd \u2208 powerset(\u03a0)} \u2022 Let T = { Ppset(P ) | P \u2208 \u03a0}\n\u22c3{$} be the set of terminals, where $ is a special symbol4. \u2022 Let N = {S}\u22c3 powerset(\u03a0) be the set of nonterminals withS being the start symbol. \u2022 Let P be the set of productions, defined as the union of the following sets: 1. {S \u2192 \u03bd | \u03bd \u2208 powerset(\u03a0)}.\n2. {\u03bd \u2192 P\u03bd \u00b5 | P \u2208 \u03a0\u2212\u03a0\u0303 , \u03bd \u2208 pset(P ) and\u00b5 \u2208 powerset(\u03a0)}. These are nonterminal transi-\ntions, note that they emit only non-terminal patterns.\n3. {\u03bd \u2192 P\u03bd $ | P \u2208 \u03a0\u0303 and\u03bd \u2208 pset(P )}. These are the terminal transitions, they emit a terminal pattern and the symbol $. 4. {\u03bd \u2192 P\u03bd \u00b51 . . . \u00b5n | P \u2208 \u03a0 \u2212 \u03a0\u0303 , \u03bd \u2208 pset(P ) and \u2200i\u2208[1..n] \u00b5i \u2208 powerset(\u03a0)}. This rule models conjunction withn branches."
+        },
+        {
+            "heading": "2.4 Our Gap Model",
+            "text": "Given the grammar defined in the previous subsection, we will define a probabilistic model for gap insertion. Recall that our goal is to find:\nargmax x,a,b\nPr(gabxx|T )\nJust like the probability of a sentence is obtained by summing up the probabilities of its parses, the probability of the gap being atgabxx is the sum of probabilities of all pattern chains that yieldgabxx.\n3Patterns that generate exact position for a gap. 4Symbol $ helps to separate branches in strings with con-\njunction.\nPr(gabxx|T ) = \u2211\npci\u2208\u03a5 Pr(pci|T )\nwhere\u03a5 = {pc | app(pc, T ) = gabxx}. Note that pci \u2208 TC(T ) by definition.\nFor our model, we use two approximations. First, we collapse a treeT into its Tree ClassTC(T ), effectively ignoring details irrelevant to gap insertion:\nPr(pci|T ) \u2248 Pr(pci|TC(T ))\nFigure 7: A pattern tree with the pattern chain ABDGM marked using bold lines\nConsider the pattern tree shown in Figure 7. The probability of the pattern chainABDGM given the pattern tree can be computed as:\nPr(ABDGM |TC(T )) = Pr(ABDGM,TC(T )) Pr(TC(T ))\n= NR(ABDGM,TC(T ))\nNR(TC(T ))\nwhere NR(TC(T )) is the number of occurrences of the tree classTC(T ) in the training corpus and NR(ABDGM,TC(T )) is the number cases when the pattern chainABDGM leads to a correct gap in trees corresponding to the tree classTC(T ). For many tree classes, NR(TC(T )) may be a small number or even zero, thus this direct approach cannot be applied to the estimation ofPr(pci|TC(T )). Further approximation is required to tackle the sparsity issue.\nIn the following discussion,XY will denote an edge (pattern) between verticesX and Y in\nthe pattern tree shown in Figure 7. Note that Pr(ABDGM |TC(T )) can be represented as:\nPr(AB|TC(T ), A)\u00d7 Pr(BD|TC(T ), AB)\u00d7 \u00d7Pr(DG|TC(T ), ABD)\u00d7 Pr(GM |TC(T ), ABDG)\nWe make an independence assumption, specifically, thatPr(BD|TC(T ), AB) depends only on statesB, D, and the edge between them, not on the whole pattern tree or the edges aboveB, i.e., Pr(BD|TC(T ), AB) \u2248 Pr(BD,D|B). Note that this probability is equivalent to the probability of a productionPr(B BD\u2192 D) of a PCFG. Recall that the meaning assigned to a state in pattern grammar in Section 2.2 is the set of patterns matching at that state. Thus, according to that semantics, only the edges displayed bold in Figure 8 are involved in computation of Pr(B BD\u2192 D). Written in the style we used for our grammar, the production is{BD,BE,BF} \u2192 BD {BD,BE,BF}{DG,DH}.\nFigure 8: The context considered for estimation of the probability of transition fromB toD\nPattern trees are fairly shallow (partly because many patterns cover several layers in a parse tree as can be seen in Figures 1 and 2); therefore, the context associated with a production covers a good part of a pattern tree. Another important observation is that the local configuration of a node, which is described by the set of matching patterns, is the most relevant to the decision of where the gap is to be propagated5. This is the reason why the states are represented this way.\nFormally, the second approximation we make is\n5We have evaluated a model that only uses Pr(BD|{BD,BE,BF}) for the probability of taking BD and found it performs only slightly worse than the model presented here.\nas follows:\nPr(pci|TC(T )) \u2248 Pr(pci|G)\nwhereG is a PCFG model based on the grammar described above.\nPr(pci|G) = \u220f\nprodj\u2208P(pci) Pr(prodj |G)\nwhereP(pci) is the parse of the pattern chainpci which is a string of terminals ofG. Combining the formulae:\nPr(gabxx|T ) \u2248 \u2211\npci\u2208\u03a5 Pr(pci|G)\nFinally, sincePr(TC(T )|G) is a constant forT ,\nargmax x,a,b Pr(gabxx|T ) \u2248 argmax x,a,b\n\u2211\npci\u2208\u03a5 Pr(pci|G)\nTo handle conjunction, we must express the fact that pattern chains yield sets of gaps. Thus, the goal becomes:\nargmax (x1,a1,b1),...,(xn,an,bn)\nPr({ga1b1x1x1 , . . . , ganbnxnxn}|T )\nPr({ga1b1x1x1 , . . . , ganbnxnxn}|T ) = \u2211\npci\u2208\u03a5 Pr(pci|T )\nwhere \u03a5 = {pc | app(pc, T ) = {ga1b1x1x1 , . . . , ganbnxnxn}}. The remaining equations\nare unaffected."
+        },
+        {
+            "heading": "2.5 Smoothing",
+            "text": "Even for the relatively small number of patterns, the number of non-terminals in the grammar can potentially be large (2|\u03a0|). This does not happen in practice since most patterns are mutually exclusive. Nonetheless, productions, unseen in the training data, do occur and their probabilities have to be\nstimated. Rewriting the probability of a transition Pr(A \u2192 a\nA B) asP(A, a,B), we use the following in-\nterpolation:\nP\u0303(A, a,B) = \u03bb1P(A, a,B) + \u03bb2P(A, a) +\u03bb3P(A,B) + \u03bb4P(a,B) + \u03bb5P(a)\nWe estimate the parameters on the held out data (section 24 of WSJ) using a hill-climbing algorithm."
+        },
+        {
+            "heading": "3 Evaluation",
+            "text": ""
+        },
+        {
+            "heading": "3.1 Setup",
+            "text": "We compare our algorithm under a variety of conditions to the work of (Johnson, 2002) and (Gabbard et al., 2006). We selected these two approaches because of their availability6. In addition, (Gabbard et al., 2006) provides state-of-the-art results. Since we only model the insertion of WH-traces, all metrics include co-indexation with the correct WH phrases identified by their type and word span.\nWe evaluate on three metrics. The first metric, which was introduced by Johnson (2002), has been widely reported by researchers investigating gap insertion. A gap is scored as correct only when it has the correct type and string position. The metric has the shortcoming that it does not require correct attachment into the tree.\nThe second metric, which was developed by Campbell (2004), scores a gap as correct only when it has the correct gap type and its mother node has the correct nonterminal label and word span. As Campbell points out, this metric does not restrict the position of the gap among its siblings, which in most cases is desirable; however, in some cases (e.g., double object constructions), it does not correctly detect errors in object order. This metric is also adversely affected by incorrect attachments of optional constituents, such as PPs, due to the span requirement.\nTo overcome the latter issue with Campbell\u2019s metric, we propose to use a third metric that evaluates gaps with respect to correctness of their lexical head, type of the mother node, and the type of the coindexed wh-phrase. This metric differs from that used by Levy and Manning (2004) in that it counts only the dependencies involving gaps, and so it represents performance of the gap insertion algorithm more directly.\nWe evaluate gap insertion on gold trees from section 23 of the Wall Street Journal Penn Treebank (WSJ) and parse trees automatically produced using the Charniak (2000) and Bikel (2004) parsers. These parsers were trained using sections 00 through 22 of the WSJ with section 24 as the development set.\nBecause our algorithm inserts only traces of nonempty WH phrases, to fairly compare to Johnson\u2019s and Gabbard\u2019s performance on WH-traces alone, we\n6Johnson\u2019s source code is publicly available, and Ryan Gabbard kindly provided us with output trees produced by his system.\nremove the other gap types from both the gold trees and the output of their algorithms. Note that Gabbard et al.\u2019s algorithm requires the use of function tags, which are produced using a modified version of the Bikel parser (Gabbard et al., 2006) and a separate software tool (Blaheta, 2003) for the Charniak parser output.\nFor our algorithm, we do not utilize function tags, but we automatically replace the tags of auxiliary verbs in tensed constructions withAUX prior to inserting gaps using tree surgeon (Levy and Andrew, 2006). We found that Johnson\u2019s algorithm more accurately inserts gaps when operating on auxified trees, and so we evaluate his algorithm using these modified trees.\nIn order to assess robustness of our algorithm, we evaluate it on a corpus of a different genre \u2013 Broadcast News Penn Treebank (BN), and compare the result with Johnson\u2019s and Gabbard\u2019s algorithms. The BN corpus uses a modified version of annotation guidelines, with some of the modifications affecting gap placement.\nTreebank 2 guidelines (WSJ style): (SBAR (WHNP-2 (WP whom))\n(S (NP-SBJ (PRP they)) (VP (VBD called)\n(S (NP-SBJ (-NONE- *T*-2)) (NP-PRD (NNS exploiters))))))\nTreebank 2a guidelines (BN style): (SBAR-NOM (WHNP-1 (WP what))\n(S (NP-SBJ (PRP they)) (VP (VBP call)\n(NP-2 (-NONE- *T*-1)) (S-CLR (NP-SBJ (-NONE- *PRO*-2))\n(NP-PRD (DT an) (NN epidemic))))))\nSince our algorithms were trained on WSJ, we apply tree transformations to the BN corpus to convert these trees to WSJ style. We also auxify the trees as described previously."
+        },
+        {
+            "heading": "3.2 Results",
+            "text": "Table 1 presents gap insertion F measure for Johnson\u2019s (2002) (denoted J), Gabbard\u2019s (2006) (denoted G), and our (denoted Pres) algorithms on section 23 gold trees, as well as on parses generated by the Charniak and Bikel parsers. In addition to WHNP and WHADVP results that are reported in the literature, we also present results for WHPP gaps even though there is a small number of them in section 23 (i.e., 22 gaps total). Since there are only 3 nonempty WHADJP phrases in section 23, we omit them in our evaluation.\nCompared to Johnson\u2019s and Gabbard\u2019s algorithm, our algorithm significantly reduces the error on gold trees (table 1). Operating on automatically parsed trees, our system compares favorably on all WH traces, using all metrics, except for two instances: Gabbard\u2019s algorithm has better performance on WHNP, using Cambpell\u2019s metric and trees generated by the Charniak parser by 0.3% and on WHADVP, using Johnson\u2019s metric and trees produces by the Bikel parser by 0.7%. However, we believe that the dependency metric is more appropriate for evaluation on automatically parsed trees because it enforces the most important aspects of tree structure for evaluating gap insertion. The relatively poor performance of Johnson\u2019s and our algorithms on WHPP gaps compared that on WHADVP gaps is probably due, at least in part, to the significantly smaller number of WHPP gaps in the training corpus and the relatively wider range of possible attachment sites for the prepositional phrases.\nTable 2 displays how well the algorithms trained on WSJ perform on BN. A large number of the errors are due toFRAGs which are far more common in the speech corpus than in WSJ. WHPP and WHADJP, although more rare than the other types, are presented for reference."
+        },
+        {
+            "heading": "3.3 Error Analysis",
+            "text": "It is clear from the contrast between the results based on gold standard trees and the automatically produced parses in Table 1 that parse error is a major source of error. Parse error impacts all of the metrics, but the patterns of errors are different. For WHNPs, Campbell\u2019s metric is lower than the other two across all three algorithms, suggesting that this metric is adversely affected by factors that do not impact the other metrics (most likely the span of the gap\u2019s mother node). For WHADVPs, the metrics\nshow a similar degradation due to parse error across the board. We are reluctant to draw conclusions for the metrics on WHPPs; however, it should be noted that the position of the PP should be less critical for evaluating these gaps than their correct attachment, suggesting that the head dependency metric would more accurately reflect the performance of the system for these gaps.\nCampbell\u2019s metric has an interesting property: in parse trees, we can compute the upper bound on recall by simply checking whether the correct WHphrase and gap\u2019s mother node exist in the parse tree. We present recall results and upper bounds in Table 3. Clearly the algorithms are performing close to the upper bound for WHNPs when we take into account the impact of parse errors on this metric. Clearly there is room for improvement for the WHPPs.\nIn addition to parser errors, which naturally have the most profound impact on the performance, we found the following sources of errors to have impact on our results:\n\u2022 Annotation errors and inconsistency in PTB, which impact not only the training of our system, but also its evaluation.\nCharniak Parser J G Pres UB WHNP 81.9 82.8 83.5 84.0 WHADVP 61.4 71.7 78.4 81.1 WHPP 28.6 N/R 60.0 86.4 Bikel Parser J G Pres UB WHNP 77.0 80.5 81.5 82.0 WHADVP 47.2 70.1 74.8 78.0 WHPP 22.7 N/R 59.1 81.8\n(NP (-NONE- *T*-3)) (PP ...))))\n2. Some WHADVPs have gaps attached in the wrong places or do not have gaps at all, e.g., (SBAR (WHADVP (WRB when))\n(S (NP (PRP he)) (VP (VBD arrived)\n(PP (IN at) (NP ...)) (ADVP (NP (CD two) (NNS days))\n(JJ later)))))\n3. PTB annotation guidelines leave it to annotators to decide whether the gap should be attached at the conjunction level or inside its branches (Bies et al., 1995) leading to inconsistency in attachment decisions for adverbial gaps.\n\u2022 Lack of coverage: Even though the patterns we use are very expressive, due to their small number some rare cases are left uncovered.\n\u2022 Model errors: Sometimes despite one of the applicable pattern chains proposes the correct gap, the probabilistic model chooses otherwise. We believe that a lexicalized model can eliminate most of these errors."
+        },
+        {
+            "heading": "4 Conclusions and Future Work",
+            "text": "The main contribution of this paper is the development of a generative probabilistic model for gap insertion that operates on subtree structures. Our model achieves state-of-the-art performance, demonstrating results very close to the upper bound on WHNP using Campbell\u2019s metric. Performance for WHADVPs and especially WHPPs, however, has room for improvement.\nWe believe that lexicalizing the model by adding information about lexical heads of the gaps may resolve some of the errors. For example:\n(SBAR (WHADVP-3 (WRB when)) (S (NP (NNP Congress))\n(VP (VBD wanted) (S (VP (TO to)\n(VP (VB know) ...))) (ADVP (-NONE- *T*-3)))))\nThese sentences have very similar structure, with two potential places to insert gaps (ignoring reordering with siblings). The current model inserts the gaps as follows:when Congress (VP wanted (S to know) gap)and when it is (VP expected (S to deliver) gap), making an error in the second case (partly due to the bias towards shorter pattern chains, typical for a PCFG). However,deliver is more likely to take a temporal modifier thank ow.\nIn future work, we will investigate methods for adding lexical information to our model in order to improve the performance on WHADVPs and WHPPs. In addition, we will investigate methods for automatically inferring patterns from a treebank corpus to support fast porting of our approach to other languages with treebanks."
+        },
+        {
+            "heading": "5 Acknowledgements",
+            "text": "We would like to thank Ryan Gabbard for providing us output from his algorithm for evaluation. We would also like to thank the anonymous reviewers for invaluable comments. This material is based upon work supported by the Defense Advanced Research Projects Agency (DARPA) under Contract No. HR0011-06-C-0023. Any opinions, findings and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of DARPA."
+        }
+    ],
+    "title": "Recovery of Empty Nodes in Parse Structures",
+    "year": 2007
+}

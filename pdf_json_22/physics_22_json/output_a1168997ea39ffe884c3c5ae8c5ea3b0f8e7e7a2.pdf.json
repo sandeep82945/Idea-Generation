@@ -1,0 +1,1039 @@
+{
+    "abstractText": "In this work, we explore the quantum chemical foundations of descriptors for molecular similarity. Such descriptors are key for traversing chemical compound space with machine learning. Our focus is on the Coulomb matrix and on the smooth overlap of atomic positions (SOAP). We adopt a basic framework that allows us to connect both descriptors to electronic structure theory. This framework enables us to then define two new descriptors that are more closely related to electronic structure theory, which we call Coulomb lists and smooth overlap of electron densities (SOED). By investigating their usefulness as molecular similarity descriptors, we gain new insights into how and why CM and SOAP work. Moreover, Coulomb lists avoid the somewhat mysterious diagonalization step of the CM and might provide a direct means to extract subsystem information that can be compared across Born\u2013Oppenheimer surfaces of varying dimension. For the electron density we derive the necessary formalism to create the SOED measure in close analogy to SOAP. Because this formalism is more involved than that of SOAP, we review the essential theory, as well as introduce a set of approximations that eventually allow us to work with SOED in terms of the same implementation available for the evaluation of SOAP. We focus our analysis on elementary reaction steps, where transition state structures are more similar to either reactant or product structures than the latter two are with respect to one another. The prediction of electronic energies of transition state structures can, however, be more difficult than that of stable intermediates due to multi-configurational effects. The question arises to what extent molecular similarity descriptors rooted in electronic structure theory can resolve these intricate effects. \u2217Corresponding author; e-mail: markus.reiher@phys.chem.ethz.ch 1 ar X iv :2 20 7. 03 59 9v 2 [ ph ys ic s. ch em -p h] 7 O ct 2 02 2",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Stefan Gugler"
+        },
+        {
+            "affiliations": [],
+            "name": "Markus Reiher"
+        }
+    ],
+    "id": "SP:2741de085b971f3d06e12e827287594336ecd4cb",
+    "references": [
+        {
+            "authors": [
+                "C.M. Bishop"
+            ],
+            "title": "Pattern Recognition and Machine Learning",
+            "venue": "Information Science and Statistics, Springer",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "J. Mercer",
+                "A.R. Forsyth"
+            ],
+            "title": "Philosophical Transactions of the Royal Society of London",
+            "venue": "Series A, Containing Papers of a Mathematical or Physical Character 209, 415 ",
+            "year": 1909
+        },
+        {
+            "authors": [
+                "T. Hastie",
+                "R. Tibshirani",
+                "J. Friedman"
+            ],
+            "title": "The Elements of Statistical Learning",
+            "venue": "Springer Series in Statistics, Springer New York Inc.",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "C.E. Rasmussen",
+                "C.K.I. Williams"
+            ],
+            "title": "Gaussian Processes for Machine Learning",
+            "venue": "Adaptive Computation and Machine Learning, MIT Press",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "A.P. Bart\u00f3k",
+                "R. Kondor",
+                "G. Cs\u00e1nyi"
+            ],
+            "title": "Phys",
+            "venue": "Rev. B 87, 184115 ",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "R. Todeschini",
+                "V. Consonni"
+            ],
+            "title": "Molecular Descriptors for Chemoinformatics",
+            "venue": "Methods and Principles in Medicinal Chemistry, Wiley",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "A.S. Christensen",
+                "L.A. Bratholm",
+                "F.A. Faber"
+            ],
+            "title": "and O",
+            "venue": "Anatole von Lilienfeld, J. Chem. Phys. 152, 044107 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "M. Rupp",
+                "A. Tkatchenko",
+                "K.-R. M\u00fcller"
+            ],
+            "title": "and O",
+            "venue": "A. von Lilienfeld, Phys. Rev. Lett. 108 ",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "K. Hansen",
+                "G. Montavon",
+                "F. Biegler",
+                "S. Fazli",
+                "M. Rupp",
+                "M. Scheffler"
+            ],
+            "title": "O",
+            "venue": "A. von Lilienfeld, A. Tkatchenko, and K.-R. M\u00fcller, J. Chem. Theory Comput. 9, 3404 ",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "J. Schrier",
+                "J. Chem"
+            ],
+            "title": "Inf",
+            "venue": "Model. 60, 3804 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "K. Hansen",
+                "F. Biegler",
+                "R. Ramakrishnan",
+                "W. Pronobis"
+            ],
+            "title": "O",
+            "venue": "A. von Lilienfeld, K.-R. M\u00fcller, and A. Tkatchenko, J. Phys. Chem. Lett. 6, 2326 ",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "C.R. Collins",
+                "G.J. Gordon"
+            ],
+            "title": "O",
+            "venue": "A. von Lilienfeld, and D. J. Yaron, J. Chem. Phys. 148, 241718 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "W. Pronobis",
+                "A. Tkatchenko",
+                "K.-R. M\u00fcller",
+                "J. Chem"
+            ],
+            "title": "Theory Comput",
+            "venue": "14, 2991 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "S. De",
+                "A.P. Bart\u00f3k",
+                "G. Cs\u00e1nyi",
+                "M. Ceriotti"
+            ],
+            "title": "Phys",
+            "venue": "Chem. Chem. Phys. 18, 13754 ",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "M.J. Willatt",
+                "F. Musil",
+                "M. Ceriotti",
+                "J. Chem"
+            ],
+            "title": "Phys",
+            "venue": "150, 154110 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "F. Musil",
+                "A. Grisafi",
+                "A.P. Bart\u00f3k",
+                "C. Ortner",
+                "G. Cs\u00e1nyi",
+                "M. Ceriotti"
+            ],
+            "title": "Chem",
+            "venue": "Rev. 121, 9759 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A.P. Bart\u00f3k",
+                "S. De",
+                "C. Poelking",
+                "N. Bernstein",
+                "J.R. Kermode",
+                "G. Cs\u00e1nyi",
+                "M. Ceriotti"
+            ],
+            "title": "Sci",
+            "venue": "Adv. 3, e1701816 ",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M. Ceriotti",
+                "C. Clementi"
+            ],
+            "title": "and O",
+            "venue": "Anatole von Lilienfeld, J. Chem. Phys. 154, 160401 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S.N. Pozdnyakov",
+                "M.J. Willatt",
+                "A.P. Bart\u00f3k",
+                "C. Ortner",
+                "G. Cs\u00e1nyi",
+                "M. Ceriotti"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Lett. 125, 166001 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "F. Musil",
+                "M. Ceriotti"
+            ],
+            "title": "CHIMIA 73",
+            "venue": "972 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Goscinski",
+                "G. Fraux",
+                "G. Imbalzano",
+                "M. Ceriotti"
+            ],
+            "title": "Mach",
+            "venue": "Learn.: Sci. Technol. 2, 025028 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A. Grisafi",
+                "A. Fabrizio",
+                "B. Meyer",
+                "D.M. Wilkins",
+                "C. Corminboeuf",
+                "M. Ceriotti",
+                "ACS Cent"
+            ],
+            "title": "Sci",
+            "venue": "5, 57 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "A. Fabrizio",
+                "K. Briling",
+                "A. Grisafi",
+                "C. Corminboeuf"
+            ],
+            "title": "Chimia 74",
+            "venue": "232 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Y.-H. Tang",
+                "D. Zhang",
+                "G.E. Karniadakis",
+                "J. Chem"
+            ],
+            "title": "Phys",
+            "venue": "148, 034101 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "S. Geidl",
+                "T. Bouchal",
+                "T. Ra\u010dek",
+                "R. Svobodov\u00e1 Va\u0159ekov\u00e1",
+                "V. Hejret",
+                "A. K\u0159enek",
+                "R. Abagyan",
+                "J. Ko\u010da"
+            ],
+            "title": "J",
+            "venue": "Cheminformatics 7, 59 ",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "A.T. Balaban"
+            ],
+            "title": "Chem",
+            "venue": "Phys. Lett. 89, 399 ",
+            "year": 1982
+        },
+        {
+            "authors": [
+                "R. Modee",
+                "S. Agarwal",
+                "A. Verma",
+                "K. Joshi",
+                "U.D. Priyakumar"
+            ],
+            "title": "Phys",
+            "venue": "Chem. Chem. Phys. 23, 21995 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A.T. Balaban"
+            ],
+            "title": "Journal of Chemical Information and Computer Sciences 25",
+            "venue": "334 ",
+            "year": 1985
+        },
+        {
+            "authors": [
+                "S. Mohapatra",
+                "J. An"
+            ],
+            "title": "and R",
+            "venue": "G\u00f3mez-Bombarelli, arXiv:2103.02565 [cs, q-bio, stat] ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J.L. McDonagh",
+                "A.F. Silva",
+                "M.A. Vincent",
+                "P.L.A. Popelier",
+                "J. Chem"
+            ],
+            "title": "Theory Comput",
+            "venue": "14, 216 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "J.P. Janet",
+                "H.J. Kulik"
+            ],
+            "title": "Chem",
+            "venue": "Sci. 8, 5137 ",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "P. Broto",
+                "G. Moreau",
+                "C. Vandycke"
+            ],
+            "title": "Eur",
+            "venue": "J. Med. Chem. 19, 71 ",
+            "year": 1984
+        },
+        {
+            "authors": [
+                "J.P. Janet",
+                "H.J. Kulik",
+                "J. Phys"
+            ],
+            "title": "Chem",
+            "venue": "A 121, 8939 ",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "J. Behler",
+                "M. Parrinello"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Lett. 98, 146401 ",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "J. Behler",
+                "J. Chem"
+            ],
+            "title": "Phys",
+            "venue": "134, 074106 ",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "D. Duvenaud",
+                "D. Maclaurin",
+                "J. Aguilera-Iparraguirre",
+                "R. G\u00f3mez-Bombarelli",
+                "T. Hirzel",
+                "A. Aspuru-Guzik"
+            ],
+            "title": "and R",
+            "venue": "P. Adams, arXiv:1509.09292 [cs, stat] ",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "K.T. Sch\u00fctt",
+                "F. Arbabzadah",
+                "S. Chmiela",
+                "K.-R. M\u00fcller",
+                "A. Tkatchenko"
+            ],
+            "title": "Nat",
+            "venue": "Commun. 8, 13890 ",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "K.T. Sch\u00fctt",
+                "H.E. Sauceda",
+                "P.-J. Kindermans",
+                "A. Tkatchenko",
+                "K.-R. M\u00fcller",
+                "J. Chem"
+            ],
+            "title": "Phys",
+            "venue": "148, 241722 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "N. Lubbers",
+                "J.S. Smith",
+                "K. Barros",
+                "J. Chem"
+            ],
+            "title": "Phys",
+            "venue": "148, 241715 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "O.T. Unke",
+                "M. Meuwly",
+                "J. Chem"
+            ],
+            "title": "Theory Comput",
+            "venue": "15, 3678 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "F. Scarselli",
+                "M. Gori"
+            ],
+            "title": "Ah Chung Tsoi",
+            "venue": "M. Hagenbuchner, and G. Monfardini, IEEE Trans. Neural Networks 20, 61 ",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "K. Abdelfatah",
+                "W. Yang",
+                "R.V. Solomon",
+                "B. Rajbanshi",
+                "A. Chowdhury",
+                "M. Zare",
+                "S.K. Kundu",
+                "A. Yonge",
+                "A. Heyden",
+                "G. Terejanu",
+                "J. Phys"
+            ],
+            "title": "Chem",
+            "venue": "C 123, 29804 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "D. Lemm"
+            ],
+            "title": "G",
+            "venue": "F. von Rudorff, and O. A. von Lilienfeld, Nat. Commun. 12, 4468 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R. Jackson",
+                "W. Zhang",
+                "J. Pearson"
+            ],
+            "title": "Chem",
+            "venue": "Sci. 12, 10022 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Zhang",
+                "Y.-K. Lei",
+                "Z. Zhang",
+                "X. Han",
+                "M. Li",
+                "L. Yang",
+                "Y.I. Yang",
+                "Y.Q. Gao"
+            ],
+            "title": "Phys",
+            "venue": "Chem. Chem. Phys. 23, 6888 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Z.D. Pozun",
+                "K. Hansen",
+                "D. Sheppard",
+                "M. Rupp",
+                "K.-R. M\u00fcller",
+                "G. Henkelman",
+                "J. Chem"
+            ],
+            "title": "Phys",
+            "venue": "136, 174101 ",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "M.A. Kayala",
+                "C.-A. Azencott",
+                "J.H. Chen",
+                "P. Baldi",
+                "J. Chem"
+            ],
+            "title": "Inf",
+            "venue": "Model. 51, 2209 ",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "S. Chen",
+                "T. Nielson",
+                "E. Zalit",
+                "B.B. Skjelstad",
+                "B. Borough",
+                "W.J. Hirschi",
+                "S. Yu",
+                "D. Balcells",
+                "D.H. Ess"
+            ],
+            "title": "Top",
+            "venue": "Catal. 65, 312 ",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "A.R. Singh",
+                "B.A. Rohr",
+                "J.A. Gauthier",
+                "J.K. N\u00f8rskov"
+            ],
+            "title": "Catal",
+            "venue": "Lett. 149, 2347 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "G.N. Simm",
+                "A.C. Vaucher",
+                "M. Reiher",
+                "J. Phys"
+            ],
+            "title": "Chem",
+            "venue": "A 123, 385 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Heinen"
+            ],
+            "title": "G",
+            "venue": "F. von Rudorff, and O. A. von Lilienfeld, J. Chem. Phys. 155, 064105 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "W. Yang",
+                "T.T. Fidelis",
+                "W.-H. Sun"
+            ],
+            "title": "ACS Omega 5",
+            "venue": "83 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P. Friederich"
+            ],
+            "title": "G",
+            "venue": "d. P. Gomes, R. D. Bin, A. Aspuru-Guzik, and D. Balcells, Chem. Sci. 11, 4584 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "K. Takahashi",
+                "I. Miyazato",
+                "J. Comput"
+            ],
+            "title": "Chem",
+            "venue": "39, 2405 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "A. Nandy",
+                "C. Duan",
+                "M.G. Taylor",
+                "F. Liu",
+                "A.H. Steeves",
+                "H.J. Kulik"
+            ],
+            "title": "Chem",
+            "venue": "Rev. 121, 9927 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "V.L. Deringer",
+                "A.P. Bart\u00f3k",
+                "N. Bernstein",
+                "D.M. Wilkins",
+                "M. Ceriotti",
+                "G. Cs\u00e1nyi"
+            ],
+            "title": "Chem",
+            "venue": "Rev. 121, 10073 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "V.L. Deringer",
+                "C.J. Pickard",
+                "G. Cs\u00e1nyi"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Lett. 120, 156001 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "V.L. Deringer",
+                "N. Bernstein",
+                "A.P. Bart\u00f3k",
+                "M.J. Cliffe",
+                "R.N. Kerber",
+                "L.E. Marbella",
+                "C.P. Grey",
+                "S.R. Elliott",
+                "G. Cs\u00e1nyi",
+                "J. Phys"
+            ],
+            "title": "Chem",
+            "venue": "Lett. 9, 2879 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "L. Himanen",
+                "M.O.J. J\u00e4ger",
+                "E.V. Morooka",
+                "F. Federici Canova",
+                "Y.S. Ranawat",
+                "D.Z. Gao",
+                "P. Rinke",
+                "A.S. Foster"
+            ],
+            "title": "Comput",
+            "venue": "Phys. Commun. 247, 106949 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P.O. Dral",
+                "J. Comput"
+            ],
+            "title": "Chem",
+            "venue": "40, 2339 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M. Haghighatlari",
+                "G. Vishwakarma",
+                "D. Altarawy",
+                "R. Subramanian",
+                "B.U. Kota",
+                "A. Sonpal",
+                "S. Setlur"
+            ],
+            "title": "and J",
+            "venue": "Hachmann, ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "F. Musil",
+                "M. Veit",
+                "A. Goscinski",
+                "G. Fraux",
+                "M.J. Willatt",
+                "M. Stricker",
+                "T. Junge",
+                "M. Ceriotti",
+                "J. Chem"
+            ],
+            "title": "Phys",
+            "venue": "154, 114109 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M.A. Caro"
+            ],
+            "title": "Phys",
+            "venue": "Rev. B 100, 024112 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "R. Ramakrishnan",
+                "P.O. Dral",
+                "M. Rupp"
+            ],
+            "title": "and O",
+            "venue": "A. von Lilienfeld, Sci. Data 1, 140022 ",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "N.C. Handy"
+            ],
+            "title": "Density Functional Theory",
+            "venue": "Lecture Notes in Quantum Chemistry II: European Summer School in Quantum Chemistry, edited by B. O. Roos, Lecture Notes in Chemistry, pp. 91\u2013124, Springer",
+            "year": 1994
+        },
+        {
+            "authors": [
+                "P. Hohenberg",
+                "W. Kohn"
+            ],
+            "title": "Phys",
+            "venue": "Rev. 136, B864 ",
+            "year": 1964
+        },
+        {
+            "authors": [
+                "R. Ramakrishnan",
+                "M. Hartmann",
+                "E. Tapavicza"
+            ],
+            "title": "and O",
+            "venue": "A. von Lilienfeld, J. Chem. Phys. 143, 084111 ",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "R.G. Parr",
+                "Y. Weitao"
+            ],
+            "title": "Density-Functional Theory of Atoms and Molecules",
+            "venue": "International Series of Monographs on Chemistry, Oxford University Press",
+            "year": 1995
+        },
+        {
+            "authors": [
+                "J.E. Meany",
+                "V. Minderhout",
+                "Y. Pocker",
+                "J. Chem"
+            ],
+            "title": "Educ",
+            "venue": "78, 204 ",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "J.E. Moussa"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Lett. 109, 059801 ",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "N. Raimbault",
+                "A. Grisafi",
+                "M. Ceriotti",
+                "M. Rossi"
+            ],
+            "title": "New J",
+            "venue": "Phys. 21, 105001 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "G. Ferr\u00e9",
+                "T. Haut",
+                "K. Barros",
+                "J. Chem"
+            ],
+            "title": "Phys",
+            "venue": "146, 114107 ",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "E.A. Engel",
+                "A. Anelli",
+                "A. Hofstetter",
+                "F. Paruzzo",
+                "L. Emsley",
+                "M. Ceriotti"
+            ],
+            "title": "Phys",
+            "venue": "Chem. Chem. Phys. 21, 23385 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "G.N. Watson"
+            ],
+            "title": "A Treatise on the Theory of Bessel Functions",
+            "venue": "Cambridge University Press",
+            "year": 1995
+        },
+        {
+            "authors": [
+                "H. Weber"
+            ],
+            "title": "1868",
+            "venue": "222 ",
+            "year": 1868
+        },
+        {
+            "authors": [
+                "K. Kaufmann",
+                "W. Baumeister",
+                "J. Phys"
+            ],
+            "title": "B: At",
+            "venue": "Mol. Opt. Phys. 22, 1 ",
+            "year": 1989
+        },
+        {
+            "authors": [
+                "A.P. Bart\u00f3k",
+                "R. Kondor",
+                "G. Cs\u00e1nyi"
+            ],
+            "title": "Phys",
+            "venue": "Rev. B 96, 019902 ",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "P.L.A. Popelier"
+            ],
+            "title": "Coord",
+            "venue": "Chem. Rev. 197, 169 ",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "R. Carb\u00f3",
+                "L. Leyda",
+                "M. Arnau"
+            ],
+            "title": "Int",
+            "venue": "J. Quantum Chem. 17, 1185 ",
+            "year": 1980
+        },
+        {
+            "authors": [
+                "F. Neese",
+                "F. Wennmohs",
+                "U. Becker",
+                "C. Riplinger",
+                "J. Chem"
+            ],
+            "title": "Phys",
+            "venue": "152, 224108 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J.P. Perdew",
+                "K. Burke",
+                "M. Ernzerhof"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Lett. 77, 3865 ",
+            "year": 1996
+        },
+        {
+            "authors": [
+                "F. Weigend"
+            ],
+            "title": "Phys",
+            "venue": "Chem. Chem. Phys. 8, 1057 ",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "J.P. Unsleber",
+                "T. Dresselhaus",
+                "K. Klahr",
+                "D. Schnieders",
+                "M. B\u00f6ckers",
+                "D. Barton",
+                "J. Neugebauer",
+                "J. Comput"
+            ],
+            "title": "Chem",
+            "venue": "39, 788 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "D. Barton",
+                "M. Bensberg",
+                "M. B\u00f6ckers",
+                "T. Dresselhaus",
+                "P. Eschenbach",
+                "L. Hellmann",
+                "K. Klahr",
+                "A. Massolle",
+                "N. Niemeyer",
+                "D. Schnieders",
+                "J. T\u00f6lle",
+                "J.P. Unsleber"
+            ],
+            "title": "and J",
+            "venue": "Neugebauer, Qcserenity/Serenity: Release 1.3.1",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "F. Weigend",
+                "R. Ahlrichs"
+            ],
+            "title": "Phys",
+            "venue": "Chem. Chem. Phys. 7, 3297 ",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "W.J. Hehre",
+                "R.F. Stewart",
+                "J.A. Pople",
+                "J. Chem"
+            ],
+            "title": "Phys",
+            "venue": "51, 2657 ",
+            "year": 1969
+        },
+        {
+            "authors": [
+                "C.R. Harris",
+                "K.J. Millman"
+            ],
+            "title": "S",
+            "venue": "J. van der Walt, R. Gommers, P. Virtanen, D. Cournapeau, E. Wieser, J. Taylor, S. Berg, N. J. Smith, R. Kern, M. Picus, S. Hoyer, M. H. van Kerkwijk, M. Brett, A. Haldane, J. F. del \u0154\u0131o, M. Wiebe, P. Peterson, P. G\u00e9rard-Marchant, K. Sheppard, T. Reddy, W. Weckesser, H. Abbasi, C. Gohlke, and T. E. Oliphant, Nature 585, 357 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P. Moritz",
+                "R. Nishihara",
+                "S. Wang",
+                "A. Tumanov",
+                "R. Liaw",
+                "E. Liang",
+                "M. Elibol",
+                "Z. Yang",
+                "W. Paul",
+                "M.I. Jordan"
+            ],
+            "title": "and I",
+            "venue": "Stoica, Ray: A Distributed Framework for Emerging AI Applications",
+            "year": 2018
+        }
+    ],
+    "sections": [
+        {
+            "text": "\u2217Corresponding author; e-mail: markus.reiher@phys.chem.ethz.ch\nar X\niv :2\n20 7.\n03 59\n9v 2\n[ ph\nys ic\ns. ch"
+        },
+        {
+            "heading": "1 Introduction",
+            "text": "A molecular descriptor\u2014in the machine-learning literature also known as feature1\u2014is a representation of a molecule in terms of a computer readable vector. Molecular descriptors can be compared in order to assess the similarity of molecules of different composition and configuration. A similarity measure is a mathematical metric, that is, a function that measures the distance between two points in descriptor space. The closer the two points are, the more similar they are.\nA kernel function generalizes this notion.2 Examples are Gaussian kernels or linear kernels.1,3 They do not bear physical meaning per se but assess whether two points are close together according to the measure. Often, they are chosen for mathematical convenience (such as radial basis functions based on Gaussians4), but they can also be loaded with physical interpretation such as the smooth overlap of atomic positions (SOAP).5 Even though the notions of features and kernels are distinct, they are sometimes treated as practically the same, because the physical and chemical properties of systems to be represented are encoded in both the kernel and the feature.\nThere exists a multitude of molecular descriptors, many originating from the field of cheminformatics: one of the most comprehensive overviews was provided by Todeschini and Consonni,6 which, however, does not cover post-2012 descriptors, that is, those that have gained traction within the recent revival of machine learning and artificial intelligence in chemistry. Todeschini and Consonni6 classify the descriptors according to the theory from which they are derived: graph theory, discrete mathematics, physical chemistry, information theory, quantum chemistry, organic chemistry, differential topology, and algebraic topology. On top of that, they distinguish how they are processed, namely, by statistics, chemometrics, or cheminformatics. The bibliography of their review covers the period between 1741 and 2008 with about 6400 references and 3300 descriptors listed.6\nWith the advent of modern machine learning in chemistry, several groups have developed descriptors and methods that are better tailored to a particular machine-learning method and harness the latest computational developments more efficiently.\nThe group of von Lilienfeld proposed various descriptors, most of which can be described as two- or many-body expansions such as the atom-in-moleculebased descriptor called \u201camons\u201d7 or FCHL8 (named after the authors). In collaboration with the groups of Mu\u0308ller and Tkatchenko, they developed9 and assessed10,11 Coulomb matrices (CMs), their eigenvalues, or multiple CMs per molecule, as well as the bag of bonds (BoB) descriptor.12 Huang and von Lilienfeld studied the uniqueness of some of their descriptors.13\nA variation in the CM that avoids the permutation issue is the BoB descriptor.12 All off-diagonal elements of the CM are collected and grouped (\u201cbagged\u201d) according the corresponding element tuples which is interpreted as bond \u201ctype\u201d (such as the tuples (H,H) and (C,H)). Each group of Coulomb matrix elements is then sorted by magnitude and padded with zeros if other molecules in the\ndata set have more elements in a given bag. Hence, all bags have the same length. The feature vector is the concatenation of all bags. This idea has been developed into a hierarchy of features including more and more bodies, collectively called \u201cBA-representations\u201d (bonds, angles, torsions, etc.) to hint at the many-body expansion character.13 It commonly performs slightly better than the CM itself.12,14,15\nTo establish size-intensive descriptors, Collins studied descriptors for machine learning and how to encode bonds.14 The molecular-structure-based descriptor SOAP by Csa\u0301nyi and co-workers has experienced continuous development and is among the most successful ones.5,16,17 Ceriotti and co-workers have developed and analyzed physics-inspired molecular representations18\u201320 and carried out considerable work in unifying the landscape of descriptors.18,21\u201323 Various groups have investigated ways to incorporate the electron density into machine learning procedures.17,24\u201327\nOther descriptors use topological information28,29 or a graph-based representation,30\u201332 both of which have deep roots in cheminformatics and find applications in machine learning for chemistry. Working a set of empirical topological descriptors33 into autocorrelation functions34 has been applied to transition metal complexes by Janet and Kulik.35 Neural-network representations have been studied by Behler and Parrinello with symmetry function to represent local environments36,37 and by Aspuru-Guzik and co-workers, where the neural network operates directly on the molecular graph.38 Instead of finding an adequate representation, end-to-end neural networks were shown to learn the appropriate representation on their own.39\u201343\nThis work is in the regime of low amounts of data as we focus, for the sake of a detailed analysis, on a specific similarity paradox in reaction chemistry.\nMolecular similarity descriptors such as CM and SOAP have been used in machine-learning applications as \u201crulers\u201d to assign a degree of similarity to two different structures. Typically, the structures to be compared can differ significantly and may be taken from across chemical space. However, if we consider the opposite case, namely, structures that are clearly related through an elementary reaction step, then we arrive at a somewhat paradoxical situation: while reactant and product are obviously rather similar molecules by construction (as they are related by an elementary reaction step), the connecting transition state (TS) structure is even more similar to either product or reactant. Yet, it is well known in electronic structure theory that TS structures (which represent activated molecules that typically exhibit one or two stretched chemical bonds) present a very different electron correlation problem compared to the stable reactant or product structures. Hence, this example presents a well-defined situation, in which molecular structure similarity seems to be insufficient to also judge electronic similarity, which governs the molecular properties. As a result, a molecular similarity measure might rightfully determine a TS structure to be more similar to either side of the reaction arrow but at the same time miss the fact that its electronic structure will be rather different (as measured, for instance, in terms of electron correlation diagnostics). Another measure might even determine all three structures to be basically identical, which will then ig-\nnore all fine-grained differentiation that quantum chemical methods attributes to them.\nWe note that machine learning has also been applied to TSs44\u201350 compared to stable intermediates, but more can be expected in the future in view of the key role TSs play in chemistry. Closely related is the machine learning of reaction barriers.51\u201356 It is therefore important to better understand to what degree descriptors of molecular similarity can differentiate between stable intermediates (i.e., local minima on the Born\u2013Oppenheimer potential energy surface) and TSs (i.e., first-order saddle points on that surface).\nKulik and co-workers studied the applicability of the eigenvalues of the CM for transition metal complexes.33,35,57 Compared to their autocorrelation functions proposed as descriptors, the CM eigenvalue performed poorly. They found that electronic properties such as spin-splitting energies are not represented well and show a large dependence on molecular size. However, despite these practical difficulties the CM should be applicable to the whole range of the periodic table due to its connection to the first principles of quantum mechanics. Its explicit dependence on the external potential (nuclear charges and nuclear positions) and hence its direct connection to electronic structure theory should allow for the differentiation of atoms in molecules and, at the same time, for the identification of isoelectronic features. Moreover, we will later see that SOAP can also be rooted in first-principles electronic structure theory and generality across the periodic table may be expected. In fact, it has been used for various materials19,58 and elements such as boron59 or silicon,60 which also indicates general applicability. Along these lines, arguments for general applicability can also be made for the two descriptors introduced in this work: Coulomb lists (CL) and smooth overlap of electron densities (SOED). Whether or not this can be exploited in practice remains to be a subject of future studies as it is far beyond the scope of the present work.\nIn this work, we consider the physical foundations of the CM and SOAP from the point of view of electronic structure theory. The selection of these two out of the many available descriptors is driven by the possibility to connect to electronic structure theory and justified by their popularity. Moreover, we aim at non-neural, low-data regime descriptors that have been influential in the current surge of machine learning for chemistry. In addition, they are commonly taught in introductory courses to machine learning for chemistry and are available in machine learning software for chemical applications.14,61\u201366 We first introduce three example reactions for which we will compare the different descriptors, unlike in a machine learning study, where a large data set is used to assess the predictive power of a descriptor. Then, we study a general expression for the electronic energy to which we want to relate the measures in order to establish a relation between a similarity measure and this key quantity of electronic structure theory. Afterwards, we first consider the relation of the electronic energy and the CM, which will also lead us to introduce CLs as a descriptor. Then, we turn to such a relation for SOAP, which will also lead us to the introduction of a new descriptor, namely the SOED."
+        },
+        {
+            "heading": "2 Elementary Reaction Step Example",
+            "text": "By contrast to a typical machine learning study, we will, in this first step, not consider vast amounts of data, but instead make an attempt to understand how CM and SOAP operate at the level of a single elementary reaction step. In order to be able to later extend this work to a large data set, we chose our (generic) example (reaction 1) in such a way that it is on the same Born\u2013Oppenheimer surface as the QM9 reference data set of von Lilienfeld and co-workers.67\nWe will base the numerical part of this work on the reactions shown in Figure 1: the nucleophilic double bond between C1 and C5 abstracts the proton of the hydroxyl group, H9, which results in a change of the aromatic system as the imidazole ring opens up. An isocyanate group is created. In this generic reaction 1, both electronic and structural changes are present. This allows us to probe to what extent a descriptor can account for electronic changes in terms of its numerical values.\nAnalogously to reaction 1, reactions 2 and 3 are chosen as proton abstraction reactions of the same type but with modulating substituents. In the case of reaction 2, we introduced a push\u2013pull-type \u03c0-system structure to replace two hydrogen atoms of the original reaction. The nitro group functions as an electron acceptor, and the methoxy group may be considered as the electron donor. Accordingly, this system poses a challenge for a descriptor. In the case of reaction 3, two ethyl groups replace the same two hydrogen atoms to probe the\neffect of atoms that are farther away from the reactive site. Hence, the three reactions serve the purpose of studying descriptor transferability because the locality of the descriptor should highlight whether the generic reaction 1 can be recovered in reactions 2 and 3."
+        },
+        {
+            "heading": "3 Electronic Energy in Terms of Nuclear Con-",
+            "text": "tributions\nTo connect a descriptor of molecular similarity, which refers to an atom-resolved molecular structure (usually in terms of its nuclear coordinates), with the expression for the electronic energy, we first need to rewrite this energy in terms of nuclear contributions. Although every electronic structure model affords a different expression for the electronic energy, a common expression can be formulated in terms of one- and two-body reduced density matrices. If we focus on the nuclear contributions in such an expression, we may write the electronic energy in Hartree atomic units as:\nEel = M\u2211 I>J ZIZJ |RI \u2212RJ | \u2212 N,M\u2211 i,J ni \u2329 \u03c6i \u2223\u2223\u2223\u2223 ZJ|RJ \u2212 r| \u2223\u2223\u2223\u2223\u03c6i\u232a+ Erest[{\u03c6i}] , (1)\nwhere I and J are the indices running over the M nuclei with their respective nuclear charges, ZI and ZJ , and coordinates, RI and RJ . The first sum refers to the Coulomb repulsion of all nuclei, which is independent of the electronic structure model.\nThe second term delivers the potential energy for the interaction with the external potential and all other contributions are kept hidden in the third one. For the sake of simplicity, we have introduced a general occupation number ni, which can be easily generalized to the doubly indexed one-body reduced density matrix. One may simply choose the ni to be equal to 1 as in unrestricted Hartree\u2013Fock or Kohn\u2013Sham theory. The index i then runs over N spin orbitals \u03c6i from which the electronic wave function is constructed. Finally, r is the coordinate of an electron.\nErest[{\u03c6i}] denotes the remaining contributions to the electronic energy, namely the expectation values for total kinetic energy, \u3008T \u3009, and the electron\u2013 electron interaction, \u3008Vee\u3009,\nErest = \u3008T \u3009+ \u3008Vee\u3009 , (2)\nwhich all depend on the wave function and, hence, on all orbitals {\u03c6i}. If molecular orbitals (MOs) are expanded into a set of m basis functions \u03c7\u00b5,\n\u03c6i = m\u2211 \u00b5=1 c(i)\u00b5 \u03c7\u00b5 , (3)\ntheir corresponding MO coefficients c (i) \u00b5 will enter the energy expression\nEel = M\u2211 I>J ZIZJ |RI \u2212RJ | \u2212 N,M\u2211 i,J ni m\u2211 \u00b5\u03bd c(i)\u00b5 c (i) \u03bd \u2329 \u03c7\u00b5 \u2223\u2223\u2223\u2223 ZJ|RJ \u2212 r| \u2223\u2223\u2223\u2223\u03c7\u03bd\u232a+ Erest[{c(i)\u00b5 }] .\n(4) Note that we assumed the basis functions to be real and therefore avoided a denotation for complex conjugation; however, this restriction can be easily lifted.\nWe re-write the electron\u2013nucleus attraction potential-energy integrals over basis functions \u03c7\u00b5 into a matrix, V (J), with elements\nV (J)\u00b5\u03bd = \u2329 \u03c7\u00b5 \u2223\u2223\u2223\u2223 ZJ| RJ \u2212 r| \u2223\u2223\u2223\u2223\u03c7\u03bd\u232a (5)\nand the MO coefficients into the vector, c(i), obtaining\nEel = M\u2211 I>J ZIZJ |RI \u2212RJ | \u2212 N,M\u2211 i,J nic (i)V(J)c(i) + Erest[{c(i)\u00b5 }]. (6)\nObviously, for a close connection of the quantum chemical foundations to a molecular similarity descriptor of a machine learning model, we may require that a descriptor should be based on Cartesian coordinates of all atomic nuclei, {RI}, of a molecule because these define a molecular structure to which the Born-Oppenheimer approximation assigns an electronic energy. CM and SOAP fulfill this requirement (see below). Moreover, according to the electronic energy expression, we require that the descriptor depends on the nuclear charge numbers, which, together with the nuclear coordinates, defines the external potential. The external potential and the number of electrons in the system contain all information to formulate the electronic Hamiltonian and, hence, all information to solve for the electronic energy (E. Bright Wilson argument68). The CM fulfills this requirement by construction, but it should be noted that it involves a diagonalization step that changes the information encoded in a rather non-transparent way. However, the standard formulation of SOAP considers molecular structure through fuzzy atoms, where all atoms are considered equal (see below). As such, nuclear coordinates enter the procedure, but their type (in terms of the nuclear charge number) is usually not resolved. According to the first Hohenberg\u2013Kohn theorem,69 which is also taken as the basis of density functional theory (DFT), there exists a one-to-one correspondence between the external potential and the electron density. Because SOAP constructs a density distribution of molecular structure, one may wonder whether a relation to the electron density (and hence to the electronic energy) can be established. We will consider these matters later on in this work and now first turn to the CM due to its obvious link to the external potential."
+        },
+        {
+            "heading": "4 CM and CL",
+            "text": "The elements of the CM9 are defined as\nCIJ =  Z2.4I 2 I = J\nZIZJ |RI \u2212RJ |\nI 6= J . (7)\nThe diagonal in the CM is sometimes referred to as the \u201cself-interaction term\u201d,10 even though there is no basis in classical electrodynamics for a self-interaction of a point charge. A pragmatic justification is that the diagonal term conveys information about the identity of the elements. The original publication9 states that the \u201cdiagonal elements encode a polynomial fit of atomic energies to nuclear charge\u201d. Because the authors wanted to predict atomization energies, this diagonal brings relevant information into the problem from a priori knowledge but makes the descriptor less general and less interpretable. Yet another interpretation70 is to link the diagonal terms to the total potential energy of a neutral atom in the Thomas\u2013Fermi model, which is ETF = \u22120.7687Z7/3.71\nMolecules of different sizes, M , will be padded with rows and columns of zeros in their CM representation to match the size of the largest molecule to be compared. The CM itself cannot be used as a descriptor for molecules of different sizes, because it is not permutationally invariant (exchange of rows and columns change the descriptor but physically, the order of the atoms in the molecule does not matter) and different information would be stored in different dimensions of the matrix.\nThree remedies have been proposed10 to transform the CM into a permutationally invariant descriptor. The simplest one, which we are going to analyze here, is the eigenspectrum: calculating the eigenvalues, \u03bbi, and sorting them such that |\u03bbi| \u2265 |\u03bbi+1|. This is the original recipe proposed by Rupp et al. in 2012.9 For M atoms, this method reduces the dimensionality from M2 degrees of freedom to only M . The second option to make the CM permutationally invariant is the sorted CM: the rows (or equivalently, the columns) are sorted by their Euclidean norm, such that ||Ci||2 \u2265 ||Ci+1||2. This leads to an overdetermined system, as the dimensionality is M2 now and may produce to non-smooth changes in the sorting even for small changes in the coordinates. The third approach is to represent each system by a set of n sorted CMs, each injected with Gaussian noise to vastly augment dimensionality.\n4.1 Atomic Descriptors F (J)n and F (J)e We now split Eq. (6) into atomic contributions by moving the sum over the nuclei in front of the expression\nEel = M\u2211 J [ F (J)n \u2212F (J)e ] + Erest (8)\nwith\nF (J)n = 1\n2 M\u2211 I\nI 6=J\nZIZJ |RI \u2212RJ |\n(9)\nand\nF (J)e = N\u2211 i nic (i)V(J)c(i) (10)\n(recall that all ni are equal to one for unrestricted Hartree\u2013Fock theory and unrestricted Kohn\u2013Sham theory).\nFigure 2 depicts the features F (J)e and F (J)n obtained for reaction 1 of Figure 1. In each subplot of Figure 2, we separated the elements due to the large difference in scale. In (a), the external potential features, F (J)e , are shown, and in (b), the nuclear repulsion features, F (J)n , are shown. The same plot scaled by the respective nuclear charge can be found in the Supporting Information. The scaling changes only the relationship between different elements but not within one group of elements.\nWe see how the reaction details can be recovered in the plots of Figure 2. For instance, C6 and C2 (and similarly H13) show a big drop from the TS structure (blue line) to the product (red line), which monitors that the bond between these two atoms is broken. Similarly, H9 features the biggest relative drop toward the product, which is due to the H shift observed in the reaction. Only for H12 is the product feature higher in energy than those of the TS structure and the reactant. The fact that the reactant and the TS structure features are close together while the product features are separated hints at a possible early TS structure, which resembles the reactant rather than the product according to Hammond\u2019s postulate.72\nTo further elucidate the correlation, we plot F (J)n and F (J)e against each other for each element in Figure 3. Apart from the scaling, the trends are very similar: Not only are all elements of the same type almost linearly correlated, but also the trend holds over the course of the reaction (connected points). Thus, apart from small deviations, the nuclear features encode very similar information to the external potential. Because the latter is much more expensive to calculate, it is a good trade-off to use the nuclear features, which are much more cost effective. This is evidence that at least approximately, only one of the two features can be used without great loss of accuracy. Because the nuclear features are far more efficient to calculate, as they do not depend on a converged SCF calculation, we will solely consider F (J)n in what follows. To compare the effects of different substituents, we plotted the same representations as in Figure 2 in Figure 4. In reaction 2 with the ethyl substituents, we can see that both proximal carbon atoms, C15 and C21, are of similar magnitude, as are the distal carbon atoms, C18 and C21. The patterns of C6 and C2\ntoward the product remain the same. Note that the relative pattern, for example, the increase from C8 to C6 in reaction 1 but the decrease in the same two carbon atoms in reactions 2 and 3, should not be overinterpreted as this pattern is dependent only on the sorting and does not carry physical meaning. Even for reaction 3, with the electron-donating and -withdrawing groups, a similar pattern is observed.\n4.2 Relation of F (J)n to the CM Consider the modified CM, C\u0303, with diagonal elements set to 0 and the interaction terms divided by two to resemble avoidance double counting:\nC\u0303IJ = 0 I = J1 2 ZIZJ |RI \u2212RJ | I 6= J . (11)\nAll elements F (J)n can be obtained by multiplying the J-th row of this CM with 0-diagonal with a vector of one entries, 1:\nC\u0303(J) \u00b7  1 1 ... 1  = F (J)n . (12)\nWe have F (J)n = \u2211 I,I 6=J CIJ = \u2211 I C\u0303IJ , establishing a relationship to the (modified) CM C (C\u0303). To isolate the steric effects from the electronic effects, we consider, similarly to Figure 4 but without the nuclear charges ZI and ZJ in the numerator, a\nsum of inverse distances at nucleus J , namely, F\u0303 (J)n \u2261 12 \u2211 I 1 |RI\u2212RJ | , in Figure 5. This function has a larger magnitude in areas of the molecule with a higher scaffold density that exhibit more steric effects. For instance, as before, the function shows higher values for C6 and C2 and a drastic change toward the product. However, by contrast to Figure 4, the function is characterized by a larger value at C6 than at C2 because it strictly measures the neighbor density, of which C6 has more (N7, H13, and C5 are nearby) than C2 (only N4 and O3 are nearby). In Figure 4, the larger nuclear charges of nitrogen atoms and oxygen atoms weighted the overall sum higher. More of such effects can be observed: another one is in reaction 2, where the sum of inverse distances at N15 is much smaller than in Figure 4 compared to the other nitrogen atoms, because the neighboring oxygen atoms are not weighted according to their nuclear charges.\n4.3 Comparison of F (J)n and CM Eigenvalues In Figure 6, the nuclear repulsion features, F (J)n , are shown in the left panel and the eigenvalues of the CM, \u03bbi, in the right panel, all for the intrinsic reaction coordinate (IRC) of reaction 1 in Figure 1. In both feature spaces, it is clearly visible what the TS structure is (step 187) and that it is most likely an early one. The eigenvalues of the CM are hard to interpret, however, because the values are not tied to a particular atom. By contrast, from our F (J)n descriptor, it is evident which atoms undergo large changes over the course of the reaction: the hydrogen atom that is shifted in the reaction, H9, features the largest change in the trace relative to the atoms of the same element. This is in line with Figures 2 and 3, where this hydrogen atom produces the largest spread. As before when discussing Figure 2, we see that C2 and C6 behave similarly, as they are the bonding partners of the bond that is broken. The nitrogen atoms, N4 and N7, appear relatively stable in terms of the F (J)n descriptor apart from a slight relaxation observed in all heavy atoms, due to the molecule opening up and becoming less compact. The carbon atom C8 with its hydrogen atom H14 also shows a rather flat trace as they hardly participate in the reaction.\nBecause F (J)n yields interpretable traces and, at the same time, encodes very similar information to that encoded in the eigenvalues of the CM, it represents an excellent alternative, if not a superior type of feature, for many applications. This will be especially interesting if for a given model one wants to backtrack and re-inspect a feature that a machine learning model paid particular attention to. For instance, with such information it is possible to set a threshold of change over the course of the reaction and filter the rest of the data set according to reactions that behave in a similar way. In each case, it is possible to go back to the descriptor and evaluate where a particular contribution came from.\nA drawback, however, is that F (J)n is not permutationally invariant and suf-\nfers from the same issues that plague the plain CM. Due to this very reason, the diagonalization was introduced for the CM (see above), to achieve permutational invariance at the price of interpretability. The reasons given for diagonalizing the CM are:9 (i) the unique encoding; (ii) \u201csymmetrically equivalent atoms\u201d are treated the same; (iii) invariance with respect to permutation, translation, and rotation; and (iv) continuous distance. Property (i) has been discussed73,74 and holds even for homometric molecules, (ii) is fulfilled, (iii) is a consequence of the ordering and not the diagonalization (there is no intrinsic ordering of eigenvalues as they are complex numbers and the ordering is dependent on the diagonalization algorithm), and (iv) is fulfilled. The sorting ensures that the structural properties of each molecule that are compared are of similar size. The caveat is, though, that these structural properties may appear for different chemical reasons.\nBecause, in the general case, there is no way to track atoms and because this may not even be desirable (as in symmetric molecules certain atoms are symmetry redundant), we have to sort the list (or use any other way to introduce permutational invariance). Therefore, we simply sort the vector F (J)n in a descending order and ignore tracking of atoms. This is in analogy to the eigenvalues of the CM that are sorted the same way, but the key difference remains: the entries are still atom specific and do not mix information from all atoms (as the diagonalization of the CM does).\nSimilar to our CL, in the sorted CM,12 each element of the matrix is part of the feature, whereas the rows (or columns of this symmetric matrix) are ordered according to their norm. This is equivalent to our approach apart from the fact that there is no summation over the rows (or columns, respectively), leading to a high dimensional feature, which is quadratic in the number of atoms. Moreover, it has been noted that slight variations in atomic coordinates may cause abrupt changes in the CM ordering, thereby impeding the learning of structural similarities.10\nSchrier found that the eigenvalues of the CM will not be able to distinguish larger molecules.11 We do not expect that this is different for the sorted F (J)n . Furthermore, for macromolecules of more than 10,000 atoms, not only is the global description not granular enough, but also the diagonalization needed for the eigenvalues becomes a true computational bottleneck, as it scales with O(M3), while subsequent sorting is affected by a negligible cost of order O(M logM), where M is the number of nuclei."
+        },
+        {
+            "heading": "4.4 Descriptor Extensivity",
+            "text": "One long-standing issue in descriptor research is the desired transferability between molecules of different sizes. Hence, an intensive descriptor is sought for, that is, one that is independent of molecular size. However, this desire contrasts the inherent extensivity of structures. One approach is to find sub-information that is intensive.\nThe size (number of elements) of the nuclear repulsion features, F (J)n , grows\nwith system size, M . For the specific case of an elementary reaction step, only a very localized part of the system will react, while most of the system remains largely unchanged (i.e., internal coordinates of observer atoms change only little), as illustrated by the observer hydrogen atom H14 in Figure 6. A simple solution to this problem is to truncate the feature and to consider only a subset of atoms that vary more than a given threshold and can be considered a relevant subsystem for the process under consideration. More elaborate measures may consider features evaluated in an embedding framework.\nHowever, the issue remains that even if two feature vectors are truncated to the same size to contain only the physically relevant part, they cannot be compared in a direct manner. Only if the set of atoms to which the vector has been truncated is the same for every system, a direct comparison is possible. The dilemma is that, as soon as convolutions are introduced to achieve permutational invariance, the comparability fades away."
+        },
+        {
+            "heading": "5 Smooth Overlap of Atomic Positions and of",
+            "text": "Electron Densities\nWe are advised to compare the results obtained so far to one of the most successful representations for molecular similarity: the SOAP kernel.5 In this section, we review the key derivation steps of the SOAP kernel as we need them later to formulate and evaluate our electron-density-based descriptor. In our derivation, we follow Ref. 5 but extend it at key places to highlight important steps of the derivation that are not explicit in the original paper and that become important for our electron-density-based descriptor, for which the derivation must be made more transparent. For this electron-density-based descriptor, we will reinterpret the fuzzy atomic positions of SOAP and generalize them to the actual electron density. Accordingly, we call the resulting descriptor SOED. We emphasize again that the derivation reviewed for SOAP in the next section is necessary as it will turn out to be the key evaluation strategy within our setting to evaluate SOED."
+        },
+        {
+            "heading": "5.1 SOAP Kernel",
+            "text": "SOAP represents a measure for molecular similarity without making any direct connection to the associated electronic energies (by contrast to the CM). A molecule is put with its center of mass at the origin of the coordinate system. We place on each of its atoms I at position RI an unnormalized Gaussian function, g\u03b1I , with parameter \u03b1 = 1/(2\u03c3I\n2), where \u03c3I is the variance of the Gaussian function at atom I, to obtain a superposition of fuzzy atomic positions\n\u03c1mol(r; {RI}, {\u03b1I}) = Nmol M\u2211 I=1 g\u03b1I (|r\u2212RI |) (13)\nwith the unnormalized Gaussian\ng\u03b1I (|r\u2212RI |) = exp ( \u2212\u03b1I |r\u2212RI |2 ) (14)\nand normalization constant Nmol to ensure that \u3008\u03c1mol|\u03c1mol\u3009 = 1. The variable r is the variable of the field. Note that in the original publication,5 the normalization constant Nmol is omitted because later (see below) the kernel will be normalized.\nIn the original paper,5 this superposition has been called \u201catomic neighbor density\u201d that represents the \u201catomic environment\u201d, which we do not adopt here as the superposition in Eq. (13), primarily, does not put an emphasis on some local atomic structure so that other atoms become neighbors or an environment. Instead, it refers to the molecular structure as a whole. Hence, we may refer to it as a \u201cmolecular-scaffold density\u201d. This is also advantageous to conceptually emphasize its relation to our SOED descriptor to be introduced later. The comparison of two molecular-scaffold densities then requires the definition of an overlap measure (see below), which is the origin of the term \u201csmooth overlap of atomic positions\u201d, which we understand as an overlap of molecular scaffolds represented by fuzzy atomic positions.\nUsually, the \u03b1I in Eq. (13) is taken to be the same for all atoms, \u03b1I \u2192 \u03b1. In some applications, \u03b1 was optimized as a hyperparameter16,75 or simply fixed to some value.59,76 Using a different \u03b1 as a hyperparameter for each element type77 resulted in the same value for all types during the training procedure.\nNotably, the sum in Eq. (13) is permutationally invariant, a property that is important for machine learning: exchanging the terms in the sum does not change the total density. In order to determine the best match of the scaffold densities of two molecules for their comparison regarding the assessment of molecular similarity, it will be necessary to rotate one scaffold density in a three-dimensional space with respect to the other. To be able to rotate the sum of Gaussians in Eq. (13), the equation must be expanded into functions dependent on the global polar angles, \u03b8 and \u03c6 (see Figure 7).5 In the definition above, they are dependent on rA, which refers to the frame of reference that is centered on nucleus A and that is not easily rotatable from a global point of view. The functions sought for straightforward rotation of the whole molecular scaffold field5 are all to be located at the same single center, which can be the center of mass coordinates of the molecule.\nWhen we multiply out the exponent in Eq. (13), we obtain \u2212\u03b1(r2 \u2212 2 r \u00b7 RI + R 2 I), that is, two squared terms and a cross term. The cross term is then subjected to a Rayleigh expansion of a plane wave in terms of spherical waves,5\nexp (r \u00b7RI) = \u221e\u2211 l=0 (2l + 1)il (rRI)Pl(cos \u03b3) (15)\nwhere il is the modified spherical Bessel function of the first kind of degree l, Pl is the lth Legendre polynomial, and \u03b3 = \u2220(r,RI), measured from the origin of the coordinate system (see Figure 7). The modified spherical Bessel function of the first kind, in(x) \u2261 \u221a \u03c0 2xIn+1/2(x), is one radial solution to the Helmholtz\nequation in spherical coordinates and related to the modified Bessel function of the first kind, In(x) \u2261 i\u2212nJn(ix), where Jn in turn is the Bessel function of the first kind, which is a solution to Bessel\u2019s differential equation, other solutions being the Bessel function of the second kind and Hankel functions. Hence, the molecular scaffold density in Eq. (13) can be expressed as\n\u03c1mol(r; {RI}, \u03b1) = M\u2211 I exp ( \u2212\u03b1 |r\u2212RI |2 ) =\nM\u2211 I exp ( \u2212\u03b1(r2 \u2212 2rRI + R2I) ) =\nM\u2211 I exp ( \u2212\u03b1 ( r2 +R2I )) \u221e\u2211 l=0 (2l + 1)il (2\u03b1rRI)Pl(cos \u03b3) ,\n(16) where the normalization constant Nmol was omitted as explained above. By virtue of the spherical harmonics addition theorem,\nPl(cos \u03b3) = 4\u03c0\n2l + 1 l\u2211 m=\u2212l Y \u2217lm(\u03b8RI , \u03c6RI )Ylm(\u03b8, \u03c6) (17)\nwith angles \u03b8 and \u03c6 as the polar coordinates of the field variable r measured from the origin and the angles \u03b8RI and \u03c6RI being the polar coordinates of RI ,\nnotably also measured from the new common origin. These steps accomplish a single-center expansion necessary for the subsequent rotation in search of the best matches of two molecular scaffold densities. We now obtain a compact expression of expansion coefficients and spherical harmonics, where the term (2l + 1) cancels out \u03c1mol(r; {RI}, \u03b1) = 4\u03c0 M\u2211 I exp(\u2212\u03b1(r2 +R2I)) \u221e\u2211 l=0 +l\u2211 m=\u2212l il (2\u03b1rRI)Y \u2217 lm(\u03b8RI , \u03c6RI )Ylm(\u03b8, \u03c6)\n= M\u2211 I \u2211 lm cIlm(r;RI , \u03b1)Ylm(\u03b8, \u03c6)\n(18) with\ncIlm(r;RI , \u03b1) \u2261 4\u03c0 exp ( \u2212\u03b1 ( r2 +R2I )) il (2\u03b1rRI)Y \u2217 lm(\u03b8RI , \u03c6RI ) . (19)\nwhere \u2211 lm denotes \u2211\u221e l \u2211l m=\u2212l. Note that the angular information of the nuclear position is stored in the spherical harmonics Y \u2217lm(\u03b8RI , \u03c6RI ). It is exactly these functions that we will need to rotate against each other to generate best overlaps over all possible rotations of the two molecular scaffold densities to be compared. This is due to the fact that the density field is defined in terms of Gaussian functions located at the positions of the nuclei, which therefore need to be rotated. We emphasize this point because it is important for our SOED derivation below and because it appears somewhat obscured in the original paper.5 The overlap between these two densities, \u03c1mol(r;RI , \u03b1) and \u03c1\u2032mol(r;RI\u2032 , \u03b1), is defined as the inner product of their densities,\nS(\u03c1mol, \u03c1 \u2032 mol) = \u3008\u03c1mol | \u03c1\u2032mol\u3009 = \u222b R3 dr\u03c1mol\u03c1 \u2032 mol , (20)\nwhere we omitted the parameter dependence for the sake of clarity and dr = dx dy dz. The center of mass of both molecules matches the origin of the coordinate system, leaving rotational freedom around three Euler angles, \u03b1, \u03b2, \u03b3. Hence, in search for optimal overlaps of the two molecular-scaffold densities we need to integrate over all possible rotations.5 This procedure automatically guarantees rotational invariance.\nA rotation from the rotation group, SO(3), can be written as a matrix,\nR\u0302 \u2261 R\u0302(\u03b1, \u03b2, \u03b3) , (21)\nwhere \u03b1, \u03b2, \u03b3 are the Euler angles. This rotation operator needs to be integrated over SO(3) when acting on a density; that is, all possible rotations of the density must be considered. The volume element on SO(3) integrating over all possible Euler angles yields the measure\nd\u2126 = 1\n8\u03c02 sin\u03b2 d\u03b1 d\u03b2 d\u03b3 (22)\nwith \u03b1 = [0, 2\u03c0), \u03b2 = [0, \u03c0), and \u03b3 = [0, 2\u03c0). We now need to rotate the spherical harmonic Ylm(\u03b8RI , \u03c6RI ) in the expansion in Eq. (18). An arbitrary rotation operator, R\u0302, operating on a spherical harmonic yields a linear combination of new spherical harmonics with a different magnetic quantum number m and the elements of a Wigner D-matrix as expansion coefficients. With this identity, we will rotate the angular information of the nuclear positions (because the radial part is separated) according to\nR\u0302Ylm(\u03b8RI , \u03c6RI ) = l\u2211 m\u2032=\u2212l Dlmm\u2032(R\u0302)Ylm\u2032(\u03b8RI , \u03c6RI ) . (23)\nThe elements of the Wigner matrices are given by Dlmm\u2032(R\u0302) = \u2329 Ylm(\u03b8RI , \u03c6RI ) \u2223\u2223\u2223 R\u0302 \u2223\u2223\u2223Ylm\u2032(\u03b8RI , \u03c6RI )\u232a . (24) This is convenient as the rotation happens in a very compact manner without notational overhead usually involved in rotations. Furthermore, we will later see how multiple Wigner D-matrices will cancel each other out.\nWhen considering the overlap of two molecular-scaffold densities with one of them being rotated,\nS ( \u03c1mol, R\u0302\u03c1 \u2032 mol ) = \u3008\u03c1mol | R\u0302 | \u03c1\u2032mol\u3009 = \u222b R3 dr\u03c1molR\u0302\u03c1 \u2032 mol (25)\nwe will have to integrate over all Euler angles \u03b1, \u03b2, \u03b3, which will yield the rotationally invariant kernel,\nk (\u03c1mol, \u03c1 \u2032 mol;n) = \u222b \u03b1,\u03b2,\u03b3 \u2223\u2223\u2223\u2223\u222b R3 dr\u03c1molR\u0302\u03c1 \u2032 mol \u2223\u2223\u2223\u2223n 18\u03c02 sin\u03b2 d\u03b1 d\u03b2 d\u03b3 (26) where we follow the original paper5 and artificially introduced the power n as a parameter to be considered later; for now, we set it equal to 1. As we will see in the following, this integral over Euler angles can be evaluated analytically with help of the Wigner D-matrices and will not require us to deal with the explicit rotation algebra as shown in Eq. (23).\nWe substitute the expanded density of Eq. (18) into the overlap Eq. (25) to obtain the overlap of the two molecular-scaffold densities, where we exploit the rotation identity of Eq. (23),\nS ( \u03c1mol, R\u0302\u03c1 \u2032 mol ) = \u222b dr\u03c1molR\u0302\u03c1 \u2032 mol\n= \u222b dr\u03c1mol [ M \u2032\u2211 I\u2032 \u2211 l\u2032m\u2032 4\u03c0 exp[\u2212\u03b1I\u2032(r2 +R2I\u2032)]il\u2032(2\u03b1I\u2032rRI\u2032)R\u0302Y \u2217l\u2032m\u2032(\u2126RI\u2032 )Yl\u2032m\u2032(\u2126) ]\n= \u222b dr\u03c1mol [ M \u2032\u2211 I\u2032 \u2211 l\u2032m\u2032 4\u03c0 exp[\u2212\u03b1I\u2032(r2 +R2I\u2032)]il\u2032(2\u03b1I\u2032rRI\u2032)\n\u00d7 l\u2032\u2211\nm\u2032\u2032=\u2212l\u2032 Dl\n\u2032\nm\u2032m\u2032\u2032(R\u0302)Y \u2217 l\u2032m\u2032\u2032(\u2126RI\u2032 )Yl\u2032m\u2032(\u2126)\n] (27)\nwhere a new coefficient, analogously to Eq. (19) with different indices,\ncI \u2032 l\u2032m\u2032\u2032 = 4\u03c0 exp[\u2212\u03b1I\u2032(r2 +R2I\u2032)]il\u2032(2\u03b1I\u2032rRI\u2032)Y \u2217l\u2032m\u2032\u2032(\u2126RI\u2032 ) (28)\ncan be employed to collect many of the terms. Substituting this coefficient and separating the integral into a radial and a spherical part, we obtain\nS ( \u03c1mol, R\u0302\u03c1 \u2032 mol ) = M,M \u2032\u2211 I,I\u2032 \u2211 l,m l\u2032,m\u2032 l\u2032\u2211 m\u2032\u2032=\u2212l\u2032 Dl \u2032 m\u2032m\u2032\u2032(R\u0302) \u222b \u221e r=0 drr2cI\u2217lmc I\u2032\nl\u2032m\u2032\u2032\ufe38 \ufe37\ufe37 \ufe38 radial\n\u00d7 \u222b 2\u03c0 \u03b8=0 \u222b \u03c0 \u03c6=0\nsin\u03c6 d\u03c6d\u03b8 Y \u2217lm(\u2126)Yl\u2032m\u2032(\u2126)\ufe38 \ufe37\ufe37 \ufe38 spherical\n(29)\nwhere we abbreviated the angular information according to \u2126 = (\u03b8, \u03c6) and \u2126RI = (\u03b8RI , \u03c6RI ). Recall that we also chose to have a general \u03b1I for the unprimed and \u03b1I\u2032 for the primed molecular scaffolds.\nNow, the integral in Eq. (29) must be evaluated. Because the spherical harmonics are orthonormal by definition, the spherical part in Eq. (29) evaluates to \u222b 2\u03c0\n\u03b8=0 \u222b \u03c0 \u03c6=0 sin\u03c6 d\u03c6 d\u03b8 Y \u2217lm(\u2126)Yl\u2032m\u2032(\u2126) = \u03b4ll\u2032\u03b4mm\u2032 . (30)\nThis simplifies the last line in Eq. (29) to the following,\nS ( \u03c1mol, R\u0302\u03c1 \u2032 mol ) = \u2211 I,I\u2032 \u2211 l,m l\u2211 m\u2032\u2032=\u2212l Dlmm\u2032\u2032(R\u0302) \u222b \u221e r=0 drr2cI\u2217lmc I\u2032 lm\u2032\u2032 . (31)\nsetting m\u2190 m\u2032 and l\u2190 l\u2032.\nThe radial part of the integral in Eq. (29) and Eq. (31) is non-trivial. We first expand it to move the quantities independent of the position before the integral,\n\u222b \u221e r=0 drr2cI\u2217lmc I\u2032 lm\u2032\u2032 = (4\u03c0) 2 exp(\u2212(\u03b1I\u2032R2I\u2032 + \u03b1IR2I))Ylm (\u2126RI )Y \u2217l\u2032m\u2032\u2032 ( \u2126RI\u2032 ) \u00d7 \u222b \u221e r=0 drr2 exp(\u2212(\u03b1I\u2032 + \u03b1I)r2)il(2\u03b1IrRI)il\u2032(2\u03b1I\u2032rRI\u2032) (32) where the integral is solved as\n\u222b \u221e r=0 drr2 exp(\u2212(\u03b1I\u2032 + \u03b1I)r2)il(2\u03b1IrRI)il\u2032(2\u03b1I\u2032rRI\u2032)\n= 1\n4\n( \u03c0\n(\u03b1I + \u03b1I\u2032)3\n)1/2 il ( 2 \u03b1I\u03b1I\u2032\n\u03b1I + \u03b1I\u2032 RIRI\u2032\n) exp ( \u03b12IR 2 I + \u03b1 2 I\u2032R 2 I\u2032\n\u03b1I + \u03b1I\u2032 ) (33) according to Weber.78,79\nThe prefactor in Eq. (32) can be combined with the result from the integral Eq. (33). If we had considered the two normalization constants Nmol = ( 2\u03b1 \u03c0 ) 3/4 that we omitted from Eq. (13), we would have obtained the same overlap as Kaufmann and Baumeister,80\nS ( \u03c1mol, R\u0302\u03c1 \u2032 mol ) = \u2211 I,I\u2032 \u2211 l,m,m\u2032\u2032 Dlmm\u2032\u2032(R\u0302)I\u0303 l mm\u2032\u2032(\u03b1I , \u03b1I\u2032 ,RI ,RI\u2032) (34)\nwith\nI\u0303 lmm\u2032\u2032(\u03b1I , \u03b1I\u2032 ,RI ,RI\u2032) = 4\u03c0\n( 2 (\u03b1I\u03b1I\u2032) 1/2\n\u03b1I + \u03b1I\u2032\n)3/2 exp ( \u2212 \u03b1I\u03b1I \u2032\n\u03b1I + \u03b1I\u2032 (R2I +R 2 I\u2032) ) \u00d7 il ( 2 \u03b1I\u03b1I\u2032\n\u03b1I + \u03b1I\u2032 RIRI\u2032\n) Ylm(\u2126RI )Y \u2217 l\u2032m\u2032\u2032(\u2126RI\u2032 ) .\n(35) For \u03b1\u2190 \u03b1I and \u03b1\u2190 \u03b1I\u2032 , that is, I\u0303(\u03b1, \u03b1,RI ,RI\u2032), we recover the result ob-\ntained in the original SOAP paper,5 which was there denoted as I\u0303 lmm\u2032\u2032 (\u03b1,RI ,RI\u2032). The prefactor on the original paper, \u221a 2\u03c05\n\u03b13 , as noted in the erratum, 81 origi-\nnates from the missing normalization constants, Nmol. If they were included, that new prefactor would not have been necessary, as we can easily verify by\u221a\n2\u03c05 \u03b13 N 2 mol = 4\u03c0, where 4\u03c0 is their original prefactor. As already noted in the erratum,81 this does not produce an error, as it gets cancelled at the normalization step.\nIn the original paper,5 the authors defined a term for the sum over all pairwise interactions of the integral\nI lmm\u2032\u2032 \u2261 \u2211 I,I\u2032 I\u0303 lmm\u2032\u2032(\u03b1,RI ,RI\u2032). (36)\nto obtain a slightly more succinct form S ( \u03c1mol, R\u0302\u03c1 \u2032 mol ) = \u2211 l,m,m\u2032\u2032 I lmm\u2032\u2032D l mm\u2032\u2032(R\u0302) (37)\nwhich we will not adapt here as it obfuscates the sums that nicely emphasize the series expansion over the indices l, m, and m\u2032 as well as the pairwise nuclear interaction over the indices I and I \u2032.\nWe recall from Eq. (26) that the integral of the overlap defines the kernel. For n = 2, the rotationally invariant kernel is\nk (\u03c1mol, \u03c1 \u2032 mol; 2) = \u222b \u2223\u2223\u2223S (\u03c1mol, R\u0302\u03c1\u2032mol)\u2223\u2223\u22232 d\u2126 = \u222b d\u2126S ( \u03c1mol, R\u0302\u03c1 \u2032 mol )\u2217 S ( \u03c1mol, R\u0302\u03c1 \u2032 mol\n) = \u2211 I,I\u2032 \u2211 l,m,m\u2032 \u03bb,\u00b5,\u00b5\u2032 I\u0303 l\u2217mm\u2032 I\u0303 \u03bb \u00b5\u00b5\u2032 \u222b d\u2126Dlmm\u2032(R\u0302) \u2217D\u03bb\u00b5\u00b5\u2032(R\u0302)\ufe38 \ufe37\ufe37 \ufe38 Wigner\u2019s orth. relation\n= \u2211 I,I\u2032 \u2211 l,m,m\u2032 1 2l + 1 I\u0303 l\u2217mm\u2032 I\u0303 l mm\u2032\n(38)\nwhere we used new indices to avoid the doubly primed m\u2032\u2032 and where by virtue of Wigner\u2019s orthogonality relation, we have\n\u222b 2\u03c0 0 d\u03b1 \u222b \u03c0 0 d\u03b2 sin\u03b2 \u222b 2\u03c0 0 d\u03b3 1 8\u03c02 Dj \u2032 m\u2032k\u2032(R\u0302(\u03b1, \u03b2, \u03b3)) \u2217Djmk(R\u0302(\u03b1, \u03b2, \u03b3))\n= 1\n2j + 1 \u03b4m\u2032m\u03b4k\u2032k\u03b4j\u2032j (39)\nWe see that the Greek indices collapse with the Latin ones, m\u2190 \u00b5, m\u2032 \u2190 \u00b5\u2032, and l\u2190 \u03bb.\nThe kernel is eventually defined with a power \u03b6, which is also a hyperparameter as it steers the sensitivity to the kernel changing the atomic positions, and we set it to unity to not obfuscate the results further. Finally, a normalization is introduced,\nK (\u03c1mol, \u03c1 \u2032 mol;n, \u03b6) =\n( k (\u03c1mol, \u03c1\n\u2032 mol;n)\u221a\nk(\u03c1mol, \u03c1mol;n)k (\u03c1\u2032mol, \u03c1 \u2032 mol;n)\n)\u03b6 (40)\nwhere each density depends on the width \u03b1 of the Gaussians and on the positions of the atoms, {RI}.\nDue to the quadratic scaling of the integrals (for each pair of atoms in the scaffold), it can become inefficient for larger molecules. This is certainly true for very large molecules. A remedy for the quadratic scaling is proposed that involves an approximation in terms of an expansion using radial basis functions. However, no systematic study has ever scrutinized this radial-basis approximation versus the analytic solution, apart from an initial discussion in the original paper.5 A further analysis of the accuracy of the power spectrum or engineered adversarial problems is beyond the scope of this analysis."
+        },
+        {
+            "heading": "5.2 Electron Density-Based Comparison: SOED",
+            "text": "Instead of attaching a Gaussian function to each atomic position to introduce a fuzzy atomic core as a component of a molecular scaffold density as in Eq. (13), one is tempted to exploit the electron density of a molecule for the assessment of molecular similarity. Not only does this quantity relate to the electronic energy through the Hohenberg\u2013Kohn theorem,69 but it is also an observable that is accessible in diffraction experiments and from any quantum chemical method. Moreover, it also includes a representation of the atomic cores because its maxima indicates the nuclear positions (and even the nuclear charge by virtue of the Kato cusp condition). In addition to this information about the molecular scaffold, the electron density encodes information about the electronic wave function in the valence regions\u2014although their peculiarities are in the tiny details and might require derived fields (such as the Laplacian82) to be clearly visible.\nIn this context, it is important to emphasize that the electron density is typically calculated from absolute squares of MOs that are decomposed into atomic orbitals (AOs) centered on the atomic nuclei. These AOs can then be represented by standard Gaussian functions available from a basis set library. In this regard, to employ the electron density is even on a technical level very similar to the SOAP scheme based on the molecular scaffold density\u2014although the derivation will be far more difficult as we will see in the following. Hence, the electron density could be taken as a replacement for the molecular scaffold density to represent structural information as does SOAP (best seen with width parameters, \u03b1I , that are different for every atomic core), but now also to encode electronic information.\nAlready the simplest electronic structure model will allow us to combine the AOs located at the nuclear positions linearly to yield MOs and to then yield the electron density, in complete analogy to Eq. (13). However, note that the MOs themselves cannot be used to replace the electron density or the molecular scaffold density because the coefficients in the linear combination of atomic orbitals (LCAO) expansion can take negative values and, in a superposition of MOs, these MO coefficients would cancel each other and all information about individual MOs will be lost. Obviously, this problem does not occur for the electron density that is taken as a weighted sum of the absolute squares of the MOs (see below).\nIf the additional electronic structure information encoded in the electron\ndensity can be harnessed, it might be better suited as a descriptor than SOAP, which encodes only the molecular scaffold. A similar reasoning has led Carbo\u030183 in the context of cheminformatics to develop a similarity measure based on the overlap of electron density, which is sometimes called the Carbo\u0301 index rAB ,\nrAB = \u222b V \u03c1A\u03c1Bdr(\u222b\nV \u03c12Adr )1/2 (\u222b V \u03c12Bdr )1/2 (41) and therefore reminiscent of Eq. (40) in the SOAP formalism. The derivation, where the first steps are similar to ours, is presented in the appendix of Ref. 83 but leaves out the key step of density rotations introduced in SOAP. The optimum overlap of rAB is numerically calculated, whereas we aim at an analytical solution. However, bringing electron densities in a rotatable form in a single-center picture leads to significant mathematical overhead as we shall see in the following.\nBecause we assume that we will always have results for a simple electronic structure model available from which we may take test data, we consider a single Slater determinant model. For such an ansatz, which is the basis of Kohn\u2013 Sham DFT, Hartree\u2013Fock theory, and any approximate Hartree\u2013Fock model, the electron density is the square of w MOs, \u03c6i(r), where r is the coordinate of the electron,\n\u03c1el(r) = w\u2211 i=1 ni |\u03c6i(r)|2 (42)\nwith occupation numbers ni (that may be taken to be 1 in an unrestricted framework, where w will then be identical to the number of electrons N). The MOs are usually expanded as a LCAO,\n\u03c6i(r) = M\u2211 A \u2211 \u00b5@A c(i)\u00b5 \u03c7\u00b5(r) , (43)\nas in Eq. (3) but now with an explicit notion of the atom (\u201cA\u201d) on which a function \u03c7\u00b5 is centered. In other words, the above expression explicitly introduces a sum over these atomic centers of the basis functions, which we may denote with the German word \u201cAufpunkt\u201d in order to introduce a notion that allows for centers that are not identical with nuclear positions. Hence, there is still a total of m basis functions (i.e., the AOs in this LCAO), \u03c7\u00b5(r), and their corresponding coefficients are c (i) \u00b5 . Gaussian orbitals (GTOs) employed as AO are defined as\n\u03c7\u00b5(rA) = N\u00b5f\u00b5(rA)g\u00b5(rA) (44)\nwith the polynomial\nf\u00b5(rA) = |rA|L\u00b5 YL\u00b5M\u00b5 (\u2126rA) , (45)\nthe Gaussian\ng\u00b5(rA) = exp ( \u2212\u03b6\u00b5 |rA|2 ) , (46)\nand with the normalization constant N\u00b5. Furthermore, we have the local vector from nucleus A at RA to the field variable r (see Figure 7), that is, rA = |r \u2212RA|, the spherical harmonic, YL\u00b5M\u00b5(\u2126rA), which is also centered at the position of nucleus A and hence in the local coordinate system e\u2032xA , e \u2032 yA , and e\u2032zA , with orbital quantum number (degree) L\u00b5 and magnetic quantum number (order) M\u00b5 and polar angles \u2126rA = (\u03b8rA , \u03c6rA) with respect to nucleus at RA and effective nuclear charge \u03b6\u00b5. In the following, we omit the variable dependence for the sake of brevity, that is, \u03c7\u00b5 \u2261 \u03c7\u00b5(r). As before, we will have to bring this multi-centered approach into a framework where all angles are to be taken with respect to a single center, which facilitates the rotation operation and which is taken to be the center of mass.\nSubstituting the AO expansion, Eq. (43), into the density expression, Eq. (42), we obtain\n\u03c1el(r) = w\u2211 i M\u2211 A,B \u2211 \u00b5@A \u03bd@B nic (i) \u00b5 c (i) \u03bd \u03c7\u00b5\u03c7\u03bd (47)\nwith basis functions (i.e., \u201cAOs\u201d) \u03c7\u00b5 and \u03c7\u03bd and expansion coefficients c (i) \u00b5\nand c (i) \u03bd . As usual, the introduction of a density matrix,\nD\u00b5\u03bd = w\u2211 i nic (i) \u00b5 c (i) \u03bd (48)\n(which is not to be confused with the Wigner D-matrices) brings the expression for the electron density into a more compact form,\n\u03c1el(r) = M\u2211 A,B \u2211 \u00b5@A \u03bd@B D\u00b5\u03bd\u03c7\u00b5\u03c7\u03bd . (49)\nMoreover, for notational convenience, we introduce a product GTO,\n\u03c7\u00b5\u03bd(rA, rB) = N\u00b5\u03bdf\u00b5(rA)f\u03bd(rB)g\u00b5(rA)g\u03bd(rB) (50)\nwith the normalization constant N\u00b5\u03bd = N\u00b5N\u03bd Because we want to rotate one of the electron densities with respect to the other, the expression must be made dependent on the rotation angles. However, as in the case of SOAP, the angles in the spherical harmonics are defined with respect to the local coordinate system at a nucleus but must be defined with respect to a single center that will be the center of mass. For this, we follow the derivation of Kaufmann and Baumeister80 here. However, the result from\nthe exact derivation, which we sketch in the supporting information, is very long-winded and turns out to be computationally costly to evaluate. Therefore, we propose two ways of approximating the GTO in order to simplify the expression: First, we neglect all products of higher order spherical harmonics; for example, no product of two p functions was considered, if they are positioned at different nuclei. Although this simplifies the derivation, it is still very involved. Therefore, we eliminate the polynomial factors by replacing all p basis functions with lobe functions, that is, s-type functions with shifted centers that resemble functions of higher angular momentum quantum number (see supporting information for details on how these new Aufpunkte were determined by starting from the nuclear positions). This is also possible for higher-orbital-momentum functions such as d functions. In this way, we generate an all-s-type basis set that sufficiently represents the electron density and for which the calculated MO coefficients can be inherited. Note that, from a technical point of view, the new Aufpunkte of these lobe functions are then to be treated as (new artificial) nuclear positions in the evaluation procedure for SOAP, and therefore, SOED can now be evaluated with a SOAP-type procedure.\nBy virtue of the Gaussian product theorem, each product of the two Gaussians \u03c7\u00b5 and \u03c7\u03bd in Eq. (49) becomes another Gaussian. Hence, we can collapse the double indices \u00b5\u03bd in Eq. (49) into a single index, which we call I\u030c in order to associate it to the corresponding expression in the SOAP derivation: because we consider a lobe-basis of s-functions only, we obtain the electron density as an expansion into s-functions only with Aufpunkte given at positions denoted by I\u030c, some of which are actual nuclear positions:\n\u03c1el(r) = m\u030c\u2211 I\u030c DI\u030c\u03c7I\u030c (51)\nAll of these positions I\u030c are subject to the SOAP rotation and overlap procedures and can be treated like ghost atoms. Hence, we have recovered a generalized version of SOAP with weights DI\u030c in front of the basis functions I\u030c, each of which will, in general, carry a different exponent (rather than a common exponent \u03b1, i.e. the standard choice for SOAP). Recall that the weights DI\u030c contain products of MO coefficients and occupation numbers (or first-order reduced density matrices), which can be determined in an electronic structure calculation (e.g., in a Hartree-Fock calculation). Of course, this will require one storing electronic structure data in addition to the nuclear coordinates of a molecule, but that should not present a hurdle as the molecular structures will typically be optimized with an electronic structure method whose wave-function ingredients then simply need to accompany the Cartesian coordinates in a data base in order to be exploited by a machine learning ansatz based on SOED.\nFinally, we obtain, by virtue of the direct analogy with SOAP, for the overlap of two electron densities,\nk (\u03c1el, \u03c1 \u2032 el; 2) = m\u030c,m\u030c\u2032\u2211 I\u030c,I\u030c\u2032 \u2211 l,m,m\u2032 D2 I\u030c D2 I\u030c\u2032 2l + 1 I\u0303 l\u2217mm\u2032 I\u0303 l mm\u2032 (52)"
+        },
+        {
+            "heading": "5.3 Numerical Comparison of SOAP and SOED",
+            "text": "We show in Figure 8 a comparison for the SOAP and SOED similarity results for the reactions in Figure 1. On both axes are the reactant (R), the TS (T), and the product (P) of the reaction. The diagonal is 1, as self-similarity is perfect by design. The first row shows SOAP and the second row shows the SOED results. As one can see, the electron density based descriptor is more sensitive to the reaction progress, because it drops from reactant to TS more than traditional SOAP. Again, the reactant and the TS are more similar in all descriptors shown than TS and product, implying an early TS again, as we already found for the CM and the energy diagram. However, product and TS are less similar than product and reactant, which seems unexpected at first sight. However, we note that this is actually reasonable if a purely structure-based descriptor that is largely independent of directional information (owing to the radial Gaussians involved in SOAP) favors similarity in terms of equilibrium bond lengths over similarity between stretched and equilibrium bond lengths in one constitutional isomer.\nR\nT\nP\nReaction 1 SOAP-unsep\n0.97986\n0.99926\n1.\n0.97809\n1.\n0.99926\n1.\n0.97809\n0.97986\nR\nT\nP\nReaction 2 SOAP-unsep\n0.98735\n0.99929\n1.\n0.98433\n1.\n0.99929\n1.\n0.98433\n0.98735\nR\nT\nP\nReaction 3 SOAP-unsep\n0.98017\n0.99944\n1.\n0.97884\n1.\n0.99944\n1.\n0.97884\n0.98017\nOne reason for the larger dissimilarity obtained for the SOED kernel is the fact that the parameter in the exponent of the Gaussian functions is no longer a hyperparameter. By contrast to SOAP with a fixed value \u03b1 for all nuclei, the analogous parameter in a Gaussian basis set that describes the AOs is fixed to\nrepresent these orbitals. In order to demonstrate how sensitive SOAP is in this respect, a comparison of SOAP results is shown in Figure 9 that was obtained for the three reactions with varying \u03b1: \u03b1 = 1, \u03b1 = 10, and \u03b1 = 100 (recall that the standard value is \u03b1 = 0.4). It is apparent from Figure 9 that when rotating one SOAP scaffold density with respect to the other, narrower peaks will have less overlap compared to when they are spread out."
+        },
+        {
+            "heading": "6 Comparison of Molecular Similarity Descrip-",
+            "text": "tors\nOn the basis of the three reactions studied in this work, we may draw some conclusions from a comparison of all descriptors considered here. The CL and the eigenvalues of the CM deliver similar results for the elementary steps considered. Yet, the former may be preferred over the latter as it retains interpretable meaning through a direct and unique atomic assignment of parts of the external potential. Furthermore it is cheaper to calculate, as no diagonalization step is needed. Moreover, we emphasize that by comparison to the eigenvalues of the CM the CL entries allow one to track the progress of a chemical reaction easily and classify the TS structure as early or late, as shown in Figure 6 above.\nFigure 10 presents a comparison of the eigenvalues of the CM and the CL for reactions 1\u20133 of Figure 1, in analogy to the figures created above for the comparison of SOAP and SOED. As in the case of SOAP and SOED, the diagonal elements all equal 1 because self-similarity is perfect by design. The first row shows the CL and the second row shows the CM eigenvalue results. The eigenvalues of the CM appear slightly more sensitive to the reaction progress. As for SOAP and SOED, the reactant and the TS are more similar in most descriptor\nvalues than TS and product, implying an early TS. Moreover, product and TS are less similar than product and reactant. However, all data points in Figure 10 are very similar, and there is no natural way to enhance the differentiation of the different structures (in sharp contrast to SOAP; see also below).\nCompared to the Coulomb-type descriptors, SOAP is far more expensive to evaluate in terms of the computational effort, and obviously, SOED requires even more computational resources. As already mentioned in the original publication,5 the evaluation for the integrals can be very time consuming, because I lmm\u2032 must be evaluated for every neighboring pair, I and I\n\u2032. Accordingly, this can represent a bottleneck for big-data high-throughput machine learning applications. Depending on how accuarate the numerical expansion in terms of spherical harmonics needs to be (variables m, m\u2032, and l) the scaling can be very unfavorable for SOAP\u2014and also for SOED, which relies on the same framework.\nBecause SOED requires a number of Gaussian functions equal to the number of one-electron basis functions in a given quantum chemical calculation, the number of neighbors is much higher than the number of atoms. In addition, higher angular momentum functions create an increase of the number of basis functions (and hence neighbors) needed because of the lobe functions (each p-function is approximated with 6 s-functions). Because the scaling of the calculation I lmm\u2032 is quadratic, more basis functions will be computationally much more expensive.\nA way out of this dilemma might be a further reduction of basis functions or even a complete replacement of the electronic density by an approximation with a molecular scaffold density but set up with different exponents \u03b1I for different atoms I in such a way that the electronic density is still as well approximated as possible. In this context, we recall that Figure 9 demonstrated the role of the magnitude of these exponents, which can allow for a better differentiation of structures along the reaction coordinate.\nThe fact that SOED requires a quantum chemical calculation to produce the orbital and hence the density information might become another bottleneck. However, in the case of high-throughput virtual screenings and automated reaction mechanisms explorations, such data will be available without additional costs.\nWhile comparing the Coulomb interaction-based descriptors and the densitybased descriptors in terms of predictive performance needs to be evaluated on a large data set in future work, we can already draw qualitative conclusions from the analysis of the elementary step. As we can see in Figure 9 for SOAP and SOED and analogously for the CL and CM in Figure 10, the TS structure is always closest to the reactant. In the case of reactions 2 and 3 for the eigenvalues of the CM, the TS structure is even more similar to both the reactant and the product than they are similar to each other. Thus, despite the inclusion of the coordinates and nuclear charges that are formally sufficient to describe the electronic structure of a molecule, it appears that both types of descriptors mainly represent the geometric structure and ignore important electronic effects, leaving the TS similarity paradox unresolved. This points to the need to encode further information about the electronic structure of molecular structures\ninto similarity descriptors or fingerprints in order to discriminate between the different electron-correlation regimes of stable intermediates and TS structures (where chemical bonds are being broken or formed)."
+        },
+        {
+            "heading": "7 Conclusions",
+            "text": "In this work, we considered an elementary expression for the electronic energy that allowed us to discuss two widely used descriptors of molecular similarity in machine learning from the point of view of electronic structure theory: CM and SOAP. We showed how to ground their definitions into electronic structure theory by (i) introducing CL that allowed us to scrutinize the rather arbitrary diagonal entries of the CM and its non-transparent diagonalization step and by (ii) relating the fuzzy density that encodes molecular structure for SOAP to the actual electron density, which then also carries electronic structure information directly into the descriptor.\nOur formal discussion was accompanied by a single example that served the purpose to illustrate the results one obtains with the standard descriptors CM and SOAP and with our new descriptors CL and SOED. The single example was chosen to provide structures connected through an elementary reaction step\u2014 reactant, TS, product\u2014that is, structures that are rather similar by definition and that occur in chemical reaction networks. Although the few data points are far from a big-data machine learning approach, our example allowed us to study directly the variation in the descriptors along a coordinate that connects the three types of structures. Whereas structural change is therefore continuous, the electronic structure is different, which is the reason why the TS structure acquires a higher energy than the reactant and product structures. This situation therefore introduces a peculiar twist that would allow one to argue that the TS structure is more similar to either product and reactant than product and reactant are similar to one another, while the difference in electronic structure prompts one to argue that the stable intermediates, that is, product and reactant, should be more similar to one another with respect to the nature of their electronic structures.\nFor the CL, we found that the F (J)n descriptor yields interpretable traces by contrast to the convoluted eigenvalues of the CM. At the same time, it contains the same information and can therefore replace the CM eigenvalue features, also alleviating the need for the diagonalization step.\nWe emphasize that traces of these features along reaction coordinates clearly correlated with the change in molecular structure and are able to identify the TS structure in the feature. Hence, the electronic difference of the TS compared to the stable intermediates (reactant and product) will be detectable in these features, if they are considered relative to one another.\nWe found that SOED is more sensitive than SOAP with the standard \u03b1 parameter. This is a consequence of the widths of the Gaussians that are present in the representation of the electron density. We found that narrowing the Gaussians that compose the SOAP kernel also increases sensitivity, so that\nSOAP, which is much easier to evaluate than SOED, could be used instead, but with a parameter \u03b1 in the exponent that is larger than the standard one.\nBy analyzing an elementary step through the lenses of the CM and SOAP, we were able to show their connection to the first principles of quantum mechanics. The dependence on the nuclear charge, explicitly in the case of the CM and implicitly through the electron density in SOED (and through its molecular scaffold approximation in SOAP), makes them conceptually suitable for the whole of chemical space.\nIn this quantum chemical study, we studied single elementary steps to draw detailed conclusions on individual changes of the descriptors. Clearly, a big data approach needs to be taken to demonstrate actual usefulness in machine learning applications. In future work, we will build upon our findings and elaborate on molecular similarity in the context of a huge number of elementary steps (on the same and on different Born\u2013Oppenheimer surfaces). Only such work will eventually allow us to rate the value of our new descriptors for machine learning purposes compared to known descriptors.\nSupporting Information\nFurther CL analysis, details on the derivation and implementation of SOED, Cartesian coordinates of all molecules, and additional graphical representations are provided as additional material in the Supporting Information."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "Financial support by the Swiss National Science Foundation through project no. 200021 182400 is gratefully acknowledged."
+        },
+        {
+            "heading": "Appendix: Computational Methodology",
+            "text": "The quantum chemical calculations for the model reactions were carried out with Orca 5.84 We performed unrestricted Kohn\u2013Sham PBE85 structure optimizations with the SVP basis set with density fitting.86 Our molecular similarity descriptors were then obtained from Hartree\u2013Fock single-point calculations. The atomic descriptors F (J)n and F (J)e were obtained with the program Serenity,87,88 which calculated the nuclear attraction integrals contracted with the density matrix elements and the nucleus\u2013electron interaction with unrestricted Kohn\u2013Sham PBE85 and the def2-SVP basis set.89\nFor SOED, we obtained the MO coefficients for the electron density in Hartree\u2013Fock calculations with the tiny STO-3G basis set90 with Gaussian,91 where the keyword Integral(SplitSP) had to be applied to not obtain S=P contracted orbitals but regular s and p orbitals. We note that despite its small size, this basis set already produces the main features of the electron density (non-isotropic local effects through minimal polarization by basis functions on\natomic neighbors and an element-specific maximum of the density distribution at the various atomic nuclei) that makes SOED different from SOAP.\nWe implemented Eq. (26), the SOAP kernel, in Mathematica92 and this code is available from the authors. In addition, we established a python implementation for which we used NumPy93 array programming (vectorization). The data structure ndarray harnesses the CPU\u2019s SIMD (single instruction, multiple data) architecture for a significant speed-up compared to a loop-based implementation. Furthermore, we parallelized the calculation with the library Ray.94 Our implementation is available open source.95\nAccording to Eq. (34), the overlap for the SOAP procedure is dependent on an infinite sum that originates from the Rayleigh expansion in Eq. (15) and the rotation of the spherical harmonics as an expansion of Wigner-D matrices in Eq. (23), which converges uniformly. Even though we avoid the standard power spectrum approximation, which would introduce another approximation, we can approach the exact overlap only within numerical accuracy. As the authors of the original paper5 noted, the pairwise evaluation for all I and I \u2032 leads to a big computational overhead. Because we approximated the p-functions by (lobe) s-functions, many terms are created in this double sum. Our largest molecule from reaction 3 in Figure 1 then requires 333 s-functions. For this reason, it is hard to reach a high l in the expansion, as m and m\u2032 range from \u2212l to l in steps of one. Hence, for the results presented in Figure 8, the maximum value for l was 3 for SOED and 5 for SOAP.\nIn the original reference introducing SOAP,5 it had already been noted that the computation of SOAP can be expensive, because the terms inside the sums of Eq. 38 have to be evaluated for each pairwise interaction of atoms. The sums over l, m, and m\u2032 scale with O(L3max), where Lmax is the truncation of the infinite sum over l, yielding an overall complexity of O(M2L3max). In SOED, Eq. (52), where the density is based on m2 basis functions for each density, the evaluation becomes even more expensive as O(m4L3max), where the number of basis functions, m, is in all practical cases much bigger than the number of atoms, M . The straightforward way to treat this unfavorable scaling is to trade off accuracy for speed and reduce Lmax. For all but the smallest molecules, larger basis sets than those on the order of STO-3G will likely not be feasible. As in SOAP with the power spectrum, it might be possible to simplify the nested sum with some mathematical transformations to gain a speed-up."
+        }
+    ],
+    "title": "Quantum chemical roots of machine-learning molecular similarity descriptors",
+    "year": 2022
+}

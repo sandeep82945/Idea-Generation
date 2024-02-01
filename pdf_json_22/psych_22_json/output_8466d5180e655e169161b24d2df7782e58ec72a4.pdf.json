@@ -1,0 +1,657 @@
+{
+    "abstractText": "Background: Heterogeneity in neurodevelopmental disorders, and attention deficit hyperactivity disorder (ADHD) in particular, is increasingly identified as a barrier to identifying biomarkers and developing standards for clinical care. Clustering analytic methods have previously been used across a variety of data types with the goal of identifying meaningful subgroups of individuals with ADHD. However, these analyses have often relied on algorithmic approaches which assume no error in group membership and have not made associations between patterns of behavioral, neurocognitive, and genetic indicators. More sophisticated latent classification models are often not utilized in neurodevelopmental research due to the difficulty of working with these models in small sample sizes. Methods: In the current study, we propose a framework for evaluating mixture models in sample sizes typical of neurodevelopmental research. We describe a combination of qualitative and quantitative model fit evaluation procedures. We test our framework using latent profile analysis (LPA) in a case study of 120 children with and without ADHD, starting with well-understood neuropsychological indicators, and building toward integration of electroencephalogram (EEG) measures. Results: We identified a stable five-class LPA model using seven neuropsychological indicators. Although we were not able to identify a stable multimethod indicator model, we did successfully extrapolate results of the neuropsychological model to identify distinct patterns of resting EEG power across five frequency bands. Conclusions: Our approach, which emphasizes theoretical as well as empirical evaluation of mixture models, could make these models more accessible to clinical researchers and may be a useful approach to parsing heterogeneity in neurodevelopmental disorders. \u00a9 The Author(s) 2022. Open Access This article is licensed under a Creative Commons Attribution 4.0 International License, which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if changes were made. The images or other third party material in this article are included in the article\u2019s Creative Commons licence, unless indicated otherwise in a credit line to the material. If material is not included in the article\u2019s Creative Commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this licence, visit http:// creat iveco mmons. org/ licen ses/ by/4. 0/. The Creative Commons Public Domain Dedication waiver (http:// creat iveco mmons. org/ publi cdoma in/ zero/1. 0/) applies to the data made available in this article, unless otherwise stated in a credit line to the data. Background Heterogeneity in the genetic, neurocognitive, and phenotypic presentations of neurodevelopmental disorders (NDDs) is the focus of a growing body of literature in the fields of developmental pediatrics and psychology [1\u20135]. A potential advantage of parsing heterogeneity in NDDs is identification of homogenous subtypes that map onto precision medicine guidelines for clinical care. Attention deficit hyperactivity disorder (ADHD) is a strong candidate for this approach, due to the vast heterogeneity in Open Access Anne B. Arnett and Brian P. Flaherty contributed equally to the manuscript. *Correspondence: Anne.Arnett@childrens.harvard.edu 1 Division of Developmental Medicine, Boston Children\u2019s Hospital, Boston, MA 02115, USA Full list of author information is available at the end of the article Page 2 of 15 Arnett and Flaherty Journal of Neurodevelopmental Disorders (2022) 14:45 biological and environmental mechanisms, high rates of co-occurring psychopathology, variable long-term outcomes, and multiple available pharmacological and behavioral treatment options [5\u20137]. Previous investigations have attempted to identify profiles that differentiate ADHD from control subjects utilizing neurobiological indicators and sophisticated analytic methods; however, classification accuracy is generally modest, and model adequacy may be biased due to sample size and the inherent heterogeneity within neurodevelopmental cohorts [8\u201310]. Accordingly, the current investigation aims to develop a framework for parsing heterogeneity within a neurodevelopmental or clinical cohort, using a case study of a small sample of children with ADHD and controls. Symptom-based subtypes of NDDs, such as the predominantly inattentive versus predominantly hyperactive/impulsive clinical presentations of ADHD or Asperger\u2019s syndrome versus autism or pervasive developmental disorder, have shown poor stability [11], interrater reliability [12], and inconsistent external validity [13]. Thus, subgroups defined by indicators that are distinct from the diagnostic symptoms themselves may present an opportunity to identify clinically relevant, cross-diagnostic features [7]. For example, a subgroup of individuals with a common neurobiological profile, despite variable NDD symptoms, may respond well to a specific treatment or be at increased risk for distinct adverse outcomes that could be addressed with preventative interventions. Consequently, there has been a shift toward identifying non-symptom-based subtypes of NDDs using exploratory clustering methods such as latent class analysis (LCA [14]), community detection [15], and regression trees [16], with neuropsychological [17], electroencephalography (EEG [14, 18]), event-related potential (ERP [19]), or psychiatric/behavioral [15, 20] indicators. However, the translational utility of these results is so far limited, due to a focus on single-method measurement (e.g., either neuropsychological or EEG variables, but not both) and the challenge of comprehensively characterizing clinical samples that are large enough to provide adequate statistical power for these models. Common algorithmic clustering approaches, such hierarchical or k-means clustering, often lack a statistical model. These approaches ignore measurement error and \u201chard-classify\u201d observations, which is to say these algorithms assign a case to a cluster or class with certainty. In contrast, statistical approaches to clustering, broadly referred to as mixture models [21], can model measurement error and classify probabilistically. Probabilistic classification accounts for the more realistic possibility that while some observations (i.e., individuals) may be likely to belong to a single class, others may be harder to classify. In mixture models, unless parameter restrictions are used or a solution includes boundary estimates, each observation will always have a nonzero probability of membership in each class, thus estimating classification uncertainty. Common approaches to mixture models, such as LCA or latent profile analysis (LPA), also present limitations in that they are considered large sample procedures. Particularly with small samples, it can be difficult to optimize the loglikelihood function and obtain proper maximum likelihood estimates because mixture models\u2019 loglikelihood functions are frequently multimodal, meaning there are many local maxima. Practically, analysts run many sets of random start values to try to find a global maximum, as well as assess how well the parameters are estimated. Finally, LCA and LPA are frequently exploratory. Even when subgroups of observations are expected, the extant literature rarely provides sufficient information to fully characterize these classes ahead of time. Thus, confirmatory mixture models in clinical data are uncommon. Fortunately, model fit and assessment of structural equation models (SEM) have been studied by applied statistics researchers for decades, and these procedures provide a road map for improved selection and evaluation of mixture models even in smaller samples [22]. Two general principles arise from the SEM literature. First, no single fit statistic or index is sufficient to evaluate a model; rather, multiple fit measures should be considered simultaneously. The second principle is that model evaluation and selection should first be guided by science and theory, not primarily by fit statistics [22, 23]. This emphasis on theory and science that we see in SEM has not been similarly adopted in applied mixture models, to date. Rather, the difficulty and subjectivity of interpreting and comparing plausible models are often side stepped with an appeal to parsimony, which translates to overreliance on the Bayesian information criterion (BIC [24]). While the BIC frequently performs well in mixture model simulation studies [25], it penalizes heavily for model complexity, compared to Akaike\u2019s information criterion (AIC [26]), another common fit index used in mixture models. No statistical measure of fit, including AIC or BIC, has been found to be superior across research situations. Therefore, we propose that the principles identified in SEM (i.e., consider multiple criteria and heavily weight the science and interpretation) are the best current practice guidelines for evaluating mixture models in neurodevelopmental research. In the current study, we aim to develop a statistical framework for parsing heterogeneity in neurodevelopmental disorders using LPA in sample sizes typical of neurodevelopmental research, i.e., < 150 subjects. As described above, one of the primary limitations of mixture models is the exploratory nature of the analyses, Page 3 of 15 Arnett and Flaherty Journal of Neurodevelopmental Disorders (2022) 14:45 particularly with indicators for which there are no population normative values. Thus, we will begin by identifying a single-method model using indicators that have interpretable norms. Next, we will attempt to meaningfully interpret a second set of indicators (resting EEG data), by leveraging the structure identified in the singlemethod model. Consistent with procedures outlined in the SEM literature, we will examine all model aspects, rather than heavily weighting one or two indices of fit. Specifically, we will iteratively examine competing models by comparing their estimation quality, traditional fit indices, interpretation, measurement quality, and error variance. The obvious drawback to this holistic model selection approach is increased reliance on interpretation and subjectivity. However, as mixture models are typically utilized in the context of exploratory research to begin with, we argue that overreliance on fit indices risks rejection of potentially meaningful subgroups, which would be a disservice to clinical science in the long run.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "of children with ADHD"
+        },
+        {
+            "affiliations": [],
+            "name": "Anne B. Arnett"
+        },
+        {
+            "affiliations": [],
+            "name": "Brian P. Flaherty"
+        }
+    ],
+    "id": "SP:57d50f1e6558b9fa9543bdb95192cadec9365ac4",
+    "references": [
+        {
+            "authors": [
+                "C. Betancur"
+            ],
+            "title": "Etiological heterogeneity in autism spectrum disorders: more than 100 genetic and genomic disorders and still counting",
+            "venue": "Brain Res",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "Jeste SS",
+                "Geschwind DH"
+            ],
+            "title": "Disentangling the heterogeneity of autism spectrum disorder through genetic findings",
+            "venue": "Nat Rev Neurol",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "Karalunas SL",
+                "Nigg JT"
+            ],
+            "title": "Heterogeneity and subtyping in attentiondeficit/hyperactivity disorder\u2014considerations for emerging research using person-centered computational approaches",
+            "venue": "Biol Psychiatry",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "T Li",
+                "D van Rooij",
+                "N Roth Mota",
+                "JK Buitelaar",
+                "EAW Group",
+                "M Hoogman"
+            ],
+            "title": "Characterizing neuroanatomic heterogeneity in people with and without ADHD based on subcortical brain volumes",
+            "venue": "J Child Psychol Psychiatry",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "JT Nigg",
+                "SL Karalunas",
+                "E Feczko",
+                "DA. Fair"
+            ],
+            "title": "Toward a revised nosology for ADHD heterogeneity",
+            "venue": "Biol Psychiatry: Cogn Neurosci Neuroimaging",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "AB Arnett",
+                "M. Stein"
+            ],
+            "title": "Refining treatment choices for ADHD",
+            "venue": "Lancet Psychiatry",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Beauchaine TP",
+                "Hinshaw SP"
+            ],
+            "title": "RDoC and psychopathology among youth: misplaced assumptions and an agenda for future research",
+            "venue": "J Clin Child Adolesc Psychol",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "MR Brown",
+                "GS Sidhu",
+                "R Greiner",
+                "N Asgarian",
+                "M Bastani",
+                "PH Silverstone"
+            ],
+            "title": "ADHD-200 Global Competition: diagnosing ADHD using personal characteristic data can outperform resting state fMRI measurements",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "D Dai",
+                "J Wang",
+                "J Hua",
+                "H. He"
+            ],
+            "title": "Classification of ADHD children through multimodal magnetic resonance imaging",
+            "venue": "Front Syst Neurosci",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "AA Pulini",
+                "WT Kerr",
+                "SK Loo",
+                "A. Lenartowicz"
+            ],
+            "title": "Classification accuracy of neuroimaging biomarkers in attention-deficit/hyperactivity disorder: effects of sample size and circular analysis",
+            "venue": "Biol Psychiatry: Cogn Neurosci Neuroimaging",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "EG Willcutt",
+                "JT Nigg",
+                "BF Pennington",
+                "MV Solanto",
+                "LA Rohde",
+                "R Tannock"
+            ],
+            "title": "Validity of DSM-IV attention deficit/hyperactivity disorder symptom dimensions and subtypes",
+            "venue": "J Abnorm Psychol",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "DR Walker",
+                "A Thompson",
+                "L Zwaigenbaum",
+                "J Goldberg",
+                "SE Bryson",
+                "WJ Mahoney"
+            ],
+            "title": "Specifying PDD-NOS: a comparison of PDD-NOS, Asperger syndrome, and autism",
+            "venue": "J Am Acad Child Adolesc Psychiatry",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "JF Saad",
+                "KR Griffiths",
+                "MS. Korgaonkar"
+            ],
+            "title": "A systematic review of imaging studies in the combined and inattentive subtypes of attention deficit hyperactivity disorder",
+            "venue": "Front Integr Neurosci",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "SK Loo",
+                "JJ McGough",
+                "JT McCracken",
+                "SL. Smalley"
+            ],
+            "title": "Parsing heterogeneity in attention-deficit hyperactivity disorder using EEG-based subgroups",
+            "venue": "J Child Psychol Psychiatry",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "SL Karalunas",
+                "D Fair",
+                "ED Musser",
+                "K Aykes",
+                "SP Iyer",
+                "JT. Nigg"
+            ],
+            "title": "Toward biologically-based nosology: ADHD subtyping using temperament dimensions",
+            "venue": "JAMA Psychiat",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "T Wolfers",
+                "DL Floris",
+                "R Dinga",
+                "D van Rooij",
+                "C Isakoglou",
+                "SM Kia"
+            ],
+            "title": "From pattern classification to stratification: towards conceptualizing the heterogeneity of autism spectrum disorder",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "DA Fair",
+                "JT Nigg",
+                "S Iyer",
+                "D Bathula",
+                "KL Mills",
+                "NU Dosenbach"
+            ],
+            "title": "Distinct neural signatures detected for ADHD subtypes after controlling for Page 15 of 15 Arnett and Flaherty Journal of Neurodevelopmental Disorders",
+            "venue": "Front Syst Neurosci",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "AR Clarke",
+                "RJ Barry",
+                "R McCarthy",
+                "M. Selikowitz"
+            ],
+            "title": "EEG-defined subtypes of children with attention-deficit/hyperactivity disorder",
+            "venue": "Clin Neurophysiol",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "JL Smith",
+                "SJ Johnstone",
+                "RJ. Barry"
+            ],
+            "title": "Aiding diagnosis of attentiondeficit/hyperactivity disorder and its subtypes: discriminant function analysis of event-related potential data",
+            "venue": "J Child Psychol Psychiatry",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "Rutter T",
+                "Arnett AB"
+            ],
+            "title": "Temperament traits mark liability for coexisting psychiatric symptoms in children with elevated ADHD symptoms",
+            "venue": "J Atten Disord",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "GJ McLachlan",
+                "SX Lee",
+                "SI. Rathnayake"
+            ],
+            "title": "Finite mixture models",
+            "venue": "Annu Rev Stat Appl",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Bollen KA",
+                "Long JS"
+            ],
+            "title": "Testing structural equation models",
+            "venue": "Newbury Park: Sage;",
+            "year": 1993
+        },
+        {
+            "authors": [
+                "HW Marsh",
+                "K-T Hau",
+                "Z. Wen"
+            ],
+            "title": "In search of golden rules: comment on hypothesis-testing approaches to setting cutoff values for fit indexes and dangers in overgeneralizing Hu and Bentler\u2019s (1999) findings",
+            "venue": "Struct Equ Modeling",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "G. Schwarz"
+            ],
+            "title": "Estimating the dimension of a model",
+            "venue": "Ann Stat",
+            "year": 1978
+        },
+        {
+            "authors": [
+                "KL Nylund",
+                "T Asparouhov",
+                "BO. Muth\u00e9n"
+            ],
+            "title": "Deciding on the number of classes in latent class analysis and growth mixture modeling: a Monte Carlo simulation study",
+            "venue": "Struct Equ Model Multidiscip J. 2007;14(4):535\u201369",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "H. Akaike"
+            ],
+            "title": "Factor analysis and AIC. Selected papers of hirotugu akaike",
+            "venue": "New York: Springer;",
+            "year": 1987
+        },
+        {
+            "authors": [
+                "L Townsend",
+                "K Kobak",
+                "C Kearney",
+                "M Milham",
+                "C Andreotti",
+                "J Escalera"
+            ],
+            "title": "Development of three web-based computerized versions of the Kiddie Schedule for Affective Disorders and Schizophrenia Child psychiatric diagnostic interview: preliminary validity data",
+            "venue": "J Am Acad Child Adolesc Psychiatry",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "JM Swanson",
+                "S Schuck",
+                "MM Porter",
+                "C Carlson",
+                "CA Hartman",
+                "JA Sergeant"
+            ],
+            "title": "Categorical and dimensional definitions and evaluations of symptoms of ADHD: history of the SNAP and the SWAN rating scales",
+            "venue": "Int J Educ Psychol Assess",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "D. Wechsler"
+            ],
+            "title": "WISC-V: Technical and interpretive manual",
+            "venue": "New York: NCS Pearson,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "W Schneider",
+                "A Eschman",
+                "A. Zuccolotto"
+            ],
+            "title": "E-prime (version 2.0)",
+            "venue": "Computer software and manual. Pittsburgh: Psychology Software Tools Inc.;",
+            "year": 2002
+        },
+        {
+            "authors": [
+                "GD Logan",
+                "WB Cowan",
+                "KA. Davis"
+            ],
+            "title": "On the ability to inhibit simple and choice reaction time responses: a model and a method",
+            "venue": "J Exp Psychol Hum Percept Perform",
+            "year": 1984
+        },
+        {
+            "authors": [
+                "F Verbruggen",
+                "AR Aron",
+                "GP Band",
+                "C Beste",
+                "PG Bissett",
+                "AT Brockett"
+            ],
+            "title": "A consensus guide to capturing the ability to inhibit actions and impulsive behaviors in the stop-signal task. elife. 2019;8:e46323",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "LJ Gabard-Durnam",
+                "AS Mendez Leal",
+                "CL Wilkinson",
+                "AR. Levin"
+            ],
+            "title": "The Harvard Automated Processing Pipeline for Electroencephalography (HAPPE): standardized processing software for developmental and high-artifact data",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "Lee T-W",
+                "Lewicki MS",
+                "Sejnowski TJ"
+            ],
+            "title": "Unsupervised classification with non-Gaussian mixture models using ICA. Advances in neural information processing",
+            "year": 1999
+        },
+        {
+            "authors": [
+                "AR Levin",
+                "AS M\u00e9ndez Leal",
+                "LJ Gabard-Durnam",
+                "HM. O\u2019Leary"
+            ],
+            "title": "BEAPP: the batch electroencephalography automated processing platform",
+            "venue": "Front Neurosci",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "EG Willcutt",
+                "AE Doyle",
+                "JT Nigg",
+                "SV Faraone",
+                "BF. Pennington"
+            ],
+            "title": "Validity of the executive function theory of attention-deficit/hyperactivity disorder: a meta-analytic review",
+            "venue": "Biol Psychiatry",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "F Craig",
+                "F Margari",
+                "AR Legrottaglie",
+                "R Palumbi",
+                "C De Giambattista",
+                "L. Margari"
+            ],
+            "title": "A review of executive function deficits in autism spectrum disorder and attention-deficit/hyperactivity disorder",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Y Qian",
+                "L Shuai",
+                "Q Cao",
+                "RC Chan",
+                "Y. Wang"
+            ],
+            "title": "Do executive function deficits differentiate between children with attention deficit hyperactivity disorder (ADHD) and ADHD comorbid with oppositional defiant disorder? A cross-cultural study using performance-based tests and the behavior rating inventory of executive function",
+            "venue": "Clin Neuropsychol",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "T Lee",
+                "L Cai",
+                "RC. MacCallum"
+            ],
+            "title": "Power analysis for tests of structural equation models. In: Hoyle RH, editor. Handbook of structural equation modeling",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Schafer JL"
+            ],
+            "title": "Analysis of incomplete multivariate data",
+            "venue": "Boca Raton: CRC press;",
+            "year": 1997
+        },
+        {
+            "authors": [
+                "M Arns",
+                "CK Conners",
+                "HC. Kraemer"
+            ],
+            "title": "A decade of EEG theta/beta ratio research in ADHD: a meta-analysis",
+            "venue": "J Atten Disord",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "RM Alderson",
+                "MD Rapport",
+                "MJ. Kofler"
+            ],
+            "title": "Attention-deficit/hyperactivity disorder and behavioral inhibition: a meta-analytic review of the stop-signal paradigm",
+            "venue": "J Abnorm Child Psychol",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "Pennington BF"
+            ],
+            "title": "From single to multiple deficit models of developmental disorders",
+            "year": 2006
+        },
+        {
+            "authors": [
+                "Loo SK",
+                "Barkley RA"
+            ],
+            "title": "Clinical utility of EEG in attention deficit hyperactivity disorder",
+            "venue": "Appl Neuropsychol",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "AR Clarke",
+                "RJ Barry",
+                "FE Dupuy",
+                "LD Heckel",
+                "R McCarthy",
+                "M Selikowitz"
+            ],
+            "title": "Behavioural differences between EEG-defined subgroups of children with attention-deficit/hyperactivity disorder",
+            "venue": "Clin Neurophysiol",
+            "year": 2011
+        }
+    ],
+    "sections": [
+        {
+            "text": "Methods: In the current study, we propose a framework for evaluating mixture models in sample sizes typical of neurodevelopmental research. We describe a combination of qualitative and quantitative model fit evaluation procedures. We test our framework using latent profile analysis (LPA) in a case study of 120 children with and without ADHD, starting with well-understood neuropsychological indicators, and building toward integration of electroencephalogram (EEG) measures.\nResults: We identified a stable five-class LPA model using seven neuropsychological indicators. Although we were not able to identify a stable multimethod indicator model, we did successfully extrapolate results of the neuropsychological model to identify distinct patterns of resting EEG power across five frequency bands.\nConclusions: Our approach, which emphasizes theoretical as well as empirical evaluation of mixture models, could make these models more accessible to clinical researchers and may be a useful approach to parsing heterogeneity in neurodevelopmental disorders.\n\u00a9 The Author(s) 2022. Open Access This article is licensed under a Creative Commons Attribution 4.0 International License, which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if changes were made. The images or other third party material in this article are included in the article\u2019s Creative Commons licence, unless indicated otherwise in a credit line to the material. If material is not included in the article\u2019s Creative Commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this licence, visit http:// creat iveco mmons. org/ licen ses/ by/4. 0/. The Creative Commons Public Domain Dedication waiver (http:// creat iveco mmons. org/ publi cdoma in/ zero/1. 0/) applies to the data made available in this article, unless otherwise stated in a credit line to the data."
+        },
+        {
+            "heading": "Background",
+            "text": "Heterogeneity in the genetic, neurocognitive, and phenotypic presentations of neurodevelopmental disorders (NDDs) is the focus of a growing body of literature in the fields of developmental pediatrics and psychology [1\u20135]. A potential advantage of parsing heterogeneity in NDDs is identification of homogenous subtypes that map onto precision medicine guidelines for clinical care. Attention deficit hyperactivity disorder (ADHD) is a strong candidate for this approach, due to the vast heterogeneity in\n\u2020Anne B. Arnett and Brian P. Flaherty contributed equally to the manuscript.\n*Correspondence: Anne.Arnett@childrens.harvard.edu\n1 Division of Developmental Medicine, Boston Children\u2019s Hospital, Boston, MA 02115, USA Full list of author information is available at the end of the article\nbiological and environmental mechanisms, high rates of co-occurring psychopathology, variable long-term outcomes, and multiple available pharmacological and behavioral treatment options [5\u20137]. Previous investigations have attempted to identify profiles that differentiate ADHD from control subjects utilizing neurobiological indicators and sophisticated analytic methods; however, classification accuracy is generally modest, and model adequacy may be biased due to sample size and the inherent heterogeneity within neurodevelopmental cohorts [8\u201310]. Accordingly, the current investigation aims to develop a framework for parsing heterogeneity within a neurodevelopmental or clinical cohort, using a case study of a small sample of children with ADHD and controls.\nSymptom-based subtypes of NDDs, such as the predominantly inattentive versus predominantly hyperactive/impulsive clinical presentations of ADHD or Asperger\u2019s syndrome versus autism or pervasive developmental disorder, have shown poor stability [11], interrater reliability [12], and inconsistent external validity [13]. Thus, subgroups defined by indicators that are distinct from the diagnostic symptoms themselves may present an opportunity to identify clinically relevant, cross-diagnostic features [7]. For example, a subgroup of individuals with a common neurobiological profile, despite variable NDD symptoms, may respond well to a specific treatment or be at increased risk for distinct adverse outcomes that could be addressed with preventative interventions. Consequently, there has been a shift toward identifying non-symptom-based subtypes of NDDs using exploratory clustering methods such as latent class analysis (LCA [14]), community detection [15], and regression trees [16], with neuropsychological [17], electroencephalography (EEG [14, 18]), event-related potential (ERP [19]), or psychiatric/behavioral [15, 20] indicators. However, the translational utility of these results is so far limited, due to a focus on single-method measurement (e.g., either neuropsychological or EEG variables, but not both) and the challenge of comprehensively characterizing clinical samples that are large enough to provide adequate statistical power for these models.\nCommon algorithmic clustering approaches, such hierarchical or k-means clustering, often lack a statistical model. These approaches ignore measurement error and \u201chard-classify\u201d observations, which is to say these algorithms assign a case to a cluster or class with certainty. In contrast, statistical approaches to clustering, broadly referred to as mixture models [21], can model measurement error and classify probabilistically. Probabilistic classification accounts for the more realistic possibility that while some observations (i.e., individuals) may be likely to belong to a single class, others may be harder to classify. In mixture models, unless parameter restrictions\nare used or a solution includes boundary estimates, each observation will always have a nonzero probability of membership in each class, thus estimating classification uncertainty. Common approaches to mixture models, such as LCA or latent profile analysis (LPA), also present limitations in that they are considered large sample procedures. Particularly with small samples, it can be difficult to optimize the loglikelihood function and obtain proper maximum likelihood estimates because mixture models\u2019 loglikelihood functions are frequently multimodal, meaning there are many local maxima. Practically, analysts run many sets of random start values to try to find a global maximum, as well as assess how well the parameters are estimated. Finally, LCA and LPA are frequently exploratory. Even when subgroups of observations are expected, the extant literature rarely provides sufficient information to fully characterize these classes ahead of time. Thus, confirmatory mixture models in clinical data are uncommon.\nFortunately, model fit and assessment of structural equation models (SEM) have been studied by applied statistics researchers for decades, and these procedures provide a road map for improved selection and evaluation of mixture models even in smaller samples [22]. Two general principles arise from the SEM literature. First, no single fit statistic or index is sufficient to evaluate a model; rather, multiple fit measures should be considered simultaneously. The second principle is that model evaluation and selection should first be guided by science and theory, not primarily by fit statistics [22, 23]. This emphasis on theory and science that we see in SEM has not been similarly adopted in applied mixture models, to date. Rather, the difficulty and subjectivity of interpreting and comparing plausible models are often side stepped with an appeal to parsimony, which translates to overreliance on the Bayesian information criterion (BIC [24]). While the BIC frequently performs well in mixture model simulation studies [25], it penalizes heavily for model complexity, compared to Akaike\u2019s information criterion (AIC [26]), another common fit index used in mixture models. No statistical measure of fit, including AIC or BIC, has been found to be superior across research situations. Therefore, we propose that the principles identified in SEM (i.e., consider multiple criteria and heavily weight the science and interpretation) are the best current practice guidelines for evaluating mixture models in neurodevelopmental research.\nIn the current study, we aim to develop a statistical framework for parsing heterogeneity in neurodevelopmental disorders using LPA in sample sizes typical of neurodevelopmental research, i.e., < 150 subjects. As described above, one of the primary limitations of mixture models is the exploratory nature of the analyses,\nparticularly with indicators for which there are no population normative values. Thus, we will begin by identifying a single-method model using indicators that have interpretable norms. Next, we will attempt to meaningfully interpret a second set of indicators (resting EEG data), by leveraging the structure identified in the singlemethod model. Consistent with procedures outlined in the SEM literature, we will examine all model aspects, rather than heavily weighting one or two indices of fit. Specifically, we will iteratively examine competing models by comparing their estimation quality, traditional fit indices, interpretation, measurement quality, and error variance. The obvious drawback to this holistic model selection approach is increased reliance on interpretation and subjectivity. However, as mixture models are typically utilized in the context of exploratory research to begin with, we argue that overreliance on fit indices risks rejection of potentially meaningful subgroups, which would be a disservice to clinical science in the long run."
+        },
+        {
+            "heading": "Methods",
+            "text": ""
+        },
+        {
+            "heading": "Participants",
+            "text": "One-hundred forty-one children ages 7\u201311 years were recruited from the greater Seattle, Washington area. Children were enrolled who had a clinical diagnosis of ADHD (n = 107) or did not have ADHD nor an immediate family history of ADHD (controls; n = 34). Exclusion criteria were diagnosis of intellectual disability, diagnosis of autism spectrum disorder, history of seizures, gestational age < 32 weeks, or prenatal exposure to drugs or alcohol. After enrollment, a subset of participants were excluded due to failure to meet diagnostic criteria for ADHD without autism (n = 15), elevated ADHD ratings in a control participant (n = 1), discovery of seizure activity during the EEG (n = 1), IQ < 80 (n = 2), or failure to abstain from psychotropic medications prior to the visit (n = 2).\nThe final sample included 30 controls and 90 ADHD participants, of whom 30% were assigned female at birth. The control group had higher full-scale IQ (range: 91\u2013135, M = 118, SD = 10) than the ADHD group (range: 82\u2013143, M = 107, SD = 12), t (56.33) = \u22124.42, p < .001. The groups did not differ on age (t [57.43] = 1.00, p = 0.319) or proportion of females (\u03c72 [1] = 0.053, p = 0.818). A significant minority of ADHD participants had elevated coexisting psychiatric symptoms according to caregiver ratings on the CBCL DSM-oriented scales (i.e., T score > 65): depressive problems (n = 32), anxiety problems (n = 14), somatic problems (n = 8), oppositional defiant problems (n = 35), and conduct problems (n = 27). Additionally, academic difficulties were indicated for a subset of ADHD participants, based on performance at least one standard deviation below average\n(i.e., standard score < 85) on the Wechsler Individual Achievement Test, 3rd Edition [27] single word reading (n = 17) or numerical operations (n = 10) subtests. One control participant had elevated oppositional symptoms, and one had below average performance on numerical operations."
+        },
+        {
+            "heading": "Procedures",
+            "text": "Participants visited the University of Washington for a 3-h research visit that included parent-report questionnaires, 1 h of EEG, and 90 min of neuropsychological testing completed by a trained graduate student under supervision of a licensed clinical psychologist. Prior to the visit, children abstained from taking prescribed stimulant medications for at least 48 h, when applicable. Children taking other medications (e.g., non-stimulants) abstained for longer periods, according to guidance from their prescribing physician. ADHD diagnoses were confirmed by a licensed clinical psychologist specializing in pediatric ADHD using a combination of sources, including direct observation, caregiver report on the computerized version of the Kiddie Schedule for Affective Disorders and Schizophrenia [28], unstructured clinical interview, review of medical records, and/or caregiver report of at least six inattentive or hyperactive/impulsive symptoms on the strengths and weakness of ADHD and normative behavior DSM-5 ADHD checklist [29]."
+        },
+        {
+            "heading": "Measures",
+            "text": ""
+        },
+        {
+            "heading": "Neuropsychological testing",
+            "text": "Full-scale IQ (FSIQ) was derived from the two-subtest version of the Wechsler Abbreviated Scale of Intelligence, 2nd Edition (WASI-II [30]) and was thus separable from the remaining measures of executive functions and cognitive control. Measures of verbal memory, verbal and visual working memory, and orthographic processing speed were obtained from the digit-span forward, digitspan backward, picture span, and coding subtests of the Wechsler Intelligence Scale for Children, 5th Edition (WISC-V [31]), respectively. To measure variability of reaction time (VRT) and inhibitory control, participants completed a computerized stop signal task, administered on a laptop using E-Prime 2.0 [32]. The stop signal task consisted of 15 practice trials followed by 64 test trials, in which a continuous stream of visual stimuli (randomly ordered Xs and Os) was presented with a stimulus duration of 500 ms and interstimulus interval of 1030\u20131050 ms. Participants were instructed to press a corresponding key for each visual stimulus, except when presented with an auditory \u201cstop signal.\u201d The stop signal was a 1000 hz tone lasting 250 ms and was randomly presented prior to the onset of the visual stimulus on approximately 25% of trials. The duration of time between the stop signal\nand visual stimulus began at 250 ms and subsequently decreased or increased by 50 ms depending on whether the previous response was a correct inhibition or incorrect commission, respectively [33]. Stop signal reaction time (SSRT) was calculated as a measure of inhibitory control, using the subtraction method, which we determined was an unbiased approach given the low number of go-trial omission errors in our sample (median = 3.00; IQR = 1.00\u20137.00) [34]. VRT was calculated as the standard deviation of reaction time to go trials. Variables were normed and reverse coded as necessary such that higher scores indicated better performance."
+        },
+        {
+            "heading": "Resting EEG",
+            "text": "Participants were seated in a comfortable chair 70 cm from the presentation screen for the duration of the EEG. During the resting condition, children were instructed to sit quietly with their eyes open in a dark acquisition booth for four blocks of 30-s recordings, with brief (< 15 s) breaks between blocks, during which the lights remained off. After processing, the amount of data available for each participant ranged from 85 to 120 s for ADHD participants and 87\u2013120 s for controls."
+        },
+        {
+            "heading": "EEG recording",
+            "text": "Continuous EEG was recorded with a high-density 128-channel Magstim-EGI Hydrocel geodesic sensor net and Net Station Acquisition software version 4.5.6 and 400-series high impedance amplifier (Magstim-EGI; Plymouth, MN). Signal-to-noise ratio was maximized by reducing electrode impedances to below 50 kOhms at the start of the session and by monitoring and rewetting electrodes throughout the EEG session. EEG signals were referenced to the vertex electrode, analog filtered (0.1 Hz high pass, 100 Hz elliptical low pass), amplified, and digitized with a sampling rate of 1000 Hz."
+        },
+        {
+            "heading": "EEG processing",
+            "text": "Continuous EEG data were processed offline using Matlab R2018b extensions and functions from EEGLAB 15 and ERPLab v8.0 packages. To aid with artifact detection and correction, initial processing of EEG data included an additional 3 min of baseline (lights on resting) EEG data and 30 min of ERP paradigms that were not analyzed as part of the current study. Data were downsampled to 250 hz and bandpass filtered at 0.3\u201380 hz. Electrical line noise from 55 to 65 hz was removed using the CleanLine plugin for EEGLAB. Bad channels were automatically detected and subsequently interpolated back into the dataset prior to average referencing, following methods outlined in [35]. Extended independent component analysis [36] with primary component analysis dimension reduction was used to identify and remove artifactual\ncomponents (i.e., deriving from eye blinks, line noise, or cardiac signal) [37]. Continuous resting EEG data were fast Fourier transformed, and whole scalp absolute spectral power was extracted for delta (1\u20134 hz), theta (4\u20137 hz), alpha (8\u201312 hz), low beta (12\u201316 hz), and high beta (16\u201321 hz) frequency ranges. Values were then log transformed. Finally, power values within each frequency band were standardized within the sample prior to analyses to reduce computational load during the LPA and increase interpretability."
+        },
+        {
+            "heading": "Analytic plan",
+            "text": "All raw item distributions were inspected, and one VRT outlier was winsorized from 446.88 to 346.88, which was near the next highest score. All data were standardized prior to analysis. LPA was conducted in Stata 17. Following the iterative framework illustrated in Fig.\u00a0 1, initial analyses were done with neuropsychological variables. We chose to begin with neuropsychological indicators in this case study to demonstrate the utility of characterizing latent profiles that were separable from the diagnostic symptoms, unlikely to represent a continuum (i.e., low, medium, and high), and that were based on scores that were relatively understood with respect to population and ADHD norms. Moreover, neuropsychological evaluation is a frequent component of both research and clinical evaluations of NDDs, and while low performance on at least one test of cognition is common across NDDs, no single neuropsychological impairment fully explains variance in ADHD [38], nor do neuropsychological profiles reliably differentiate between ADHD and related NDDs [39, 40]. Thus, we expected to find heterogeneity in neuropsychological test performance even within our relatively homogenous ADHD sample.\nAt step 1 (Fig.\u00a01, top left square), we began with unrestricted models specifying 1\u20138 latent classes, estimating each with 1000 sets of random start values. Next, at step 2, we considered (and ultimately rejected) the possibility of equating means across classes. Instead, we added parameter restrictions to specify two theoretically and data-driven classes and re-estimated models with 2\u20137 classes. That is, at this stage, the two-class model had two fully specified classes and only estimated one class proportion and seven pooled residual variances. The three- through seven-class models included the two fully specified classes, with the remaining classes having unrestricted means. Each of the parameter restricted models was compared with the previous unrestricted means models, as well as with one another. At step 3, we selected the best-performing model and tried adding EEG data, about which we had fewer hypotheses. We hoped to leverage the interpretability of the neuropsychological data to identify a stable model of EEG classes. Finally,\nwe examined whether the classes differed on clinically relevant variables, such as demographics and ADHD diagnosis. At each stage, evaluation of model fit was comprehensive and included consideration of estimability, stability, interpretability, traditional model fit indices, and external and internal validity measurements (see Fig.\u00a0 1, circles), which we describe in detail in the results."
+        },
+        {
+            "heading": "Results",
+            "text": "Step 1: single\u2011method unrestricted means LPA We estimated unrestricted means LPA models with pooled variances, specifying 1\u20138 classes with all seven neuropsychological indicator variables. The one-class LPA had unacceptable fit statistics, as indicated by substantially higher AIC and BIC values, compared with larger models. This was an important result in our small sample size, because if the data were insufficiently powered to reject a model of independence, then we could not justify testing more complex models. The two-class LPA solution had a single mode (i.e., convergence on a\nsingle solution) that indicated low average (40%) and high average (60%) classes (Fig.\u00a0 2a), the former of which we hypothesized was dominated by individuals with ADHD.\nIn contrast, the three-class loglikelihood function had four modes. All four of these three-class solutions included the low average and high average classes found in the two-class solution, indicating stability. However, the third class varied across modes. The solution corresponding to the best-fitting mode (i.e., with greatest \u2212LL, Fig.\u00a02b) included a third class with a relative weakness on measures of inhibitory and response control (SSRT and VRT) and a relative strength on measures of memory (digit span forward and picture span). This low control/ high memory class comprised about 9% of the sample, an indication of internal validity. The second highest \u2212LL three-class solution had a less extreme pattern but still captured individuals with relatively low SSRT and VRT (Fig.\u00a0 2c). Next, we fit the four-class model, which had 11 modes, In the best-fitting four-class model, the low control/high memory class was retained, in addition to\na fourth class with another interesting pattern that captured about 5% of the sample (Fig.\u00a02d) and was characterized by the combination of above average FSIQ and coding, with low SSRT; we called this group \u201chigh FSIQ.\u201d The next best four-class model included the three classes seen in the second-best three-class solution (low average, high average, and low SSRT/VRT) as well as the high FSIQ class from the best-fitting four-class model (Fig.\u00a02e).\nCompared to three- and four-class models, the fiveclass model had the most sets of random start values go to the best mode (Table\u00a0 1); thus, it exhibited better convergence. The best-fitting five-class model included profile patterns corresponding to most of the classes discussed above in the best and second best three- and four-class models, indicating stability and lending credibility to the idea that these groups correspond to real subgroups in the data. Specifically, the five-class solution specified the low average, high average, low control/ high memory, and high FSIQ classes. The new fifth class, which we called \u201cbelow average,\u201d was characterized by below average performance across all indicators except SSRT. The pooled residual variances for the indicators ranged from 44% for digit span forward to 86% for coding, indicating modest internal validity. The next best-fitting five-class model had substantially poorer fit (\u2212LL = \u22121066.56) and was not considered.\nThe six-, seven-, and eight-class models were not well estimated. Start values went to many more modes (\u2265 50)\nwith only minimally different loglikelihoods and fewer than 10% of the start values converging on the top mode. Investigation of the structures of the solutions revealed highly variable patterns of means. The six-class solutions included classes with variability in the low-performance end of the distribution, which is theoretically interesting; however, the exact patterns of means varied across the solutions, indicating poor estimation of these classes. Additionally, the seven- and eight-class models included classes comprised of a single individual in the sample (i.e., class prevalence ~1%), indicating poor external validity.\nAltogether, we observed consistent features throughout the 2\u20135 class models. We closely examined shifts in class proportions as new classes were added and observed a high degree of stability. Specifically, as new classes were added, individuals tended to move out of the high average class into a new class with more variability across neuropsychological indicators (Table\u00a02). As a result, the high average class developed a flatter profile as model complexity increased (i.e., as more classes were added). This consistency of class membership was another positive indicator of stability and possible validity of our models.\nStep 2: Single\u2011method LPA with\u00a0restrictions"
+        },
+        {
+            "heading": "Equality restrictions",
+            "text": "Having concluded that the three-, four-, and five-class models had the best model fit indices, we next imposed"
+        },
+        {
+            "heading": "8 70 115 0.1% \u22121030.94 2201.87 2397.00 0.87",
+            "text": ""
+        },
+        {
+            "heading": "7 62 82 5% \u22121040.98 2205.97 2378.79 0.89",
+            "text": ""
+        },
+        {
+            "heading": "6 54 50 9% \u22121052.50 2212.99 2363.52 0.88",
+            "text": ""
+        },
+        {
+            "heading": "5 46 24 65% \u22121063.67 2219.33 2347.56 0.90",
+            "text": ""
+        },
+        {
+            "heading": "4 38 11 10% \u22121076.77 2229.53 2335.46 0.91",
+            "text": ""
+        },
+        {
+            "heading": "3 30 4 12% \u22121090.29 2240.58 2324.21 0.91",
+            "text": ""
+        },
+        {
+            "heading": "2 22 1 100% \u22121103.32 2250.63 2311.96 0.92",
+            "text": ""
+        },
+        {
+            "heading": "1 14 N/A N/A \u22121144.41 2316.81 2355.84 1",
+            "text": "equality restrictions on indicator means across classes within each model. The goals of this step were to determine whether we could improve model fit by conserving statistical power, as well as to test stability of the classes. We began with the three-class model; based on estimates from the unrestricted three-class models, we restricted the means of VRT and coding to be equal across the low average and third classes (note, means of each indicator were equated across classes, not across all indicators). Likewise, we restricted the means of digit span forward, FSIQ, and picture span to be equal across the high average and third classes (again, means were equated only across classes, not indicators). This worked well in the three-class model, but the four- and five-class models showed poor estimation and stability. Thus, we decided to move forward without equality restrictions in our models."
+        },
+        {
+            "heading": "Fixed parameters",
+            "text": "An alternative to equality restrictions is to fix class item mean or variance parameters to a specific value. Based on results of the unrestricted models and our hypothesis that there would be a low-performing ADHD class and a higher performing control class, we added two sets of parameter restrictions. We specified two reference\nclasses, with the first having means equal to \u22120.5 (i.e., one-half standard deviation below average) and the second having means equal to +0.5. By adding these restrictions, we reduced the number of parameters to be freely estimated by the models, thus increasing power to explain the remaining variance. At this stage, we examined models specifying 2\u20137 classes, based on favorable results returned for this range in the unrestricted models.\nThe models with two fixed classes (i.e., one class with means fixed to +0.5 and one with means fixed to \u22120.5) showed improved estimability over the unrestricted models. The two- through four-class models had good convergence, with only one or two modes. Interestingly, both of the four-class modes were variations of means patterns that had emerged in the unrestricted models, increasing confidence that these were true features in the data and supporting use of a model that had greater than three classes. The five-class model had worse convergence, with six total modes, but a clear best solution (best solution, 567/1000 start values; substantially worse fitting solution, 418/1000 start values). In the best-fitting fiveclass model, the three freely estimated classes showed the same features seen in the unrestricted five class LPA (i.e., classes characterized by low control/high memory, high FSIQ, and below average; Fig.\u00a03). Class distributions\nFig. 3 Plots of means and 95% confidence intervals for the unrestricted means (left) and fixed parameter (right) 5-class models. The fixed parameter model specifies a class with means of \u22120.5 (Low Average) and +0.5 (High Average). Numbers in parentheses are estimated proportions for each class (unrestricted/restricted). Note these values generally do not shift much, implying stability of the models. Profile means (y-axis) are standardized within the sample. SSRT stop-signal reaction time, VRT go-reaction time variability, FSIQ full-scale IQ, Digit Span Fwd digit span forward, Digit Span Bkwd digit span backward. Class proportions are depicted in parentheses (unrestricted model/restricted model)\nranged from 5 to 42%, suggesting at least six individuals sharing a common item profile, even in the smallest class. Error variances were slightly worse in this model, ranging from 50% for digit span forward to 86% for coding. This was unsurprising, in that we were limiting the flexibility of the model to fit the data. Posterior membership probabilities were reasonably good in this model, with 74% of individuals with their highest class membership probability above 0.8.\nThe six-class LPA with two restricted classes was better estimated than the unrestricted six-class model, with 794/1000 start values going to the best solution. The best-fitting six-class model replicated results of the fiveclass model, with a sixth class characterized by indicator means falling approximately in the average range, between the two fixed classes, which was not theoretically interesting. In contrast, the next best six-class solution specified a sixth class that described approximately a single individual. Entropy for the best-fitting six-class model was poor, while AIC was lower and BIC higher than the five-class model. Finally, the seven-class model with two fixed classes was again poorly estimated and not considered.\nAltogether, the five-class model with fixed parameters demonstrated a good balance across AIC, BIC, and entropy; the top mode fits considerably better than the second best mode, and the classes were both stable and theoretically interesting (Table\u00a0 3). Thus, we opted to move forward with the fixed class five-class model in subsequent analyses."
+        },
+        {
+            "heading": "Sensitivity analyses",
+            "text": "As part of the second step in Fig.\u00a0 1, we sought to further probe the stability of the results of the \u22120.5/+0.5 restricted five-class model by changing the means values for the reference classes. First, we tried shifting the reference means only slightly, to 0 and 1, respectively. The 0/1 restricted model had worse fit than the \u22120.5/+0.5 model; however, both models had structural features similar to those seen in the unrestricted five-class model,\nsupporting stability of the \u22120.5/+0.5 solution. The only notable change was that the extremity of the difference in means between the low average and below average classes was attenuated relative to the unrestricted model.\nA concern when using latent variable models with small samples is that there may be insufficient statistical power to reject a bad model [41]. Thus, we next examined the fits of two alternative restricted five-class models with extreme (and thus unlikely) reference classes: \u22121/+1, \u22122/+2, and \u22121/\u22122. In support of our ability to reject a bad model even with our relatively small sample size, estimability of these extreme fixed models was substantially worse. There were frequent estimation problems and failures to converge, which did not occur in the previous models. Additionally, fit statistics were far worse, and several classes had estimated proportions near zero. Thus, despite having a small sample, our ability to see differences in fit statistics across models suggested there was sufficient statistical power to capture reliable features of the data and unlikely to simply be modeling noise. As seen in Table\u00a04, relying simply on AIC, BIC, or entropy is not sufficient. AIC and BIC values both favored the restricted \u22120.5/+0.5 model; however, we were not able to reject the extreme restricted models in favor of the unrestricted model using BIC alone. Likewise, entropy values were high for the extreme \u22122/+2 restricted model, because most individuals were captured in the freely estimated classes, with the reference class proportions nearing zero."
+        },
+        {
+            "heading": "Equality restrictions repeated",
+            "text": "Having identified a relatively stable five-class model with two fixed classes (means = \u22120.5 and +0.5), we revisited the possibility of further conserving statistical power through equality restrictions. This time, we equated means of the VRT and coding indicators across the low control/high memory and high FSIQ classes. This model converged on two top modes (148/1000 and 143/1000 start values, respectively) which had comparable fit statistics. However, introduction of these equality restrictions"
+        },
+        {
+            "heading": "6 40 17 80% \u22121064.48 2208.956 2320.455 0.789589",
+            "text": ""
+        },
+        {
+            "heading": "5 32 6 57% \u22121072.99 2209.973 2299.172 0.875514",
+            "text": ""
+        },
+        {
+            "heading": "4 24 2 77% \u22121087.21 2222.418 2289.317 0.898637",
+            "text": ""
+        },
+        {
+            "heading": "3 16 1 100% \u22121100.26 2232.511 2277.111 0.891765",
+            "text": ""
+        },
+        {
+            "heading": "2 8 1 100% \u22121112.56 2241.125 2263.425 0.90207",
+            "text": "resulted in significant shifts in means for these indicators, suggesting the models were contorting the solution to accommodate the equality restrictions. Thus, we did not include equality restrictions in future models."
+        },
+        {
+            "heading": "Interpretation",
+            "text": "To examine whether differences among the five latent classes were meaningful, we back-transformed the standardized indicator variables. Indeed, we found that differences among the classes were clinically interpretable. For example, the below average class scored at approximately the 9th\u201325th percentiles on tests of memory and processing speed. The high FSIQ class had a mean IQ at the 98th percentile but average performance (~50th percentile) on tests of memory and processing speed. The low average class had notably slower performance on the coding test of processing speed (16th percentile), with performance on other tests ranging from approximately the 25th to 50th percentiles. Finally, the low control/high memory class performed well above average on tests of memory (~91st percentile) but had relatively weaker performance on a test of processing speed (25th percentile). As depicted in Fig.\u00a03, the 95% confidence intervals were largely nonoverlapping.\nStep 3: Add additional indicators to\u00a0the\u00a0model Next, we aimed to go beyond the existing research by adding a second set of indicators to the model. In the current example, we added spectral power gathered during resting EEG, across five frequency ranges: delta, theta, alpha, low beta, and high beta. We hypothesized that by adding these lesser-understood indicators (i.e., brain data that do not have population normative values) to a model defined by indicators that were relatively well understood (i.e., neuropsychological test performance), we would increase the probability of identifying multi-method classes that were stable and theoretically meaningful."
+        },
+        {
+            "heading": "Unrestricted multimethod model",
+            "text": "First, we estimated a multimethod five-class model that included all seven neuropsychological and five EEG indicators. Parameter and equality restrictions were lifted, so that equal weight was allocated to all indicators. Results indicated that this unrestricted multimethod model was not well estimated; moreover, the EEG indicators overpowered the neuropsychological indicators, such that classes represented low to high EEG power and the structure of the five-class singlemethod model was entirely lost."
+        },
+        {
+            "heading": "Restricted multimethod model",
+            "text": "Next, we added restrictions so that we could estimate patterns of EEG indicator means corresponding to the five classes identified by the best-fitting neuropsychological model. We did not fix the means and variances of the neuropsychological indicators to match those identified in the final model because this would lead to improperly small standard errors and erroneous confidence in the model outcomes. Instead, we used multiple imputation with 20 imputed data sets. Individuals were randomly assigned to classes based on the posterior membership probabilities from the final neuropsychological model. For example, an individual with posterior probability of 0.90 for membership in the low average class would be included in that class during approximately 90% of the iterations; if this same individual had a posterior probability of 0.10 for the below average class, then their EEG values would be included in the below average class in about 10% of the iterations. Thus, the final estimate of means and variances for EEG powers within each latent class accounted for both class uncertainty and standard error of the sample means [42].\nThe resulting EEG patterns are illustrated in Fig.\u00a0 4. There was significant variability in EEG indicators for these classes. The low control/high memory and below\naverage classes demonstrated elevated theta:beta ratio, which has previously been described as a potential neural signature of ADHD [43], while theta:beta ratio was low for the high FSIQ class (Table\u00a05).\nStep 4: Examine distributions of\u00a0external variables across\u00a0classes To test the external validity and/or potential clinical utility of the multimethod model, the last step was to estimate counts, means, and variances of external variables of interest across classes, using latent class regression. First, we modeled sex and age as predictors simultaneously, because we did not have any a priori hypotheses about their association with the five latent classes. Sex was not significantly associated with any of the five classes (ps > 0.210). Older age was more strongly associated with the high average than the low average class (B = 0.48, SE = 0.24, p = .047, 95% CI = 0.01\u20130.95). No other effects of age were found (ps > 0.350).\nWe hypothesized that higher rates of ADHD participants in certain classes would add additional evidence of external validity for the model. Latent class regression failed because every member of the below average class\nwas expected to be in the ADHD group. Thus, we again used multiple imputation with 20 iterations to estimate the proportion of ADHD versus control subjects in each class. ADHD diagnosis was highly probable in low average (88%), low control/high memory (70%), and below average (97%) classes and slightly less probable in the high FSIQ (34%) and high average (65%) classes."
+        },
+        {
+            "heading": "Discussion",
+            "text": ""
+        },
+        {
+            "heading": "Overview",
+            "text": "In the current study, we tested an iterative approach to estimating latent profile models using psychological data with a relatively small sample size. With high-quality, informative indicators (i.e., the neuropsychological data), our estimation process worked remarkably well. We were able to estimate, compare, and reject complex models using our small sample size largely due to estimation of the more complex models conditional on two reference classes (i.e., with means fixed at \u22120.5 and +0.5, respectively). By fixing parameter means in theoretically and data-driven classes, we conserved statistical power and leveraged remaining information in the data. As a result, we identified a five-class model that had strong\nconvergence, high entropy, and moderate fit statistics; explained a high proportion of variance in the data; showed stability; and was theoretically interpretable. Critically, we may not have come to the same conclusion had we relied solely on BIC and AIC statistics, which are biased in small sample sizes.\nCluster modeling is often used in an exploratory context to better understand patterns of responses on a series of variables about which there are few a priori hypotheses. In the second part of our case study, we tested an approach in which we leveraged the stability of the five-class neuropsychological model (which had well understood indicators) to gain knowledge about less well-understood data (i.e., EEG spectral power). Not surprisingly, with twelve total indicators across the two domains, the five-class unrestricted neuropsychological + EEG LPA model was not stable, and did not retain the structure of the neuropsychological data. This is where we argue that the order of operations is particularly important, and that some subjective input may strengthen, rather than weaken, the outcomes of these models. Namely, we made a conscious decision to weight the structure of the five-class, neuropsychological indicator LPA with fixed classes more strongly than the unrestricted EEG data, by using multiple imputation to estimate means and variances of the EEG variables within each latent class. The result was that two classes showed interesting and theoretically plausible patterns of EEG spectral power; because these classes were small and the standard error of the EEG means was greater than those of the neuropsychological data, we would not have observed these patterns without first identifying the single-method LPA."
+        },
+        {
+            "heading": "Modeling guidelines",
+            "text": "In this case study, we have provided an iterative flow chart to guide comprehensive evaluation of mixture models, similar to the recommendations made for SEM [22, 23, 41]. We propose that these guidelines will be particularly relevant to neurodevelopmental researchers who do not often have access to large sample sizes. Whenever possible, it may be useful to start with models that utilize indicators that are reliable and interpretable, to guide decision-making and provide a framework within which to gain knowledge about un-normed or exploratory data. The flow chart illustrates complementary qualitative and quantitative approaches to evaluating the estimability of the models at each stage. Although word limitations often impede documentation of model evaluation in the level of detail that we have provided here, we suggest that at the very least, choice of mixture models should be supported with qualitative as well as quantitative parameters. In the most qualitative recommendation, we\nadvocate for using knowledge of the variables and extant literature to make a judgement about whether the model is theoretically sound. At the most quantitative end of the spectrum, we recommend comparing traditional fit statistics, like loglikelihood, AIC, BIC, and entropy. The suggestions in between (convergence, internal validity, and stability) are perhaps the most novel and yet provided some of the clearest guidance in the current case study.\nIt is a common practice for researchers to only examine the solution with the best loglikelihood and declare the solution reliable as long as it replicates an unspecified number of times. However, as we have demonstrated, examination of the number of modes and comparison of solutions across top modes (i.e., convergence) can be elucidating. Multiple modes with similar loglikelihoods indicate potential instability, while multiple nearby modes with differing solutions indicate a lack of convergence. Moreover, some investigation may reveal that the second or third best-fitting replicated mode may converge on a similar solution, suggesting greater stability than the top, unique mode. We noticed that in the three-class model, three modes replicated many times but revealed different solutions; yet, each of those solutions included features that showed up in subsequent models. This suggested that each mode was capturing aspects of a more complex underlying structure and gave us additional confidence in exploring a more complex model.\nRather than use an arbitrary class size cutoff for model selection, our internal validity check advocates examining models with small classes, within the bounds of reason for a particular dataset. For example, in our analyses, a class prevalence of 1% means about 1.2 people are predicted to be in this class. This seems like overextraction for this work. Yet, in a sample of 1000 people, a 1% class reflects about 10 people, which could be meaningful and consistent with the goal to fully explore patterns in the data. However, substantive interpretation must also be considered. A small class whose pattern of means differs only slightly from that of a larger class may not be necessary. On the other hand, a small class with a notably different and compelling profile of means may worth further exploration. In addition to theoretical interpretation, posterior membership probabilities for small classes should also be considered. Consistently, low posterior membership probabilities in a small class would suggest that this class does not capture any individuals\u2019 response profiles well and is likely not worth retaining. On the other hand, even a small number of high posterior membership probabilities for a small class suggests that a small homogenous group has been identified. Of course, it is always possible that a small class is sample specific and will not replicate. However, we suggest that it is preferable to consider a small class and reject it later, rather\nthan never seriously consider it. If one or more small classes do generalize and they are ignored, subsequent models are likely misspecified and will produce biased results. Furthermore, small classes may represent theoretically interesting behavioral patterns that could lend to highly tailored treatment plans."
+        },
+        {
+            "heading": "Model evaluation",
+            "text": "Stability of the models can be examined in multiple ways. In the current study, we observed the same features in the data across models with different numbers of classes (e.g., the peak on FSIQ in the high FSIQ class), which suggested the models were capturing a subgroup of observations, rather than simply noise. Likewise, when we added restrictions to the data, the class structures did not shift much until the restrictions were highly incongruent with the data (e.g., fixed means at \u22122 and \u22121). Another way to evaluate stability is to add predictors to the model (in the current example, we used age and sex) and examine whether the class structures shift with a latent regression model."
+        },
+        {
+            "heading": "Case study results",
+            "text": "With respect to interpretability of our final classes, we did observe features of the data that underscored our confidence in our approach. Specifically, the low average and below average classes are presented as consistent with a common clinical ADHD profile, with generally low or average performance across variables (with the surprising exception of SSRT in the below average class). In contrast, the high FSIQ class, which had a high probability of control participant membership, had above average IQ and average performance on most of the remaining variables. The high average class, which had means fixed to one-half standard deviation above average (i.e., +0.5), appeared to capture a proportion of controls as well as ADHD children who did not have a clear neuropsychological deficit. This phenomenon of children with behavioral, but not cognitive, symptoms of ADHD has previously been described [38]. Finally, the low control/high memory class emerged as a highly probable ADHD class characterized by variable reaction time and weaker inhibitory control (low scores on VRT and SSRT). Both of these measures have previously been identified as impaired in ADHD samples on average, as well as specifically within a subgroup of children with ADHD [17, 44]. Altogether, results of the single-method model demonstrated the cognitive heterogeneity often seen in neuropsychological profiles of ADHD [17, 45].\nThe patterns identified in the EEG data are likewise at least partially consistent with prior literature. Most notably, the low control/high memory and below average classes, which were high probability ADHD, were\ncharacterized by a high ratio of theta:beta band power [43, 46]. The fact that elevated theta:beta ratio was observed in two, but not all, of the high-probability ADHD classes is consistent with the extant literature, which finds inconsistent effect sizes for this neural signature [43]. In contrast, the high FSIQ class, of which 70% was estimated to be control participants, was uniquely characterized by high power in the beta frequency bands. The low average and high average classes had average EEG power across frequency bands, and their confidence intervals overlapped substantially with one another; thus, there is little to interpret in those groups. Importantly, with the exception of the delta and theta powers in the low control/high memory class and high beta power in the high FSIQ class, the standard errors of EEG power estimates overlapped across all five classes. This is not unexpected given the small sample sizes within each class and the greater degree of error in EEG as compared to neuropsychological data. An additional limitation is that power estimates were derived from the whole scalp, rather than specific regions, which likely increases standard error of these measurements [47]. Overall, there is additional probing to be done to better understand the association between the EEG outcomes and the neuropsychological profiles."
+        },
+        {
+            "heading": "Limitations",
+            "text": "One of the most subjective steps in our estimation procedure, and that of any mixture model, was the selection of indicator variables. As already noted, we chose to start with neuropsychological variables because these measures are frequently used in clinical and research evaluations of children with NDDs and due to the availability of population norms to aid in interpretation of the scores. However, in ADHD and other NDDs, there are multiple sources of heterogeneity that could influence our outcomes and/or potentially be more reliable indicators, including co-occurring psychopathology (e.g., anxiety, depression), academic performance, and treatment response. In any case, an inherent limitation of our procedures is the reliance on known indicator variables and subjective interpretation of the results. The need for interpretation in our framework constitutes a barrier to discovering potentially meaningful subtypes derived from more exploratory measures, such as brain data.\nDespite the promising theoretical outcomes and potential for further investigation, we must emphasize that these data were simply a case study used with the intent to test our hypothesis that with proper estimation techniques, it is possible to parse heterogeneity using small sample sizes and continuous data that are common in neurodevelopment. Our sample was small even for neurodevelopmental datasets, and thus, the\nresults should be interpreted cautiously. We encourage researchers to attempt to validate their small study results in large, publicly available datasets, even if the indicator variables do not entirely overlap. Relatedly, it is important to recognize that the choice of indicator variables influences the models, and these measures will necessarily differ for neurodevelopmental samples that include children with lower cognitive, language, and/or adaptive functioning. In particular, several of the neuropsychological tests used in the current study rely heavily on the child\u2019s receptive language abilities for valid administration, and thus do not adequately capture variance in the lower end of the cognitive distribution. Thus, these models require replication and further external validation before they can be interpreted from a broader neurodevelopmental perspective."
+        },
+        {
+            "heading": "Conclusions",
+            "text": "We have demonstrated that a rigorous model evaluation process that simultaneously considers a range of quantitative and qualitative metrics can result in identification of a stable, complex mixture model in a small sample size. Novel and critical steps that maximized statistical power included specifying theoretically plausible parameter restrictions and starting with a set of indicators about which we had prior knowledge. We advocate for increased use of exploratory mixture models as a reasonable method for parsing heterogeneity in neurodevelopmental research and clinical samples more broadly.\nAcknowledgements We are grateful to the children and their families for their participation in this study.\nAuthors\u2019 contributions Both authors conceptualized the manuscript and collaborated on analytic decisions throughout. ABA wrote sections of the manuscript and collected and prepared data for analysis. BPF ran the analyses and wrote sections of the manuscript. The authors read and approved the final manuscript.\nFunding This study was funded by grants from the National Institute of Mental Health (K99MH116064 and R00MH116064 to Anne Arnett and 1P30MH123248 to Jane Simoni (PI) and Brian P. Flaherty (Methods Core Director). Data collection was conducted with support from the NIH-funded University of Washington Intellectual and Developmental Disabilities Research Center (5P50HD103524). The funding sources were not involved in the design of the study, data collection, analysis, or interpretation of data, nor in writing the manuscript.\nAvailability of data and materials The datasets and analytic code used during the current study are available from the corresponding author on reasonable request."
+        },
+        {
+            "heading": "Declarations",
+            "text": "Ethics approval and consent to participate All procedures conducted are in compliance with the University of Washington IRB regulations for human subject\u2019s research.\nConsent for publication Not applicable.\nCompeting interests The authors declare that they have no competing interests.\nAuthor details 1 Division of Developmental Medicine, Boston Children\u2019s Hospital, Boston, MA 02115, USA. 2 Department of Pediatrics, Harvard Medical School, Boston, MA, USA. 3 Department of Psychology, University of Washington, Seattle, WA, USA.\nReceived: 1 October 2021 Accepted: 24 July 2022\nReferences 1. Betancur C. Etiological heterogeneity in autism spectrum disorders: more\nthan 100 genetic and genomic disorders and still counting. Brain Res. 2011;1380:42\u201377.\n2. Jeste SS, Geschwind DH. Disentangling the heterogeneity of autism spectrum disorder through genetic findings. Nat Rev Neurol. 2014;10(2):74. 3. Karalunas SL, Nigg JT. Heterogeneity and subtyping in attentiondeficit/hyperactivity disorder\u2014considerations for emerging research using person-centered computational approaches. Biol Psychiatry. 2020;88(1):103\u201310. 4. Li T, van Rooij D, Roth Mota N, Buitelaar JK, Group EAW, Hoogman M, et al. Characterizing neuroanatomic heterogeneity in people with and without ADHD based on subcortical brain volumes. J Child Psychol Psychiatry. 2021;62(9):1140\u20139. 5. Nigg JT, Karalunas SL, Feczko E, Fair DA. Toward a revised nosology for ADHD heterogeneity. Biol Psychiatry: Cogn Neurosci Neuroimaging. 2020;5(8):726\u201337. 6. Arnett AB, Stein M. Refining treatment choices for ADHD. Lancet Psychiatry. 2018;5(9):691\u20132. 7. Beauchaine TP, Hinshaw SP. RDoC and psychopathology among youth: misplaced assumptions and an agenda for future research. J Clin Child Adolesc Psychol. 2020;49(3):322\u201340. 8. Brown MR, Sidhu GS, Greiner R, Asgarian N, Bastani M, Silverstone PH, et al. ADHD-200 Global Competition: diagnosing ADHD using personal characteristic data can outperform resting state fMRI measurements. Front Syst Neurosci. 2012;6:69. 9. Dai D, Wang J, Hua J, He H. Classification of ADHD children through multimodal magnetic resonance imaging. Front Syst Neurosci. 2012;6:63. 10. Pulini AA, Kerr WT, Loo SK, Lenartowicz A. Classification accuracy of neuroimaging biomarkers in attention-deficit/hyperactivity disorder: effects of sample size and circular analysis. Biol Psychiatry: Cogn Neurosci Neuroimaging. 2019;4(2):108\u201320. 11. Willcutt EG, Nigg JT, Pennington BF, Solanto MV, Rohde LA, Tannock R, et al. Validity of DSM-IV attention deficit/hyperactivity disorder symptom dimensions and subtypes. J Abnorm Psychol. 2012;121(4):991. 12. Walker DR, Thompson A, Zwaigenbaum L, Goldberg J, Bryson SE, Mahoney WJ, et al. Specifying PDD-NOS: a comparison of PDD-NOS, Asperger syndrome, and autism. J Am Acad Child Adolesc Psychiatry. 2004;43(2):172\u201380. 13. Saad JF, Griffiths KR, Korgaonkar MS. A systematic review of imaging studies in the combined and inattentive subtypes of attention deficit hyperactivity disorder. Front Integr Neurosci. 2020;14:31. 14. Loo SK, McGough JJ, McCracken JT, Smalley SL. Parsing heterogeneity in attention-deficit hyperactivity disorder using EEG-based subgroups. J Child Psychol Psychiatry. 2018;59(3):223\u201331. 15. Karalunas SL, Fair D, Musser ED, Aykes K, Iyer SP, Nigg JT. Toward biologically-based nosology: ADHD subtyping using temperament dimensions. JAMA Psychiat. 2014;71:1015\u201324. 16. Wolfers T, Floris DL, Dinga R, van Rooij D, Isakoglou C, Kia SM, et al. From pattern classification to stratification: towards conceptualizing the heterogeneity of autism spectrum disorder. Neurosci Biobehav Rev. 2019;104:240\u201354. 17. Fair DA, Nigg JT, Iyer S, Bathula D, Mills KL, Dosenbach NU, et al. Distinct neural signatures detected for ADHD subtypes after controlling for\n\u2022 fast, convenient online submission\n\u2022 thorough peer review by experienced researchers in your field\n\u2022 rapid publication on acceptance\n\u2022 support for research data, including large and complex data types\n\u2022 gold Open Access which fosters wider collaboration and increased citations\nmaximum visibility for your research: over 100M website views per year \u2022\nAt BMC, research is always in progress.\nLearn more biomedcentral.com/submissions\nReady to submit your research ? Choose BMC and benefit from:\nmicro-movements in resting state functional connectivity MRI data. Front Syst Neurosci. 2012;6:80.\n18. Clarke AR, Barry RJ, McCarthy R, Selikowitz M. EEG-defined subtypes of children with attention-deficit/hyperactivity disorder. Clin Neurophysiol. 2001;112(11):2098\u2013105. 19. Smith JL, Johnstone SJ, Barry RJ. Aiding diagnosis of attentiondeficit/hyperactivity disorder and its subtypes: discriminant function analysis of event-related potential data. J Child Psychol Psychiatry. 2003;44(7):1067\u201375. 20. Rutter T, Arnett AB. Temperament traits mark liability for coexisting psychiatric symptoms in children with elevated ADHD symptoms. J Atten Disord. 2021;25(13):1871-80. 21. McLachlan GJ, Lee SX, Rathnayake SI. Finite mixture models. Annu Rev Stat Appl. 2019;6:355\u201378. 22. Bollen KA, Long JS. Testing structural equation models. Newbury Park: Sage; 1993. 23. Marsh HW, Hau K-T, Wen Z. In search of golden rules: comment on hypothesis-testing approaches to setting cutoff values for fit indexes and dangers in overgeneralizing Hu and Bentler\u2019s (1999) findings. Struct Equ Modeling. 2004;11(3):320\u201341. 24. Schwarz G. Estimating the dimension of a model. Ann Stat. 1978;6(2):461\u20134. 25. Nylund KL, Asparouhov T, Muth\u00e9n BO. Deciding on the number of classes in latent class analysis and growth mixture modeling: a Monte Carlo simulation study. Struct Equ Model Multidiscip J. 2007;14(4):535\u201369. 26. Akaike H. Factor analysis and AIC. Selected papers of hirotugu akaike. New York: Springer; 1987. p. 371\u201386. 27. Corporation P. WIAT III: Wechsler Individual Achievement Test. San Antonio: Psychological Corporation; 2009. 28. Townsend L, Kobak K, Kearney C, Milham M, Andreotti C, Escalera J, et al. Development of three web-based computerized versions of the Kiddie Schedule for Affective Disorders and Schizophrenia Child psychiatric diagnostic interview: preliminary validity data. J Am Acad Child Adolesc Psychiatry. 2019;59(2):309-25. 29. Swanson JM, Schuck S, Porter MM, Carlson C, Hartman CA, Sergeant JA, et al. Categorical and dimensional definitions and evaluations of symptoms of ADHD: history of the SNAP and the SWAN rating scales. Int J Educ Psychol Assess. 2012;10(1):51. 30. Wechsler D. Wechsler Abbreviated Scale of Intelligence. 2nd ed. Bloomington: Pearson; 2011. 31. Wechsler D. WISC-V: Technical and interpretive manual. New York: NCS Pearson, Incorporated; 2014. 32. Schneider W, Eschman A, Zuccolotto A. E-prime (version 2.0). Computer software and manual. Pittsburgh: Psychology Software Tools Inc.; 2002. 33. Logan GD, Cowan WB, Davis KA. On the ability to inhibit simple and choice reaction time responses: a model and a method. J Exp Psychol Hum Percept Perform. 1984;10(2):276. 34. Verbruggen F, Aron AR, Band GP, Beste C, Bissett PG, Brockett AT, et al. A consensus guide to capturing the ability to inhibit actions and impulsive behaviors in the stop-signal task. elife. 2019;8:e46323. 35. Gabard-Durnam LJ, Mendez Leal AS, Wilkinson CL, Levin AR. The Harvard Automated Processing Pipeline for Electroencephalography (HAPPE): standardized processing software for developmental and high-artifact data. Front Neurosci. 2018;12:97. 36. Lee T-W, Lewicki MS, Sejnowski TJ. Unsupervised classification with non-Gaussian mixture models using ICA. Advances in neural information processing systems; 1999. 37. Levin AR, M\u00e9ndez Leal AS, Gabard-Durnam LJ, O\u2019Leary HM. BEAPP: the batch electroencephalography automated processing platform. Front Neurosci. 2018;12:513. 38. Willcutt EG, Doyle AE, Nigg JT, Faraone SV, Pennington BF. Validity of the executive function theory of attention-deficit/hyperactivity disorder: a meta-analytic review. Biol Psychiatry. 2005;57(11):1336\u201346. 39. Craig F, Margari F, Legrottaglie AR, Palumbi R, De Giambattista C, Margari L. A review of executive function deficits in autism spectrum disorder and attention-deficit/hyperactivity disorder. Neuropsychiatr Dis Treat. 2016;12:1191. 40. Qian Y, Shuai L, Cao Q, Chan RC, Wang Y. Do executive function deficits differentiate between children with attention deficit hyperactivity disorder (ADHD) and ADHD comorbid with oppositional defiant disorder? A cross-cultural study using performance-based tests and\nthe behavior rating inventory of executive function. Clin Neuropsychol. 2010;24(5):793\u2013810.\n41. Lee T, Cai L, MacCallum RC. Power analysis for tests of structural equation models. In: Hoyle RH, editor. Handbook of structural equation modeling. The Guilford Press: 2012. p. 181\u201394. 42. Schafer JL. Analysis of incomplete multivariate data. Boca Raton: CRC press; 1997. 43. Arns M, Conners CK, Kraemer HC. A decade of EEG theta/beta ratio research in ADHD: a meta-analysis. J Atten Disord. 2013;17(5):374\u201383. 44. Alderson RM, Rapport MD, Kofler MJ. Attention-deficit/hyperactivity disorder and behavioral inhibition: a meta-analytic review of the stop-signal paradigm. J Abnorm Child Psychol. 2007;35(5):745\u201358. 45. Pennington BF. From single to multiple deficit models of developmental disorders. Cognition. 2006;101(2):385\u2013413. 46. Loo SK, Barkley RA. Clinical utility of EEG in attention deficit hyperactivity disorder. Appl Neuropsychol. 2005;12(2):64\u201376. 47. Clarke AR, Barry RJ, Dupuy FE, Heckel LD, McCarthy R, Selikowitz M, et al. Behavioural differences between EEG-defined subgroups of children with attention-deficit/hyperactivity disorder. Clin Neurophysiol. 2011;122(7):1333\u201341."
+        },
+        {
+            "heading": "Publisher\u2019s Note",
+            "text": "Springer Nature remains neutral with regard to jurisdictional claims in published maps and institutional affiliations."
+        }
+    ],
+    "title": "A framework for characterizing heterogeneity in neurodevelopmental data using latent profile analysis in a sample of children with ADHD",
+    "year": 2022
+}

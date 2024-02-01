@@ -1,0 +1,616 @@
+{
+    "abstractText": "In mathematical optimization, second-order Newton\u2019s methods generally converge faster than first-order methods, but they require the inverse of the Hessian, hence are computationally expensive. However, we discover that on sparse graphs, graph neural networks (GNN) can implement an efficient Quasi-Newton method that can speed up optimization by a factor of 10-100x. Our method, neural reparametrization, modifies the optimization parameters as the output of a GNN to reshape the optimization landscape. Using a precomputed Hessian as the propagation rule, the GNN can effectively utilize the second-order information, reaching a similar effect as adaptive gradient methods. As our method solves optimization through architecture design, it can be used in conjunction with any optimizers such as Adam and RMSProp. We show the application of our method on scientifically relevant problems including heat diffusion, synchronization and persistent homology. Figure 1: Original (a) vs Neural Reparametrization using GNN (b). In problems on sparse graphs, using the Hessian inside the GNN implements a quasi-Newton method and accelerates optimization. Dynamical processes on graphs are ubiquitous in many real-world problems such as traffic flow on road networks, epidemic spreading on mobility networks, and heat diffusion on a surface. They also frequently appear in machine learning applications including accelerating fluid simulations Ummenhofer et al. (2019); Pfaff et al. (2020), topological data analysis Carriere et al. (2021); Birdal et al. (2021), and solving differential equations Zobeiry & Humfeld (2021); He & Pathak (2020); Schnell et al. (2021). Many such problems can be cast as (generally highly non-convex) optimization problems on graphs. Gradient-based methods are often used for numerical optimization. But on large graphs, they also suffer from slow convergence Chen et al. (2018). In this paper, we propose a novel optimization method based on neural reparametrization: parametrizing the solution to the optimization problem with a graph neural network (GNN). Instead of optimizing \u2217Equal contribution Preprint. Under review. ar X iv :2 20 5. 13 62 4v 1 [ cs .L G ] 2 6 M ay 2 02 2 the original parameters of the problem, we optimize the weights of the graph neural network. Especially on large sparse graphs, GNN reparametrization can be implemented efficiently, leading to significant speed-up. The effect of this reparametrization is similar to adaptive gradient methods. As shown in Duchi et al. (2011), when using gradient descent (GD) for loss L with parameters w, optimal convergence rate is achieved when the learning rate is proportional to G t := ( \u2211t \u03c4=1 g\u03c4g > \u03c4 ) \u22121/2 constructed from the gradient of the loss gt = \u2207L(wt) in the past t steps. However, when Gt is large, computing G \u22121/2 t during optimization is intractable. Many adaptive gradient methods such as AdaGrad Duchi et al. (2011), RMSProp (Tieleman & Hinton, 2012) and Adam (Kingma & Ba, 2014) use a diagonal approximation of Gt. More recent methods such as KFAC (Martens & Grosse, 2015) and Shampoo (Gupta et al., 2018; Anil et al., 2020) approximate a more compressed version of G using Kronecker factorization for faster optimization. For sparse graph optimization problems, we can construct a GNN to approximate G t efficiently. This is achieved by using a precomputed Hessian as the propagation rule in the GNN. Because the GNN is trainable, its output also changes dynamically during GD. Our method effectively utilizes the second-order information, hence it is also implicitly quasi-Newton. But rather than approximating the inverse Hessian, we change the optimization variables entirely. In summary, we show that 1. Neural reparametrization, an optimization technique that reparametrizes the optimization variables with neural networks has a similar effect to adaptive gradient methods. 2. A particular linear reparametrization using GNN recovers the optimal adaptive learning rate of AdaGrad (Duchi et al., 2011). 3. On sparse graph optimization problems in early steps, a GNN reparametrization is computationally efficient, leading to faster convergence (400%-8,000% speedup). 4. We show the effectiveness of this method on three scientifically relevant problems on graphs: heat diffusion, synchronization, and persistent homology. 1 Related Work Graph Neural Networks. Our method demonstrates a novel and unique perspective for GNN. The majority of literature use GNNs to learn representations from graph data to make predictions, see surveys and the references in Bronstein et al. (2017); Zhang et al. (2018); Wu et al. (2019); Goyal & Ferrara (2018). Recently, (Bapst et al., 2020) showed the power of GNN in predicting long-time behavior of glassy systems, which are notoriously slow and difficult to simulate. Additionally, (Fu et al., 2022) showed that GNN-based models can help speedup simulation of molecular dynamics problems by predicting large time steps ahead. However, we use GNNs to modify the learning dynamics of sparse graph optimization problems. We discover that by reparametrizing optimization problems, we can have significantly speed-up. Indeed, we show analytically that a GNN with a certain aggregation rule achieves the same optimal adaptive learning rate as in (Duchi et al., 2011). Thanks to the sparsity of the graph, we can obtain an efficient implementation of the optimizer that mimics the behavior of quasi-Newton methods. Neural Reparametrization. Reparameterizing an optimization problem can reshape the landscape geometry, change the learning dynamics, hence speeding-up convergence. In linear systems, preconditioning Axelsson (1996); Saad & Van Der Vorst (2000) reparameterizes the problem by multiplying a fixed symmetric positive-definite preconditioner matrix to the original problem. Groeneveld (1994) reparameterizes the covariance matrix to allow the use a faster Quasi-newton algorithm in maximum likelihood estimation. Recently, an implicit acceleration has been documented in over-parametrized linear neural networks and analyzed in Arora et al. (2018); Tarmoun et al. (2021). Specifically, Arora et al. (2018) shows that reparametrizing with deep linear networks impose a preconditioning scheme on gradient descent. Other works (Sosnovik & Oseledets, 2019; Hoyer et al., 2019) have demonstrated that reparametrizing with convolutional neural networks can speed-up structure optimization problems (e.g. designing a bridge). But the theoretical foundation for the improvement is not well understood. To the best of our knowledge, designing GNNs to reparametrize and accelerate graph optimization has not been studied before.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Nima Dehmamy"
+        }
+    ],
+    "id": "SP:acebc50f1ba005540339cfaa55a445ea2ab9690f",
+    "references": [
+        {
+            "authors": [
+                "R. Anil",
+                "V. Gupta",
+                "T. Koren",
+                "K. Regan",
+                "Y. Singer"
+            ],
+            "title": "Scalable second order optimization for deep learning",
+            "venue": "arXiv preprint arXiv:2002.09018,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S. Arora",
+                "N. Cohen",
+                "E. Hazan"
+            ],
+            "title": "On the optimization of deep networks: Implicit acceleration by overparameterization",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "O. Axelsson"
+            ],
+            "title": "Iterative solution methods",
+            "venue": "Cambridge university press,",
+            "year": 1996
+        },
+        {
+            "authors": [
+                "V. Bapst",
+                "T. Keck",
+                "A. Grabska-Barwi\u0144ska",
+                "C. Donner",
+                "E.D. Cubuk",
+                "S.S. Schoenholz",
+                "A. Obika",
+                "A.W. Nelson",
+                "T. Back",
+                "D Hassabis"
+            ],
+            "title": "Unveiling the predictive power of static structure in glassy systems",
+            "venue": "Nature Physics,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "L. Bar",
+                "N. Sochen"
+            ],
+            "title": "Unsupervised deep learning algorithm for pde-based forward and inverse problems",
+            "venue": "arXiv preprint arXiv:1904.05417,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "T. Birdal",
+                "A. Lou",
+                "L.J. Guibas",
+                "U. Simsekli"
+            ],
+            "title": "Intrinsic dimension, persistent homology and generalization in neural networks",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M.M. Bronstein",
+                "J. Bruna",
+                "Y. LeCun",
+                "A. Szlam",
+                "P. Vandergheynst"
+            ],
+            "title": "Geometric deep learning: going beyond euclidean data",
+            "venue": "IEEE Signal Processing Magazine,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M. Carriere",
+                "F. Chazal",
+                "M. Glisse",
+                "Y. Ike",
+                "H. Kannan",
+                "Y. Umeda"
+            ],
+            "title": "Optimizing persistent homology based functions",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Chen",
+                "T. Ma",
+                "C. Xiao"
+            ],
+            "title": "Fastgcn: Fast learning with graph convolutional networks via importance sampling",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "N. Dehmamy",
+                "Barab\u00e1si",
+                "A.-L",
+                "R. Yu"
+            ],
+            "title": "Understanding the representation power of graph neural networks in learning graph topology",
+            "venue": "Advances in Neural Information Processing Systems,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "J. Duchi",
+                "E. Hazan",
+                "Y. Singer"
+            ],
+            "title": "Adaptive subgradient methods for online learning and stochastic optimization",
+            "venue": "Journal of machine learning research,",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "H. Edelsbrunner",
+                "J Harer"
+            ],
+            "title": "Persistent homology-a survey",
+            "venue": "Contemporary mathematics,",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "X. Fu",
+                "T. Xie",
+                "N.J. Rebello",
+                "B.D. Olsen",
+                "T. Jaakkola"
+            ],
+            "title": "Simulate time-integrated coarse-grained molecular dynamics with geometric machine learning",
+            "venue": "arXiv preprint arXiv:2204.10348,",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "R.B. Gabrielsson",
+                "B.J. Nelson",
+                "A. Dwaraknath",
+                "P. Skraba"
+            ],
+            "title": "A topology layer for machine learning",
+            "venue": "In International Conference on Artificial Intelligence and Statistics,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "P. Goyal",
+                "E. Ferrara"
+            ],
+            "title": "Graph embedding techniques, applications, and performance: A survey",
+            "venue": "Knowledge-Based Systems,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "D. Greenfeld",
+                "M. Galun",
+                "R. Basri",
+                "I. Yavneh",
+                "R. Kimmel"
+            ],
+            "title": "Learning to optimize multigrid pde solvers",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "E. Groeneveld"
+            ],
+            "title": "A reparameterization to improve numerical optimization in multivariate reml (co) variance component estimation",
+            "venue": "Genetics Selection Evolution,",
+            "year": 1994
+        },
+        {
+            "authors": [
+                "V. Gupta",
+                "T. Koren",
+                "Y. Singer"
+            ],
+            "title": "Shampoo: Preconditioned stochastic tensor optimization",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "H. He",
+                "J. Pathak"
+            ],
+            "title": "An unsupervised learning approach to solving heat equations on chip based on auto encoder and image gradient",
+            "venue": "arXiv preprint arXiv:2007.09684,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "C. Hofer",
+                "R. Kwitt",
+                "M. Niethammer",
+                "M. Dixit"
+            ],
+            "title": "Connectivity-optimized representation learning via persistent homology",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Hoyer",
+                "J. Sohl-Dickstein",
+                "S. Greydanus"
+            ],
+            "title": "Neural reparameterization improves structural optimization",
+            "venue": "arXiv preprint arXiv:1909.04240,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "F.P. Incropera",
+                "D.P. DeWitt",
+                "T.L. Bergman",
+                "Lavine",
+                "A. S"
+            ],
+            "title": "Fundamentals of heat and mass transfer, volume 6",
+            "year": 1996
+        },
+        {
+            "authors": [
+                "B. Karrer",
+                "M.E. Newman"
+            ],
+            "title": "Stochastic blockmodels and community structure in networks",
+            "venue": "Physical review E,",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "D.P. Kingma",
+                "J. Ba"
+            ],
+            "title": "Adam: A method for stochastic optimization",
+            "venue": "arXiv preprint arXiv:1412.6980,",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "T.N. Kipf",
+                "M. Welling"
+            ],
+            "title": "Semi-supervised classification with graph convolutional networks",
+            "venue": "arXiv preprint arXiv:1609.02907,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "J.M. Kosterlitz",
+                "D.J. Thouless"
+            ],
+            "title": "Ordering, metastability and phase transitions in two-dimensional systems",
+            "venue": "Journal of Physics C: Solid State Physics,",
+            "year": 1973
+        },
+        {
+            "authors": [
+                "Y. Kuramoto"
+            ],
+            "title": "Self-entrainment of a population of coupled non-linear oscillators",
+            "venue": "In International symposium on mathematical problems in theoretical physics,",
+            "year": 1975
+        },
+        {
+            "authors": [
+                "Y. Kuramoto"
+            ],
+            "title": "Chemical turbulence. In Chemical Oscillations, Waves, and Turbulence, pp. 111\u2013140",
+            "year": 1984
+        },
+        {
+            "authors": [
+                "R. Lauter",
+                "C. Brendel",
+                "S.J. Habraken",
+                "F. Marquardt"
+            ],
+            "title": "Pattern phase diagram for two-dimensional arrays of coupled limit-cycle oscillators",
+            "venue": "Physical Review E,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Z. Li",
+                "N. Kovachki",
+                "K. Azizzadenesheli",
+                "B. Liu",
+                "K. Bhattacharya",
+                "A. Stuart",
+                "A. Anandkumar"
+            ],
+            "title": "Neural operator: Graph kernel network for partial differential equations",
+            "venue": "arXiv preprint arXiv:2003.03485,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Z. Li",
+                "N.B. Kovachki",
+                "K. Azizzadenesheli",
+                "K. Bhattacharya",
+                "A. Stuart",
+                "A Anandkumar"
+            ],
+            "title": "Fourier neural operator for parametric partial differential equations",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "L. Lu",
+                "P. Jin",
+                "G. Pang",
+                "Z. Zhang",
+                "G.E. Karniadakis"
+            ],
+            "title": "Learning nonlinear operators via deeponet based on the universal approximation theorem of operators",
+            "venue": "Nature Machine Intelligence,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J. Martens",
+                "R. Grosse"
+            ],
+            "title": "Optimizing neural networks with kronecker-factored approximate curvature",
+            "venue": "In International conference on machine learning,",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "H.B. McMahan",
+                "M. Streeter"
+            ],
+            "title": "Adaptive bound optimization for online convex optimization",
+            "venue": "In Proceedings of the Twenty Third Annual Conference on Computational Learning Theory,",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "N. Otter",
+                "M.A. Porter",
+                "U. Tillmann",
+                "P. Grindod",
+                "H.A. Harrington"
+            ],
+            "title": "A roadmap for the computation of persistent homology",
+            "venue": "EPJ Data Science,",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M. Penrose"
+            ],
+            "title": "Random geometric graphs, volume 5",
+            "venue": "OUP Oxford,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "T. Pfaff",
+                "M. Fortunato",
+                "A. Sanchez-Gonzalez",
+                "P. Battaglia"
+            ],
+            "title": "Learning mesh-based simulation with graph networks",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A. Pikovsky",
+                "J. Kurths",
+                "M. Rosenblum"
+            ],
+            "title": "Synchronization: a universal concept in nonlinear sciences",
+            "venue": "Number 12. Cambridge university press,",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "M. Raissi",
+                "P. Perdikaris",
+                "G.E. Karniadakis"
+            ],
+            "title": "Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations",
+            "venue": "Journal of Computational physics,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Y. Saad",
+                "H.A. Van Der Vorst"
+            ],
+            "title": "Iterative solution of linear systems in the 20th century",
+            "venue": "Journal of Computational and Applied Mathematics,",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "M. Sarkar",
+                "N. Gupte"
+            ],
+            "title": "Phase synchronization in the two-dimensional kuramoto model: Vortices and duality",
+            "venue": "Physical Review E,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P. Schnell",
+                "P. Holl",
+                "N. Thuerey"
+            ],
+            "title": "Half-inverse gradients for physical deep learning",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "I. Sosnovik",
+                "I. Oseledets"
+            ],
+            "title": "Neural networks for topology optimization",
+            "venue": "Russian Journal of Numerical Analysis and Mathematical Modelling,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Tarmoun",
+                "G. Franca",
+                "B.D. Haeffele",
+                "R. Vidal"
+            ],
+            "title": "Understanding the dynamics of gradient flow in overparameterized linear models",
+            "venue": "In International Conference on Machine Learning,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "T. Tieleman",
+                "G. Hinton"
+            ],
+            "title": "Lecture 6.5-RMSProp: Divide the gradient by a running average of its recent magnitude. Coursera: Neural networks for machine",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "B. Ummenhofer",
+                "L. Prantl",
+                "N. Thuerey",
+                "V. Koltun"
+            ],
+            "title": "Lagrangian fluid simulation with continuous convolutions",
+            "venue": "In International Conference on Learning Representations,",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Z. Wu",
+                "S. Pan",
+                "F. Chen",
+                "G. Long",
+                "C. Zhang",
+                "P.S. Yu"
+            ],
+            "title": "A comprehensive survey on graph neural networks",
+            "year": 1901
+        },
+        {
+            "authors": [
+                "Z. Zhang",
+                "P. Cui",
+                "W. Zhu"
+            ],
+            "title": "Deep learning on graphs: A survey",
+            "venue": "arXiv preprint arXiv:1812.04202,",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "N. Zobeiry",
+                "K.D. Humfeld"
+            ],
+            "title": "A physics-informed machine learning approach for solving heat transfer equation in advanced manufacturing and engineering applications",
+            "venue": "Engineering Applications of Artificial Intelligence,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Carriere"
+            ],
+            "title": "Czech complex, the most classic model, guarantees approximation of a topological space with a subset of points. However, it is computationally heavy and thus rarely used in practice. Instead, other models like the Vietoris-Rips complex, which approximates the Czech complex, are preferred for their efficiency (Otter et al., 2017). Vietoris-Rips complex is also used in the point cloud optimization experiment of ours and Gabrielsson et al",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Gabrielsson"
+            ],
+            "title": "2021), which consists of topological and distance penalties. The GCN model can significantly accelerates convergence at the start of training, but this effect diminishes quickly. Therefore, we switch the GCN to the linear model once the its acceleration slows down",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "Figure 1: Original (a) vs Neural Reparametrization using GNN (b). In problems on sparse graphs, using the Hessian inside the GNN implements a quasi-Newton method and accelerates optimization.\nDynamical processes on graphs are ubiquitous in many real-world problems such as traffic flow on road networks, epidemic spreading on mobility networks, and heat diffusion on a surface. They also frequently appear in machine learning applications including accelerating fluid simulations Ummenhofer et al. (2019); Pfaff et al. (2020), topological data analysis Carriere et al. (2021); Birdal et al. (2021), and solving differential equations Zobeiry & Humfeld (2021); He & Pathak (2020); Schnell et al. (2021). Many such problems can be cast as (generally highly non-convex) optimization problems on graphs. Gradient-based methods are often used for numerical optimization. But on large graphs, they also suffer from slow convergence Chen et al. (2018).\nIn this paper, we propose a novel optimization method based on neural reparametrization: parametrizing the solution to the optimization problem with a graph neural network (GNN). Instead of optimizing\n\u2217Equal contribution\nPreprint. Under review.\nar X\niv :2\n20 5.\n13 62\n4v 1\n[ cs\n.L G\n] 2\n6 M\nthe original parameters of the problem, we optimize the weights of the graph neural network. Especially on large sparse graphs, GNN reparametrization can be implemented efficiently, leading to significant speed-up.\nThe effect of this reparametrization is similar to adaptive gradient methods. As shown in Duchi et al. (2011), when using gradient descent (GD) for loss L with parameters w, optimal convergence rate is achieved when the learning rate is proportional to G\u22121/2t := ( \u2211t \u03c4=1 g\u03c4g > \u03c4 ) \u22121/2 constructed from the gradient of the loss gt = \u2207L(wt) in the past t steps. However, when Gt is large, computing G \u22121/2 t during optimization is intractable. Many adaptive gradient methods such as AdaGrad Duchi et al. (2011), RMSProp (Tieleman & Hinton, 2012) and Adam (Kingma & Ba, 2014) use a diagonal approximation of Gt. More recent methods such as KFAC (Martens & Grosse, 2015) and Shampoo (Gupta et al., 2018; Anil et al., 2020) approximate a more compressed version of G using Kronecker factorization for faster optimization.\nFor sparse graph optimization problems, we can construct a GNN to approximate G\u22121/2t efficiently. This is achieved by using a precomputed Hessian as the propagation rule in the GNN. Because the GNN is trainable, its output also changes dynamically during GD. Our method effectively utilizes the second-order information, hence it is also implicitly quasi-Newton. But rather than approximating the inverse Hessian, we change the optimization variables entirely. In summary, we show that\n1. Neural reparametrization, an optimization technique that reparametrizes the optimization variables with neural networks has a similar effect to adaptive gradient methods.\n2. A particular linear reparametrization using GNN recovers the optimal adaptive learning rate of AdaGrad (Duchi et al., 2011).\n3. On sparse graph optimization problems in early steps, a GNN reparametrization is computationally efficient, leading to faster convergence (400%-8,000% speedup).\n4. We show the effectiveness of this method on three scientifically relevant problems on graphs: heat diffusion, synchronization, and persistent homology."
+        },
+        {
+            "heading": "1 Related Work",
+            "text": "Graph Neural Networks. Our method demonstrates a novel and unique perspective for GNN. The majority of literature use GNNs to learn representations from graph data to make predictions, see surveys and the references in Bronstein et al. (2017); Zhang et al. (2018); Wu et al. (2019); Goyal & Ferrara (2018). Recently, (Bapst et al., 2020) showed the power of GNN in predicting long-time behavior of glassy systems, which are notoriously slow and difficult to simulate. Additionally, (Fu et al., 2022) showed that GNN-based models can help speedup simulation of molecular dynamics problems by predicting large time steps ahead. However, we use GNNs to modify the learning dynamics of sparse graph optimization problems. We discover that by reparametrizing optimization problems, we can have significantly speed-up. Indeed, we show analytically that a GNN with a certain aggregation rule achieves the same optimal adaptive learning rate as in (Duchi et al., 2011). Thanks to the sparsity of the graph, we can obtain an efficient implementation of the optimizer that mimics the behavior of quasi-Newton methods.\nNeural Reparametrization. Reparameterizing an optimization problem can reshape the landscape geometry, change the learning dynamics, hence speeding-up convergence. In linear systems, preconditioning Axelsson (1996); Saad & Van Der Vorst (2000) reparameterizes the problem by multiplying a fixed symmetric positive-definite preconditioner matrix to the original problem. Groeneveld (1994) reparameterizes the covariance matrix to allow the use a faster Quasi-newton algorithm in maximum likelihood estimation. Recently, an implicit acceleration has been documented in over-parametrized linear neural networks and analyzed in Arora et al. (2018); Tarmoun et al. (2021). Specifically, Arora et al. (2018) shows that reparametrizing with deep linear networks impose a preconditioning scheme on gradient descent. Other works (Sosnovik & Oseledets, 2019; Hoyer et al., 2019) have demonstrated that reparametrizing with convolutional neural networks can speed-up structure optimization problems (e.g. designing a bridge). But the theoretical foundation for the improvement is not well understood. To the best of our knowledge, designing GNNs to reparametrize and accelerate graph optimization has not been studied before.\nPDE Solving. Our work can also be viewed as finding the steady-state solution of non-linear discretized partial differential equations (PDEs). Traditional finite difference or finite element methods for solving PDEs are computationally challenging. Several recent works use deep learning to solve PDEs in a supervised fashion. For example, physics-informed neural network (PINN) Raissi et al. (2019); Greenfeld et al. (2019); Bar & Sochen (2019) parameterize the solution of a PDE with neural networks. Their neural networks take as input the physical domain. Thus, their solution is independent of the mesh but is specific to each parameterization. Neural operators Lu et al. (2021); Li et al. (2020a,b) alleviate this limitation by learning in the space of infinite dimensional functions. However, both class of methods require data from the numerical solver as supervision, whereas our method is completely unsupervised. We solve the PDEs by directly minimizing the energy function."
+        },
+        {
+            "heading": "2 Gradient Flow Dynamics and Adaptive Gradient",
+            "text": "Consider a graph with n nodes (vertices) and each node i has a state vector wi \u2208 Rd. We have an adjacency matrix A \u2208 Rn\u00d7n where Aij is the weight of the edge from node i to node j. We look for a matrix of states w \u2208 Rn\u00d7d that minimizes a loss (energy) function L(w).\nGradient Flow. The optimization problem above can be tackled using gradient-based methods. Although in non-convex settings, these methods likely won\u2019t find a global minimum. Gradient descent (GD) updates the variables w by taking repeated steps in the direction of the steepest descent wt+1 = wt\u2212\u03b5 \u2202L\u2202wt for a learning rate \u03b5. With infinitesimal time steps \u03b4t, GD becomes the continuous time gradient flow (GF) dynamics:\ndw dt = \u2212\u03b5 \u2202L \u2202w , (1)\nAdaptive Gradient. In general, \u03b5 can be a (positive semi-definite) matrix \u03b5 \u2208 Rn\u00d7n that vary per parameter and change dynamically at each time step. In some parameter directions, GF is much slower than others McMahan & Streeter (2010). Adaptive gradient methods use different learning rates for each parameter to make GF isotropic (i.e. all directions flowing at similar rates). The adaptive learning rate is:\n\u03b5 = \u03b7G\u22121/2 \u2208 Rn\u00d7n, G \u2261 E [ \u2207L\u2207LT ] , (2)\nwhere \u03b7 1 is a small constant. The expectation E can be defined either over a mini-batch of samples or over multiple time steps. In AdaGrad (Duchi et al., 2011), E is over some past time steps, while in RMSProp (Tieleman & Hinton, 2012) and Adam (Kingma & Ba, 2014) it is a discounted time averaging. Defining the gradient g(t) = \u2207L(w(t)), this expectation can be written as\nE\u2206t [f ] (t) \u2261 1\n\u2206t \u222b \u2206t 0 ds\u03b3sf(t\u2212 s), G(t) \u2261 E\u2206t [ ggT ] (t) (3)\nwhere \u03b3 < 1 is the discount factor. Unfortunately, G(t) \u2208 Rn\u00d7n is generally a large matrix and computing \u03b5 = \u03b7G\u22121/2 (O(n3)) during optimization is not feasible. Even using a fixed precomputed G\u22121/2 is expensive, being O(n2) for the matrix times vector multiplication G1/2\u2207L. Therefore, methods like AdaGrad, Adam and RMSprop use a diagonal approximation diag(g2\u03c4 ) in equation 3, while Shampoo and K-FAC use a more detailed Kronecker factorized approximation of G\u03c4 ."
+        },
+        {
+            "heading": "3 Neural Reparametrization",
+            "text": "For sparse graphs, a better approximation ofG\u22121/2 can be used in early steps to speed up optimization. The key idea behind our method is to change the optimization parameters with a graph neural network (GNN) whose propagation rule involves an approximate Hessian. We add a GNN module such that GF on the new problem is equivalent to a quasi-Newton\u2019s method on the original problem. GNN allows us to perform quasi-Newton\u2019s method with time complexity similar to first-order GF, with O(nk) complexity with k n proportional to average degree of nodes. After a few iterations, the approximate Hessian starts deviating significantly from the true Hessian and the reparametrization becomes less beneficial. Therefore, once improvements in the objective function become small, we switch back to GF on the original problem. Using this two stage method we observe impressive speedups. Figure 1 visualizes the pipeline of the proposed approach."
+        },
+        {
+            "heading": "3.1 Proposed Approach",
+            "text": "We reparametrize the problem by expressing the optimization variable w as a neural network function w(\u03b8), where \u03b8 are the trainable parameters. Rather than optimizing over w directly, we optimize over the neural network parameters \u03b8. We seek a neural network architecture that is guaranteed to accelerate optimization after reparametrization. If we want to match the adaptive learning rate in equation 2, this would naturally lead to the design of w(\u03b8) as a GNN. We begin by comparing the GF and rate of loss decay dL/dt for w(\u03b8) with the original ones for w.\nModified Gradient Flow. After reparametrization w(\u03b8), we are updating \u03b8 using GF on L(w(\u03b8)) d\u03b8a dt = \u2212 \u2211 b \u03b5\u0302ab \u2202L \u2202\u03b8b = \u2212 \u2211 b \u03b5\u0302ab \u2211 i \u2202L \u2202wi \u2202wi \u2202\u03b8b = \u2212 [\u03b5\u0302J\u2207L]a (4)\nwhere \u03b5\u0302 is the learning rate for parameters \u03b8, and J \u2261 \u2202w/\u2202\u03b8 is the Jacobian of the reparametrization. Note that\u2207L = \u2202L/\u2202w. From equation 4 we can also calculate the dw(\u03b8)/dt\ndw dt = \u2202w \u2202\u03b8\nT d\u03b8\ndt = \u2212JT \u03b5\u0302J\u2207L (5)\nwhich means that dw/dt has now acquired an adaptive learning rate JT \u03b5\u0302J . Therefore, the choice of architecture for w(\u03b8) would determine J and hence the convergence rate.\nArchitecture Choice. We can show that an adaptive, linear reparametrization can closely mimic the optimal adaptive learning rate of (Duchi et al., 2011). This motivates the GNN architecture we use below for graph optimization problems. Proposition 3.1. For \u03b8 \u2208 Rm and w \u2208 Rn, with m \u2265 n, using a linear reparametrization w = J\u03b8 leads to the optimal adaptive learning rate in equation 2, where (\u03b3 \u2208 Rn\u00d7m),\nJ = \u221a \u03b7\u03b3G \u22121/4 t , \u03b3 T \u03b5\u0302\u03b3 = In\u00d7n (6)\nProof. As before, the learning rate \u03b5\u0302 must be PSD. Thus, for m \u2265 n and using SVD we can find \u03b3 such that \u03b3T \u03b5\u0302\u03b3 = In\u00d7n. It follows that J in equation 6 satisfies JT \u03b5\u0302J = \u03b7G \u22121/2 t .\nThe solution equation 6 is not unique. Even for m = n, \u03b3 and G\u22121/4t are not unique and any such solution yields a valid J (e.g. any vvT = G\u22121/2t with large hidden dimension works). However, even when \u03b5\u0302 = \u03b7I is constant, obtaining J requires expensive spectral expansion of Gt of O(n3). We could use a low-rank approximation of J by minimizing the error \u2016JTJ \u2212G\u22121/2t \u20162 with \u03b8 \u2208 Rm. As Gt changes during optimization, we also need to update J . For a small number of iterations after t, the change is small. So a fixed J could still yield a good approximation J \u2248 G\u22121/4t . However, for sparse graphs, we show that efficient approximations to w \u2248 G\u22121/4t \u03b8 can be achieved via a GNN.\nNormalization Note that in GF with adaptive gradients dw/dt = \u2212\u03b7G\u22121/2t \u2207L, the choice of the learning rate \u03b7 depends on the eigenvalues of Gt. To ensure numerical stability we need \u03b7 1/ \u221a \u03bbmax, where \u03bbmax is the largest eigenvalue of Gt. If we normalize Gt \u2192 Gt/\u03bbmax, we don\u2019t need to adjust \u03b7 and any \u03b7 1 works. Therefore, we want the Jacobian to satisfy\nJ \u2248 (\nGt \u03bbmax\n)\u22121/4 (7)"
+        },
+        {
+            "heading": "3.2 Efficient Implementation for Graph Problems",
+            "text": "Note that G\u22121/2t in adaptive gradient methods approximates the inverse Hessian (Duchi et al., 2011). If w are initialized as wi \u223c N (0, 1/ \u221a n), we have (see SI A.1)\nGij(t\u2192 0) = \u2211 k,l E[wkwl] \u22022L \u2202wk\u2202wi \u22022L \u2202wl\u2202wj +O(n\u22122) = 1 n [ H2 ] ij \u2223\u2223\u2223 w\u21920 +O(n\u22122), (8)\nwhere Hij(w) \u2261 \u22022L(w)/\u2202wi\u2202wj is the Hessian of the loss at t = 0. Therefore in early stages, instead of computing J \u223c (Gt/\u03bbmax)\u22121/4, we can implement a quasi-Newton methods with J = H\u22121/2 where H \u2261 (1 \u2212 \u03be)H/hmax. Here hmax \u2248 \u221a \u03bbmax is the top eigenvalue of the Hessian and \u03be 1. This requires pre-computing the Hessian matrix, but the denseness of H\u22121/2 will slow down the optimization process. Additionally, we also want to account for the changes in H. Luckily, in graph optimization problems, sparsity can offer a way to tackle both issues using GNN. We next discuss the structure of these problems.\nStructure of Graph Optimization Problems. For a graph with n nodes (vertices), each of which has a state vector wi, and an adjacency matrix A \u2208 Rn\u00d7n, the graph optimization problems w.r.t. the state matrix w \u2208 Rn\u00d7d have the following common structure. 2\nL(w) \u2248 \u2211 ij Aij\u2016wi \u2212wj\u20162 +O(w3) = Tr [ wTLw ] +O(w3), (9)\nwhere L = D \u2212 A is the graph Laplacian, Dij = \u2211 k Aik\u03b4ij the diagonal degree matrix and \u03b4ij is the Kronecker delta. equation 9 is satisfied by all the problems we consider in our experiments, which include diffusion processes and highly nonlinear synchronization problems. With equation 9, the Hessian at the initialization often becomesH \u223c 2L. Hence, when the graph is sparse,H is sparse too. Still,H\u22121 can be a dense matrix, making Newton\u2019s method expensive. However, at early stages, we can exploit the sparsity of Hessian to approximate J = H\u22121/2 for efficient optimization.\nExploiting Sparsity. If H is sparse or low-rank, we may estimate H\u22121 using a short Taylor series (e.g. up to O(H2)), which also remains sparse. When the graph is undirected and the degree distribution is concentrated (i.e. not fat-tailed) hmax \u2248 Tr[D]/n (average degree) (Appendix A.2)\nH \u2248 I \u2212D\u22121/2AD\u22121/2 = I \u2212As. (10)\nwhere As = D\u22121/2AD\u22121/2 is the symmetric degree normalized adjacency matrix. To get an O(qn2) approximation for this J = H\u22121/2 wwe can use q terms in the binomial expansion H\u22121/2 \u2248 I \u2212 12As \u2212 3 4A 2 s + . . . , which for small q is also sparse. Next we show how such an expansion can be implemented using GNN.\nGCN Implementation. A graph convolutional network (GCN) layer takes an input \u03b8 \u2208 Rn\u00d7d and returns \u03c3(f(A)\u03b8V ), where f(A) is the propagation (or aggregation) rule, V \u2208 Rd\u00d7h are the weights, \u03c3 is the nonlinearity. For the GCN proposed by Kipf & Welling (2016), we have f(A) = As. A linear GCN layer with residual connections represents the polynomial F (\u03b8) = \u2211 k A k s\u03b8Vk. (Dehmamy et al., 2019). We can implement an approximation of w(\u03b8) = H\u22121/2\u03b8 using GCN layers. For example, we can implement the O(A2s) approximation J \u2248 H\u22121/2 using a two-layer GCN with pre-specified weights. However, to account for the changes in the Hessian during optimization, we make the GCN weights trainable parameters. We also use a nonlinear GCN w(\u03b8) = GNN(As, \u03b8), where GNN(\u00b7) is a trainable function implemented using one or two layers of GCN (Fig. 1).\nTwo-stage optimization. In w(\u03b8) = GNN(As, \u03b8), both the input \u03b8 and the weights of the GCN layers in GNN(\u00b7) are trainable. In spite of this, because GNN(\u00b7) uses the initial Hessian via As, it may not help when the Hessian has changed significantly. This, combined with the extra computation costs, led us to adopt a two-stage optimization. In the initial stage, we use our GNN reparametrization with a precomputed Hessian to perform a quasi-Newton GD on w(\u03b8). Once the rate of loss decay becomes small, we switch to GD over the original parameters w, initialized using the final value of the parameters from the first stage.\nPer-step Time Complexity. Let w \u2208 Rn\u00d7d with d n and let the average degree of each node be k = \u2211 ij Aij/n. For a sparse graph we have k n. Assuming the leading term in the loss L(w) is as in equation 9, the complexity of computing\u2207L(w) is at least O(dn2k), because of the matrix product Lw. When we reparametrize to \u03b8 \u2208 Rn\u00d7h with h n, passign through each layer of GCN has complexity O(hn2k). The complexity of GD on the reparametrized model with l GCN layers is\n2Although here w is not flattened, each row of w still follows the same GF equation 1 and the results extend trivially to this case.\nO((lh+ d)n2k). Thus, as long as lh is not too big, the reparametrization slows down each iteration by a constant factor of \u223c 1 + lh/d."
+        },
+        {
+            "heading": "4 Experiments",
+            "text": "We showcase the acceleration of neural reparametrization on three graph optimization problems: heat diffusion on a graph; synchronization of oscillators; and persistent homology, a mathematical tool that computes the topology features of data. We use the Adam Kingma & Ba (2014) optimizer and compare different reparametrization models. We implemented all models with Pytorch. Figure 2 summarizes the speedups (wall clock time to run original problem divided by time of the GNN model) we observed in all our experiments. We explain the three problems used in the experiments next."
+        },
+        {
+            "heading": "4.1 Heat Diffusion",
+            "text": "Heat equation describes heat diffusion Incropera et al. (1996). It is given by \u2202tw = \u2212\u03b5\u22072w where w(x, t) represents the temperature at point x at time t, and \u03b5 is the heat diffusion constant. On a graph, w(x, t) \u2208 R+ is discretized and replaced by wi(t), with node i representing the position. The Laplacian operator \u22072 becomes the graph Laplacian L = D \u2212 A where D is the diagonal degree matrix with entries Dij = \u2211 k Aik\u03b4ij (Kronecker delta). The heat diffusion on graphs dw/dt = \u2212\u03b5Lw can be derived as minimizing the following loss function\nLHE(w) = 1\n2 wTLw =\n1\n2 \u2211 ij Aij(wi \u2212wj)2 (11)\nWhile this loss function is quadratic and the heat equation is linear, the boundary conditions make it highly nonlinear. For example, a set S of the nodes may be attached to a heat or cold source with fixed temperatures Ti for i \u2208 S. In this case, we will add a regularizer c \u2211 i\u2208S \u2016wi \u2212 Ti\u20164 to the loss function. For large meshes, lattices or amorphous, glassy systems, or systems with bottlenecks (e.g. graph with multiple clusters with bottlenecks between them), finding the steady-state solution w(t\u2192\u221e) of heat diffusion can become prohibitively slow. Results for heat diffusion. Figure 2 summarizes the observed speedups. We find that on all these graphs, our method can speed up finding the final w by over an order of magnitude. Figure 3 shows the final temperature distribution in some examples of our experiments. We ran tests on different\ngraphs, described next. In all case we pick 10% of nodes and connect them to a hot source using the regularizer \u2016wi \u2212 Th\u20162, and 10% to the cold source using \u2016wi \u2212 Tc\u20162. The graphs in our experiments include the Stanford Bunny, Stochastic Block Model (SBM), 2D and 3D lattices, and Random Geometric Graphs (RGG) Penrose (2003); Karrer & Newman (2011). SBM is model where the probability of Aij = 1 is drawn from a block diagonal matrix. It represents a graphs with multiple clusters (diagonal block in Aij) where nodes within a cluster are more likely to be connected to each other than to other clusters (Fig. 3, SBM 10). RGG are graphs where the nodes are distributed in space (2D or higher) and nodes are more likely to connect to nearby nodes."
+        },
+        {
+            "heading": "4.2 Synchronization",
+            "text": "Small perturbations to many physical systems at equilibrium can be described a set of oscillators coupled over a graph (e.g. nodes can be segments of a rope bridge and edges the ropes connecting neighboring segments.) An important model for studying is the Kuramoto model (Kuramoto, 1975, 1984), which has had a profound impact on engineering, physics, machine learning Schnell et al. (2021) and network synchronization problems (Pikovsky et al., 2003) in social systems. The loss function for the Kuramoto model is defined as\nL(w) = \u2212 \u2211 i,j Aji cos \u2206ij , \u2206ij = wi \u2212wj . (12)\nwhich can be derived from the misalignement \u2016xi \u2212 xj\u20162 = 2 [1 + cos(wi \u2212wj)] between unit 2D vectors xi representing each oscillator. Its GF equation dwi/dt = \u2212\u03b5 \u2211 j Aij sin \u2206ij , is highly nonlinear. We further consider a more complex version of the Kuramoto model important in physics: the Hopf-Kuramoto (HK) model Lauter et al. (2015). The loss function for the HK model is\nL = \u2211 i,j Aji [sin \u2206ij + s1 cos \u2206ij ]+ s2 2 \u2211 i,k,j AijAjk [ cos (\u2206ji+\u2206jk) + cos (\u2206ji\u2212\u2206jk) ] (13)\nwhere s1, s2 are model constants determining the phases of the system. This model has very rich set of phases (Fig. 5) and the phase space includes regions where simulations becomes slow and difficult. This diversity of phases allows us to showcase our method\u2019s performance in different parameter regimes and in highly nonlinear scenarios.\nImplementation. For early stages, we use a GCN with the aggregation function derived from the Hessian. For the Kuramoto model, it isHij(0) = \u22022L/\u2202wi\u2202wj |w\u21920 = Aij \u2212 \u2211 k Aik\u03b4ij = \u2212Lij (L = D \u2212 A being the Laplacian). We use neural reparametrization in the first 100 iterations and then switch to the original optimization (referred to as Linear) afterwards. We experimented with three different graph structures: square lattice, circle graph, and tree graph. The phases w are randomly initialized between 0 and 2\u03c0 from a uniform distribution. We let the models run until the loss converges (10 patience steps for early stopping, 10\u221215 loss fluctuation limit).\nResults for the Kuramoto Model. Figure 4 shows the results of Kuramoto model on a square lattice. Additional results on circle graph, and tree graph can be found in Appendix B. Figure 4 (a) shows that our method with one-layer GCN (GCN-1) and GCN with residual connection (RGCN-1) achieves significant speedup. In particular, we found 3.6\u00b1 .5 speed improvement for the lattice, 6.1\u00b1 .1 for the circle graph and 2.7\u00b1 .3 for tree graphs. We also experimented with two layer (GCN/RGCN-2) and three layer (GCN/RGCN-3) GCNs. As expected, the overhead of deeper GCN models slows down optimization and offsets the speedup gains. Figure 4 (b) visualizes the evolution of wi on a\nsquare lattice over iterations. Although different GNNs reach the same loss value, the final solutions are quite different. The linear model (without GNN) arrives at the final solution smoothly, while GNN models form dense clusters at the initial steps and reach an organized state before 100 steps. To quantify the level of synchronization, we measure a quantity \u03c1 known as the \u201cglobal order parameter\u201d (Sarkar & Gupte (2021)): \u03c1 = 1N\n\u2223\u2223\u2223\u2211j eiwj \u2223\u2223\u2223. Figure 4 (c) shows the convergence of the global order parameter over time. We can see that one-layer GCN and RGCN gives the highest amount of acceleration, driving the system to synchronization.\nResults for the Hopf-Kuramoto Model. We report the comparison on synchronizing more complex Hopf-Kuramoto dynamics. According to the Lauter et al. (2015) paper, we identify two different main patterns on the phase diagram Fig. 5 (b): ordered (small s2/c, smooth patterns) and disordered (large s2/c, noisy) phases (c = 1). In all experiments, we use the same lattice size 50\u00d7 50, with the same stopping criteria (10 patience steps and 10\u221210 loss error limit) and switch between the Linear and GNN reparametrization after 100 iteration steps. Fig. 5 (a) shows the loss at convergence versus the speedup. We compare different GCN models and observe that GCN with A2 as the propagation rule achieves the highest speedup. This is not surprising, as from equation 13 the Hessian for HK contain O(A2) terms. Also, we can see that we have different speedups in each region, especially in the disordered phases. Furthermore, we observed that the Linear and GCN models converge into a different minima in a few cases. However, the patterns of w remain the same. Interestingly, in the disordered phase we observe the highest speedup (Fig. 2)"
+        },
+        {
+            "heading": "4.3 Persistent homology",
+            "text": "Persistent homology Edelsbrunner et al. (2008) is an algebraic tool for measuring topological features of shapes and functions. Recently, it has found many applications in machine learning Hofer et al. (2019); Gabrielsson et al. (2020); Birdal et al. (2021). Persistent homology is computable with linear algebra and robust to perturbation of input data (Otter et al., 2017), see more details in Appendix B.4. An example application of persistent homology is point cloud optimization (Gabrielsson et al., 2020; Carriere et al., 2021). As shown in Fig. 6 left, given a random point cloud w that lacks any observable characteristics, we aim to produce persistent homological features by optimizing the position of data.\nL(w) = \u2212 \u2211 p\u2208D \u2016p\u2212 \u03c0\u2206(p)\u20162\u221e + n\u2211 i=1 \u2016wi \u2212 r\u20162 (14)\nwhere p \u2208 D = {(bi, di)}i\u2208Ik denotes the homological features in the the persistence diagram D, consisting of all the pairs of birth bi and death di filtration values of the set of k-dimensional homological features Ik. \u03c0\u2206 is the projection onto the diagonal \u2206 and \u2211 i d(wi, S) constrains the points within the a square centered at the origin with length 2r (denote r as range of the point cloud). Carriere et al. (2021) optimizes the point cloud positions directly with gradient-based optimization (we refer to it as \u201clinear\u201d).\nImplementation. We used the same Gudhi library for computing persistence diagram as Gabrielsson et al. (2020); Carriere et al. (2021). The run time of learning persistent homology is dominated by computing persistence diagram in every iteration, which has the time complexity of O(n3). Thus, the run time per iteration for GCN model and linear model are very similar, and we find that the GCN model can reduce convergence time by a factor of \u223c 4 (Fig. 6,6). We ran the experiments for point cloud of 100,200,300 points, with ranges of 0.5,1.0,2.0,4.0. The hyperparameters of the GCN model are kept constant, including network dimensions. The result for each setting is averaged from 5 consecutive runs.\nResults for Persistent Homology. Figure 6 right shows that the speedup of the GCN model is related to point cloud density. In this problem, the initial position of the point cloud determines the topology features. Therefore, we need to make sure the GCN models also yield the same positions as used in the linear model. Therefore, we first run a \u201ctraining\" step, where we use MSE to match the w(\u03b8) or GCN to the initial w used in the linear model. Training converges faster as the point cloud becomes more sparse, but the speedup gain saturates as point cloud density decreases. On the other hand, time required for initial point cloud fitting increases significantly with the range of point cloud. Consequently, the overall speedup peaks when the range of point cloud is around 4 times larger than what is used be in Gabrielsson et al. (2020); Carriere et al. (2021), which spans over an area 16 times larger. Further increase in point cloud range causes the speedup to drop as the extra time of initial point cloud fitting outweighs the reduced training time. The loss curve plot in Fig. 6 shows the convergence of training loss of the GCN model and the baseline model in one of the settings when GCN is performing well. Fig. 6 shows the initial random point cloud and the output from the GCN model. In the Appendix B.4, we included the results of GCN model hyperparameter search and a runtime comparison of the GCN model under all experiment settings."
+        },
+        {
+            "heading": "5 Conclusion",
+            "text": "We propose a novel neural reparametrization scheme to accelerate a large class of graph optimization problems. By reparametrizing the optimization problem with a graph convolutional network, we can modify the geometry of the loss landscape and obtain the maximum speed up. The effect of neural reparametrization mimics the behavior of adaptive gradient methods. A linear reparametrization of GCN recovers the optimal learning rate from AdaGrad. The aggregation function of the GCN is constructed from the gradients of the loss function and reduces to the Hessian in early stages of the optimization. We demonstrate our method on optimizing heat diffusion, network synchronization problems and persistent homology of point clouds. Depending on the experiment, we obtain a best case speedup that ranges from 5 - 100x.\nOne limitation of the work is that the switching from neural reparameterization to the original optimization stage is still ad-hoc. Further insights into the learning dynamics of the optimization are needed. Another interesting direction is to extend our method to stochastic dynamics, which has close connections with energy-based generative models."
+        },
+        {
+            "heading": "Checklist",
+            "text": "The checklist follows the references. Please read the checklist guidelines carefully for information on how to answer these questions. For each question, change the default [TODO] to [Yes] , [No] , or [N/A] . You are strongly encouraged to include a justification to your answer, either by referencing the appropriate section of your paper or providing a brief inline description. For example:\n\u2022 Did you include the license to the code and datasets?\n\u2022 Did you include the license to the code and datasets? [No] The code and the data are proprietary.\n\u2022 Did you include the license to the code and datasets? [N/A]\nPlease do not modify the questions and only use the provided macros for your answers. Note that the Checklist section does not count towards the page limit. In your paper, please delete this instructions block and only keep the Checklist section heading above along with the questions/answers below.\n1. For all authors...\n(a) Do the main claims made in the abstract and introduction accurately reflect the paper\u2019s contributions and scope? [Yes]\n(b) Did you describe the limitations of your work? [Yes] (c) Did you discuss any potential negative societal impacts of your work? [N/A] (d) Have you read the ethics review guidelines and ensured that your paper conforms to\nthem? [Yes]\n2. If you are including theoretical results...\n(a) Did you state the full set of assumptions of all theoretical results? [Yes] (b) Did you include complete proofs of all theoretical results? [Yes]\n3. If you ran experiments...\n(a) Did you include the code, data, and instructions needed to reproduce the main experimental results (either in the supplemental material or as a URL)? [Yes]\n(b) Did you specify all the training details (e.g., data splits, hyperparameters, how they were chosen)? [Yes]\n(c) Did you report error bars (e.g., with respect to the random seed after running experiments multiple times)? [Yes]\n(d) Did you include the total amount of compute and the type of resources used (e.g., type of GPUs, internal cluster, or cloud provider)? [Yes]\n4. If you are using existing assets (e.g., code, data, models) or curating/releasing new assets... (a) If your work uses existing assets, did you cite the creators? [Yes] (b) Did you mention the license of the assets? [N/A] (c) Did you include any new assets either in the supplemental material or as a URL? [N/A]\n(d) Did you discuss whether and how consent was obtained from people whose data you\u2019re using/curating? [TODO]\n(e) Did you discuss whether the data you are using/curating contains personally identifiable information or offensive content? [N/A]\n5. If you used crowdsourcing or conducted research with human subjects... (a) Did you include the full text of instructions given to participants and screenshots, if\napplicable? [N/A] (b) Did you describe any potential participant risks, with links to Institutional Review\nBoard (IRB) approvals, if applicable? [N/A] (c) Did you include the estimated hourly wage paid to participants and the total amount\nspent on participant compensation? [N/A]"
+        },
+        {
+            "heading": "A Extended Derivations",
+            "text": ""
+        },
+        {
+            "heading": "A.1 Estimating Gt at t\u2192 0",
+            "text": "G = E[\u2207L\u2207LT ] can be written in terms of the moments of the random variable W = {w} using the Taylor expansion of L around wi = 0 plugged into G = E[\u2207L\u2207LT ]\n\u2202L(w) \u2202wi \u2248 \u221e\u2211 k=0 1 k! [ wT \u2202 \u2202v ]k \u2202L(v) \u2202vi \u2223\u2223\u2223\u2223\u2223 v\u21920\n(15)\nGij(t) = \u221e\u2211 p,q=1 1 p!q! \u2211 {ia} EP [ wi1 . . .wip+q ] \u2202p+1L \u2202vi1 . . . \u2202vip\u2202vi \u2202q+1L \u2202vip+1 . . . \u2202vip+q\u2202vj \u2223\u2223\u2223\u2223\u2223\u2223 v\u21920 (16)\nwhere the sum over {ia} means all choices for the set of indices i1 . . . ip+q. Equation 16 states that we need to know the order p+ q moments EP [wi1 . . .wip+q ] of W to calculate G. This is doable in some cases. For example, we can use a normal distribution is used to initialize w(t = 0) \u2208 Rn. The local minima of L reachable by GD need to be in a finite domain for w. Therefore, we can always rescale and redefine w such that its domain satisfies \u2016w\u20162 \u2264 1. This way we can initialize with normalized vectors w(0)Tw(0) = 1 using \u03c3 = 1/ \u221a n and get\nw(i)j(0) = N ( 0, n\u22121/2 ) , (17)\nEP [ p\u220f a=1 wia ] = \u03b4i1...ip (p\u2212 1)!! np/2 even(p) (18)\nwhere \u03b4i...j is the Kronecker delta, (p \u2212 1)!! = \u220f[p/2] k=0 (p \u2212 1 \u2212 2k) and even(p) = 1 if p is even and 0 if it\u2019s odd. When the number of variables n 1 is large, order p > 2 moments are suppressed by factors of n\u2212p/2. Plugging equation 18 into equation 16 and defining the Hessian Hij(w) \u2261 \u22022L(w)/\u2202wi\u2202wj we have\nGij(t = 0) = 1\nn\n[ H2 ] ij \u2223\u2223\u2223 w\u21920 +O(n\u22122). (19)\nHere the assumption is that the derivatives \u2202pwL are not n dependent after rescaling the domain such that \u2016w\u2016 \u2264 1. In the experiments in this paper this condition is satisfied."
+        },
+        {
+            "heading": "A.2 Computationally efficient implementation",
+            "text": "We focus on speeding up the early stages, in which we use the Hessian H is G(0) \u2248 H2/n as in Newton\u2019s method. To control the learning rate \u03b7 in Newton\u2019s method \u2202tw = \u2212\u03b7H\u22121\u2207L, we need to work with the normalized matrix H/hmax. Next, we want an approximate Jacobian J \u223c (H/hmax)\u22121/2 written as a expansion. To ensure we have a matrix whose eigenvalues are all less than 1, we work with H \u2261 (1 \u2212 \u03be)H/hmax, where hmax = \u221a \u03bbmax and \u03be 1. To get an O(qn2) approximation for J we can take the first q terms in the binomial expansion as\nH\u22121/2 \u2248 I \u2212 1 2 (I \u2212H)\u2212 3 4 (I \u2212H)2 + . . . . (20)\nSince H is positive semi-definite and its largest eigenvalue is 1 \u2212 \u03be < 1, the sum in equation 20 can be truncated after q \u223c O(1) terms. The first q terms of equation 20 can be implemented as a q layer GCN with aggregation function f(H) = I \u2212H and residual connections. We choose q to be as small as 1 or 2, as larger q may actually slow down the optimization. Note that computing f(H)q\u03b8 is O(qn2) because we do not need to first compute f(H)q (which is O(qn3)). Instead, we use the forward pass through the GCN layers, which with linear activation is case is vi+1 = f(H)vi (O(n2)). This way, q layers with v1 = \u03b8 implements f(H)q\u03b8 with O(qn2h) for \u03b8 \u2208 Rn\u00d7h (h n).\nGCN Aggregation Rule To evaluate H we need to estimate the leading eigenvalue hmax. In the graph problems we consider we have H \u2248 L = D \u2212 A, where L is the graph Laplacian and Dij = \u03b4ij \u2211 k Aik is the degree matrix. In this case, instead of dividing by hmax an easy alternative is\nH = D\u22121/2LD\u22121/2 = I \u2212As (21)\nwhere As = D\u22121/2AD\u22121/2, and we chose this symmetrized form instead of D\u22121L because the Hessian is symmetric. When the edge weights are positive and degrees of nodes are similar Dii \u2248 k (e.g. mesh, lattice, RGG, SBM), we expect hmax \u223c O(k). This is because when degrees are similar L \u2248 kI \u2212A. L is PSD as vTLv = \u2211 ij Aij(vi\u2212 vj)2 \u2265 0. Therefore, when L = kI \u2212A the largest eigenvalue \u03b11 of A is bounded by \u03b11 \u2264 k. When the graph is grid-like, its eigenvectors are waves on the grid and the eigenvalues are the Fourier frequencies, \u00b1k/m for m \u2208 [1 \u2192 n/2]. This bounds hmax \u2264 k \u2212 (\u2212k) = 2k. and when the graph is mostly random, its spectrum follows the Wigner semi-circle law, which states most eigenvalues are concentrated near zero, hence hmax \u2248 k. This goes to say that choosing H = I \u2212As should be suitable for numerical stability, as the normalization in As is comparable toH/hmax."
+        },
+        {
+            "heading": "A.3 Network Synchronization",
+            "text": "The HK model\u2019s dynamics are follows:\ndwi dt = c \u2211 j Aji [cos \u2206ij \u2212 s1 sin \u2206ij ]\n+ s2 \u2211 k,j AijAjk [sin (\u2206ji + \u2206jk)\u2212 sin (\u2206ji \u2212\u2206jk)]\n+AijAik sin (\u2206ji + \u2206ki) . (22)\nwhere c, s1, s2 are the governing parameters. Equation 22 is the GF equation for the following loss function (found by integrating Equation 22):\nL(w) = c \u03b5 \u2211 i,j Aji [sin \u2206ij + s1 cos \u2206ij ]\n+ s2 2\u03b5 \u2211 i,k,j AijAjk [ cos (\u2206ji + \u2206jk)\n+ cos (\u2206ji \u2212\u2206jk) ]\n(23)"
+        },
+        {
+            "heading": "B Experiment details and additional results",
+            "text": ""
+        },
+        {
+            "heading": "B.1 Network Synchronization",
+            "text": "Network synchronization (Pikovsky et al., 2003) optimizes a network of coupled oscillators until they reach at the same frequency, known as synchronization. Kuramoto model Kuramoto (1975, 1984) are widely used for synchronization problems, which have profound impact on engineering, physics and machine learning Schnell et al. (2021).\nAs shown in Fig. 7, Kuramoto model describes the behavior of a large set of coupled oscillators. Each oscillator is defined by an angle \u03b8i = \u03c9it+ wi, where \u03c9i is the frequency and wi is the phase. We consider the case where \u03c9i = 0. The coupling strength is represented by a graph Aij \u2208 R. Defining \u2206ij \u2261 wi \u2212wj , the dynamics of the phases wi(t) in the Kuramoto model follows the following equations:\ndwi dt = \u2212\u03b5 n\u2211 j=1 Aji sin \u2206ij , L(w) = n\u2211 i,j=1 Aji cos \u2206ij . (24)\nOur goal is to minimize the phase drift dwi/dt such that the oscillators are synchronized. We further consider a more general version of the Kuramoto model: Hopf-Kuramoto (HK) model Lauter et al. (2015), which includes second-order interactions.\nWe experiment with both the Kuramoto model and Hopf-Kuramoto model. Existing numerical methods directly optimize the loss L(w) with gradient-based algorithms, which we refer to as linear. We apply our method to reparametrize the phase variables w and speed up convergence towards synchronization.\nImplementation. For early stages, we use a GCN with the aggregation function derived from the Hessian which for the Kuramoto model simply becomes Hij(0) = \u22022L/\u2202wi\u2202wj |w\u21920 = Aij \u2212 \u2211 k Aik\u03b4ij = \u2212Lij , where L = D \u2212 A is the graph Laplacian of A. We found that NR in the early stages of the optimization gives more speed up. We implemented the hybrid optimization described earlier, where we reparemtrize the problem in the first 100 iterations and then switch to the original linear optimization for the rest of the optimization.\nWe experimented with three Kuramoto oscillator systems with different coupling structures: square lattice, circle graph, and tree graph. For each system, the phases are randomly initialized between 0 and 2\u03c0 from uniform distribution. We let the different models run until the loss converges (10 patience steps for early stopping, 10\u221215 loss fluctuation limit)."
+        },
+        {
+            "heading": "B.2 Kuramoto Oscillator",
+            "text": "Relation to the XY model The loss equation 12 is also identical to the Hamiltonian (energy function) of a the classical XY model (Kosterlitz & Thouless (1973)), a set of 2D spins si with interaction energy given by L = \u2211 i,j Aijsi \u00b7 sj = \u2211 i,j Aji cos(wj \u2212wi). In the XY model, we are also interested in the minima of the energy.\nMethod In our model, we first initialize random phases between 0 and 2\u03c0 from a uniform distribution for each oscillator in a h dimensional space that results in N \u00d7 h dimensional vector N is the number of oscillators. Then we use this vector as input to the GCN model, which applies D\u22121/2A\u0302D\u22121/2 , A\u0302 = A+I propagation rule, with LeakyRelu activation. The final output dimension is N \u00d7 1, where the elements are the phases of oscillators constrained between 0 and 2\u03c0. In all experiments for h hyperparameter we chose 10. Different h values for different graph sizes may give different results. Choosing large h reduces the speedup significantly. We used Adam optimizer by 0.01 learning rate."
+        },
+        {
+            "heading": "B.3 MNIST image classification",
+            "text": "Here, we introduce our reparametrization model for image classification on the MNIST image dataset. First, we test a simple linear model as a baseline and compare the performance to the GCN model. We use a cross-entropy loss function, Adam optimizer with a 0.001 learning rate in the experiments, and Softmax nonlinear activation function in the GCN model. We train our models on 100 batch\nsize and 20 epochs. In the GCN model, we build the H matrix (introduced in the eq. 20) from the covariance matrix of images and use it as a propagation rule. In the early stages of the optimization, we use the GCN model until a plateau appears on the loss curve then train the model further by a linear model. We found that the optimal GCN to linear model transition is around 50 iterations steps. Also, we discovered that wider GCN layers achieve better performance; thus, we chose 500 for the initially hidden dimension. According to the previous experiments, the GCN model, persistent homology (B.4), and Kuramoto (B.2) model speedups the convergence in the early stages (Fig. 12)"
+        },
+        {
+            "heading": "B.4 Persistent Homology",
+            "text": "Overview. Homology describes the general characteristics of data in a metric space, and is categorized by the order of its features. Zero order features correspond to connected components, first order features have shapes like \"holes\" and higher order features are described as \"voids\".\nA practical way to compute homology of a topological space is through forming simplicial complexes from its points. This enables not only fast homology computation with linear algebra, but also approximating the topological space with its subsets.\nIn order to construct a simplicial complex, a filtration parameter is needed to specify the scope of connectivity. Intuitively, this defines the resolution of the homological features obtained. A feature is considered \"persistent\" if it exists across a wide range of filtration values. In order words, persistent homology seeks features that are scale-invariant, which serve as the best descriptors of the topological space.\nThere are different ways to build simplicial complexes from given data points and filtration values. Czech complex, the most classic model, guarantees approximation of a topological space with a subset of points. However, it is computationally heavy and thus rarely used in practice. Instead, other models like the Vietoris-Rips complex, which approximates the Czech complex, are preferred for their efficiency (Otter et al., 2017). Vietoris-Rips complex is also used in the point cloud optimization experiment of ours and Gabrielsson et al. (2020); Carriere et al. (2021).\nAlgorithm Implementation. Instead of optimizing the coordinates of the point cloud directly, we reparameterize the point cloud as the output of the GCN model. To optimize the network weights, we chose identity matrix with dimension of the point cloud size as the fixed input.\nTo apply GCN, we need the adjacency matrix of the point cloud. Even though the point cloud does not have any edges, we can manually generate edges by constructing a simplicial complex from it. The filtration value is chosen around the midpoint between the maximum and minimum of the feature birth filtration value of the initial random point cloud, which works well in practice.\nBefore the optimization process begins, we first fit the network to re-produce the initial random point cloud distribution. This is done by minimizing MSE loss on the network output and the regression target.\nThen, we begin to optimize the output with the same loss function in Gabrielsson et al. (2020); Carriere et al. (2021), which consists of topological and distance penalties. The GCN model can significantly accelerates convergence at the start of training, but this effect diminishes quickly. Therefore, we switch the GCN to the linear model once the its acceleration slows down. We used this hybrid approach in all of our experiments.\nHyperparameter Tuning. We conducted extensive hyperparameter search to fine tune the GCN model, in terms of varying hidden dimensions, learning rates and optimizers. We chose the setting of 200 point cloud with range 2.0 for all the tuning experiments.\nFig. 13 shows the model convergence with different hidden dimensions. We see that loss converges faster with one layer of GCN instead of two. Also, convergence is delayed when the dimension of GCN becomes too large. Overall, one layer GCN model with h1, h2 = 8, 6 generally excels in performance, and is used in all other experiments.\nFig. 14,15,16 shows the performance of the GCN model with different prefit learning rates, train learning rates and optimizers. From the results, a lower prefit learning rate of 0.01 combined with a training learning rate below 0.01 generally converges to lower loss and yields better speedup. For all the optimizers, default parameters from the Tensorflow model are used alongside varying learning rates and the same optimizer is used in both training and prefitting. Adam optimizer is much more effective than RSMProp and SGD on accelerating convergence. For SGD, prefitting with learning rate 0.05 and 0.1 causes the loss to explode in a few iterations, thus the corresponding results are left as blank spaces.\nDetailed Runtime Comparison. Fig. 17 and 18 shows how training, initial point cloud fitting and total time evolve over different point cloud sizes and ranges. Training time decreases significantly with increasing range, especially from 1.0 to 2.0. This effect becomes more obvious with density normalized runtime. On the other hand, prefitting time increases exponentially with both point cloud range and size. Overall, the total time matches the trend of training time, however the speed-up is halved compared to training due to the addition of prefitting time.\n."
+        }
+    ],
+    "title": "Faster Optimization on Sparse Graphs via Neural Reparametrization",
+    "year": 2022
+}

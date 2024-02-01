@@ -1,0 +1,826 @@
+{
+    "abstractText": "Twin-field quantum key distribution (TF-QKD) has emerged as a promising solution for practical quantum communication over long-haul fiber. However, previous demonstrations on TF-QKD require the phase locking technique to coherently control the twin light fields, inevitably complicating the system with extra fiber channels and peripheral hardware. Here we propose and demonstrate an approach to recover the single-photon interference pattern and realize TF-QKD without phase locking. Our approach separates the communication time into reference frames and quantum frames, where the reference frames serve as a flexible scheme for establishing the global phase reference. To do so, we develop a tailored algorithm based on fast Fourier transform to efficiently reconcile the phase reference via data post-processing. We demonstrate no-phase-locking TF-QKD from short to long distances over standard optical fibers. At 50-km standard fiber, we produce a high secret key rate (SKR) of 1.27 Mbit/s, while at 504-km standard fiber, we obtain the repeater-like key rate scaling with a SKR of 34 times higher than the repeaterless secret key capacity. Our work provides a scalable and practical solution to TF-QKD, thus representing an important step towards its wide applications. Introduction.\u2014Quantum key distribution (QKD) can provide information-theoretically secure keys among distant parties [1] and it has become an indispensable cryptographic primitive in the upcoming quantum era [2, 3]. Due to the loss of photons in their transmission, the point-to-point secret key capacity (SKC0) of a channel without the quantum repeater scales linearly O(\u03b7) with the channel transmission [4\u20136]. The twin-field (TF) QKD protocol [7], an efficient version of measurement-device-independent QKD [8], can greatly enhance the transmission distance by achieving a repeater-like rate-loss scaling of O( \u221a \u03b7) with current available technology. Consequently, TF-QKD has been studied extensively in theory [9\u201312] and experiment [13\u201322]. These efforts make the long-haul fiber network within reach. Moreover, its measurement-device-independent advantage can remove trusted nodes from the networks, thus granting a security boost over deployed quantum communication network [23\u201325]. In practice, however, TF-QKD is phase-sensitive [7], which normally requires sufficiently long coherence time for two independent laser sources. In previous TF-QKD realizations, \u2217 Equal contribution.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Wei Li"
+        },
+        {
+            "affiliations": [],
+            "name": "Likang Zhang"
+        },
+        {
+            "affiliations": [],
+            "name": "Yichen Lu"
+        },
+        {
+            "affiliations": [],
+            "name": "Zheng-Ping Li"
+        },
+        {
+            "affiliations": [],
+            "name": "Cong Jiang"
+        },
+        {
+            "affiliations": [],
+            "name": "Yang Liu"
+        },
+        {
+            "affiliations": [],
+            "name": "Jia Huang"
+        },
+        {
+            "affiliations": [],
+            "name": "Hao Li"
+        },
+        {
+            "affiliations": [],
+            "name": "Zhen Wang"
+        },
+        {
+            "affiliations": [],
+            "name": "Xiang-Bin Wang"
+        },
+        {
+            "affiliations": [],
+            "name": "Qiang Zhang"
+        },
+        {
+            "affiliations": [],
+            "name": "Lixing You"
+        },
+        {
+            "affiliations": [],
+            "name": "Feihu Xu"
+        },
+        {
+            "affiliations": [],
+            "name": "Jian-Wei Pan"
+        }
+    ],
+    "id": "SP:08718d596567d21ea113e56457d808df3e6aad6f",
+    "references": [
+        {
+            "authors": [
+                "C.H. Bennett",
+                "G. Brassard"
+            ],
+            "title": "in Proceedings of the IEEE International Conference on Computers",
+            "venue": "Systems, and Signal Processing ",
+            "year": 1984
+        },
+        {
+            "authors": [
+                "F. Xu",
+                "X. Ma",
+                "Q. Zhang",
+                "H.-K. Lo",
+                "J.-W. Pan"
+            ],
+            "title": "Rev",
+            "venue": "Mod. Phys. 92, 025002 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S. Pirandola",
+                "U.L. Andersen",
+                "L. Banchi",
+                "M. Berta",
+                "D. Bunandar",
+                "R. Colbeck",
+                "D. Englund",
+                "T. Gehring",
+                "C. Lupo",
+                "C. Ottaviani",
+                "J.L. Pereira",
+                "M. Razavi",
+                "J.S. Shaari",
+                "M. Tomamichel",
+                "V.C. Usenko",
+                "G. Vallone",
+                "P. Villoresi",
+                "P. Wallden"
+            ],
+            "title": "Adv",
+            "venue": "Opt. Photon. 12, 1012 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S. Pirandola",
+                "R. Gar\u0107\u0131a-Patr\u00f3n",
+                "S.L. Braunstein",
+                "S. Lloyd"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Lett. 102, 050503 ",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "M. Takeoka",
+                "S. Guha",
+                "M.M. Wilde"
+            ],
+            "title": "Nat",
+            "venue": "Commun. 5, 5235 ",
+            "year": 2014
+        },
+        {
+            "authors": [
+                "S. Pirandola",
+                "R. Laurenza",
+                "C. Ottaviani",
+                "L. Banchi"
+            ],
+            "title": "Nat",
+            "venue": "Commun. 8, 15043 ",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "M. Lucamarini",
+                "Z.L. Yuan",
+                "J.F. Dynes",
+                "A.J. Shields"
+            ],
+            "title": "Nature 557",
+            "venue": "400 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "H.-K. Lo",
+                "M. Curty",
+                "B. Qi"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Lett. 108, 130503 ",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "X. Ma",
+                "P. Zeng",
+                "H. Zhou"
+            ],
+            "title": "Phys",
+            "venue": "Rev. X 8, 031043 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "X.-B. Wang",
+                "Z.-W. Yu",
+                "X.-L. Hu"
+            ],
+            "title": "Phys",
+            "venue": "Rev. A 98, 062323 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "M. Curty",
+                "K. Azuma",
+                "H.-K. Lo"
+            ],
+            "title": "npj Quantum Inf",
+            "venue": "5, 64 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "C. Cui",
+                "Z.-Q. Yin",
+                "R. Wang",
+                "W. Chen",
+                "S. Wang",
+                "G.-C. Guo",
+                "Z.-F. Han"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Applied 11, 034053 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M. Minder",
+                "M. Pittaluga",
+                "G. Roberts",
+                "M. Lucamarini",
+                "J. Dynes",
+                "Z. Yuan",
+                "A. Shields"
+            ],
+            "title": "Nat",
+            "venue": "Photonics 13, 334 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "Y. Liu",
+                "Z.-W. Yu",
+                "W. Zhang",
+                "J.-Y. Guan",
+                "J.-P. Chen",
+                "C. Zhang",
+                "X.-L. Hu",
+                "H. Li",
+                "C. Jiang",
+                "J. Lin",
+                "T.-Y. Chen",
+                "L. You",
+                "Z. Wang",
+                "X.-B. Wang",
+                "Q. Zhang",
+                "J.-W. Pan"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Lett. 123, 100505 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "S. Wang",
+                "D.-Y. He",
+                "Z.-Q. Yin",
+                "F.-Y. Lu",
+                "C.-H. Cui",
+                "W. Chen",
+                "Z. Zhou",
+                "G.-C. Guo",
+                "Z.-F. Han"
+            ],
+            "title": "Phys",
+            "venue": "Rev. X 9, 021046 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "X.-T. Fang",
+                "P. Zeng",
+                "H. Liu",
+                "M. Zou",
+                "W. Wu",
+                "Y.-L. Tang",
+                "Y.-J. Sheng",
+                "Y. Xiang",
+                "W. Zhang",
+                "H. Li",
+                "Z. Wang",
+                "L. You",
+                "M.-J. Li",
+                "H. Chen",
+                "Y.-A. Chen",
+                "Q. Zhang",
+                "C.-Z. Peng",
+                "X. Ma",
+                "T.-Y. Chen",
+                "J.-W. Pan"
+            ],
+            "title": "Nat",
+            "venue": "Photonics 14, 422 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "X. Zhong",
+                "J. Hu",
+                "M. Curty",
+                "L. Qian",
+                "H.-K. Lo"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Lett. 123, 100506 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "M. Pittaluga",
+                "M. Minder",
+                "M. Lucamarini",
+                "M. Sanzaro",
+                "R.I. Woodward",
+                "M.-J. Li",
+                "Z. Yuan",
+                "A.J. Shields"
+            ],
+            "title": "Nat",
+            "venue": "Photonics 15, 530 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J.-P. Chen",
+                "C. Zhang",
+                "Y. Liu",
+                "C. Jiang",
+                "W.-J. Zhang",
+                "Z.-Y. Han",
+                "S.-Z. Ma",
+                "X.-L. Hu",
+                "Y.-H. Li",
+                "H. Liu",
+                "F. Zhou",
+                "H.-F. Jiang",
+                "T.-Y. Chen",
+                "H. Li",
+                "L.-X. You",
+                "Z. Wang",
+                "X.-B. Wang",
+                "Q. Zhang",
+                "J.-W. Pan"
+            ],
+            "title": "Nat",
+            "venue": "Photonics 15, 570 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C. Clivati",
+                "A. Meda",
+                "S. Donadello"
+            ],
+            "title": "S",
+            "venue": "Virz\u0300\u0131, M. Genovese, F. Levi, A. Mura, M. Pittaluga, 11 Z. Yuan, A. J. Shields, M. Lucamarini, I. P. Degiovanni, and D. Calonico, Nat. Commun. 13, 157 ",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "J.-P. Chen",
+                "C. Zhang",
+                "Y. Liu",
+                "C. Jiang",
+                "D.-F. Zhao",
+                "W.-J. Zhang",
+                "F.-X. Chen",
+                "H. Li",
+                "L.-X. You",
+                "Z. Wang",
+                "Y. Chen",
+                "X.-B. Wang",
+                "Q. Zhang",
+                "J.-W. Pan"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Lett. 128, 180502 ",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S. Wang",
+                "Z.-Q. Yin",
+                "D.-Y. He",
+                "W. Chen",
+                "R.-Q. Wang",
+                "P. Ye",
+                "Y. Zhou",
+                "G.-J. Fan-Yuan",
+                "F.-X. Wang",
+                "W. Chen",
+                "Y.-G. Zhu",
+                "P.V. Morozov",
+                "A.V. Divochiy",
+                "Z. Zhou",
+                "G.-C. Guo",
+                "Z.-F. Han"
+            ],
+            "title": "Nat",
+            "venue": "Photon. 16, 154 ",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "M. Peev",
+                "C. Pacher",
+                "R. All\u00e9aume",
+                "C. Barreiro",
+                "J. Bouda",
+                "W. Boxleitner",
+                "T. Debuisschert",
+                "E. Diamanti",
+                "M. Dianati",
+                "J. Dynes",
+                "S. Fasel",
+                "S. Fossier",
+                "S. F\u00fcrst",
+                "J.-D. Gautie",
+                "O. Gay",
+                "N. Gisin",
+                "P. Grangier",
+                "A. Happe",
+                "Y. Hasani",
+                "M. Hentschel",
+                "H. H\u00fcbel",
+                "G. Humer",
+                "T. L\u00e4nger",
+                "M. Legr\u00e9",
+                "R. Lieger",
+                "J. Lodewyck",
+                "T. Lor\u00fcnser",
+                "N. L\u00fctkenhau",
+                "A. Marhold",
+                "T. Matyus",
+                "O. Maurhart",
+                "L. Monat",
+                "S. Nauerth",
+                "J.-B. Page",
+                "A. Poppe",
+                "E. Querasser",
+                "G. Ribordy",
+                "S. Robyr",
+                "L. Salvail",
+                "A. Sharpe",
+                "P. Trinkler",
+                "R. Tualle-Brouri",
+                "F. Vannel",
+                "N. Walenta",
+                "H. Weier",
+                "H. Weinfurter",
+                "I. Wimberger",
+                "Z. Yuan",
+                "H. Zbinden",
+                "A. Zeilinger"
+            ],
+            "title": "New J",
+            "venue": "Phys. 11, 075001 ",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "M. Sasaki",
+                "M. Fujiwara",
+                "H. Ishizuka",
+                "W. Klaus",
+                "K. Wakui",
+                "M. Takeoka",
+                "S. Miki",
+                "T. Yamashita",
+                "Z. Wang",
+                "A. Tanaka",
+                "K. Yoshino",
+                "Y. Nambu",
+                "S. Takahashi",
+                "A. Tajima",
+                "A. Tomita",
+                "T. Domeki",
+                "T. Hasegawa",
+                "Y. Sakai",
+                "H. Kobayashi",
+                "T. Asai",
+                "K. Shimizu",
+                "T. Tokura",
+                "T. Tsurumaru",
+                "M. Matsui",
+                "T. Honjo",
+                "K. Tamaki",
+                "H. Takesue",
+                "Y. Tokura",
+                "J. Dynes",
+                "A. Dixon",
+                "A. Sharpe",
+                "Z. Yuan",
+                "A. Shields",
+                "S. Uchikoga",
+                "M. Legr\u00e9",
+                "S. Robyr",
+                "P. Trinkler",
+                "L. Monat",
+                "J.-B. Page",
+                "G. Ribordy",
+                "A. Poppe",
+                "A. Allacher",
+                "O. Maurhart",
+                "T. L\u00e4nger",
+                "M. Peev",
+                "A. Zeilinger"
+            ],
+            "title": "Opt",
+            "venue": "Express 19, 10387 ",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "Y.-A. Chen",
+                "Q. Zhang",
+                "T.-Y. Chen",
+                "W.-Q. Cai",
+                "S.-K. Liao",
+                "J. Zhang",
+                "K. Chen"
+            ],
+            "title": "J",
+            "venue": "Yin, J.- G. Ren, Z. Chen, S.-L. Han, Q. Yu, K. Liang, F. Zhou, X. Yuan, M.-S. Zhao, T.-Y. Wang, X. Jiang, L. Zhang, W.-Y. Liu, Y. Li, Q. Shen, Y. Cao, C.-Y. Lu, R. Shu, J.-Y. Wang, L. Li, N.-L. Liu, F. Xu, X.-B. Wang, C.-Z. Peng, and J.-W. Pan, Nature 589, 214 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "G. Vallone",
+                "D. Bacco",
+                "D. Dequal",
+                "S. Gaiarin",
+                "V. Luceri",
+                "G. Bianco",
+                "P. Villoresi"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Lett. 115, 040502 ",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Y. Cao",
+                "Y.-H. Li",
+                "K.-X. Yang",
+                "Y.-F. Jiang",
+                "S.-L. Li",
+                "X.-L. Hu",
+                "M. Abulizi",
+                "C.-L. Li",
+                "W. Zhang",
+                "Q.-C. Sun",
+                "W.-Y. Liu",
+                "X. Jiang",
+                "S.-K. Liao",
+                "J.-G. Ren",
+                "H. Li",
+                "L. You",
+                "Z. Wang"
+            ],
+            "title": "J",
+            "venue": "Yin, C.-Y. 12 Lu, X.-B. Wang, Q. Zhang, C.-Z. Peng, and J.-W. Pan, Phys. Rev. Lett. 125, 260503 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "C. Ma",
+                "W.D. Sacher",
+                "Z. Tang",
+                "J.C. Mikkelsen",
+                "Y. Yang",
+                "F. Xu",
+                "T. Thiessen",
+                "H.-K. Lo",
+                "J.K. Poon"
+            ],
+            "title": "Optica 3",
+            "venue": "1274 ",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "P. Sibson",
+                "C. Erven",
+                "M. Godfrey",
+                "S. Miki",
+                "T. Yamashita",
+                "M. Fujiwara",
+                "M. Sasaki",
+                "H. Terai",
+                "M.G. Tanner",
+                "C.M. Natarajan",
+                "R.H. Hadfield"
+            ],
+            "title": "J",
+            "venue": "L. O\u2019Brien, and M. G. Thompson, Nat. Commun. 8, 13984 ",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "K. Wei",
+                "W. Li",
+                "H. Tan",
+                "Y. Li",
+                "H. Min",
+                "W.-J. Zhang",
+                "H. Li",
+                "L. You",
+                "Z. Wang",
+                "X. Jiang",
+                "T.-Y. Chen",
+                "S.-K. Liao",
+                "C.-Z. Peng",
+                "F. Xu",
+                "J.-W. Pan"
+            ],
+            "title": "Phys",
+            "venue": "Rev. X 10, 031030 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S. Camatel",
+                "V. Ferrero",
+                "J. Light"
+            ],
+            "title": "Technol",
+            "venue": "26, 3048 ",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "H. Chernoff"
+            ],
+            "title": "The Annals of Mathematical Statistics 23",
+            "venue": "493 ",
+            "year": 1952
+        },
+        {
+            "authors": [
+                "A. Vitanov",
+                "F. Dupuis",
+                "M. Tomamichel",
+                "R. Renner",
+                "IEEE Trans"
+            ],
+            "title": "Inf",
+            "venue": "Theory 59, 2603 ",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "Z.-W. Yu",
+                "X.-L. Hu",
+                "C. Jiang",
+                "H. Xu",
+                "X.-B. Wang"
+            ],
+            "title": "Sci",
+            "venue": "Rep. 9, 3080 ",
+            "year": 2019
+        },
+        {
+            "authors": [
+                "H. Xu",
+                "Z.-W. Yu",
+                "C. Jiang",
+                "X.-L. Hu",
+                "X.-B. Wang"
+            ],
+            "title": "Phys",
+            "venue": "Rev. A 101, 042330 ",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "C. Jiang",
+                "X.-L. Hu",
+                "Z.-W. Yu",
+                "X.-B. Wang"
+            ],
+            "title": "New J",
+            "venue": "Phys. 23, 063038 ",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "V. Burenkov",
+                "H. Xu",
+                "B. Qi",
+                "R.H. Hadfield",
+                "H.-K. Lo",
+                "J. Appl"
+            ],
+            "title": "Phys",
+            "venue": "113, 213102 ",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "S. Chen",
+                "L. You",
+                "W. Zhang",
+                "X. Yang",
+                "H. Li",
+                "L. Zhang",
+                "Z. Wang",
+                "X. Xie"
+            ],
+            "title": "Opt",
+            "venue": "Express 23, 10786 ",
+            "year": 2015
+        },
+        {
+            "authors": [
+                "Y. Liu",
+                "T.-Y. Chen",
+                "L.-J. Wang",
+                "H. Liang",
+                "G.-L. Shentu",
+                "J. Wang",
+                "K. Cui",
+                "H.-L. Yin",
+                "N.-L. Liu",
+                "L. Li",
+                "X. Ma",
+                "J.S. Pelc",
+                "M.M. Fejer",
+                "C.-Z. Peng",
+                "Q. Zhang",
+                "J.-W. Pan"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Lett. 111, 130502 ",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "L.C. Comandar",
+                "M. Lucamarini",
+                "B. Fr\u00f6hlich",
+                "J.F. Dynes",
+                "A.W. Sharpe",
+                "S.W.-B. Tam",
+                "Z.L. Yuan",
+                "R.V. Penty",
+                "A.J. Shields"
+            ],
+            "title": "Nat",
+            "venue": "Photonics 10, 312 ",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "L.-M. Duan",
+                "M.D. Lukin",
+                "J.I. Cirac",
+                "P. Zoller"
+            ],
+            "title": "Nature 414",
+            "venue": "413 ",
+            "year": 2001
+        },
+        {
+            "authors": [
+                "P.C. Humphreys",
+                "N. Kalb",
+                "J.P.J. Morits",
+                "R.N. Schouten",
+                "R.F.L. Vermeulen",
+                "D.J. Twitchen",
+                "M. Markham",
+                "R. Hanson"
+            ],
+            "title": "Nature 558",
+            "venue": "268 ",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "H.-T. Zhu",
+                "Y. Huang",
+                "H. Liu",
+                "P. Zeng",
+                "M. Zou",
+                "Y. Dai",
+                "S. Tang",
+                "H. Li",
+                "L. You",
+                "Z. Wang",
+                "Y.-A. Chen",
+                "X. Ma",
+                "T.-Y. Chen",
+                "J.-W. Pan"
+            ],
+            "title": "Phys",
+            "venue": "Rev. Lett. 130, 030801 ",
+            "year": 2023
+        }
+    ],
+    "sections": [
+        {
+            "text": "Twin-field quantum key distribution (TF-QKD) has emerged as a promising solution for practi-\ncal quantum communication over long-haul fiber. However, previous demonstrations on TF-QKD\nrequire the phase locking technique to coherently control the twin light fields, inevitably com-\nplicating the system with extra fiber channels and peripheral hardware. Here we propose and\ndemonstrate an approach to recover the single-photon interference pattern and realize TF-QKD\nwithout phase locking. Our approach separates the communication time into reference frames and\nquantum frames, where the reference frames serve as a flexible scheme for establishing the global\nphase reference. To do so, we develop a tailored algorithm based on fast Fourier transform to ef-\nficiently reconcile the phase reference via data post-processing. We demonstrate no-phase-locking\nTF-QKD from short to long distances over standard optical fibers. At 50-km standard fiber, we\nproduce a high secret key rate (SKR) of 1.27 Mbit/s, while at 504-km standard fiber, we obtain\nthe repeater-like key rate scaling with a SKR of 34 times higher than the repeaterless secret key\ncapacity. Our work provides a scalable and practical solution to TF-QKD, thus representing an\nimportant step towards its wide applications.\nIntroduction.\u2014Quantum key distribution (QKD) can provide information-theoretically secure keys among distant parties [1] and it has become an indispensable cryptographic primitive in the upcoming quantum era [2, 3]. Due to the loss of photons in their transmission, the point-to-point secret key capacity (SKC0) of a channel without the quantum repeater scales linearly O(\u03b7) with the channel transmission [4\u20136]. The twin-field (TF) QKD protocol [7], an efficient version of measurement-device-independent QKD [8], can greatly enhance the transmission distance by achieving a repeater-like rate-loss scaling of O( \u221a \u03b7) with current available technology. Consequently, TF-QKD has been studied extensively in theory [9\u201312] and experiment [13\u201322]. These efforts make the long-haul fiber network within reach. Moreover, its measurement-device-independent advantage can remove trusted nodes from the networks, thus granting a security boost over deployed quantum communication network [23\u201325].\nIn practice, however, TF-QKD is phase-sensitive [7], which normally requires sufficiently long coherence time for two independent laser sources. In previous TF-QKD realizations,\n\u2217 Equal contribution.\nsuch stringent requirement has been fulfilled by phase-locking laser sources using the optical phase-lock loop [13, 15, 18, 22], the time-frequency dissemination [14, 19\u201321] or the injection locking [16] techniques. These approaches require extra servo channels to disseminate the reference light and peripheral hardware to perform the locking, which could potentially hinder the wide deployment of TF-QKD in network settings. Furthermore, the future quantum network may involve users with free-space link [26, 27] or with integrated photonic chip [28\u201330]. However, the servo channel is hard to establish in the free-space link, and the phase-locking components are challenging to be integrated on chip.\nIn this work, we propose and demonstrate an approach to realize TF-QKD without phase locking. We alternate the communication period into quantum frame (Q-frame) and reference frame (R-frame), and use the R-frame to provide a phase reference for the Q-frame by reconciling the signals via data post-processing. We develop an algorithm based on the fast Fourier transform (FFT) to efficiently track the frequency and the phase fluctuation. By doing so, we are able to recover the interference pattern with 259 photon detections in a duration of 7 \u00b5s, yielding an interference error rate (ER) of 2.32%, or an ER of 3.74% with 159 photon detections in a duration of 11 \u00b5s. Moreover, we derive an analytical model to study the sources of phase fluctuation and provide a guideline to optimize the experimental parameters in the aspect of the ratio of the Q-frame to the R-frame. To test our approach, we build a TF-QKD setup without any phase locking (or phase compensation) at the transmitters (or receiver), and demonstrate TF-QKD from 50- to 504-km of standard fiber channels. A secret key rate (SKR) of 2.05 bit/s is generated over 504-km standard fiber (96.8 dB loss or equivalent to 605-km ultra low loss fiber) in the finite-size regime, which is 34 times higher than SKC0. At 50-km standard fiber, we are able to produce 1.27 Mbit/s secret keys.\nNo-phase-locking scheme.\u2014The phase difference of two light fields \u03a6(t) evolves as,\n\u03a6(t) = 2\u03c0\u03bd0t+ \u03d50 +\u2206\u03d5(t), (1)\nwhere \u03bd0, \u03d50 and \u2206\u03d5(t) denote the beat-note frequency, the initial phase and the phase fluctuation respectively. Both \u03bd0 and \u03d50 are constant and can be estimated via the data post-processing, whereas \u2206\u03d5(t) includes the intrinsic phase noise of the laser sources and the fluctuation introduced in the channel transmission.\nTo perform the parameter estimation, we propose to supplement the quantum pulses\n(Q-frame) with strong R-frame. The R-frame is used to reconcile the phase in the Q-frame through post-processing the photon detection events. As shown in Fig. 1, the detection probabilities of two detectors are correlated with the interference pattern. In light of this, we develop an FFT-based algorithm to reconstruct the frequency spectrum (see Supplementary Section II [31]). From the frequency spectrum, we choose the component with the largest amplitude within a certain frequency range. Then, \u03bd0 is the frequency of the component and \u03d50 can be obtained from the angle of the complex amplitude of the component. Here to reduce the estimation error, we propose to extend the detection series with padding zeros. This can greatly narrow the distribution of the frequency estimation and decrease the frequency deviation, thus enhancing the frequency estimation precision (see Supplementary Fig. 1). Moreover, we duplex the detection events to use them more efficiently, i.e., each R-frame is used twice by the two neighbour Q-frame. This doubles the available photon events and reduces the error rate when the photon count rate is low.\nAccording to the estimated \u03bd\u03020 and \u03d5\u03020, the ER can be further evaluated. When single photon events arrival time t satisfy (a) cos ( \u03a6\u0302(t) ) \u2265 cos (2\u03c0/M) or (b) cos ( \u03a6\u0302(t) ) \u2264 cos ((M \u2212 2)\u03c0/M), a valid event is counted, where \u03a6\u0302(t) = 2\u03c0\u03bd\u03020t+ \u03d5\u03020 is the estimated phase difference andM is the number of discrete phase slices in the post-selection. If condition (a) ((b)) is satisfied and D0 (D1) clicks, it is counted as a correct event. Otherwise, if condition (a) ((b)) is satisfied and D1 (D0) clicks, it is counted as an error event.\nThe ER originates from the difference \u03a6(t) \u2212 \u03a6\u0302(t) = 2\u03c0(\u03bd0 \u2212 \u03bd\u03020)t + (\u03d50 \u2212 \u03d5\u03020) + \u2206\u03d5(t). The third term (mainly contributed by the phase noise of laser source and the fiber length fluctuation) is a random noise, its contribution can be analyzed in theory and characterized in experiment. To do so, we derive an analytical model to study the phase noise/fluctuation and provide a guideline to optimize the experimental parameters (see Supplementary Section I). The phase fluctuation can be analyzed in time domain [7, 14, 16] or frequency domain [20]. Here, we use the frequency-domain power spectral density (PSD) to characterize the random noise. By doing so, we are able to calculate the fluctuation in variable interval \u03c4 and relate it to the ER. Furthermore, the phase noise of the laser sources is also taken into consideration in our model. This was often ignored in the previous analysis for the phase-locked TFQKD schemes [7, 14, 16]. Nonetheless, as the linewidth of the laser source increases, it will dominate the phase fluctuation. Even for the phase-locked laser sources, their phase noise replicate the one of the reference source at best, which can not be ignored. By including the phase noise, our model can properly analyze the linewidth requirement for the laser sources for both phase-locking and no-phase-locking TF-QKD.\nSetup.\u2014To implement the no-phase-locking TF-QKD scheme, we build an experimental setup as shown in Fig. 2. Alice and Bob transmit their quantum light to Charlie\u2019s measurement site via symmetric quantum channels, constituted by standard telecom fiber spools (G.652). No servo link is used for the dissemination of a third phase reference laser. Each user holds a commercial external cavity laser diode (RIO PLANEX) with a Lorentzian linewidth of 5 kHz and the wavelength is set at 1550.12 nm, but with a slight frequency mismatch of about 100 MHz. The frequency drifts slowly to an extent of 30 MHz over one day (see Supplementary Section VI), which can be tracked by the frequency estimation algorithm.\nThe continuous light is encoded into two frames by three cascaded intensity modulators. Due to the fact that two lasers are heterodyned, no modulation in intensity and phase is required for the R-frame to resolve the phase ambiguity as in ref. [14, 16]. The Q-frame is used to generate quantum signals following the 3-intensity sending-or-not-sending (SNS) TF-QKD protocol [35] (see Supplementary Section VII for full descriptions) with a clock rate of 1.25 GHz. Two cascaded phase modulators are used for 16-level random phase modulation covering 2\u03c0 range. One intensity modulator creates the two frames and modulates the weak decoy intensity (if the intensity contrast is over the capability of one modulator, the weak\ndecoy is modulated by another modulator instead, see Supplementary Table III), and the other two shape the pulses in Q-frame and extinct vacuum pulses jointly. Such configuration allow us to apply bias control on the first intensity modulator to stabilize the signal and decoy intensities.\nLight from Alice and Bob interfere at Charlie\u2019s 50:50 beam splitter with the same polarization as the output of the polarization beamsplitter is polarization-maintaining. This transforms the polarization variation into intensity variation. We use two electrical polarization controllers to rotate the polarization at 5 Hz so as to keep the photon rates at the other port of the polarization beamsplitter constant (5% of total photon rate). Moreover, the photons detected by D2 (D3) are accumulated to track the delay drift of the fiber every 5 s. The transition edge from the Q-frame to the R-frame is used as the time mark. These are sufficient to compensate the polarization and delay drift caused by the indoor fiber spools.\nThe interference output is detected by two superconducting nanowire single photon detectors (SNSPD). We use two types of SNSPDs, SNSPD#1 and #2, to perform the measurements (see Supplementary Section VIII for the characterization). The detected photon\nevents are registered by a time tagging unit and then processed by a computer. The frequency \u03bd\u03020 and initial phase \u03d5\u03020 of the beat note can be both estimated by the FFT-based algorithm. The valid arriving time t in X basis should satisfy:\u2223\u2223\u2223cos(2\u03c0\u03bd\u03020t+ \u03d5\u03020 + (\u03d5a \u2212 \u03d5b))\u2223\u2223\u2223 \u2265 cos (\u03c0/16), (2) where \u03d5a (\u03d5b) is phase modulated by the users and announced publicly in the post-processing. We also use actively odd-parity pairing method [36, 37] in the error rejection through twoway classical communication, significantly reducing the bit-flip error rate.\nResults.\u2014We firstly analyze the system performance with the no-phase-locking scheme quantitatively. The phase noise PSD of the laser has a -20 dB/decade slope, contributed by the white frequency noise. The phase noise PSD introduced by the fiber spool is also measured (see Supplementary Section III and IV), which is mainly distributed below the frequency 100 kHz and increase slightly with the fiber length. With these two results, the phase fluctuation in the Q-frame can be calculated accordingly. The fluctuation is converted to the ER and averaged over the duration of the Q-frame.\nTo characterize the ER with different TQ and TR, we use the same setup as in Fig. 2, except that no modulation is applied. We plot measured ER as a function of TR from 0.1 \u00b5s to 50 \u00b5s at a fixed TQ of 1 \u00b5s with different photon count rates in Fig. 3a. A higher count rate enables accurate frequency estimation at smaller TR, thus lowering the minimum ER. The simulation result excluding the estimation error is also plotted, assuming that \u03bd\u03020 = \u03bd0 and \u03d5\u03020 = \u03d50+\u2206\u03d5(t) (see Supplementary Section I). Based on these results and the constraint of the experimental system, we choose TR and TQ to be 4.9152 and 1.6384 \u00b5s respectively. The ER contributes to the quantum bit error rate (QBER) of phase (X) basis in SNS-TF-QKD protocol. As another important implication of our theoretical model, we can determine the linewidth requirement for different selected TQ and plot the simulated results in Fig. 3b. As an example, to achieve a maximum channel loss of 66 dB in our system, the laser linewidth should be narrower than 35.5 kHz when TQ = 1 \u00b5s, resulting in an ER of 11%.\nWith the performance analysis and parameter optimization, we perform TF-QKD experiments from 50 to 504-km standard fiber spools with different detectors and finite sizes (Supplementary Section VIII). The channel is symmetrical and the total channel loss amounts to 9.6, 38.4, 56.8, 72.1 and 96.8 dB respectively. The results are presented in Fig. 4. With SNSPD#1, we measure the dynamic range to be 44 dB when the count rate of the R-frame\nis 24 Mcount/s and the duty cycle (i.e., the ratio of Q-frame) is 1/4. That is to say the dynamic dark count rate [38, 39] is about 1000 count/s, which is the dominant noise. To increase the signal-to-noise ratio, we apply a gating window of 200 ps, resulting in a dark count probability of 2 \u00d7 10\u22127. With less than one hour of continuous run, we achieve a finite-size SKR of 1.25\u00d7 10\u22127 bit/pulse, or 39 bit/s at 380-km standard fiber. At the short end, we increase the duty cycle of the Q-frame to 3/4 to enhance the per-second key rate. And it enable a secret key rate of 1.27 Mbit/s at 50-km standard fiber channel with a small number of sending pulses of 1010.\nTo generate positive key rates at longer distance, we replace the detectors with SNSPD#2, which has a dynamic range over 58 dB. Furthermore, we keep the detected count rate in R-frame as low as possible (8 Mcounts/s per detector) and use a narrower gating window of 100 ps. With these upgrades, the scattering noise in fiber becomes dominant and results in a noise probability of 1.6 \u00d7 10\u22128. This is an order of magnitude of improvement over SNSPD#1, allowing us to achieve a SKR of 6.56 \u00d7 10\u22129 bit/pulse or 2.05 bit/s at 504-km standard optical fiber.\nDiscussion.\u2014In summary, we have proposed and demonstrated the no-phase-locking scheme for TF-QKD. Our scheme does not only remove the service channels for the dissemination of the reference light, but also does not needs active phase compensation setup at the measurement site. Such features greatly simplify the setup to match the one of measurement-device-independent QKD systems [40, 41], with the ability to establish global phase reference nonetheless. We also show that commercial kilohertz linewidth semiconductor lasers are sufficient to perform TF-QKD with our scheme. Despite the simplification of setup with our scheme, the phase-sensitive ER is 2.69% for a channel distance of 504 km (Supplementary Table I) which is comparable to the state-of-art TF-QKD experiment with\nphase locking [18, 21, 22]. To achieve further transmission distance with our scheme, one could increase the clock rate and develop more advanced algorithm to lower the required counts in the recovery of the carrier, which helps to reduce the influence of scattering noise. Overall, we believe our scheme provides a practical solution to TF-QKD network and the phase recovery algorithm is applicable to other phase-sensitive applications [42, 43].\nWhile preparing the manuscript, we notice two related works which demonstrate different approaches [44, 45] to solve the phase-locking issue. Comparing to Ref. [44], the setup has similarities, but the protocols are different. Our work uses the twin-field protocol, but Ref. [44] employs the so-called mode-pairing protocol. The mode-pairing protocol is a postpairing approach by postselecting time slots within the coherence time of the laser source. The post-pairing distance for time slots has to increase with the transmission loss, which leads to a large interference error due to the limited coherence time of the laser. As a result, our system endures higher transmission loss (96.8 dB) comparing to Ref. [44] (66 dB). This can be compensated using ultra-stable lasers which have a much longer coherence time [45], but adding more complexity and cost. In contrast, we demonstrate an efficient method to reconcile the phase reference in TF-QKD protocol. Our approach has no stringent requirements for the laser source, but it requires the estimation of full phase information which may need further software processing and sufficient photon counts.\nAcknowledgement.\u2014 This work was supported by National Natural Science Foundation of China (Grant No. 62031024, No. 12204467), Innovation Program for Quantum Science and Technology (2021ZD0300300), Anhui Initiative in Quantum Information Technologies, Shanghai Municipal Science and Technology Major Project (Grant No. 2019SHZDZX01), Shanghai Science and Technology Development Funds (22JC1402900) and Shanghai Academic/Technology Research Leader (21XD1403800). Y.L. acknowledges support from the Taishan Scholar Program of Shandong Province. F. Xu acknowledges the support from the Tencent Foundation.\n[1] C. H. Bennett and G. Brassard, in Proceedings of the IEEE International Conference on\nComputers, Systems, and Signal Processing (1984) pp. 175\u2013179.\n[2] F. Xu, X. Ma, Q. Zhang, H.-K. Lo, and J.-W. Pan, Rev. Mod. Phys. 92, 025002 (2020).\n[3] S. Pirandola, U. L. Andersen, L. Banchi, M. Berta, D. Bunandar, R. Colbeck, D. Englund,\nT. Gehring, C. Lupo, C. Ottaviani, J. L. Pereira, M. Razavi, J. S. Shaari, M. Tomamichel,\nV. C. Usenko, G. Vallone, P. Villoresi, and P. Wallden, Adv. Opt. Photon. 12, 1012 (2020).\n[4] S. Pirandola, R. Garc\u0301\u0131a-Patro\u0301n, S. L. Braunstein, and S. Lloyd, Phys. Rev. Lett. 102, 050503\n(2009).\n[5] M. Takeoka, S. Guha, and M. M. Wilde, Nat. Commun. 5, 5235 (2014).\n[6] S. Pirandola, R. Laurenza, C. Ottaviani, and L. Banchi, Nat. Commun. 8, 15043 (2017).\n[7] M. Lucamarini, Z. L. Yuan, J. F. Dynes, and A. J. Shields, Nature 557, 400 (2018).\n[8] H.-K. Lo, M. Curty, and B. Qi, Phys. Rev. Lett. 108, 130503 (2012).\n[9] X. Ma, P. Zeng, and H. Zhou, Phys. Rev. X 8, 031043 (2018).\n[10] X.-B. Wang, Z.-W. Yu, and X.-L. Hu, Phys. Rev. A 98, 062323 (2018).\n[11] M. Curty, K. Azuma, and H.-K. Lo, npj Quantum Inf. 5, 64 (2019).\n[12] C. Cui, Z.-Q. Yin, R. Wang, W. Chen, S. Wang, G.-C. Guo, and Z.-F. Han, Phys. Rev.\nApplied 11, 034053 (2019).\n[13] M. Minder, M. Pittaluga, G. Roberts, M. Lucamarini, J. Dynes, Z. Yuan, and A. Shields, Nat.\nPhotonics 13, 334 (2019).\n[14] Y. Liu, Z.-W. Yu, W. Zhang, J.-Y. Guan, J.-P. Chen, C. Zhang, X.-L. Hu, H. Li, C. Jiang,\nJ. Lin, T.-Y. Chen, L. You, Z. Wang, X.-B. Wang, Q. Zhang, and J.-W. Pan, Phys. Rev. Lett.\n123, 100505 (2019).\n[15] S. Wang, D.-Y. He, Z.-Q. Yin, F.-Y. Lu, C.-H. Cui, W. Chen, Z. Zhou, G.-C. Guo, and Z.-F.\nHan, Phys. Rev. X 9, 021046 (2019).\n[16] X.-T. Fang, P. Zeng, H. Liu, M. Zou, W. Wu, Y.-L. Tang, Y.-J. Sheng, Y. Xiang, W. Zhang,\nH. Li, Z. Wang, L. You, M.-J. Li, H. Chen, Y.-A. Chen, Q. Zhang, C.-Z. Peng, X. Ma, T.-Y.\nChen, and J.-W. Pan, Nat. Photonics 14, 422 (2020).\n[17] X. Zhong, J. Hu, M. Curty, L. Qian, and H.-K. Lo, Phys. Rev. Lett. 123, 100506 (2019).\n[18] M. Pittaluga, M. Minder, M. Lucamarini, M. Sanzaro, R. I. Woodward, M.-J. Li, Z. Yuan,\nand A. J. Shields, Nat. Photonics 15, 530 (2021).\n[19] J.-P. Chen, C. Zhang, Y. Liu, C. Jiang, W.-J. Zhang, Z.-Y. Han, S.-Z. Ma, X.-L. Hu, Y.-H. Li,\nH. Liu, F. Zhou, H.-F. Jiang, T.-Y. Chen, H. Li, L.-X. You, Z. Wang, X.-B. Wang, Q. Zhang,\nand J.-W. Pan, Nat. Photonics 15, 570 (2021).\n[20] C. Clivati, A. Meda, S. Donadello, S. Virz\u0300\u0131, M. Genovese, F. Levi, A. Mura, M. Pittaluga,\nZ. Yuan, A. J. Shields, M. Lucamarini, I. P. Degiovanni, and D. Calonico, Nat. Commun. 13,\n157 (2022).\n[21] J.-P. Chen, C. Zhang, Y. Liu, C. Jiang, D.-F. Zhao, W.-J. Zhang, F.-X. Chen, H. Li, L.-X.\nYou, Z. Wang, Y. Chen, X.-B. Wang, Q. Zhang, and J.-W. Pan, Phys. Rev. Lett. 128, 180502\n(2022).\n[22] S. Wang, Z.-Q. Yin, D.-Y. He, W. Chen, R.-Q. Wang, P. Ye, Y. Zhou, G.-J. Fan-Yuan, F.-X.\nWang, W. Chen, Y.-G. Zhu, P. V. Morozov, A. V. Divochiy, Z. Zhou, G.-C. Guo, and Z.-F.\nHan, Nat. Photon. 16, 154 (2022).\n[23] M. Peev, C. Pacher, R. Alle\u0301aume, C. Barreiro, J. Bouda, W. Boxleitner, T. Debuisschert,\nE. Diamanti, M. Dianati, J. Dynes, S. Fasel, S. Fossier, S. Fu\u0308rst, J.-D. Gautie, O. Gay,\nN. Gisin, P. Grangier, A. Happe, Y. Hasani, M. Hentschel, H. Hu\u0308bel, G. Humer, T. La\u0308nger,\nM. Legre\u0301, R. Lieger, J. Lodewyck, T. Loru\u0308nser, N. Lu\u0308tkenhau, A. Marhold, T. Matyus,\nO. Maurhart, L. Monat, S. Nauerth, J.-B. Page, A. Poppe, E. Querasser, G. Ribordy, S. Robyr,\nL. Salvail, A. Sharpe, P. Trinkler, R. Tualle-Brouri, F. Vannel, N. Walenta, H. Weier, H. We-\ninfurter, I. Wimberger, Z. Yuan, H. Zbinden, and A. Zeilinger, New J. Phys. 11, 075001\n(2009).\n[24] M. Sasaki, M. Fujiwara, H. Ishizuka, W. Klaus, K. Wakui, M. Takeoka, S. Miki, T. Yamashita,\nZ. Wang, A. Tanaka, K. Yoshino, Y. Nambu, S. Takahashi, A. Tajima, A. Tomita, T. Domeki,\nT. Hasegawa, Y. Sakai, H. Kobayashi, T. Asai, K. Shimizu, T. Tokura, T. Tsurumaru, M. Mat-\nsui, T. Honjo, K. Tamaki, H. Takesue, Y. Tokura, J. Dynes, A. Dixon, A. Sharpe, Z. Yuan,\nA. Shields, S. Uchikoga, M. Legre\u0301, S. Robyr, P. Trinkler, L. Monat, J.-B. Page, G. Ribordy,\nA. Poppe, A. Allacher, O. Maurhart, T. La\u0308nger, M. Peev, and A. Zeilinger, Opt. Express 19,\n10387 (2011).\n[25] Y.-A. Chen, Q. Zhang, T.-Y. Chen, W.-Q. Cai, S.-K. Liao, J. Zhang, K. Chen, J. Yin, J.-\nG. Ren, Z. Chen, S.-L. Han, Q. Yu, K. Liang, F. Zhou, X. Yuan, M.-S. Zhao, T.-Y. Wang,\nX. Jiang, L. Zhang, W.-Y. Liu, Y. Li, Q. Shen, Y. Cao, C.-Y. Lu, R. Shu, J.-Y. Wang, L. Li,\nN.-L. Liu, F. Xu, X.-B. Wang, C.-Z. Peng, and J.-W. Pan, Nature 589, 214 (2021).\n[26] G. Vallone, D. Bacco, D. Dequal, S. Gaiarin, V. Luceri, G. Bianco, and P. Villoresi, Phys.\nRev. Lett. 115, 040502 (2015).\n[27] Y. Cao, Y.-H. Li, K.-X. Yang, Y.-F. Jiang, S.-L. Li, X.-L. Hu, M. Abulizi, C.-L. Li, W. Zhang,\nQ.-C. Sun, W.-Y. Liu, X. Jiang, S.-K. Liao, J.-G. Ren, H. Li, L. You, Z. Wang, J. Yin, C.-Y.\nLu, X.-B. Wang, Q. Zhang, C.-Z. Peng, and J.-W. Pan, Phys. Rev. Lett. 125, 260503 (2020).\n[28] C. Ma, W. D. Sacher, Z. Tang, J. C. Mikkelsen, Y. Yang, F. Xu, T. Thiessen, H.-K. Lo, and\nJ. K. Poon, Optica 3, 1274 (2016).\n[29] P. Sibson, C. Erven, M. Godfrey, S. Miki, T. Yamashita, M. Fujiwara, M. Sasaki, H. Terai,\nM. G. Tanner, C. M. Natarajan, R. H. Hadfield, J. L. O\u2019Brien, and M. G. Thompson, Nat.\nCommun. 8, 13984 (2017).\n[30] K. Wei, W. Li, H. Tan, Y. Li, H. Min, W.-J. Zhang, H. Li, L. You, Z. Wang, X. Jiang, T.-Y.\nChen, S.-K. Liao, C.-Z. Peng, F. Xu, and J.-W. Pan, Phys. Rev. X 10, 031030 (2020).\n[31] See Supplemental Material at apslink for a theoretical analysis of error, detailed description\nof the protocol, and the relevant experimental data, which also includes Refs. [32-34].\n[32] S. Camatel and V. Ferrero, J. Light. Technol. 26, 3048 (2008).\n[33] H. Chernoff, The Annals of Mathematical Statistics 23, 493 (1952).\n[34] A. Vitanov, F. Dupuis, M. Tomamichel, and R. Renner, IEEE Trans. Inf. Theory 59, 2603\n(2013).\n[35] Z.-W. Yu, X.-L. Hu, C. Jiang, H. Xu, and X.-B. Wang, Sci. Rep. 9, 3080 (2019).\n[36] H. Xu, Z.-W. Yu, C. Jiang, X.-L. Hu, and X.-B. Wang, Phys. Rev. A 101, 042330 (2020).\n[37] C. Jiang, X.-L. Hu, Z.-W. Yu, and X.-B. Wang, New J. Phys. 23, 063038 (2021).\n[38] V. Burenkov, H. Xu, B. Qi, R. H. Hadfield, and H.-K. Lo, J. Appl. Phys. 113, 213102 (2013).\n[39] S. Chen, L. You, W. Zhang, X. Yang, H. Li, L. Zhang, Z. Wang, and X. Xie, Opt. Express\n23, 10786 (2015).\n[40] Y. Liu, T.-Y. Chen, L.-J. Wang, H. Liang, G.-L. Shentu, J. Wang, K. Cui, H.-L. Yin, N.-L.\nLiu, L. Li, X. Ma, J. S. Pelc, M. M. Fejer, C.-Z. Peng, Q. Zhang, and J.-W. Pan, Phys. Rev.\nLett. 111, 130502 (2013).\n[41] L. C. Comandar, M. Lucamarini, B. Fro\u0308hlich, J. F. Dynes, A. W. Sharpe, S. W.-B. Tam, Z. L.\nYuan, R. V. Penty, and A. J. Shields, Nat. Photonics 10, 312 (2016).\n[42] L.-M. Duan, M. D. Lukin, J. I. Cirac, and P. Zoller, Nature 414, 413 (2001).\n[43] P. C. Humphreys, N. Kalb, J. P. J. Morits, R. N. Schouten, R. F. L. Vermeulen, D. J. Twitchen,\nM. Markham, and R. Hanson, Nature 558, 268 (2018).\n[44] H.-T. Zhu, Y. Huang, H. Liu, P. Zeng, M. Zou, Y. Dai, S. Tang, H. Li, L. You, Z. Wang,\nY.-A. Chen, X. Ma, T.-Y. Chen, and J.-W. Pan, Phys. Rev. Lett. 130, 030801 (2023).\n[45] L. Zhou, J. Lin, Y.-M. Xie, Y.-S. Lu, Y. Jing, H.-L. Yin, and Z. Yuan, Phys. Rev. Lett. 130,\n250801 (2023).\nSupplementary for \u201cTwin-field quantum key distribution without\nphase locking\u201d\nI. INTERFERENCE ERROR RATE CALCULATION\nHere we present the theoretical model for the calculation of the interference error rate introduced by the phase fluctuation. The emitted laser electric field undergoing phase fluctuations at Alice\u2019s (Bob\u2019s) side can be written as\nEA(B)(t) = E0 exp { i\u03a6A(B)(t) } ,\n\u03a6A(B)(t) = \u222b t 0 2\u03c0\u03bdA(B)(t \u2032)dt\u2032 + \u03d50A(B),\n(1)\nwhere \u03a6A(B)(t), \u03bdA(B)(t) and \u03d50A(B) are the phase, the frequency and the initial phase of the laser, \u03bdA(B)(t) is a stochastic process representing the frequency noise of the laser.\nAfter transmitting through the fiber, the fluctuation of the fiber length and refractive index changes the optical distance, and therefore changes the phase of the light field. Note that the light right before interference at time t is emitted at time t \u2212 LA(B)(t)/c, where LA(B)(t) is the optical distance through which the photon arriving at time t passes and c is the speed of light in vacuum. We assume LA(B)(t) to be a Gaussian stationary process. The phase change of the laser is the integral of frequency within the time \u03c4 :\n\u03a6A(B)(t+ \u03c4)\u2212 \u03a6A(B)(t)\n= \u222b t+\u03c4\u2212LA(B)(t+\u03c4)/c t\u2212LA(B)(t)/c 2\u03c0\u03bdA(B)(t \u2032)dt\u2032\n= \u222b t+\u03c4\u2212LA(B)(t+\u03c4)/c t\u2212LA(B)(t)/c 2\u03c0\u03b4\u03bdA(B)(t \u2032)dt\u2032 + 2\u03c0\u03bd0A(B) \u00b7 (\u03c4 \u2212 LA(B)(t+ \u03c4)\u2212 LA(B)(t) c ),\n(2)\nwhere \u03b4\u03bdA(B)(t) = \u03bdA(B)(t)\u2212 \u2329 \u03bdA(B) \u232a . We assume \u03b4\u03bdA(B)(t) is a zero-mean wide-sense station-\nary process. \u03bd0A(B) = \u2329 \u03bdA(B) \u232a and \u2329 \u03bdA(B) \u232a is the ensemble average of \u03bdA(B). It is the result of treating the frequency modulation noise \u03b4\u03bdA(B)(t) as the source of the phase noise. And the phase noise can be related to the frequency noise in the following form:\n2\u03c0\u03bd0A(B)t+ \u03d5A(B)(t) = \u222b t 0 2\u03c0\u03bdA(B)(t \u2032)dt\u2032 + \u03d50A(B). (3)\nBy substituting Equation 1 and 2 into above equation, we can get phase fluctuation at one side:\n\u2206\u03d5A(B)(\u03c4) =\u03d5A(B)(t+ \u03c4)\u2212 \u03d5A(B)(t)\n= \u222b t+\u03c4\u2212LA(B)(t+\u03c4)/c t\u2212LA(B)(t)/c 2\u03c0\u03b4\u03bdA(B)(t \u2032)dt\u2032 \u2212 2\u03c0\u03bd0A(B) LA(B)(t+ \u03c4)\u2212 LA(B)(t) c . (4)\nBy using the Wiener\u2013Khinchin theorem and the Gaussian stationary assumptions, its\nsecond order moment has the following form:\u2329 \u2206\u03d52A(B)(\u03c4) \u232a =4\u03c02\u03c4 2\n\u222b \u221e 0 S\u03b4\u03bdA(B)(f) sinc 2(\u03c0f\u03c4)df\n+4\u03c02\u03bd20A(B)\u03c3 2 LA(B) (\u03c4)\n+2 \u222b \u221e 0 S\u03b4\u03bdA(B)(f) [ 1\u2212 exp ( \u22122\u03c02\u03c32LA(B)(\u03c4)f 2 )] cos (2\u03c0f\u03c4) f 2 df,\n(5)\nwhere S\u03b4\u03bdA(B)(f) is the power spectral density (PSD) of the laser frequency fluctuation \u03b4\u03bdA(B), and \u03c32LA(B)(\u03c4) =\n\u2329( LA(B)(\u03c4)\u2212LA(B)(0)\nc\n)2\u232a LA(B) . S\u03b4\u03bdA(B)(f) and S\u03d5(f) can be obtained from the\nPSD measurement of laser and fiber phase noise accordingly.\nIn the following, we omit the subscript to represent the difference of two sides. Since the noise of Alice\u2019s side and Bob\u2019s side are identical and independent, so the variance of phase fluctuation at time t+ \u03c4 can be calculated:\n\u2329 \u2206\u03d52(\u03c4) \u232a := \u2329 (\u03d5(t+ \u03c4)\u2212 \u03d5(t))2 \u232a = \u2329 \u2206\u03d52A(\u03c4) \u232a + \u2329 \u2206\u03d52B(\u03c4) \u232a (6)\nIn the experiment, we need the R-frame with time interval R = [\u2212TR \u2212 TQ/2,\u2212TQ/2] \u222a [TQ/2, TQ/2 + TR] to estimate \u03d5 as \u03d5\u0302, \u03bd as \u03bd\u0302 and predict the relative phase in the Q-frame Q = [\u2212TQ/2, TQ/2]. The estimation process can be modeled as the following least square optimization problem assuming the estimate of frequency difference is accurate \u03bd\u0302 = \u03bd0 = \u03bd0A \u2212 \u03bd0B :\n1\n2TR \u222b R [ \u03d5\u0302\u2212 \u03d5(t) ]2 dt\n= 1\n2TR \u222b R [( \u03d5(t)\u2212 1 2TR \u222b R \u03d5(t\u2032)dt\u2032 ) + ( 1 2TR \u222b R \u03d5(t\u2032)dt\u2032 \u2212 \u03d5\u0302 )]2 dt\n=\u2206\u03d52 + ( \u03d5\u0304\u2212 \u03d5\u0302 )2 (7)\nwhere \u2206\u03d52 = 1 2TR \u222b R ( \u03d5(t\u2032)\u2212 \u03d5\u0304 )2 dt\u2032 is the time average of variance over R-frame. Note that this is different from the ensemble average of variance \u27e8\u2206\u03d52\u27e9. To exclude the estimation error caused by the estimation algorithm and limited photon counts in the simulation, we need to minimize the above formula. \u03d5\u0302 takes the following value,\n\u03d5\u0302 = \u03d5\u0304 = 1\n2TR \u222b R \u03d5(t\u2032)dt\u2032 (8)\nThe phase fluctuation in the quantum frame (at time t \u2208 Q) is derived as follow:\u2329( \u03d5(t)\u2212 \u03d5\u0302 )2\u232a = 1\n(2TR) \u222b T 0 [\u2329 \u2206\u03d52(t\u2032 + TQ/2 + t) \u232a + \u2329 \u2206\u03d52(t\u2032 + TQ/2\u2212 t) \u232a] dt\u2032\n\u2212 1 (2TR)2 \u222b T 0 [\u2329 \u2206\u03d52(TQ + t \u2032) \u232a + \u2329 \u2206\u03d52(TQ + 2TR \u2212 t\u2032) \u232a + 2 \u2329 \u2206\u03d52(TR \u2212 t\u2032) \u232a] t\u2032dt\u2032\n(9)\nTo this end, we have obtained the phase fluctuation after the estimation of the phase reference. And we can prove that by using neighboring R-frames, better estimation can be obtained. The next step is to transform the phase fluctuation to the interference error rate. The instantaneous interference error rate at time t \u2208 Q is\nERins(t) = M\n4\u03c0\n\u222b 2\u03c0 M\n\u03d5\u0302=\u2212 2\u03c0 M\n\u222b \u221e \u03d5=\u2212\u221e sin2 ( \u03d5 2 ) \u00b7 \u03c1(\u03d5\u0302\u2212 \u03d5; t)d\u03d5d\u03d5\u0302 (10)\nwhere \u03c1(\u03d5\u0302\u2212 \u03d5; t) is the Gaussian probability distribution function of the phase fluctuation and M is the number of discrete phase slices in the post-selection.\n\u03c1(\u03d5\u0302\u2212 \u03d5; t) = 1\u221a 2\u03c0 \u2329( \u03d5(t)\u2212 \u03d5\u0302\n)2\u232a \u00b7 exp \u2212 (\u03d5\u0302\u2212 \u03d5)2\n2 \u2329( \u03d5(t)\u2212 \u03d5\u0302\n)2\u232a  (11)\nFinally, we can obtain the average interference error rate over the Q-frame Q =\n[\u2212TQ/2, TQ/2]:\nER(Q) = 1 TQ \u222b Q M 4\u03c0 \u222b 2\u03c0 M\n\u03d5\u0302=\u2212 2\u03c0 M\n\u222b \u221e \u03d5=\u2212\u221e sin2 ( \u03d5 2 ) \u00b7 \u03c1(\u03d5\u0302\u2212 \u03d5; t)d\u03d5d\u03d5\u0302dt (12)"
+        },
+        {
+            "heading": "II. FFT-BASED ALGORITHM",
+            "text": "In this experiment, Alice and Bob send bright continuous-wave light to Charlie during the R-frame, who will then broadcast the detection result including which detector clicks\nand the arrival time. We estimate the frequency and phase of the interference pattern in the post-processing procedure based on these detection results. The estimation problem can be modeled as following. Supposing that the frequency difference of the two independent laser source of Alice and Bob is \u03bd, and the initial phase difference at time t = t0 is \u03d50, The detection probabilities of the two detector are: P0(t) = 1 + cos\u03a6(t) 2\nP1(t) = 1\u2212 cos\u03a6(t)\n2\n, (13)\nwhere \u03a6(t) = 2\u03c0\u03bd(t \u2212 t0) + \u03d50. To recover \u03a6(t) using the detections of two detectors, we defined P (t) = P0(t)\u2212 P1(t) = cos\u03a6(t). The value of i-th detection event xi is assigned to\n+1 (-1) if D0 (D1) clicks. And the value of the j-th bin Xj = \u2211 x for all the events in the bin. And we perform the FFT algorithm on the sparse signal Xj. From the spectrum, we select the frequency component with the largest amplitude as the estimate of \u03bd\u0302 and its phase in the spectrum as the estimate of \u03d5\u03020. We set the bin width to 100 ps in the experiment.\nDue to the sparsity of Xj, the signal to noise ratio is often limited. And the frequency resolution of the spectrum is limited by the time duration of the sample. As a consequence, when there are enough detection events within the R-frame, the precision of the estimated frequency is mainly affected by the resolution of the spectrum. In this case, further intensifying the reference light to increase effective number of detection is no longer beneficial. Another possible way to reduce the frequency estimation error is to combine a number of neighboring R-frames for a single frequency estimation. However, this method is not always useful as the estimation error of \u03a6(t) will accumulate with time under a fixed estimation error of \u03bd\u0302, thus increasing the interference error rate with more R-frame used.\nWe enhance the spectral resolution by padding Xn with trailing zeros to a suitable length. Fig. S1 shows the comparison of the frequency estimation results using the FFT algorithm with and without padding zeros. By improving the resolution from about 0.1 MHz to 0.01 MHz, the full width at half maximum of the frequency distribution decreases from 0.13 MHz to 0.02 MHz. It is clear that padding zeros greatly narrows the distribution of the frequency estimation and decreases frequency deviation. This in turn verifies that the frequency estimation precision is mainly limited by the frequency resolution of the algorithm instead of our system. Besides, in our experimental implementation, we utilize two neighboring R-frames to obtain one estimate of the differential phase of the R-frame. This doubles the available\nphoton events for the estimation while contributing little to the error accumulation effect, which reduce the error rate with relatively low count rate at longer distance. Moreover, even excluding estimation error (i.e. \u03bd\u0302 = \u03bd0, \u03d5\u0302 = \u03d5\u0304 = 1\n2TR\n\u222b R \u03d5(t \u2032)dt\u2032), the two-sided phase\nfluctuation \u27e8\u2206\u03d52\u27e9two\u2212sided is smaller than that of one-sided \u27e8\u2206\u03d52\u27e9one\u2212sided with the definition:\n\u27e8\u2206\u03d52\u27e9 = 1 TQ \u222b Q \u2329( \u03d5(t)\u2212 \u03d5\u0302 )2\u232a dt. (14)\nWe give the proof in the following. Combining Equation 9 and Equation 14 the average phase fluctuation of two-sided R-frame is:\n\u27e8\u2206\u03d52\u27e9two\u2212sided\n= 1\nTR \u222b TQ 0 \u222b TR 0 \u2329 \u2206\u03d52(t\u2032 + t) \u232a dt\u2032dt\n\u2212 1 (2TR)2 \u222b TQ 0 \u222b TR 0 [\u2329 \u2206\u03d52(TQ + t \u2032) \u232a + \u2329 \u2206\u03d52(TQ + 2TR \u2212 t\u2032) \u232a + 2 \u2329 \u2206\u03d52(TR \u2212 t\u2032) \u232a] t\u2032dt\u2032dt,\n(15)\nwhile the average phase fluctuation of one-sided R-frame is:\n\u27e8\u2206\u03d52\u27e9one\u2212sided\n= 1\nTR \u222b TQ 0 \u222b TR 0 \u2329 \u2206\u03d52(t\u2032 + t) \u232a dt\u2032dt\u2212 1 (TR)2 \u222b TQ 0 \u222b TR 0 \u2329 \u2206\u03d52(TR \u2212 t\u2032) \u232a t\u2032dt\u2032dt.\n(16)\nSo the difference of above two is:\n\u27e8\u2206\u03d52\u27e9one\u2212sided \u2212 \u27e8\u2206\u03d52\u27e9two\u2212sided\n= 1\n(2TR)2 \u222b TQ 0 \u222b TR 0 [\u2329 \u2206\u03d52(TQ + t \u2032) \u232a + \u2329 \u2206\u03d52(TQ + 2TR \u2212 t\u2032) \u232a \u2212 2 \u2329 \u2206\u03d52(TR \u2212 t\u2032) \u232a] t\u2032dt\u2032dt.\n(17)\nIn order to prove the difference is bigger than 0, we only need to prove the core function of integral over Q is bigger than 0:\u222b TR 0 [\u2329 \u2206\u03d52(TQ + t \u2032) \u232a + \u2329 \u2206\u03d52(TQ + 2TR \u2212 t\u2032) \u232a \u2212 2 \u2329 \u2206\u03d52(TR \u2212 t\u2032) \u232a] t\u2032dt\u2032\n> \u222b TR 0 [\u2329 \u2206\u03d52(TQ + t \u2032) \u232a \u2212 \u2329 \u2206\u03d52(TR \u2212 t\u2032) \u232a] t\u2032dt\u2032\n= \u222b TR 0 \u2329 \u2206\u03d52(TQ + t \u2032) \u232a t\u2032dt\u2032 \u2212 \u222b TR 0 \u2329 \u2206\u03d52(TR \u2212 t\u2032) \u232a t\u2032dt\u2032\n> \u222b TR 0 \u2329 \u2206\u03d52(TQ + t \u2032) \u232a t\u2032dt\u2032 \u2212 \u222b TR 0 \u2329 \u2206\u03d52(t\u2032) \u232a t\u2032dt\u2032\n= \u222b TR 0 [\u2329 \u2206\u03d52(TQ + t \u2032) \u232a \u2212 \u2329 \u2206\u03d52(t\u2032) \u232a] t\u2032dt\u2032 >0,\n(18)\nwhere the monotonicity of \u27e8\u2206\u03d52\u27e9 is used in the first and the third inequality, and the rearrangement inequality is used in the second inequality.\nIn conclusion, the improved algorithm can recover the spectrum with higher frequency resolution and higher signal-to-noise ratio. As a result, the interference error rate improves from 27.22% to 3.89%.\n7 9 . 8 7 9 . 9 8 0 . 0 8 0 . 1 8 0 . 20 . 0 0 . 2 0 . 4 0 . 6 0 . 8 1 . 0 Co un t (a .u. )\nF r e q u e n c y ( M H z )\nF F T w i t h p a d d i n g z e r o s F F T w i t h o u t p a d d i n g z e r o s\nFIG. S1. The histogram of frequency estimation results using FFT algorithm with/without padding\nzeros. The results are based on a beat frequency of 80 MHz. The solid lines represent the corre-\nsponding Gaussian fit of the two histograms."
+        },
+        {
+            "heading": "III. LASER PHASE NOISE CHARACTERIZATION",
+            "text": "We adopt the delayed self-heterodyne technique [32] to measure the laser\u2019s phase noise. The setup is shown in Fig. S2. The advantage of this method is that no lengthy fiber (longer than the coherence length of the tested laser) is needed. We use an acoustic optic modulator driven by a 80-MHz sinusoidal signal as the frequency shifter. And the fiber length mismatch is chosen to be 16 m. Therefore a 80-ns delay is introduced, which is enough to ensure that the measured phase noise is mainly contributed by the laser.\nThe measurement is performed on a Keysight E5052B signal source analyzer. The numbers of correlation and trace average are both set to 10. The measured results are shown in Fig. S3. The phase noise PSD of the laser S\u03d5,LD(f) is related to measured PSD by the\nFIG. S2. The phase noise measurement setup for lasers. AOM, acoustic optic modulator; PD,\nphotodiode with a trans-impedance amplifier; SSA, signal source analyzer.\nfollowing equation:\nS\u03d5,LD(f) = S\u03d5(f) \u00b7 1\n4 sin2(\u03c0f\u03c4) (19)\nThe PSDs of the lasers are also plotted in Fig. S3. The PSD of the lasers have a -20 dB/decade slope, indicating that the white frequency noise is the noise source. Therefore, the linewidth of the laser can be simply calculated as \u03b4\u03bd = \u03c0hw. hw is the amplitude of the white frequency noise. The linewidth of Alice\u2019s and Bob\u2019s lasers are 5.9 and 2.4 kHz respectively."
+        },
+        {
+            "heading": "IV. FIBER PHASE NOISE CHARACTERIZATION",
+            "text": "Also, we characterize the phase noise of the fiber channel using the setup as shown in Fig. S4. The light source is a fiber laser with a narrow linewidth <100 Hz. This ensure that the measured phase noise is mainly contributed by the fiber spools. The measured PSDs S\u03d5(f) are plotted in Fig. S5 and can related to \u03c3 2 LA (\u03c4) in Equation 5 in form:\n4\u03c02 ( \u03bd20A\u03c3 2 LA (\u03c4) + \u03bd20B\u03c3 2 LB (\u03c4) ) = 4 \u222b\u221e 0 S\u03d5(f) sin 2(\u03c0f\u03c4)df . The noise below 100 kHz is significantly larger than the one without fiber spools. The noise is mainly contributed by the mechanical vibration of the fibers. As we tap the spool, we observe the noise level below the frequency range of 100 kHz bouncing up and down. However as the total distance increases from 202 km to 380 km, the increase of the noise at frequency > 100 kHz is minor. As a result, the interference error rate slightly increases from 0 to 504 km, as we show in the next section. This can be explained by our analytical model. the weighting function sin2(\u03c0f\u03c4) in the integral acts as a high-pass filter in the frequency domain. In our experiment, \u03c4 is at the microsecond level. The laser has noise level of -90 dBc/Hz @ 1 MHz, while the fiber has noise level of -120 dBc/Hz @ 1 MHz. Therefore, the phase noise contribution from the fiber\n1 E + 3 1 E + 4 1 E + 5 1 E + 6 1 E + 7 - 1 4 0\n- 1 2 0\n- 1 0 0\n- 8 0\n- 6 0\n- 4 0\n- 2 0 0 Ph as e n ois e P SD (d Bc /Hz )\nF r e q u e n c y o f f s e t ( H z )\nA l i c e ' s l a s e r P S D B o b ' s l a s e r P S D A l i c e ' s m e a s u r e d P S D B o b ' s m e a s u r e d P S D\nFIG. S3. The phase noise PSD for lasers. The PSD of the lasers S\u03d5,LD(f) (red and blue lines) are calculated from the measured PSD S\u03d5(f) (green and black lines) using the setup in Fig. S2. The white frequency noise PSD is used to fit the data in the frequency range of 100 kHz to 10 MHz.\nis minor in our error rate result.\nV. INTERFERENCE ERROR RATE CHARACTERIZATION\nIn order to analyze the sources of the interference error rate reported in the Main Text\nand validate our theoretical analysis, we perform series of tests under different conditions.\nFirst, we use a self-heterodyne setup as in Fig. S6 to characterize the error introduced by our fast-Fourier-transform-based algorithm as the phase fluctuations contributed by the source and the fiber channel are negligible in this case. Using the no-phase-locking scheme described in the Main Text, the total error rate is measured to be 1.66% with a count rate\nFIG. S4. The phase noise measurement setup for fiber spools. The setup is similar to the one\nfor characterizing laser source, except that lengthy fiber spools are inserted in the Mach-Zehnder\ninterferometer and a lower noise laser (linewidth <100 Hz) is used.\n1 E + 3 1 E + 4 1 E + 5 1 E + 6 1 E + 7\n- 1 4 0\n- 1 2 0\n- 1 0 0\n- 8 0\n- 6 0\n- 4 0\nPh as\ne n ois\ne P SD\n(d Bc\n/Hz )\nF r e q u e n c y o f f s e t ( H z )\n0 k m 2 0 2 k m 3 0 2 k m 3 8 0 k m 2 0 2 k m w / o c o v e r\nFIG. S5. The phase noise results for fiber spools. The bare fiber spools used in the experiment are\ncovered with foams. One set of spools without any cover are also measured for comparison. The\nlaser source used in the measurement has a linewidth <100 Hz.\nof 24 Mcount/s per detector.\nFIG. S6. The error rate measurement setup for a single laser. The VOA is used to attenuate the\nlight to single photon level and to balance the loss of the Mach-Zehnder interferometer. VOA,\nvariable optical attenuator; SNSPD, superconducting nanowire single photon detector.\nWe use the same setup as in figure 2 in the Main Text to characterize the error rate of two lasers, except that no modulation is applied. In the experiment, TR and TQ are 4.9152 and 1.6384 \u00b5s respectively. As shown in Tab. S1, the count rate is 24 Mcount/s for each detector. The error rate of two lasers increases to 2.55%. And the fiber channel with different lengths contribute little to the error rate. Therefore, the phase noise of the sources play a bigger role than the fiber channel in our experiment. And to replicate a more practical scenario, we place one of the laser to a different room. The error rate in this case increases slightly.\nTABLE S1. Interference error rate with different configurations.\nConfiguration Interference error rate One laser + 0-km fiber 1.66 \u00b1 0.02% Two lasers + 0-km fiber 2.55 \u00b1 0.06% Two lasers + 302-km fiber 2.64 \u00b1 0.17% Two lasers + 504-km fiber 2.69 \u00b1 0.18%"
+        },
+        {
+            "heading": "VI. SOURCE FREQUENCY STABILITY TEST",
+            "text": "The beat note frequency can be measured by a PD and a frequency counter. The result is shown in Fig. S7. In the estimation of the beat note frequency, we limit the frequency range in 50 to 200 MHz. The frequency is within the range over days. Somehow, if the frequency drifts out of the range, Alice or Bob could abort the QKD session and recalibrate their wavelength by discussing over the public channel.\n0 5 1 0 1 5 2 0 2 5 3 0\n9 0\n9 5\n1 0 0\n1 0 5\n1 1 0\n1 1 5\n1 2 0 1 2 5 Fre qu en cy (M Hz )\nT i m e ( h )\nFIG. S7. The frequency drift of two unlocked lasers used in our TF-QKD experiment."
+        },
+        {
+            "heading": "VII. THREE-INTENSITY SNS-TF-QKD WITH ACTIVE ODD PARITY PAIR-",
+            "text": "ING PROTOCOL\nThe 3-intensity SNS protocol [10, 35] is implemented by our TF-QKD system, and the actively odd-parity paring (AOPP) method is used to extract the final key [37]. For the completeness of the paper, we simply review the content as following.\nIn this protocol, Alice (Bob) has three sources o, x, y (o\u2032, x\u2032, y\u2032) with intensities \u00b5o = 0, \u00b5x, \u00b5y respectively. Here the sources o, o \u2032 are vacuum sources. In each time window, Alice (Bob) randomly decides whether it is a window that emits pulses from source o (o\u2032) with probability po, or a window that emits pulses from source x (x \u2032) with probability px, or a signal window with probability py = 1 \u2212 po \u2212 px. If it is a signal window, Alice (Bob)\nrandomly chooses the sources o or y (o\u2032 or y\u2032) with probabilities 1\u2212 \u03f5 and \u03f5. For the vacuum pulses in the signal windows, Alice (Bob) denotes them as 0 (1), and for the non-vacuum pulses in the signal windows, Alice (Bob) denotes them as 1 (0).\nIn the data post-processing, for the time windows that Alice and Bob choose the sources x and x\u2032 respectively, Alice and Bob would announce the private phases of the pulse pair and take the following criterion to perform the post-selection:\n1\u2212 | cos(\u03b8A1 \u2212 \u03b8B1 \u2212 \u03c8AB)| \u2264 \u03bb, (20)\nwhere \u03b8A1 and \u03b8B1 are the private phases of Alice\u2019s and Bob\u2019s pulses respectively; \u03c8AB can take an arbitrary value, which can be different from time to time as Alice and Bob like; \u03bb is a small positive value. Denote the number of total pulse pairs sent out that satisfactory Eq. (20) by NX and the number of corresponding error effective events as mX .\nWe denote the number of pulse pairs of source \u03ba\u03b6(\u03ba = o, x, y; \u03b6 = o\u2032, x\u2032, y\u2032) sent out in the whole protocol by N\u03ba\u03b6 , and the total number of one-detector heralded events of source \u03ba\u03b6 by n\u03ba\u03b6 . We define the counting rate of source \u03ba\u03b6 by S\u03ba\u03b6 = n\u03ba\u03b6/N\u03ba\u03b6 , and the corresponding expected value by \u27e8S\u03ba\u03b6\u27e9. With all those definitions, we have\nNoo\u2032 = [p 2 o + 2popy(1\u2212 \u03f5)]N Nox\u2032 = Nxo\u2032 = [po + py(1\u2212 \u03f5)]pxN\nNoy\u2032 = Nyo\u2032 = popy\u03f5N\n(21)\nWith the decoy-state analysis, we can get the lower bounds of the expected values of the\ncounting rate of states |01\u27e9\u27e801| and |10\u27e9\u27e810|, which are\n\u27e8s01\u27e9 = \u00b52ye \u00b5x\u27e8Sox\u2032\u27e9 \u2212 \u00b52xe\u00b5y\u27e8Soy\u2032\u27e9 \u2212 (\u00b52y \u2212 \u00b52x)\u27e8Soo\u2032\u27e9 \u00b5y\u00b5x(\u00b5y \u2212 \u00b5x) , (22) \u27e8s10\u27e9 = \u00b52ye\n\u00b5x\u27e8Sxo\u2032\u27e9 \u2212 \u00b52xe\u00b5y\u27e8Syo\u2032\u27e9 \u2212 (\u00b52y \u2212 \u00b52x)\u27e8Soo\u2032\u27e9 \u00b5y\u00b5x(\u00b5y \u2212 \u00b5x) . (23)\nThen we can get the lower bound of the expected value of the counting rate of untagged photons\n\u27e8s1\u27e9 = 1\n2 (\u27e8s10\u27e9+ \u27e8s01\u27e9), (24)\nand the lower bound of the expected value of the untagged bits 1, \u27e8n10\u27e9, and untagged bits 0, \u27e8n01\u27e9\n\u27e8n10\u27e9 = Np2y\u03f5(1\u2212 \u03f5)\u00b5ye\u2212\u00b5y\u27e8s10\u27e9, (25) \u27e8n01\u27e9 = Np2y\u03f5(1\u2212 \u03f5)\u00b5ye\u2212\u00b5y\u27e8s01\u27e9. (26)\nAnd the upper bound of the expected value of the phase-flip error rate satisfy\n\u27e8eph1 \u27e9 = \u27e8TX\u27e9 \u2212 e\u2212\u00b5A1\u2212\u00b5B1\u27e8Soo\u2032\u27e9/2 e\u2212\u00b5A1\u2212\u00b5B1(\u00b5A1 + \u00b5B1)\u27e8s1\u27e9 , (27)\nwhere \u27e8TX\u27e9 is the expected value of TX , and TX = mX/NX .\nWith values above, we can calculate the lower bound of untagged bits and phase-flip error rate after AOPP, n\u20321 and e \u2032ph 1 by the method proposed in Refs. [37]. We have the related formulas of n\u20321 as follows:\nu = ng\n2nodd , (28a)\nn10 = \u03c6 L(u\u27e8n10\u27e9), (28b) n01 = \u03c6 L(u\u27e8n01\u27e9), (28c)\nn1 = n10 + n01, (28d)\nnr1 = \u03c6 L\n( n1 2\n2unt\n) , (28e)\nn\u203201 = 2n r 1\n( n01\nn1 \u2212 \u221a \u2212 ln \u03b5 2nr1 ) (28f)\nn\u203210 = 2n r 1\n( n10\nn1 \u2212 \u221a \u2212 ln \u03b5 2nr1 ) (28g)\nnmin = min(n \u2032 01, n \u2032 10), (28h) n\u20321 = 2\u03c6 L ( nmin(1\u2212\nnmin 2nr1 )\n) , (28i)\n(28j)\nwhere nt is number of raw keys that Alice and Bob get in the experiment; ng is the number of pair if Alice and Bob perform AOPP to their raw keys; nodd is the number of pairs with odd-parity if Bob randomly groups all his raw key bits two by two, and ng and nodd are observed values; \u03f5 is the failure probability of parameter estimation; and \u03c6U(x), \u03c6L(x) are the upper and lower bounds while using Chernoff bound [33] to estimate the real values according to the expected values.\nAnd we have the the related formulas of e\u2032ph1 as follows:\nr = n1\nn1 \u2212 2nr1 ln\n3(n1 \u2212 2nr1)2\n\u03b5 , (29a)\ne\u03c4 = \u03c6U(2nr1\u27e8e ph 1 \u27e9)\n2nr1 \u2212 r (29b)\nM\u0304s = \u03c6 U [(nr1 \u2212 r)e\u03c4 (1\u2212 e\u03c4 )] + r, (29c) e\u2032ph1 = 2M\u0304s n\u20321 (29d)\nFinally, we can get the key rate R by\nR = 1\nN\n{ n\u20321[1\u2212 h(e \u2032ph 1 )]\u2212 fn\u2032th(E \u2032)\u2212 2 log2 2\n\u03b5cor\n\u22124 log2 1\u221a\n2\u03b5PA\u03b5\u0302\n} .\n(30)\nwhere N is the total number of pulse pairs sent out in the experiment; h(x) = \u2212x log2 x \u2212 (1 \u2212 x) log2(1 \u2212 x) is the Shannon entropy; f is the error correction inefficiency; n\u2032t is the number of survived bits after AOPP; E \u2032 is the bit-flip error rate of the survived bits after AOPP; \u03b5cor is the failure probability of error correction, \u03b5PA is the failure probability of privacy amplification, and \u03b5\u0302 is the coefficient while using the chain rules of smooth min- and max-entropy [34]."
+        },
+        {
+            "heading": "VIII. EXPERIMENTAL PARAMETERS AND DATA",
+            "text": "As Fig. S8 shows, the R-frame is time-multiplexed with the Q-frame, and the ratio of them can be tuned flexibly according to the channel loss. In Tab. S2, we present the frame configuration for different fiber distances in our experiment. At the long end, the count rate of the reference frame is reduced to lower the dark count noise related to the strong reference pulses. At the short end, the quantum frame duty cycle can be improved to increase the secret key rate (SKR).\nTab. S3 summarizes the encoding information of our experiments using 3-intensity SNS protocol. The encoding parameters are optimized to generate higher SKR according to the protocol presented in Section VII.\nThe insertion loss of the measurement setup is listed in Tab. S4. The EPC, DWDM and PBS are spliced together to reduce the insertion loss. We use two different SNSPDs\nTR TQ\n800 ps\nBuffer zone\nReference frame\nQuantum frame\n200 ps\nFIG. S8. Intensity and phase modulation format. A buffer zone lasting 20 pulses (16 ns) between\nthe two frames is used to reduce the modulation error from the transition of two frames with\ndifferent dynamics. The height of the box reflects the intensity modulation and the color reflects\nthe phase modulation.\nTABLE S2. Frame time and count rate in the reference frame for different fiber distances. TQ (TR) is the frame time for the quantum (reference) frame.\nFiber distance (km) TR (\u00b5s) TQ (\u00b5s) Count rate (Mcount/s) 50 0.4096 1.2288 48\n202 4.9152 1.6384 24\n302 4.9152 1.6384 24\n380 4.9152 1.6384 24\n504 4.9152 1.6384 8\nfor the experiments of 504-km-long fiber and other distances. Their performances are summarized in Tab. S5. At 504 km, the noise in the key generation basis is mainly from the scattering photons in the fiber induced by the strong light in the R-frame. Therefore, the dense wavelength-division multiplexer is used to reduce the Raman noise. However, double Rayleigh scattering still contributes to the noise count of 160 count/s per detector.\nIn Tab. S6 we report the detailed experimental results for the different fiber distances. Raw detection counts needed to calculate the SKR and and the AOPP results are listed.\nThe counts are labelled in the suffix as \u2018ABab\u2019, \u2018A\u2019 (\u2018B\u2019) and \u2018a\u2019 (\u2018b\u2019) denotes the basis and decoy intensity chosen by Alice (Bob) for a certain pulse, where \u2018y\u2019, \u2018x\u2019, \u2018o\u2019 are the signal, decoy and vacuum states respectively.\nTABLE S3. Parameters for the different fiber lengths, including the decoy intensities and proba-\nbilities. \u00b5y, \u00b5x, \u00b5o are the signal, decoy and vacuum intensities. PZ is the probability of choosing Z basis. \u03f5 is the sending probability when Z basis is chosen. P\u00b5x is the probability of sending in \u00b5x decoy intensity. \u03b3 is the contrast ratio between the intensity of R-frame and \u00b5y.\nFiber length (km) \u00b5y (ph/pulse) \u00b5x (ph/pulse) \u00b5o (ph/pulse) PZ \u03f5 P\u00b5x \u03b3 (dB) 50 0.53 0.028 0.00005 0.94 0.28 0.055 -4\n202 0.49 0.044 0.00005 0.878 0.28 0.115 3\n302 0.48 0.045 0.00005 0.87 0.28 0.12 12\n380 0.45 0.050 0.00005 0.85 0.28 0.136 20\n504 0.43 0.064 0.00005 0.77 0.28 0.2 25\nTABLE S4. Insertion loss of the measurement setup. The results are specified in dB.\nComponent Alice Bob\nEPC+DWDM+PBS 0.87 0.92\nBS-D0 3.51 3.39\nBS-D1 3.41 3.45"
+        },
+        {
+            "heading": "PC 0.21 0.12",
+            "text": "TABLE S5. Performance of two sets of SNSPDs.\nDetector SNSPD#1 SNSPD#2\nD0 D1 D0 D1\nEfficiency 74% 65% 70% 72%\nDark count (count/s) 7 6 7 5\nDynamic range (dB) 44 48 58 60\nTABLE S6. Experimental results and SKR results of finite-size SNS protocol with AOPP.\nDetector SNSPD#1 SNSPD#2\nDistance (km) 50 202 302 380 504\nLoss (dB) 9.6 38.4 56.8 72.1 96.8\nR (bit per pulse) 1.35\u00d7 10\u22123 2.15\u00d7 10\u22125 1.18\u00d7 10\u22126 1.25\u00d7 10\u22127 6.56\u00d7 10\u22129\nK (bit per second) 1.27\u00d7 106 6.72\u00d7 103 3.69\u00d7 102 3.92\u00d7 101 2.05\nNsend 10 10 1010 1011 1012 1013\nDetected-ZZyy 91070688 3753305 4348062 6061368 2848762 Detected-ZZyo 125590483 4799465 5625148 7930021 3744013 Detected-ZZoy 119406794 4855778 5423145 7773735 3470979 Detected-ZZoo 328365 13077 35858 123832 68929 Detected-ZXyx 10890616 950371 1162482 1957861 1529226 Detected-ZXyo 935187 55645 89416 613864 235751 Detected-ZXox 1510180 215377 248739 194847 515998 Detected-ZXoo 2457 153 563 5898 4721 Detected-XZxy 10228682 955528 1144738 1954830 1553976 Detected-XZxo 1543109 202480 261767 199155 496252 Detected-XZoy 889432 55600 86138 533252 216947 Detected-XZoo 4981 303 1045 3235 6753 Detected-XXxx 239419 72844 84062 251290 337914 Detected-XXxo 11791 2406 4066 15654 31099 Detected-XXox 11074 2572 3985 13337 32511 Detected-XXoo 16 2 9 158 178\nDetected XXxx matching 30014 9055 10447 31442 42569\nCorrect XXxx matching 28560 8407 9549 28859 40621\nSifted key bits in Z-basis before AOPP 336396330 13421625 15432213 21888956 10132683\nQBERZZ before AOPP 27.17% 28.06% 28.41% 28.26% 28.79%\nSurvived key bits in Z-basis after AOPP 71375551 2707044 3137485 4522494 2111964\nQBERZZ after AOPP 0.20% 0.21% 0.52% 1.23% 1.50%"
+        }
+    ],
+    "title": "Twin-field quantum key distribution without phase locking",
+    "year": 2023
+}

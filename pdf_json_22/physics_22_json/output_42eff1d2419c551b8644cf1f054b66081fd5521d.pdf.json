@@ -1,0 +1,68 @@
+{
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Edward F. Valeev"
+        },
+        {
+            "affiliations": [],
+            "name": "Ashutosh Kumar"
+        },
+        {
+            "affiliations": [],
+            "name": "Nakul Teke"
+        },
+        {
+            "affiliations": [],
+            "name": "Bimal Gaudel"
+        },
+        {
+            "affiliations": [],
+            "name": "Takeshi Yanai"
+        }
+    ],
+    "id": "SP:1605c3a298e41b2556a118b7c424cfcf1a3649ce",
+    "references": [
+        {
+            "authors": [
+                "Y. S"
+            ],
+            "title": "Zenodo, Evaleev/libint: 2.7.0",
+            "venue": "Willow",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "F. Valeev"
+            ],
+            "title": "Coupled-cluster methods with perturbative inclusion of explic",
+            "year": 2002
+        }
+    ],
+    "sections": [
+        {
+            "text": " View Online  Export Citation\nCrossMark\nARTICLE COMMENTARY | FEBRUARY 01 2023\nComment on \u201cCanonical transcorrelated theory with projected Slater-type geminals\u201d [J. Chem. Phys. 136, 084107 (2012)]  Conner Masteran ; Ashutosh Kumar ; Nakul Teke ; Bimal Gaudel ; Takeshi Yanai ; Edward F. Valeev\nJ. Chem. Phys. 158, 057101 (2023) https://doi.org/10.1063/5.0135257\n18 January 2024 20:48:29\nComment on \u201cCanonical transcorrelated theory with projected Slater-type geminals\u201d [J. Chem. Phys. 136, 084107 (2012)]\nCite as: J. Chem. Phys. 158, 057101 (2023); doi: 10.1063/5.0135257 Submitted: 17 November 2022 \u2022 Accepted: 10 January 2023 \u2022"
+        },
+        {
+            "heading": "Published Online: 1 February 2023",
+            "text": ""
+        },
+        {
+            "heading": "Conner Masteran,1 Ashutosh Kumar,2 Nakul Teke,1 Bimal Gaudel,1 Takeshi Yanai,3 and Edward F. Valeev1,a)",
+            "text": ""
+        },
+        {
+            "heading": "AFFILIATIONS",
+            "text": "1Department of Chemistry, Virginia Tech, Blacksburg, Virginia 24061, USA 2Theoretical Division, Los Alamos National Laboratory, Los Alamos, New Mexico 87545, USA"
+        },
+        {
+            "heading": "3 Institute of Transformative Bio-Molecules (WPI-ITbM), Nagoya University, Furocho, Chikusa Ward, Nagoya, Aichi 464-8601, Japan",
+            "text": "a)Author to whom correspondence should be addressed: efv@vt.edu\nhttps://doi.org/10.1063/5.0135257\nIn Ref. 1, Yanai and Shiozaki presented a formalism for regularizing the Coulomb Hamiltonian by approximate similarity transformation (transcorrelation) with explicitly correlated geminals. The a priori inclusion of the explicitly correlated terms into the Hamiltonian, rather than into the wave function/operator, is formally appealing; combined with robust reduction of the basis set error and the fact that the transformed Hamiltonian only contains two-particle interactions (albeit, unlike the regular Coulomb interactions, they are nonlocal in real space) attracted several research groups2\u20136 to investigate the approach. The goal of this Comment is to identify and correct errors in the formalism/implementation reported in Ref. 1 and discuss some aspects of that work that were not fully specified in the original publication. This Comment also provides reference numerical results for a simple system to ease future implementation of the approach by other researchers. \u25cf Equation (27) in Ref. 1 contains spurious factor of 1/2;\nit should be omitted to obtain the correct expression. We discovered the error by comparing the manual implementation (I2) of the formulas reported in 1 (developed in the course of work reported in Ref. 5) against the automated implementation (I3) of the operator algebra using version 2 of the SeQuant toolkit7 that will be described elsewhere. For the reference purposes, the corrected expressions for the approximate transcorrelated (CT-F12) Hamiltonian and its tensor elements are documented in the supplementary material of this article. \u25cf The original computer implementation used to generate the numerical data reported in Ref. 1 (I1) contained errors.\nSome (but not all) of these errors were discovered in the course of detailed analysis of the numerical differences between the two manual implementations, I1 and I2. Note that these two implementations are completely independent (e.g., they even use different evaluation schemes for the AO integrals over correlation factor-containing kernels: GaussRys quadrature used by I18 and the Obara-Saika recurrence used by I29). Numerical results produced by I2 (manual) and I3 (automated) agreed perfectly; these implementations are integrated into the MPQC framework10 (see git commit 4f19136fda66bd7cf06863629edbf4ce1508bf2d) the first as a unit test and the latter as an end-user class, and thus both share its numerical technologies. Due to their deep integration in MPQC, it is not possible at the moment to full document these implementations by standalone source code; they will become available as part of the next public release of MPQC. However, the non-factorized equations that are automatically generated as part of the I3 implementation can be produced and verified using a publicly available version of SeQuant.11 \u25cf The application of the frozen core approximation in the CT-F12 framework was unfortunately not fully described in Ref. 1; hence, we discuss this issue here. Since the Slater-type geminal parameters recommended for standard F12 calculations are appropriate only for valence-only computations, the frozen core approximation in the CT-F12 approach should be first introduced (a) by excluding core orbitals from the geminal-generating orbitals [Eq. (10) of Ref. 1].\nJ. Chem. Phys. 158, 057101 (2023); doi: 10.1063/5.0135257 158, 057101-1\nPublished under an exclusive license by AIP Publishing\n18 January 2024 20:48:29\nIt may be also reasonable to (b) exclude the core orbitals from the transcorrelated contributions to the Hamiltonian [Eqs. (17) and (20) of Ref. 1]. Due to the use of the cumulant decomposition to approximate the three-body operators in the CT-F12 method this leads to two further subvariants of this approach: (b1) with core orbitals excluded from the three-body terms in the non-approximated transformed Hamiltonian [see Eq. (S1) in supplementary material] before invoking the cumulant decomposition, and (b2) vice versa, with the cumulant decomposition preceding the core orbital exclusion. This seemingly innocuous order reversal leads to the appearance of reduced density matrix (RDM) elements involving core orbitals in the frozen-core CT-F12 formulation (a + b2) but not in its (a + b1) counterpart [Eqs. (S10) and (S8), respectively]. In Refs. 5 and 6, as well as in this work, we used frozen core formulation (a). In Ref. 1, formulation (a + b1) was used; in other words, all occupied and OBS ranges in that work exclude the core orbitals. The differences between the three frozen-core formulations, in practice, may be small, but not negligible, and the distinction is important for the purposes of reproducibility. Plausible arguments for all three frozen-core variants can be put forth, especially if one considers extensions of the CT-F12 approach, including single-particle relaxations as explored recently in Ref. 6. To keep our focus on the issues in Ref. 1, we do not further investigate numerical differences between the three frozen-core approaches.\nTable I contains reference results for a neon atom obtained with the transformed Hamiltonian for a number of standard single-reference correlated methods. These results can be directly\ncompared with the results from Table II of Yanai and Shiozaki. The same method nomenclature as in Ref. 1 is used here, i.e., F12-X refers to method X using the CT-F12 Hamiltonian. All computations utilized aug-cc-pVXZ orbital basis sets12,13 and the matching aug-ccpVXZ/OptRI bases14 for the CABS15 construction. The correlation factor, 1 \u2212 exp(\u2212\u03b3r12)/\u03b3, with \u03b3 = 1.5a0, was not approximated by fitting to Gaussians (as is done traditionally16,17), i.e., integrals over the \u201cgenuine\u201d factor were employed in all calculations as in Ref. 1. All calculations were performed with the developmental version of the MPQC software package.10 No density fitting approximation was used. Unlike the TCE-based coupled-cluster computations in Ref. 1, the eightfold permutational symmetry was not enforced for the coupled-cluster computations.\nThe most significant conclusion from the data in Table I is that the basis set convergence of the CT-F12 energies is monotonic and similar to that of the traditional F12 counterparts. The origin of the troublesome non-monotonic basis set convergence of CT-F12 energies reported in Ref. 1 should be largely attributed to the implementation errors. The reported F12-CC energies for Ne also have smaller errors than their conventional explicitly correlated coupled-cluster (CC-F12) counterparts. These findings suggest that the CT-F12 approach might be a good candidate for reducing the basis set error of the high-order CC methods, perhaps better than the traditional high-order CC-F12 approaches.21 Further investigation along these lines will be reported shortly elsewhere.\nThis work underscores the importance of automation of all steps involved in the development of many-body electronic structure methods, no matter how simple. While automation does not solve all problems, it helps to reduce the vast room for formal and technical mistakes in developing such methods.\nTABLE I. Reference electronic energies (Eh) of the neon atom obtained with conventional and transcorrelated Hamiltonians (to be compared to Table II in Ref. 1).\nMethod Source aug-cc-pVTZ aug-cc-pVQZ aug-cc-pVQZ CBS\nHF This work \u2212128.496 349 731 \u2212128.533 272 825 \u2212128.533 272 825 \u2212128.5474a\nF12-HF Reference 1 \u22120.111 48 \u22120.043 56 \u22120.020 25 0c\n(MP2-)F12b This work \u22120.111 555 079 \u22120.042 845 640 \u22120.019 939 990 This work \u22120.104 682 301 \u22120.043 083 913 \u22120.020 967 256\nF12-MP2 Reference 1 \u22120.314 11 \u22120.311 71 \u22120.314 78 \u22120.3202dMP2-F12 This work \u22120.301 361 902 \u22120.308 391 143 \u22120.313 067 546This work \u22120.311 555 810 \u22120.315 602 818 \u22120.318 210 062\nF12-CCSD Reference 1 \u22120.317 83 \u22120.313 56 \u22120.315 42 \u22120.3157e\nCCSD(2)F12 This work \u22120.307 130 26 \u22120.310 390 088 \u22120.313 651 909 This work \u22120.301 489 064 \u22120.307 734 267 \u22120.311 958 932\nF12-CCSDT Reference 1 \u22120.320 55 \u22120.318 70 \u22120.321 26 \u22120.3220fCCSDT(2)F12 This work \u22120.309 736 623 \u22120.315 500 325 \u22120.319 487 083 This work \u22120.304 635 289 \u22120.312 921 334 \u22120.317 828 063\naReference 18. bE(MP2-F12) - E(MP2), i.e., the F12 correction to the MP2 energy. cAll F12 corrections become zero in the CBS limit. dReference 19. eReference 20. fThe CBS CCSD energy from Ref. 20 corrected for the difference between CCSDT-F12 and CCSD-F12 energies evaluated with the aug-cc-pV6Z basis from Ref. 21.\nJ. Chem. Phys. 158, 057101 (2023); doi: 10.1063/5.0135257 158, 057101-2\nPublished under an exclusive license by AIP Publishing\n18 January 2024 20:48:29\nSee supplementary material for the reference formulas of the CT-F12 Hamiltonian and detailed discussion of its frozen core variants.\nThis work was supported by the U.S. Department of Energy, Office of Science, via Award No. DE-SC0019374."
+        },
+        {
+            "heading": "AUTHOR DECLARATIONS Conflict of Interest",
+            "text": "The authors have no conflicts to disclose."
+        }
+    ],
+    "year": 2024
+}

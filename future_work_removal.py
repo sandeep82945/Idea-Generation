@@ -12,7 +12,7 @@ from future_work_RE_extractor import future_work_extraction_algorithm
 with open('config.yml', 'r') as config_file:
     config = yaml.safe_load(config_file)
 
-file_names = ['output_data_computer.xlsx']
+file_names = ['output_data_comp22.xlsx']
 
 def read_json(json_file_path):
     with open(json_file_path, 'r') as file:
@@ -20,7 +20,7 @@ def read_json(json_file_path):
 
     paper_text = ''
     if 'abstractText' in data:
-        text = paper_text + data['abstractText']
+        paper_text = paper_text + data['abstractText']
 
     if 'sections' in data:
         for element in data['sections']:
@@ -112,7 +112,7 @@ for file in file_names:
         if removed_paper_sentences is None:
             continue
         
-        dic[paper_id] = {'paper_id': paper_id, 'full_text': paper_data, 'full_text_WF': '. '.join(removed_paper_sentences), 'Future_work': '. '.join(future_work_sentences)}
+        dic[paper_id] = {'paper_id': paper_id, 'full_text': paper_data, 'full_text_WF': ' '.join(removed_paper_sentences), 'Future_work': ' '.join(future_work_sentences)}
 
     data = []
     for paper_id, attributes in dic.items():

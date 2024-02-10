@@ -35,7 +35,6 @@ def tokenize_and_count(folder_path):
         s+=i
     return s/len(count)
 
-folder_path=os.path.join("D:\dsa","final\chemistry22")
-num_tokens = tokenize_and_count(folder_path)
-print(num_tokens)
-
+# folder_path=os.path.join("D:\dsa","final\chemistry22")
+# num_tokens = tokenize_and_count(folder_path)
+# print(num_tokens)

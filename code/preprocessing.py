@@ -41,7 +41,13 @@ def tokenize_and_count(folder_path):
         s+=i
     return s/len(count)
 
+<<<<<<< HEAD:code/preprcessing.py
 folder_path=os.path.join("D:\dsa","final\comp22")
 num_tokens = tokenize_and_count(folder_path)
 print(num_tokens)
 
+=======
+# folder_path=os.path.join("D:\dsa","final\chemistry22")
+# num_tokens = tokenize_and_count(folder_path)
+# print(num_tokens)
+>>>>>>> 45ee383bfac6a6715265b5d62a2b09f35c654246:code/preprocessing.py

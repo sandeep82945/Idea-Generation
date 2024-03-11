@@ -1,0 +1,204 @@
+{
+    "abstractText": "In this work, we build two environments, namely the modified QLBS and RLOP models, from a mathematics perspective which enables RL methods in option pricing through replicating by portfolio. We implement the environment specifications , the learning algorithm, and agent parametrization by a neural network. The learned optimal hedging strategy is compared against the BS prediction. The effect of various factors is considered and studied based on how they affect the optimal price and position.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Ziheng Chen"
+        }
+    ],
+    "id": "SP:64b5cdb4ff224bb83ae9d8a4b434915e08103167",
+    "references": [
+        {
+            "authors": [
+                "A. Fathan",
+                "E. Delage"
+            ],
+            "title": "Deep reinforcement learning for optimal stopping with application 16 in financial engineering",
+            "venue": "arXiv preprint arXiv:2105.08877,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "T. Grassl"
+            ],
+            "title": "A reinforcement learning approach for pricing derivatives",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "I. Halperin"
+            ],
+            "title": "Qlbs: Q-learner in the black-scholes (-merton) worlds",
+            "venue": "The Journal of Derivatives,",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "K. He",
+                "X. Zhang",
+                "S. Ren",
+                "J. Sun"
+            ],
+            "title": "Deep residual learning for image recognition",
+            "venue": "Proceedings of the IEEE conference on computer vision and pattern recognition,",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "Y. Li",
+                "C. Szepesvari",
+                "D. Schuurmans"
+            ],
+            "title": "Learning exercise policies for american options, in Artificial Intelligence and Statistics, PMLR",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "S. Marzban",
+                "E. Delage",
+                "J.Y. Li"
+            ],
+            "title": "Deep reinforcement learning for equal risk pricing and hedging under dynamic expectile risk measures",
+            "venue": "arXiv preprint arXiv:2109.04001,",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "M. Musiela"
+            ],
+            "title": "Martingale Methods in Financial Modelling by Marek Musiela, Marek Rutkowski",
+            "venue": "Stochastic Modelling and Applied Probability,",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "S.E. Shreve"
+            ],
+            "title": "Stochastic calculus for finance II: Continuous-time models, vol",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "R.S. Sutton",
+                "A.G. Barto"
+            ],
+            "title": "Reinforcement learning: An introduction, MIT press, 2018",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "A. Tamar",
+                "Y. Chow",
+                "M. Ghavamzadeh",
+                "S. Mannor"
+            ],
+            "title": "Policy gradient for coherent risk measures",
+            "venue": "Advances in neural information processing systems,",
+            "year": 2015
+        }
+    ],
+    "sections": [
+        {
+            "heading": "1 Introduction and Background",
+            "text": "Option pricing is one of the central and open questions in the mathematical finance field. It motivates the advancement of the stochastic process theory and becomes one of the practical applications of sophisticated theories. To begin with, options are a type of derivative that gives the holder the right, but not the obligation, to buy or sell the underlying asset at a specified price (a.k.a. the strike price) within a specific period. The name \u2018derivative\u2019 implies that those securities are derived from the origin asset. Although investors can long and short options for seeking risky profits, one primary feature of options is to obtain a certain share of assets with a fixed amount of payment in the future. This helps to control volatility and uncertainty. Thus, the market maker who sells the option charges the buyer a certain amount of fee that amounts to the expected risk.\nWe focus on the European call in this paper. One can only exercise a European option at the terminal time and a call option gives the holder the right to buy. The holder usually exercises the European call if the asset price ends up above the strike price and takes no action otherwise. If the market is liquid enough, the holder can sell the asset immediately after obtaining it, making a marginal profit. Therefore, we define the payoff of a European call as\npayoff = max {S \u2212K, 0} (1) \u2217email: ziheng.chen@math.utexas.edu 1the source code can be found at https://github.com/owen8877/RLOP 2We thank Zhou Fang for his initial motivation and helpful discussion on the financial aspects.\nar X\niv :2\n20 5.\n05 60\n0v 1\n[ q-\nfi n.\nPR ]\n1 1\nM ay\nwhere S is the asset price at the exercise time andK stands for the strike price. Although it is tempting to price the option based on this payoff function with consideration of each path probability, this is usually not the best way since the option is designed to measure the risk of obtaining the asset. If there is a general trend in the price process, one can hold a consistent position in the asset and purchase an option in addition. Thus, the more popular approach is to manage a portfolio that replicates the option, i.e. the holder invests the same amount of money as the price of the option in a replication portfolio and gets the same amount of payoff (Eqn. 1) at the terminal time. The portfolio borrows some extra funds from an external risk-free source to hold a long position of the underlying asset and adjusts its position according to the change in the asset price. This approach is referred to as the replication by portfolio method.\nWe conduct a brief review in this section, starting by introducing the Black-Scholes model which solves the optimal hedging strategy and the pricing problem at the same time, moving to a literature review where multiple types of asset pricing are involved, and discussing how to model transaction costs."
+        },
+        {
+            "heading": "1.1 Black-Scholes Model",
+            "text": "The Black-Scholes formula (or BS formula or short) is the first formula that prices the European-style call option. There are two equivalent ways of calculating the price, either by solving the Black-ScholesMerton equation or use the risk-neutral measure. The price of an European call of time span T and a strike price K is solved by\ncBS (t, x) = xN (d+ (T \u2212 t, x))\u2212Ke\u2212r(T\u2212t)N (d\u2212 (T \u2212 t, x)) (2)\nwhere 0 \u2264 t < T is the current time and x is the current asset price, with r being the risk-free interest rate, \u03c3 being the volatility, N (y) := 1\u221a\n2\u03c0\n\u222b y \u2212\u221e exp ( \u2212 z 2 2 ) d z being the cumulative standard normal\ndistribution, and d\u00b1 defined as\nd\u00b1 (\u03c4, x) := 1\n\u03c3 \u221a \u03c4\n[ log x\nK +\n( r \u00b1 \u03c3 2\n2\n) \u03c4 ] .\nThe optimal hedging position can be derived as the partial derivative of Eqn. 2 as\nuBS (t, x) = N (d+ (T \u2212 t, x)) . (3)\nWe leave the details to [9, 8] for more in-depth theory and computation. This set of theory surpassed most of the option pricing theories when it was first published and is still helpful from since. With that being said, the theory relies on a critical assumption that the agent is able to continuously rehedge the positions of the replication portfolio. This is either impractical or costly to most of the investing parties. In the view of stochastic integration, we use a Riemannstyle sum with left endpoints to approximate the Ito integral. The accumulation of the temporal discretization errors will affect the final payoff profoundly."
+        },
+        {
+            "heading": "1.2 Literature Review",
+            "text": "There have been vast works and literatures on option pricing. A few exercising strategies for American option are reviewed in [6]. The state space is composed of asset price trajectories (S0, S1, . . . , ST ) and an absorbing state e which serves as the destination after the option has been exercised. The action space simply contains two actions: hold and exercise. The only non-zero reward is given when the option has been exercised at the value specified by the option. The Q-function is derived as in classical RL problems and it is the quantity of interest. The first method, LSPI (LS policy iteration), combines LSTD (LS with TD update) and policy iteration together to achieve efficient learning. The second and third ones, FQI (fitted Q-iteration algorithm) and LSMC (Least squares Monte Carlo), take a DP approach where the exact exercising problem is solved at each trading moment; the only difference lies in that FDI takes a forward view in time while LSMC is backward, starting from the exercising time. In the same spirit, [1] investigates the efficiency and effectiveness of different parametrizaiton structures. Three algorithms, namely double deep Q-Learning (DDQN), categorical distributional RL (C51), and implicit quantile networks (IQN) are compared where DDQN learns the optimal Q-value function while the other two algorithms try to learn the full distribution of the discounted reward. They are tested on empirical data as well as simulated geometric Brownian motion trajectories.\nDifferent RL architectures can be deployed in this field as well. The Actor-Critic structure is used in [7] for Equal Risk Pricing (ERP) in a risk averse setting under the framework studied in [11]. The concept of \u03c4 -expectile\n\u03c1 (X) = arg min q \u03c4E [ (q \u2212X)2+ ] + (1\u2212 \u03c4)E [ (q \u2212X)2\u2212 ] is used to elicit a coherent risk measure. The value function is defined as the portfolio value under the recursive coherent risk measure realized by expectiles, i.e.\nVt (St, Yt) = inf \u03bet \u03c1 ( \u2212\u03beTt \u2206St+1 + Vt+1 (St+1, Yt+1) |St, Yt ) with terminal condition VT (ST , YT ) = F (ST , YT ) specified by the option contract. With that being established, we can apply the policy gradient method where the critic network updates the value estimate which the actor network can refer to and build its policy upon. The network uses a classical fully multilayer structure with alternating activation functions.\nA hybrid attempt is carried out in [2] where the pricing strategy is based on a combination of optimal stopping and terminal payoff. The idea is that the agent can either hold the derivative until the terminal time, executing the contract to get the payoff written, or sell the derivative earlier according to the price at that particular moment. The reward function is thus simplified defined as the selling/execution price if such scenario happens. The value function is parameterized by kernel function approximation and the algorithm is tested using simulated geometric Brownian paths of an European call option.\nWe point out that it is also possible to directly solve the HJB equation if the associated RL problem is formulated as a control porblem. We refer to [4] for more details on distributional offline\ncontinuous-time RL learning algorithms."
+        },
+        {
+            "heading": "1.3 Trading Cost",
+            "text": "One other important factor in option pricing is the trading cost (or transaction cost, used interchangeably). The trading cost occurs when the hedging position of the replication portfolio changes, making a portion of the invested capital unavailable. Thus, the presence of trading cost increases the price of the option in general.\nA way of understanding and modeling the trading cost is to use the concept of bid-ask spread. Consider the limit order book of a particular asset at a given time. Empirical observation shows that the selling (a.k.a. ask) orders are always above the buying orders (a.k.a. bid) orders since one wishes to buy low and sell high. Moreover, the orders are not uniformly distributed: there are fewer orders close to the mid price (i.e. the arithmetic average of the highest bid and lowest ask) and more orders away from the mid price. The gap between the lowest ask and highest bid is called the bid-ask spread. A larger gap usually implies a higher friction in the market.\nIn general, the dynamics of the limit order book distribution is a very challenging problem. However, under the assumption that the replicating portfolio hedges a small position, we can safely conclude that the trading cost, defined as the additional cost paid for buying (or selling, correspondingly) a unit of asset with reference to its mid price, can be computed as follows\nTrading cost (TC) = Sask \u2212 Smid = 1\n2 (Sask \u2212 Sbid) =\n1 2 spread.\nTo model the spread, we assume that it scales with the mid price by a factor of , characterizing the friction. Thus, the trading cost to buy/sell \u2206u shares of the asset requires a trading cost of\nTC (\u2206u, Smid) = 2 Smid\u2206u."
+        },
+        {
+            "heading": "2 QLBS: Q-learning Black-Scholes Model",
+            "text": ""
+        },
+        {
+            "heading": "2.1 A Brief Review",
+            "text": "We quickly introduce the QLBS model proposed in [3]. Consider a sequence of asset prices {St}t=0,1,..., adapted under the filtration {Ft}, upon which we wish to build an option with payoff function h at the maturity time T . The option is realized as a hedge portfolio which consists of some shares ut of the underlying asset and the risk-free deposit Bt. Let\n\u03a0t := utSt +Bt\ndenote the value of the portfolio at time t. To fulfill the option contract, the holding position is cleared at the terminal time T and is fully converted into cash position, i.e.\n\u03a0T = BT = h (ST ) .\nThe deposit position at a particular time is solved via the self-financing condition which requires that the instantaneous value of the portfolio is kept same before and after the re-hedging operation:\nutSt+1 + e r\u2206tBt = ut+1St+1 +Bt+1 (4)\nwhere r stands for the risk-free interest rate. Eqn. 4 can be used to solve how much money is needed to cover future trading activities.\nA state is defined as a pair of an integer and a real number (t,Xt), where\nXt = \u2212 ( \u00b5\u2212 \u03c3 2\n2\n) t+ logSt\nis the compensated logarithm price. The action space is the real number, indicating how much shares are hedged at a particular time. A policy is a mapping from the state space to the action space, i.e.\n\u03c0 : (t,Xt) 7\u2192 at.\nNotice that we use at for the log-processed input Xt while ut for the asset price St in normal scale. The policy may depend on other macro factors, e.g. interest rate r, volatility \u03c3, total maturity time T , the strike price K if the option is of call/put type.\nThe reward function is derived from the Bellman\u2019s optimality equation where we define the value function in the first place. The idea is to minimize the money needed to initiate the hedge portfolio as well as to minimize the volatility throughout the trading periods. Given a hedging strategy \u03c0, the value function is defined as\nV \u03c0t (Xt) = E\u03c0 [ \u2212\u03a0t (Xt)\u2212 \u03bb T\u2211 \u03c4=t e\u2212r(\u03c4\u2212t)Var [\u03a0\u03c4 (X\u03c4 ) |F\u03c4 ] |Ft ] (5)\nwhere \u03bb is the risk aversion factor. The reward function can be derived by matching the corresponding terms in the Bellman\u2019s equation:\nRt (Xt, at, Xt+1) := \u03b3at\u2206St \u2212 \u03bbVar [\u03a0t|Ft]\nwhere \u03b3 := e\u2212r\u2206t is the discounting factor. The connection between the value function and option pricing is that the option price is given by the minus optimal Q-function."
+        },
+        {
+            "heading": "2.2 Make QLBS Interactive",
+            "text": "Elegant as the vanilla QLBS approach, it is not a true RL problem since the optimal policy \u03c0\u2217 is solved analytically without any reinforcement learning techniques. In fact, the author derives the Bellman\u2019s equation for the optimal Q-function from Eqn. 5\nQ\u2217t (Xt, at) = \u03b3Et [ Qt+1 ( Xt+1, a \u2217 t+1 ) + at\u2206St ] \u2212 \u03bb\u03b32Et [ \u03a0\u03022t+1 \u2212 2at\u03a0\u0302t+1\u2206S\u0302t + a2t ( \u2206S\u0302t )2] (6)\nwhich admits the optimal policy in closed form since Eqn. 6 is a quadratic function in at. Such direct approach is feasible if provided with abundant data on the correlation structure of the portofolio value \u03a0\u0302 and the stock price change \u2206S\u0302, but it fails to generalize beyond this simple setting. Besides, the portofolio value process \u03a0t is in general non-adapted due to how the self-financing condition (Eqn. 4) works.\nTo deal with the aforementioned issues, we propose a modified QLBS model which is\n1. fully adapted with respect to the given filtration {Ft},\n2. compatible with the transaction cost proposed in Sec. 1.3, and\n3. works well with value-based or policy-based learning algorithms.\nWe start by modifying the value function. A first problem lies in the fact that the reward are not homogeneous over time. Eqn. 5 assigns the (negative) cashflow with a risk part as the reward, but the terminal step gets the option payoff which is in general much larger than the previous steps. Technically speaking, an agent could notice this heterogenity since the time t aligns with the terminal time T , but it is rather difficult in practice to figure out this situation. Thus, we propose the modified value function\nV \u03c0t (Xt) = E\u03c0t\n[ \u2212 (\n1\u2212 t T\n) \u03a0t (Xt)\u2212 \u03bb T\u2211 \u03c4=t \u03b3\u03c4\u2212t \u221a Var [\u03a0\u03c4 (X\u03c4 )] ] . (7)\nOur improvement is two folds:\n1. We weight the portfolio term by a diminishing factor ( 1\u2212 tT ) . This factor does not impact the\nstarting estimate at t = 0 and it fully vanishes at t = T . We point out that introducing this factor will break the temporal symmetry so that the intermediate estimate does not correspond to option pricing from the intermediate time steps.\n2. We take a square root of the variance terms so that they turn into standard deviation. This helps to keep the value estimate dimensionless and robust.\nThe reward function changes accordingly to\nRt+1 (Xt, at) = E\u03c0t [ \u2212 (\n1\u2212 t T\n) \u03a0t (Xt) + ( 1\u2212 t+ 1\nT\n) \u03a0t (Xt)\u2212 \u03bb \u221a Var [\u03a0t (Xt)] ] (8)\nwith action at time t to be at and remaining actions following the current policy \u03c0. Considering the effect of transaction costs, the portfolio value process \u03a0t is calculated backwards from the modified self-financing condition\ner\u2206t (\u03a0t \u2212 utSt) + utSt+1 = \u03a0t+1 + TC (ut+1 \u2212 ut, St+1) (9)\nwith terminal condition \u03a0T = h (ST ) unchanged. We point out that we wrap the cashflow part with an conditional expectation at time t so that we don\u2019t run into adaptedness issues. We briefly illustrate the modified QLBS model in Fig. 1."
+        },
+        {
+            "heading": "2.3 Specification",
+            "text": "In this section, we describe how to set-up the QLBS environment and the necessary numerical procedures."
+        },
+        {
+            "heading": "2.3.1 Environment",
+            "text": "The environment is responsible for keeping track of the asset price and portfolio value based on the actions provided by the agent. With a given set of parameters r, \u00b5, \u03c3, T , the asset prices are a set of geometrical brownian motion paths {St} which solves\ndSt = \u00b5St d t+ \u03c3St dWt\nwhere Wt refers to the standard brownian motion according to the filtration {Ft}. At each time step t, the normalized price Xt = \u2212 ( \u00b5\u2212 \u03c3 2\n2\n) t + logSt and t are provided to the agent, waiting for the\nresponse of the hedge position at. Then, the reward Rt+1, as a conditional expectation specified in Eqn. 8, is computed empirically by averaging samples from a fixed number of additional trajectories under the current policy. At the beginning of each episode, the parameters are adjusted in a random fashion to help the agent explore different settings and help avoid overfitting; the adjustment obeys a Poisson process with intensity \u03a5 ."
+        },
+        {
+            "heading": "2.3.2 Agent Parametrization",
+            "text": "The agent is fully responsible for determining the hedge position at under a given normalized price at each time step. The policy \u03c0, whether stochastic or deterministic, depends on these input variables as well as the environment parameters\nat \u223c \u03c0 (Xt, t; r, \u00b5, \u03c3, T,K, \u03bb) .\nIn pratice, we prefer a stochastic policy since it encourages exploration which is helpful to excape local minima. To further simplify the sampling procedure, we restrict our policy spaces to Gaussian distribution where the agent determines the mean and standard deviation, i.e.\n\u03c0 = N (\u00b5\u03c0, \u03c3\u03c0)\n(where the subscripts \u03c0 are used to distinguish these parameters from the environmental ones). The statistics \u00b5\u03c0 and \u03c3\u03c0 are parametrized by two separate neural networks with the Resnet [5] skipconnection structure. The Resnet structure is composed of three parts:\n1. Pre-processing Tlift (x) := \u039e ( wTliftx+ blift ) , that lifts the (8-dimensional) input to the latent\ndimension by an affine transform and an activation funciton \u039e;\n2. Chain of transforms { T (k) } in a fixed-point iteration style, with each transform combining the\nidentity functions and a series of alternating affine transforms { Z\n(k) l\n} and activation \u039e, i.e.\nT (k) := \u039e \u25e6 [ id + Z(k)nk \u25e6 \u039e \u25e6 Z (k) nk\u22121 \u25e6 \u00b7 \u00b7 \u00b7 \u25e6 \u039e \u25e6 Z (k) 1 ] 3. Post-processing Tproject (x) := wTprojectx + bproject, that projects the latent representations onto\nthe target space.\nThus, the Resnet realization can be formally written as Tproject \u25e6 T (k) \u25e6 T (k\u22121) \u25e6 \u00b7 \u00b7 \u00b7 \u25e6 T (1) \u25e6 Tlift. We include an illustration in Fig. 2."
+        },
+        {
+            "heading": "2.3.3 Learning Algorithm",
+            "text": "Since the action space at \u2208 R is a continuous space, it is nature to adopt a policy-based method. Here we opt-in the classical REINFORCE algorithm with baseline where the policy components relies on the value estimator to learn quickly and reliably while the value estimator learns from empirical averages of Monte Carlo samples. The value estimator, parameterized by a neural network, uses the same Resnet structure as mentioned in the previous section. We refer to [10] for more details.\nIn our implementation, the policy network and the value network have the same latent dimension 10 and they are composed of two Resnet blocks with two hidden affine transforms. We use the Adam optimizers to update the networks, one for each, and the learning rate is set to 10\u22124 by default."
+        },
+        {
+            "heading": "2.4 Experiments and Results",
+            "text": "We include a variety of experiments, starting from a demonstration that shows the agent learns over time, moving to a comparison with the Black-Scholes baseline model, and finally exploring other directions that have a stronger connection to finance."
+        },
+        {
+            "heading": "2.4.1 Demonstration on learning",
+            "text": "We start by showing that the policy gradient algorithm has been correctly implemented and the agent learns well over time. The environment parameter is set to r = 0.01, \u03c3 = 0.1, \u00b5 = 0, T = 5,K = 1, S0 = 1,\u2206t = 1, \u03bb \u2208 {0, 1, 2, 3} , = 0 in Sec. 2.4.1, 2.4.2, and 2.4.3 unless otherwise specified. As shown in Fig. 3a, the episodic return flatterns after training for around 3000 steps. It is worth noticing that the cashflow return part\nT\u22121\u2211 t=0 E\u03c0 [ \u2212 ( 1\u2212 t T ) \u03a0t (Xt) + ( 1\u2212 t+ 1 T ) \u03a0t (Xt) ] = E\u03c0 [\u03a00 (X0)]\nis slightly smaller for a large risk parameter \u03bb, implying that the agent learns to make a trade-off between the cash-flow and the risk component.\nTo prepare for learning in a much broader setting, we allow the initial price to be adjusted at a given intensity \u03a5 . We mark out the episodes that the adjustments take place (Fig. 3b) and it seems that the agent can swiftly adapt to the change."
+        },
+        {
+            "heading": "2.4.2 Influence of risk parameter \u03bb",
+            "text": "We wish to compare the optimal price under different choices of the risk aversion parameter \u03bb. A priori estimate is that a larger \u03bb leads to a higher price learnt, since it penalizes improper hedges harder. To complete the comparision, we also introduce the vanilla BS hedging strategy \u03c0BS and learns the episodic return using the same neural network parametrization. The results are shown in Fig. 4. We remind the readers that the option prices are defined as the negative value function, so a lower option price implies a larger return learnt. As we expect, a large \u03bb does lead to a higher price, both under BS policy and under the learnt policy. In general, the policy learnt by the neural network parametrization is a bit sub-optimal compared to the BS policy, but it performs better when \u03bb = 0."
+        },
+        {
+            "heading": "2.4.3 Effect of transaction cost",
+            "text": "Next, we\u2019d like to examine the effect of transaction costs. As indicated by the self-financing condition (Eqn. 9), a higher trading cost can significantly bias the portfolio value process and consequently increase the optimal price learnt. As shown in Fig. 5, we compare the price and hedge position learnt under different friction parameters . In general, a larger does lead to a higher price learned (shown in the left half) and the hedge position is usually always higher (in the right half)."
+        },
+        {
+            "heading": "2.4.4 Generalization power",
+            "text": "As a concluding setting, we wish to parametrize the policy and baseline networks on not only the states but also the environment parameters and examine the generalization power. We pick two set of parameters: r = 0.01, \u00b5 = 0, \u03c3 = 0.1, \u03bb = 0.5, = 0 under the first condition while r = 0.02, \u00b5 = 0.1, \u03c3 = 0.2, \u03bb = 1.5, = 0.1 under the second condition. We train a policy and baseline under these two conditions mixed, i.e. they have the same probability of being presented, with the switching process being a Poisson process. After training for a while, we refine the agent to learn a third condition where the parameters are set to the arithmic average of the given two conditions. As shown in Fig. 6, we examine the hedging strategy of the agent before and after fine tuning to the third average condition. The result, that the fine tuning does a great improvement, is not surprising since we don\u2019t expect a lot of generalization power. However, one could expect such generalization given enough amount of training time."
+        },
+        {
+            "heading": "3 RLOP: Replication Learning of Option Pricing",
+            "text": "In this section, we propose a novel algorithm that prices a call/put option via portfolio replication, but this method uses a forward view which is fundamentally different from the QLBS approach. The idea is simple: the agent manages a portfolio which yields a reward at the terminal time based on how accurate the portfolio value is compared to the option payoff. This naive idea has the problem that the reward is zero for quite a long time until the maturity, which is usually not good for shaping the agent\u2019s behavior. To deal with this downside, we propose to group a few options as an ensemble so that the agent gets a stream of feedbacks during each episode. To be specific, given a (simulated or historical) path of the asset price {St}, maturity time T , and the payoff function h, the agent needs\nto manages (at most) T portfolios {\n\u03a0 (i) t }T i=1\nat the same time, where the k-th portfolio replicates the option that terminals at time step k. In other words, for every i \u2208 [t+ 1, T ], the agent proposes the hedge position u(i)t based on the current time step t, the asset price St, and the balance of the i-th portfolio \u03a0(i)t . We hold the belief that the agent is able to learn the hedging strategy step by step from small t to the terminal time T ."
+        },
+        {
+            "heading": "3.1 MDP Formulation",
+            "text": "We now rigorously define the aforementioned problem as a MDP. Given a maturity time i, the state space consists of tuples containing the time step t, the asset price St, and the current portfolio value \u03a0\n(i) t . The action space is R that contains all possible hedging positions. The transitional probability\n(density) function is defined as\np (( t, St,\u03a0 (i) t ) , u (i) t \u2192 ( t\u2032, St\u2032 ,\u03a0 (i) t\u2032 ) , Rt+1 ) = \u03b4t+1,t\u2032\u03b4\u03a0\u0303(i)t+1,\u03a0(i)t\u2032 \u03c1 (St, St\u2032) t < i0 t = i where\n\u2022 the only admissible state is the terminal state when t > i, marking the end of this episode;\n\u2022 \u03a0\u0303(i)t+1 refers to the portfolio value determined by the self-financing condition\n\u03a0\u0303 (i) t+1 = e\nr\u2206t ( \u03a0t \u2212 u(i)t St ) + u (i) t St+1 \u2212 TC ( u (i) t+1 \u2212 u (i) t , St+1 ) (which is the same as Eqn. 9);\n\u2022 \u03c1 characterizes the dynamics of the underlying asset, e.g. the discrete version geometric brownian motion;\n\u2022 Rt+1 = 0 for t + 1 < i and Ri = H ( h (Si) ,\u03a0 (i) i ) where H is a given penalty function that\nmeasures how accurate the portfolio value \u03a0(i)i mimics the option payoff h (Si).\nAs we mentioned in the previous paragraph, we stack a few pricing tasks together so that the agent gets a reward from the portfolio that recently terminates. For a T -term option, we combine T tasks together where the agent is required to learn to price not only the T -term one but all t-term ones for t < T . We briefly illustrate the stucture of RLOP in Fig. 7."
+        },
+        {
+            "heading": "3.2 Specification",
+            "text": "In this section, we describe how to set-up the RLOP environment and the necessary numerical procedures."
+        },
+        {
+            "heading": "3.2.1 Environment",
+            "text": "As in the QLBS model, the environment samples a family of asset price trajectories and maintains the portfolio value process. The asset value is assumed to obey the geometrical brownian motion, as in Sec. 2.3.1. We also allows the environment parameters to change at the beginning of each episode according to a Poisson process with intensity \u03a5 ."
+        },
+        {
+            "heading": "3.2.2 Agent Parametrization and Learning Algorithm",
+            "text": "The agent, i.e. the hedging strategy is parametrized by a Resnet-motivated structure, same in Sec. 2.3.2. The REINFORCE algorithm is adopted to train the agent. One caveat is that there is no need to use a baseline as in the QLBS model, since in this case the reward function is for penalty rather than learning the optimal price."
+        },
+        {
+            "heading": "3.3 Experiments and Results",
+            "text": "We include a variety of experiments, including a demonstration that shows the agent learns over time, a comparison with the Black-Scholes baseline model, and a another one on the effect of trading costs."
+        },
+        {
+            "heading": "3.3.1 Demonstration on learning",
+            "text": "We use a parameter setting similar to Sec. 2.4.1 where r = 0.01, \u03c3 = 0.1, \u00b5 = 0, T = 5,K = 1, S0 = 1,\u2206t = 1. The agent is trained under no transaction cost with a fixed initial asset value and the training curve is flat after around 8000 steps, shown in Fig. 8a. Similar to the QLBS setting, we introduce adjustment to the parameters (i.e. the initial asset value in the experiments to follow) by a Poisson process. We mark where the adjustment occurs in the bottom half of the figure by purple triangles.\nWe also compare the optimal hedging strategy learnt with the BS predictions. In general, the hedging curve should have a greater slope for a smaller remaining time which implies that the price of the option is more sensitive to the underlying asset price. As expected, both the learnt position and the BS position show a greater slope when approaching the terminal time. The one learnt by our RL agent is slightly insensitve to the time variable."
+        },
+        {
+            "heading": "3.3.2 Effect of transaction cost",
+            "text": "We proceed to measure how the transaction cost can effect the optimal hedging strategy. We use the same setting as laid out in Sec. 2.4.3 where is the friction parameter. We plot the optimal hedging position learnt under different in Fig. 9. The general trend is that a large discourages hedging amounts, since it leads to a higher trading cost on average. A higher friction also leads to a larger distinction between positions at different times, which implies that in an illuquid market, we need to value the time variable more than in a liquid one."
+        },
+        {
+            "heading": "4 Conclusion and Discussion",
+            "text": "In this project, we construct the modified QLBS and RLOP as two mathematically sound environments that enable RL methods in the field of option pricing. We specify the environment details as well as how the agent is parametrized and trained. We provide a few numerical experiments which compare the learned optimal hedging against the BS predictions. We also study how the factors affect the optimal price and position. We hope that this work can inspire and motivate more research into the cross-discipline study between finance and machine learning.\nWe would like to discuss a few possible future directions, starting from the financial aspects. We focus on European call options in this report, but in general, it shall also apply to the put option or other options that can only exercise at the terminal time. It is not clear whether the QLBS or RLOP model can generalize to the American or even swing options that are useful in electricity trading. Besides, the transaction cost model proposed in Sec. 1.3 can be greatly improved to allow fine models on the order density, or even influence on the mid price.\nThere are also a few open questions on the mathematics side. It could be beneficial to analyze the theoretical optimal hedging strategy in the discrete time model. We have provided an analogous to the stochastic integral in the earlier sections, which might help in analyzing the temporal discretization error. Besides, the modified QLBS reward function (Eqn. 7) is no longer time translational invariant, so one has to train a new model if the maturity time of the option changes. It would be a great improvement if one finds an equivalent or a similar formulation where the value function is translational invariant while giving homogeneous rewards over time.\nWe also have a few comments on the learning/sampling algorithms. One common drawback of the two methods is that the computational complexity scales quadratically as the maturity time T . The modified QLBS model requires computing a conditional expectation at each time step, which is not of constant cost. The RLOP model stacks T pricing tasks together, each lasting one more period than the previous one, leading to a quadratic cumulative cost. Another issue is that we use REINFORCE with baseline as the learning algorithm, which can be replaced by the actor-critic (or even the soft version) to improve performance. More time is appreciated since we have limited time in the project to try different possibilities.\nThere are controversial conclusions as far as what the numerical experiments show. In general, the agents learn to price a higher price if the current price St is higher, or the risk aversion parameter \u03bb (or the friction parameter ) is larger. However, the two models predict the optimal hedging strategy differently, especially when large friction is anticipated. The modified QLBS agent prefers to hedge more than the frictionless case while the RLOP agent inclines to hedge less. This discrepancy might be the key to understanding the difference between these two models and eventually the option pricing problem."
+        }
+    ],
+    "title": "RLOP: RL Methods in Option Pricing from a Mathematical Perspective",
+    "year": 2022
+}

@@ -1,0 +1,1451 @@
+{
+    "abstractText": "Background: Despite the vaccination process in Germany, a large share of the population is still susceptible to SARS\u2010 CoV\u20102. In addition, we face the spread of novel variants. Until we overcome the pandemic, reasonable mitigation and opening strategies are crucial to balance public health and economic interests. Methods: We model the spread of SARS\u2010CoV\u20102 over the German counties by a graph\u2010SIR\u2010type, metapopulation model with particular focus on commuter testing. We account for political interventions by varying contact reduction values in private and public locations such as homes, schools, workplaces, and other. We consider different levels of lockdown strictness, commuter testing strategies, or the delay of intervention implementation. We conduct numeri\u2010 cal simulations to assess the effectiveness of the different intervention strategies after one month. The virus dynamics in the regions (German counties) are initialized randomly with incidences between 75 and 150 weekly new cases per 100,000 inhabitants (red zones) or below (green zones) and consider 25 different initial scenarios of randomly distrib\u2010 uted red zones (between 2 and 20% of all counties). To account for uncertainty, we consider an ensemble set of 500 Monte Carlo runs for each scenario. Results: We find that the strength of the lockdown in regions with out of control virus dynamics is most important to avoid the spread into neighboring regions. With very strict lockdowns in red zones, commuter testing rates of twice a week can substantially contribute to the safety of adjacent regions. In contrast, the negative effect of less strict interventions can be overcome by high commuter testing rates. A further key contributor is the potential delay of the intervention implementation. In order to keep the spread of the virus under control, strict regional lockdowns with minimum delay and commuter testing of at least twice a week are advisable. If less strict interventions are in favor, substantially increased testing rates are needed to avoid overall higher infection dynamics. Conclusions: Our results indicate that local containment of outbreaks and maintenance of low overall incidence is possible even in densely populated and highly connected regions such as Germany or Western Europe. While we demonstrate this on data from Germany, similar patterns of mobility likely exist in many countries and our results are, hence, generalizable to a certain extent. \u00a9 The Author(s) 2022. Open Access This article is licensed under a Creative Commons Attribution 4.0 International License, which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if changes were made. The images or other third party material in this article are included in the article\u2019s Creative Commons licence, unless indicated otherwise in a credit line to the material. If material is not included in the article\u2019s Creative Commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this licence, visit http:// creat iveco mmons. org/ licen ses/ by/4. 0/. The Creative Commons Public Domain Dedication waiver (http:// creat iveco mmons. org/ publi cdoma in/ zero/1. 0/) applies to the data made available in this article, unless otherwise stated in a credit line to the data. Open Access *Correspondence: Martin.Kuehn@DLR.de; SB@Theoretical\u2010Biology.de; MMH@Theoretical\u2010Biology.de; Achim.Basermann@DLR.de 1 Institute for Software Technology, German Aerospace Center, Cologne, Germany 2 Department of Systems Immunology and Braunschweig Integrated Centre of Systems Biology (BRICS), Helmholtz Centre for Infection Research, Braunschweig, Germany Page 2 of 17 K\u00fchn et al. BMC Infectious Diseases (2022) 22:333 Background With about three million detected infections in Germany [1] and about 22 million vaccinations [2] until April 2021, we could reasonably assume that at least 80% of the population were still susceptible to SARS-CoV-2. New SARS-CoV-2 variants (B.1.1.7, B.1.351 and P.1) contributed to the increase in case numbers [3, Report of Apr. 7]. Due to the higher transmission risk of B.1.1.7 [4], previous mitigation strategies had to be reconsidered and strengthened. Among other things, massive deployment of antigen tests and regular testing were proposed [5]. As of February 2022, we have seen the more infectious Delta and Omicron variants. Although we hoped for herd immunity in winter 2021/2022, still 25% of the German population have not been vaccinated twice and 43% of the population have not yet had a third vaccine dose [2]. With lockdowns and strict interventions not being in place, testing becomes even more important. The prediction of SARS-CoV-2 infections by mathematical models is an active area of research of many groups from all over the world. There are various approaches to simulate the spread of infectious diseases across regions. In the following, we will shortly discuss different approaches and provide a non-exhaustive list of references with applications to SARS-CoV-2. Sets of ordinary differential equations were already proposed in [6, 7] to model the spread of infectious diseases. These models are often denoted SIRor SEIR-models and the letters (e.g., S, E, I, or R) represent infection states used in the model, e.g., susceptible, exposed, infected, or removed/recovered. In order to avoid a proliferation of letters, we will denote models of this kind as SIR-type models. To be more precise, we denote these models as (deterministic) ODE-SIR-type models to indicate their reliance on ordinary differential equations. A good overview on these deterministic models as well as a presentation of limitations is given, e.g., in [8\u201310]. Although having certain limitations, these models are often praised for their simplicity and understandability. In the context of the SARS-CoV-2 pandemic, ODESIR-type models with focus on vaccination were used by [11, 12] while [13] focused on hospitalization and ICU demands. The authors of [14, 15] considered similar models with an additional differentiation of confirmed and unconfirmed infections. This differentiation was also used by the authors of [16, 17]. The authors of [18\u201322] considered ODE-SIR models and laid a particular focus on the effect of non-pharmaceutical interventions (NPIs) while [23] focused on contacts outside households and [24] tried to assess the effect of seasonality of SARSCoV-2. Latency effects in ODE-SIR-type models were studied in [25]. Some obvious limitations of simple ODE-SIR-type models are the homogeneous mixing assumption, the lack of stochastic effects and the implicit use of exponentially distributed compartment stays. The authors of [26] considered stochastic and deterministic ODE-SIR-type models and [27] provides an overview over 13, either stochastic or deterministic, models from 33 papers. The authors of [28] used stochastic compartment models to consider the effect of NPIs and [29] used a stochastic branching process which may be advantageous over compartment models in the beginning phase of pandemic. Viboud et al. [30] proposed a simple generalized-growth model for the early phase of disease outbreaks. In [31], different stochastic and deterministic compartment and agent-based models for Germany and Poland from, i.a., [16, 32\u201336], were compared. Stochastic effects such as superspreading events can naturally be modeled by agent-based models or, in parts, by stochastic differential equations. However, the nature and setting of superspreading events is still an area of active research, cf., e.g., [37, 38] and will take years to be fully understood [39]. Agent-based models (ABMs) have been used by many authors since they model infection dynamics in a natural way [40\u201348]. Another ABM based on a traffic simulation and mobile phone data was proposed by [49] and [50, 51] presented agent-based models which build upon a predefined contact networks. While ABMs do not have the limitations of the homogeneous mixing assumption or the lack of stochastic events, their use comes at a huge computational overhead. In [52, 53] agent-based models were combined with artificial intelligence and machine learning. Other machine learning approaches were presented by, e.g., [54\u201356]. Radev et al. [54] used ODE-SIR-type based Bayesian inference with invertible neural networks. In [55], an ODESIR-type model based machine learning approach was presented and [56] proposed the use of LSTM networks. Although compartment and agent-based models seem to be contrary approaches, links can be established. The authors of [57, 58] provide links between microscopic, agent-based and ODE models and [59] presented a generalization of ODE-SIR-type models and considered agent-based modeling. In [60], relations between Agentbased and stochastic as well as deterministic metapopulation models were presented.",
+    "authors": [
+        {
+            "affiliations": [],
+            "name": "Martin J. K\u00fchn"
+        },
+        {
+            "affiliations": [],
+            "name": "Daniel Abele"
+        },
+        {
+            "affiliations": [],
+            "name": "Sebastian Binder"
+        },
+        {
+            "affiliations": [],
+            "name": "Kathrin Rack"
+        },
+        {
+            "affiliations": [],
+            "name": "Margrit Klitz"
+        },
+        {
+            "affiliations": [],
+            "name": "Jan Kleinert"
+        },
+        {
+            "affiliations": [],
+            "name": "Jonas Gilg"
+        },
+        {
+            "affiliations": [],
+            "name": "Luca Spataro"
+        },
+        {
+            "affiliations": [],
+            "name": "Wadim Koslow"
+        },
+        {
+            "affiliations": [],
+            "name": "Martin Siggel"
+        },
+        {
+            "affiliations": [],
+            "name": "Michael Meyer\u2010Hermann"
+        },
+        {
+            "affiliations": [],
+            "name": "Achim Basermann"
+        }
+    ],
+    "id": "SP:d99497b20d6606b9eb68a514c3661ae88fb46dbd",
+    "references": [
+        {
+            "authors": [
+                "E Volz",
+                "S Mishra",
+                "M Chand",
+                "JC Barrett",
+                "R Johnson",
+                "L Geidelberg",
+                "WR Hinsley",
+                "DJ Laydon",
+                "G Dabrera",
+                "\u00c1 O\u2019Toole",
+                "R Amato",
+                "M Ragonnet\u2010Cronin",
+                "I Harrison",
+                "B Jackson",
+                "CV Ariani",
+                "O Boyd",
+                "NJ Loman",
+                "JT McCrone",
+                "S Gon\u2010 \u00e7alves",
+                "D Jorgensen",
+                "R Myers",
+                "V Hill",
+                "DK Jackson",
+                "K Gaythorpe",
+                "N Groves",
+                "J Sillitoe",
+                "DP Kwiatkowski",
+                "S Flaxman",
+                "O Ratmann",
+                "S Bhatt",
+                "S Hopkins",
+                "A Gandy",
+                "A Rambaut",
+                "NM. Ferguson"
+            ],
+            "title": "Transmission of SARS\u2010CoV\u20102 lineage b.1.1.7 in England: insights from linking epidemiological and genetic data. medRxiv",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "WO Kermack",
+                "AG McKendrick",
+                "GT. Walker"
+            ],
+            "title": "A contribution to the math\u2010 ematical theory of epidemics",
+            "venue": "Proc R Soc Lond",
+            "year": 1927
+        },
+        {
+            "authors": [
+                "Anderson RM",
+                "May RM"
+            ],
+            "title": "Population biology of infectious diseases: part I",
+            "venue": "Nature. 1979;280(5721):361\u20137. https:// doi. org/",
+            "year": 1979
+        },
+        {
+            "authors": [
+                "A Huppert",
+                "G. Katriel"
+            ],
+            "title": "Mathematical modelling and prediction in infec\u2010 tious disease epidemiology",
+            "venue": "Clin Microbiol Infect",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "F. Brauer"
+            ],
+            "title": "Mathematical epidemiology: past, present, and future",
+            "venue": "Infect Dis Model",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "Rao IJ",
+                "Brandeau ML"
+            ],
+            "title": "Optimal allocation of limited vaccine to minimize the effective reproduction",
+            "venue": "number. Math Biosci. 2021;339:108654. https:// doi. org/ 10. 1016/j. mbs",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S Bauer",
+                "S Contreras",
+                "J Dehning",
+                "M Linden",
+                "E Iftekhar",
+                "SB Mohr",
+                "A Olivera\u2010 Nappa",
+                "V. Priesemann"
+            ],
+            "title": "Relaxing restrictions at the pace of vaccination increases freedom and guards against further COVID\u201019 waves",
+            "venue": "PLoS Comput Biol",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "BJ L\u00fcnsmann",
+                "K Polotzek",
+                "C Kleber",
+                "R Gebler",
+                "V Bierbaum",
+                "F Walther",
+                "F Baum",
+                "K Juncken",
+                "C Forkert",
+                "T Lange",
+                "H\u2010C Held",
+                "A Mogwitz",
+                "RR Weide\u2010 mann",
+                "M Sedlmayr",
+                "N Lakowa",
+                "SN Stehr",
+                "M Albrecht",
+                "J Karschau",
+                "J. Schmitt"
+            ],
+            "title": "Regional responsibility and coordination of appropriate inpatient care capacities for patients with COVID\u201019\u2014the German dispense model",
+            "venue": "PLoS ONE",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "S Khailaie",
+                "T Mitra",
+                "A Bandyopadhyay",
+                "M Schips",
+                "P Mascheroni",
+                "P Vanella",
+                "B Lange",
+                "SC Binder",
+                "M. Meyer\u2010Hermann"
+            ],
+            "title": "Development of the reproduc\u2010 tion number from coronavirus SARS\u2010CoV\u20102 case data in Germany and implications for political measures",
+            "venue": "BMC Med",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "MJ Keeling",
+                "MJ Tildesley",
+                "BD Atkins",
+                "B Penman",
+                "E Southall",
+                "G Guyver\u2010 Fletcher",
+                "A Holmes",
+                "H McKimm",
+                "EE Gorsich",
+                "EM Hill"
+            ],
+            "title": "The impact of school reopening on the spread of COVID\u201019 in England",
+            "venue": "Philos Trans R Soc B",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "MV Barbarossa",
+                "J Fuhrmann",
+                "JH Meinke",
+                "S Krieg",
+                "HV Varma",
+                "N Castelletti",
+                "T. Lippert"
+            ],
+            "title": "Modeling the spread of COVID\u201019 in Germany: early assess\u2010 ment and possible scenarios",
+            "venue": "PLoS ONE",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S Sturniolo",
+                "W Waites",
+                "T Colbourn",
+                "D Manheim",
+                "J. Panovska\u2010Griffiths"
+            ],
+            "title": "Test\u2010 ing, tracing and isolation in compartmental models",
+            "venue": "PLoS Comput Biol",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J Dehning",
+                "J Zierenberg",
+                "FP Spitzner",
+                "M Wibral",
+                "JP Neto",
+                "M Wilczek",
+                "V. Priesemann"
+            ],
+            "title": "Inferring change points in the spread of COVID\u201019 reveals the effectiveness of interventions. Science. 2020;369(6500):9789",
+            "venue": "https:// doi. org/",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "L Di Domenico",
+                "G Pullano",
+                "CE Sabbatini",
+                "P\u2010Y Bo\u00eblle",
+                "V. Colizza"
+            ],
+            "title": "Impact of lockdown on COVID\u201019 epidemic in ile\u2010de\u2010France and possible exit strategies",
+            "venue": "BMC Med",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J K\u00f6hler",
+                "L Schwenkel",
+                "A Koch",
+                "J Berberich",
+                "P Pauli",
+                "F. Allg\u00f6wer"
+            ],
+            "title": "Robust and optimal predictive control of the COVID\u201019 outbreak",
+            "venue": "Annu Rev Control",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "K Prem",
+                "Y Liu",
+                "TW Russell",
+                "AJ Kucharski",
+                "RM Eggo",
+                "N Davies",
+                "S Flasche",
+                "S Clifford",
+                "CAB Pearson",
+                "JD Munday",
+                "S Abbott",
+                "H Gibbs",
+                "A Rosello",
+                "BJ Quilty",
+                "T Jombart",
+                "F Sun",
+                "C Diamond",
+                "A Gimma",
+                "Zandvoort Kv",
+                "S Funk",
+                "CI Jarvis",
+                "WJ Edmunds",
+                "NI Bosse",
+                "J Hellewell",
+                "M Jit",
+                "P. Klepac"
+            ],
+            "title": "The effect of control strategies to reduce social mixing on outcomes of the COVID\u2010 19 epidemic in Wuhan, China: a modelling study",
+            "venue": "Lancet Public Health",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "CN Ngonghala",
+                "E Iboi",
+                "S Eikenberry",
+                "M Scotch",
+                "CR MacIntyre",
+                "MH Bonds",
+                "AB. Gumel"
+            ],
+            "title": "Mathematical assessment of the impact of non\u2010pharma\u2010 ceutical interventions on curtailing the 2019 novel coronavirus",
+            "venue": "Math Biosci. 2020;325:108364. https:// doi. org/",
+            "year": 1016
+        },
+        {
+            "authors": [
+                "R Omori",
+                "R Matsuyama",
+                "Y. Nakata"
+            ],
+            "title": "The age distribution of mortality from novel coronavirus disease (COVID\u201019) suggests no large difference of susceptibility by age",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "X Liu",
+                "J Huang",
+                "C Li",
+                "Y Zhao",
+                "D Wang",
+                "Z Huang",
+                "K. Yang"
+            ],
+            "title": "The role of seasonality in the spread of COVID\u201019 pandemic",
+            "venue": "Environ Res",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Blyuss KB",
+                "Kyrychko YN"
+            ],
+            "title": "Effects of latency and age structure on the dynamics and containment of COVID\u201019",
+            "venue": "J Theor Biol",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "FS Lobato",
+                "GB Libotte",
+                "GM. Platt"
+            ],
+            "title": "Mathematical modelling of the second wave of COVID\u201019 infections using deterministic and stochastic SIDR models",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Y Xiang",
+                "Y Jia",
+                "L Chen",
+                "L Guo",
+                "B Shu",
+                "tion Long E. COVID\u201019 epidemic predic\u2010",
+                "interventions the impact of public health"
+            ],
+            "title": "a review of COVID\u2010 19 epidemic models",
+            "venue": "Infect Dis Model. 2021;6:324\u201342. https:// doi. org/ 10. 1016/j. idm. 2021. 01. 001. Page 15 of 17 K\u00fchn et al. BMC Infectious Diseases",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "NG Davies",
+                "AJ Kucharski",
+                "RM Eggo",
+                "A Gimma",
+                "WJ. Edmunds"
+            ],
+            "title": "Centre for the mathematical modelling of infectious diseases COVID\u201019 working group: effects of non\u2010pharmaceutical interventions on COVID\u201019 cases, deaths, and demand for hospital services in the UK: a modelling study",
+            "venue": "Lancet Public Health",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A James",
+                "MJ Plank",
+                "RN Binny",
+                "A Lustig",
+                "K Hannah",
+                "SC Hendy",
+                "N. Steyn"
+            ],
+            "title": "A structured model for COVID\u201019 spread: modelling age and healthcare inequities",
+            "venue": "Math Med Biol J IMA",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C Viboud",
+                "L Simonsen",
+                "G. Chowell"
+            ],
+            "title": "A generalized\u2010growth model to characterize the early ascending phase of infectious disease outbreaks",
+            "venue": "Epidemics. 2016;15:27\u201337. https:// doi. org/ 10",
+            "year": 2016
+        },
+        {
+            "authors": [
+                "J Bracher",
+                "D Wolffram",
+                "J Deuschel",
+                "K G\u00f6rgen",
+                "JL Ketterer",
+                "A Ullrich",
+                "S Abbott",
+                "MV Barbarossa",
+                "D Bertsimas",
+                "S Bhatia",
+                "M Bodych",
+                "NI Bosse",
+                "JP Burgard",
+                "L Castro",
+                "G Fairchild",
+                "J Fuhrmann",
+                "S Funk",
+                "K Gogolewski",
+                "Q Gu",
+                "S Heyder",
+                "T Hotz",
+                "Y Kheifetz",
+                "H Kirsten",
+                "T Krueger",
+                "E Krymova",
+                "ML Li",
+                "JH Meinke",
+                "IJ Michaud",
+                "K Niedzielewski",
+                "T O\u017ca\u0144ski",
+                "F Rakowski",
+                "M Scholz",
+                "S Soni",
+                "A Srivastava",
+                "J Zieli\u0144ski",
+                "D Zou",
+                "T Gneiting",
+                "M. Schienle"
+            ],
+            "title": "Short\u2010term forecasting of COVID\u201019 in Germany and Poland during the second wave\u2014a preregistered study",
+            "venue": "medRxiv",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "F Rakowski",
+                "M Gruziel",
+                "\u0141 Bieniasz\u2010Krzywiec",
+                "JP. Radomski"
+            ],
+            "title": "Influenza epidemic spread simulation for Poland\u2014a large scale, individual based model study",
+            "venue": "Physica A Stat Mech Appl",
+            "year": 2010
+        },
+        {
+            "authors": [
+                "B Adamik",
+                "M Bawiec",
+                "V Bezborodov",
+                "W Bock",
+                "M Bodych",
+                "JP Burgard",
+                "T G\u00f6tz",
+                "T Krueger",
+                "A Migalska",
+                "B Pabjan",
+                "T O\u017ca\u0144ski",
+                "E Rafaj\u0142owicz",
+                "W Rafaj\u0142owicz",
+                "E Skubalska\u2010Rafaj\u0142owicz",
+                "S Ryfczy\u0144ska",
+                "E Szczurek",
+                "P. Szyma\u0144ski"
+            ],
+            "title": "Mitigation and herd immunity strategy for COVID\u201019 is likely to fail",
+            "venue": "medRxiv. 2020. https:// doi",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "ML Li",
+                "HT Bouardi",
+                "OS Lami",
+                "TA Trikalinos",
+                "NK Trichakis",
+                "D. Bertsimas"
+            ],
+            "title": "Fore\u2010 casting COVID\u201019 and analyzing the effect of government interven\u2010 tions. medRxiv",
+            "venue": "https:// doi",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "D Zou",
+                "L Wang",
+                "P Xu",
+                "J Chen",
+                "W Zhang",
+                "Q. Gu"
+            ],
+            "title": "Epidemic model guided machine learning for COVID\u201019 forecasts in the United States",
+            "venue": "medRxiv",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A Srivastava",
+                "T Xu",
+                "VK. Prasanna"
+            ],
+            "title": "Fast and accurate forecasting of COVID\u2010 19 deaths using the SIkJ\u03b1 model 2020",
+            "venue": "arxiv:",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "D Dave",
+                "D McNichols",
+                "JJ. Sabia"
+            ],
+            "title": "The contagion externality of a super\u2010 spreading event: the Sturgis motorcycle rally and COVID\u201019",
+            "venue": "South Econ J. 2021;87(3):769\u2013807. https:// doi. org/",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "T Guenther",
+                "M Czech\u2010Sioli",
+                "D Indenbirken",
+                "A Robitailles",
+                "P Tenhaken",
+                "M Exner",
+                "M Ottinger",
+                "N Fischer",
+                "A Grundhoff",
+                "M. Brinkmann"
+            ],
+            "title": "Investiga\u2010 tion of a superspreading event preceding the largest meat processing plant\u2010related SARS\u2010coronavirus 2 outbreak",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Lakdawala SS",
+                "Menachery VD"
+            ],
+            "title": "Catch me if you can: superspreading of COVID\u201019",
+            "venue": "Trends Microbiol",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S Venkatramanan",
+                "B Lewis",
+                "J Chen",
+                "D Higdon",
+                "A Vullikanti",
+                "M. Marathe"
+            ],
+            "title": "Using data\u2010driven agent\u2010based models for forecasting emerging infectious diseases",
+            "venue": "Epidemics. 2018;22:43\u20139. https:// doi. org/ 10",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "SA M\u00fcller",
+                "M Balmer",
+                "W Charlton",
+                "R Ewert",
+                "A Neumann",
+                "C Rakow",
+                "T Schlenther",
+                "K. Nagel"
+            ],
+            "title": "Predicting the effects of COVID\u201019 related interventions in urban settings by combining activity\u2010based model\u2010 ling, agent\u2010based simulation, and mobile phone data",
+            "venue": "medRxiv",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "J\u2010H Niemann",
+                "S Winkelmann",
+                "S Wolf",
+                "C. Sch\u00fctte"
+            ],
+            "title": "Agent\u2010based modeling: population limits and large timescales",
+            "venue": "Chaos Interdiscip J Nonlinear Sci",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "F Sanchez",
+                "JG Calvo",
+                "YE Garc\u00eda",
+                "LA Barboza",
+                "P V\u00e1squez",
+                "G Mery",
+                "T. Rivas"
+            ],
+            "title": "A multilayer network model of COVID\u201019: implications in public health policy in Costa Rica",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "N Bellomo",
+                "R Bingham",
+                "MAJ Chaplain",
+                "G Dosi",
+                "G Forni",
+                "DA Knopoff",
+                "J Lowengrub",
+                "R Twarock",
+                "ME. Virgillito"
+            ],
+            "title": "A multiscale model of virus pandemic: heterogeneous interactive entities in a globally connected world",
+            "venue": "Math Models Methods Appl Sci",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Y Kim",
+                "H Ryu",
+                "S. Lee"
+            ],
+            "title": "Agent\u2010based modeling for super\u2010spreading events: a case study of MERS\u2010CoV transmission dynamics in the Republic of Korea",
+            "venue": "Int J Environ Res Public Health",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "MR Bicher",
+                "C Rippinger",
+                "C Urach",
+                "D Brunmeir",
+                "U Siebert",
+                "N. Popper"
+            ],
+            "title": "Agent\u2010based simulation for evaluation of contact\u2010tracing policies against the spread of SARS\u2010CoV\u20102",
+            "venue": "medRxiv",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "CC Kerr",
+                "RM Stuart",
+                "D Mistry",
+                "RG Abeysuriya",
+                "K Rosenfeld",
+                "GR Hart",
+                "RC N\u00fa\u00f1ez",
+                "JA Cohen",
+                "P Selvaraj",
+                "B Hagedorn",
+                "L George",
+                "M Jastrzebski",
+                "AS Izzo",
+                "G Fowler",
+                "A Palmer",
+                "D Delport",
+                "N Scott",
+                "SL Kelly",
+                "CS Bennette",
+                "BG Wagner",
+                "ST Chang",
+                "AP Oron",
+                "EA Wenger",
+                "J Panovska\u2010Griffiths",
+                "M Famu\u2010 lare",
+                "DJ. Klein"
+            ],
+            "title": "Covasim: an agent\u2010based model of COVID\u201019 dynamics and interventions",
+            "venue": "PLoS Comput Biol",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "MR Bicher",
+                "C Rippinger",
+                "GR Schneckenreither",
+                "N Weibrecht",
+                "C Urach",
+                "M Zechmeister",
+                "D Brunmeir",
+                "W Huf",
+                "N. Popper"
+            ],
+            "title": "Model based estimation of the SARS\u2010CoV\u20102 immunization level in Austria and consequences for herd immunity effects",
+            "venue": "Sci Rep. 2022. https:// doi",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "SA M\u00fcller",
+                "M Balmer",
+                "W Charlton",
+                "R Ewert",
+                "A Neumann",
+                "C Rakow",
+                "T Schlenther",
+                "K. Nagel"
+            ],
+            "title": "A realistic agent\u2010based simulation model for COVID\u201019 based on a traffic simulation and mobile phone",
+            "venue": "arxiv:",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "KR Bisset",
+                "J Chen",
+                "X Feng",
+                "VSA Kumar",
+                "MV. Marathe"
+            ],
+            "title": "Epifast: a fast algorithm for large scale realistic epidemic simulations on distributed memory systems. In: ICS \u201909",
+            "venue": "New York: Association for Computing Machinery;",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "S Syga",
+                "D David\u2010Rus",
+                "Y Sch\u00e4lte",
+                "H Hatzikirou",
+                "A. Deutsch"
+            ],
+            "title": "Inferring the effect of interventions on COVID\u201019 transmission",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "SZ Valtchev",
+                "A Asgary",
+                "M Chen",
+                "FA Cronemberger",
+                "MM Najafabadi",
+                "MG Cojocaru",
+                "J. Wu"
+            ],
+            "title": "Managing SARS\u2010CoV\u20102 testing in schools with an artificial intelligence model and application developed by simulation data",
+            "venue": "https:// doi. org/",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "F Lamperti",
+                "A Roventini",
+                "A. Sani"
+            ],
+            "title": "Agent\u2010based model calibration using machine learning surrogates",
+            "venue": "J Econ Dyn Control",
+            "year": 2018
+        },
+        {
+            "authors": [
+                "ST Radev",
+                "F Graw",
+                "S Chen",
+                "NT Mutters",
+                "VM Eichel",
+                "T B\u00e4rnighausen",
+                "U. K\u00f6the"
+            ],
+            "title": "Outbreakflow: model\u2010based Bayesian inference of disease outbreak dynamics with invertible neural networks and its application to the COVID\u201019 pandemics in Germany",
+            "venue": "PLoS Comput Biol",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "SO Arik",
+                "C\u2010L. Li",
+                "J Yoon",
+                "R Sinha",
+                "A Epshteyn",
+                "LT Le",
+                "V Menon",
+                "S Singh",
+                "L Zhang",
+                "N Yoder",
+                "M Nikoltchev",
+                "Y Sonthalia",
+                "H Nakhost",
+                "E Kanal",
+                "T. Pfister"
+            ],
+            "title": "Interpretable sequence learning for COVID\u201019 forecasting",
+            "venue": "arxiv:",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "VKR Chimmula",
+                "L. Zhang"
+            ],
+            "title": "Time series forecasting of COVID\u201019 trans\u2010 mission in Canada using LSTM networks. Chaos Solitons Fractals",
+            "venue": "https:// doi. org/",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "W Bock",
+                "T Fattler",
+                "I Rodiah",
+                "O. Tse"
+            ],
+            "title": "An analytic method for agent\u2010based modeling of spatially inhomogeneous disease dynamics",
+            "venue": "AIP Conf Proc. 2017;1871(1):020008. https:// doi",
+            "year": 2000
+        },
+        {
+            "authors": [
+                "M Bicher",
+                "N. Popper"
+            ],
+            "title": "Agent\u2010based derivation of the sir\u2010differential equa\u2010 tions",
+            "venue": "8th EUROSIM congress on modelling and simulation",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "A. Vazquez"
+            ],
+            "title": "Exact solution of infection dynamics with gamma distribu\u2010 tion of generation intervals",
+            "venue": "Phys Rev E. 2021;103:042306. https:// doi. org/",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S Winkelmann",
+                "J Zonker",
+                "C Sch\u00fctte",
+                "ND. Conrad"
+            ],
+            "title": "Mathematical modeling of spatio\u2010temporal population dynamics and application to epidemic spreading",
+            "venue": "Math Biosci. 2021;336:108619. https:// doi. org/ 10. 1016/j. mbs",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "Wang W",
+                "Zhao X\u2010Q"
+            ],
+            "title": "An age\u2010structured epidemic model in a patchy environment",
+            "venue": "SIAM J Appl Math. 2005;65(5):1597\u2013614. https:// doi. org/",
+            "year": 2005
+        },
+        {
+            "authors": [
+                "P Bittihn",
+                "L Hupe",
+                "J Isensee",
+                "R. Golestanian"
+            ],
+            "title": "Local measures enable COVID\u201019 containment with fewer restrictions due to cooperative effects",
+            "venue": "EClinicalMedicine",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "F Schlosser",
+                "BF Maier",
+                "O Jack",
+                "D Hinrichs",
+                "A Zachariae",
+                "D. Brockmann"
+            ],
+            "title": "COVID\u201019 lockdown induces disease\u2010mitigating structural changes in Page 16 of 17 K\u00fchn et al. BMC Infectious Diseases",
+            "venue": "Proc Natl Acad Sci",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "MJ K\u00fchn",
+                "D Abele",
+                "T Mitra",
+                "W Koslow",
+                "M Abedi",
+                "K Rack",
+                "M Siggel",
+                "S Khailaie",
+                "M Klitz",
+                "S Binder",
+                "L Spataro",
+                "J Gilg",
+                "J Kleinert",
+                "M H\u00e4berle",
+                "L Pl\u00f6tzke",
+                "CD Spinner",
+                "M Stecher",
+                "XX Zhu",
+                "A Basermann",
+                "M. Meyer\u2010Hermann"
+            ],
+            "title": "Assessment of effective mitigation and prediction of the spread of SARS\u2010CoV\u20102 in Germany using demographic information and spatial resolution",
+            "venue": "Math Biosci",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "S Pei",
+                "S Kandula",
+                "J. Shaman"
+            ],
+            "title": "Differential effects of intervention timing on COVID\u201019 spread in the United States",
+            "venue": "Sci Adv",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "W Koslow",
+                "MJ K\u00fchn",
+                "S Binder",
+                "M Klitz",
+                "D Abele",
+                "A Basermann",
+                "M. Meyer\u2010 Hermann"
+            ],
+            "title": "Appropriate relaxation of non\u2010pharmaceutical interven\u2010 tions minimizes the risk of a resurgence in SARS\u2010CoV\u20102 infections in spite of the delta variant",
+            "venue": "medRxiv",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "D Brockmann",
+                "D. Helbing"
+            ],
+            "title": "The hidden geometry of complex, network\u2010 driven contagion phenomena",
+            "year": 2013
+        },
+        {
+            "authors": [
+                "E Hunter",
+                "B Mac Namee",
+                "J. Kelleher"
+            ],
+            "title": "A hybrid agent\u2010based and equation based model for the spread of infectious diseases",
+            "venue": "J Artif Soc Soc Simul",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Hethcote HW",
+                "Tudor DW"
+            ],
+            "title": "Integral equation models for endemic infec\u2010 tious diseases",
+            "venue": "J Math Biol",
+            "year": 1980
+        },
+        {
+            "authors": [
+                "P van den Driessche",
+                "X. Zou"
+            ],
+            "title": "Modeling relapse in infectious diseases",
+            "venue": "Math Biosci",
+            "year": 2007
+        },
+        {
+            "authors": [
+                "F Brauer",
+                "J. Watmough"
+            ],
+            "title": "Age of infection epidemic models with hetero\u2010 geneous mixing",
+            "venue": "J Biol Dyn. 2009;3(2\u20133):324\u201330. https:// doi. org/",
+            "year": 2009
+        },
+        {
+            "authors": [
+                "A Keimer",
+                "L. Pflug"
+            ],
+            "title": "Modeling infectious diseases using integro\u2010differen\u2010 tial equations: optimal control strategies for policy decisions and appli\u2010 cations in COVID\u201019",
+            "venue": "Technical report, Friedrich\u2010Alexander\u2010Universita\u0308t Erlangen\u2010Nu\u0308rnberg",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Z Fodor",
+                "SD Katz",
+                "TG. Kovacs"
+            ],
+            "title": "Why integral equations should be used instead of differential equations to describe the dynamics of epidemics",
+            "venue": "arxiv:",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J Medlock",
+                "M. Kot"
+            ],
+            "title": "Spreading disease: integro\u2010differential equations old and new",
+            "venue": "Math Biosci",
+            "year": 2003
+        },
+        {
+            "authors": [
+                "Medlock JP"
+            ],
+            "title": "Integro\u2010differential\u2010equation models in ecology and epide\u2010 miology",
+            "venue": "Seattle: University of Washington;",
+            "year": 2004
+        },
+        {
+            "authors": [
+                "Smith HL"
+            ],
+            "title": "An introduction to delay differential equations with applica\u2010 tions to the life sciences, vol",
+            "year": 2011
+        },
+        {
+            "authors": [
+                "L Contento",
+                "N Castelletti",
+                "E Raim\u00fandez",
+                "R Le Gleut",
+                "Y Schaelte",
+                "P Stapor",
+                "LC Hinske",
+                "M Hoelscher",
+                "A Wieser",
+                "K Radon"
+            ],
+            "title": "Integrative modelling of reported case numbers and seroprevalence reveals time\u2010dependent test efficiency and infection",
+            "venue": "rates. medRxiv. 2021. https:// doi",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A Kerga\u00dfner",
+                "C Burkhardt",
+                "D Lippold",
+                "M Kerga\u00dfner",
+                "L Pflug",
+                "D Budday",
+                "P Steinmann",
+                "S. Budday"
+            ],
+            "title": "Memory\u2010based meso\u2010scale modeling of COVID\u2010 19",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "F Brauer",
+                "P Driessche",
+                "J. Wu"
+            ],
+            "title": "Lecture notes in mathematical epidemiol\u2010 ogy",
+            "year": 2008
+        },
+        {
+            "authors": [
+                "O Diekmann",
+                "H Heesterbeek",
+                "T. Britton"
+            ],
+            "title": "Mathematical tools for under\u2010 standing infectious disease",
+            "venue": "https:// doi",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "M Baumann",
+                "M Beier",
+                "M Brinkmann",
+                "H Bude",
+                "C Fuest",
+                "D Feldner",
+                "M Hallek",
+                "I Kickbusch",
+                "M Mayer",
+                "M Meyer\u2010Hermann",
+                "A Peichl",
+                "E Rosert",
+                "M. Sch\u2010 neider"
+            ],
+            "title": "A proactive approach to fight SARS\u2010CoV\u20102 in Germany and Europe",
+            "venue": "Technical report",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "R. Horton"
+            ],
+            "title": "Offline: the case for no\u2010COVID",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "C Shen",
+                "GF Killeen",
+                "A Staines",
+                "Y. Bar\u2010Yam"
+            ],
+            "title": "A green zone strategy for Ire\u2010 land",
+            "venue": "Technical report, New England Complex Systems Institute",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "S Jasanoff",
+                "S Hilgartner",
+                "JB Hurlbut",
+                "O \u00d6zg\u00f6de",
+                "M. Rayzberg"
+            ],
+            "title": "Compara\u2010 tive COVID response: crisis, knowledge, politics",
+            "venue": "Technical report, Harvard Kennedy School",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "P Poletti",
+                "M Tirani",
+                "D Cereda",
+                "F Trentini",
+                "G Guzzetta",
+                "V Marziano",
+                "S Buoro",
+                "S Riboli",
+                "L Crottogini",
+                "R Piccarreta",
+                "A Piatti",
+                "G Grasselli",
+                "A Melegaro",
+                "M Gramegna",
+                "M Ajelli",
+                "S. Merler"
+            ],
+            "title": "Age\u2010specific SARS\u2010CoV\u20102 infection fatality ratio and associated risk factors, Italy, February to April 2020",
+            "venue": "Eurosurveillance",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "AT Levin",
+                "WP Hanage",
+                "N Owusu\u2010Boaitey",
+                "KB Cochran",
+                "SP Walsh",
+                "G. Meyerowitz\u2010Katz"
+            ],
+            "title": "Assessing the age specificity of infection fatality rates for COVID\u201019: systematic review, meta\u2010analysis, and public policy implications",
+            "venue": "medRxiv",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "R Verity",
+                "LC Okell",
+                "I Dorigatti",
+                "P Winskill",
+                "C Whittaker",
+                "N Imai",
+                "G Cuomo\u2010 Dannenburg",
+                "H Thompson",
+                "PGT Walker",
+                "H Fu",
+                "A Dighe",
+                "JT Griffin",
+                "M Baguelin",
+                "S Bhatia",
+                "A Boonyasiri",
+                "A Cori",
+                "Z Cucunub\u00e1",
+                "R FitzJohn",
+                "K Gaythorpe",
+                "W Green",
+                "A Hamlet",
+                "W Hinsley",
+                "D Laydon",
+                "G Nedjati\u2010Gilani",
+                "S Riley",
+                "Sv Elsland",
+                "E Volz",
+                "H Wang",
+                "Y Wang",
+                "X Xi",
+                "CA Donnelly",
+                "AC Ghani",
+                "NM. Ferguson"
+            ],
+            "title": "Estimates of the severity of coronavirus disease 2019: a model\u2010based analysis",
+            "venue": "Lancet Infect Dis",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "K Prem",
+                "AR Cook",
+                "M. Jit"
+            ],
+            "title": "Projecting social contact matrices in 152 coun\u2010 tries using contact surveys and demographic data",
+            "venue": "PLoS Comput Biol",
+            "year": 2017
+        },
+        {
+            "authors": [
+                "L Fumanelli",
+                "M Ajelli",
+                "P Manfredi",
+                "A Vespignani",
+                "S. Merler"
+            ],
+            "title": "Inferring the structure of social contacts from demographic data in the analysis of infectious diseases spread",
+            "venue": "PLoS Comput Biol",
+            "year": 2012
+        },
+        {
+            "authors": [
+                "Bundesregierung"
+            ],
+            "title": "Beschluss zur Telefonkonferenz der Bundeskanzlerin am 13",
+            "venue": "Dezember 2020. 2020.https:// www. bunde sregi erung. de/ resou rce/ blob/ 975226/ 18273 66/ 69441 fb684 35a71 99b3d 3a89b ff2c0 e6/ 2020\u2010 12\u2010 13\u2010 besch luss\u2010 mpk\u2010 data. pdf. Accessed 14 Dec 2020. Page 17 of 17 K\u00fchn et al. BMC Infectious Diseases",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "A Cherif",
+                "N Grobe",
+                "X Wang",
+                "P. Kotanko"
+            ],
+            "title": "Simulation of pool testing to identify patients with coronavirus disease 2019 under conditions of limited test availability",
+            "venue": "JAMA Netw Open",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "Sunjaya AF",
+                "Sunjaya AP"
+            ],
+            "title": "Pooled testing for expanding COVID\u201019 mass surveillance",
+            "venue": "Disaster Med Public Health Prep",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "J Dinnes",
+                "J Deeks",
+                "S Berhane",
+                "M Taylor",
+                "A Adriano",
+                "C Davenport",
+                "S Dittrich",
+                "D Emperador",
+                "Y Takwoingi",
+                "J Cunningham",
+                "S Beese",
+                "J Domen",
+                "J Dretzke",
+                "L Ferrante di Ruffano",
+                "I Harris",
+                "M Price",
+                "S Taylor\u2010Phillips",
+                "L Hooft",
+                "M Leeflang",
+                "M McInnes",
+                "R Spijker",
+                "A. Van den Bruel"
+            ],
+            "title": "Rapid, point\u2010of\u2010care antigen and molecular\u2010based tests for diagnosis of SARS\u2010CoV\u20102 infec\u2010 tion",
+            "venue": "Cochrane Database Syst Rev",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "F Dorn",
+                "S Khailaie",
+                "M St\u00f6ckli",
+                "S Binder",
+                "B Lange",
+                "P Vanella",
+                "T Wollmersh\u00e4u\u2010 ser",
+                "A Peichl",
+                "C Fuest",
+                "M. Meyer\u2010Hermann"
+            ],
+            "title": "Das gemeinsame Interesse von Gesundheit und Wirtschaft: Eine Szenarienrechnung zur Eind\u00e4m\u2010 mung der Corona\u2010 Pandemie",
+            "venue": "Technical Report",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "A Staffini",
+                "AK Svensson",
+                "U\u2010I Chung",
+                "T. Svensson"
+            ],
+            "title": "An agent\u2010based model of the local spread of SARS\u2010CoV\u20102: modeling study",
+            "venue": "JMIR Med Inform",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "MA Shiraef",
+                "P Friesen",
+                "L Feddern",
+                "MA. Weiss"
+            ],
+            "title": "Did border closures slow SARS\u2010CoV\u20102",
+            "year": 2022
+        },
+        {
+            "authors": [
+                "N Islam",
+                "SJ Sharp",
+                "G Chowell",
+                "S Shabnam",
+                "I Kawachi",
+                "B Lacey",
+                "JM Massaro",
+                "RB D\u2019Agostino",
+                "M. White"
+            ],
+            "title": "Physical distancing interventions and inci\u2010 dence of coronavirus disease 2019: natural experiment in 149 countries",
+            "venue": "BMJ. 2020. https:// doi",
+            "year": 2020
+        },
+        {
+            "authors": [
+                "JM Brauner",
+                "S Mindermann",
+                "M Sharma",
+                "D Johnston",
+                "J Salvatier",
+                "T Gaven\u010diak",
+                "AB Stephenson",
+                "G Leech",
+                "G Altman",
+                "V Mikulik",
+                "AJ Norman",
+                "JT Monrad",
+                "T Besiroglu",
+                "H Ge",
+                "MA Hartwick",
+                "YW Teh",
+                "L Chindelevitch",
+                "Y Gal",
+                "J. Kulveit"
+            ],
+            "title": "Inferring the effectiveness of government interventions against COVID\u201019",
+            "venue": "https:// doi",
+            "year": 2021
+        },
+        {
+            "authors": [
+                "A Mendez\u2010Brito",
+                "C El Bcheraoui",
+                "F. Pozo\u2010Martin"
+            ],
+            "title": "Systematic review of empirical studies comparing the effectiveness of non\u2010pharmaceutical interventions against COVID\u201019",
+            "venue": "J Infect",
+            "year": 2021
+        }
+    ],
+    "sections": [
+        {
+            "text": "Methods: We model the spread of SARS\u2011CoV\u20112 over the German counties by a graph\u2011SIR\u2011type, metapopulation model with particular focus on commuter testing. We account for political interventions by varying contact reduction values in private and public locations such as homes, schools, workplaces, and other. We consider different levels of lockdown strictness, commuter testing strategies, or the delay of intervention implementation. We conduct numeri\u2011 cal simulations to assess the effectiveness of the different intervention strategies after one month. The virus dynamics in the regions (German counties) are initialized randomly with incidences between 75 and 150 weekly new cases per 100,000 inhabitants (red zones) or below (green zones) and consider 25 different initial scenarios of randomly distrib\u2011 uted red zones (between 2 and 20% of all counties). To account for uncertainty, we consider an ensemble set of 500 Monte Carlo runs for each scenario.\nResults: We find that the strength of the lockdown in regions with out of control virus dynamics is most important to avoid the spread into neighboring regions. With very strict lockdowns in red zones, commuter testing rates of twice a week can substantially contribute to the safety of adjacent regions. In contrast, the negative effect of less strict interventions can be overcome by high commuter testing rates. A further key contributor is the potential delay of the intervention implementation. In order to keep the spread of the virus under control, strict regional lockdowns with minimum delay and commuter testing of at least twice a week are advisable. If less strict interventions are in favor, substantially increased testing rates are needed to avoid overall higher infection dynamics.\nConclusions: Our results indicate that local containment of outbreaks and maintenance of low overall incidence is possible even in densely populated and highly connected regions such as Germany or Western Europe. While we demonstrate this on data from Germany, similar patterns of mobility likely exist in many countries and our results are, hence, generalizable to a certain extent.\n\u00a9 The Author(s) 2022. Open Access This article is licensed under a Creative Commons Attribution 4.0 International License, which permits use, sharing, adaptation, distribution and reproduction in any medium or format, as long as you give appropriate credit to the original author(s) and the source, provide a link to the Creative Commons licence, and indicate if changes were made. The images or other third party material in this article are included in the article\u2019s Creative Commons licence, unless indicated otherwise in a credit line to the material. If material is not included in the article\u2019s Creative Commons licence and your intended use is not permitted by statutory regulation or exceeds the permitted use, you will need to obtain permission directly from the copyright holder. To view a copy of this licence, visit http:// creat iveco mmons. org/ licen ses/ by/4. 0/. The Creative Commons Public Domain Dedication waiver (http:// creat iveco mmons. org/ publi cdoma in/ zero/1. 0/) applies to the data made available in this article, unless otherwise stated in a credit line to the data.\n*Correspondence: Martin.Kuehn@DLR.de; SB@Theoretical\u2011Biology.de; MMH@Theoretical\u2011Biology.de; Achim.Basermann@DLR.de 1 Institute for Software Technology, German Aerospace Center, Cologne, Germany 2 Department of Systems Immunology and Braunschweig Integrated Centre of Systems Biology (BRICS), Helmholtz Centre for Infection Research, Braunschweig, Germany"
+        },
+        {
+            "heading": "Background",
+            "text": "With about three million detected infections in Germany [1] and about 22 million vaccinations [2] until April 2021, we could reasonably assume that at least 80% of the population were still susceptible to SARS-CoV-2. New SARS-CoV-2 variants (B.1.1.7, B.1.351 and P.1) contributed to the increase in case numbers [3, Report of Apr. 7]. Due to the higher transmission risk of B.1.1.7 [4], previous mitigation strategies had to be reconsidered and strengthened. Among other things, massive deployment of antigen tests and regular testing were proposed [5].\nAs of February 2022, we have seen the more infectious Delta and Omicron variants. Although we hoped for herd immunity in winter 2021/2022, still 25% of the German population have not been vaccinated twice and 43% of the population have not yet had a third vaccine dose [2]. With lockdowns and strict interventions not being in place, testing becomes even more important.\nThe prediction of SARS-CoV-2 infections by mathematical models is an active area of research of many groups from all over the world. There are various approaches to simulate the spread of infectious diseases across regions. In the following, we will shortly discuss different approaches and provide a non-exhaustive list of references with applications to SARS-CoV-2.\nSets of ordinary differential equations were already proposed in [6, 7] to model the spread of infectious diseases. These models are often denoted SIR- or SEIR-models and the letters (e.g., S, E, I, or R) represent infection states used in the model, e.g., susceptible, exposed, infected, or removed/recovered. In order to avoid a proliferation of letters, we will denote models of this kind as SIR-type models. To be more precise, we denote these models as (deterministic) ODE-SIR-type models to indicate their reliance on ordinary differential equations. A good overview on these deterministic models as well as a presentation of limitations is given, e.g., in [8\u201310]. Although having certain limitations, these models are often praised for their simplicity and understandability.\nIn the context of the SARS-CoV-2 pandemic, ODESIR-type models with focus on vaccination were used by [11, 12] while [13] focused on hospitalization and ICU demands. The authors of [14, 15] considered similar models with an additional differentiation of confirmed and unconfirmed infections. This differentiation was also used by the authors of [16, 17]. The authors of [18\u201322] considered ODE-SIR models and laid a particular focus on the effect of non-pharmaceutical interventions (NPIs)\nwhile [23] focused on contacts outside households and [24] tried to assess the effect of seasonality of SARSCoV-2. Latency effects in ODE-SIR-type models were studied in [25].\nSome obvious limitations of simple ODE-SIR-type models are the homogeneous mixing assumption, the lack of stochastic effects and the implicit use of exponentially distributed compartment stays. The authors of [26] considered stochastic and deterministic ODE-SIR-type models and [27] provides an overview over 13, either stochastic or deterministic, models from 33 papers. The authors of [28] used stochastic compartment models to consider the effect of NPIs and [29] used a stochastic branching process which may be advantageous over compartment models in the beginning phase of pandemic. Viboud et\u00a0al. [30] proposed a simple generalized-growth model for the early phase of disease outbreaks. In [31], different stochastic and deterministic compartment and agent-based models for Germany and Poland from, i.a., [16, 32\u201336], were compared.\nStochastic effects such as superspreading events can naturally be modeled by agent-based models or, in parts, by stochastic differential equations. However, the nature and setting of superspreading events is still an area of active research, cf., e.g., [37, 38] and will take years to be fully understood [39]. Agent-based models (ABMs) have been used by many authors since they model infection dynamics in a natural way [40\u201348]. Another ABM based on a traffic simulation and mobile phone data was proposed by [49] and [50, 51] presented agent-based models which build upon a predefined contact networks. While ABMs do not have the limitations of the homogeneous mixing assumption or the lack of stochastic events, their use comes at a huge computational overhead.\nIn [52, 53] agent-based models were combined with artificial intelligence and machine learning. Other machine learning approaches were presented by, e.g., [54\u201356]. Radev et\u00a0al. [54] used ODE-SIR-type based Bayesian inference with invertible neural networks. In [55], an ODESIR-type model based machine learning approach was presented and [56] proposed the use of LSTM networks.\nAlthough compartment and agent-based models seem to be contrary approaches, links can be established. The authors of [57, 58] provide links between microscopic, agent-based and ODE models and [59] presented a generalization of ODE-SIR-type models and considered agent-based modeling. In [60], relations between Agentbased and stochastic as well as deterministic metapopulation models were presented.\nKeywords: SARS\u2011CoV\u20112, Covid\u201119, Nonpharmaceutical intervention, Mitigation strategy, Modeling, Predictive analytics, NoCovid strategy\nMetapopulation models reduce the limitations of simple ODE-based models by introducing a spatial dimension and thus allowing for heterogeneous mixing across regions. Metapopulation models were already used before Covid-19 [61] and different approaches exist to extend ODE-models to account for exchange across regions [10, Chapter\u00a014]. The authors of [36, 62\u201365] presented ODE-based metapopulation models considering different regions and an additional focus on regional differences in vaccination progress can be found in [66]. Brockmann and Helbing [67] presented network-driven contagion phenomena based on ODE-SIR-dynamics but where the latter are not essential for the results provided. Also, agent- and compartment-based models can be combined to set up hybrid models [68].\nIn order to overcome another limitation of simple ODEbased models, integro-differential equation-based (also named age of infection) models [6, 69\u201371] can be used. Integro-differential equation-based (IDE) models allow for using arbitrary distributions to waive the implicit use of exponential compartment stays as given by ODEbased models. These have been used for SARS-CoV-2 in, e.g., [72\u201374]. A good overview is given in [75, 76]. A trade-off between simple ODE- and IDE-based models are delay-differential equations and linear chain trick [77] also recently used in [78]. The authors of [79] presented memory-equation-based spatial infection dynamics.\nThe previous background provides a nonexhaustive list of models and papers for mathematical epidemiology. For a broad overview, we refer to [10, 80, 81] and the references therein.\nA proactive approach to fight SARS-CoV-2 in Germany and Europe is presented in [82] with the aim of a safe and sustainable re-opening of societies and economies; see also related discussions in [83\u201385]. Lockdowns remain implemented regionally until the incidence is below 12 cases per week and 100,000 inhabitants and local measures are reintroduced rapidly should infections flare up again. This approach was already successfully implemented in Australia. It is based on the observation that the virus spreads heterogeneously: There are certain regions with very low incidences while other regions (\u201chotspots\u201d) are highly affected [3]. However, neighboring regions can quickly become impacted, especially, by daily commuting. So far, the feasibility and effectiveness of the strategy with respect to commuter testing and local lockdowns has not been investigated numerically. The aim of this paper is a quantification of the necessary test frequency, the required strength of the local lockdown and the time frame that we have for the intervention implementation to avoid the spreading of the virus to neighboring regions."
+        },
+        {
+            "heading": "Methods",
+            "text": "The aim of this study is to provide viable strategies of careful opening of facilities in low-incidence regions without being affected by neighboring regions of substantially higher incidence. Motivated by [82], the regions (here: German counties) are partitioned into red and green zones. A region is labeled a green zone if there is a stable low incidence below 12 per week and 100,000 inhabitants1 with effective tracing of new cases. As soon as this is no longer the case, a region is labeled a red zone.\nWe initialize the set of German counties randomly with weekly incidences per 100,000 inhabitants of around 5 for green zones and 75\u2013150 for red zones. The values of 5 and 75\u2013150 are to some extent arbitrary and are chosen such that we have two well distinguished infection dynamics. They are motivated by the proposed strategy [82] and represent infection dynamics which are well under control (green zone) as well as infection dynamics that are out of control and where a lot of infections happen undetected (red zone). We consider 25 different random scenarios with in between 2 and 20% of the counties as red zones; cf.\u00a0 Fig.\u00a03 (top). Random variables are sampled from a uniform distribution. In green zones, all facilities are open with only protective measures, such as distancing and face masks, in place. Red zones start from an incidence of 12, and in that case a lockdown is implemented for 30 days. For counties with incidence 100 or higher enforced measures are applied. Since political decisions require time, intervention implementation allows for certain delay. Commuter testing is conducted for all commuters coming from red zones. If tested positive, presymptomatic, asymptomatic or symptomatic people will be isolated and prevented from traveling or commuting before recovery. For the precise set of values for lockdowns or testing rates, see the section on mitigation and opening strategies. To assess the impact of the initial overall incidence, we also present two scenarios with 42% and 60% of counties classified red at the beginning.\nNote that throughout this work, incidence always refers to the incidence averaged over 100,000 people and 7 days."
+        },
+        {
+            "heading": "Mathematical model",
+            "text": "In order to achieve the numerical investigation, a large number of ensemble runs of a regionally resolved model have to be conducted. While agent-based models come at a huge computational cost and are well suited for capturing microscopic effects, age-resolved metapopulation models reliably allow for capturing macroscopic effects of a large number of regions at a reasonable cost."
+        },
+        {
+            "heading": "1 The small deviation from the incidence 12 in [82] takes into account report-",
+            "text": "ing delays.\nWe have also decided to use deterministic metapopulation models to avoid making assumptions on the quantification and nature of stochastic events. While this may be a limitation on the county-scale, this will capture the mean macroscopic effects well.\nOur mathematical model for the spread of SARSCoV-2 accounts for age-dependence [86\u201388], heterogeneous spread across regions [3], and commuter testing for mitigation [5].\nFor the geographic resolution, we use a graph approach as presented in [64] and assign one SIR-type model to each German county. The resulting models will be coupled by the edges of the graph which represent the mobility between the regions. The mobility data is obtained from the German Federal Employment Agency [89] complemented with geo-referenced Twitter data [90]. For more details on the data and the practical exchange between regions, we refer to [64]. In the graph, counties are not only connected to their geographical neighbors. We define neighbors by mobility, depending on the numbers of in-commuters. If the number of daily in-commuters in county A (coming from county B) exceeds 1000 on average, B will be classified a neighbor of A. This leads to an increased number of neighbors for larger cities in particular as shown in Fig.\u00a01.\nFor each county, we use an age-resolved SIR-type model based on [14, 64], with particular new focus on commuter\ntesting. The model uses the compartments Susceptible ( Si ); Exposed ( Ei ), who carry the virus but are not yet infectious to others; Carriers ( Ci ), who carry the virus and are infectious to others but do not yet show symptoms (they may be pre- or asymptomatic); Infected ( Ii ), who carry the virus, are infectious and show symptoms; Hospitalized ( Hi ), who experience a severe development of the disease; In Intensive Care Unit ( Ui ); Dead ( Di ); and Recovered ( Ri ), who cannot be infected again. To resolve age-specific disease parameters, the totality of people N into n different age groups i = 1, . . . , n . Note that our focus in this paper is not on hospitalizations, ICU bottlenecks, deaths or vaccinations such that these compartments are of minor interest for our considerations here.\nIn order to model commuter testing, we introduce the new compartments C+i and I + i for carriers or infectious who are tested positive while commuting. The compartment C+i does not have any natural influx and only depends on the number of commuters and testing rates defined between counties on a daily basis. I+i has only influx from C+i and can also increase due to testing results. For a visualization of the process see\u00a0 Fig.\u00a02. Testing within counties and lockdown strictness will be handled as presented in [64], adapted to counterstrategies against novel SARSCoV-2 variants. The full system of equations writes\n(1) dSi\ndt = \u2212Si\u03c1i\nn \u2211\nj=1\n\u03c6i,j \u03beC ,jCj + \u03beI ,jIj\nNj ,\n(2) dEi\ndt = Si\u03c1i\nn \u2211\nj=1\n\u03c6i,j \u03beC ,jCj + \u03beI ,jIj\nNj \u2212\n1\nT Ci Ei\nEi,\n(3) dCi\ndt =\n1\nT Ci Ei\nEi \u2212\n(\n1\u2212 \u00b5 Ri Ci\nT Ii Ci\n+ \u00b5 Ri Ci\nT Ri Ci\n)\nCi,\n(4) dC+i dt = \u2212\n(\n1\u2212 \u00b5 Ri Ci\nT Ii Ci\n+ \u00b5 Ri Ci\nT Ri Ci\n)\nC+i ,\n(5) dIi\ndt =\n1\u2212 \u00b5 Ri Ci\nT Ii Ci\nCi \u2212\n(\n1\u2212 \u00b5 Hi Ii\nT Ri Ii\n+ \u00b5 Hi Ii\nT Hi Ii\n)\nIi,\n(6) dI+i dt = 1\u2212 \u00b5 Ri Ci\nT Ii Ci\nC+i \u2212\n(\n1\u2212 \u00b5 Hi Ii\nT Ri Ii\n+ \u00b5 Hi Ii\nT Hi Ii\n)\nI+i ,\n(7)\ndHi\ndt =\n\u00b5 Hi Ii T Hi Ii Ii + \u00b5 Hi Ii T Hi Ii I+i \u2212\n(\n1\u2212 \u00b5 Ui Hi\nT Ri Hi\n+ \u00b5 Ui Hi\nT Ui Hi\n)\nHi,\n(8) dUi\ndt =\n\u00b5 Ui Hi T Ui Hi Hi \u2212\n(\n1\u2212 \u00b5 Di Ui\nT Ri Ui\n+ \u00b5 Di Ui\nT Di Ui\n)\nUi,\n(9)dRi dt\n= \u00b5 Ri Ci\nT Ri Ci\n(Ci + C + i )+\n1\u2212 \u00b5 Hi Ii\nT Ri Ii\n(Ii + I + i )+\n1\u2212 \u00b5 Ui Hi\nT Ri Hi\nHi + 1\u2212 \u00b5\nDi Ui\nT Ri Ui\nUi,\nFor each age group i = 1, . . . , n , we denote the transmission risk by \u03c1i and the proportion of carriers and infected people not isolated or quarantined is denoted by \u03beC ,i and \u03beI ,i , respectively. The contact frequency matrix \ufffd = (\u03c6i,j)i,j=1,...,n represents the (mean) daily contacts of a person of age group i with people from age group j. For the remaining parameters, we use the variables T \u22172\u22171 for the time spent in state \u22171 \u2208 Zi before transition to state \u22172 \u2208 Zi and \u00b5\u22172\u22171 for the probability of a patient to go to state \u22172 from state \u22171.\nExcept for the transmission risk \u03c1i , the detection of carriers \u03beC ,i and the isolation and quarantine of infected \u03beI ,i defined in Table\u00a01, we use the parameter ranges and age groups as gathered and described elaborately in [64]. To account for the variant B.1.1.7 in Germany [3, Report of Apr. 7], we use a 1.4 times increased value for the transmission risk \u03c1i [4]. The sigmoidal cosine curves in Table\u00a0 1 are defined by the actual incidence of the zone. Thus, the minimum values are adopted for incidences below 12, where even carriers are quarantined and symptomatic are isolated fast and efficiently. From incidence 20 onward, carriers are generally no longer detected on a larger scale and the non-isolation of symptomatic increases to its highest value at incidence 150.\u00a0For a summarized description on the parameters, please see Table\u00a02.\nThe range of contact patterns depends on the decreed non-pharmaceutical interventions. The baseline\n(10) dDi\ndt =\n\u00b5 Di Ui T Di Ui Ui.\nnumber of contacts \u03c6B,i,j is obtained from [91, 92] as described in [64, Sect.\u00a0 3.2]. The resulting number of contacts according to the non-pharmaceutical intervention then writes\nHere \u2217 \u2208 {H , S,W ,O} refers to the four locations of contact home, school, work, and other, and r(l)\u2217 \u2208 [0, 1] is the reduction factor in effective contacts as induced from political decisions. The superindex l is the intervention level. With l = 1 we describe interventions that yield direct contact reduction such as gathering bans. With l = 2 we include protective effects from, e.g., face masks and distancing; cf. [64] for more details. Precise values are provided in the following section. In contrast to [64], r (l) \u2217 will not reduce the number of commuters from one region to another. The reduction in traveling of infectious and carriers will be based upon the isolation of symptomatic cases in the home region through \u03beIi and the commuter testing rate as described in\u00a0 Fig.\u00a02 and in the following section.\u00a0 The baseline intra-county contact patterns and the raw, non-normalized mobility data, not yet differentiated for age-groups, used for initialization of inter-county mobility are published together with our software and can also be found in the Additional file\u00a01.\n(11)\u03c6i,j = \u2211\n\u2217\u2208{H ,S,W ,O}\n(\n1\u2212\n2 \u220f\nl=1\nr(l)\u2217\n)\n\u03c6M,\u2217,i,j .\nIn order to account for the uncertainty, we consider an ensemble set of 500 Monte Carlo runs for each scenario such that our final results are based on 200,000 different runs."
+        },
+        {
+            "heading": "Mitigation and\u00a0opening strategies",
+            "text": "Our tensor space of strategies summarized in Table\u00a0 3 provides 16 different strategies. These are defined by the dimensions lockdown strictness for red zones, commuter testing rate from red zones, and delay of intervention implementation. Political meetings of the German government with the federal state governments to discuss NPIs were often held in a four weekly rhythm, cf., [93\u2013104]. We thus assume that a set of restrictions always lasts for 30 days. It will only be lifted (red zones become green) if the incidence is below 12 at the end of the intervention.\nFor all strategies, the handling of green zones is identical. We assume that all facilities can be opened and that first level political interventions are unnecessary, i.e., r(1)\u2217 = 0 with \u2217 \u2208 {H , S,W ,O} in Eq.\u00a0 (11). However, second level interventions with face masks and distancing are in place, and we assume a reduced contact rate by r (2) \u2217 \u2208 [0.25, 0.35] for \u2217 \u2208 {S,W ,O} (schools, workplaces and other), and r(2)H = 0 (homes), since face masks may\nWe omit the age index i for better readability. For derivation and more details, see [14]"
+        },
+        {
+            "heading": "Range in age group",
+            "text": "\u03beI Sigmoidal cosine curve from [0.0, 0.2] to [0.4, 0.5]\nT C E [2.67, 4.00] \u00b5R C [0.20, 0.30] [0.15, 0.25] T R\nC T I C + 0.5T R I\nT I C Sampled with TC E ; cf. [14] \u00b5H I [0.006, 0.009] [0.015, 0.023] [0.049, 0.074] [0.15, 0.18] [0.20, 0.25] T H\nI [9, 12] [5, 7]\nT R I [5.6, 8.4] \u00b5U H [0.05, 0.10] [0.10, 0.20] [0.25, 0.35] [0.35, 0.45] T U\nH [3, 7]\nT R H [4, 6] [5, 7] [7, 9] [9, 11] [13, 17] \u00b5D U [0.00, 0.10] [0.10, 0.18] [0.3, 0.5] [0.5, 0.7] T R\nU [5, 9] [14, 21] [10, 15]\nT D U [4, 8] [15, 18] [10, 12]\nnot be worn in most private situations if the spread is under control.\nFor red zones, we consider two different sets of lockdowns. Both differ in their severeness for incidences below 100 and above 100. For the stricter set denoted by L+ and incidences below 100, we implement first level interventions ( l = 1 ) that achieve an average contact reduction by 50%. In addition ( l = 2 ), we implement second level interventions with protective measures that increase the average effective contact reduction to 70% in total ( l = {1, 2} ). For incidences above 100, l = 1 leads to 58% and l = {1, 2} to 76% of effective contact reduction. For the less stricter set denoted by L, we have effective contact reductions ( l = {1, 2} ) of 57% and 64% with incidences below and above 100, respectively.\nFor the Monte Carlo runs, we vary the contact reduction in a range of \u00b15%.\nThe particular contact reduction values for red and green zones and different locations (homes, schools, workplaces, and other) are based on [64] and on model calibration: red zones must substantially reduce their incidences in lockdown over multiple weeks and green zones are calibrated to maintain stable low incidence values within the local population (i.e. if there weren\u2019t any commuters).\nThe second dimension of our strategy space is given by four different rates of commuter testing. With T0, there is no particular commuter testing at all, and with T1, T2, T5 we refer to testing rates of once, twice, and five times a week. Based on a 5 days working week, T5 will also be called the daily testing strategy. We assume massive deployment of antigen tests combined with a smaller number of PCR or RT-qPCR and pool tests [105\u2013107] to control the commuter spread from highly infected regions. In [5], the sensitivity of antigen tests on the German market is estimated by 40\u201380%, and [108] identifies average chances of 72% and 58% to correctly detect an infection by antigen tests for symptomatic and asymptomatic cases, respectively. Given a combination of different kinds of tests, we use a generic daily detection ratio of 75% for carriers and infectious persons."
+        },
+        {
+            "heading": "Parameter Description",
+            "text": "T C E Period of latent non\u2011infectious stage \u00b5R C Proportion of mild, asymptomatic cases T R\nC Period of asymptomatic stage before recovery\nT I C Period of latent infectious stage \u00b5H I Proportion of symptomatic cases needing hospitalization T H\nI Period of mild symptoms for individuals requiring hospitalization later on\nT R I Period of mild symptoms for individuals not requiring hospitalization later on \u00b5U H Proportion of hospitalized individuals getting ICU treatment T U\nH Period of hospitalization before ICU treatment (of critical cases)\nT R H Period of hospitalization before recovery (of non\u2011critical cases) \u00b5D U proportion of individuals in ICU care that die T R\nU Period of ICU treatment before recovery\nT D U Period of ICU treatment before death\nTable 3 Tensor space of mitigation strategies\nThe 16 considered strategies are defined by choosing one item per column\nLockdown strictness Commuter testing Delay of implementation\n1. L+: effective con\u2011 tact reduction: 70% ( I \u2264 100 ), 76% ( I > 100) 2. L: effective contact reduction: 57% ( I \u2264 100 ), 64% ( I > 100) 1. T0: no testing 2. T1: 1 test per week 3. T2: 2 tests per week 4. T5: 5 tests per week 1. D1W: 1 week delay 2. D3W: 3 weeks delay\nThe last key property in our strategy space is the delay of implementation of new interventions once critical thresholds are exceeded. Since the introduction of NPIs always required political consensus, we decided to consider the effect of different delays from the moment an incidence threshold passed and a new intervention was decreed. We consider two well distinguished delays, a delay of one week denoted by D1W and a delay of three weeks denoted by D3W before new NPIs get active. This was done to study the effect of swift and slow reactions."
+        },
+        {
+            "heading": "Results",
+            "text": "In this section, we present numerical results for the simulation of the 16 defined strategies for 25 randomized initial scenarios. In particular, we focus on the most effective strategy consisting of strict lockdowns, daily\ntesting, and fast implementation of interventions (L+, T5, D1W).\nIn\u00a0 Fig.\u00a03, we present four different scenarios of virus spread across Germany with 2 to 20% of the regions classified as red zones (incidence 75\u2013150 at start). These are generic scenarios of local outbreaks as they have been observed over the last year [3] in a smaller quantity. Each red zone represents a snapshot of the situation before the virus spreads into the surrounding regions. The initial situation is depicted on the top. In the center, we see the median outcome after 30 days and on the bottom the outcome after 60 days. Already after thirty days, we have a stable incidence of about 5 and only a small number of counties with incidences around 20 or 30. After 60 days, the initial heterogeneous situation is completely under control with stable incidences around 1 or 2 for all German counties.\nIn\u00a0 Fig.\u00a04, we present the average incidence over the whole country for the 25 different initial red zone distributions. The median incidences (as well as the percentiles p25 and p75 of the Monte Carlo runs) for strategy L+, T5, D1W after 30 and 60 days are shown\nin orange and green, respectively. Analogous to the four scenarios considered in\u00a0 Fig.\u00a0 3, the overall incidence drops considerably after 30 days already and is below 5 after 60 days in all 25 scenarios. As expected, a strong local lockdown L+, daily testing and a fast response time lead to green zones remaining green and red zones becoming green after only 1-2 months and thus avoiding a perpetuation of interventions.\nIn\u00a0 Figs.\u00a0 5 and 6, we present the results for all strategies and all 25 initial scenarios. In\u00a0 Fig.\u00a05, we see the number of counties in lockdown for all mitigation strategies (averaged over the 25 different scenarios) for 30 days of simulation time. Note that we use the same color for strategies that only differ in the strength of the lockdown L+ (solid) vs L (dashed). In all cases, the L+ strategy leads to less counties in lockdown over time. Hence, the most important factor for controlling the dynamics is the strictness of the lockdown in the red zones. The reduced lockdown strength L with an effective contact reduction of 57% ( I \u2264 100 ) and 64% ( I > 100 ) needs to be complemented by daily testing T5 to control the propagation; see L, T5, D1W and L, T5, D3W. With L and lesser testing, the number of counties in lockdown doubles within just thirty days. Considering the slope of the curves, we see that the weaker the strictness of the interventions, the faster immediate action is required. With testing only once a week (L, T1, D*W, \u2217 \u2208 1, 3 ), almost a third\nFig. 4 Country\u2011wide SARS\u2011CoV\u20112 infections per 100,000 people and seven days (denoted: incidence) with the strongest mitigation strategy. Results after 30 days (orange) and after 60 days (green)\nwith the initial setting shown by the blue curve. The p25 and p75 percentiles for 500 Monte Carlo runs and 30 and 60 days of simulation, respectively, are shown by dashed lines in the same color\nFig. 5 Counties in lockdown per day from start for the different mitigation strategies. Due to the strictness of the interventions in L+, T5, D1W and L+, T5, D3W, the delay of implementation is of minor importance and the curves overlap. For less strict interventions longer delays lead to more\nsevere situations\nof all counties will be in lockdown after only one month. In order to control the dynamics with testing rates under twice a week, very strict lockdowns L+ with effective contact reductions of 70% ( I \u2264 100 ) and 76% ( I > 100 ) have to be implemented. These would have to be stricter than anything decreed for Germany ever before.\nFigure\u00a0 6 depicts how many lockdowns have to be implemented for each scenario and each strategy over the whole country, i.e., how many counties turn red that were green in the beginning. Lesser restrictions like lockdown L and testing T0, T1 or even T2 lead to a substantial number of necessary lockdowns in neighboring regions. This number is 20-30 or even 100 times larger than that of strategy L+, T5, D1W. Stronger containment measures lead to more opening possibilities and hence to less economical damage than a perpetuation of less effective measures as also established in [82, 109]. The authors of [110] also advocated for aggressive political actions in the contagion containment phase to reduce the economic burden of the pandemic.\nIn\u00a0 Fig.\u00a0 7, we depict the outcomes for one particular scenario of about 18% red zones after 30 days of simulation with all 16 opening and mitigation strategies presented in Table\u00a0 3. Again, strategies\u00a0 L+, T5, D1W and\u00a0 L+, T5, D3W lead to the most promising results. The images also quantify how reduced testing for the same lockdown strictness leads to slightly\nworse outcomes while reduced testing combined with reduced lockdown strictness quickly lead to out-ofcontrol virus dynamics.\nFinally, in\u00a0 Fig.\u00a0 8, we present the outcome of the strongest and intermediate interventions, i.e. L+, T5, D1W and L, T2, D3W, for the case of a much severe initial situation with 42% and 60% counties as red zones. After 30 days with L+, T5, D1W, the situations improves considerably (center), while after thirty days with L, T2, D3W, we see a deterioration of infection dynamics (right)."
+        },
+        {
+            "heading": "Discussion",
+            "text": "Within the first eighteen months of the pandemic, a variety of different approaches to controlling the spread of the SARS-CoV-2 pandemic has been proposed. Many authors tried to assess the effectiveness of different nonpharmaceutical interventions (NPIs). The authors of [19, 109\u2013111] also partially focused on economic development and provided evidence for the effectiveness of lockdowns. The authors of [112, 113] derived confidence intervals for the effect of fine-grained NPIs such as school or workplace closures or gathering bans based on data for 149 and 41 countries, respectively. Although this assessment is an issue of high importance, this is not the focus of our paper. A key component in many successful interventions is a more or less differentiated and explicit zone\ndistinction strategy based on regionally heterogeneous pandemic developments; see also Refs. [83\u201385]. Here, we investigated a basic version with only two different zones that are distinguished simply by incidence levels. While such zone distinction concepts are straightforward to implement in sparsely inhabited countries or countries with clear regional separation that facilitates isolation of high-incidence regions, the densely populated, highly\nthe second to left scenario shown on the top in Fig. 3\nmobile, highly connected situation in Germany, the EU, and similar regions presents challenges.\nIn particular, concepts of dealing with commuters between regions are needed. Work-related commuting between regions is often critical to maintaining a basic level of economic and social activity. Given the enormous cost of a complete ban on travel to neighboring cities, restricting mobility beyond a certain level seems unrealistic from a pragmatic point of view.\nOn the other hand, unrestricted travel between highand low-incidence regions is problematic, as it effectively prevents regionally differentiated approaches due to the expected high amount of imported cases that will quickly revert any local progress towards lower incidence. Besides reducing unnecessary mobility between zones with different status to a minimum, testing commuters has been proposed as a tool to reduce import of cases into low-incidence zones. While this is intuitively appealing, its utility and practicality in a real-world scenario remains yet to be demonstrated. Recently, the authors of [111] found evidence in favor of domestic lockdowns\nto reduce the spread of the disease. On the other hand, the authors could not find any results in favor of border closures such that alternative strategies need to be found. Regular testing, however, may present a viable alternative that is more targeted and interrupts infection chains by isolating infected individuals.\nIn [114], 34 studies assessing the effect of fine-grained interventions were reviewed. While lockdowns were found to have an intermediate effect, testing was found to be less effective. However, when these studies were conducted, massive deployment of antigen tests was mostly not yet possible and effects of, e.g., daily or bi-daily testing in zones of high risk need to be studied. Also, interventions were often considered qualitatively and research on the interplay between the quantification of intervention strictness and testing is needed.\nGerman health minister Karl Lauterbach recently declared that we still need strategies for \u201chotspots\u201d, i.e., regional outbreaks [115]. Our modeling approach aims at providing a data-based estimate of the effect that a combination of regionally differentiated restrictions and\nsystematic testing of commuters with a given test sensitivity and frequency has on the overall incidence, on the frequency of necessary lockdowns, and on the containment of isolated local outbreaks. A limitation of the approach is that border regions are not considered, e.g., the impact of systematically higher incidences in a neighbouring country. However, since our simulation approach consists of randomly initialized generic scenarios, our conclusions also hold true for mobility across German borders.\nOur results clearly indicate that a combined strategy of local lockdowns and systematic testing has the potential to contain isolated local outbreaks in a general low incidence setting. In particular, rather strict local measures in combination with frequent testing of commuters proves highly effective in preventing the spread of localized infection hot spots and reducing the incidence in these regions. This can be seen both in the number of counties that need to impose measures and in the median incidence in the simulations which can be brought to surprisingly low levels with the most effective strategies.\nThe results further clearly indicate a hierarchy of effectiveness that depends on the strength of the locally imposed measures, the duration of the delay with which they are imposed after a critical incidence threshold has been reached, and the frequency at which commuters are tested which ultimately determines the fraction of imported cases that are found.\nInterestingly, although the strength of the locally imposed measures dominates the further development of a local outbreak as expected, our simulations indicate that with an effective daily testing regimen and a swift reaction to local outbreaks, even a less severe reaction may be effective in containing isolated outbreaks. With less strict contact reduction policies in the lockdown scenario, our model predicts especially testing frequency to be a highly relevant factor in outbreak mitigation. It should be noted, however, that our scenarios are lowincidence scenarios with a rather small number of local infection hot spots. With a high overall incidence as demonstrated in\u00a0 Fig.\u00a08, strict measures are even more essential in first instance. With very strict policy interventions, reaction delay and testing of commuters appear to have less of an impact. However, testing only once a week or not at all can quickly lead to a degeneration of infection dynamics."
+        },
+        {
+            "heading": "Conclusions",
+            "text": "Using a regionally resolved model based on mobility data to describe pandemic spread on a subnational level, we systematically investigated the feasibility of a localized strategy for outbreak containment based on a simple\ndistinction of low- and high-incidence regions. Such a strategy may be especially useful in a scenario where generalized, nation-wide measures have brought incidence to a rather low overall level and a restrictive overall policy is no longer necessary. In that sense, it can be seen as a perspective for careful resumption of economic and social activity. This is especially important as there is a clear general pattern of re-emergence of the pandemic after successful containment and lifting of restrictive policy; e.g., the incidence in Germany remained at very low levels after the first outbreak in March 2020 until September when several local outbreaks emerged and, after lack of a substantial intervention, developed into a nationwide second surge of infections. Similar developments could be observed after Summer 2021 (Additional file\u00a01).\nOur results indicate that local containment of outbreaks and maintenance of low overall incidence is possible even in densely populated and highly connected areas. While we demonstrate this on data from Germany, similar patterns of mobility likely exist in many countries and our results are, hence, generalizable to a certain extent.\nWhile it is obvious that a substantial reduction of transmission and, hence, contacts in the population is necessary to mitigate a local high-incidence situation, our results suggest that reduced mobility along with frequent testing of regular commuters can successfully prevent generalized spreading of the infection in larger areas even with less strict contact reduction policies, especially when reaction to an outbreak is swift. This gives rise to a promising perspective after hard and economically damaging policy interventions: Maintaining the situation at stable levels may require moderate, localized interventions that affect only a small fraction of the population, offering a viable alternative to switching back and forth between premature lifting of restrictions and restrictive untargeted measures."
+        },
+        {
+            "heading": "Abbreviations",
+            "text": "Covid\u201119: Coronavirus disease 2019; SARS\u2011CoV\u20112: Severe acute respiratory syndrome coronavirus type 2.\nSupplementary Information The online version contains supplementary material available at https:// doi. org/ 10. 1186/ s12879\u2011 022\u2011 07302\u20119.\nAdditional file\u00a01. The baseline intra\u2011county contact patterns and the raw, non\u2011normalized mobility data, not yet differentiated for age\u2011groups, used for initialization of inter\u2011county mobility."
+        },
+        {
+            "heading": "Acknowledgements",
+            "text": "Not applicable."
+        },
+        {
+            "heading": "Author contributions",
+            "text": "MMH, SB, MJK and MK developed the mitigation strategies, MJK, DA, MK, JK, WK and MS developed and implemented the graph SIR\u2011type model with commuter testing, MJK, KR and WK developed the data analysis tools, JG and LS developed the visualization tools, MMH and AB supervised the study. All authors read and approved the final manuscript."
+        },
+        {
+            "heading": "Funding",
+            "text": "Open Access funding enabled and organized by Projekt DEAL. This work has received funding from the European Union\u2019s Horizon 2020 research and inno\u2011 vation programme under grant agreement No 101003480 and by the Initiative and Networking Fund of the Helmholtz Association. It was supported by German Federal Ministry of Education and Research for the project CoViDec (FKZ: 01KI20102). The funding bodies had no role in the design of the study, collection, analysis, and interpretation of the results, or writing the manuscript."
+        },
+        {
+            "heading": "Availability of data and materials",
+            "text": "The parameters to setup the simulations are provided in the current article and [64]. The simulation output for all different strategies, scenarios and Monte Carlo runs presented here make up more than 100 GB in over 1.9 million items and cannot be shared easily. Particular results can be shared upon request. Please contact Martin.Kuehn@DLR.de. Intra\u2011 and intercounty contact and raw, non\u2011normalized mobility data for initialization are provided in text files. The underlying software framework MEmilio has been published and is available as open source on https:// github. com/ DLR\u2011 SC/ memil io.\nEthics approval and consent to participate Not applicable."
+        },
+        {
+            "heading": "Consent for publication",
+            "text": "Not applicable."
+        },
+        {
+            "heading": "Competing interests",
+            "text": "The authors declare that they have no competing interests.\nReceived: 24 April 2021 Accepted: 21 March 2022"
+        },
+        {
+            "heading": "Publisher\u2019s Note",
+            "text": "Springer Nature remains neutral with regard to jurisdictional claims in pub\u2011 lished maps and institutional affiliations."
+        }
+    ],
+    "title": "Regional opening strategies with commuter testing and containment of new SARS-CoV-2 variants in Germany",
+    "year": 2022
+}

@@ -10,7 +10,7 @@ nltk.download('punkt')
 
 tokenizer = PunktSentenceTokenizer()
 
-filename = 'Idea_chemistry.xlsx'
+filename = 'Cidea_chemistryMORE.xlsx'
 
 domain = filename.split('.')[0].split('_')[1]
 

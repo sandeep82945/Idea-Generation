@@ -10,8 +10,8 @@ from test_preprocessing import preprocess
 from anthropic_bedrock import AnthropicBedrock, HUMAN_PROMPT, AI_PROMPT
 
 from tqdm import tqdm
-#from gemini import inference as gemini_inference  #keep changing
-from claude import inference as claude_inference
+from gemini import inference as gemini_inference  #keep changing
+#from claude import inference as claude_inference
 #from galactica import inference as galactica_inference
 
 with open('code/config.yml', 'r') as config_file:
@@ -44,7 +44,7 @@ def generate_claude2(paper_text):
     return response
 
 def generate_galactica(paper_text):
-    prompt = f""" Imagine you are a research scientist, read the following paper and generate 5 possible future research ideas after brainstorming:  
+    prompt = f""" Imagine you are a research scientist, read the following paper and generate top 5 possible future research ideas after brainstorming:  
         {paper_text[0:1000]+paper_text[-1000:]}
         5 possible future research ideas from the paper are: <work>:"""
     response = galactica_inference(prompt)

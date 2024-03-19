@@ -87,3 +87,38 @@ def preprocess(text):
     text = clean_research_text(text)
     text = tokenize_and_count(text)
     return text
+
+import os
+
+def preprocess(text):
+    # Your preprocessing steps here
+    # For example:
+    # Convert text to lowercase
+    # Remove special characters
+    # Tokenize text
+    # Perform other text normalization tasks
+    return text
+
+def preprocess_and_save_file(input_file_path, output_file_path):
+    with open(input_file_path, 'r', encoding='utf-8') as input_file:
+        text = input_file.read()
+        preprocessed_text = preprocess(text)
+    
+    with open(output_file_path, 'w', encoding='utf-8') as output_file:
+        output_file.write(preprocessed_text)
+
+def preprocess_files_in_folder(input_folder, output_folder):
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    for file_name in os.listdir(input_folder):
+        input_file_path = os.path.join(input_folder, file_name)
+        output_file_path = os.path.join(output_folder, file_name)
+
+        preprocess_and_save_file(input_file_path, output_file_path)
+
+# Specify input and output folders
+input_folder = os.path.join("C:\Users","vinay\OneDrive\Desktop\New folder\chemistry")
+output_folder = os.path.join("C:\Users","vinay\OneDrive\Desktop\pre\chemistry")
+
+preprocess_files_in_folder(input_folder, output_folder)

@@ -1,5 +1,5 @@
 from openai import OpenAI
-client = OpenAI(api_key ="" )
+client = OpenAI(api_key ="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" )
 import time
 
 def generate_openai(prompt):

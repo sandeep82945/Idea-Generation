@@ -65,7 +65,7 @@ def choose_model(text):
         return generate_gemini(text)
     elif model_name == 'claude':
         return generate_claude2(text)
-    elif model_name == 'gpt3.5':
+    elif model_name == 'gpt4':
         return generate_gpt(text)
 
 for filename in tqdm(os.listdir(input_folder)):
